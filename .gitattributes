@@ -7,9 +7,10 @@ tvbrowser/jsmooth/lib/jsmoothgen.jar -text
 tvbrowser/jsmooth/skeletons/console-wrapper-debug/consolewrapper.exe -text
 tvbrowser/jsmooth/skeletons/console-wrapper-debug/description-debug.skel -text svneol=unset#application/octet-stream
 tvbrowser/jsmooth/skeletons/console-wrapper/consolewrapper.exe -text
+tvbrowser/jsmooth/skeletons/console-wrapper/description.skel -text svneol=unset#application/octet-stream
 tvbrowser/jsmooth/skeletons/windowed-wrapper-debug/description-debug.skel -text svneol=unset#application/octet-stream
 tvbrowser/jsmooth/skeletons/windowed-wrapper-debug/jwrap.exe -text
-tvbrowser/jsmooth/skeletons/windowed-wrapper/description-normal.skel -text svneol=unset#application/octet-stream
+tvbrowser/jsmooth/skeletons/windowed-wrapper/description.skel -text svneol=unset#application/octet-stream
 tvbrowser/jsmooth/skeletons/windowed-wrapper/jwrap.exe -text
 tvbrowser/lib/commons-net.jar -text
 tvbrowser/lib/junit.jar -text
