@@ -39,6 +39,7 @@ tvbrowser/src/help/de/img09.png -text
 tvbrowser/src/imdbsearchplugin/imdb.gif -text
 tvbrowser/src/imgs/About16.gif -text
 tvbrowser/src/imgs/Back24.gif -text
+tvbrowser/src/imgs/Down16.gif -text
 tvbrowser/src/imgs/Down24.gif -text
 tvbrowser/src/imgs/Export16.gif -text
 tvbrowser/src/imgs/Find24.gif -text
@@ -72,6 +73,7 @@ tvbrowser/src/imgs/TimeEvening24.gif -text
 tvbrowser/src/imgs/TimeMidday24.gif -text
 tvbrowser/src/imgs/TimeMorning24.gif -text
 tvbrowser/src/imgs/TimeNow24.gif -text
+tvbrowser/src/imgs/Up16.gif -text
 tvbrowser/src/imgs/Up24.gif -text
 tvbrowser/src/imgs/WebComponent16.gif -text
 tvbrowser/src/imgs/background.jpg -text
