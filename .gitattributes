@@ -19,6 +19,7 @@ tvbrowser/jsmooth/skeletons/windowed-wrapper/jwrap.exe -text
 tvbrowser/lib/commons-net.jar -text
 tvbrowser/lib/junit.jar -text
 tvbrowser/lib/skinlf.jar -text
+tvbrowser/src/calendarexportplugin/calendar.png -text
 tvbrowser/src/favoritesplugin/Delete24.gif -text
 tvbrowser/src/favoritesplugin/Down24.gif -text
 tvbrowser/src/favoritesplugin/Edit24.gif -text
