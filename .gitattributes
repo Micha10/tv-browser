@@ -133,6 +133,7 @@ tvbrowser/src/webplugin/Up16.gif -text
 tvbrowser/src/webplugin/altavista.gif -text
 tvbrowser/src/webplugin/google.gif -text
 tvbrowser/src/webplugin/imdb.gif -text
+tvbrowser/src/webplugin/ofdb.gif -text
 tvbrowser/statcvs/statcvs.jar -text
 tvbrowser/themepacks/themepack.zip -text
 tvbrowser/tvdatakit/workspace/TvData.xls -text
