@@ -118,4 +118,5 @@ tvbrowser/statcvs/statcvs.jar -text
 tvbrowser/themepacks/themepack.zip -text
 tvbrowser/tvdatakit/workspace/TvData.xls -text
 tvbrowser/tvdatakit/workspace/java/poi-2.5-final-20040302.jar -text
+tvbrowser/tvdatakit/workspace/java/xercesImpl.jar -text
 tvbrowser/win/DesktopIndicator.dll -text
