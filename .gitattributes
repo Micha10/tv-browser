@@ -45,6 +45,7 @@ tvbrowser/src/help/de/img08.png -text
 tvbrowser/src/help/de/img09.png -text
 tvbrowser/src/imgs/About16.gif -text
 tvbrowser/src/imgs/Back24.gif -text
+tvbrowser/src/imgs/Delete16.gif -text
 tvbrowser/src/imgs/Down24.gif -text
 tvbrowser/src/imgs/Export16.gif -text
 tvbrowser/src/imgs/Find24.gif -text
@@ -62,6 +63,7 @@ tvbrowser/src/imgs/Info_Stereo.gif -text
 tvbrowser/src/imgs/Info_SubtitleForAurallyHandicapped.gif -text
 tvbrowser/src/imgs/Info_TwoChannelTone.gif -text
 tvbrowser/src/imgs/Jar16.gif -text
+tvbrowser/src/imgs/New16.gif -text
 tvbrowser/src/imgs/Open16.gif -text
 tvbrowser/src/imgs/Preferences16.gif -text
 tvbrowser/src/imgs/Preferences24.gif -text
