@@ -20,6 +20,7 @@ tvbrowser/lib/commons-net.jar -text
 tvbrowser/lib/idw-gpl.jar -text
 tvbrowser/lib/junit.jar -text
 tvbrowser/lib/skinlf.jar -text
+tvbrowser/macosx/jarbundler-1.2.jar -text
 tvbrowser/src/calendarexportplugin/calendar.png -text
 tvbrowser/src/captureplugin/capturePlugin.png -text
 tvbrowser/src/captureplugin/tabs/Delete16.gif -text
