@@ -115,4 +115,6 @@ tvbrowser/src/tvraterplugin/imgs/listview16.gif -text
 tvbrowser/src/tvraterplugin/tvrater.gif -text
 tvbrowser/statcvs/statcvs.jar -text
 tvbrowser/themepacks/themepack.zip -text
+tvbrowser/tvdatakit/workspace/TvData.xls -text
+tvbrowser/tvdatakit/workspace/java/poi-2.5-final-20040302.jar -text
 tvbrowser/win/DesktopIndicator.dll -text
