@@ -1,13 +1,25 @@
 * text=auto !eol
 tvbrowser/installer/makensis.exe -text
 tvbrowser/lib/ant.jar -text
+tvbrowser/src/favoritesplugin/Delete24.gif -text
+tvbrowser/src/favoritesplugin/Down24.gif -text
+tvbrowser/src/favoritesplugin/Edit24.gif -text
+tvbrowser/src/favoritesplugin/New24.gif -text
 tvbrowser/src/favoritesplugin/ThumbUp16.gif -text
+tvbrowser/src/favoritesplugin/Up24.gif -text
+tvbrowser/src/imgs/About16.gif -text
 tvbrowser/src/imgs/Back24.gif -text
 tvbrowser/src/imgs/Down24.gif -text
+tvbrowser/src/imgs/Export16.gif -text
 tvbrowser/src/imgs/Find24.gif -text
 tvbrowser/src/imgs/Forward24.gif -text
-tvbrowser/src/imgs/Import24.gif -text
+tvbrowser/src/imgs/Help16.gif -text
+tvbrowser/src/imgs/Import16.gif -text
+tvbrowser/src/imgs/Preferences16.gif -text
 tvbrowser/src/imgs/Preferences24.gif -text
+tvbrowser/src/imgs/Refresh16.gif -text
+tvbrowser/src/imgs/Refresh24.gif -text
+tvbrowser/src/imgs/Search16.gif -text
 tvbrowser/src/imgs/Stop24.gif -text
 tvbrowser/src/imgs/TimeEarly24.gif -text
 tvbrowser/src/imgs/TimeEvening24.gif -text
