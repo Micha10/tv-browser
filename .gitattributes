@@ -34,6 +34,7 @@ tvbrowser/src/favoritesplugin/Down24.gif -text
 tvbrowser/src/favoritesplugin/Edit16.gif -text
 tvbrowser/src/favoritesplugin/Edit24.gif -text
 tvbrowser/src/favoritesplugin/Import24.gif -text
+tvbrowser/src/favoritesplugin/New16.gif -text
 tvbrowser/src/favoritesplugin/New24.gif -text
 tvbrowser/src/favoritesplugin/Sort24.gif -text
 tvbrowser/src/favoritesplugin/ThumbUp16.gif -text
@@ -50,6 +51,8 @@ tvbrowser/src/help/de/img08.png -text
 tvbrowser/src/help/de/img09.png -text
 tvbrowser/src/imgs/About16.gif -text
 tvbrowser/src/imgs/Back24.gif -text
+tvbrowser/src/imgs/Bookmarks16.gif -text
+tvbrowser/src/imgs/Bookmarks24.gif -text
 tvbrowser/src/imgs/Delete16.gif -text
 tvbrowser/src/imgs/Delete24.gif svneol=native#unset
 tvbrowser/src/imgs/Down24.gif -text
