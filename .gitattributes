@@ -85,6 +85,12 @@ tvbrowser/src/searchplugin/Find24.gif -text
 tvbrowser/src/tvbrowserdataservice/Add24.gif -text
 tvbrowser/src/tvbrowserdataservice/Refresh24.gif -text
 tvbrowser/src/tvbrowserdataservice/Remove24.gif -text
+tvbrowser/src/tvraterplugin/0.gif -text
+tvbrowser/src/tvraterplugin/1.gif -text
+tvbrowser/src/tvraterplugin/2.gif -text
+tvbrowser/src/tvraterplugin/3.gif -text
+tvbrowser/src/tvraterplugin/4.gif -text
+tvbrowser/src/tvraterplugin/5.gif -text
 tvbrowser/src/tvraterplugin/tvrater.gif -text
 tvbrowser/statcvs/statcvs.jar -text
 tvbrowser/themepacks/themepack.zip -text
