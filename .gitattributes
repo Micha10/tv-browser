@@ -3,6 +3,8 @@ tvbrowser/installer/Contrib/Graphics/Checks/modern.bmp -text
 tvbrowser/installer/Contrib/Graphics/Icons/murfman-install.ico -text
 tvbrowser/installer/Contrib/Graphics/Icons/murfman-uninstall.ico -text
 tvbrowser/installer/Contrib/Graphics/Wizard/win.bmp -text
+tvbrowser/installer/Contrib/UIs/modern.exe -text
+tvbrowser/installer/Contrib/UIs/modern_nodesc.exe -text
 tvbrowser/installer/Plugins/InstallOptions.dll -text
 tvbrowser/installer/Plugins/StartMenu.dll -text
 tvbrowser/installer/makensis.exe -text
