@@ -64,3 +64,5 @@ tvbrowser/src/reminderplugin/TipOfTheDay16.gif -text
 tvbrowser/src/searchplugin/Find16.gif -text
 tvbrowser/src/searchplugin/Find24.gif -text
 tvbrowser/themepacks/themepack.zip -text
+tvbrowser/win/DesktopIndicator.dll -text
+tvbrowser/win/taskicon.ico -text
