@@ -38,6 +38,15 @@ tvbrowser/src/imgs/Forward24.gif -text
 tvbrowser/src/imgs/Help16.gif -text
 tvbrowser/src/imgs/Host16.gif -text
 tvbrowser/src/imgs/Import16.gif -text
+tvbrowser/src/imgs/Info_16to9.gif -text
+tvbrowser/src/imgs/Info_BlackAndWhite.gif -text
+tvbrowser/src/imgs/Info_DolbyDigital51.gif -text
+tvbrowser/src/imgs/Info_DolbySurround.gif -text
+tvbrowser/src/imgs/Info_Mono.gif -text
+tvbrowser/src/imgs/Info_OriginalWithSubtitle.gif -text
+tvbrowser/src/imgs/Info_Stereo.gif -text
+tvbrowser/src/imgs/Info_SubtitleForAurallyHandicapped.gif -text
+tvbrowser/src/imgs/Info_TwoChannelTone.gif -text
 tvbrowser/src/imgs/Jar16.gif -text
 tvbrowser/src/imgs/Open16.gif -text
 tvbrowser/src/imgs/Preferences16.gif -text
