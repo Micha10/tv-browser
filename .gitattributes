@@ -57,6 +57,13 @@ tvbrowser/src/imgs/splash.jpg -text
 tvbrowser/src/imgs/up16.gif -text
 tvbrowser/src/printplugin/Print16.gif -text
 tvbrowser/src/printplugin/Print24.gif -text
+tvbrowser/src/programinfo/Info_16to9.gif -text
+tvbrowser/src/programinfo/Info_BlackAndWhite.gif -text
+tvbrowser/src/programinfo/Info_DolbySurround.gif -text
+tvbrowser/src/programinfo/Info_Mono.gif -text
+tvbrowser/src/programinfo/Info_Stereo.gif -text
+tvbrowser/src/programinfo/Info_Subtitle.gif -text
+tvbrowser/src/programinfo/Info_TwoChannelTone.gif -text
 tvbrowser/src/programinfo/Information16.gif -text
 tvbrowser/src/reminderplugin/Delete24.gif -text
 tvbrowser/src/reminderplugin/TipOfTheDay16.gif -text
