@@ -11,8 +11,6 @@ tvbrowser/src/imgs/columns.jpg -text
 tvbrowser/src/imgs/columns2.jpg -text
 tvbrowser/src/imgs/down16.gif -text
 tvbrowser/src/imgs/up16.gif -text
-tvbrowser/src/reminderplugin/Back16.gif svneol=native#unset
 tvbrowser/src/reminderplugin/TipOfTheDay16.gif -text
-tvbrowser/src/reminderplugin/Wecker16.gif svneol=native#unset
 tvbrowser/src/searchplugin/Find16.gif -text
 tvbrowser/src/searchplugin/Find24.gif -text
