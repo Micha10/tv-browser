@@ -25,6 +25,10 @@ tvbrowser/macosx/jarbundler-1.2.jar -text
 tvbrowser/src/calendarexportplugin/calendar.png -text
 tvbrowser/src/captureplugin/capturePlugin.png -text
 tvbrowser/src/captureplugin/capturePlugin24.png -text
+tvbrowser/src/captureplugin/drivers/defaultdriver/imgs/Delete16.gif -text
+tvbrowser/src/captureplugin/drivers/defaultdriver/imgs/Down16.gif -text
+tvbrowser/src/captureplugin/drivers/defaultdriver/imgs/New16.gif -text
+tvbrowser/src/captureplugin/drivers/defaultdriver/imgs/Up16.gif -text
 tvbrowser/src/captureplugin/tabs/Delete16.gif -text
 tvbrowser/src/clipboardplugin/Delete16.gif -text
 tvbrowser/src/clipboardplugin/clipboard.png -text
