@@ -128,6 +128,7 @@ tvbrowser/src/searchplugin/Find16.gif -text
 tvbrowser/src/searchplugin/Find24.gif -text
 tvbrowser/src/tvbrowser/core/plugin/JavaPluginProxy.java.withoutRename -text svneol=unset#application/octet-stream
 tvbrowser/src/tvbrowserdataservice/Add24.gif -text
+tvbrowser/src/tvbrowserdataservice/Information24.gif -text
 tvbrowser/src/tvbrowserdataservice/Refresh24.gif -text
 tvbrowser/src/tvbrowserdataservice/Remove24.gif -text
 tvbrowser/src/tvraterplugin/imgs/-1.gif -text
