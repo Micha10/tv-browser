@@ -1,6 +1,25 @@
 * text=auto !eol
 tvbrowser/installer/makensis.exe -text
 tvbrowser/lib/ant.jar -text
+tvbrowser/src/com/l2fprod/gui/plaf/skin/icons/Computer.gif -text
+tvbrowser/src/com/l2fprod/gui/plaf/skin/icons/DetailsView.gif -text
+tvbrowser/src/com/l2fprod/gui/plaf/skin/icons/Directory.gif -text
+tvbrowser/src/com/l2fprod/gui/plaf/skin/icons/Error.gif -text
+tvbrowser/src/com/l2fprod/gui/plaf/skin/icons/File.gif -text
+tvbrowser/src/com/l2fprod/gui/plaf/skin/icons/FloppyDrive.gif -text
+tvbrowser/src/com/l2fprod/gui/plaf/skin/icons/HardDrive.gif -text
+tvbrowser/src/com/l2fprod/gui/plaf/skin/icons/HomeFolder.gif -text
+tvbrowser/src/com/l2fprod/gui/plaf/skin/icons/Inform.gif -text
+tvbrowser/src/com/l2fprod/gui/plaf/skin/icons/JavaCup.gif -text
+tvbrowser/src/com/l2fprod/gui/plaf/skin/icons/ListView.gif -text
+tvbrowser/src/com/l2fprod/gui/plaf/skin/icons/NewFolder.gif -text
+tvbrowser/src/com/l2fprod/gui/plaf/skin/icons/Question.gif -text
+tvbrowser/src/com/l2fprod/gui/plaf/skin/icons/StandardBackground.gif -text
+tvbrowser/src/com/l2fprod/gui/plaf/skin/icons/TreeClosed.gif -text
+tvbrowser/src/com/l2fprod/gui/plaf/skin/icons/TreeLeaf.gif -text
+tvbrowser/src/com/l2fprod/gui/plaf/skin/icons/TreeOpen.gif -text
+tvbrowser/src/com/l2fprod/gui/plaf/skin/icons/UpFolder.gif -text
+tvbrowser/src/com/l2fprod/gui/plaf/skin/icons/Warn.gif -text
 tvbrowser/src/favoritesplugin/Delete24.gif -text
 tvbrowser/src/favoritesplugin/Down24.gif -text
 tvbrowser/src/favoritesplugin/Edit24.gif -text
