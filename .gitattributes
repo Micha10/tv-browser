@@ -71,6 +71,7 @@ tvbrowser/src/printplugin/Print16.gif -text
 tvbrowser/src/printplugin/Print24.gif -text
 tvbrowser/src/programinfo/Info_16to9.gif -text
 tvbrowser/src/programinfo/Info_BlackAndWhite.gif -text
+tvbrowser/src/programinfo/Info_DolbyDigital51.gif -text
 tvbrowser/src/programinfo/Info_DolbySurround.gif -text
 tvbrowser/src/programinfo/Info_Mono.gif -text
 tvbrowser/src/programinfo/Info_OriginalWithSubtitle.gif -text
