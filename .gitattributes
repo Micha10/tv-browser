@@ -111,6 +111,7 @@ tvbrowser/src/reminderplugin/Delete24.gif -text
 tvbrowser/src/reminderplugin/TipOfTheDay16.gif -text
 tvbrowser/src/searchplugin/Find16.gif -text
 tvbrowser/src/searchplugin/Find24.gif -text
+tvbrowser/src/tvbrowser/core/plugin/JavaPluginProxy.java.withoutRename -text svneol=unset#application/octet-stream
 tvbrowser/src/tvbrowserdataservice/Add24.gif -text
 tvbrowser/src/tvbrowserdataservice/Refresh24.gif -text
 tvbrowser/src/tvbrowserdataservice/Remove24.gif -text
