@@ -1,5 +1,4 @@
 * text=auto !eol
-tvbrowser/installer/makensis.exe -text
 tvbrowser/lib/ant.jar -text
 tvbrowser/src/favoritesplugin/ThumbUp16.gif -text
 tvbrowser/src/imgs/Back24.gif -text
