@@ -22,7 +22,9 @@ tvbrowser/lib/skinlf.jar -text
 tvbrowser/src/favoritesplugin/Delete24.gif -text
 tvbrowser/src/favoritesplugin/Down24.gif -text
 tvbrowser/src/favoritesplugin/Edit24.gif -text
+tvbrowser/src/favoritesplugin/Import24.gif -text
 tvbrowser/src/favoritesplugin/New24.gif -text
+tvbrowser/src/favoritesplugin/Sort24.gif -text
 tvbrowser/src/favoritesplugin/ThumbUp16.gif -text
 tvbrowser/src/favoritesplugin/Up24.gif -text
 tvbrowser/src/googlesearchplugin/google.gif -text
