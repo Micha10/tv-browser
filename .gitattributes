@@ -86,6 +86,7 @@ tvbrowser/src/tvbrowserdataservice/Add24.gif -text
 tvbrowser/src/tvbrowserdataservice/Refresh24.gif -text
 tvbrowser/src/tvbrowserdataservice/Remove24.gif -text
 tvbrowser/src/tvraterplugin/tvrater.gif -text
+tvbrowser/statcvs/statcvs.jar -text
 tvbrowser/themepacks/themepack.zip -text
 tvbrowser/win/DesktopIndicator.dll -text
 tvbrowser/win/taskicon.ico -text
