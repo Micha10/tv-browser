@@ -18,7 +18,6 @@ tvbrowser/jsmooth/skeletons/windowed-wrapper/description.skel -text svneol=unset
 tvbrowser/jsmooth/skeletons/windowed-wrapper/jwrap.exe -text
 tvbrowser/lib/bsh-2.0b1.jar -text
 tvbrowser/lib/commons-net.jar -text
-tvbrowser/lib/idw-gpl.jar -text
 tvbrowser/lib/junit.jar -text
 tvbrowser/lib/skinlf.jar -text
 tvbrowser/macosx/jarbundler-1.2.jar -text
