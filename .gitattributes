@@ -16,6 +16,7 @@ tvbrowser/jsmooth/skeletons/console-wrapper/consolewrapper.exe -text
 tvbrowser/jsmooth/skeletons/console-wrapper/description.skel -text svneol=unset#application/octet-stream
 tvbrowser/jsmooth/skeletons/windowed-wrapper/description.skel -text svneol=unset#application/octet-stream
 tvbrowser/jsmooth/skeletons/windowed-wrapper/jwrap.exe -text
+tvbrowser/lib/bsh-2.0b1.jar -text
 tvbrowser/lib/commons-net.jar -text
 tvbrowser/lib/idw-gpl.jar -text
 tvbrowser/lib/junit.jar -text
