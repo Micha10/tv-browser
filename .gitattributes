@@ -67,8 +67,13 @@ tvbrowser/src/imgs/columns2.jpg -text
 tvbrowser/src/imgs/down16.gif -text
 tvbrowser/src/imgs/splash.jpg -text
 tvbrowser/src/imgs/up16.gif -text
+tvbrowser/src/printplugin/PageSetup24.gif -text
+tvbrowser/src/printplugin/Preferences24.gif -text
 tvbrowser/src/printplugin/Print16.gif -text
 tvbrowser/src/printplugin/Print24.gif -text
+tvbrowser/src/printplugin/PrintPreview24.gif -text
+tvbrowser/src/printplugin/Properties24.gif -text
+tvbrowser/src/printplugin/Stop24.gif -text
 tvbrowser/src/programinfo/Info_16to9.gif -text
 tvbrowser/src/programinfo/Info_BlackAndWhite.gif -text
 tvbrowser/src/programinfo/Info_DolbyDigital51.gif -text
