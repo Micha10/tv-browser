@@ -22,6 +22,9 @@ tvbrowser/lib/skinlf.jar -text
 tvbrowser/src/calendarexportplugin/calendar.png -text
 tvbrowser/src/captureplugin/capturePlugin.png -text
 tvbrowser/src/captureplugin/tabs/Delete16.gif -text
+tvbrowser/src/clipboardplugin/Delete16.gif -text
+tvbrowser/src/clipboardplugin/clipboard.png -text
+tvbrowser/src/clipboardplugin/send.png -text
 tvbrowser/src/favoritesplugin/Delete24.gif -text
 tvbrowser/src/favoritesplugin/Down24.gif -text
 tvbrowser/src/favoritesplugin/Edit24.gif -text
