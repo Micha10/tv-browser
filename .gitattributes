@@ -9,6 +9,8 @@ tvbrowser/src/favoritesplugin/Edit24.gif -text
 tvbrowser/src/favoritesplugin/New24.gif -text
 tvbrowser/src/favoritesplugin/ThumbUp16.gif -text
 tvbrowser/src/favoritesplugin/Up24.gif -text
+tvbrowser/src/googlesearchplugin/google.gif -text
+tvbrowser/src/imdbsearchplugin/imdb.gif -text
 tvbrowser/src/imgs/About16.gif -text
 tvbrowser/src/imgs/Back24.gif -text
 tvbrowser/src/imgs/Down24.gif -text
