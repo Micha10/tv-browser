@@ -38,6 +38,8 @@ tvbrowser/src/imgs/columns2.jpg -text
 tvbrowser/src/imgs/down16.gif -text
 tvbrowser/src/imgs/splash.jpg -text
 tvbrowser/src/imgs/up16.gif -text
+tvbrowser/src/printplugin/Print16.gif -text
+tvbrowser/src/printplugin/Print24.gif -text
 tvbrowser/src/programinfo/Information16.gif -text
 tvbrowser/src/reminderplugin/TipOfTheDay16.gif -text
 tvbrowser/src/searchplugin/Find16.gif -text
