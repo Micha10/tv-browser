@@ -129,12 +129,14 @@ tvbrowser/src/newsplugin/Information16.gif -text
 tvbrowser/src/newsplugin/Information24.gif -text
 tvbrowser/src/newsplugin/New24.gif -text
 tvbrowser/src/printplugin/imgs/Delete16.gif -text
+tvbrowser/src/printplugin/imgs/Edit16.gif -text
 tvbrowser/src/printplugin/imgs/New16.gif -text
 tvbrowser/src/printplugin/imgs/PageSetup16.gif -text
 tvbrowser/src/printplugin/imgs/Print16.gif -text
 tvbrowser/src/printplugin/imgs/Print24.gif -text
 tvbrowser/src/printplugin/imgs/PrintPreview16.gif -text
 tvbrowser/src/printplugin/imgs/Properties16.gif -text
+tvbrowser/src/printplugin/imgs/Save16.gif -text
 tvbrowser/src/programinfo/Information16.gif -text
 tvbrowser/src/reminderplugin/Delete24.gif -text
 tvbrowser/src/reminderplugin/TipOfTheDay16.gif -text
