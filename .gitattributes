@@ -21,7 +21,7 @@ tvbrowser/lib/commons-net.jar -text
 tvbrowser/lib/forms-1.0.5.jar -text
 tvbrowser/lib/junit.jar -text
 tvbrowser/lib/skinlf.jar -text
-tvbrowser/macosx/jarbundler-1.2.jar -text
+tvbrowser/macosx/jarbundler-1.4.jar -text
 tvbrowser/src/calendarexportplugin/calendar.png -text
 tvbrowser/src/captureplugin/capturePlugin.png -text
 tvbrowser/src/captureplugin/capturePlugin24.png -text
