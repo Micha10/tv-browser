@@ -97,9 +97,6 @@ tvbrowser/src/imgs/Server16.gif -text
 tvbrowser/src/imgs/Stop16.gif -text
 tvbrowser/src/imgs/Stop24.gif -text
 tvbrowser/src/imgs/TVBrowser.ico -text
-tvbrowser/src/imgs/TVBrowser16.gif -text
-tvbrowser/src/imgs/TVBrowser16.png -text
-tvbrowser/src/imgs/TVBrowser32.gif -text
 tvbrowser/src/imgs/TimeEarly24.gif -text
 tvbrowser/src/imgs/TimeEvening24.gif -text
 tvbrowser/src/imgs/TimeMidday24.gif -text
@@ -120,6 +117,10 @@ tvbrowser/src/imgs/down16.gif -text
 tvbrowser/src/imgs/more.png -text
 tvbrowser/src/imgs/splash.png -text
 tvbrowser/src/imgs/tvabout.jpg -text
+tvbrowser/src/imgs/tvbrowser128.png -text
+tvbrowser/src/imgs/tvbrowser16.png -text
+tvbrowser/src/imgs/tvbrowser32.png -text
+tvbrowser/src/imgs/tvbrowser48.png -text
 tvbrowser/src/imgs/up16.gif -text
 tvbrowser/src/listviewplugin/listview16.gif -text
 tvbrowser/src/listviewplugin/listview24.gif -text
