@@ -28,6 +28,8 @@ tvbrowser/src/captureplugin/capturePlugin24.png -text
 tvbrowser/src/captureplugin/drivers/defaultdriver/imgs/Delete16.gif -text
 tvbrowser/src/captureplugin/drivers/defaultdriver/imgs/Down16.gif -text
 tvbrowser/src/captureplugin/drivers/defaultdriver/imgs/New16.gif -text
+tvbrowser/src/captureplugin/drivers/defaultdriver/imgs/Refresh16.gif -text
+tvbrowser/src/captureplugin/drivers/defaultdriver/imgs/Stop16.gif -text
 tvbrowser/src/captureplugin/drivers/defaultdriver/imgs/Up16.gif -text
 tvbrowser/src/captureplugin/tabs/Delete16.gif -text
 tvbrowser/src/clipboardplugin/Delete16.gif -text
