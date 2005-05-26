@@ -22,6 +22,9 @@ tvbrowser/lib/forms-1.0.5.jar -text
 tvbrowser/lib/junit.jar -text
 tvbrowser/lib/skinlf.jar -text
 tvbrowser/macosx/jarbundler-1.4.jar -text
+tvbrowser/photoshop/logo_phpBB.psd -text
+tvbrowser/photoshop/tvabout.psd -text
+tvbrowser/photoshop/tvb_splash.psd -text
 tvbrowser/src/calendarexportplugin/calendar.png -text
 tvbrowser/src/captureplugin/capturePlugin.png -text
 tvbrowser/src/captureplugin/capturePlugin24.png -text
