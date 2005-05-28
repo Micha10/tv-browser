@@ -210,6 +210,7 @@ tvbrowser/x11/mkinstalldirs -text svneol=unset#application/octet-stream
 tvbrowser/x11/src/Makefile.am -text svneol=unset#application/octet-stream
 tvbrowser/x11/src/Makefile.in -text svneol=unset#application/octet-stream
 tvbrowser/x11/src/jni_wrapper.c -text svneol=unset#application/octet-stream
+tvbrowser/x11/src/libDesktopIndicator.so -text
 tvbrowser/x11/src/logger/Makefile.am -text svneol=unset#application/octet-stream
 tvbrowser/x11/src/logger/Makefile.in -text svneol=unset#application/octet-stream
 tvbrowser/x11/src/logger/logger.c -text svneol=unset#application/octet-stream
