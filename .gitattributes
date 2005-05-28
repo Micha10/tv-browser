@@ -185,3 +185,37 @@ tvbrowser/tvdatakit/workspace/TvData.xls -text
 tvbrowser/tvdatakit/workspace/java/poi-2.5-final-20040302.jar -text
 tvbrowser/tvdatakit/workspace/java/xercesImpl.jar -text
 tvbrowser/win/DesktopIndicator.dll -text
+tvbrowser/x11/AUTHORS -text svneol=unset#application/octet-stream
+tvbrowser/x11/COPYING -text svneol=unset#application/octet-stream
+tvbrowser/x11/Doxyfile -text svneol=unset#application/octet-stream
+tvbrowser/x11/INSTALL -text svneol=unset#application/octet-stream
+tvbrowser/x11/Makefile.am -text svneol=unset#application/octet-stream
+tvbrowser/x11/Makefile.cvs -text svneol=unset#application/octet-stream
+tvbrowser/x11/Makefile.in -text svneol=unset#application/octet-stream
+tvbrowser/x11/aclocal.m4 -text svneol=unset#application/octet-stream
+tvbrowser/x11/autom4te.cache/output.0 -text svneol=unset#application/octet-stream
+tvbrowser/x11/autom4te.cache/output.1 -text svneol=unset#application/octet-stream
+tvbrowser/x11/autom4te.cache/requests -text svneol=unset#application/octet-stream
+tvbrowser/x11/autom4te.cache/traces.0 -text svneol=unset#application/octet-stream
+tvbrowser/x11/autom4te.cache/traces.1 -text svneol=unset#application/octet-stream
+tvbrowser/x11/config.guess -text svneol=unset#application/octet-stream
+tvbrowser/x11/config.h.in -text svneol=unset#application/octet-stream
+tvbrowser/x11/config.sub -text svneol=unset#application/octet-stream
+tvbrowser/x11/configure -text svneol=unset#application/octet-stream
+tvbrowser/x11/configure.in -text svneol=unset#application/octet-stream
+tvbrowser/x11/depcomp -text svneol=unset#application/octet-stream
+tvbrowser/x11/install-sh -text svneol=unset#application/octet-stream
+tvbrowser/x11/missing -text svneol=unset#application/octet-stream
+tvbrowser/x11/mkinstalldirs -text svneol=unset#application/octet-stream
+tvbrowser/x11/src/Makefile.am -text svneol=unset#application/octet-stream
+tvbrowser/x11/src/Makefile.in -text svneol=unset#application/octet-stream
+tvbrowser/x11/src/jni_wrapper.c -text svneol=unset#application/octet-stream
+tvbrowser/x11/src/logger/Makefile.am -text svneol=unset#application/octet-stream
+tvbrowser/x11/src/logger/Makefile.in -text svneol=unset#application/octet-stream
+tvbrowser/x11/src/logger/logger.c -text svneol=unset#application/octet-stream
+tvbrowser/x11/src/logger/logger.h -text svneol=unset#application/octet-stream
+tvbrowser/x11/src/x11_systray_window.c -text svneol=unset#application/octet-stream
+tvbrowser/x11/src/x11_systray_window.h -text svneol=unset#application/octet-stream
+tvbrowser/x11/x11_tvbrowser_systray.kdevelop -text svneol=unset#application/octet-stream
+tvbrowser/x11/x11_tvbrowser_systray.kdevelop.pcs -text
+tvbrowser/x11/x11_tvbrowser_systray.kdevses -text svneol=unset#application/octet-stream
