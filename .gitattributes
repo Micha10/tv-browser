@@ -22,6 +22,8 @@ tvbrowser/lib/forms-1.0.5.jar -text
 tvbrowser/lib/junit.jar -text
 tvbrowser/lib/skinlf.jar -text
 tvbrowser/macosx/jarbundler-1.4.jar -text
+tvbrowser/macosx/mkdmg -text
+tvbrowser/macosx/mkdmg_ReadMe.rtf -text svneol=unset#application/octet-stream
 tvbrowser/photoshop/logo_phpBB.psd -text
 tvbrowser/photoshop/tvabout.psd -text
 tvbrowser/photoshop/tvb_splash.psd -text
