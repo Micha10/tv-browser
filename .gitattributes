@@ -115,6 +115,7 @@ tvbrowser/src/imgs/desktop.ico -text
 tvbrowser/src/imgs/down16.gif -text
 tvbrowser/src/imgs/more.png -text
 tvbrowser/src/imgs/splash.png -text
+tvbrowser/src/imgs/systray.ico -text
 tvbrowser/src/imgs/tvabout.png -text
 tvbrowser/src/imgs/tvbrowser.icns -text
 tvbrowser/src/imgs/tvbrowser128.png -text
