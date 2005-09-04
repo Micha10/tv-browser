@@ -1,30 +1,44 @@
 * text=auto !eol
-tvbrowser/installer/Contrib/Graphics/Checks/modern.bmp -text
-tvbrowser/installer/Contrib/Graphics/Icons/murfman-install.ico -text
-tvbrowser/installer/Contrib/Graphics/Icons/murfman-uninstall.ico -text
-tvbrowser/installer/Contrib/Graphics/Wizard/win.bmp -text
-tvbrowser/installer/Contrib/UIs/modern.exe -text
-tvbrowser/installer/Contrib/UIs/modern_nodesc.exe -text
-tvbrowser/installer/Plugins/InstallOptions.dll -text
-tvbrowser/installer/Plugins/StartMenu.dll -text
-tvbrowser/installer/Plugins/UserInfo.dll -text
-tvbrowser/installer/makensis.exe -text
+tvbrowser/deployment/common/wiki.url -text svneol=unset#application/octet-stream
+tvbrowser/deployment/macosx/jarbundler-1.4.jar -text
+tvbrowser/deployment/win/desktopindicator/DesktopIndicator.dll -text
+tvbrowser/deployment/win/desktopindicator/DesktopIndicator.dsp -text svneol=unset#application/octet-stream
+tvbrowser/deployment/win/desktopindicator/DesktopIndicator.dsw -text svneol=unset#application/octet-stream
+tvbrowser/deployment/win/desktopindicator/Script.rc -text svneol=unset#application/octet-stream
+tvbrowser/deployment/win/desktopindicator/StdAfx.h -text svneol=unset#application/octet-stream
+tvbrowser/deployment/win/installer/Contrib/Graphics/Checks/modern.bmp -text
+tvbrowser/deployment/win/installer/Contrib/Graphics/Icons/murfman-install.ico -text
+tvbrowser/deployment/win/installer/Contrib/Graphics/Icons/murfman-uninstall.ico -text
+tvbrowser/deployment/win/installer/Contrib/Graphics/Wizard/win.bmp -text
+tvbrowser/deployment/win/installer/Contrib/Language[!!-~]files/English.nlf -text svneol=unset#application/octet-stream
+tvbrowser/deployment/win/installer/Contrib/Language[!!-~]files/German.nlf -text svneol=unset#application/octet-stream
+tvbrowser/deployment/win/installer/Contrib/Modern[!!-~]UI/System.nsh -text svneol=unset#application/octet-stream
+tvbrowser/deployment/win/installer/Contrib/UIs/modern.exe -text
+tvbrowser/deployment/win/installer/Contrib/UIs/modern_nodesc.exe -text
+tvbrowser/deployment/win/installer/Include/WinMessages.nsh -text svneol=unset#application/octet-stream
+tvbrowser/deployment/win/installer/Plugins/InstallOptions.dll -text
+tvbrowser/deployment/win/installer/Plugins/StartMenu.dll -text
+tvbrowser/deployment/win/installer/Plugins/UserInfo.dll -text
+tvbrowser/deployment/win/installer/makensis.exe -text
+tvbrowser/deployment/win/jsmooth/lib/dtdparser113.jar -text
+tvbrowser/deployment/win/jsmooth/lib/jox116.jar -text
+tvbrowser/deployment/win/jsmooth/lib/jsmoothgen-ant.jar -text
+tvbrowser/deployment/win/jsmooth/lib/jsmoothgen.jar -text
+tvbrowser/deployment/win/jsmooth/skeletons/console-wrapper/consolewrapper.exe -text
+tvbrowser/deployment/win/jsmooth/skeletons/windowed-wrapper/jwrap.exe -text
+tvbrowser/deployment/x11/aclocal.m4 -text svneol=unset#application/octet-stream
+tvbrowser/deployment/x11/config.guess -text svneol=unset#application/octet-stream
+tvbrowser/deployment/x11/src/libDesktopIndicator.so -text
+tvbrowser/deployment/x11/x11_tvbrowser_systray.kdevelop.pcs -text
 tvbrowser/jsmooth/lib/dtdparser113.jar -text
 tvbrowser/jsmooth/lib/jox116.jar -text
 tvbrowser/jsmooth/lib/jsmoothgen-ant.jar -text
-tvbrowser/jsmooth/lib/jsmoothgen.jar -text
-tvbrowser/jsmooth/skeletons/console-wrapper/consolewrapper.exe -text
-tvbrowser/jsmooth/skeletons/console-wrapper/description.skel -text svneol=unset#application/octet-stream
-tvbrowser/jsmooth/skeletons/windowed-wrapper/description.skel -text svneol=unset#application/octet-stream
-tvbrowser/jsmooth/skeletons/windowed-wrapper/jwrap.exe -text
 tvbrowser/lib/bsh-2.0b1.jar -text
 tvbrowser/lib/commons-net.jar -text
 tvbrowser/lib/forms-1.0.5.jar -text
 tvbrowser/lib/junit.jar -text
 tvbrowser/lib/skinlf.jar -text
 tvbrowser/macosx/jarbundler-1.4.jar -text
-tvbrowser/macosx/mkdmg -text
-tvbrowser/macosx/mkdmg_ReadMe.rtf -text svneol=unset#application/octet-stream
 tvbrowser/photoshop/logo_phpBB.psd -text
 tvbrowser/photoshop/tvabout.psd -text
 tvbrowser/photoshop/tvb_splash.psd -text
@@ -181,39 +195,3 @@ tvbrowser/themepacks/themepack.zip -text
 tvbrowser/tvdatakit/workspace/TvData.xls -text
 tvbrowser/tvdatakit/workspace/java/poi-2.5-final-20040302.jar -text
 tvbrowser/tvdatakit/workspace/java/xercesImpl.jar -text
-tvbrowser/win/DesktopIndicator.dll -text
-tvbrowser/x11/AUTHORS -text svneol=unset#application/octet-stream
-tvbrowser/x11/COPYING -text svneol=unset#application/octet-stream
-tvbrowser/x11/Doxyfile -text svneol=unset#application/octet-stream
-tvbrowser/x11/INSTALL -text svneol=unset#application/octet-stream
-tvbrowser/x11/Makefile.am -text svneol=unset#application/octet-stream
-tvbrowser/x11/Makefile.cvs -text svneol=unset#application/octet-stream
-tvbrowser/x11/Makefile.in -text svneol=unset#application/octet-stream
-tvbrowser/x11/aclocal.m4 -text svneol=unset#application/octet-stream
-tvbrowser/x11/autom4te.cache/output.0 -text svneol=unset#application/octet-stream
-tvbrowser/x11/autom4te.cache/output.1 -text svneol=unset#application/octet-stream
-tvbrowser/x11/autom4te.cache/requests -text svneol=unset#application/octet-stream
-tvbrowser/x11/autom4te.cache/traces.0 -text svneol=unset#application/octet-stream
-tvbrowser/x11/autom4te.cache/traces.1 -text svneol=unset#application/octet-stream
-tvbrowser/x11/config.guess -text svneol=unset#application/octet-stream
-tvbrowser/x11/config.h.in -text svneol=unset#application/octet-stream
-tvbrowser/x11/config.sub -text svneol=unset#application/octet-stream
-tvbrowser/x11/configure -text svneol=unset#application/octet-stream
-tvbrowser/x11/configure.in -text svneol=unset#application/octet-stream
-tvbrowser/x11/depcomp -text svneol=unset#application/octet-stream
-tvbrowser/x11/install-sh -text svneol=unset#application/octet-stream
-tvbrowser/x11/missing -text svneol=unset#application/octet-stream
-tvbrowser/x11/mkinstalldirs -text svneol=unset#application/octet-stream
-tvbrowser/x11/src/Makefile.am -text svneol=unset#application/octet-stream
-tvbrowser/x11/src/Makefile.in -text svneol=unset#application/octet-stream
-tvbrowser/x11/src/jni_wrapper.c -text svneol=unset#application/octet-stream
-tvbrowser/x11/src/libDesktopIndicator.so -text
-tvbrowser/x11/src/logger/Makefile.am -text svneol=unset#application/octet-stream
-tvbrowser/x11/src/logger/Makefile.in -text svneol=unset#application/octet-stream
-tvbrowser/x11/src/logger/logger.c -text svneol=unset#application/octet-stream
-tvbrowser/x11/src/logger/logger.h -text svneol=unset#application/octet-stream
-tvbrowser/x11/src/x11_systray_window.c -text svneol=unset#application/octet-stream
-tvbrowser/x11/src/x11_systray_window.h -text svneol=unset#application/octet-stream
-tvbrowser/x11/x11_tvbrowser_systray.kdevelop -text svneol=unset#application/octet-stream
-tvbrowser/x11/x11_tvbrowser_systray.kdevelop.pcs -text
-tvbrowser/x11/x11_tvbrowser_systray.kdevses -text svneol=unset#application/octet-stream
