@@ -81,6 +81,7 @@ tvbrowser/src/imgs/Forward24.gif -text
 tvbrowser/src/imgs/Help16.gif -text
 tvbrowser/src/imgs/Host16.gif -text
 tvbrowser/src/imgs/Import16.gif -text
+tvbrowser/src/imgs/Import24.gif -text
 tvbrowser/src/imgs/Info_16to9.gif -text
 tvbrowser/src/imgs/Info_BlackAndWhite.gif -text
 tvbrowser/src/imgs/Info_DolbyDigital51.gif -text
@@ -94,6 +95,8 @@ tvbrowser/src/imgs/Jar16.gif -text
 tvbrowser/src/imgs/New16.gif -text
 tvbrowser/src/imgs/New24.gif -text
 tvbrowser/src/imgs/Open16.gif -text
+tvbrowser/src/imgs/Play16.gif -text
+tvbrowser/src/imgs/Play24.gif -text
 tvbrowser/src/imgs/Preferences16.gif -text
 tvbrowser/src/imgs/Preferences24.gif -text
 tvbrowser/src/imgs/Refresh16.gif -text
@@ -102,6 +105,8 @@ tvbrowser/src/imgs/Search16.gif -text
 tvbrowser/src/imgs/SendToPlugin.png -text
 tvbrowser/src/imgs/SendToPlugin24.png -text
 tvbrowser/src/imgs/Server16.gif -text
+tvbrowser/src/imgs/StepForward16.gif -text
+tvbrowser/src/imgs/StepForward24.gif -text
 tvbrowser/src/imgs/Stop16.gif -text
 tvbrowser/src/imgs/Stop24.gif -text
 tvbrowser/src/imgs/TVBrowser.ico -text
