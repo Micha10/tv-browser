@@ -67,7 +67,6 @@ tvbrowser/src/clipboardplugin/clipboard24.png -text
 tvbrowser/src/emailplugin/email.gif -text
 tvbrowser/src/favoritesplugin/Delete16.gif -text
 tvbrowser/src/favoritesplugin/Delete24.gif -text
-tvbrowser/src/favoritesplugin/Down24.gif -text
 tvbrowser/src/favoritesplugin/Edit16.gif -text
 tvbrowser/src/favoritesplugin/Edit24.gif -text
 tvbrowser/src/favoritesplugin/Import24.gif -text
@@ -75,7 +74,6 @@ tvbrowser/src/favoritesplugin/New16.gif -text
 tvbrowser/src/favoritesplugin/New24.gif -text
 tvbrowser/src/favoritesplugin/Sort24.gif -text
 tvbrowser/src/favoritesplugin/ThumbUp16.gif -text
-tvbrowser/src/favoritesplugin/Up24.gif -text
 tvbrowser/src/growlplugin/growlclaw.png -text
 tvbrowser/src/imgs/About16.gif -text
 tvbrowser/src/imgs/About24.gif -text
