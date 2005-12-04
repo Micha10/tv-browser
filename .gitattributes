@@ -82,7 +82,6 @@ tvbrowser/src/imgs/Bookmarks16.gif -text
 tvbrowser/src/imgs/Bookmarks24.gif -text
 tvbrowser/src/imgs/Delete16.gif -text
 tvbrowser/src/imgs/Delete24.gif svneol=native#unset
-tvbrowser/src/imgs/Down24.gif -text
 tvbrowser/src/imgs/Export16.gif -text
 tvbrowser/src/imgs/Filter16.png -text
 tvbrowser/src/imgs/Filter24.png -text
@@ -126,7 +125,6 @@ tvbrowser/src/imgs/TimeEvening24.gif -text
 tvbrowser/src/imgs/TimeMidday24.gif -text
 tvbrowser/src/imgs/TimeMorning24.gif -text
 tvbrowser/src/imgs/TimeNow24.gif -text
-tvbrowser/src/imgs/Up24.gif -text
 tvbrowser/src/imgs/WebComponent16.gif -text
 tvbrowser/src/imgs/background.jpg -text
 tvbrowser/src/imgs/background2.jpg -text
@@ -137,7 +135,6 @@ tvbrowser/src/imgs/columns_early.jpg -text
 tvbrowser/src/imgs/columns_edge.jpg -text
 tvbrowser/src/imgs/columns_evening.jpg -text
 tvbrowser/src/imgs/columns_midday.jpg -text
-tvbrowser/src/imgs/down16.gif -text
 tvbrowser/src/imgs/more.png -text
 tvbrowser/src/imgs/splash.png -text
 tvbrowser/src/imgs/systray.ico -text
@@ -146,7 +143,6 @@ tvbrowser/src/imgs/tvbrowser128.png -text
 tvbrowser/src/imgs/tvbrowser16.png -text
 tvbrowser/src/imgs/tvbrowser32.png -text
 tvbrowser/src/imgs/tvbrowser48.png -text
-tvbrowser/src/imgs/up16.gif -text
 tvbrowser/src/justmark/kaddressbook2.png -text
 tvbrowser/src/listviewplugin/listview16.gif -text
 tvbrowser/src/listviewplugin/listview24.gif -text
