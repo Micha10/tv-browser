@@ -36,16 +36,20 @@ tvbrowser/images/additional/tvbrowser.icns -text
 tvbrowser/images/photoshop/logo_phpBB.psd -text
 tvbrowser/images/photoshop/tvabout.psd -text
 tvbrowser/images/photoshop/tvb_splash.psd -text
+tvbrowser/images/themes/tango/16x16/actions/edit-find.png -text
 tvbrowser/images/themes/tango/16x16/actions/go-down.png -text
 tvbrowser/images/themes/tango/16x16/actions/go-next.png -text
 tvbrowser/images/themes/tango/16x16/actions/go-previous.png -text
 tvbrowser/images/themes/tango/16x16/actions/go-up.png -text
 tvbrowser/images/themes/tango/16x16/actions/mail-message-new.png -text
+tvbrowser/images/themes/tango/16x16/actions/system-search.png -text
+tvbrowser/images/themes/tango/22x22/actions/edit-find.png -text
 tvbrowser/images/themes/tango/22x22/actions/go-down.png -text
 tvbrowser/images/themes/tango/22x22/actions/go-next.png -text
 tvbrowser/images/themes/tango/22x22/actions/go-previous.png -text
 tvbrowser/images/themes/tango/22x22/actions/go-up.png -text
 tvbrowser/images/themes/tango/22x22/actions/mail-message-new.png -text
+tvbrowser/images/themes/tango/22x22/actions/system-search.png -text
 tvbrowser/lib/bsh-2.0b1.jar -text
 tvbrowser/lib/commons-net.jar -text
 tvbrowser/lib/forms-1.0.5.jar -text
@@ -76,7 +80,6 @@ tvbrowser/src/favoritesplugin/ThumbUp16.gif -text
 tvbrowser/src/growlplugin/growlclaw.png -text
 tvbrowser/src/imgs/About16.gif -text
 tvbrowser/src/imgs/About24.gif -text
-tvbrowser/src/imgs/Back24.gif -text
 tvbrowser/src/imgs/Bookmarks16.gif -text
 tvbrowser/src/imgs/Bookmarks24.gif -text
 tvbrowser/src/imgs/Delete16.gif -text
@@ -86,8 +89,6 @@ tvbrowser/src/imgs/Filter16.png -text
 tvbrowser/src/imgs/Filter24.png -text
 tvbrowser/src/imgs/FilterSet16.png -text
 tvbrowser/src/imgs/FilterSet24.png -text
-tvbrowser/src/imgs/Find24.gif -text
-tvbrowser/src/imgs/Forward24.gif -text
 tvbrowser/src/imgs/Help16.gif -text
 tvbrowser/src/imgs/Host16.gif -text
 tvbrowser/src/imgs/Import16.gif -text
@@ -163,13 +164,10 @@ tvbrowser/src/printplugin/imgs/Print24.gif -text
 tvbrowser/src/printplugin/imgs/PrintPreview16.gif -text
 tvbrowser/src/printplugin/imgs/Properties16.gif -text
 tvbrowser/src/printplugin/imgs/Save16.gif -text
-tvbrowser/src/programinfo/Find16.gif -text
 tvbrowser/src/programinfo/Information16.gif -text
 tvbrowser/src/reminderplugin/Delete24.gif -text
 tvbrowser/src/reminderplugin/TipOfTheDay16.gif -text
 tvbrowser/src/reminderplugin/TipOfTheDay24.gif -text
-tvbrowser/src/searchplugin/Find16.gif -text
-tvbrowser/src/searchplugin/Find24.gif -text
 tvbrowser/src/tvbrowser/core/plugin/JavaPluginProxy.java.withoutRename -text svneol=unset#application/octet-stream
 tvbrowser/src/tvbrowserdataservice/Add24.gif -text
 tvbrowser/src/tvbrowserdataservice/Information24.gif -text
