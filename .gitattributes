@@ -39,6 +39,7 @@ tvbrowser/images/photoshop/tvb_splash.psd -text
 tvbrowser/images/themes/tango/16x16/actions/document-new.png -text
 tvbrowser/images/themes/tango/16x16/actions/edit-delete.png -text
 tvbrowser/images/themes/tango/16x16/actions/edit-find.png -text
+tvbrowser/images/themes/tango/16x16/actions/edit-paste.png -text
 tvbrowser/images/themes/tango/16x16/actions/go-down.png -text
 tvbrowser/images/themes/tango/16x16/actions/go-next.png -text
 tvbrowser/images/themes/tango/16x16/actions/go-previous.png -text
@@ -52,6 +53,7 @@ tvbrowser/images/themes/tango/16x16/categories/preferences-desktop.png -text
 tvbrowser/images/themes/tango/22x22/actions/document-new.png -text
 tvbrowser/images/themes/tango/22x22/actions/edit-delete.png -text
 tvbrowser/images/themes/tango/22x22/actions/edit-find.png -text
+tvbrowser/images/themes/tango/22x22/actions/edit-paste.png -text
 tvbrowser/images/themes/tango/22x22/actions/go-down.png -text
 tvbrowser/images/themes/tango/22x22/actions/go-next.png -text
 tvbrowser/images/themes/tango/22x22/actions/go-previous.png -text
@@ -72,8 +74,6 @@ tvbrowser/src/captureplugin/capturePlugin.png -text
 tvbrowser/src/captureplugin/capturePlugin24.png -text
 tvbrowser/src/captureplugin/drivers/defaultdriver/imgs/Down16.gif -text
 tvbrowser/src/captureplugin/drivers/defaultdriver/imgs/Up16.gif -text
-tvbrowser/src/clipboardplugin/clipboard.png -text
-tvbrowser/src/clipboardplugin/clipboard24.png -text
 tvbrowser/src/favoritesplugin/Edit16.gif -text
 tvbrowser/src/favoritesplugin/Edit24.gif -text
 tvbrowser/src/favoritesplugin/Import24.gif -text
