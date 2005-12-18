@@ -54,6 +54,7 @@ tvbrowser/images/themes/tango/16x16/actions/system-search.png -text
 tvbrowser/images/themes/tango/16x16/actions/view-refresh.png -text
 tvbrowser/images/themes/tango/16x16/apps/appointment.png -text
 tvbrowser/images/themes/tango/16x16/apps/bookmark.png -text
+tvbrowser/images/themes/tango/16x16/apps/internet-news-reader.png -text
 tvbrowser/images/themes/tango/16x16/apps/system-software-update.png -text
 tvbrowser/images/themes/tango/16x16/categories/preferences-desktop.png -text
 tvbrowser/images/themes/tango/22x22/actions/appointment-new.png -text
@@ -74,6 +75,7 @@ tvbrowser/images/themes/tango/22x22/actions/system-search.png -text
 tvbrowser/images/themes/tango/22x22/actions/view-refresh.png -text
 tvbrowser/images/themes/tango/22x22/apps/appointment.png -text
 tvbrowser/images/themes/tango/22x22/apps/bookmark.png -text
+tvbrowser/images/themes/tango/22x22/apps/internet-news-reader.png -text
 tvbrowser/images/themes/tango/22x22/apps/system-software-update.png -text
 tvbrowser/images/themes/tango/22x22/categories/preferences-desktop.png -text
 tvbrowser/lib/bsh-2.0b1.jar -text
@@ -143,8 +145,6 @@ tvbrowser/src/mediacenterplugin/images/default_blue.jpg -text
 tvbrowser/src/mediacenterplugin/images/krdc16.png -text
 tvbrowser/src/mediacenterplugin/images/krdc24.png -text
 tvbrowser/src/microtvbrowserplugin/M16.png -text
-tvbrowser/src/newsplugin/Information16.gif -text
-tvbrowser/src/newsplugin/Information24.gif -text
 tvbrowser/src/onlinereminder/icons/bell16.png -text
 tvbrowser/src/onlinereminder/icons/bell22.png -text
 tvbrowser/src/printplugin/imgs/Edit16.gif -text
