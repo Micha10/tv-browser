@@ -90,8 +90,6 @@ tvbrowser/lib/forms-1.0.5.jar -text
 tvbrowser/lib/junit.jar -text
 tvbrowser/lib/skinlf.jar -text
 tvbrowser/src/calendarexportplugin/calendar.png -text
-tvbrowser/src/captureplugin/capturePlugin.png -text
-tvbrowser/src/captureplugin/capturePlugin24.png -text
 tvbrowser/src/captureplugin/drivers/defaultdriver/imgs/Down16.gif -text
 tvbrowser/src/captureplugin/drivers/defaultdriver/imgs/Up16.gif -text
 tvbrowser/src/favoritesplugin/Import24.gif -text
@@ -153,13 +151,9 @@ tvbrowser/src/mediacenterplugin/images/krdc24.png -text
 tvbrowser/src/microtvbrowserplugin/M16.png -text
 tvbrowser/src/onlinereminder/icons/bell16.png -text
 tvbrowser/src/onlinereminder/icons/bell22.png -text
-tvbrowser/src/printplugin/imgs/Edit16.gif -text
 tvbrowser/src/printplugin/imgs/PageSetup16.gif -text
-tvbrowser/src/printplugin/imgs/Print16.gif -text
-tvbrowser/src/printplugin/imgs/Print24.gif -text
 tvbrowser/src/printplugin/imgs/PrintPreview16.gif -text
 tvbrowser/src/printplugin/imgs/Properties16.gif -text
-tvbrowser/src/printplugin/imgs/Save16.gif -text
 tvbrowser/src/tvbrowser/core/plugin/JavaPluginProxy.java.withoutRename -text svneol=unset#application/octet-stream
 tvbrowser/src/tvbrowserdataservice/Add24.gif -text
 tvbrowser/src/tvbrowserdataservice/Information24.gif -text
@@ -174,7 +168,6 @@ tvbrowser/src/tvraterplugin/imgs/5.gif -text
 tvbrowser/src/tvraterplugin/imgs/details16.gif -text
 tvbrowser/src/tvraterplugin/imgs/listview16.gif -text
 tvbrowser/src/tvraterplugin/imgs/tvrater.gif -text
-tvbrowser/src/webplugin/Edit16.gif -text
 tvbrowser/src/webplugin/Search16.gif -text
 tvbrowser/src/webplugin/altavista.gif -text
 tvbrowser/src/webplugin/google.gif -text
