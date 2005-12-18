@@ -57,7 +57,9 @@ tvbrowser/images/themes/tango/16x16/actions/system-search.png -text
 tvbrowser/images/themes/tango/16x16/actions/view-refresh.png -text
 tvbrowser/images/themes/tango/16x16/apps/appointment.png -text
 tvbrowser/images/themes/tango/16x16/apps/bookmark.png -text
+tvbrowser/images/themes/tango/16x16/apps/help-browser.png -text
 tvbrowser/images/themes/tango/16x16/apps/internet-news-reader.png -text
+tvbrowser/images/themes/tango/16x16/apps/internet-web-browser.png -text
 tvbrowser/images/themes/tango/16x16/apps/system-software-update.png -text
 tvbrowser/images/themes/tango/16x16/categories/preferences-desktop.png -text
 tvbrowser/images/themes/tango/16x16/devices/printer.png -text
@@ -83,7 +85,9 @@ tvbrowser/images/themes/tango/22x22/actions/system-search.png -text
 tvbrowser/images/themes/tango/22x22/actions/view-refresh.png -text
 tvbrowser/images/themes/tango/22x22/apps/appointment.png -text
 tvbrowser/images/themes/tango/22x22/apps/bookmark.png -text
+tvbrowser/images/themes/tango/22x22/apps/help-browser.png -text
 tvbrowser/images/themes/tango/22x22/apps/internet-news-reader.png -text
+tvbrowser/images/themes/tango/22x22/apps/internet-web-browser.png -text
 tvbrowser/images/themes/tango/22x22/apps/system-software-update.png -text
 tvbrowser/images/themes/tango/22x22/categories/preferences-desktop.png -text
 tvbrowser/images/themes/tango/22x22/devices/printer.png -text
