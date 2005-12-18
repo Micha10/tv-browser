@@ -40,6 +40,8 @@ tvbrowser/images/themes/tango/16x16/actions/appointment-new.png -text
 tvbrowser/images/themes/tango/16x16/actions/bookmark-new.png -text
 tvbrowser/images/themes/tango/16x16/actions/document-edit.png -text
 tvbrowser/images/themes/tango/16x16/actions/document-new.png -text
+tvbrowser/images/themes/tango/16x16/actions/document-print-preview.png -text
+tvbrowser/images/themes/tango/16x16/actions/document-properties.png -text
 tvbrowser/images/themes/tango/16x16/actions/document-save.png -text
 tvbrowser/images/themes/tango/16x16/actions/edit-copy.png -text
 tvbrowser/images/themes/tango/16x16/actions/edit-delete.png -text
@@ -63,6 +65,8 @@ tvbrowser/images/themes/tango/16x16/mimetypes/video-x-generic.png -text
 tvbrowser/images/themes/tango/22x22/actions/appointment-new.png -text
 tvbrowser/images/themes/tango/22x22/actions/document-edit.png -text
 tvbrowser/images/themes/tango/22x22/actions/document-new.png -text
+tvbrowser/images/themes/tango/22x22/actions/document-print-preview.png -text
+tvbrowser/images/themes/tango/22x22/actions/document-properties.png -text
 tvbrowser/images/themes/tango/22x22/actions/document-save.png -text
 tvbrowser/images/themes/tango/22x22/actions/edit-copy.png -text
 tvbrowser/images/themes/tango/22x22/actions/edit-delete.png -text
@@ -151,9 +155,6 @@ tvbrowser/src/mediacenterplugin/images/krdc24.png -text
 tvbrowser/src/microtvbrowserplugin/M16.png -text
 tvbrowser/src/onlinereminder/icons/bell16.png -text
 tvbrowser/src/onlinereminder/icons/bell22.png -text
-tvbrowser/src/printplugin/imgs/PageSetup16.gif -text
-tvbrowser/src/printplugin/imgs/PrintPreview16.gif -text
-tvbrowser/src/printplugin/imgs/Properties16.gif -text
 tvbrowser/src/tvbrowser/core/plugin/JavaPluginProxy.java.withoutRename -text svneol=unset#application/octet-stream
 tvbrowser/src/tvbrowserdataservice/Add24.gif -text
 tvbrowser/src/tvbrowserdataservice/Information24.gif -text
