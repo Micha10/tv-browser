@@ -115,8 +115,6 @@ tvbrowser/src/imgs/Filter16.png -text
 tvbrowser/src/imgs/Filter24.png -text
 tvbrowser/src/imgs/FilterSet16.png -text
 tvbrowser/src/imgs/FilterSet24.png -text
-tvbrowser/src/imgs/Help16.gif -text
-tvbrowser/src/imgs/Host16.gif -text
 tvbrowser/src/imgs/Import16.gif -text
 tvbrowser/src/imgs/Import24.gif -text
 tvbrowser/src/imgs/Info_16to9.gif -text
@@ -132,7 +130,6 @@ tvbrowser/src/imgs/Jar16.gif -text
 tvbrowser/src/imgs/Open16.gif -text
 tvbrowser/src/imgs/Play16.gif -text
 tvbrowser/src/imgs/Play24.gif -text
-tvbrowser/src/imgs/Search16.gif -text
 tvbrowser/src/imgs/SendToPlugin.png -text
 tvbrowser/src/imgs/SendToPlugin24.png -text
 tvbrowser/src/imgs/Server16.gif -text
