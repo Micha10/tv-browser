@@ -115,8 +115,6 @@ tvbrowser/lib/junit.jar -text
 tvbrowser/lib/skinlf.jar -text
 tvbrowser/src/favoritesplugin/Sort24.gif -text
 tvbrowser/src/growlplugin/growlclaw.png -text
-tvbrowser/src/imgs/About16.gif -text
-tvbrowser/src/imgs/About24.gif -text
 tvbrowser/src/imgs/Bookmarks16.gif -text
 tvbrowser/src/imgs/Bookmarks24.gif -text
 tvbrowser/src/imgs/Filter16.png -text
@@ -133,8 +131,6 @@ tvbrowser/src/imgs/Info_Stereo.gif -text
 tvbrowser/src/imgs/Info_SubtitleForAurallyHandicapped.gif -text
 tvbrowser/src/imgs/Info_TwoChannelTone.gif -text
 tvbrowser/src/imgs/Jar16.gif -text
-tvbrowser/src/imgs/SendToPlugin.png -text
-tvbrowser/src/imgs/SendToPlugin24.png -text
 tvbrowser/src/imgs/Server16.gif -text
 tvbrowser/src/imgs/beanshell.png -text
 tvbrowser/src/imgs/columns2.jpg -text
