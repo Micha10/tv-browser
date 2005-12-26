@@ -36,6 +36,8 @@ tvbrowser/images/additional/tvbrowser.icns -text
 tvbrowser/images/photoshop/logo_phpBB.psd -text
 tvbrowser/images/photoshop/tvabout.psd -text
 tvbrowser/images/photoshop/tvb_splash.psd -text
+tvbrowser/images/photoshop/tvrater/tvrater.psd -text
+tvbrowser/images/photoshop/tvrater/tvrater22.psd -text
 tvbrowser/images/themes/tango/16x16/actions/appointment-new.png -text
 tvbrowser/images/themes/tango/16x16/actions/bookmark-new.png -text
 tvbrowser/images/themes/tango/16x16/actions/document-edit.png -text
@@ -166,8 +168,6 @@ tvbrowser/src/tvraterplugin/imgs/2.png -text
 tvbrowser/src/tvraterplugin/imgs/3.png -text
 tvbrowser/src/tvraterplugin/imgs/4.png -text
 tvbrowser/src/tvraterplugin/imgs/5.png -text
-tvbrowser/src/tvraterplugin/imgs/details16.gif -text
-tvbrowser/src/tvraterplugin/imgs/listview16.gif -text
 tvbrowser/src/tvraterplugin/imgs/tvrater.png -text
 tvbrowser/src/tvraterplugin/imgs/tvrater22.png -text
 tvbrowser/src/webplugin/altavista.gif -text
