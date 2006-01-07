@@ -115,7 +115,6 @@ tvbrowser/lib/commons-net.jar -text
 tvbrowser/lib/forms-1.0.5.jar -text
 tvbrowser/lib/junit.jar -text
 tvbrowser/lib/skinlf.jar -text
-tvbrowser/src/favoritesplugin/Sort24.gif -text
 tvbrowser/src/growlplugin/growlclaw.png -text
 tvbrowser/src/imgs/Bookmarks16.gif -text
 tvbrowser/src/imgs/Bookmarks22.gif -text
@@ -158,6 +157,7 @@ tvbrowser/src/microtvbrowserplugin/M16.png -text
 tvbrowser/src/onlinereminder/icons/bell16.png -text
 tvbrowser/src/onlinereminder/icons/bell22.png -text
 tvbrowser/src/tvbrowser/core/plugin/JavaPluginProxy.java.withoutRename -text svneol=unset#application/octet-stream
+tvbrowser/src/tvbrowser/extras/favoritesplugin/Sort24.gif -text
 tvbrowser/src/tvbrowserdataservice/Add24.gif -text
 tvbrowser/src/tvbrowserdataservice/Information24.gif -text
 tvbrowser/src/tvbrowserdataservice/Remove24.gif -text
