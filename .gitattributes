@@ -114,6 +114,7 @@ tvbrowser/lib/bsh-2.0b1.jar -text
 tvbrowser/lib/commons-net.jar -text
 tvbrowser/lib/forms-1.0.5.jar -text
 tvbrowser/lib/junit.jar -text
+tvbrowser/lib/l2fprod-common-tasks.jar -text
 tvbrowser/lib/skinlf.jar -text
 tvbrowser/src/growlplugin/growlclaw.png -text
 tvbrowser/src/imgs/Bookmarks16.gif -text
