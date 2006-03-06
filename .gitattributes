@@ -70,6 +70,7 @@ tvbrowser/images/themes/tango/16x16/apps/internet-news-reader.png -text
 tvbrowser/images/themes/tango/16x16/apps/internet-web-browser.png -text
 tvbrowser/images/themes/tango/16x16/apps/office-calendar.png -text
 tvbrowser/images/themes/tango/16x16/apps/preferences-desktop-font.png -text
+tvbrowser/images/themes/tango/16x16/apps/preferences-desktop-locale.png -text
 tvbrowser/images/themes/tango/16x16/apps/system-software-update.png -text
 tvbrowser/images/themes/tango/16x16/categories/preferences-desktop.png -text
 tvbrowser/images/themes/tango/16x16/devices/printer.png -text
@@ -109,6 +110,7 @@ tvbrowser/images/themes/tango/22x22/apps/internet-news-reader.png -text
 tvbrowser/images/themes/tango/22x22/apps/internet-web-browser.png -text
 tvbrowser/images/themes/tango/22x22/apps/office-calendar.png -text
 tvbrowser/images/themes/tango/22x22/apps/preferences-desktop-font.png -text
+tvbrowser/images/themes/tango/22x22/apps/preferences-desktop-locale.png -text
 tvbrowser/images/themes/tango/22x22/apps/system-software-update.png -text
 tvbrowser/images/themes/tango/22x22/categories/preferences-desktop.png -text
 tvbrowser/images/themes/tango/22x22/devices/printer.png -text
