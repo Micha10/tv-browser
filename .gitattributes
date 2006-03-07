@@ -71,6 +71,8 @@ tvbrowser/images/themes/tango/16x16/apps/internet-web-browser.png -text
 tvbrowser/images/themes/tango/16x16/apps/office-calendar.png -text
 tvbrowser/images/themes/tango/16x16/apps/preferences-desktop-font.png -text
 tvbrowser/images/themes/tango/16x16/apps/preferences-desktop-locale.png -text
+tvbrowser/images/themes/tango/16x16/apps/preferences-desktop-theme.png -text
+tvbrowser/images/themes/tango/16x16/apps/preferences-system-network-proxy.png -text
 tvbrowser/images/themes/tango/16x16/apps/system-software-update.png -text
 tvbrowser/images/themes/tango/16x16/categories/preferences-desktop.png -text
 tvbrowser/images/themes/tango/16x16/devices/printer.png -text
@@ -111,6 +113,8 @@ tvbrowser/images/themes/tango/22x22/apps/internet-web-browser.png -text
 tvbrowser/images/themes/tango/22x22/apps/office-calendar.png -text
 tvbrowser/images/themes/tango/22x22/apps/preferences-desktop-font.png -text
 tvbrowser/images/themes/tango/22x22/apps/preferences-desktop-locale.png -text
+tvbrowser/images/themes/tango/22x22/apps/preferences-desktop-theme.png -text
+tvbrowser/images/themes/tango/22x22/apps/preferences-system-network-proxy.png -text
 tvbrowser/images/themes/tango/22x22/apps/system-software-update.png -text
 tvbrowser/images/themes/tango/22x22/categories/preferences-desktop.png -text
 tvbrowser/images/themes/tango/22x22/devices/printer.png -text
@@ -141,7 +145,6 @@ tvbrowser/src/imgs/Info_Stereo.gif -text
 tvbrowser/src/imgs/Info_SubtitleForAurallyHandicapped.gif -text
 tvbrowser/src/imgs/Info_TwoChannelTone.gif -text
 tvbrowser/src/imgs/Jar16.gif -text
-tvbrowser/src/imgs/Server16.gif -text
 tvbrowser/src/imgs/beanshell.png -text
 tvbrowser/src/imgs/columns2.jpg -text
 tvbrowser/src/imgs/columns_afternoon.jpg -text
