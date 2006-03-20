@@ -77,6 +77,7 @@ tvbrowser/images/themes/tango/16x16/apps/system-software-update.png -text
 tvbrowser/images/themes/tango/16x16/categories/preferences-desktop.png -text
 tvbrowser/images/themes/tango/16x16/devices/printer.png -text
 tvbrowser/images/themes/tango/16x16/mimetypes/video-x-generic.png -text
+tvbrowser/images/themes/tango/16x16/mimetypes/x-office-calendar.png -text
 tvbrowser/images/themes/tango/16x16/status/close-over.png -text
 tvbrowser/images/themes/tango/16x16/status/dialog-information.png -text
 tvbrowser/images/themes/tango/16x16/status/dialog-warning.png -text
@@ -119,6 +120,7 @@ tvbrowser/images/themes/tango/22x22/apps/system-software-update.png -text
 tvbrowser/images/themes/tango/22x22/categories/preferences-desktop.png -text
 tvbrowser/images/themes/tango/22x22/devices/printer.png -text
 tvbrowser/images/themes/tango/22x22/mimetypes/video-x-generic.png -text
+tvbrowser/images/themes/tango/22x22/mimetypes/x-office-calendar.png -text
 tvbrowser/images/themes/tango/22x22/status/dialog-information.png -text
 tvbrowser/images/themes/tango/22x22/status/folder-open.png -text
 tvbrowser/lib/bsh-2.0b1.jar -text
