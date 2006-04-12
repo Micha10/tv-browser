@@ -184,6 +184,8 @@ tvbrowser/src/tvraterplugin/imgs/4.png -text
 tvbrowser/src/tvraterplugin/imgs/5.png -text
 tvbrowser/src/tvraterplugin/imgs/tvrater.png -text
 tvbrowser/src/tvraterplugin/imgs/tvrater22.png -text
+tvbrowser/src/util/program/program.properties -text
+tvbrowser/src/util/program/program_de.properties -text
 tvbrowser/src/webplugin/altavista.gif -text
 tvbrowser/src/webplugin/google.gif -text
 tvbrowser/src/webplugin/imdb.gif -text
