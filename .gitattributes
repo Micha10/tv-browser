@@ -170,6 +170,7 @@ tvbrowser/src/mediacenterplugin/images/default_blue.jpg -text
 tvbrowser/src/mediacenterplugin/images/krdc16.png -text
 tvbrowser/src/mediacenterplugin/images/krdc24.png -text
 tvbrowser/src/microtvbrowserplugin/M16.png -text
+tvbrowser/src/printplugin/printer/singleprogramprinter/DocumentRenderer.java -text
 tvbrowser/src/tvbrowser/core/plugin/JavaPluginProxy.java.withoutRename -text svneol=unset#application/octet-stream
 tvbrowser/src/tvbrowser/extras/favoritesplugin/Sort24.gif -text
 tvbrowser/src/tvbrowser/ui/settings/TrayImportantSettingsTab.java -text
