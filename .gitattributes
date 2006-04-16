@@ -132,7 +132,9 @@ tvbrowser/lib/junit.jar -text
 tvbrowser/lib/l2fprod-common-tasks.jar -text
 tvbrowser/lib/looks-2.0.jar -text
 tvbrowser/lib/skinlf.jar -text
+tvbrowser/src/blogthisplugin/blogthisplugin_sv.properties -text
 tvbrowser/src/growlplugin/growlclaw.png -text
+tvbrowser/src/growlplugin/growlplugin_sv.properties -text
 tvbrowser/src/imgs/Bookmarks16.gif -text
 tvbrowser/src/imgs/Bookmarks22.gif -text
 tvbrowser/src/imgs/Filter16.png -text
@@ -163,6 +165,7 @@ tvbrowser/src/imgs/tvbrowser128.png -text
 tvbrowser/src/imgs/tvbrowser16.png -text
 tvbrowser/src/imgs/tvbrowser32.png -text
 tvbrowser/src/imgs/tvbrowser48.png -text
+tvbrowser/src/justmark/justmark_sv.properties -text
 tvbrowser/src/justmark/kaddressbook2.png -text
 tvbrowser/src/listviewplugin/listview16.gif -text
 tvbrowser/src/listviewplugin/listview24.gif -text
@@ -171,12 +174,16 @@ tvbrowser/src/mediacenterplugin/images/krdc16.png -text
 tvbrowser/src/mediacenterplugin/images/krdc24.png -text
 tvbrowser/src/microtvbrowserplugin/M16.png -text
 tvbrowser/src/printplugin/printer/singleprogramprinter/DocumentRenderer.java -text
+tvbrowser/src/showviewplugin/showviewplugin_sv.properties -text
+tvbrowser/src/tvbrowser/core/contextmenu/contextmenu_sv.properties -text
 tvbrowser/src/tvbrowser/core/plugin/JavaPluginProxy.java.withoutRename -text svneol=unset#application/octet-stream
+tvbrowser/src/tvbrowser/core/search/search_sv.properties -text
 tvbrowser/src/tvbrowser/extras/common/DayListCellRenderer.java -text
 tvbrowser/src/tvbrowser/extras/common/common.properties -text
 tvbrowser/src/tvbrowser/extras/common/common_de.properties -text
 tvbrowser/src/tvbrowser/extras/favoritesplugin/Sort24.gif -text
 tvbrowser/src/tvbrowser/extras/favoritesplugin/wizards/AbstractWizardStep.java -text
+tvbrowser/src/tvbrowser/ui/mainframe/searchfield/searchfield_sv.properties -text
 tvbrowser/src/tvbrowser/ui/settings/TrayImportantSettingsTab.java -text
 tvbrowser/src/tvbrowser/ui/settings/TrayNowSettingsTab.java -text
 tvbrowser/src/tvbrowser/ui/settings/TrayOnTimeSettingsTab.java -text
@@ -184,6 +191,7 @@ tvbrowser/src/tvbrowser/ui/settings/TraySoonSettingsTab.java -text
 tvbrowser/src/tvbrowserdataservice/Add24.gif -text
 tvbrowser/src/tvbrowserdataservice/Information24.gif -text
 tvbrowser/src/tvbrowserdataservice/Remove24.gif -text
+tvbrowser/src/tvraterplugin/genre_sv.properties -text
 tvbrowser/src/tvraterplugin/imgs/-1.png -text
 tvbrowser/src/tvraterplugin/imgs/0.png -text
 tvbrowser/src/tvraterplugin/imgs/1.png -text
@@ -193,6 +201,10 @@ tvbrowser/src/tvraterplugin/imgs/4.png -text
 tvbrowser/src/tvraterplugin/imgs/5.png -text
 tvbrowser/src/tvraterplugin/imgs/tvrater.png -text
 tvbrowser/src/tvraterplugin/imgs/tvrater22.png -text
+tvbrowser/src/tvraterplugin/tvraterplugin_sv.properties -text
+tvbrowser/src/util/browserlauncher/browserlauncher_sv.properties -text
+tvbrowser/src/util/io/io_sv.properties -text
+tvbrowser/src/util/paramhandler/paramhandler_sv.properties -text
 tvbrowser/src/util/program/program.properties -text
 tvbrowser/src/util/program/program_de.properties -text
 tvbrowser/src/webplugin/altavista.gif -text
