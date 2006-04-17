@@ -32,6 +32,7 @@ tvbrowser/deployment/x11/src/libDesktopIndicator.so -text
 tvbrowser/deployment/x11/x11_tvbrowser_systray.kdevelop.pcs -text
 tvbrowser/images/additional/TVBrowser.ico -text
 tvbrowser/images/additional/desktop.ico -text
+tvbrowser/images/additional/systray.ico -text
 tvbrowser/images/additional/tvbrowser.icns -text
 tvbrowser/images/photoshop/logo_phpBB.psd -text
 tvbrowser/images/photoshop/tvabout.psd -text
