@@ -184,6 +184,7 @@ tvbrowser/src/tvbrowser/extras/common/common.properties -text
 tvbrowser/src/tvbrowser/extras/common/common_de.properties -text
 tvbrowser/src/tvbrowser/extras/favoritesplugin/Sort24.gif -text
 tvbrowser/src/tvbrowser/extras/favoritesplugin/wizards/AbstractWizardStep.java -text
+tvbrowser/src/tvbrowser/extras/favoritesplugin/wizards/RenameWizardStep.java -text
 tvbrowser/src/tvbrowser/extras/programinfo/ProgramInfoDesignSettingsTab.java -text
 tvbrowser/src/tvbrowser/extras/programinfo/ProgramInfoFontSettingsTab.java -text
 tvbrowser/src/tvbrowser/extras/programinfo/ProgramInfoOrderSettingsTab.java -text
