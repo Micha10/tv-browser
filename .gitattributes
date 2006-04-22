@@ -177,6 +177,8 @@ tvbrowser/src/microtvbrowserplugin/M16.png -text
 tvbrowser/src/printplugin/printer/singleprogramprinter/DocumentRenderer.java -text
 tvbrowser/src/showviewplugin/showviewplugin_sv.properties -text
 tvbrowser/src/tvbrowser/core/contextmenu/contextmenu_sv.properties -text
+tvbrowser/src/tvbrowser/core/filters/filtercomponents/FavoritesFilterComponent.java -text
+tvbrowser/src/tvbrowser/core/filters/filtercomponents/ReminderFilterComponent.java -text
 tvbrowser/src/tvbrowser/core/plugin/JavaPluginProxy.java.withoutRename -text svneol=unset#application/octet-stream
 tvbrowser/src/tvbrowser/core/search/search_sv.properties -text
 tvbrowser/src/tvbrowser/extras/common/DayListCellRenderer.java -text
