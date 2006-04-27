@@ -194,6 +194,7 @@ tvbrowser/src/tvbrowser/extras/programinfo/ProgramInfoDesignSettingsTab.java -te
 tvbrowser/src/tvbrowser/extras/programinfo/ProgramInfoFontSettingsTab.java -text
 tvbrowser/src/tvbrowser/extras/programinfo/ProgramInfoOrderSettingsTab.java -text
 tvbrowser/src/tvbrowser/ui/mainframe/searchfield/searchfield_sv.properties -text
+tvbrowser/src/tvbrowser/ui/settings/ChannelListSettingsTab.java -text
 tvbrowser/src/tvbrowser/ui/settings/TrayImportantSettingsTab.java -text
 tvbrowser/src/tvbrowser/ui/settings/TrayNowSettingsTab.java -text
 tvbrowser/src/tvbrowser/ui/settings/TrayOnTimeSettingsTab.java -text
