@@ -64,6 +64,8 @@ tvbrowser/images/themes/tango/16x16/actions/process-stop.png -text
 tvbrowser/images/themes/tango/16x16/actions/system-search.png -text
 tvbrowser/images/themes/tango/16x16/actions/view-refresh.png -text
 tvbrowser/images/themes/tango/16x16/actions/web-search.png -text
+tvbrowser/images/themes/tango/16x16/actions/zoom-in.png -text
+tvbrowser/images/themes/tango/16x16/actions/zoom-out.png -text
 tvbrowser/images/themes/tango/16x16/apps/appointment.png -text
 tvbrowser/images/themes/tango/16x16/apps/bookmark.png -text
 tvbrowser/images/themes/tango/16x16/apps/help-browser.png -text
@@ -108,6 +110,8 @@ tvbrowser/images/themes/tango/22x22/actions/process-stop.png -text
 tvbrowser/images/themes/tango/22x22/actions/system-search.png -text
 tvbrowser/images/themes/tango/22x22/actions/view-refresh.png -text
 tvbrowser/images/themes/tango/22x22/actions/web-search.png -text
+tvbrowser/images/themes/tango/22x22/actions/zoom-in.png -text
+tvbrowser/images/themes/tango/22x22/actions/zoom-out.png -text
 tvbrowser/images/themes/tango/22x22/apps/appointment.png -text
 tvbrowser/images/themes/tango/22x22/apps/bookmark.png -text
 tvbrowser/images/themes/tango/22x22/apps/help-browser.png -text
