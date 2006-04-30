@@ -139,6 +139,8 @@ tvbrowser/lib/looks-2.0.jar -text
 tvbrowser/lib/skinlf.jar -text
 tvbrowser/src/blogthisplugin/blogthisplugin_sv.properties -text
 tvbrowser/src/captureplugin/drivers/elgatodriver/AppleScriptRunner.java -text
+tvbrowser/src/captureplugin/drivers/elgatodriver/ElgatoChannel.java -text
+tvbrowser/src/captureplugin/drivers/elgatodriver/ElgatoConnection.java -text
 tvbrowser/src/captureplugin/drivers/elgatodriver/ElgatoDevice.java -text
 tvbrowser/src/captureplugin/drivers/elgatodriver/ElgatoDriver.java -text
 tvbrowser/src/captureplugin/drivers/elgatodriver/elgatodriver.properties -text
