@@ -140,9 +140,16 @@ tvbrowser/lib/skinlf.jar -text
 tvbrowser/src/blogthisplugin/blogthisplugin_sv.properties -text
 tvbrowser/src/captureplugin/drivers/elgatodriver/AppleScriptRunner.java -text
 tvbrowser/src/captureplugin/drivers/elgatodriver/ElgatoChannel.java -text
+tvbrowser/src/captureplugin/drivers/elgatodriver/ElgatoConfig.java -text
 tvbrowser/src/captureplugin/drivers/elgatodriver/ElgatoConnection.java -text
 tvbrowser/src/captureplugin/drivers/elgatodriver/ElgatoDevice.java -text
 tvbrowser/src/captureplugin/drivers/elgatodriver/ElgatoDriver.java -text
+tvbrowser/src/captureplugin/drivers/elgatodriver/configdialog/ConfigTableModel.java -text
+tvbrowser/src/captureplugin/drivers/elgatodriver/configdialog/ElgatoChannelEditor.java -text
+tvbrowser/src/captureplugin/drivers/elgatodriver/configdialog/ElgatoChannelRenderer.java -text
+tvbrowser/src/captureplugin/drivers/elgatodriver/configdialog/ElgatoConfigDialog.java -text
+tvbrowser/src/captureplugin/drivers/elgatodriver/configdialog/configdialog.properties -text
+tvbrowser/src/captureplugin/drivers/elgatodriver/configdialog/configdialog_de.properties -text
 tvbrowser/src/captureplugin/drivers/elgatodriver/elgatodriver.properties -text
 tvbrowser/src/captureplugin/drivers/elgatodriver/elgatodriver_de.properties -text
 tvbrowser/src/growlplugin/growlclaw.png -text
