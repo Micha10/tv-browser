@@ -30,6 +30,8 @@ tvbrowser/images/themes/tango/22x22/mimetypes/Makefile
 tvbrowser/images/themes/tango/22x22/mimetypes/Makefile.in
 tvbrowser/images/themes/tango/22x22/status/Makefile
 tvbrowser/images/themes/tango/22x22/status/Makefile.in
+tvbrowser/runtime
 tvbrowser/src/primarydatamanager/primarydataservice/secret
 tvbrowser/src/tvraterplugin/imgs/tvbrowser_pie.psd
 tvbrowser/src/webplugin/.pics
+tvbrowser/unpacked
