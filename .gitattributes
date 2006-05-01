@@ -150,8 +150,10 @@ tvbrowser/src/captureplugin/drivers/elgatodriver/configdialog/ElgatoChannelRende
 tvbrowser/src/captureplugin/drivers/elgatodriver/configdialog/ElgatoConfigDialog.java -text
 tvbrowser/src/captureplugin/drivers/elgatodriver/configdialog/configdialog.properties -text
 tvbrowser/src/captureplugin/drivers/elgatodriver/configdialog/configdialog_de.properties -text
+tvbrowser/src/captureplugin/drivers/elgatodriver/configdialog/configdialog_sv.properties -text
 tvbrowser/src/captureplugin/drivers/elgatodriver/elgatodriver.properties -text
 tvbrowser/src/captureplugin/drivers/elgatodriver/elgatodriver_de.properties -text
+tvbrowser/src/captureplugin/drivers/elgatodriver/elgatodriver_sv.properties -text
 tvbrowser/src/growlplugin/growlclaw.png -text
 tvbrowser/src/growlplugin/growlplugin_sv.properties -text
 tvbrowser/src/imgs/Bookmarks16.gif -text
@@ -218,6 +220,7 @@ tvbrowser/src/tvbrowser/ui/settings/TrayImportantSettingsTab.java -text
 tvbrowser/src/tvbrowser/ui/settings/TrayNowSettingsTab.java -text
 tvbrowser/src/tvbrowser/ui/settings/TrayOnTimeSettingsTab.java -text
 tvbrowser/src/tvbrowser/ui/settings/TraySoonSettingsTab.java -text
+tvbrowser/src/tvbrowser/ui/settings/looksSettings/looksSettings_sv.properties -text
 tvbrowser/src/tvbrowserdataservice/Add24.gif -text
 tvbrowser/src/tvbrowserdataservice/Information24.gif -text
 tvbrowser/src/tvbrowserdataservice/Remove24.gif -text
