@@ -144,6 +144,7 @@ tvbrowser/src/captureplugin/drivers/elgatodriver/ElgatoConfig.java -text
 tvbrowser/src/captureplugin/drivers/elgatodriver/ElgatoConnection.java -text
 tvbrowser/src/captureplugin/drivers/elgatodriver/ElgatoDevice.java -text
 tvbrowser/src/captureplugin/drivers/elgatodriver/ElgatoDriver.java -text
+tvbrowser/src/captureplugin/drivers/elgatodriver/TimeChooserDialog.java -text
 tvbrowser/src/captureplugin/drivers/elgatodriver/configdialog/ConfigTableModel.java -text
 tvbrowser/src/captureplugin/drivers/elgatodriver/configdialog/ElgatoChannelEditor.java -text
 tvbrowser/src/captureplugin/drivers/elgatodriver/configdialog/ElgatoChannelRenderer.java -text
