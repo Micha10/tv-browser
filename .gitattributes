@@ -214,6 +214,7 @@ tvbrowser/src/tvbrowser/extras/favoritesplugin/wizards/RenameWizardStep.java -te
 tvbrowser/src/tvbrowser/extras/favoritesplugin/wizards/wizards_sv.properties -text
 tvbrowser/src/tvbrowser/extras/programinfo/ProgramInfoDesignSettingsTab.java -text
 tvbrowser/src/tvbrowser/extras/programinfo/ProgramInfoFontSettingsTab.java -text
+tvbrowser/src/tvbrowser/extras/programinfo/ProgramInfoFunctionsSettingsTab.java -text
 tvbrowser/src/tvbrowser/extras/programinfo/ProgramInfoOrderSettingsTab.java -text
 tvbrowser/src/tvbrowser/ui/mainframe/searchfield/searchfield_sv.properties -text
 tvbrowser/src/tvbrowser/ui/settings/ChannelListSettingsTab.java -text
