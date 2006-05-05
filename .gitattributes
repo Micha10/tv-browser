@@ -1,4 +1,5 @@
 * text=auto !eol
+tvbrowser/ChangeLog.txt -text
 tvbrowser/deployment/common/wiki.url -text svneol=unset#application/octet-stream
 tvbrowser/deployment/macosx/jarbundler-1.4.jar -text
 tvbrowser/deployment/win/desktopindicator/DesktopIndicator.dll -text
