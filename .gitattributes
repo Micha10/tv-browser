@@ -205,6 +205,7 @@ tvbrowser/src/swedbtvdataservice/SweDBDayParser.java -text
 tvbrowser/src/swedbtvdataservice/SweDBTvDataService.java -text
 tvbrowser/src/swedbtvdataservice/swedbtvdataservice.properties -text
 tvbrowser/src/swedbtvdataservice/swedbtvdataservice_sv.properties -text
+tvbrowser/src/test/tvbrowser/extras/favoritesplugin/core/ActorStringSearcherTest.java -text
 tvbrowser/src/tvbrowser/core/contextmenu/contextmenu_sv.properties -text
 tvbrowser/src/tvbrowser/core/filters/filtercomponents/FavoritesFilterComponent.java -text
 tvbrowser/src/tvbrowser/core/filters/filtercomponents/ReminderFilterComponent.java -text
