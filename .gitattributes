@@ -215,6 +215,7 @@ tvbrowser/src/tvbrowser/extras/common/common_de.properties -text
 tvbrowser/src/tvbrowser/extras/common/common_sv.properties -text
 tvbrowser/src/tvbrowser/extras/favoritesplugin/ContextMenuProvider.java -text
 tvbrowser/src/tvbrowser/extras/favoritesplugin/Sort24.gif -text
+tvbrowser/src/tvbrowser/extras/favoritesplugin/core/ActorStringSearcher.java -text
 tvbrowser/src/tvbrowser/extras/favoritesplugin/core/core_sv.properties -text
 tvbrowser/src/tvbrowser/extras/favoritesplugin/wizards/AbstractWizardStep.java -text
 tvbrowser/src/tvbrowser/extras/favoritesplugin/wizards/RenameWizardStep.java -text
