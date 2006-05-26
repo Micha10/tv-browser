@@ -36,7 +36,11 @@ tvbrowser/images/additional/TVBrowser.ico -text
 tvbrowser/images/additional/desktop.ico -text
 tvbrowser/images/additional/systray.ico -text
 tvbrowser/images/additional/tvbrowser.icns -text
+tvbrowser/images/photoshop/liste16.psd -text
+tvbrowser/images/photoshop/liste22.psd -text
 tvbrowser/images/photoshop/logo_phpBB.psd -text
+tvbrowser/images/photoshop/plugins.psd -text
+tvbrowser/images/photoshop/plugins16.psd -text
 tvbrowser/images/photoshop/tvabout.psd -text
 tvbrowser/images/photoshop/tvb_splash.psd -text
 tvbrowser/images/photoshop/tvrater/tvrater.psd -text
