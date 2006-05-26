@@ -64,6 +64,8 @@ tvbrowser/images/themes/tango/16x16/actions/media-playback-start.png -text
 tvbrowser/images/themes/tango/16x16/actions/media-seek-forward.png -text
 tvbrowser/images/themes/tango/16x16/actions/process-stop.png -text
 tvbrowser/images/themes/tango/16x16/actions/system-search.png -text
+tvbrowser/images/themes/tango/16x16/actions/view-list.png -text
+tvbrowser/images/themes/tango/16x16/actions/view-plugins.png -text
 tvbrowser/images/themes/tango/16x16/actions/view-refresh.png -text
 tvbrowser/images/themes/tango/16x16/actions/web-search.png -text
 tvbrowser/images/themes/tango/16x16/actions/zoom-in.png -text
@@ -110,6 +112,8 @@ tvbrowser/images/themes/tango/22x22/actions/media-playback-start.png -text
 tvbrowser/images/themes/tango/22x22/actions/media-seek-forward.png -text
 tvbrowser/images/themes/tango/22x22/actions/process-stop.png -text
 tvbrowser/images/themes/tango/22x22/actions/system-search.png -text
+tvbrowser/images/themes/tango/22x22/actions/view-list.png -text
+tvbrowser/images/themes/tango/22x22/actions/view-plugins.png -text
 tvbrowser/images/themes/tango/22x22/actions/view-refresh.png -text
 tvbrowser/images/themes/tango/22x22/actions/web-search.png -text
 tvbrowser/images/themes/tango/22x22/actions/zoom-in.png -text
@@ -159,8 +163,6 @@ tvbrowser/src/captureplugin/drivers/elgatodriver/elgatodriver_de.properties -tex
 tvbrowser/src/captureplugin/drivers/elgatodriver/elgatodriver_sv.properties -text
 tvbrowser/src/growlplugin/growlclaw.png -text
 tvbrowser/src/growlplugin/growlplugin_sv.properties -text
-tvbrowser/src/imgs/Bookmarks16.gif -text
-tvbrowser/src/imgs/Bookmarks22.gif -text
 tvbrowser/src/imgs/Filter16.png -text
 tvbrowser/src/imgs/Filter22.png -text
 tvbrowser/src/imgs/FilterSet16.png -text
@@ -191,8 +193,6 @@ tvbrowser/src/imgs/tvbrowser32.png -text
 tvbrowser/src/imgs/tvbrowser48.png -text
 tvbrowser/src/justmark/justmark_sv.properties -text
 tvbrowser/src/justmark/kaddressbook2.png -text
-tvbrowser/src/listviewplugin/listview16.gif -text
-tvbrowser/src/listviewplugin/listview24.gif -text
 tvbrowser/src/mediacenterplugin/images/default_blue.jpg -text
 tvbrowser/src/mediacenterplugin/images/krdc16.png -text
 tvbrowser/src/mediacenterplugin/images/krdc24.png -text
