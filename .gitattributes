@@ -157,7 +157,7 @@ tvbrowser/images/themes/tango/22x22/emblems/emblem-symbolic-link.png -text
 tvbrowser/images/themes/tango/22x22/mimetypes/video-x-generic.png -text
 tvbrowser/images/themes/tango/22x22/status/dialog-information.png -text
 tvbrowser/images/themes/tango/22x22/status/folder-open.png -text
-tvbrowser/images/themes/tango/22x22/status/view-filter-set.png.png -text
+tvbrowser/images/themes/tango/22x22/status/view-filter-set.png -text
 tvbrowser/lib/bsh-2.0b1.jar -text
 tvbrowser/lib/commons-net.jar -text
 tvbrowser/lib/forms-1.0.6.jar -text
