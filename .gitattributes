@@ -22,6 +22,7 @@ tvbrowser/deployment/win/installer/Plugins/InstallOptions.dll -text
 tvbrowser/deployment/win/installer/Plugins/StartMenu.dll -text
 tvbrowser/deployment/win/installer/Plugins/UserInfo.dll -text
 tvbrowser/deployment/win/installer/makensis.exe -text
+tvbrowser/deployment/win/jRegistryKey/jRegistryKey.dll -text
 tvbrowser/deployment/win/jsmooth/lib/dtdparser113.jar -text
 tvbrowser/deployment/win/jsmooth/lib/jox116.jar -text
 tvbrowser/deployment/win/jsmooth/lib/jsmoothgen-ant.jar -text
@@ -161,6 +162,7 @@ tvbrowser/images/themes/tango/22x22/status/view-filter-set.png -text
 tvbrowser/lib/bsh-2.0b1.jar -text
 tvbrowser/lib/commons-net.jar -text
 tvbrowser/lib/forms-1.0.6.jar -text
+tvbrowser/lib/jRegistryKey.jar -text
 tvbrowser/lib/junit.jar -text
 tvbrowser/lib/l2fprod-common-tasks.jar -text
 tvbrowser/lib/looks-2.0.jar -text
@@ -272,6 +274,7 @@ tvbrowser/src/tvraterplugin/imgs/tvrater.png -text
 tvbrowser/src/tvraterplugin/imgs/tvrater22.png -text
 tvbrowser/src/tvraterplugin/tvraterplugin_sv.properties -text
 tvbrowser/src/util/browserlauncher/browserlauncher_sv.properties -text
+tvbrowser/src/util/io/UrlFile.java -text
 tvbrowser/src/util/io/io_sv.properties -text
 tvbrowser/src/util/paramhandler/paramhandler_sv.properties -text
 tvbrowser/src/util/program/program.properties -text
