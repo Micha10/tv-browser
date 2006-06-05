@@ -169,6 +169,9 @@ tvbrowser/lib/junit.jar -text
 tvbrowser/lib/l2fprod-common-tasks.jar -text
 tvbrowser/lib/looks-2.0.jar -text
 tvbrowser/lib/skinlf.jar -text
+tvbrowser/src/bbcbackstagedataservice/BbcBackstageDataService.java -text
+tvbrowser/src/bbcbackstagedataservice/BbcChannelGroup.java -text
+tvbrowser/src/bbcbackstagedataservice/BbcFileParser.java -text
 tvbrowser/src/blogthisplugin/blogthisplugin_sv.properties -text
 tvbrowser/src/captureplugin/drivers/elgatodriver/AppleScriptRunner.java -text
 tvbrowser/src/captureplugin/drivers/elgatodriver/ElgatoChannel.java -text
