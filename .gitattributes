@@ -172,6 +172,8 @@ tvbrowser/lib/skinlf.jar -text
 tvbrowser/src/bbcbackstagedataservice/BbcBackstageDataService.java -text
 tvbrowser/src/bbcbackstagedataservice/BbcChannelGroup.java -text
 tvbrowser/src/bbcbackstagedataservice/BbcFileParser.java -text
+tvbrowser/src/bbcbackstagedataservice/bbcbackstagedataservice.properties -text
+tvbrowser/src/bbcbackstagedataservice/bbcbackstagedataservice_de.properties -text
 tvbrowser/src/blogthisplugin/blogthisplugin_sv.properties -text
 tvbrowser/src/captureplugin/drivers/elgatodriver/AppleScriptRunner.java -text
 tvbrowser/src/captureplugin/drivers/elgatodriver/ElgatoChannel.java -text
