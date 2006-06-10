@@ -229,6 +229,11 @@ tvbrowser/src/mediacenterplugin/images/krdc16.png -text
 tvbrowser/src/mediacenterplugin/images/krdc24.png -text
 tvbrowser/src/microtvbrowserplugin/M16.png -text
 tvbrowser/src/printplugin/printer/singleprogramprinter/DocumentRenderer.java -text
+tvbrowser/src/radiotimesdataservice/RadioTimesChannelGroup.java -text
+tvbrowser/src/radiotimesdataservice/RadioTimesDataService.java -text
+tvbrowser/src/radiotimesdataservice/RadioTimesFileParser.java -text
+tvbrowser/src/radiotimesdataservice/radiotimesdataservice.properties -text
+tvbrowser/src/radiotimesdataservice/radiotimesdataservice_de.properties -text
 tvbrowser/src/showviewplugin/showviewplugin_sv.properties -text
 tvbrowser/src/swedbtvdataservice/SweDBChannelContainer.java -text
 tvbrowser/src/swedbtvdataservice/SweDBChannelGroup.java -text
