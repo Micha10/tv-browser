@@ -234,6 +234,16 @@ tvbrowser/src/radiotimesdataservice/RadioTimesFileParser.java -text
 tvbrowser/src/radiotimesdataservice/radiotimesdataservice.properties -text
 tvbrowser/src/radiotimesdataservice/radiotimesdataservice_de.properties -text
 tvbrowser/src/showviewplugin/showviewplugin_sv.properties -text
+tvbrowser/src/simplemarkerplugin/GroupUnmarkAction.java -text
+tvbrowser/src/simplemarkerplugin/ManagePanel.java -text
+tvbrowser/src/simplemarkerplugin/MarkList.java -text
+tvbrowser/src/simplemarkerplugin/MarkListsVector.java -text
+tvbrowser/src/simplemarkerplugin/SimpleMarkerPlugin.java -text
+tvbrowser/src/simplemarkerplugin/SimpleMarkerPluginSettingsTab.java -text
+tvbrowser/src/simplemarkerplugin/icons/16x16/actions/just-mark.png -text
+tvbrowser/src/simplemarkerplugin/icons/22x22/actions/just-mark.png -text
+tvbrowser/src/simplemarkerplugin/simplemarkerplugin.properties -text
+tvbrowser/src/simplemarkerplugin/simplemarkerplugin_de.properties -text
 tvbrowser/src/swedbtvdataservice/SweDBChannelContainer.java -text
 tvbrowser/src/swedbtvdataservice/SweDBChannelGroup.java -text
 tvbrowser/src/swedbtvdataservice/SweDBChannelParser.java -text
