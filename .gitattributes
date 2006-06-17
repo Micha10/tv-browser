@@ -193,6 +193,7 @@ tvbrowser/src/captureplugin/drivers/elgatodriver/elgatodriver.properties -text
 tvbrowser/src/captureplugin/drivers/elgatodriver/elgatodriver_de.properties -text
 tvbrowser/src/captureplugin/drivers/elgatodriver/elgatodriver_sv.properties -text
 tvbrowser/src/devplugin/ProgramReceiveIf.java -text
+tvbrowser/src/devplugin/devplugin_en_US.properties -text
 tvbrowser/src/growlplugin/growlclaw.png -text
 tvbrowser/src/growlplugin/growlplugin_sv.properties -text
 tvbrowser/src/imgs/Filter16.png -text
@@ -205,8 +206,10 @@ tvbrowser/src/imgs/Info_DolbyDigital51.gif -text
 tvbrowser/src/imgs/Info_DolbySurround.gif -text
 tvbrowser/src/imgs/Info_Mono.gif -text
 tvbrowser/src/imgs/Info_OriginalWithSubtitle.gif -text
+tvbrowser/src/imgs/Info_OriginalWithSubtitle_EN.gif -text
 tvbrowser/src/imgs/Info_Stereo.gif -text
 tvbrowser/src/imgs/Info_SubtitleForAurallyHandicapped.gif -text
+tvbrowser/src/imgs/Info_SubtitleForAurallyHandicapped_US.gif -text
 tvbrowser/src/imgs/Info_TwoChannelTone.gif -text
 tvbrowser/src/imgs/Jar16.gif -text
 tvbrowser/src/imgs/beanshell.png -text
