@@ -165,6 +165,8 @@ tvbrowser/lib/bsh-2.0b1.jar -text
 tvbrowser/lib/commons-compress-20050911.jar -text
 tvbrowser/lib/commons-net.jar -text
 tvbrowser/lib/forms-1.0.7.jar -text
+tvbrowser/lib/gdata-calendar-1.0.jar -text
+tvbrowser/lib/gdata-client-1.0.jar -text
 tvbrowser/lib/jRegistryKey.jar -text
 tvbrowser/lib/junit.jar -text
 tvbrowser/lib/l2fprod-common-tasks.jar -text
