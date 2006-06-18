@@ -164,11 +164,11 @@ tvbrowser/lib/TVAnytimeAPI.jar -text
 tvbrowser/lib/bsh-2.0b1.jar -text
 tvbrowser/lib/commons-compress-20050911.jar -text
 tvbrowser/lib/commons-net.jar -text
-tvbrowser/lib/forms-1.0.6.jar -text
+tvbrowser/lib/forms-1.0.7.jar -text
 tvbrowser/lib/jRegistryKey.jar -text
 tvbrowser/lib/junit.jar -text
 tvbrowser/lib/l2fprod-common-tasks.jar -text
-tvbrowser/lib/looks-2.0.jar -text
+tvbrowser/lib/looks-2.0.3.jar -text
 tvbrowser/lib/skinlf.jar -text
 tvbrowser/src/bbcbackstagedataservice/BbcBackstageDataService.java -text
 tvbrowser/src/bbcbackstagedataservice/BbcChannelGroup.java -text

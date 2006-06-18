@@ -30,6 +30,10 @@ tvbrowser/images/themes/tango/22x22/mimetypes/Makefile
 tvbrowser/images/themes/tango/22x22/mimetypes/Makefile.in
 tvbrowser/images/themes/tango/22x22/status/Makefile
 tvbrowser/images/themes/tango/22x22/status/Makefile.in
+tvbrowser/lib/commons-io-1.0.jar
+tvbrowser/lib/commons-lang-2.0.jar
+tvbrowser/lib/poi-3.0-alpha1-20050704.jar
+tvbrowser/lib/xercesImpl.jar
 tvbrowser/runtime
 tvbrowser/src/primarydatamanager/primarydataservice/secret
 tvbrowser/src/tvraterplugin/imgs/tvbrowser_pie.psd
