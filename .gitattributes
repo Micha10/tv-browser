@@ -177,8 +177,9 @@ tvbrowser/src/bbcbackstagedataservice/bbcbackstagedataservice.properties -text
 tvbrowser/src/bbcbackstagedataservice/bbcbackstagedataservice_de.properties -text
 tvbrowser/src/blogthisplugin/blogthisplugin_sv.properties -text
 tvbrowser/src/calendarexportplugin/ExtendedDialog.java -text
-tvbrowser/src/calendarexportplugin/ICalExporter.java -text
-tvbrowser/src/calendarexportplugin/VCalExporter.java -text
+tvbrowser/src/calendarexportplugin/utils/CalendarToolbox.java -text
+tvbrowser/src/calendarexportplugin/utils/ICalFile.java -text
+tvbrowser/src/calendarexportplugin/utils/VCalFile.java -text
 tvbrowser/src/captureplugin/drivers/elgatodriver/AppleScriptRunner.java -text
 tvbrowser/src/captureplugin/drivers/elgatodriver/ElgatoChannel.java -text
 tvbrowser/src/captureplugin/drivers/elgatodriver/ElgatoConfig.java -text
