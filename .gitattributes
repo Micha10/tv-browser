@@ -217,6 +217,10 @@ tvbrowser/src/devplugin/ProgramReceiveIf.java -text
 tvbrowser/src/devplugin/devplugin_en_US.properties -text
 tvbrowser/src/growlplugin/growlclaw.png -text
 tvbrowser/src/growlplugin/growlplugin_sv.properties -text
+tvbrowser/src/i18nplugin/I18NPlugin.java -text
+tvbrowser/src/i18nplugin/TranslationDialog.java -text
+tvbrowser/src/i18nplugin/i18nplugin.properties -text
+tvbrowser/src/i18nplugin/i18nplugin_de.properties -text
 tvbrowser/src/imgs/Filter16.png -text
 tvbrowser/src/imgs/Filter22.png -text
 tvbrowser/src/imgs/FilterSet16.png -text
@@ -330,6 +334,7 @@ tvbrowser/src/util/paramhandler/paramhandler_sv.properties -text
 tvbrowser/src/util/program/program.properties -text
 tvbrowser/src/util/program/program_de.properties -text
 tvbrowser/src/util/program/program_sv.properties -text
+tvbrowser/src/util/ui/LocalizerClassloader.java -text
 tvbrowser/src/util/ui/NullProgressMonitor.java -text
 tvbrowser/src/util/ui/TimeFormatter.java -text
 tvbrowser/src/webplugin/FavIconFetcher.java -text
