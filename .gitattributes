@@ -218,7 +218,11 @@ tvbrowser/src/devplugin/devplugin_en_US.properties -text
 tvbrowser/src/growlplugin/growlclaw.png -text
 tvbrowser/src/growlplugin/growlplugin_sv.properties -text
 tvbrowser/src/i18nplugin/I18NPlugin.java -text
+tvbrowser/src/i18nplugin/PathNode.java -text
+tvbrowser/src/i18nplugin/PropertiesEntryNode.java -text
+tvbrowser/src/i18nplugin/PropertiesNode.java -text
 tvbrowser/src/i18nplugin/TranslationDialog.java -text
+tvbrowser/src/i18nplugin/TranslationNode.java -text
 tvbrowser/src/i18nplugin/i18nplugin.properties -text
 tvbrowser/src/i18nplugin/i18nplugin_de.properties -text
 tvbrowser/src/imgs/Filter16.png -text
