@@ -311,6 +311,7 @@ tvbrowser/src/tvbrowser/extras/programinfo/ProgramInfoOrderSettingsTab.java -tex
 tvbrowser/src/tvbrowser/extras/programinfo/ProgramInfoProxy.java -text
 tvbrowser/src/tvbrowser/extras/programinfo/TaskMenuAction.java -text
 tvbrowser/src/tvbrowser/extras/reminderplugin/ReminderPluginProxy.java -text
+tvbrowser/src/tvbrowser/ui/mainframe/SettingsWaitingDialog.java -text
 tvbrowser/src/tvbrowser/ui/mainframe/searchfield/searchfield_sv.properties -text
 tvbrowser/src/tvbrowser/ui/programtable/RealCompactLayout.java -text
 tvbrowser/src/tvbrowser/ui/settings/ChannelListSettingsTab.java -text
