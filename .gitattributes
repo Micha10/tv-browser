@@ -336,6 +336,7 @@ tvbrowser/src/tvraterplugin/imgs/tvrater22.png -text
 tvbrowser/src/tvraterplugin/tvraterplugin_sv.properties -text
 tvbrowser/src/util/browserlauncher/browserlauncher_sv.properties -text
 tvbrowser/src/util/io/UrlFile.java -text
+tvbrowser/src/util/io/ZipUtil.java -text
 tvbrowser/src/util/io/io_sv.properties -text
 tvbrowser/src/util/misc/AppleScriptRunner.java -text
 tvbrowser/src/util/paramhandler/paramhandler_sv.properties -text
