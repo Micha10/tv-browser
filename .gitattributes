@@ -218,6 +218,7 @@ tvbrowser/src/devplugin/devplugin_en_US.properties -text
 tvbrowser/src/growlplugin/growlclaw.png -text
 tvbrowser/src/growlplugin/growlplugin_sv.properties -text
 tvbrowser/src/i18nplugin/I18NPlugin.java -text
+tvbrowser/src/i18nplugin/LanguageChooser.java -text
 tvbrowser/src/i18nplugin/LanguageNodeIf.java -text
 tvbrowser/src/i18nplugin/PathNode.java -text
 tvbrowser/src/i18nplugin/PropertiesEntryNode.java -text
@@ -311,6 +312,7 @@ tvbrowser/src/tvbrowser/extras/programinfo/ProgramInfoOrderSettingsTab.java -tex
 tvbrowser/src/tvbrowser/extras/programinfo/ProgramInfoProxy.java -text
 tvbrowser/src/tvbrowser/extras/programinfo/TaskMenuAction.java -text
 tvbrowser/src/tvbrowser/extras/reminderplugin/ReminderPluginProxy.java -text
+tvbrowser/src/tvbrowser/tvbrowser_en_US.properties -text
 tvbrowser/src/tvbrowser/ui/mainframe/SettingsWaitingDialog.java -text
 tvbrowser/src/tvbrowser/ui/mainframe/searchfield/searchfield_sv.properties -text
 tvbrowser/src/tvbrowser/ui/programtable/RealCompactLayout.java -text
