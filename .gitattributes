@@ -77,6 +77,7 @@ tvbrowser/images/themes/tango/16x16/actions/scroll-to-channel.png -text
 tvbrowser/images/themes/tango/16x16/actions/scroll-to-now.png -text
 tvbrowser/images/themes/tango/16x16/actions/scroll-to-specific-time.png -text
 tvbrowser/images/themes/tango/16x16/actions/scroll-to-time.png -text
+tvbrowser/images/themes/tango/16x16/actions/sort-list.png -text
 tvbrowser/images/themes/tango/16x16/actions/system-search.png -text
 tvbrowser/images/themes/tango/16x16/actions/view-filter.png -text
 tvbrowser/images/themes/tango/16x16/actions/view-list.png -text
@@ -134,6 +135,7 @@ tvbrowser/images/themes/tango/22x22/actions/scroll-to-channel.png -text
 tvbrowser/images/themes/tango/22x22/actions/scroll-to-now.png -text
 tvbrowser/images/themes/tango/22x22/actions/scroll-to-specific-time.png -text
 tvbrowser/images/themes/tango/22x22/actions/scroll-to-time.png -text
+tvbrowser/images/themes/tango/22x22/actions/sort-list.png -text
 tvbrowser/images/themes/tango/22x22/actions/system-search.png -text
 tvbrowser/images/themes/tango/22x22/actions/view-filter.png -text
 tvbrowser/images/themes/tango/22x22/actions/view-list.png -text
@@ -298,7 +300,6 @@ tvbrowser/src/tvbrowser/extras/common/common_de.properties -text
 tvbrowser/src/tvbrowser/extras/common/common_sv.properties -text
 tvbrowser/src/tvbrowser/extras/favoritesplugin/ContextMenuProvider.java -text
 tvbrowser/src/tvbrowser/extras/favoritesplugin/FavoritesPluginProxy.java -text
-tvbrowser/src/tvbrowser/extras/favoritesplugin/Sort24.gif -text
 tvbrowser/src/tvbrowser/extras/favoritesplugin/core/ActorSearcher.java -text
 tvbrowser/src/tvbrowser/extras/favoritesplugin/core/ActorStringSearcher.java -text
 tvbrowser/src/tvbrowser/extras/favoritesplugin/core/core_sv.properties -text
