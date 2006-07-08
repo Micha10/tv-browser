@@ -346,6 +346,7 @@ tvbrowser/src/util/paramhandler/paramhandler_sv.properties -text
 tvbrowser/src/util/program/program.properties -text
 tvbrowser/src/util/program/program_de.properties -text
 tvbrowser/src/util/program/program_sv.properties -text
+tvbrowser/src/util/ui/CaretPositionCorrector.java -text
 tvbrowser/src/util/ui/LocalizerClassloader.java -text
 tvbrowser/src/util/ui/NullProgressMonitor.java -text
 tvbrowser/src/util/ui/TimeFormatter.java -text
