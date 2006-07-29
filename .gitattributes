@@ -374,3 +374,6 @@ tvbrowser/themepacks/themepack.zip -text
 tvbrowser/tvdatakit/workspace/TvData.xls -text
 tvbrowser/tvdatakit/workspace/java/poi-2.5-final-20040302.jar -text
 tvbrowser/tvdatakit/workspace/java/xercesImpl.jar -text
+tvbrowser/tvdatakit/workspace/lib/poi-2.5-final-20040302.jar -text
+tvbrowser/tvdatakit/workspace/lib/poi_license.txt -text
+tvbrowser/tvdatakit/workspace/lib/xercesImpl.jar -text
