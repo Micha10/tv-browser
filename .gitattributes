@@ -24,6 +24,7 @@ tvbrowser/deployment/win/installer/Plugins/StartMenu.dll -text
 tvbrowser/deployment/win/installer/Plugins/UserInfo.dll -text
 tvbrowser/deployment/win/installer/makensis.exe -text
 tvbrowser/deployment/win/jRegistryKey/jRegistryKey.dll -text
+tvbrowser/deployment/win/jcom/jcom.dll -text
 tvbrowser/deployment/win/jsmooth/lib/dtdparser113.jar -text
 tvbrowser/deployment/win/jsmooth/lib/jox116.jar -text
 tvbrowser/deployment/win/jsmooth/lib/jsmoothgen-ant.jar -text
@@ -170,6 +171,7 @@ tvbrowser/lib/forms-1.0.7.jar -text
 tvbrowser/lib/gdata-calendar-1.0.jar -text
 tvbrowser/lib/gdata-client-1.0.jar -text
 tvbrowser/lib/jRegistryKey.jar -text
+tvbrowser/lib/jcom.jar -text
 tvbrowser/lib/junit.jar -text
 tvbrowser/lib/l2fprod-common-tasks.jar -text
 tvbrowser/lib/looks-2.0.4.jar -text
@@ -189,6 +191,7 @@ tvbrowser/src/calendarexportplugin/exporter/GoogleExporter.java -text
 tvbrowser/src/calendarexportplugin/exporter/GoogleLoginDialog.java -text
 tvbrowser/src/calendarexportplugin/exporter/ICalExporter.java -text
 tvbrowser/src/calendarexportplugin/exporter/KOrganizerExporter.java -text
+tvbrowser/src/calendarexportplugin/exporter/OutlookExporter.java -text
 tvbrowser/src/calendarexportplugin/exporter/VCalExporter.java -text
 tvbrowser/src/calendarexportplugin/exporter/exporter.properties -text
 tvbrowser/src/calendarexportplugin/exporter/exporter_de.properties -text
