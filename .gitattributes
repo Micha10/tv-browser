@@ -268,6 +268,7 @@ tvbrowser/src/mediacenterplugin/images/default_blue.jpg -text
 tvbrowser/src/mediacenterplugin/images/krdc16.png -text
 tvbrowser/src/mediacenterplugin/images/krdc24.png -text
 tvbrowser/src/microtvbrowserplugin/M16.png -text
+tvbrowser/src/printplugin/dlgs/components/FilterSelectionPanel.java -text
 tvbrowser/src/printplugin/printer/singleprogramprinter/DocumentRenderer.java -text
 tvbrowser/src/radiotimesdataservice/RadioTimesChannelGroup.java -text
 tvbrowser/src/radiotimesdataservice/RadioTimesDataService.java -text
