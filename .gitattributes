@@ -175,6 +175,7 @@ tvbrowser/lib/jcom.jar -text
 tvbrowser/lib/junit.jar -text
 tvbrowser/lib/l2fprod-common-tasks.jar -text
 tvbrowser/lib/looks-2.0.4.jar -text
+tvbrowser/lib/poi-3.0-alpha2-20060616.jar -text
 tvbrowser/lib/skinlf.jar -text
 tvbrowser/src/bbcbackstagedataservice/BbcBackstageDataService.java -text
 tvbrowser/src/bbcbackstagedataservice/BbcChannelGroup.java -text
@@ -388,6 +389,5 @@ tvbrowser/src/webplugin/aclib/image/ico/spi/ICOReader.java -text
 tvbrowser/themepacks/themepack.zip -text
 tvbrowser/tvdatakit/workspace/MirrorUpdater.ini -text
 tvbrowser/tvdatakit/workspace/TvData.xls -text
-tvbrowser/tvdatakit/workspace/lib/poi-2.5-final-20040302.jar -text
 tvbrowser/tvdatakit/workspace/lib/poi_license.txt -text
 tvbrowser/tvdatakit/workspace/lib/xercesImpl.jar -text
