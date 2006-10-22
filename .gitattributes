@@ -220,6 +220,7 @@ tvbrowser/src/captureplugin/drivers/elgatodriver/elgatodriver.properties -text
 tvbrowser/src/captureplugin/drivers/elgatodriver/elgatodriver_de.properties -text
 tvbrowser/src/captureplugin/drivers/elgatodriver/elgatodriver_sv.properties -text
 tvbrowser/src/devplugin/ProgramReceiveIf.java -text
+tvbrowser/src/devplugin/ProgramReceiveTarget.java -text
 tvbrowser/src/devplugin/devplugin_en_US.properties -text
 tvbrowser/src/growlplugin/growlclaw.png -text
 tvbrowser/src/growlplugin/growlplugin_sv.properties -text
