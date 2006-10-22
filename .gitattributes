@@ -339,6 +339,7 @@ tvbrowser/src/tvbrowser/ui/settings/looksSettings/looksSettings_sv.properties -t
 tvbrowser/src/tvbrowserdataservice/Add24.gif -text
 tvbrowser/src/tvbrowserdataservice/Information24.gif -text
 tvbrowser/src/tvbrowserdataservice/Remove24.gif -text
+tvbrowser/src/tvdataservice/PictureSettingsIf.java -text
 tvbrowser/src/tvraterplugin/genre_sv.properties -text
 tvbrowser/src/tvraterplugin/imgs/-1.png -text
 tvbrowser/src/tvraterplugin/imgs/0.png -text
@@ -363,6 +364,7 @@ tvbrowser/src/util/program/program_sv.properties -text
 tvbrowser/src/util/settings/ProgramPanelSettings.java -text
 tvbrowser/src/util/ui/CaretPositionCorrector.java -text
 tvbrowser/src/util/ui/LocalizerClassloader.java -text
+tvbrowser/src/util/ui/MarkerChooserDlg.java -text
 tvbrowser/src/util/ui/NullProgressMonitor.java -text
 tvbrowser/src/util/ui/PictureAreaIcon.java -text
 tvbrowser/src/util/ui/PictureSettingsPanel.java -text
