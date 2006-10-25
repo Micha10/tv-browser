@@ -219,6 +219,9 @@ tvbrowser/src/captureplugin/drivers/elgatodriver/configdialog/configdialog_sv.pr
 tvbrowser/src/captureplugin/drivers/elgatodriver/elgatodriver.properties -text
 tvbrowser/src/captureplugin/drivers/elgatodriver/elgatodriver_de.properties -text
 tvbrowser/src/captureplugin/drivers/elgatodriver/elgatodriver_sv.properties -text
+tvbrowser/src/devplugin/FilterManager.java -text
+tvbrowser/src/devplugin/PluginsFilterComponent.java -text
+tvbrowser/src/devplugin/PluginsProgramFilter.java -text
 tvbrowser/src/devplugin/ProgramReceiveIf.java -text
 tvbrowser/src/devplugin/ProgramReceiveTarget.java -text
 tvbrowser/src/devplugin/devplugin_en_US.properties -text
@@ -297,6 +300,7 @@ tvbrowser/src/swedbtvdataservice/swedbtvdataservice.properties -text
 tvbrowser/src/swedbtvdataservice/swedbtvdataservice_sv.properties -text
 tvbrowser/src/test/tvbrowser/extras/favoritesplugin/core/ActorStringSearcherTest.java -text
 tvbrowser/src/tvbrowser/core/contextmenu/contextmenu_sv.properties -text
+tvbrowser/src/tvbrowser/core/filters/FilterManagerImpl.java -text
 tvbrowser/src/tvbrowser/core/filters/filtercomponents/FavoritesFilterComponent.java -text
 tvbrowser/src/tvbrowser/core/filters/filtercomponents/ReminderFilterComponent.java -text
 tvbrowser/src/tvbrowser/core/plugin/JavaPluginProxy.java.withoutRename -text svneol=unset#application/octet-stream
