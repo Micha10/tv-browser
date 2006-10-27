@@ -243,6 +243,7 @@ tvbrowser/src/imgs/Filter16.png -text
 tvbrowser/src/imgs/Filter22.png -text
 tvbrowser/src/imgs/FilterSet16.png -text
 tvbrowser/src/imgs/FilterSet22.png -text
+tvbrowser/src/imgs/HasPicutre.gif -text
 tvbrowser/src/imgs/Info_16to9.gif -text
 tvbrowser/src/imgs/Info_BlackAndWhite.gif -text
 tvbrowser/src/imgs/Info_DolbyDigital51.gif -text
@@ -334,6 +335,7 @@ tvbrowser/src/tvbrowser/ui/mainframe/SettingsWaitingDialog.java -text
 tvbrowser/src/tvbrowser/ui/mainframe/searchfield/searchfield_sv.properties -text
 tvbrowser/src/tvbrowser/ui/programtable/RealCompactLayout.java -text
 tvbrowser/src/tvbrowser/ui/settings/ChannelListSettingsTab.java -text
+tvbrowser/src/tvbrowser/ui/settings/CloseSettingsTab.java -text
 tvbrowser/src/tvbrowser/ui/settings/PictureSettingsTab.java -text
 tvbrowser/src/tvbrowser/ui/settings/TrayImportantSettingsTab.java -text
 tvbrowser/src/tvbrowser/ui/settings/TrayNowSettingsTab.java -text
