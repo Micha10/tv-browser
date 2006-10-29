@@ -347,6 +347,7 @@ tvbrowser/src/tvbrowserdataservice/Add24.gif -text
 tvbrowser/src/tvbrowserdataservice/Information24.gif -text
 tvbrowser/src/tvbrowserdataservice/Remove24.gif -text
 tvbrowser/src/tvdataservice/PictureSettingsIf.java -text
+tvbrowser/src/tvraterplugin/TVRaterProgramFilter.java -text
 tvbrowser/src/tvraterplugin/genre_sv.properties -text
 tvbrowser/src/tvraterplugin/imgs/-1.png -text
 tvbrowser/src/tvraterplugin/imgs/0.png -text
