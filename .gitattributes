@@ -120,6 +120,7 @@ tvbrowser/images/themes/tango/22x22/actions/edit-delete.png -text
 tvbrowser/images/themes/tango/22x22/actions/edit-find.png -text
 tvbrowser/images/themes/tango/22x22/actions/edit-paste.png -text
 tvbrowser/images/themes/tango/22x22/actions/format-justify-fill.png -text
+tvbrowser/images/themes/tango/22x22/actions/go-bottom.png -text
 tvbrowser/images/themes/tango/22x22/actions/go-down.png -text
 tvbrowser/images/themes/tango/22x22/actions/go-next.png -text
 tvbrowser/images/themes/tango/22x22/actions/go-previous.png -text
@@ -127,6 +128,7 @@ tvbrowser/images/themes/tango/22x22/actions/go-to-date.png -text
 tvbrowser/images/themes/tango/22x22/actions/go-to-next-day.png -text
 tvbrowser/images/themes/tango/22x22/actions/go-to-previous-day.png -text
 tvbrowser/images/themes/tango/22x22/actions/go-to-today.png -text
+tvbrowser/images/themes/tango/22x22/actions/go-top.png -text
 tvbrowser/images/themes/tango/22x22/actions/go-up.png -text
 tvbrowser/images/themes/tango/22x22/actions/mail-message-new.png -text
 tvbrowser/images/themes/tango/22x22/actions/media-playback-start.png -text
