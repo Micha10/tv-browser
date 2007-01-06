@@ -96,11 +96,14 @@ tvbrowser/images/themes/tango/16x16/apps/office-calendar.png -text
 tvbrowser/images/themes/tango/16x16/apps/preferences-desktop-font.png -text
 tvbrowser/images/themes/tango/16x16/apps/preferences-desktop-locale.png -text
 tvbrowser/images/themes/tango/16x16/apps/preferences-desktop-theme.png -text
+tvbrowser/images/themes/tango/16x16/apps/preferences-desktop-wallpaper.png -text
 tvbrowser/images/themes/tango/16x16/apps/preferences-system-network-proxy.png -text
 tvbrowser/images/themes/tango/16x16/apps/system-software-update.png -text
 tvbrowser/images/themes/tango/16x16/categories/preferences-desktop.png -text
+tvbrowser/images/themes/tango/16x16/devices/input-mouse.png -text
 tvbrowser/images/themes/tango/16x16/devices/printer.png -text
 tvbrowser/images/themes/tango/16x16/emblems/emblem-symbolic-link.png -text
+tvbrowser/images/themes/tango/16x16/mimetypes/image-x-generic.png -text
 tvbrowser/images/themes/tango/16x16/mimetypes/video-x-generic.png -text
 tvbrowser/images/themes/tango/16x16/status/close-over.png -text
 tvbrowser/images/themes/tango/16x16/status/dialog-information.png -text
@@ -338,6 +341,7 @@ tvbrowser/src/tvbrowser/ui/configassistant/TvBrowserPictureSettingsUpdateDialog.
 tvbrowser/src/tvbrowser/ui/mainframe/SettingsWaitingDialog.java -text
 tvbrowser/src/tvbrowser/ui/mainframe/searchfield/searchfield_sv.properties -text
 tvbrowser/src/tvbrowser/ui/programtable/RealCompactLayout.java -text
+tvbrowser/src/tvbrowser/ui/settings/AbstractSettingsTab.java -text
 tvbrowser/src/tvbrowser/ui/settings/ChannelListSettingsTab.java -text
 tvbrowser/src/tvbrowser/ui/settings/CloseSettingsTab.java -text
 tvbrowser/src/tvbrowser/ui/settings/PictureSettingsTab.java -text
