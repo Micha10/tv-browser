@@ -109,6 +109,7 @@ tvbrowser/images/themes/tango/16x16/status/close-over.png -text
 tvbrowser/images/themes/tango/16x16/status/dialog-information.png -text
 tvbrowser/images/themes/tango/16x16/status/dialog-warning.png -text
 tvbrowser/images/themes/tango/16x16/status/folder-open.png -text
+tvbrowser/images/themes/tango/16x16/status/network-transmit-receive.png -text
 tvbrowser/images/themes/tango/16x16/status/view-filter-set.png -text
 tvbrowser/images/themes/tango/22x22/actions/appointment-new.png -text
 tvbrowser/images/themes/tango/22x22/actions/document-edit.png -text
@@ -167,6 +168,7 @@ tvbrowser/images/themes/tango/22x22/emblems/emblem-symbolic-link.png -text
 tvbrowser/images/themes/tango/22x22/mimetypes/video-x-generic.png -text
 tvbrowser/images/themes/tango/22x22/status/dialog-information.png -text
 tvbrowser/images/themes/tango/22x22/status/folder-open.png -text
+tvbrowser/images/themes/tango/22x22/status/network-transmit-receive.png -text
 tvbrowser/images/themes/tango/22x22/status/view-filter-set.png -text
 tvbrowser/lib/TVAnytimeAPI.jar -text
 tvbrowser/lib/bsh-2.0b1.jar -text
@@ -344,6 +346,7 @@ tvbrowser/src/tvbrowser/ui/programtable/RealCompactLayout.java -text
 tvbrowser/src/tvbrowser/ui/settings/AbstractSettingsTab.java -text
 tvbrowser/src/tvbrowser/ui/settings/ChannelListSettingsTab.java -text
 tvbrowser/src/tvbrowser/ui/settings/CloseSettingsTab.java -text
+tvbrowser/src/tvbrowser/ui/settings/NetworkSettingsTab.java -text
 tvbrowser/src/tvbrowser/ui/settings/PictureSettingsTab.java -text
 tvbrowser/src/tvbrowser/ui/settings/TrayImportantSettingsTab.java -text
 tvbrowser/src/tvbrowser/ui/settings/TrayNowSettingsTab.java -text
