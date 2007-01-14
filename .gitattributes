@@ -242,6 +242,8 @@ tvbrowser/src/captureplugin/drivers/elgatodriver/elgatodriver.properties -text
 tvbrowser/src/captureplugin/drivers/elgatodriver/elgatodriver_de.properties -text
 tvbrowser/src/captureplugin/drivers/elgatodriver/elgatodriver_sv.properties -text
 tvbrowser/src/captureplugin/drivers/utils/IDGenerator.java -text
+tvbrowser/src/com/gc/systray/Java6Tray.java -text
+tvbrowser/src/com/gc/systray/TrayIcon.java -text
 tvbrowser/src/devplugin/FilterManager.java -text
 tvbrowser/src/devplugin/PluginsFilterComponent.java -text
 tvbrowser/src/devplugin/PluginsProgramFilter.java -text
