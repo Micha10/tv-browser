@@ -31,6 +31,22 @@ tvbrowser/deployment/win/jsmooth/lib/jsmoothgen-ant.jar -text
 tvbrowser/deployment/win/jsmooth/lib/jsmoothgen.jar -text
 tvbrowser/deployment/win/jsmooth/skeletons/console-wrapper/consolewrapper.exe -text
 tvbrowser/deployment/win/jsmooth/skeletons/windowed-wrapper/jwrap.exe -text
+tvbrowser/deployment/win/launch4j/bin/ld.exe -text
+tvbrowser/deployment/win/launch4j/bin/windres.exe -text
+tvbrowser/deployment/win/launch4j/head/guihead.o -text
+tvbrowser/deployment/win/launch4j/head/head.o -text
+tvbrowser/deployment/win/launch4j/launch4j.jar -text
+tvbrowser/deployment/win/launch4j/lib/xstream.jar -text
+tvbrowser/deployment/win/launch4j/tvbrowser.xml -text
+tvbrowser/deployment/win/launch4j/tvbrowser_noDD.xml -text
+tvbrowser/deployment/win/launch4j/w32api/crt2.o -text
+tvbrowser/deployment/win/launch4j/w32api/libadvapi32.a -text
+tvbrowser/deployment/win/launch4j/w32api/libgcc.a -text
+tvbrowser/deployment/win/launch4j/w32api/libkernel32.a -text
+tvbrowser/deployment/win/launch4j/w32api/libmingw32.a -text
+tvbrowser/deployment/win/launch4j/w32api/libmsvcrt.a -text
+tvbrowser/deployment/win/launch4j/w32api/libshell32.a -text
+tvbrowser/deployment/win/launch4j/w32api/libuser32.a -text
 tvbrowser/deployment/x11/aclocal.m4 -text svneol=unset#application/octet-stream
 tvbrowser/deployment/x11/config.guess -text svneol=unset#application/octet-stream
 tvbrowser/deployment/x11/src/libDesktopIndicator.so -text
