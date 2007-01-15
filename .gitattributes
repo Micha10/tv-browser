@@ -22,6 +22,10 @@ tvbrowser/deployment/win/installer/Include/WinMessages.nsh -text svneol=unset#ap
 tvbrowser/deployment/win/installer/Plugins/InstallOptions.dll -text
 tvbrowser/deployment/win/installer/Plugins/StartMenu.dll -text
 tvbrowser/deployment/win/installer/Plugins/UserInfo.dll -text
+tvbrowser/deployment/win/installer/Stubs/lzma -text
+tvbrowser/deployment/win/installer/Stubs/lzma_solid -text
+tvbrowser/deployment/win/installer/Stubs/uninst -text
+tvbrowser/deployment/win/installer/Stubs/zlib -text
 tvbrowser/deployment/win/installer/makensis.exe -text
 tvbrowser/deployment/win/jRegistryKey/jRegistryKey.dll -text
 tvbrowser/deployment/win/jcom/jcom.dll -text
