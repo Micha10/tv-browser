@@ -41,6 +41,7 @@ tvbrowser/deployment/win/launch4j/head/guihead.o -text
 tvbrowser/deployment/win/launch4j/head/head.o -text
 tvbrowser/deployment/win/launch4j/launch4j.jar -text
 tvbrowser/deployment/win/launch4j/lib/xstream.jar -text
+tvbrowser/deployment/win/launch4j/tvbrowser-transportable.xml -text
 tvbrowser/deployment/win/launch4j/tvbrowser.xml -text
 tvbrowser/deployment/win/launch4j/tvbrowser_noDD.xml -text
 tvbrowser/deployment/win/launch4j/w32api/crt2.o -text
@@ -367,7 +368,6 @@ tvbrowser/src/tvbrowser/tvbrowser_en_US.properties -text
 tvbrowser/src/tvbrowser/ui/configassistant/PictureCardPanel.java -text
 tvbrowser/src/tvbrowser/ui/configassistant/PictureConfigPanel.java -text
 tvbrowser/src/tvbrowser/ui/configassistant/TvBrowserPictureSettingsUpdateDialog.java -text
-tvbrowser/src/tvbrowser/ui/mainframe/SettingsWaitingDialog.java -text
 tvbrowser/src/tvbrowser/ui/mainframe/searchfield/searchfield_sv.properties -text
 tvbrowser/src/tvbrowser/ui/programtable/RealCompactLayout.java -text
 tvbrowser/src/tvbrowser/ui/settings/AbstractSettingsTab.java -text
