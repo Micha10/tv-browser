@@ -442,11 +442,16 @@ tvbrowser/themepacks/themepack.zip -text
 tvbrowser/tvdatakit/workspace/MirrorUpdater.ini -text
 tvbrowser/tvdatakit/workspace/TvData.xls -text
 tvbrowser/tvdatakit/workspace/compile.cmd eol=crlf
+tvbrowser/tvdatakit/workspace/compile.sh eol=lf
 tvbrowser/tvdatakit/workspace/datamanager.cmd eol=crlf
+tvbrowser/tvdatakit/workspace/datamanager.sh eol=lf
 tvbrowser/tvdatakit/workspace/dayprogramfiletranslator.cmd eol=crlf
+tvbrowser/tvdatakit/workspace/dayprogramfiletranslator.sh eol=lf
 tvbrowser/tvdatakit/workspace/lib/poi-3.0-alpha2-20060616.jar -text
 tvbrowser/tvdatakit/workspace/lib/poi_license.txt -text
 tvbrowser/tvdatakit/workspace/lib/xercesImpl.jar -text
 tvbrowser/tvdatakit/workspace/mirrorupdater.cmd eol=crlf
+tvbrowser/tvdatakit/workspace/mirrorupdater.sh eol=lf
 tvbrowser/tvdatakit/workspace/pdsrunner.cmd eol=crlf
+tvbrowser/tvdatakit/workspace/pdsrunner.sh eol=lf
 tvbrowser/tvdatakit/workspace/setClasspath.cmd eol=crlf
