@@ -1,4 +1,7 @@
 * text=auto !eol
+tvbrowser/.settings/org.eclipse.core.resources.prefs -text
+tvbrowser/.settings/org.eclipse.jdt.core.prefs -text
+tvbrowser/.settings/org.eclipse.jdt.ui.prefs -text
 tvbrowser/ChangeLog.txt -text
 tvbrowser/deployment/common/enwiki.url -text
 tvbrowser/deployment/common/wiki.url -text svneol=unset#application/octet-stream
