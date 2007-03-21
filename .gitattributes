@@ -5,6 +5,7 @@ tvbrowser/.settings/org.eclipse.jdt.ui.prefs -text
 tvbrowser/ChangeLog.txt -text
 tvbrowser/deployment/common/enwiki.url -text
 tvbrowser/deployment/common/wiki.url -text svneol=unset#application/octet-stream
+tvbrowser/deployment/linux.properties eol=lf
 tvbrowser/deployment/linux/tvbrowser.sh eol=lf
 tvbrowser/deployment/macosx/jarbundler-1.4.jar -text
 tvbrowser/deployment/win/desktopindicator/DesktopIndicator.dll -text
@@ -51,6 +52,7 @@ tvbrowser/deployment/win/launch4j/w32api/libshell32.a -text
 tvbrowser/deployment/win/launch4j/w32api/libuser32.a -text
 tvbrowser/deployment/win/launcher/bin/JarWinJavaExeLauncher.jar -text
 tvbrowser/deployment/win/launcher/src/launcher/JarWinJavaExeLauncher.java -text
+tvbrowser/deployment/windows.properties eol=crlf
 tvbrowser/deployment/x11/aclocal.m4 -text svneol=unset#application/octet-stream
 tvbrowser/deployment/x11/config.guess -text svneol=unset#application/octet-stream
 tvbrowser/deployment/x11/src/libDesktopIndicator.so -text
