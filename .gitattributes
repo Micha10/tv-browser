@@ -231,6 +231,14 @@ tvbrowser/src/calendarexportplugin/utils/VCalFile.java -text
 tvbrowser/src/calendarexportplugin/utils/utils.properties -text
 tvbrowser/src/calendarexportplugin/utils/utils_de.properties -text
 tvbrowser/src/calendarexportplugin/utils/utils_sv.properties -text
+tvbrowser/src/captureplugin/drivers/dreambox/DreamboxDevice.java -text
+tvbrowser/src/captureplugin/drivers/dreambox/configdialog/ConfigTableModel.java -text
+tvbrowser/src/captureplugin/drivers/dreambox/configdialog/DreamboxChannelEditor.java -text
+tvbrowser/src/captureplugin/drivers/dreambox/configdialog/DreamboxChannelRenderer.java -text
+tvbrowser/src/captureplugin/drivers/dreambox/configdialog/configdialog_de.properties -text
+tvbrowser/src/captureplugin/drivers/dreambox/connector/DreamboxChannel.java -text
+tvbrowser/src/captureplugin/drivers/dreambox/connector/DreamboxHandler.java -text
+tvbrowser/src/captureplugin/drivers/dreambox/connector/DreamboxTimerHandler.java -text
 tvbrowser/src/captureplugin/drivers/elgatodriver/ElgatoChannel.java -text
 tvbrowser/src/captureplugin/drivers/elgatodriver/ElgatoConfig.java -text
 tvbrowser/src/captureplugin/drivers/elgatodriver/ElgatoConnection.java -text
