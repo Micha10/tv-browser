@@ -244,6 +244,8 @@ tvbrowser/src/captureplugin/drivers/dreambox/connector/DreamboxChannel.java -tex
 tvbrowser/src/captureplugin/drivers/dreambox/connector/DreamboxConnector.java -text
 tvbrowser/src/captureplugin/drivers/dreambox/connector/DreamboxHandler.java -text
 tvbrowser/src/captureplugin/drivers/dreambox/connector/DreamboxTimerHandler.java -text
+tvbrowser/src/captureplugin/drivers/dreambox/dreambox.properties -text
+tvbrowser/src/captureplugin/drivers/dreambox/dreambox_de.properties -text
 tvbrowser/src/captureplugin/drivers/elgatodriver/ElgatoChannel.java -text
 tvbrowser/src/captureplugin/drivers/elgatodriver/ElgatoConfig.java -text
 tvbrowser/src/captureplugin/drivers/elgatodriver/ElgatoConnection.java -text
