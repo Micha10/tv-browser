@@ -264,6 +264,8 @@ tvbrowser/src/captureplugin/drivers/elgatodriver/elgatodriver.properties -text
 tvbrowser/src/captureplugin/drivers/elgatodriver/elgatodriver_de.properties -text
 tvbrowser/src/captureplugin/drivers/elgatodriver/elgatodriver_sv.properties -text
 tvbrowser/src/captureplugin/drivers/utils/IDGenerator.java -text
+tvbrowser/src/captureplugin/drivers/utils/ProgramTime.java -text
+tvbrowser/src/captureplugin/drivers/utils/ProgramTimeDialog.java -text
 tvbrowser/src/captureplugin/drivers/utils/utils.properties -text
 tvbrowser/src/captureplugin/drivers/utils/utils_de.properties -text
 tvbrowser/src/captureplugin/drivers/utils/utils_sv.properties -text
