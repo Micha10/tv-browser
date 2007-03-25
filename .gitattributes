@@ -243,6 +243,7 @@ tvbrowser/src/captureplugin/drivers/dreambox/configdialog/configdialog_de.proper
 tvbrowser/src/captureplugin/drivers/dreambox/connector/DreamboxChannel.java -text
 tvbrowser/src/captureplugin/drivers/dreambox/connector/DreamboxConnector.java -text
 tvbrowser/src/captureplugin/drivers/dreambox/connector/DreamboxHandler.java -text
+tvbrowser/src/captureplugin/drivers/dreambox/connector/DreamboxStateHandler.java -text
 tvbrowser/src/captureplugin/drivers/dreambox/connector/DreamboxTimerHandler.java -text
 tvbrowser/src/captureplugin/drivers/dreambox/dreambox.properties -text
 tvbrowser/src/captureplugin/drivers/dreambox/dreambox_de.properties -text
