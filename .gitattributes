@@ -84,6 +84,7 @@ tvbrowser/images/themes/tango/16x16/actions/edit-copy.png -text
 tvbrowser/images/themes/tango/16x16/actions/edit-delete.png -text
 tvbrowser/images/themes/tango/16x16/actions/edit-find.png -text
 tvbrowser/images/themes/tango/16x16/actions/edit-paste.png -text
+tvbrowser/images/themes/tango/16x16/actions/edit-undo.png -text
 tvbrowser/images/themes/tango/16x16/actions/go-down.png -text
 tvbrowser/images/themes/tango/16x16/actions/go-next.png -text
 tvbrowser/images/themes/tango/16x16/actions/go-previous.png -text
@@ -145,6 +146,7 @@ tvbrowser/images/themes/tango/22x22/actions/edit-copy.png -text
 tvbrowser/images/themes/tango/22x22/actions/edit-delete.png -text
 tvbrowser/images/themes/tango/22x22/actions/edit-find.png -text
 tvbrowser/images/themes/tango/22x22/actions/edit-paste.png -text
+tvbrowser/images/themes/tango/22x22/actions/edit-undo.png -text
 tvbrowser/images/themes/tango/22x22/actions/format-justify-fill.png -text
 tvbrowser/images/themes/tango/22x22/actions/go-bottom.png -text
 tvbrowser/images/themes/tango/22x22/actions/go-down.png -text
@@ -370,7 +372,6 @@ tvbrowser/src/tvbrowser/extras/common/common_de.properties -text
 tvbrowser/src/tvbrowser/extras/common/common_sv.properties -text
 tvbrowser/src/tvbrowser/extras/favoritesplugin/ContextMenuProvider.java -text
 tvbrowser/src/tvbrowser/extras/favoritesplugin/FavoritesPicturesSettingsTab.java -text
-tvbrowser/src/tvbrowser/extras/favoritesplugin/FavoritesPluginProxy.java -text
 tvbrowser/src/tvbrowser/extras/favoritesplugin/core/ActorSearcher.java -text
 tvbrowser/src/tvbrowser/extras/favoritesplugin/core/ActorStringSearcher.java -text
 tvbrowser/src/tvbrowser/extras/favoritesplugin/core/core_sv.properties -text
@@ -435,10 +436,8 @@ tvbrowser/src/util/program/program_sv.properties -text
 tvbrowser/src/util/settings/ProgramPanelSettings.java -text
 tvbrowser/src/util/ui/CaretPositionCorrector.java -text
 tvbrowser/src/util/ui/LocalizerClassloader.java -text
-tvbrowser/src/util/ui/MarkerChooserDlg.java -text
 tvbrowser/src/util/ui/NullProgressMonitor.java -text
 tvbrowser/src/util/ui/PictureAreaIcon.java -text
-tvbrowser/src/util/ui/PictureSettingsPanel.java -text
 tvbrowser/src/util/ui/TimeFormatter.java -text
 tvbrowser/src/webplugin/FavIconFetcher.java -text
 tvbrowser/src/webplugin/aclib/codec/AbstractDecoder.java -text
