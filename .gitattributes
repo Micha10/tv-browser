@@ -356,6 +356,7 @@ tvbrowser/src/swedbtvdataservice/swedbtvdataservice.properties -text
 tvbrowser/src/swedbtvdataservice/swedbtvdataservice_de.properties -text
 tvbrowser/src/swedbtvdataservice/swedbtvdataservice_sv.properties -text
 tvbrowser/src/test/tvbrowser/extras/favoritesplugin/core/ActorStringSearcherTest.java -text
+tvbrowser/src/tvbrowser/core/contextmenu/LeaveFullScreenMenuItem.java -text
 tvbrowser/src/tvbrowser/core/contextmenu/contextmenu_sv.properties -text
 tvbrowser/src/tvbrowser/core/filters/FilterManagerImpl.java -text
 tvbrowser/src/tvbrowser/core/filters/filtercomponents/FavoritesFilterComponent.java -text
