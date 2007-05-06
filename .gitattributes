@@ -390,6 +390,7 @@ tvbrowser/src/tvbrowser/extras/programinfo/ProgramInfoProxy.java -text
 tvbrowser/src/tvbrowser/extras/programinfo/TaskMenuAction.java -text
 tvbrowser/src/tvbrowser/extras/reminderplugin/ReminderPicturesSettingsTab.java -text
 tvbrowser/src/tvbrowser/extras/reminderplugin/ReminderPluginProxy.java -text
+tvbrowser/src/tvbrowser/extras/searchplugin/RepetitionDialog.java -text
 tvbrowser/src/tvbrowser/tvbrowser_en_US.properties -text
 tvbrowser/src/tvbrowser/ui/configassistant/PictureCardPanel.java -text
 tvbrowser/src/tvbrowser/ui/configassistant/PictureConfigPanel.java -text
