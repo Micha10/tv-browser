@@ -404,6 +404,8 @@ tvbrowser/src/tvbrowser/ui/configassistant/PictureCardPanel.java -text
 tvbrowser/src/tvbrowser/ui/configassistant/PictureConfigPanel.java -text
 tvbrowser/src/tvbrowser/ui/configassistant/TvBrowserPictureSettingsUpdateDialog.java -text
 tvbrowser/src/tvbrowser/ui/mainframe/searchfield/searchfield_sv.properties -text
+tvbrowser/src/tvbrowser/ui/pluginview/contextmenu/PluginBasedPluginContextMenu.java -text
+tvbrowser/src/tvbrowser/ui/pluginview/contextmenu/ProxyBasedPluginContextMenu.java -text
 tvbrowser/src/tvbrowser/ui/programtable/RealCompactLayout.java -text
 tvbrowser/src/tvbrowser/ui/settings/AbstractSettingsTab.java -text
 tvbrowser/src/tvbrowser/ui/settings/ChannelListSettingsTab.java -text
