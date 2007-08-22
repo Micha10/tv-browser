@@ -383,7 +383,6 @@ tvbrowser/src/tvbrowser/extras/common/common.properties -text
 tvbrowser/src/tvbrowser/extras/common/common_de.properties -text
 tvbrowser/src/tvbrowser/extras/common/common_sv.properties -text
 tvbrowser/src/tvbrowser/extras/favoritesplugin/ContextMenuProvider.java -text
-tvbrowser/src/tvbrowser/extras/favoritesplugin/FavoritesPicturesSettingsTab.java -text
 tvbrowser/src/tvbrowser/extras/favoritesplugin/core/ActorSearcher.java -text
 tvbrowser/src/tvbrowser/extras/favoritesplugin/core/ActorStringSearcher.java -text
 tvbrowser/src/tvbrowser/extras/favoritesplugin/core/core_sv.properties -text
@@ -392,14 +391,9 @@ tvbrowser/src/tvbrowser/extras/favoritesplugin/dlgs/FavoriteNodeCountComparator.
 tvbrowser/src/tvbrowser/extras/favoritesplugin/wizards/AbstractWizardStep.java -text
 tvbrowser/src/tvbrowser/extras/favoritesplugin/wizards/RenameWizardStep.java -text
 tvbrowser/src/tvbrowser/extras/favoritesplugin/wizards/wizards_sv.properties -text
-tvbrowser/src/tvbrowser/extras/programinfo/ProgramInfoDesignSettingsTab.java -text
-tvbrowser/src/tvbrowser/extras/programinfo/ProgramInfoFontSettingsTab.java -text
-tvbrowser/src/tvbrowser/extras/programinfo/ProgramInfoFunctionsSettingsTab.java -text
 tvbrowser/src/tvbrowser/extras/programinfo/ProgramInfoOrderSettingsTab.java -text
-tvbrowser/src/tvbrowser/extras/programinfo/ProgramInfoPicturesSettingsTab.java -text
 tvbrowser/src/tvbrowser/extras/programinfo/ProgramInfoProxy.java -text
 tvbrowser/src/tvbrowser/extras/programinfo/TaskMenuAction.java -text
-tvbrowser/src/tvbrowser/extras/reminderplugin/ReminderPicturesSettingsTab.java -text
 tvbrowser/src/tvbrowser/extras/reminderplugin/ReminderPluginProxy.java -text
 tvbrowser/src/tvbrowser/extras/searchplugin/RepetitionDialog.java -text
 tvbrowser/src/tvbrowser/tvbrowser_en_US.properties -text
