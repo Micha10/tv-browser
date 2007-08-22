@@ -391,9 +391,7 @@ tvbrowser/src/tvbrowser/extras/favoritesplugin/dlgs/FavoriteNodeCountComparator.
 tvbrowser/src/tvbrowser/extras/favoritesplugin/wizards/AbstractWizardStep.java -text
 tvbrowser/src/tvbrowser/extras/favoritesplugin/wizards/RenameWizardStep.java -text
 tvbrowser/src/tvbrowser/extras/favoritesplugin/wizards/wizards_sv.properties -text
-tvbrowser/src/tvbrowser/extras/programinfo/ProgramInfoOrderSettingsTab.java -text
 tvbrowser/src/tvbrowser/extras/programinfo/ProgramInfoProxy.java -text
-tvbrowser/src/tvbrowser/extras/programinfo/TaskMenuAction.java -text
 tvbrowser/src/tvbrowser/extras/reminderplugin/ReminderPluginProxy.java -text
 tvbrowser/src/tvbrowser/extras/searchplugin/RepetitionDialog.java -text
 tvbrowser/src/tvbrowser/tvbrowser_en_US.properties -text
