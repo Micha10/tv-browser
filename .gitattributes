@@ -409,7 +409,6 @@ tvbrowser/src/tvbrowser/ui/settings/CloseSettingsTab.java -text
 tvbrowser/src/tvbrowser/ui/settings/GlobalPluginProgramFormatingSettings.java -text
 tvbrowser/src/tvbrowser/ui/settings/NetworkSettingsTab.java -text
 tvbrowser/src/tvbrowser/ui/settings/PictureSettingsTab.java -text
-tvbrowser/src/tvbrowser/ui/settings/PluginTableCellRenderer.java -text
 tvbrowser/src/tvbrowser/ui/settings/TrayImportantSettingsTab.java -text
 tvbrowser/src/tvbrowser/ui/settings/TrayNowSettingsTab.java -text
 tvbrowser/src/tvbrowser/ui/settings/TrayOnTimeSettingsTab.java -text
