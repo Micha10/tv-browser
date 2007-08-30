@@ -403,8 +403,6 @@ tvbrowser/src/tvbrowser/ui/pluginview/contextmenu/PluginBasedPluginContextMenu.j
 tvbrowser/src/tvbrowser/ui/pluginview/contextmenu/ProxyBasedPluginContextMenu.java -text
 tvbrowser/src/tvbrowser/ui/programtable/RealCompactLayout.java -text
 tvbrowser/src/tvbrowser/ui/settings/AbstractSettingsTab.java -text
-tvbrowser/src/tvbrowser/ui/settings/ChannelListChangesDialog.java -text
-tvbrowser/src/tvbrowser/ui/settings/ChannelListSettingsTab.java -text
 tvbrowser/src/tvbrowser/ui/settings/CloseSettingsTab.java -text
 tvbrowser/src/tvbrowser/ui/settings/GlobalPluginProgramFormatingSettings.java -text
 tvbrowser/src/tvbrowser/ui/settings/NetworkSettingsTab.java -text
