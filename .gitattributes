@@ -207,6 +207,7 @@ tvbrowser/lib/commons-net-1.4.1.jar -text
 tvbrowser/lib/forms-1.1.0.jar -text
 tvbrowser/lib/gdata-calendar-1.0.jar -text
 tvbrowser/lib/gdata-client-1.0.jar -text
+tvbrowser/lib/gdata-core-1.0.jar -text
 tvbrowser/lib/jRegistryKey.jar -text
 tvbrowser/lib/jcom.jar -text
 tvbrowser/lib/junit.jar -text
