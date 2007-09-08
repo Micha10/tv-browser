@@ -227,6 +227,7 @@ tvbrowser/src/calendarexportplugin/exporter/ExporterFactory.java -text
 tvbrowser/src/calendarexportplugin/exporter/ExporterIf.java -text
 tvbrowser/src/calendarexportplugin/exporter/GoogleExporter.java -text
 tvbrowser/src/calendarexportplugin/exporter/GoogleLoginDialog.java -text
+tvbrowser/src/calendarexportplugin/exporter/GoogleSettingsDialog.java -text
 tvbrowser/src/calendarexportplugin/exporter/ICalExporter.java -text
 tvbrowser/src/calendarexportplugin/exporter/KOrganizerExporter.java -text
 tvbrowser/src/calendarexportplugin/exporter/OutlookExporter.java -text
