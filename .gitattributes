@@ -1,4 +1,5 @@
 * text=auto !eol
+pdatvbrowser/About.cs -text
 tvbrowser/.settings/org.eclipse.core.resources.prefs -text
 tvbrowser/.settings/org.eclipse.jdt.core.prefs -text
 tvbrowser/.settings/org.eclipse.jdt.ui.prefs -text
