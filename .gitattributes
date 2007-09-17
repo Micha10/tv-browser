@@ -28,6 +28,10 @@ pdatvbrowser/TVBrowserControll.cs -text
 pdatvbrowser/TVBrowserDate.cs -text
 pdatvbrowser/TVBrowserList.cs -text
 pdatvbrowser/conf.csv -text
+pdatvbrowser/languages/Dansk.txt -text
+pdatvbrowser/languages/English.txt -text
+pdatvbrowser/languages/German.txt -text
+pdatvbrowser/languages/Norsk.txt -text
 tvbrowser/.settings/org.eclipse.core.resources.prefs -text
 tvbrowser/.settings/org.eclipse.jdt.core.prefs -text
 tvbrowser/.settings/org.eclipse.jdt.ui.prefs -text
