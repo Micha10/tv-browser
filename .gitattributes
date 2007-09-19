@@ -421,7 +421,6 @@ tvbrowser/src/tvbrowser/core/filters/AudioDescriptionFilter.java -text
 tvbrowser/src/tvbrowser/core/filters/FilterManagerImpl.java -text
 tvbrowser/src/tvbrowser/core/filters/filtercomponents/FavoritesFilterComponent.java -text
 tvbrowser/src/tvbrowser/core/filters/filtercomponents/ReminderFilterComponent.java -text
-tvbrowser/src/tvbrowser/core/plugin/JavaPluginProxy.java.withoutRename -text svneol=unset#application/octet-stream
 tvbrowser/src/tvbrowser/core/plugin/programformating/GlobalPluginProgramFormating.java -text
 tvbrowser/src/tvbrowser/core/plugin/programformating/GlobalPluginProgramFormatingManager.java -text
 tvbrowser/src/tvbrowser/core/plugin/programformating/GlobalPluginProgramFormatingSettingsDialog.java -text
