@@ -355,13 +355,16 @@ tvbrowser/src/imgs/Info_BlackAndWhite.gif -text
 tvbrowser/src/imgs/Info_DolbyDigital51.gif -text
 tvbrowser/src/imgs/Info_DolbySurround.gif -text
 tvbrowser/src/imgs/Info_HasPicture.png -text
+tvbrowser/src/imgs/Info_Infotainment.png -text
 tvbrowser/src/imgs/Info_Live.png -text
 tvbrowser/src/imgs/Info_Mono.gif -text
 tvbrowser/src/imgs/Info_Movie.png -text
 tvbrowser/src/imgs/Info_New.png -text
+tvbrowser/src/imgs/Info_News.png -text
 tvbrowser/src/imgs/Info_OriginalWithSubtitle.gif -text
 tvbrowser/src/imgs/Info_OriginalWithSubtitle_EN.gif -text
 tvbrowser/src/imgs/Info_Series.png -text
+tvbrowser/src/imgs/Info_Show.png -text
 tvbrowser/src/imgs/Info_Stereo.gif -text
 tvbrowser/src/imgs/Info_SubtitleForAurallyHandicapped.gif -text
 tvbrowser/src/imgs/Info_SubtitleForAurallyHandicapped_US.gif -text
