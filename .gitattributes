@@ -9,6 +9,9 @@ pdatvbrowser/Configuration.cs -text
 pdatvbrowser/CustomTVBrowserList.cs -text
 pdatvbrowser/Details.Designer.cs -text
 pdatvbrowser/Details.cs -text
+pdatvbrowser/ErrorMessage.cs -text
+pdatvbrowser/IRRemote.Designer.cs -text
+pdatvbrowser/IRRemote.cs -text
 pdatvbrowser/Mainform.Designer.cs -text
 pdatvbrowser/Mainform.cs -text
 pdatvbrowser/Memo.cs -text
