@@ -54,12 +54,18 @@ tvbrowser/deployment/win/installer/Contrib/Graphics/Icons/murfman-install.ico -t
 tvbrowser/deployment/win/installer/Contrib/Graphics/Icons/murfman-uninstall.ico -text
 tvbrowser/deployment/win/installer/Contrib/Graphics/Wizard/win.bmp -text
 tvbrowser/deployment/win/installer/Contrib/Language[!!-~]files/English.nlf -text svneol=unset#application/octet-stream
+tvbrowser/deployment/win/installer/Contrib/Language[!!-~]files/English.nsh -text
 tvbrowser/deployment/win/installer/Contrib/Language[!!-~]files/German.nlf -text svneol=unset#application/octet-stream
+tvbrowser/deployment/win/installer/Contrib/Language[!!-~]files/German.nsh -text
 tvbrowser/deployment/win/installer/Contrib/Modern[!!-~]UI/System.nsh -text svneol=unset#application/octet-stream
 tvbrowser/deployment/win/installer/Contrib/UIs/modern.exe -text
 tvbrowser/deployment/win/installer/Contrib/UIs/modern_nodesc.exe -text
+tvbrowser/deployment/win/installer/Contrib/UIs/modern_smalldesc.exe -text
+tvbrowser/deployment/win/installer/Include/InstallOptions.nsh -text
+tvbrowser/deployment/win/installer/Include/LangFile.nsh -text
 tvbrowser/deployment/win/installer/Include/WinMessages.nsh -text svneol=unset#application/octet-stream
 tvbrowser/deployment/win/installer/Plugins/InstallOptions.dll -text
+tvbrowser/deployment/win/installer/Plugins/LangDLL.dll -text
 tvbrowser/deployment/win/installer/Plugins/StartMenu.dll -text
 tvbrowser/deployment/win/installer/Plugins/UserInfo.dll -text
 tvbrowser/deployment/win/installer/Stubs/lzma -text
