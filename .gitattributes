@@ -131,6 +131,7 @@ tvbrowser/images/themes/tango/16x16/actions/folder-new.png -text
 tvbrowser/images/themes/tango/16x16/actions/go-down.png -text
 tvbrowser/images/themes/tango/16x16/actions/go-next.png -text
 tvbrowser/images/themes/tango/16x16/actions/go-previous.png -text
+tvbrowser/images/themes/tango/16x16/actions/go-to-date-list.png -text
 tvbrowser/images/themes/tango/16x16/actions/go-to-date.png -text
 tvbrowser/images/themes/tango/16x16/actions/go-to-next-day.png -text
 tvbrowser/images/themes/tango/16x16/actions/go-to-previous-day.png -text
@@ -141,9 +142,11 @@ tvbrowser/images/themes/tango/16x16/actions/mail-message-new.png -text
 tvbrowser/images/themes/tango/16x16/actions/media-playback-start.png -text
 tvbrowser/images/themes/tango/16x16/actions/media-seek-forward.png -text
 tvbrowser/images/themes/tango/16x16/actions/process-stop.png -text
+tvbrowser/images/themes/tango/16x16/actions/scroll-to-channel-list.png -text
 tvbrowser/images/themes/tango/16x16/actions/scroll-to-channel.png -text
 tvbrowser/images/themes/tango/16x16/actions/scroll-to-now.png -text
 tvbrowser/images/themes/tango/16x16/actions/scroll-to-specific-time.png -text
+tvbrowser/images/themes/tango/16x16/actions/scroll-to-time-list.png -text
 tvbrowser/images/themes/tango/16x16/actions/scroll-to-time.png -text
 tvbrowser/images/themes/tango/16x16/actions/sort-list-numerical.png -text
 tvbrowser/images/themes/tango/16x16/actions/sort-list.png -text
@@ -201,6 +204,7 @@ tvbrowser/images/themes/tango/22x22/actions/go-bottom.png -text
 tvbrowser/images/themes/tango/22x22/actions/go-down.png -text
 tvbrowser/images/themes/tango/22x22/actions/go-next.png -text
 tvbrowser/images/themes/tango/22x22/actions/go-previous.png -text
+tvbrowser/images/themes/tango/22x22/actions/go-to-date-list.png -text
 tvbrowser/images/themes/tango/22x22/actions/go-to-date.png -text
 tvbrowser/images/themes/tango/22x22/actions/go-to-next-day.png -text
 tvbrowser/images/themes/tango/22x22/actions/go-to-previous-day.png -text
@@ -211,9 +215,11 @@ tvbrowser/images/themes/tango/22x22/actions/mail-message-new.png -text
 tvbrowser/images/themes/tango/22x22/actions/media-playback-start.png -text
 tvbrowser/images/themes/tango/22x22/actions/media-seek-forward.png -text
 tvbrowser/images/themes/tango/22x22/actions/process-stop.png -text
+tvbrowser/images/themes/tango/22x22/actions/scroll-to-channel-list.png -text
 tvbrowser/images/themes/tango/22x22/actions/scroll-to-channel.png -text
 tvbrowser/images/themes/tango/22x22/actions/scroll-to-now.png -text
 tvbrowser/images/themes/tango/22x22/actions/scroll-to-specific-time.png -text
+tvbrowser/images/themes/tango/22x22/actions/scroll-to-time-list.png -text
 tvbrowser/images/themes/tango/22x22/actions/scroll-to-time.png -text
 tvbrowser/images/themes/tango/22x22/actions/sort-list-numerical.png -text
 tvbrowser/images/themes/tango/22x22/actions/sort-list.png -text
