@@ -156,6 +156,7 @@ tvbrowser/images/themes/tango/16x16/actions/view-fullscreen.png -text
 tvbrowser/images/themes/tango/16x16/actions/view-list.png -text
 tvbrowser/images/themes/tango/16x16/actions/view-plugins.png -text
 tvbrowser/images/themes/tango/16x16/actions/view-refresh.png -text
+tvbrowser/images/themes/tango/16x16/actions/view-tree.png -text
 tvbrowser/images/themes/tango/16x16/actions/web-search.png -text
 tvbrowser/images/themes/tango/16x16/actions/zoom-in.png -text
 tvbrowser/images/themes/tango/16x16/actions/zoom-out.png -text
@@ -228,6 +229,7 @@ tvbrowser/images/themes/tango/22x22/actions/view-filter.png -text
 tvbrowser/images/themes/tango/22x22/actions/view-list.png -text
 tvbrowser/images/themes/tango/22x22/actions/view-plugins.png -text
 tvbrowser/images/themes/tango/22x22/actions/view-refresh.png -text
+tvbrowser/images/themes/tango/22x22/actions/view-tree.png -text
 tvbrowser/images/themes/tango/22x22/actions/web-search.png -text
 tvbrowser/images/themes/tango/22x22/actions/zoom-in.png -text
 tvbrowser/images/themes/tango/22x22/actions/zoom-out.png -text
