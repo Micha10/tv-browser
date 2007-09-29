@@ -225,6 +225,7 @@ tvbrowser/images/themes/tango/22x22/actions/scroll-to-time.png -text
 tvbrowser/images/themes/tango/22x22/actions/sort-list-numerical.png -text
 tvbrowser/images/themes/tango/22x22/actions/sort-list.png -text
 tvbrowser/images/themes/tango/22x22/actions/system-search.png -text
+tvbrowser/images/themes/tango/22x22/actions/view-filter-list.png -text
 tvbrowser/images/themes/tango/22x22/actions/view-filter.png -text
 tvbrowser/images/themes/tango/22x22/actions/view-list.png -text
 tvbrowser/images/themes/tango/22x22/actions/view-plugins.png -text
@@ -252,6 +253,7 @@ tvbrowser/images/themes/tango/22x22/mimetypes/video-x-generic.png -text
 tvbrowser/images/themes/tango/22x22/status/dialog-information.png -text
 tvbrowser/images/themes/tango/22x22/status/folder-open.png -text
 tvbrowser/images/themes/tango/22x22/status/network-transmit-receive.png -text
+tvbrowser/images/themes/tango/22x22/status/view-filter-set-list.png -text
 tvbrowser/images/themes/tango/22x22/status/view-filter-set.png -text
 tvbrowser/lib/TVAnytimeAPI.jar -text
 tvbrowser/lib/bsh-2.0b4.jar -text
