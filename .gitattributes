@@ -171,6 +171,7 @@ tvbrowser/images/themes/tango/16x16/apps/preferences-desktop-locale.png -text
 tvbrowser/images/themes/tango/16x16/apps/preferences-desktop-theme.png -text
 tvbrowser/images/themes/tango/16x16/apps/preferences-desktop-wallpaper.png -text
 tvbrowser/images/themes/tango/16x16/apps/preferences-system-network-proxy.png -text
+tvbrowser/images/themes/tango/16x16/apps/system-file-manager.png -text
 tvbrowser/images/themes/tango/16x16/apps/system-software-update.png -text
 tvbrowser/images/themes/tango/16x16/categories/preferences-desktop.png -text
 tvbrowser/images/themes/tango/16x16/devices/input-mouse.png -text
@@ -358,7 +359,6 @@ tvbrowser/src/devplugin/devplugin_en_US.properties -text
 tvbrowser/src/genreplugin/GenrePlugin.java -text
 tvbrowser/src/genreplugin/GenreSettingsTab.java -text
 tvbrowser/src/genreplugin/HideGenreAction.java -text
-tvbrowser/src/genreplugin/genreplugin.png -text
 tvbrowser/src/genreplugin/genreplugin.properties -text
 tvbrowser/src/genreplugin/genreplugin_de.properties -text
 tvbrowser/src/growlplugin/growlclaw.png -text
