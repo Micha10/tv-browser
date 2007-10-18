@@ -312,6 +312,7 @@ tvbrowser/src/captureplugin/drivers/dreambox/connector/DreamboxStateHandler.java
 tvbrowser/src/captureplugin/drivers/dreambox/connector/DreamboxTimerHandler.java -text
 tvbrowser/src/captureplugin/drivers/dreambox/dreambox.properties -text
 tvbrowser/src/captureplugin/drivers/dreambox/dreambox_de.properties -text
+tvbrowser/src/captureplugin/drivers/dreambox/dreambox_sv.properties -text
 tvbrowser/src/captureplugin/drivers/elgatodriver/ElgatoConnection.java -text
 tvbrowser/src/captureplugin/drivers/elgatodriver/ElgatoDriver.java -text
 tvbrowser/src/captureplugin/drivers/elgatodriver/elgatodriver.properties -text
@@ -330,6 +331,7 @@ tvbrowser/src/captureplugin/drivers/thetubedriver/TheTubeConnection.java -text
 tvbrowser/src/captureplugin/drivers/thetubedriver/TheTubeDriver.java -text
 tvbrowser/src/captureplugin/drivers/thetubedriver/thetubedriver.properties -text
 tvbrowser/src/captureplugin/drivers/thetubedriver/thetubedriver_de.properties -text
+tvbrowser/src/captureplugin/drivers/thetubedriver/thetubedriver_sv.properties -text
 tvbrowser/src/captureplugin/drivers/utils/IDGenerator.java -text
 tvbrowser/src/captureplugin/drivers/utils/ProgramTime.java -text
 tvbrowser/src/captureplugin/drivers/utils/ProgramTimeDialog.java -text
@@ -364,6 +366,7 @@ tvbrowser/src/genreplugin/GenreSettingsTab.java -text
 tvbrowser/src/genreplugin/HideGenreAction.java -text
 tvbrowser/src/genreplugin/genreplugin.properties -text
 tvbrowser/src/genreplugin/genreplugin_de.properties -text
+tvbrowser/src/genreplugin/genreplugin_sv.properties -text
 tvbrowser/src/growlplugin/growlclaw.png -text
 tvbrowser/src/growlplugin/growlplugin_sv.properties -text
 tvbrowser/src/i18nplugin/I18NPlugin.java -text
@@ -378,6 +381,7 @@ tvbrowser/src/i18nplugin/TranslationNode.java -text
 tvbrowser/src/i18nplugin/TranslatorEditor.java -text
 tvbrowser/src/i18nplugin/i18nplugin.properties -text
 tvbrowser/src/i18nplugin/i18nplugin_de.properties -text
+tvbrowser/src/i18nplugin/i18nplugin_sv.properties -text
 tvbrowser/src/imgs/Filter16.png -text
 tvbrowser/src/imgs/Filter22.png -text
 tvbrowser/src/imgs/FilterSet16.png -text
@@ -434,6 +438,7 @@ tvbrowser/src/radiotimesdataservice/RadioTimesDataService.java -text
 tvbrowser/src/radiotimesdataservice/RadioTimesFileParser.java -text
 tvbrowser/src/radiotimesdataservice/radiotimesdataservice.properties -text
 tvbrowser/src/radiotimesdataservice/radiotimesdataservice_de.properties -text
+tvbrowser/src/radiotimesdataservice/radiotimesdataservice_sv.properties -text
 tvbrowser/src/showviewplugin/showviewplugin_sv.properties -text
 tvbrowser/src/simplemarkerplugin/GroupUnmarkAction.java -text
 tvbrowser/src/simplemarkerplugin/ManagePanel.java -text
@@ -444,6 +449,7 @@ tvbrowser/src/simplemarkerplugin/SimpleMarkerPlugin.java -text
 tvbrowser/src/simplemarkerplugin/SimpleMarkerPluginSettingsTab.java -text
 tvbrowser/src/simplemarkerplugin/simplemarkerplugin.properties -text
 tvbrowser/src/simplemarkerplugin/simplemarkerplugin_de.properties -text
+tvbrowser/src/simplemarkerplugin/simplemarkerplugin_sv.properties -text
 tvbrowser/src/swedbtvdataservice/SweDBChannelContainer.java -text
 tvbrowser/src/swedbtvdataservice/SweDBChannelGroup.java -text
 tvbrowser/src/swedbtvdataservice/SweDBChannelParser.java -text
@@ -465,6 +471,7 @@ tvbrowser/src/tvbrowser/core/plugin/programformating/GlobalPluginProgramFormatin
 tvbrowser/src/tvbrowser/core/plugin/programformating/GlobalPluginProgramFormatingSettingsDialog.java -text
 tvbrowser/src/tvbrowser/core/plugin/programformating/programformating.properties -text
 tvbrowser/src/tvbrowser/core/plugin/programformating/programformating_de.properties -text
+tvbrowser/src/tvbrowser/core/plugin/programformating/programformating_sv.properties -text
 tvbrowser/src/tvbrowser/extras/common/DayListCellRenderer.java -text
 tvbrowser/src/tvbrowser/extras/common/common.properties -text
 tvbrowser/src/tvbrowser/extras/common/common_de.properties -text
@@ -498,6 +505,7 @@ tvbrowser/src/tvbrowser/ui/settings/TrayNowSettingsTab.java -text
 tvbrowser/src/tvbrowser/ui/settings/TrayOnTimeSettingsTab.java -text
 tvbrowser/src/tvbrowser/ui/settings/TraySoonSettingsTab.java -text
 tvbrowser/src/tvbrowser/ui/settings/looksSettings/looksSettings_sv.properties -text
+tvbrowser/src/tvbrowser/ui/waiting/dlgs/dlgs_sv.properties -text
 tvbrowser/src/tvbrowserdataservice/Add24.gif -text
 tvbrowser/src/tvbrowserdataservice/Information24.gif -text
 tvbrowser/src/tvbrowserdataservice/Remove24.gif -text
