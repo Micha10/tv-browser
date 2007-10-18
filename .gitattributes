@@ -184,6 +184,7 @@ tvbrowser/images/themes/tango/16x16/status/close-over.png -text
 tvbrowser/images/themes/tango/16x16/status/dialog-information.png -text
 tvbrowser/images/themes/tango/16x16/status/dialog-warning.png -text
 tvbrowser/images/themes/tango/16x16/status/folder-open.png -text
+tvbrowser/images/themes/tango/16x16/status/mail-attachment.png -text
 tvbrowser/images/themes/tango/16x16/status/network-transmit-receive.png -text
 tvbrowser/images/themes/tango/16x16/status/software-update-available.png -text
 tvbrowser/images/themes/tango/16x16/status/view-filter-set.png -text
@@ -253,6 +254,7 @@ tvbrowser/images/themes/tango/22x22/emblems/emblem-symbolic-link.png -text
 tvbrowser/images/themes/tango/22x22/mimetypes/video-x-generic.png -text
 tvbrowser/images/themes/tango/22x22/status/dialog-information.png -text
 tvbrowser/images/themes/tango/22x22/status/folder-open.png -text
+tvbrowser/images/themes/tango/22x22/status/mail-attachment.png -text
 tvbrowser/images/themes/tango/22x22/status/network-transmit-receive.png -text
 tvbrowser/images/themes/tango/22x22/status/view-filter-set-list.png -text
 tvbrowser/images/themes/tango/22x22/status/view-filter-set.png -text
@@ -350,6 +352,7 @@ tvbrowser/src/dataviewerplugin/dataviewerplugin.properties -text
 tvbrowser/src/dataviewerplugin/dataviewerplugin_de.properties -text
 tvbrowser/src/dataviewerplugin/icons/16x16/actions/format-justify-fill.png -text
 tvbrowser/src/dataviewerplugin/icons/22x22/actions/format-justify-fill.png -text
+tvbrowser/src/dataviewerplugin/icons/Readme.txt -text
 tvbrowser/src/devplugin/FilterManager.java -text
 tvbrowser/src/devplugin/PluginsFilterComponent.java -text
 tvbrowser/src/devplugin/PluginsProgramFilter.java -text
@@ -439,8 +442,6 @@ tvbrowser/src/simplemarkerplugin/MarkListFilterComponent.java -text
 tvbrowser/src/simplemarkerplugin/MarkListsVector.java -text
 tvbrowser/src/simplemarkerplugin/SimpleMarkerPlugin.java -text
 tvbrowser/src/simplemarkerplugin/SimpleMarkerPluginSettingsTab.java -text
-tvbrowser/src/simplemarkerplugin/icons/16x16/actions/just-mark.png -text
-tvbrowser/src/simplemarkerplugin/icons/22x22/actions/just-mark.png -text
 tvbrowser/src/simplemarkerplugin/simplemarkerplugin.properties -text
 tvbrowser/src/simplemarkerplugin/simplemarkerplugin_de.properties -text
 tvbrowser/src/swedbtvdataservice/SweDBChannelContainer.java -text
