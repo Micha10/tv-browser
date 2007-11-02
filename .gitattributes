@@ -416,11 +416,7 @@ tvbrowser/src/imgs/tvbrowser128.png -text
 tvbrowser/src/imgs/tvbrowser16.png -text
 tvbrowser/src/imgs/tvbrowser32.png -text
 tvbrowser/src/imgs/tvbrowser48.png -text
-tvbrowser/src/knotifyplugin/KNotifyPlugin.java -text
-tvbrowser/src/knotifyplugin/KNotifySettingsTab.java -text
 tvbrowser/src/knotifyplugin/knotify.png -text
-tvbrowser/src/knotifyplugin/knotifyplugin.properties -text
-tvbrowser/src/knotifyplugin/knotifyplugin_de.properties -text
 tvbrowser/src/mediacenterplugin/images/default_blue.jpg -text
 tvbrowser/src/mediacenterplugin/images/krdc16.png -text
 tvbrowser/src/mediacenterplugin/images/krdc24.png -text
