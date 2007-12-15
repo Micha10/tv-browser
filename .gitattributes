@@ -324,7 +324,6 @@ tvbrowser/src/captureplugin/drivers/simpledevice/SimpleConfig.java -text
 tvbrowser/src/captureplugin/drivers/simpledevice/SimpleConfigDialog.java -text
 tvbrowser/src/captureplugin/drivers/simpledevice/SimpleConnectionIf.java -text
 tvbrowser/src/captureplugin/drivers/simpledevice/SimpleDevice.java -text
-tvbrowser/src/captureplugin/drivers/simpledevice/TimeChooserDialog.java -text
 tvbrowser/src/captureplugin/drivers/simpledevice/simpledevice.properties -text
 tvbrowser/src/captureplugin/drivers/simpledevice/simpledevice_de.properties -text
 tvbrowser/src/captureplugin/drivers/simpledevice/simpledevice_sv.properties -text
