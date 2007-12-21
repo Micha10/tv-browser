@@ -468,7 +468,7 @@ tvbrowser/src/timelistplugin/timelist-16.png -text
 tvbrowser/src/timelistplugin/timelist-22.png -text
 tvbrowser/src/timelistplugin/timelistplugin.properties -text
 tvbrowser/src/timelistplugin/timelistplugin_de.properties -text
-tvbrowser/src/tvbrowser/core/DublicateChannelNameCounter.java -text
+tvbrowser/src/tvbrowser/core/DuplicateChannelNameCounter.java -text
 tvbrowser/src/tvbrowser/core/contextmenu/LeaveFullScreenMenuItem.java -text
 tvbrowser/src/tvbrowser/core/contextmenu/contextmenu_sv.properties -text
 tvbrowser/src/tvbrowser/core/filters/AudioDescriptionFilter.java -text
