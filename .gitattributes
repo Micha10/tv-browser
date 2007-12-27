@@ -487,7 +487,6 @@ tvbrowser/src/tvbrowser/extras/common/common_de.properties -text
 tvbrowser/src/tvbrowser/extras/common/common_sv.properties -text
 tvbrowser/src/tvbrowser/extras/favoritesplugin/ContextMenuProvider.java -text
 tvbrowser/src/tvbrowser/extras/favoritesplugin/core/ActorSearcher.java -text
-tvbrowser/src/tvbrowser/extras/favoritesplugin/core/ActorStringSearcher.java -text
 tvbrowser/src/tvbrowser/extras/favoritesplugin/core/core_sv.properties -text
 tvbrowser/src/tvbrowser/extras/favoritesplugin/dlgs/FavoriteNodeComparator.java -text
 tvbrowser/src/tvbrowser/extras/favoritesplugin/dlgs/FavoriteNodeCountComparator.java -text
