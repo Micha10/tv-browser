@@ -372,6 +372,13 @@ tvbrowser/src/devplugin/PluginsProgramFilter.java -text
 tvbrowser/src/devplugin/ProgramReceiveIf.java -text
 tvbrowser/src/devplugin/ProgramReceiveTarget.java -text
 tvbrowser/src/devplugin/devplugin_en_US.properties -text
+tvbrowser/src/dreamboxdataservice/DreamboxChannelGroup.java -text
+tvbrowser/src/dreamboxdataservice/DreamboxChannelHandler.java -text
+tvbrowser/src/dreamboxdataservice/DreamboxDataService.java -text
+tvbrowser/src/dreamboxdataservice/DreamboxHandler.java -text
+tvbrowser/src/dreamboxdataservice/DreamboxSettingsPanel.java -text
+tvbrowser/src/dreamboxdataservice/dreamboxdataservice.properties -text
+tvbrowser/src/dreamboxdataservice/dreamboxdataservice_de.properties -text
 tvbrowser/src/growlplugin/growlclaw.png -text
 tvbrowser/src/growlplugin/growlplugin_sv.properties -text
 tvbrowser/src/i18nplugin/I18NPlugin.java -text
