@@ -366,6 +366,7 @@ tvbrowser/src/dataviewerplugin/dataviewerplugin_de.properties -text
 tvbrowser/src/dataviewerplugin/icons/16x16/actions/format-justify-fill.png -text
 tvbrowser/src/dataviewerplugin/icons/22x22/actions/format-justify-fill.png -text
 tvbrowser/src/dataviewerplugin/icons/Readme.txt -text
+tvbrowser/src/devplugin/CancelableSettingsTab.java -text
 tvbrowser/src/devplugin/FilterManager.java -text
 tvbrowser/src/devplugin/PluginsFilterComponent.java -text
 tvbrowser/src/devplugin/PluginsProgramFilter.java -text
