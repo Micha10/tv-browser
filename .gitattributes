@@ -548,7 +548,6 @@ tvbrowser/src/util/browserlauncher/browserlauncher_sv.properties -text
 tvbrowser/src/util/io/BufferedRandomAccessFile.java -text
 tvbrowser/src/util/io/DownloadJob.java -text
 tvbrowser/src/util/io/NtpMessage.java -text
-tvbrowser/src/util/io/UrlFile.java -text
 tvbrowser/src/util/io/ZipUtil.java -text
 tvbrowser/src/util/io/io_sv.properties -text
 tvbrowser/src/util/misc/AppleScriptRunner.java -text
