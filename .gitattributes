@@ -466,6 +466,12 @@ tvbrowser/src/swedbtvdataservice/DataFoxChannelParser.java -text
 tvbrowser/src/swedbtvdataservice/DataFoxDayParser.java -text
 tvbrowser/src/swedbtvdataservice/DataFoxFileParser.java -text
 tvbrowser/src/swedbtvdataservice/DataFoxSettingsPanel.java -text
+tvbrowser/src/swedbtvdataservice/DataHydraChannelContainer.java -text
+tvbrowser/src/swedbtvdataservice/DataHydraChannelGroup.java -text
+tvbrowser/src/swedbtvdataservice/DataHydraChannelParser.java -text
+tvbrowser/src/swedbtvdataservice/DataHydraDayParser.java -text
+tvbrowser/src/swedbtvdataservice/DataHydraFileParser.java -text
+tvbrowser/src/swedbtvdataservice/DataHydraSettingsPanel.java -text
 tvbrowser/src/swedbtvdataservice/IconLoader.java -text
 tvbrowser/src/swedbtvdataservice/SweDBTvDataService.java -text
 tvbrowser/src/swedbtvdataservice/swedbtvdataservice.properties -text
