@@ -470,7 +470,6 @@ tvbrowser/src/swedbtvdataservice/SweDBTvDataService.java -text
 tvbrowser/src/swedbtvdataservice/swedbtvdataservice.properties -text
 tvbrowser/src/swedbtvdataservice/swedbtvdataservice_de.properties -text
 tvbrowser/src/swedbtvdataservice/swedbtvdataservice_sv.properties -text
-tvbrowser/src/test/tvbrowser/extras/favoritesplugin/core/ActorStringSearcherTest.java -text
 tvbrowser/src/timelistplugin/ProgramListDialog.java -text
 tvbrowser/src/timelistplugin/TimeListCellRenderer.java -text
 tvbrowser/src/timelistplugin/TimeListPlugin.java -text
