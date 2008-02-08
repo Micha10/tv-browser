@@ -459,12 +459,6 @@ tvbrowser/src/simplemarkerplugin/SimpleMarkerPluginSettingsTab.java -text
 tvbrowser/src/simplemarkerplugin/simplemarkerplugin.properties -text
 tvbrowser/src/simplemarkerplugin/simplemarkerplugin_de.properties -text
 tvbrowser/src/simplemarkerplugin/simplemarkerplugin_sv.properties -text
-tvbrowser/src/swedbtvdataservice/DataFoxChannelContainer.java -text
-tvbrowser/src/swedbtvdataservice/DataFoxChannelGroup.java -text
-tvbrowser/src/swedbtvdataservice/DataFoxChannelParser.java -text
-tvbrowser/src/swedbtvdataservice/DataFoxDayParser.java -text
-tvbrowser/src/swedbtvdataservice/DataFoxFileParser.java -text
-tvbrowser/src/swedbtvdataservice/DataFoxSettingsPanel.java -text
 tvbrowser/src/swedbtvdataservice/DataHydraChannelContainer.java -text
 tvbrowser/src/swedbtvdataservice/DataHydraChannelGroup.java -text
 tvbrowser/src/swedbtvdataservice/DataHydraChannelParser.java -text
