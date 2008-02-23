@@ -581,6 +581,9 @@ tvbrowser/src/webplugin/aclib/image/ico/TypeCompression.java -text
 tvbrowser/src/webplugin/aclib/image/ico/spi/ICOImageReaderSPI.java -text
 tvbrowser/src/webplugin/aclib/image/ico/spi/ICOMetaData.java -text
 tvbrowser/src/webplugin/aclib/image/ico/spi/ICOReader.java -text
+tvbrowser/src/wirschauenplugin/WirSchauenDialog.java -text
+tvbrowser/src/wirschauenplugin/wirschauenplugin.properties -text
+tvbrowser/src/wirschauenplugin/wirschauenplugin_de.properties -text
 tvbrowser/test/src/primarydatamanager/DayProgramMapperTest.java -text
 tvbrowser/test/src/primarydatamanager/PrimaryDataManagerTest.java -text
 tvbrowser/test/src/tvbrowser/extras/favoritesplugin/core/ActorStringSearcherTest.java -text
