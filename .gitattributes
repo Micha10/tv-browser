@@ -285,6 +285,9 @@ tvbrowser/lib/jcom.jar -text
 tvbrowser/lib/l2fprod-common-tasks.jar -text
 tvbrowser/lib/looks-2.1.4.jar -text
 tvbrowser/lib/skinlf.jar -text
+tvbrowser/lib/stax-1.2.0.jar -text
+tvbrowser/lib/stax-api-1.0.1.jar -text
+tvbrowser/lib/xtvd-lib-2.0.jar -text
 tvbrowser/src/bbcbackstagedataservice/BbcBackstageDataService.java -text
 tvbrowser/src/bbcbackstagedataservice/BbcChannelGroup.java -text
 tvbrowser/src/bbcbackstagedataservice/BbcFileParser.java -text
@@ -448,6 +451,11 @@ tvbrowser/src/radiotimesdataservice/RadioTimesFileParser.java -text
 tvbrowser/src/radiotimesdataservice/radiotimesdataservice.properties -text
 tvbrowser/src/radiotimesdataservice/radiotimesdataservice_de.properties -text
 tvbrowser/src/radiotimesdataservice/radiotimesdataservice_sv.properties -text
+tvbrowser/src/schedulesdirectdataservice/SchedulesDirectChannelGroup.java -text
+tvbrowser/src/schedulesdirectdataservice/SchedulesDirectDataService.java -text
+tvbrowser/src/schedulesdirectdataservice/SchedulesDirectSettingsPanel.java -text
+tvbrowser/src/schedulesdirectdataservice/schedulesdirectdataservice.properties -text
+tvbrowser/src/schedulesdirectdataservice/schedulesdirectdataservice_de.properties -text
 tvbrowser/src/showviewplugin/showviewplugin_sv.properties -text
 tvbrowser/src/simplemarkerplugin/GroupUnmarkAction.java -text
 tvbrowser/src/simplemarkerplugin/ManagePanel.java -text
