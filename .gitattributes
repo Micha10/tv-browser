@@ -445,6 +445,8 @@ tvbrowser/src/microtvbrowserplugin/M16.png -text
 tvbrowser/src/primarydatamanager/primarydataservice/util/InfoCategoryParser.java -text
 tvbrowser/src/printplugin/dlgs/components/FilterSelectionPanel.java -text
 tvbrowser/src/printplugin/printer/singleprogramprinter/DocumentRenderer.java -text
+tvbrowser/src/programlistplugin/programlistplugin.properties -text
+tvbrowser/src/programlistplugin/programlistplugin_de.properties -text
 tvbrowser/src/radiotimesdataservice/RadioTimesChannelGroup.java -text
 tvbrowser/src/radiotimesdataservice/RadioTimesDataService.java -text
 tvbrowser/src/radiotimesdataservice/RadioTimesFileParser.java -text
