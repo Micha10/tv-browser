@@ -146,7 +146,9 @@ tvbrowser/images/themes/tango/16x16/actions/go-previous.png -text
 tvbrowser/images/themes/tango/16x16/actions/go-to-date-list.png -text
 tvbrowser/images/themes/tango/16x16/actions/go-to-date.png -text
 tvbrowser/images/themes/tango/16x16/actions/go-to-next-day.png -text
+tvbrowser/images/themes/tango/16x16/actions/go-to-next-week.png -text
 tvbrowser/images/themes/tango/16x16/actions/go-to-previous-day.png -text
+tvbrowser/images/themes/tango/16x16/actions/go-to-previous-week.png -text
 tvbrowser/images/themes/tango/16x16/actions/go-to-today.png -text
 tvbrowser/images/themes/tango/16x16/actions/go-up.png -text
 tvbrowser/images/themes/tango/16x16/actions/list-remove.png -text
@@ -222,7 +224,9 @@ tvbrowser/images/themes/tango/22x22/actions/go-previous.png -text
 tvbrowser/images/themes/tango/22x22/actions/go-to-date-list.png -text
 tvbrowser/images/themes/tango/22x22/actions/go-to-date.png -text
 tvbrowser/images/themes/tango/22x22/actions/go-to-next-day.png -text
+tvbrowser/images/themes/tango/22x22/actions/go-to-next-week.png -text
 tvbrowser/images/themes/tango/22x22/actions/go-to-previous-day.png -text
+tvbrowser/images/themes/tango/22x22/actions/go-to-previous-week.png -text
 tvbrowser/images/themes/tango/22x22/actions/go-to-today.png -text
 tvbrowser/images/themes/tango/22x22/actions/go-top.png -text
 tvbrowser/images/themes/tango/22x22/actions/go-up.png -text
