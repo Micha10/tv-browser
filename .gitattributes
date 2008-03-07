@@ -433,10 +433,11 @@ tvbrowser/src/imgs/columns_afternoon.jpg -text
 tvbrowser/src/imgs/columns_early.jpg -text
 tvbrowser/src/imgs/columns_edge.jpg -text
 tvbrowser/src/imgs/columns_evening.jpg -text
-tvbrowser/src/imgs/columns_evening_gray.jpg -text
 tvbrowser/src/imgs/columns_midday.jpg -text
 tvbrowser/src/imgs/splash.png -text
 tvbrowser/src/imgs/systray.ico -text
+tvbrowser/src/imgs/time_block_gray.jpg -text
+tvbrowser/src/imgs/time_block_white.jpg -text
 tvbrowser/src/imgs/tvabout.png -text
 tvbrowser/src/imgs/tvbrowser128.png -text
 tvbrowser/src/imgs/tvbrowser16.png -text
