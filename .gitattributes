@@ -181,7 +181,7 @@ tvbrowser/images/themes/tango/16x16/apps/preferences-desktop-wallpaper.png -text
 tvbrowser/images/themes/tango/16x16/apps/preferences-system-network-proxy.png -text
 tvbrowser/images/themes/tango/16x16/apps/system-file-manager.png -text
 tvbrowser/images/themes/tango/16x16/apps/system-software-update.png -text
-tvbrowser/images/themes/tango/16x16/categories/preferences-desktop.png -text
+tvbrowser/images/themes/tango/16x16/categories/preferences-system.png -text
 tvbrowser/images/themes/tango/16x16/devices/input-mouse.png -text
 tvbrowser/images/themes/tango/16x16/devices/printer.png -text
 tvbrowser/images/themes/tango/16x16/emblems/emblem-favorite.png -text
@@ -253,7 +253,7 @@ tvbrowser/images/themes/tango/22x22/apps/preferences-desktop-locale.png -text
 tvbrowser/images/themes/tango/22x22/apps/preferences-desktop-theme.png -text
 tvbrowser/images/themes/tango/22x22/apps/preferences-system-network-proxy.png -text
 tvbrowser/images/themes/tango/22x22/apps/system-software-update.png -text
-tvbrowser/images/themes/tango/22x22/categories/preferences-desktop.png -text
+tvbrowser/images/themes/tango/22x22/categories/preferences-system.png -text
 tvbrowser/images/themes/tango/22x22/devices/printer.png -text
 tvbrowser/images/themes/tango/22x22/emblems/emblem-favorite.png -text
 tvbrowser/images/themes/tango/22x22/emblems/emblem-important.png -text
