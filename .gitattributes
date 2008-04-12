@@ -588,8 +588,6 @@ tvbrowser/src/webplugin/aclib/image/ico/TypeCompression.java -text
 tvbrowser/src/webplugin/aclib/image/ico/spi/ICOImageReaderSPI.java -text
 tvbrowser/src/webplugin/aclib/image/ico/spi/ICOMetaData.java -text
 tvbrowser/src/webplugin/aclib/image/ico/spi/ICOReader.java -text
-tvbrowser/src/wirschauenplugin/WirSchauenDialog.java -text
-tvbrowser/src/wirschauenplugin/WirSchauenHandler.java -text
 tvbrowser/src/wirschauenplugin/icons/16x16/apps/wirschauen.png -text
 tvbrowser/src/wirschauenplugin/wirschauenplugin.properties -text
 tvbrowser/src/wirschauenplugin/wirschauenplugin_de.properties -text
