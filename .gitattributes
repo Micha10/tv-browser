@@ -271,7 +271,7 @@ tvbrowser/lib/bsh-2.0b4.jar -text
 tvbrowser/lib/commons-codec-1.3.jar -text
 tvbrowser/lib/commons-compress-20050911.jar -text
 tvbrowser/lib/commons-net-1.4.1.jar -text
-tvbrowser/lib/forms-1.1.0.jar -text
+tvbrowser/lib/forms-1.2.0.jar -text
 tvbrowser/lib/gdata-calendar-1.0.jar -text
 tvbrowser/lib/gdata-client-1.0.jar -text
 tvbrowser/lib/gdata-core-1.0.jar -text
