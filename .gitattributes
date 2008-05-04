@@ -398,6 +398,7 @@ tvbrowser/src/i18nplugin/i18nplugin_sv.properties -text
 tvbrowser/src/imdbplugin/ImdbDatabase.java -text
 tvbrowser/src/imdbplugin/ImdbParser.java -text
 tvbrowser/src/imdbplugin/ImdbPlugin.java -text
+tvbrowser/src/imdbplugin/ImdbRating.java -text
 tvbrowser/src/imdbplugin/imdbplugin.properties -text
 tvbrowser/src/imdbplugin/imdbplugin_de.properties -text
 tvbrowser/src/imgs/Filter16.png -text
