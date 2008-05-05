@@ -281,6 +281,7 @@ tvbrowser/lib/jakarta-oro-2.0.8.jar -text
 tvbrowser/lib/jcom.jar -text
 tvbrowser/lib/l2fprod-common-tasks.jar -text
 tvbrowser/lib/looks-2.1.4.jar -text
+tvbrowser/lib/lucene-core-2.3.1.jar -text
 tvbrowser/lib/skinlf.jar -text
 tvbrowser/lib/stax-1.2.0.jar -text
 tvbrowser/lib/stax-api-1.0.1.jar -text
