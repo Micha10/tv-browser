@@ -402,6 +402,7 @@ tvbrowser/src/imdbplugin/ImdbIcon.java -text
 tvbrowser/src/imdbplugin/ImdbParser.java -text
 tvbrowser/src/imdbplugin/ImdbPlugin.java -text
 tvbrowser/src/imdbplugin/ImdbRating.java -text
+tvbrowser/src/imdbplugin/ImdbUpdateDialog.java -text
 tvbrowser/src/imdbplugin/imdbplugin.properties -text
 tvbrowser/src/imdbplugin/imdbplugin_de.properties -text
 tvbrowser/src/imdbplugin/rating.png -text
