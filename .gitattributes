@@ -57,11 +57,6 @@ tvbrowser/deployment/linux.properties eol=lf
 tvbrowser/deployment/linux/tvbrowser.desktop -text
 tvbrowser/deployment/linux/tvbrowser.sh eol=lf
 tvbrowser/deployment/macosx/jarbundler-1.4.jar -text
-tvbrowser/deployment/win/desktopindicator/DesktopIndicator.dll -text
-tvbrowser/deployment/win/desktopindicator/DesktopIndicator.dsp -text svneol=unset#application/octet-stream
-tvbrowser/deployment/win/desktopindicator/DesktopIndicator.dsw -text svneol=unset#application/octet-stream
-tvbrowser/deployment/win/desktopindicator/Script.rc -text svneol=unset#application/octet-stream
-tvbrowser/deployment/win/desktopindicator/StdAfx.h -text svneol=unset#application/octet-stream
 tvbrowser/deployment/win/installer/Contrib/Graphics/Checks/modern.bmp -text
 tvbrowser/deployment/win/installer/Contrib/Graphics/Icons/murfman-install.ico -text
 tvbrowser/deployment/win/installer/Contrib/Graphics/Icons/murfman-uninstall.ico -text
@@ -108,10 +103,6 @@ tvbrowser/deployment/win/launch4j/w32api/libuser32.a -text
 tvbrowser/deployment/win/launcher/bin/JarWinJavaExeLauncher.jar -text
 tvbrowser/deployment/win/launcher/src/launcher/JarWinJavaExeLauncher.java -text
 tvbrowser/deployment/windows.properties eol=crlf
-tvbrowser/deployment/x11/aclocal.m4 -text svneol=unset#application/octet-stream
-tvbrowser/deployment/x11/config.guess -text svneol=unset#application/octet-stream
-tvbrowser/deployment/x11/src/libDesktopIndicator.so -text
-tvbrowser/deployment/x11/x11_tvbrowser_systray.kdevelop.pcs -text
 tvbrowser/images/additional/TVBrowser.ico -text
 tvbrowser/images/additional/desktop.ico -text
 tvbrowser/images/additional/systray.ico -text
@@ -354,8 +345,6 @@ tvbrowser/src/captureplugin/utils/ConfigTableModel.java -text
 tvbrowser/src/captureplugin/utils/ExternalChannelIf.java -text
 tvbrowser/src/captureplugin/utils/ExternalChannelTableCellEditor.java -text
 tvbrowser/src/captureplugin/utils/ExternalChannelTableCellRenderer.java -text
-tvbrowser/src/com/gc/systray/Java6Tray.java -text
-tvbrowser/src/com/gc/systray/TrayIcon.java -text
 tvbrowser/src/dataviewerplugin/ChannelTableCellRenderer.java -text
 tvbrowser/src/dataviewerplugin/DataTableCellRenderer.java -text
 tvbrowser/src/dataviewerplugin/DataTableModel.java -text
@@ -541,6 +530,9 @@ tvbrowser/src/tvbrowser/ui/settings/TrayNowSettingsTab.java -text
 tvbrowser/src/tvbrowser/ui/settings/TrayOnTimeSettingsTab.java -text
 tvbrowser/src/tvbrowser/ui/settings/TraySoonSettingsTab.java -text
 tvbrowser/src/tvbrowser/ui/settings/looksSettings/looksSettings_sv.properties -text
+tvbrowser/src/tvbrowser/ui/tray/tray.properties -text
+tvbrowser/src/tvbrowser/ui/tray/tray_de.properties -text
+tvbrowser/src/tvbrowser/ui/tray/tray_sv.properties -text
 tvbrowser/src/tvbrowser/ui/waiting/dlgs/dlgs_sv.properties -text
 tvbrowser/src/tvbrowserdataservice/Add24.gif -text
 tvbrowser/src/tvbrowserdataservice/Information24.gif -text
