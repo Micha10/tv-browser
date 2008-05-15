@@ -440,7 +440,6 @@ tvbrowser/src/imgs/tvbrowser16.png -text
 tvbrowser/src/imgs/tvbrowser32.png -text
 tvbrowser/src/imgs/tvbrowser48.png -text
 tvbrowser/src/knotifyplugin/knotify.png -text
-tvbrowser/src/microtvbrowserplugin/M16.png -text
 tvbrowser/src/primarydatamanager/primarydataservice/util/InfoCategoryParser.java -text
 tvbrowser/src/printplugin/dlgs/components/FilterSelectionPanel.java -text
 tvbrowser/src/printplugin/printer/singleprogramprinter/DocumentRenderer.java -text
