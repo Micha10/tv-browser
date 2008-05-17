@@ -268,7 +268,6 @@ tvbrowser/lib/gdata-calendar-1.0.jar -text
 tvbrowser/lib/gdata-client-1.0.jar -text
 tvbrowser/lib/gdata-core-1.0.jar -text
 tvbrowser/lib/jRegistryKey.jar -text
-tvbrowser/lib/jakarta-oro-2.0.8.jar -text
 tvbrowser/lib/jcom.jar -text
 tvbrowser/lib/l2fprod-common-tasks.jar -text
 tvbrowser/lib/looks-2.1.4.jar -text
