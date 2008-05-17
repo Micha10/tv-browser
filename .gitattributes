@@ -627,3 +627,4 @@ tvbrowser/tvdatakit/workspace/mirrorupdater.sh eol=lf
 tvbrowser/tvdatakit/workspace/pdsrunner.cmd eol=crlf
 tvbrowser/tvdatakit/workspace/pdsrunner.sh eol=lf
 tvbrowser/tvdatakit/workspace/setClasspath.cmd eol=crlf
+tvbrowser/txt/COPYRIGHT.txt -text
