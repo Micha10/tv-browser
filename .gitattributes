@@ -532,6 +532,8 @@ tvbrowser/src/tvbrowser/ui/settings/looksSettings/looksSettings_sv.properties -t
 tvbrowser/src/tvbrowser/ui/tray/tray.properties -text
 tvbrowser/src/tvbrowser/ui/tray/tray_de.properties -text
 tvbrowser/src/tvbrowser/ui/tray/tray_sv.properties -text
+tvbrowser/src/tvbrowser/ui/ui.properties -text
+tvbrowser/src/tvbrowser/ui/ui_de.properties -text
 tvbrowser/src/tvbrowser/ui/waiting/dlgs/dlgs_sv.properties -text
 tvbrowser/src/tvbrowserdataservice/Add24.gif -text
 tvbrowser/src/tvbrowserdataservice/Information24.gif -text
