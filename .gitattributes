@@ -758,6 +758,8 @@ tvbrowser/test/src/primarydatamanager/PrimaryDataManagerTest.java -text
 tvbrowser/test/src/tvbrowser/extras/favoritesplugin/core/ActorStringSearcherTest.java -text
 tvbrowser/test/src/tvbrowserdataservice/DayProgramFileTest.java -text
 tvbrowser/test/src/tvbrowserdataservice/SummaryFileTest.java -text
+tvbrowser/test/src/tvbrowserdataservice/file/ChannelListTest.java -text
+tvbrowser/test/src/tvbrowserdataservice/file/test_channellist.gz -text
 tvbrowser/test/src/util/io/IniFileReaderTest.java -text
 tvbrowser/test/src/util/io/index.theme -text
 tvbrowser/test/src/util/misc/TextLineBreakerTest.java -text
