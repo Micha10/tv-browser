@@ -152,6 +152,7 @@ tvbrowser/images/themes/CrystalClear/16x16/actions/scroll-to-time-list.png -text
 tvbrowser/images/themes/CrystalClear/16x16/actions/scroll-to-time.png -text
 tvbrowser/images/themes/CrystalClear/16x16/actions/sort-list-numerical.png -text
 tvbrowser/images/themes/CrystalClear/16x16/actions/sort-list.png -text
+tvbrowser/images/themes/CrystalClear/16x16/actions/system-log-out.png -text
 tvbrowser/images/themes/CrystalClear/16x16/actions/system-search.png -text
 tvbrowser/images/themes/CrystalClear/16x16/actions/view-filter.png -text
 tvbrowser/images/themes/CrystalClear/16x16/actions/view-fullscreen.png -text
@@ -173,7 +174,7 @@ tvbrowser/images/themes/CrystalClear/16x16/apps/preferences-desktop-theme.png -t
 tvbrowser/images/themes/CrystalClear/16x16/apps/preferences-system-network-proxy.png -text
 tvbrowser/images/themes/CrystalClear/16x16/apps/system-file-manager.png -text
 tvbrowser/images/themes/CrystalClear/16x16/apps/system-software-update.png -text
-tvbrowser/images/themes/CrystalClear/16x16/categories/preferences-desktop.png -text
+tvbrowser/images/themes/CrystalClear/16x16/categories/preferences-system.png -text
 tvbrowser/images/themes/CrystalClear/16x16/devices/input-mouse.png -text
 tvbrowser/images/themes/CrystalClear/16x16/devices/printer.png -text
 tvbrowser/images/themes/CrystalClear/16x16/emblems/emblem-favorite.png -text
@@ -228,6 +229,7 @@ tvbrowser/images/themes/CrystalClear/22x22/actions/scroll-to-time-list.png -text
 tvbrowser/images/themes/CrystalClear/22x22/actions/scroll-to-time.png -text
 tvbrowser/images/themes/CrystalClear/22x22/actions/sort-list-numerical.png -text
 tvbrowser/images/themes/CrystalClear/22x22/actions/sort-list.png -text
+tvbrowser/images/themes/CrystalClear/22x22/actions/system-log-out.png -text
 tvbrowser/images/themes/CrystalClear/22x22/actions/system-search.png -text
 tvbrowser/images/themes/CrystalClear/22x22/actions/view-filter-list.png -text
 tvbrowser/images/themes/CrystalClear/22x22/actions/view-filter.png -text
@@ -248,7 +250,7 @@ tvbrowser/images/themes/CrystalClear/22x22/apps/preferences-desktop-locale.png -
 tvbrowser/images/themes/CrystalClear/22x22/apps/preferences-desktop-theme.png -text
 tvbrowser/images/themes/CrystalClear/22x22/apps/preferences-system-network-proxy.png -text
 tvbrowser/images/themes/CrystalClear/22x22/apps/system-software-update.png -text
-tvbrowser/images/themes/CrystalClear/22x22/categories/preferences-desktop.png -text
+tvbrowser/images/themes/CrystalClear/22x22/categories/preferences-system.png -text
 tvbrowser/images/themes/CrystalClear/22x22/devices/printer.png -text
 tvbrowser/images/themes/CrystalClear/22x22/emblems/emblem-favorite.png -text
 tvbrowser/images/themes/CrystalClear/22x22/emblems/emblem-important.png -text
@@ -300,6 +302,7 @@ tvbrowser/images/themes/tango/16x16/actions/scroll-to-time-list.png -text
 tvbrowser/images/themes/tango/16x16/actions/scroll-to-time.png -text
 tvbrowser/images/themes/tango/16x16/actions/sort-list-numerical.png -text
 tvbrowser/images/themes/tango/16x16/actions/sort-list.png -text
+tvbrowser/images/themes/tango/16x16/actions/system-log-out.png -text
 tvbrowser/images/themes/tango/16x16/actions/system-search.png -text
 tvbrowser/images/themes/tango/16x16/actions/view-filter.png -text
 tvbrowser/images/themes/tango/16x16/actions/view-fullscreen.png -text
@@ -374,6 +377,7 @@ tvbrowser/images/themes/tango/22x22/actions/scroll-to-time-list.png -text
 tvbrowser/images/themes/tango/22x22/actions/scroll-to-time.png -text
 tvbrowser/images/themes/tango/22x22/actions/sort-list-numerical.png -text
 tvbrowser/images/themes/tango/22x22/actions/sort-list.png -text
+tvbrowser/images/themes/tango/22x22/actions/system-log-out.png -text
 tvbrowser/images/themes/tango/22x22/actions/system-search.png -text
 tvbrowser/images/themes/tango/22x22/actions/view-filter-list.png -text
 tvbrowser/images/themes/tango/22x22/actions/view-filter.png -text
