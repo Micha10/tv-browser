@@ -556,8 +556,11 @@ tvbrowser/src/imgs/Filter22.png -text
 tvbrowser/src/imgs/FilterSet16.png -text
 tvbrowser/src/imgs/FilterSet22.png -text
 tvbrowser/src/imgs/Info_16to9.gif -text
+tvbrowser/src/imgs/Info_Arts.png -text
 tvbrowser/src/imgs/Info_AudioDescription.png -text
 tvbrowser/src/imgs/Info_BlackAndWhite.gif -text
+tvbrowser/src/imgs/Info_Children.png -text
+tvbrowser/src/imgs/Info_Docu.png -text
 tvbrowser/src/imgs/Info_DolbyDigital51.gif -text
 tvbrowser/src/imgs/Info_DolbySurround.gif -text
 tvbrowser/src/imgs/Info_HD.png -text
@@ -572,6 +575,7 @@ tvbrowser/src/imgs/Info_OriginalWithSubtitle.gif -text
 tvbrowser/src/imgs/Info_OriginalWithSubtitle_EN.gif -text
 tvbrowser/src/imgs/Info_Series.png -text
 tvbrowser/src/imgs/Info_Show.png -text
+tvbrowser/src/imgs/Info_Sports.png -text
 tvbrowser/src/imgs/Info_Stereo.gif -text
 tvbrowser/src/imgs/Info_SubtitleForAurallyHandicapped.gif -text
 tvbrowser/src/imgs/Info_SubtitleForAurallyHandicapped_US.gif -text
