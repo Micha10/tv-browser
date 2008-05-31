@@ -781,9 +781,8 @@ tvbrowser/test/src/util/settings/StringArrayProperties.properties -text
 tvbrowser/test/src/util/settings/StringArrayPropertiesTest.java -text
 tvbrowser/test/src/util/ui/html/HTMLTextHelperTest.java -text
 tvbrowser/themepacks/themepack.zip -text
-tvbrowser/tvdatakit/workspace/build.xml -text
-tvbrowser/tvdatakit/workspace/config/MirrorUpdater.ini -text
-tvbrowser/tvdatakit/workspace/lib/poi-3.0-alpha2-20060616.jar -text
-tvbrowser/tvdatakit/workspace/lib/poi_license.txt -text
-tvbrowser/tvdatakit/workspace/lib/xercesImpl.jar -text
+tvbrowser/tvdatakit/build.xml -text
+tvbrowser/tvdatakit/config/MirrorUpdater.ini -text
+tvbrowser/tvdatakit/input/images/test.jpg -text
+tvbrowser/tvdatakit/lib/xercesImpl.jar -text
 tvbrowser/txt/COPYRIGHT.txt -text
