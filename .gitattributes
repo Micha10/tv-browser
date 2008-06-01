@@ -784,5 +784,6 @@ tvbrowser/themepacks/themepack.zip -text
 tvbrowser/tvdatakit/build.xml -text
 tvbrowser/tvdatakit/config/MirrorUpdater.ini -text
 tvbrowser/tvdatakit/input/images/test.jpg -text
+tvbrowser/tvdatakit/java/XmlTvDataHandler.java -text
 tvbrowser/tvdatakit/lib/xercesImpl.jar -text
 tvbrowser/txt/COPYRIGHT.txt -text
