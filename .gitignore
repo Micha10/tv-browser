@@ -37,6 +37,7 @@ tvbrowser/lib/commons-lang-2.0.jar
 tvbrowser/lib/poi-3.0-alpha1-20050704.jar
 tvbrowser/lib/xercesImpl.jar
 tvbrowser/runtime
+tvbrowser/src/dataviewerplugin/LICENSE.txt
 tvbrowser/src/primarydatamanager/primarydataservice/secret
 tvbrowser/src/tvraterplugin/imgs/tvbrowser_pie.psd
 tvbrowser/src/webplugin/.pics
