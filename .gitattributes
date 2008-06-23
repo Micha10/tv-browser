@@ -598,11 +598,15 @@ tvbrowser/src/imgs/tvbrowser16.png -text
 tvbrowser/src/imgs/tvbrowser32.png -text
 tvbrowser/src/imgs/tvbrowser48.png -text
 tvbrowser/src/knotifyplugin/knotify.png -text
+tvbrowser/src/movieawardplugin/Award.java -text
 tvbrowser/src/movieawardplugin/Movie.java -text
 tvbrowser/src/movieawardplugin/MovieAward.java -text
+tvbrowser/src/movieawardplugin/MovieAwardCategorie.java -text
+tvbrowser/src/movieawardplugin/MovieAwardHandler.java -text
 tvbrowser/src/movieawardplugin/MovieAwardPlugin.java -text
 tvbrowser/src/movieawardplugin/data/index.csv -text
 tvbrowser/src/movieawardplugin/data/oscar.csv -text
+tvbrowser/src/movieawardplugin/data/oscars.xml -text
 tvbrowser/src/movieawardplugin/movieawardplugin.properties -text
 tvbrowser/src/movieawardplugin/movieawardplugin_de.properties -text
 tvbrowser/src/primarydatamanager/primarydataservice/util/InfoCategoryParser.java -text
