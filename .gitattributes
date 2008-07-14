@@ -637,6 +637,11 @@ tvbrowser/src/simplemarkerplugin/SimpleMarkerPluginSettingsTab.java -text
 tvbrowser/src/simplemarkerplugin/simplemarkerplugin.properties -text
 tvbrowser/src/simplemarkerplugin/simplemarkerplugin_de.properties -text
 tvbrowser/src/simplemarkerplugin/simplemarkerplugin_sv.properties -text
+tvbrowser/src/speechplugin/SpeechPlugin.java -text svneol=unset#text/plain
+tvbrowser/src/speechplugin/SpeechPluginSettings.java -text svneol=unset#text/plain
+tvbrowser/src/speechplugin/SpeechPluginSettingsTab.java -text svneol=unset#text/plain
+tvbrowser/src/speechplugin/speechplugin.properties -text svneol=unset#text/plain
+tvbrowser/src/speechplugin/speechplugin_de.properties -text svneol=unset#text/plain
 tvbrowser/src/swedbtvdataservice/DataHydraChannelContainer.java -text
 tvbrowser/src/swedbtvdataservice/DataHydraChannelGroup.java -text
 tvbrowser/src/swedbtvdataservice/DataHydraChannelParser.java -text
