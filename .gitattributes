@@ -603,7 +603,7 @@ tvbrowser/src/knotifyplugin/knotify.png -text
 tvbrowser/src/movieawardplugin/Award.java -text
 tvbrowser/src/movieawardplugin/Movie.java -text
 tvbrowser/src/movieawardplugin/MovieAward.java -text
-tvbrowser/src/movieawardplugin/MovieAwardCategorie.java -text
+tvbrowser/src/movieawardplugin/MovieAwardCategory.java -text
 tvbrowser/src/movieawardplugin/MovieAwardHandler.java -text
 tvbrowser/src/movieawardplugin/MovieAwardPlugin.java -text
 tvbrowser/src/movieawardplugin/data/index.csv -text
