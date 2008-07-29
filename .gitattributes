@@ -501,6 +501,9 @@ tvbrowser/src/captureplugin/utils/ConfigTableModel.java -text
 tvbrowser/src/captureplugin/utils/ExternalChannelIf.java -text
 tvbrowser/src/captureplugin/utils/ExternalChannelTableCellEditor.java -text
 tvbrowser/src/captureplugin/utils/ExternalChannelTableCellRenderer.java -text
+tvbrowser/src/countrycodeplugin/CountryCodePlugin.java -text svneol=unset#text/plain
+tvbrowser/src/countrycodeplugin/countrycodeplugin.properties -text svneol=unset#text/plain
+tvbrowser/src/countrycodeplugin/countrycodeplugin_de.properties -text svneol=unset#text/plain
 tvbrowser/src/dataviewerplugin/ChannelTableCellRenderer.java -text
 tvbrowser/src/dataviewerplugin/DataTableCellRenderer.java -text
 tvbrowser/src/dataviewerplugin/DataTableModel.java -text
