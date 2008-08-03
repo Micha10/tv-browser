@@ -641,9 +641,38 @@ tvbrowser/src/simplemarkerplugin/SimpleMarkerPluginSettingsTab.java -text
 tvbrowser/src/simplemarkerplugin/simplemarkerplugin.properties -text
 tvbrowser/src/simplemarkerplugin/simplemarkerplugin_de.properties -text
 tvbrowser/src/simplemarkerplugin/simplemarkerplugin_sv.properties -text
+tvbrowser/src/speechplugin/SpeechParamLibrary.java -text svneol=unset#text/plain
 tvbrowser/src/speechplugin/SpeechPlugin.java -text svneol=unset#text/plain
 tvbrowser/src/speechplugin/SpeechPluginSettings.java -text svneol=unset#text/plain
 tvbrowser/src/speechplugin/SpeechPluginSettingsTab.java -text svneol=unset#text/plain
+tvbrowser/src/speechplugin/engine/AbstractSpeechEngine.java -text svneol=unset#text/plain
+tvbrowser/src/speechplugin/engine/CommandLineSpeechEngine.java -text svneol=unset#text/plain
+tvbrowser/src/speechplugin/engine/JSAPISpeechEngine.java -text svneol=unset#text/plain
+tvbrowser/src/speechplugin/engine/MacSpeechEngine.java -text svneol=unset#text/plain
+tvbrowser/src/speechplugin/engine/SAPISpeechEngine.java -text svneol=unset#text/plain
+tvbrowser/src/speechplugin/engine/engine.properties -text svneol=unset#text/plain
+tvbrowser/src/speechplugin/engine/engine_de.properties -text svneol=unset#text/plain
+tvbrowser/src/speechplugin/quadmore/QUADINIT.H -text
+tvbrowser/src/speechplugin/quadmore/QuadTTS.clw -text
+tvbrowser/src/speechplugin/quadmore/QuadTTS.cpp -text
+tvbrowser/src/speechplugin/quadmore/QuadTTS.def -text
+tvbrowser/src/speechplugin/quadmore/QuadTTS.dll -text
+tvbrowser/src/speechplugin/quadmore/QuadTTS.dsp -text
+tvbrowser/src/speechplugin/quadmore/QuadTTS.dsw -text
+tvbrowser/src/speechplugin/quadmore/QuadTTS.h -text
+tvbrowser/src/speechplugin/quadmore/QuadTTS.ncb -text
+tvbrowser/src/speechplugin/quadmore/QuadTTS.opt -text
+tvbrowser/src/speechplugin/quadmore/QuadTTS.plg -text
+tvbrowser/src/speechplugin/quadmore/QuadTTS.rc -text
+tvbrowser/src/speechplugin/quadmore/QuadmoreTTS.class -text
+tvbrowser/src/speechplugin/quadmore/QuadmoreTTS.h -text
+tvbrowser/src/speechplugin/quadmore/QuadmoreTTS.java -text svneol=unset#text/plain
+tvbrowser/src/speechplugin/quadmore/RES/QuadTTS.rc2 -text
+tvbrowser/src/speechplugin/quadmore/Resource.h -text
+tvbrowser/src/speechplugin/quadmore/SAPI.java -text svneol=unset#text/plain
+tvbrowser/src/speechplugin/quadmore/SR.H -text
+tvbrowser/src/speechplugin/quadmore/StdAfx.cpp -text
+tvbrowser/src/speechplugin/quadmore/StdAfx.h -text
 tvbrowser/src/speechplugin/speechplugin.properties -text svneol=unset#text/plain
 tvbrowser/src/speechplugin/speechplugin_de.properties -text svneol=unset#text/plain
 tvbrowser/src/swedbtvdataservice/DataHydraChannelContainer.java -text
