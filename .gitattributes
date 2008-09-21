@@ -455,6 +455,10 @@ tvbrowser/src/calendarexportplugin/exporter/VCalExporter.java -text
 tvbrowser/src/calendarexportplugin/exporter/exporter.properties -text
 tvbrowser/src/calendarexportplugin/exporter/exporter_de.properties -text
 tvbrowser/src/calendarexportplugin/exporter/exporter_sv.properties -text
+tvbrowser/src/calendarexportplugin/icons/16x16/apps/apple_ical.png -text
+tvbrowser/src/calendarexportplugin/icons/16x16/apps/google.png -text
+tvbrowser/src/calendarexportplugin/icons/16x16/apps/korganizer.png -text
+tvbrowser/src/calendarexportplugin/icons/16x16/apps/outlook.png -text
 tvbrowser/src/calendarexportplugin/utils/CalendarToolbox.java -text
 tvbrowser/src/calendarexportplugin/utils/ICalFile.java -text
 tvbrowser/src/calendarexportplugin/utils/VCalFile.java -text
