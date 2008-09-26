@@ -680,6 +680,7 @@ tvbrowser/src/speechplugin/quadmore/StdAfx.cpp -text
 tvbrowser/src/speechplugin/quadmore/StdAfx.h -text
 tvbrowser/src/speechplugin/speechplugin.properties -text svneol=unset#text/plain
 tvbrowser/src/speechplugin/speechplugin_de.properties -text svneol=unset#text/plain
+tvbrowser/src/swedbtvdataservice/ChangeTrackingProperties.java -text svneol=unset#text/plain
 tvbrowser/src/swedbtvdataservice/DataHydraChannelContainer.java -text
 tvbrowser/src/swedbtvdataservice/DataHydraChannelGroup.java -text
 tvbrowser/src/swedbtvdataservice/DataHydraChannelParser.java -text
