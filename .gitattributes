@@ -48,6 +48,11 @@ pdatvbrowser/languages/German.txt -text
 pdatvbrowser/languages/Norsk.txt -text
 tvbrowser-plugins/src/idontwant2see/idontwant2see.properties -text
 tvbrowser-plugins/src/idontwant2see/idontwant2see_de.properties -text
+tvbrowser-plugins/src/teletextplugin/TeleTextPlugin.java svneol=native#text/plain
+tvbrowser-plugins/src/teletextplugin/teletext.png -text
+tvbrowser-plugins/src/teletextplugin/teletext.properties -text svneol=unset#text/plain
+tvbrowser-plugins/src/teletextplugin/teletextplugin.properties -text svneol=unset#text/plain
+tvbrowser-plugins/src/teletextplugin/teletextplugin_de.properties -text svneol=unset#text/plain
 tvbrowser-plugins/src/tooltipcontrolplugin/ToolTipControlPlugin.java -text
 tvbrowser-plugins/src/tooltipcontrolplugin/ToolTipControlPluginSettingsTab.java -text
 tvbrowser-plugins/src/tooltipcontrolplugin/tooltipcontrolplugin.properties -text
@@ -697,11 +702,6 @@ tvbrowser/src/swedbtvdataservice/SweDBTvDataService.java -text
 tvbrowser/src/swedbtvdataservice/swedbtvdataservice.properties -text
 tvbrowser/src/swedbtvdataservice/swedbtvdataservice_de.properties -text
 tvbrowser/src/swedbtvdataservice/swedbtvdataservice_sv.properties -text
-tvbrowser/src/teletextplugin/TeleTextPlugin.java svneol=native#text/plain
-tvbrowser/src/teletextplugin/teletext.png -text
-tvbrowser/src/teletextplugin/teletext.properties -text svneol=unset#text/plain
-tvbrowser/src/teletextplugin/teletextplugin.properties -text svneol=unset#text/plain
-tvbrowser/src/teletextplugin/teletextplugin_de.properties -text svneol=unset#text/plain
 tvbrowser/src/timelistplugin/ProgramListDialog.java -text
 tvbrowser/src/timelistplugin/TimeListCellRenderer.java -text
 tvbrowser/src/timelistplugin/TimeListPlugin.java -text
