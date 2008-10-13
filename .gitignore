@@ -2,6 +2,7 @@ tvbrowser-plugins/src/idontwant2see/License.txt
 tvbrowser-plugins/src/tooltipcontrolplugin/License.txt
 tvbrowser/.settings
 tvbrowser/classes
+tvbrowser/doc
 tvbrowser/images/themes/tango/16x16/actions/Makefile
 tvbrowser/images/themes/tango/16x16/actions/Makefile.in
 tvbrowser/images/themes/tango/16x16/apps/Makefile
@@ -43,4 +44,5 @@ tvbrowser/src/dataviewerplugin/LICENSE.txt
 tvbrowser/src/primarydatamanager/primarydataservice/secret
 tvbrowser/src/tvraterplugin/imgs/tvbrowser_pie.psd
 tvbrowser/src/webplugin/.pics
+tvbrowser/testdata
 tvbrowser/unpacked
