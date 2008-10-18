@@ -57,8 +57,6 @@ tvbrowser-plugins/src/tooltipcontrolplugin/ToolTipControlPlugin.java -text
 tvbrowser-plugins/src/tooltipcontrolplugin/ToolTipControlPluginSettingsTab.java -text
 tvbrowser-plugins/src/tooltipcontrolplugin/tooltipcontrolplugin.properties -text
 tvbrowser-plugins/src/tooltipcontrolplugin/tooltipcontrolplugin_de.properties -text
-tvbrowser/.classpath -text svneol=unset#text/plain
-tvbrowser/.project -text svneol=unset#text/plain
 tvbrowser/.settings/org.eclipse.core.resources.prefs -text
 tvbrowser/.settings/org.eclipse.jdt.core.prefs -text
 tvbrowser/.settings/org.eclipse.jdt.ui.prefs -text
