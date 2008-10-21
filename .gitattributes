@@ -548,6 +548,7 @@ tvbrowser/src/dreamboxdataservice/dreamboxdataservice_de.properties -text
 tvbrowser/src/genreplugin/IGenreSettings.java -text
 tvbrowser/src/growlplugin/growlclaw.png -text
 tvbrowser/src/growlplugin/growlplugin_sv.properties -text
+tvbrowser/src/i18nplugin/AbstractHierarchicalNode.java -text svneol=unset#text/plain
 tvbrowser/src/i18nplugin/FilterNodeIf.java -text
 tvbrowser/src/i18nplugin/I18NPlugin.java -text
 tvbrowser/src/i18nplugin/LanguageChooser.java -text
