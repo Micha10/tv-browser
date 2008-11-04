@@ -46,6 +46,7 @@ pdatvbrowser/languages/Dansk.txt -text
 pdatvbrowser/languages/English.txt -text
 pdatvbrowser/languages/German.txt -text
 pdatvbrowser/languages/Norsk.txt -text
+tvbrowser-plugins/plugin-idontwant2see/pom.xml -text
 tvbrowser-plugins/plugin-idontwant2see/src/main/java/idontwant2see/idontwant2see.properties -text
 tvbrowser-plugins/plugin-idontwant2see/src/main/java/idontwant2see/idontwant2see_de.properties -text
 tvbrowser-plugins/plugin-teletext/pom.xml -text
@@ -59,6 +60,7 @@ tvbrowser-plugins/plugin-tooltipcontrol/src/main/java/tooltipcontrolplugin/ToolT
 tvbrowser-plugins/plugin-tooltipcontrol/src/main/java/tooltipcontrolplugin/ToolTipControlPluginSettingsTab.java -text
 tvbrowser-plugins/plugin-tooltipcontrol/src/main/java/tooltipcontrolplugin/tooltipcontrolplugin.properties -text
 tvbrowser-plugins/plugin-tooltipcontrol/src/main/java/tooltipcontrolplugin/tooltipcontrolplugin_de.properties -text
+tvbrowser-plugins/pom.xml -text
 tvbrowser/.settings/org.eclipse.core.resources.prefs -text
 tvbrowser/.settings/org.eclipse.jdt.core.prefs -text
 tvbrowser/.settings/org.eclipse.jdt.ui.prefs -text
