@@ -62,6 +62,10 @@ tvbrowser-plugins/plugin-tooltipcontrol/src/main/resources/tooltipcontrolplugin/
 tvbrowser-plugins/plugin-tooltipcontrol/src/main/resources/tooltipcontrolplugin/tooltipcontrolplugin_de.properties -text
 tvbrowser-plugins/plugin-twitter/pom.xml -text
 tvbrowser-plugins/plugin-twitter/src/main/assembly/src.xml -text
+tvbrowser-plugins/plugin-twitter/src/main/java/twitterplugin/TwitterPlugin.java -text
+tvbrowser-plugins/plugin-twitter/src/main/resources/twitterplugin/twitter.png -text
+tvbrowser-plugins/plugin-twitter/src/main/resources/twitterplugin/twitterplugin.properties -text
+tvbrowser-plugins/plugin-twitter/src/main/resources/twitterplugin/twitterplugin_de.properties -text
 tvbrowser-plugins/pom.xml -text
 tvbrowser/.settings/org.eclipse.core.resources.prefs -text
 tvbrowser/.settings/org.eclipse.jdt.core.prefs -text
