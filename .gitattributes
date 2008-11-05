@@ -47,19 +47,19 @@ pdatvbrowser/languages/English.txt -text
 pdatvbrowser/languages/German.txt -text
 pdatvbrowser/languages/Norsk.txt -text
 tvbrowser-plugins/plugin-idontwant2see/pom.xml -text
-tvbrowser-plugins/plugin-idontwant2see/src/main/java/idontwant2see/idontwant2see.properties -text
-tvbrowser-plugins/plugin-idontwant2see/src/main/java/idontwant2see/idontwant2see_de.properties -text
+tvbrowser-plugins/plugin-idontwant2see/src/main/resources/idontwant2see/idontwant2see.properties -text
+tvbrowser-plugins/plugin-idontwant2see/src/main/resources/idontwant2see/idontwant2see_de.properties -text
 tvbrowser-plugins/plugin-teletext/pom.xml -text
 tvbrowser-plugins/plugin-teletext/src/main/java/teletextplugin/TeleTextPlugin.java svneol=native#text/plain
-tvbrowser-plugins/plugin-teletext/src/main/java/teletextplugin/teletext.png -text
-tvbrowser-plugins/plugin-teletext/src/main/java/teletextplugin/teletext.properties -text svneol=unset#text/plain
-tvbrowser-plugins/plugin-teletext/src/main/java/teletextplugin/teletextplugin.properties -text svneol=unset#text/plain
-tvbrowser-plugins/plugin-teletext/src/main/java/teletextplugin/teletextplugin_de.properties -text svneol=unset#text/plain
+tvbrowser-plugins/plugin-teletext/src/main/resources/teletextplugin/teletext.png -text
+tvbrowser-plugins/plugin-teletext/src/main/resources/teletextplugin/teletext.properties -text
+tvbrowser-plugins/plugin-teletext/src/main/resources/teletextplugin/teletextplugin.properties -text
+tvbrowser-plugins/plugin-teletext/src/main/resources/teletextplugin/teletextplugin_de.properties -text
 tvbrowser-plugins/plugin-tooltipcontrol/pom.xml -text
 tvbrowser-plugins/plugin-tooltipcontrol/src/main/java/tooltipcontrolplugin/ToolTipControlPlugin.java -text
 tvbrowser-plugins/plugin-tooltipcontrol/src/main/java/tooltipcontrolplugin/ToolTipControlPluginSettingsTab.java -text
-tvbrowser-plugins/plugin-tooltipcontrol/src/main/java/tooltipcontrolplugin/tooltipcontrolplugin.properties -text
-tvbrowser-plugins/plugin-tooltipcontrol/src/main/java/tooltipcontrolplugin/tooltipcontrolplugin_de.properties -text
+tvbrowser-plugins/plugin-tooltipcontrol/src/main/resources/tooltipcontrolplugin/tooltipcontrolplugin.properties -text
+tvbrowser-plugins/plugin-tooltipcontrol/src/main/resources/tooltipcontrolplugin/tooltipcontrolplugin_de.properties -text
 tvbrowser-plugins/plugin-twitter/pom.xml -text
 tvbrowser-plugins/plugin-twitter/src/main/assembly/src.xml -text
 tvbrowser-plugins/pom.xml -text
