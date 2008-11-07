@@ -144,6 +144,7 @@ tvbrowser-plugins/plugin-tooltipcontrol/src/main/resources/tooltipcontrolplugin/
 tvbrowser-plugins/plugin-tooltipcontrol/src/main/resources/tooltipcontrolplugin/tooltipcontrolplugin_de.properties -text
 tvbrowser-plugins/plugin-twitter/pom.xml -text
 tvbrowser-plugins/plugin-twitter/src/main/java/twitterplugin/TwitterDialog.java -text
+tvbrowser-plugins/plugin-twitter/src/main/java/twitterplugin/TwitterLoginDialog.java -text
 tvbrowser-plugins/plugin-twitter/src/main/java/twitterplugin/TwitterPlugin.java -text
 tvbrowser-plugins/plugin-twitter/src/main/java/twitterplugin/TwitterSender.java -text
 tvbrowser-plugins/plugin-twitter/src/main/resources/twitterplugin/twitter.png -text
