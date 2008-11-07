@@ -51,16 +51,16 @@ tvbrowser-plugins/plugin-countrycode/src/main/java/countrycodeplugin/CountryCode
 tvbrowser-plugins/plugin-countrycode/src/main/resources/countrycodeplugin/countrycodeplugin.properties -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-countrycode/src/main/resources/countrycodeplugin/countrycodeplugin_de.properties -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-dataviewer/pom.xml -text
-tvbrowser-plugins/plugin-dataviewer/src/main/java/dataviewer/ChannelTableCellRenderer.java -text
-tvbrowser-plugins/plugin-dataviewer/src/main/java/dataviewer/DataTableCellRenderer.java -text
-tvbrowser-plugins/plugin-dataviewer/src/main/java/dataviewer/DataTableModel.java -text
-tvbrowser-plugins/plugin-dataviewer/src/main/java/dataviewer/DataViewerPlugin.java -text
-tvbrowser-plugins/plugin-dataviewer/src/main/java/dataviewer/DataViewerPluginSettingsTab.java -text
-tvbrowser-plugins/plugin-dataviewer/src/main/resources/dataviewer/dataviewerplugin.properties -text
-tvbrowser-plugins/plugin-dataviewer/src/main/resources/dataviewer/dataviewerplugin_de.properties -text
-tvbrowser-plugins/plugin-dataviewer/src/main/resources/dataviewer/icons/16x16/actions/format-justify-fill.png -text
-tvbrowser-plugins/plugin-dataviewer/src/main/resources/dataviewer/icons/22x22/actions/format-justify-fill.png -text
-tvbrowser-plugins/plugin-dataviewer/src/main/resources/dataviewer/icons/Readme.txt -text
+tvbrowser-plugins/plugin-dataviewer/src/main/java/dataviewerplugin/ChannelTableCellRenderer.java -text
+tvbrowser-plugins/plugin-dataviewer/src/main/java/dataviewerplugin/DataTableCellRenderer.java -text
+tvbrowser-plugins/plugin-dataviewer/src/main/java/dataviewerplugin/DataTableModel.java -text
+tvbrowser-plugins/plugin-dataviewer/src/main/java/dataviewerplugin/DataViewerPlugin.java -text
+tvbrowser-plugins/plugin-dataviewer/src/main/java/dataviewerplugin/DataViewerPluginSettingsTab.java -text
+tvbrowser-plugins/plugin-dataviewer/src/main/resources/dataviewerplugin/dataviewerplugin.properties -text
+tvbrowser-plugins/plugin-dataviewer/src/main/resources/dataviewerplugin/dataviewerplugin_de.properties -text
+tvbrowser-plugins/plugin-dataviewer/src/main/resources/dataviewerplugin/icons/16x16/actions/format-justify-fill.png -text
+tvbrowser-plugins/plugin-dataviewer/src/main/resources/dataviewerplugin/icons/22x22/actions/format-justify-fill.png -text
+tvbrowser-plugins/plugin-dataviewer/src/main/resources/dataviewerplugin/icons/Readme.txt -text
 tvbrowser-plugins/plugin-idontwant2see/pom.xml -text
 tvbrowser-plugins/plugin-idontwant2see/src/main/resources/idontwant2see/idontwant2see.properties -text
 tvbrowser-plugins/plugin-idontwant2see/src/main/resources/idontwant2see/idontwant2see_de.properties -text
