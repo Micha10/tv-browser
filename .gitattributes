@@ -50,6 +50,17 @@ tvbrowser-plugins/plugin-countrycode/pom.xml -text
 tvbrowser-plugins/plugin-countrycode/src/main/java/countrycodeplugin/CountryCodePlugin.java -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-countrycode/src/main/resources/countrycodeplugin/countrycodeplugin.properties -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-countrycode/src/main/resources/countrycodeplugin/countrycodeplugin_de.properties -text svneol=unset#text/plain
+tvbrowser-plugins/plugin-dataviewer/pom.xml -text
+tvbrowser-plugins/plugin-dataviewer/src/main/java/dataviewer/ChannelTableCellRenderer.java -text
+tvbrowser-plugins/plugin-dataviewer/src/main/java/dataviewer/DataTableCellRenderer.java -text
+tvbrowser-plugins/plugin-dataviewer/src/main/java/dataviewer/DataTableModel.java -text
+tvbrowser-plugins/plugin-dataviewer/src/main/java/dataviewer/DataViewerPlugin.java -text
+tvbrowser-plugins/plugin-dataviewer/src/main/java/dataviewer/DataViewerPluginSettingsTab.java -text
+tvbrowser-plugins/plugin-dataviewer/src/main/resources/dataviewer/dataviewerplugin.properties -text
+tvbrowser-plugins/plugin-dataviewer/src/main/resources/dataviewer/dataviewerplugin_de.properties -text
+tvbrowser-plugins/plugin-dataviewer/src/main/resources/dataviewer/icons/16x16/actions/format-justify-fill.png -text
+tvbrowser-plugins/plugin-dataviewer/src/main/resources/dataviewer/icons/22x22/actions/format-justify-fill.png -text
+tvbrowser-plugins/plugin-dataviewer/src/main/resources/dataviewer/icons/Readme.txt -text
 tvbrowser-plugins/plugin-idontwant2see/pom.xml -text
 tvbrowser-plugins/plugin-idontwant2see/src/main/resources/idontwant2see/idontwant2see.properties -text
 tvbrowser-plugins/plugin-idontwant2see/src/main/resources/idontwant2see/idontwant2see_de.properties -text
@@ -558,16 +569,6 @@ tvbrowser/src/captureplugin/utils/ConfigTableModel.java -text
 tvbrowser/src/captureplugin/utils/ExternalChannelIf.java -text
 tvbrowser/src/captureplugin/utils/ExternalChannelTableCellEditor.java -text
 tvbrowser/src/captureplugin/utils/ExternalChannelTableCellRenderer.java -text
-tvbrowser/src/dataviewerplugin/ChannelTableCellRenderer.java -text
-tvbrowser/src/dataviewerplugin/DataTableCellRenderer.java -text
-tvbrowser/src/dataviewerplugin/DataTableModel.java -text
-tvbrowser/src/dataviewerplugin/DataViewerPlugin.java -text
-tvbrowser/src/dataviewerplugin/DataViewerPluginSettingsTab.java -text
-tvbrowser/src/dataviewerplugin/dataviewerplugin.properties -text
-tvbrowser/src/dataviewerplugin/dataviewerplugin_de.properties -text
-tvbrowser/src/dataviewerplugin/icons/16x16/actions/format-justify-fill.png -text
-tvbrowser/src/dataviewerplugin/icons/22x22/actions/format-justify-fill.png -text
-tvbrowser/src/dataviewerplugin/icons/Readme.txt -text
 tvbrowser/src/devplugin/CancelableSettingsTab.java -text
 tvbrowser/src/devplugin/FilterManager.java -text
 tvbrowser/src/devplugin/PluginsFilterComponent.java -text
