@@ -68,6 +68,10 @@ tvbrowser-plugins/plugin-twitter/src/main/java/twitterplugin/TwitterSender.java 
 tvbrowser-plugins/plugin-twitter/src/main/resources/twitterplugin/twitter.png -text
 tvbrowser-plugins/plugin-twitter/src/main/resources/twitterplugin/twitterplugin.properties -text
 tvbrowser-plugins/plugin-twitter/src/main/resources/twitterplugin/twitterplugin_de.properties -text
+tvbrowser-plugins/plugin-wirschauen/pom.xml -text
+tvbrowser-plugins/plugin-wirschauen/src/main/resources/wirschauenplugin/icons/16x16/apps/wirschauen.png -text
+tvbrowser-plugins/plugin-wirschauen/src/main/resources/wirschauenplugin/wirschauenplugin.properties -text
+tvbrowser-plugins/plugin-wirschauen/src/main/resources/wirschauenplugin/wirschauenplugin_de.properties -text
 tvbrowser-plugins/pom.xml -text
 tvbrowser/.settings/org.eclipse.core.resources.prefs -text
 tvbrowser/.settings/org.eclipse.jdt.core.prefs -text
@@ -834,9 +838,6 @@ tvbrowser/src/webplugin/aclib/image/ico/TypeCompression.java -text
 tvbrowser/src/webplugin/aclib/image/ico/spi/ICOImageReaderSPI.java -text
 tvbrowser/src/webplugin/aclib/image/ico/spi/ICOMetaData.java -text
 tvbrowser/src/webplugin/aclib/image/ico/spi/ICOReader.java -text
-tvbrowser/src/wirschauenplugin/icons/16x16/apps/wirschauen.png -text
-tvbrowser/src/wirschauenplugin/wirschauenplugin.properties -text
-tvbrowser/src/wirschauenplugin/wirschauenplugin_de.properties -text
 tvbrowser/test/src/primarydatamanager/DayProgramMapperTest.java -text
 tvbrowser/test/src/primarydatamanager/PrimaryDataManagerTest.java -text
 tvbrowser/test/src/tvbrowser/extras/favoritesplugin/core/ActorStringSearcherTest.java -text
