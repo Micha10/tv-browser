@@ -102,7 +102,6 @@ tvbrowser-plugins/plugin-speech/src/main/cpp/quadmore/QuadTTS.rc -text
 tvbrowser-plugins/plugin-speech/src/main/cpp/quadmore/QuadmoreTTS.h -text
 tvbrowser-plugins/plugin-speech/src/main/cpp/quadmore/RES/QuadTTS.rc2 -text
 tvbrowser-plugins/plugin-speech/src/main/cpp/quadmore/Resource.h -text
-tvbrowser-plugins/plugin-speech/src/main/cpp/quadmore/SAPI.java -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-speech/src/main/cpp/quadmore/SR.H -text
 tvbrowser-plugins/plugin-speech/src/main/cpp/quadmore/StdAfx.cpp -text
 tvbrowser-plugins/plugin-speech/src/main/cpp/quadmore/StdAfx.h -text
@@ -116,6 +115,7 @@ tvbrowser-plugins/plugin-speech/src/main/java/speechplugin/engine/JSAPISpeechEng
 tvbrowser-plugins/plugin-speech/src/main/java/speechplugin/engine/MacSpeechEngine.java -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-speech/src/main/java/speechplugin/engine/SAPISpeechEngine.java -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-speech/src/main/java/speechplugin/quadmore/QuadmoreTTS.java -text svneol=unset#text/plain
+tvbrowser-plugins/plugin-speech/src/main/java/speechplugin/quadmore/SAPI.java -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-speech/src/main/resources/quadmore/QuadTTS.dll -text
 tvbrowser-plugins/plugin-speech/src/main/resources/speechplugin/engine/engine.properties -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-speech/src/main/resources/speechplugin/engine/engine_de.properties -text svneol=unset#text/plain
