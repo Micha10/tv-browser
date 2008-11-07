@@ -64,6 +64,7 @@ tvbrowser-plugins/plugin-dataviewer/src/main/resources/dataviewerplugin/icons/Re
 tvbrowser-plugins/plugin-idontwant2see/pom.xml -text
 tvbrowser-plugins/plugin-idontwant2see/src/main/resources/idontwant2see/idontwant2see.properties -text
 tvbrowser-plugins/plugin-idontwant2see/src/main/resources/idontwant2see/idontwant2see_de.properties -text
+tvbrowser-plugins/plugin-imdb/pom.xml -text
 tvbrowser-plugins/plugin-imdb/src/main/assembly/src.xml -text
 tvbrowser-plugins/plugin-imdb/src/main/java/imdbplugin/ImdbDatabase.java -text
 tvbrowser-plugins/plugin-imdb/src/main/java/imdbplugin/ImdbIcon.java -text
