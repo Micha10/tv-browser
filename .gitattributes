@@ -147,6 +147,7 @@ tvbrowser-plugins/plugin-twitter/src/main/java/twitterplugin/TwitterDialog.java 
 tvbrowser-plugins/plugin-twitter/src/main/java/twitterplugin/TwitterLoginDialog.java -text
 tvbrowser-plugins/plugin-twitter/src/main/java/twitterplugin/TwitterPlugin.java -text
 tvbrowser-plugins/plugin-twitter/src/main/java/twitterplugin/TwitterSender.java -text
+tvbrowser-plugins/plugin-twitter/src/main/java/twitterplugin/TwitterSettingsTab.java -text
 tvbrowser-plugins/plugin-twitter/src/main/resources/twitterplugin/twitter.png -text
 tvbrowser-plugins/plugin-twitter/src/main/resources/twitterplugin/twitterplugin.properties -text
 tvbrowser-plugins/plugin-twitter/src/main/resources/twitterplugin/twitterplugin_de.properties -text
