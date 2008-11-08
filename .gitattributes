@@ -65,7 +65,6 @@ tvbrowser-plugins/plugin-idontwant2see/pom.xml -text
 tvbrowser-plugins/plugin-idontwant2see/src/main/resources/idontwant2see/idontwant2see.properties -text
 tvbrowser-plugins/plugin-idontwant2see/src/main/resources/idontwant2see/idontwant2see_de.properties -text
 tvbrowser-plugins/plugin-imdb/pom.xml -text
-tvbrowser-plugins/plugin-imdb/src/main/assembly/src.xml -text
 tvbrowser-plugins/plugin-imdb/src/main/java/imdbplugin/ImdbDatabase.java -text
 tvbrowser-plugins/plugin-imdb/src/main/java/imdbplugin/ImdbIcon.java -text
 tvbrowser-plugins/plugin-imdb/src/main/java/imdbplugin/ImdbParser.java -text
@@ -155,6 +154,7 @@ tvbrowser-plugins/plugin-wirschauen/pom.xml -text
 tvbrowser-plugins/plugin-wirschauen/src/main/resources/wirschauenplugin/icons/16x16/apps/wirschauen.png -text
 tvbrowser-plugins/plugin-wirschauen/src/main/resources/wirschauenplugin/wirschauenplugin.properties -text
 tvbrowser-plugins/plugin-wirschauen/src/main/resources/wirschauenplugin/wirschauenplugin_de.properties -text
+tvbrowser-plugins/plugin-zattoo/pom.xml -text
 tvbrowser-plugins/pom.xml -text
 tvbrowser/.settings/org.eclipse.core.resources.prefs -text
 tvbrowser/.settings/org.eclipse.jdt.core.prefs -text
