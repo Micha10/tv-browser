@@ -158,7 +158,6 @@ tvbrowser-plugins/plugin-zattoo/pom.xml -text
 tvbrowser-plugins/plugin-zattoo/src/main/java/zattooplugin/ZattooCountry.java -text
 tvbrowser-plugins/plugin-zattoo/src/main/java/zattooplugin/ZattooPlugin.java -text
 tvbrowser-plugins/plugin-zattoo/src/main/java/zattooplugin/ZattooSettingsTab.java -text
-tvbrowser-plugins/plugin-zattoo/src/main/resources/zattooplugin/channelid_at.properties -text
 tvbrowser-plugins/plugin-zattoo/src/main/resources/zattooplugin/channelid_ch.properties -text
 tvbrowser-plugins/plugin-zattoo/src/main/resources/zattooplugin/channelid_de.properties -text
 tvbrowser-plugins/plugin-zattoo/src/main/resources/zattooplugin/zattoo.png -text
