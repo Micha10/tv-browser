@@ -156,7 +156,7 @@ tvbrowser-plugins/plugin-wirschauen/src/main/resources/wirschauenplugin/wirschau
 tvbrowser-plugins/plugin-wirschauen/src/main/resources/wirschauenplugin/wirschauenplugin_de.properties -text
 tvbrowser-plugins/plugin-zattoo/pom.xml -text
 tvbrowser-plugins/plugin-zattoo/src/main/java/zattooplugin/ZattooPlugin.java -text
-tvbrowser-plugins/plugin-zattoo/src/main/resources/zattooplugin/channelid.properties -text
+tvbrowser-plugins/plugin-zattoo/src/main/resources/zattooplugin/channelid_de.properties -text
 tvbrowser-plugins/plugin-zattoo/src/main/resources/zattooplugin/zattooplugin.properties -text
 tvbrowser-plugins/plugin-zattoo/src/main/resources/zattooplugin/zattooplugin_de.properties -text
 tvbrowser-plugins/pom.xml -text
