@@ -175,6 +175,7 @@ tvbrowser/deployment/linux.properties eol=lf
 tvbrowser/deployment/linux/tvbrowser.desktop -text
 tvbrowser/deployment/linux/tvbrowser.sh eol=lf
 tvbrowser/deployment/macosx/jarbundler-2.0.0.jar -text
+tvbrowser/deployment/macosx/tvbrowser.dmg -text
 tvbrowser/deployment/win/installer/Contrib/Graphics/Checks/modern.bmp -text
 tvbrowser/deployment/win/installer/Contrib/Graphics/Icons/murfman-install.ico -text
 tvbrowser/deployment/win/installer/Contrib/Graphics/Icons/murfman-uninstall.ico -text
