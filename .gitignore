@@ -14,6 +14,10 @@ tvbrowser-plugins/plugin-timelist/.classpath
 tvbrowser-plugins/plugin-timelist/.project
 tvbrowser-plugins/plugin-timelist/.settings
 tvbrowser-plugins/plugin-timelist/target
+tvbrowser-plugins/plugin-twitter/.classpath
+tvbrowser-plugins/plugin-twitter/.project
+tvbrowser-plugins/plugin-twitter/.settings
+tvbrowser-plugins/plugin-twitter/target
 tvbrowser-plugins/plugin-wirschauen/.classpath
 tvbrowser-plugins/plugin-wirschauen/.project
 tvbrowser-plugins/plugin-wirschauen/.settings
