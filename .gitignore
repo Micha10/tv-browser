@@ -18,6 +18,10 @@ tvbrowser-plugins/plugin-timelist/.classpath
 tvbrowser-plugins/plugin-timelist/.project
 tvbrowser-plugins/plugin-timelist/.settings
 tvbrowser-plugins/plugin-timelist/target
+tvbrowser-plugins/plugin-tooltipcontrol/.classpath
+tvbrowser-plugins/plugin-tooltipcontrol/.project
+tvbrowser-plugins/plugin-tooltipcontrol/.settings
+tvbrowser-plugins/plugin-tooltipcontrol/target
 tvbrowser-plugins/plugin-twitter/.classpath
 tvbrowser-plugins/plugin-twitter/.project
 tvbrowser-plugins/plugin-twitter/.settings
