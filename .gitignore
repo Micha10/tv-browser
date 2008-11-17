@@ -26,6 +26,10 @@ tvbrowser-plugins/plugin-twitter/.classpath
 tvbrowser-plugins/plugin-twitter/.project
 tvbrowser-plugins/plugin-twitter/.settings
 tvbrowser-plugins/plugin-twitter/target
+tvbrowser-plugins/plugin-widget/.classpath
+tvbrowser-plugins/plugin-widget/.project
+tvbrowser-plugins/plugin-widget/.settings
+tvbrowser-plugins/plugin-widget/target
 tvbrowser-plugins/plugin-wirschauen/.classpath
 tvbrowser-plugins/plugin-wirschauen/.project
 tvbrowser-plugins/plugin-wirschauen/.settings
