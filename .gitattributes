@@ -150,9 +150,9 @@ tvbrowser-plugins/plugin-twitter/src/main/resources/twitterplugin/twitter.png -t
 tvbrowser-plugins/plugin-twitter/src/main/resources/twitterplugin/twitterplugin.properties -text
 tvbrowser-plugins/plugin-twitter/src/main/resources/twitterplugin/twitterplugin_de.properties -text
 tvbrowser-plugins/plugin-widget/pom.xml -text svneol=unset#text/plain
-tvbrowser-plugins/plugin-widget/src/main/java/widgetplugin/IWidgetSettings.java -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-widget/src/main/java/widgetplugin/WidgetPlugin.java -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-widget/src/main/java/widgetplugin/WidgetServer.java -text svneol=unset#text/plain
+tvbrowser-plugins/plugin-widget/src/main/java/widgetplugin/WidgetSettings.java -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-widget/src/main/java/widgetplugin/WidgetSettingsTab.java -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-widget/src/main/java/widgetplugin/nanohttpd/NanoHTTPD.java -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-widget/src/main/resources/widgetplugin/widget.png -text
