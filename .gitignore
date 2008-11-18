@@ -14,6 +14,10 @@ tvbrowser-plugins/plugin-imdb/.classpath
 tvbrowser-plugins/plugin-imdb/.project
 tvbrowser-plugins/plugin-imdb/.settings
 tvbrowser-plugins/plugin-imdb/target
+tvbrowser-plugins/plugin-movieaward/.classpath
+tvbrowser-plugins/plugin-movieaward/.project
+tvbrowser-plugins/plugin-movieaward/.settings
+tvbrowser-plugins/plugin-movieaward/target
 tvbrowser-plugins/plugin-teletext/.classpath
 tvbrowser-plugins/plugin-teletext/.project
 tvbrowser-plugins/plugin-teletext/.settings
