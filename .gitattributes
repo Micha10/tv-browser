@@ -126,6 +126,7 @@ tvbrowser-plugins/plugin-teletext/src/main/resources/teletextplugin/teletext.png
 tvbrowser-plugins/plugin-teletext/src/main/resources/teletextplugin/teletext.properties -text
 tvbrowser-plugins/plugin-teletext/src/main/resources/teletextplugin/teletextplugin.properties -text
 tvbrowser-plugins/plugin-teletext/src/main/resources/teletextplugin/teletextplugin_de.properties -text
+tvbrowser-plugins/plugin-timeline/pom.xml -text
 tvbrowser-plugins/plugin-timeline/src/main/java/timelineplugin/ChannelHeader.java -text
 tvbrowser-plugins/plugin-timeline/src/main/java/timelineplugin/ProgramLabel.java -text
 tvbrowser-plugins/plugin-timeline/src/main/java/timelineplugin/ProgramPanel.java -text
@@ -158,6 +159,7 @@ tvbrowser-plugins/plugin-tooltipcontrol/src/main/java/tooltipcontrolplugin/ToolT
 tvbrowser-plugins/plugin-tooltipcontrol/src/main/java/tooltipcontrolplugin/ToolTipControlPluginSettingsTab.java -text
 tvbrowser-plugins/plugin-tooltipcontrol/src/main/resources/tooltipcontrolplugin/tooltipcontrolplugin.properties -text
 tvbrowser-plugins/plugin-tooltipcontrol/src/main/resources/tooltipcontrolplugin/tooltipcontrolplugin_de.properties -text
+tvbrowser-plugins/plugin-tvpearl/pom.xml -text
 tvbrowser-plugins/plugin-tvpearl/src/main/java/tvpearlplugin/HTTPConverter.java -text
 tvbrowser-plugins/plugin-tvpearl/src/main/java/tvpearlplugin/PearlDialog.java -text
 tvbrowser-plugins/plugin-tvpearl/src/main/java/tvpearlplugin/PearlInfoDialog.java -text
