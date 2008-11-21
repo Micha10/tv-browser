@@ -83,6 +83,7 @@ tvbrowser-plugins/plugin-movieaward/src/main/java/movieawardplugin/MovieAwardCat
 tvbrowser-plugins/plugin-movieaward/src/main/java/movieawardplugin/MovieAwardHandler.java -text
 tvbrowser-plugins/plugin-movieaward/src/main/java/movieawardplugin/MovieAwardPlugin.java -text
 tvbrowser-plugins/plugin-movieaward/src/main/java/movieawardplugin/MovieDataFactory.java -text
+tvbrowser-plugins/plugin-movieaward/src/main/resources/movieawardplugin/data/europeanmovieawards.xml -text
 tvbrowser-plugins/plugin-movieaward/src/main/resources/movieawardplugin/data/oscars.xml -text
 tvbrowser-plugins/plugin-movieaward/src/main/resources/movieawardplugin/movieawardplugin.properties -text
 tvbrowser-plugins/plugin-movieaward/src/main/resources/movieawardplugin/movieawardplugin_de.properties -text
