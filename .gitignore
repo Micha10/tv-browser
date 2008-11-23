@@ -1,6 +1,5 @@
 tvbrowser-plugins/.classpath
 tvbrowser-plugins/.project
-tvbrowser-plugins/.settings
 tvbrowser-plugins/plugin-countrycode/.classpath
 tvbrowser-plugins/plugin-countrycode/.project
 tvbrowser-plugins/plugin-countrycode/.settings
@@ -13,6 +12,7 @@ tvbrowser-plugins/plugin-idontwant2see/.classpath
 tvbrowser-plugins/plugin-idontwant2see/.project
 tvbrowser-plugins/plugin-idontwant2see/.settings
 tvbrowser-plugins/plugin-idontwant2see/target
+tvbrowser-plugins/plugin-idontwant2see/tvbrowser-plugins-idontwant2see.iml
 tvbrowser-plugins/plugin-imdb/.classpath
 tvbrowser-plugins/plugin-imdb/.project
 tvbrowser-plugins/plugin-imdb/.settings
@@ -25,10 +25,13 @@ tvbrowser-plugins/plugin-movieaward/.classpath
 tvbrowser-plugins/plugin-movieaward/.project
 tvbrowser-plugins/plugin-movieaward/.settings
 tvbrowser-plugins/plugin-movieaward/target
+tvbrowser-plugins/plugin-movieaward/tvbrowser-plugins-movieaward.iml
+tvbrowser-plugins/plugin-speech/target
 tvbrowser-plugins/plugin-teletext/.classpath
 tvbrowser-plugins/plugin-teletext/.project
 tvbrowser-plugins/plugin-teletext/.settings
 tvbrowser-plugins/plugin-teletext/target
+tvbrowser-plugins/plugin-teletext/tvbrowser-plugins-teletext.iml
 tvbrowser-plugins/plugin-timeline/.classpath
 tvbrowser-plugins/plugin-timeline/.project
 tvbrowser-plugins/plugin-timeline/.settings
@@ -41,6 +44,7 @@ tvbrowser-plugins/plugin-tooltipcontrol/.classpath
 tvbrowser-plugins/plugin-tooltipcontrol/.project
 tvbrowser-plugins/plugin-tooltipcontrol/.settings
 tvbrowser-plugins/plugin-tooltipcontrol/target
+tvbrowser-plugins/plugin-tooltipcontrol/tvbrowser-plugins-tooltipcontrol.iml
 tvbrowser-plugins/plugin-tvpearl/.classpath
 tvbrowser-plugins/plugin-tvpearl/.project
 tvbrowser-plugins/plugin-tvpearl/.settings
@@ -49,6 +53,7 @@ tvbrowser-plugins/plugin-twitter/.classpath
 tvbrowser-plugins/plugin-twitter/.project
 tvbrowser-plugins/plugin-twitter/.settings
 tvbrowser-plugins/plugin-twitter/target
+tvbrowser-plugins/plugin-twitter/tvbrowser-plugins-twitter.iml
 tvbrowser-plugins/plugin-widget/.classpath
 tvbrowser-plugins/plugin-widget/.project
 tvbrowser-plugins/plugin-widget/.settings
@@ -61,7 +66,11 @@ tvbrowser-plugins/plugin-zattoo/.classpath
 tvbrowser-plugins/plugin-zattoo/.project
 tvbrowser-plugins/plugin-zattoo/.settings
 tvbrowser-plugins/plugin-zattoo/target
+tvbrowser-plugins/plugin-zattoo/tvbrowser-plugins-zattoo.iml
 tvbrowser-plugins/target
+tvbrowser-plugins/tvbrowser-plugins.iml
+tvbrowser-plugins/tvbrowser-plugins.ipr
+tvbrowser-plugins/tvbrowser-plugins.iws
 tvbrowser/.classpath
 tvbrowser/.project
 tvbrowser/.settings
