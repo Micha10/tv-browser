@@ -1,3 +1,6 @@
+tvbrowser-plugins/.classpath
+tvbrowser-plugins/.project
+tvbrowser-plugins/.settings
 tvbrowser-plugins/plugin-countrycode/.classpath
 tvbrowser-plugins/plugin-countrycode/.project
 tvbrowser-plugins/plugin-countrycode/.settings
@@ -14,6 +17,7 @@ tvbrowser-plugins/plugin-imdb/.classpath
 tvbrowser-plugins/plugin-imdb/.project
 tvbrowser-plugins/plugin-imdb/.settings
 tvbrowser-plugins/plugin-imdb/target
+tvbrowser-plugins/plugin-mediathek/target
 tvbrowser-plugins/plugin-movieaward/.classpath
 tvbrowser-plugins/plugin-movieaward/.project
 tvbrowser-plugins/plugin-movieaward/.settings
@@ -54,6 +58,7 @@ tvbrowser-plugins/plugin-zattoo/.classpath
 tvbrowser-plugins/plugin-zattoo/.project
 tvbrowser-plugins/plugin-zattoo/.settings
 tvbrowser-plugins/plugin-zattoo/target
+tvbrowser-plugins/target
 tvbrowser/.classpath
 tvbrowser/.project
 tvbrowser/.settings
