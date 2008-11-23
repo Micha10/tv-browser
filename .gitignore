@@ -17,6 +17,9 @@ tvbrowser-plugins/plugin-imdb/.classpath
 tvbrowser-plugins/plugin-imdb/.project
 tvbrowser-plugins/plugin-imdb/.settings
 tvbrowser-plugins/plugin-imdb/target
+tvbrowser-plugins/plugin-mediathek/.classpath
+tvbrowser-plugins/plugin-mediathek/.project
+tvbrowser-plugins/plugin-mediathek/.settings
 tvbrowser-plugins/plugin-mediathek/target
 tvbrowser-plugins/plugin-movieaward/.classpath
 tvbrowser-plugins/plugin-movieaward/.project
