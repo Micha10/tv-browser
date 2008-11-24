@@ -82,6 +82,7 @@ tvbrowser-plugins/plugin-mediathek/src/main/java/mediathekplugin/ItemListCellRen
 tvbrowser-plugins/plugin-mediathek/src/main/java/mediathekplugin/MediathekPlugin.java -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-mediathek/src/main/java/mediathekplugin/MediathekProgram.java -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-mediathek/src/main/java/mediathekplugin/MediathekProgramItem.java -text svneol=unset#text/plain
+tvbrowser-plugins/plugin-mediathek/src/main/java/mediathekplugin/MediathekProgramNode.java -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-mediathek/src/main/java/mediathekplugin/MediathekSettingsTab.java -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-mediathek/src/main/java/mediathekplugin/ProgramsDialog.java -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-mediathek/src/main/java/mediathekplugin/UpdateThread.java -text svneol=unset#text/plain
