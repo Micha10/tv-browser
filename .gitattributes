@@ -79,6 +79,7 @@ tvbrowser-plugins/plugin-mediathek/pom.xml -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-mediathek/src/main/java/mediathekplugin/EpisodeNode.java -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-mediathek/src/main/java/mediathekplugin/IMediathekProperties.java -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-mediathek/src/main/java/mediathekplugin/ItemListCellRenderer.java -text svneol=unset#text/plain
+tvbrowser-plugins/plugin-mediathek/src/main/java/mediathekplugin/LaunchBrowserAction.java -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-mediathek/src/main/java/mediathekplugin/MediathekPlugin.java -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-mediathek/src/main/java/mediathekplugin/MediathekProgram.java -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-mediathek/src/main/java/mediathekplugin/MediathekProgramItem.java -text svneol=unset#text/plain
@@ -86,6 +87,10 @@ tvbrowser-plugins/plugin-mediathek/src/main/java/mediathekplugin/MediathekProgra
 tvbrowser-plugins/plugin-mediathek/src/main/java/mediathekplugin/MediathekSettingsTab.java -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-mediathek/src/main/java/mediathekplugin/ProgramsDialog.java -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-mediathek/src/main/java/mediathekplugin/UpdateThread.java -text svneol=unset#text/plain
+tvbrowser-plugins/plugin-mediathek/src/main/java/mediathekplugin/parser/ARDParser.java -text svneol=unset#text/plain
+tvbrowser-plugins/plugin-mediathek/src/main/java/mediathekplugin/parser/AbstractParser.java -text svneol=unset#text/plain
+tvbrowser-plugins/plugin-mediathek/src/main/java/mediathekplugin/parser/IParser.java -text svneol=unset#text/plain
+tvbrowser-plugins/plugin-mediathek/src/main/java/mediathekplugin/parser/ZDFParser.java -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-mediathek/src/main/resources/mediathekplugin/mediathekplugin.properties -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-mediathek/src/main/resources/mediathekplugin/mediathekplugin_de.properties -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-movieaward/pom.xml -text
