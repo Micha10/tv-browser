@@ -11,6 +11,7 @@ tvbrowser-plugins/plugin-dataviewer/target
 tvbrowser-plugins/plugin-idontwant2see/.classpath
 tvbrowser-plugins/plugin-idontwant2see/.project
 tvbrowser-plugins/plugin-idontwant2see/.settings
+tvbrowser-plugins/plugin-idontwant2see/src/main/java/idontwant2see/LICENSE.txt
 tvbrowser-plugins/plugin-idontwant2see/target
 tvbrowser-plugins/plugin-idontwant2see/tvbrowser-plugins-idontwant2see.iml
 tvbrowser-plugins/plugin-imdb/.classpath
