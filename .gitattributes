@@ -103,9 +103,12 @@ tvbrowser-plugins/plugin-movieaward/src/main/java/movieawardplugin/MovieAwardHan
 tvbrowser-plugins/plugin-movieaward/src/main/java/movieawardplugin/MovieAwardPlugin.java -text
 tvbrowser-plugins/plugin-movieaward/src/main/java/movieawardplugin/MovieAwardSettingsTab.java -text
 tvbrowser-plugins/plugin-movieaward/src/main/java/movieawardplugin/MovieDataFactory.java -text
+tvbrowser-plugins/plugin-movieaward/src/main/java/movieawardplugin/MovieDatabase.java -text
+tvbrowser-plugins/plugin-movieaward/src/main/java/movieawardplugin/MovieDatabaseHandler.java -text
 tvbrowser-plugins/plugin-movieaward/src/main/resources/movieawardplugin/data/cannes.xml -text
 tvbrowser-plugins/plugin-movieaward/src/main/resources/movieawardplugin/data/europeanmovieawards.xml -text
 tvbrowser-plugins/plugin-movieaward/src/main/resources/movieawardplugin/data/grimme.xml -text
+tvbrowser-plugins/plugin-movieaward/src/main/resources/movieawardplugin/data/moviedatabase.xml -text
 tvbrowser-plugins/plugin-movieaward/src/main/resources/movieawardplugin/data/oscars.xml -text
 tvbrowser-plugins/plugin-movieaward/src/main/resources/movieawardplugin/movieaward.png -text
 tvbrowser-plugins/plugin-movieaward/src/main/resources/movieawardplugin/movieawardplugin.properties -text
