@@ -113,6 +113,10 @@ tvbrowser-plugins/plugin-movieaward/src/main/resources/movieawardplugin/data/osc
 tvbrowser-plugins/plugin-movieaward/src/main/resources/movieawardplugin/movieaward.png -text
 tvbrowser-plugins/plugin-movieaward/src/main/resources/movieawardplugin/movieawardplugin.properties -text
 tvbrowser-plugins/plugin-movieaward/src/main/resources/movieawardplugin/movieawardplugin_de.properties -text
+tvbrowser-plugins/plugin-recommendation/pom.xml -text
+tvbrowser-plugins/plugin-recommendation/src/main/java/recommendationplugin/RecommendationPlugin.java -text
+tvbrowser-plugins/plugin-recommendation/src/main/resources/recommendationplugin/recommendationplugin.properties -text
+tvbrowser-plugins/plugin-recommendation/src/main/resources/recommendationplugin/recommendationplugin_de.properties -text
 tvbrowser-plugins/plugin-speech/pom.xml -text
 tvbrowser-plugins/plugin-speech/src/main/cpp/quadmore/QUADINIT.H -text
 tvbrowser-plugins/plugin-speech/src/main/cpp/quadmore/QuadTTS.clw -text
