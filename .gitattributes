@@ -62,6 +62,8 @@ tvbrowser-plugins/plugin-dataviewer/src/main/resources/dataviewerplugin/icons/16
 tvbrowser-plugins/plugin-dataviewer/src/main/resources/dataviewerplugin/icons/22x22/actions/format-justify-fill.png -text
 tvbrowser-plugins/plugin-dataviewer/src/main/resources/dataviewerplugin/icons/Readme.txt -text
 tvbrowser-plugins/plugin-idontwant2see/pom.xml -text
+tvbrowser-plugins/plugin-idontwant2see/src/main/resources/idontwant2see/icons/16x16/apps/idontwant2see.png -text
+tvbrowser-plugins/plugin-idontwant2see/src/main/resources/idontwant2see/icons/22x22/apps/idontwant2see.png -text
 tvbrowser-plugins/plugin-idontwant2see/src/main/resources/idontwant2see/idontwant2see.properties -text
 tvbrowser-plugins/plugin-idontwant2see/src/main/resources/idontwant2see/idontwant2see_de.properties -text
 tvbrowser-plugins/plugin-imdb/pom.xml -text
