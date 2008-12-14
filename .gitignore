@@ -27,6 +27,10 @@ tvbrowser-plugins/plugin-movieaward/.project
 tvbrowser-plugins/plugin-movieaward/.settings
 tvbrowser-plugins/plugin-movieaward/target
 tvbrowser-plugins/plugin-movieaward/tvbrowser-plugins-movieaward.iml
+tvbrowser-plugins/plugin-recommendation/.classpath
+tvbrowser-plugins/plugin-recommendation/.project
+tvbrowser-plugins/plugin-recommendation/.settings
+tvbrowser-plugins/plugin-recommendation/target
 tvbrowser-plugins/plugin-recommendation/tvbrowser-plugins-recommendation.iml
 tvbrowser-plugins/plugin-speech/.classpath
 tvbrowser-plugins/plugin-speech/.project
