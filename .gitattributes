@@ -832,6 +832,7 @@ tvbrowser/src/tvbrowser/core/filters/AudioDescriptionFilter.java -text
 tvbrowser/src/tvbrowser/core/filters/FilterManagerImpl.java -text
 tvbrowser/src/tvbrowser/core/filters/filtercomponents/AbstractFilterComponent.java -text svneol=unset#text/plain
 tvbrowser/src/tvbrowser/core/filters/filtercomponents/AgeLimitFilterComponent.java -text svneol=unset#text/plain
+tvbrowser/src/tvbrowser/core/filters/filtercomponents/DateFilterComponent.java -text svneol=unset#text/plain
 tvbrowser/src/tvbrowser/core/filters/filtercomponents/FavoritesFilterComponent.java -text
 tvbrowser/src/tvbrowser/core/filters/filtercomponents/ReminderFilterComponent.java -text
 tvbrowser/src/tvbrowser/core/plugin/ButtonActionIf.java -text
