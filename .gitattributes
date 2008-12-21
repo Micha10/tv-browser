@@ -196,6 +196,7 @@ tvbrowser-plugins/plugin-tooltipcontrol/src/main/resources/tooltipcontrolplugin/
 tvbrowser-plugins/plugin-tooltipcontrol/src/main/resources/tooltipcontrolplugin/tooltipcontrolplugin_de.properties -text
 tvbrowser-plugins/plugin-tvpearl/pom.xml -text
 tvbrowser-plugins/plugin-tvpearl/src/main/java/tvpearlplugin/HTTPConverter.java -text
+tvbrowser-plugins/plugin-tvpearl/src/main/java/tvpearlplugin/IProgramStatus.java -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-tvpearl/src/main/java/tvpearlplugin/PearlDialog.java -text
 tvbrowser-plugins/plugin-tvpearl/src/main/java/tvpearlplugin/PearlInfoDialog.java -text
 tvbrowser-plugins/plugin-tvpearl/src/main/java/tvpearlplugin/TVPGrabber.java -text
