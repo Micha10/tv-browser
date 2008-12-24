@@ -124,6 +124,8 @@ tvbrowser-plugins/plugin-recommendation/src/main/java/recommendationplugin/Recom
 tvbrowser-plugins/plugin-recommendation/src/main/java/recommendationplugin/RecommendationPlugin.java -text
 tvbrowser-plugins/plugin-recommendation/src/main/java/recommendationplugin/RecommendationSettingsTab.java -text
 tvbrowser-plugins/plugin-recommendation/src/main/java/recommendationplugin/RecommendationTableModel.java -text
+tvbrowser-plugins/plugin-recommendation/src/main/java/recommendationplugin/TableSliderEditor.java -text
+tvbrowser-plugins/plugin-recommendation/src/main/java/recommendationplugin/TableSliderRenderer.java -text
 tvbrowser-plugins/plugin-recommendation/src/main/java/recommendationplugin/WeightDialog.java -text
 tvbrowser-plugins/plugin-recommendation/src/main/java/recommendationplugin/inputimpl/FavoriteInput.java -text
 tvbrowser-plugins/plugin-recommendation/src/main/java/recommendationplugin/inputimpl/RatingInput.java -text
