@@ -118,7 +118,17 @@ tvbrowser-plugins/plugin-movieaward/src/main/resources/movieawardplugin/movieawa
 tvbrowser-plugins/plugin-movieaward/src/main/resources/movieawardplugin/movieawardplugin.properties -text
 tvbrowser-plugins/plugin-movieaward/src/main/resources/movieawardplugin/movieawardplugin_de.properties -text
 tvbrowser-plugins/plugin-recommendation/pom.xml -text
+tvbrowser-plugins/plugin-recommendation/src/main/java/recommendationplugin/ProgramWeight.java -text
+tvbrowser-plugins/plugin-recommendation/src/main/java/recommendationplugin/ProgramWeightWrapperModel.java -text
+tvbrowser-plugins/plugin-recommendation/src/main/java/recommendationplugin/RecommendationInputIf.java -text
 tvbrowser-plugins/plugin-recommendation/src/main/java/recommendationplugin/RecommendationPlugin.java -text
+tvbrowser-plugins/plugin-recommendation/src/main/java/recommendationplugin/RecommendationSettingsTab.java -text
+tvbrowser-plugins/plugin-recommendation/src/main/java/recommendationplugin/RecommendationTableModel.java -text
+tvbrowser-plugins/plugin-recommendation/src/main/java/recommendationplugin/WeightDialog.java -text
+tvbrowser-plugins/plugin-recommendation/src/main/java/recommendationplugin/inputimpl/FavoriteInput.java -text
+tvbrowser-plugins/plugin-recommendation/src/main/java/recommendationplugin/inputimpl/RatingInput.java -text
+tvbrowser-plugins/plugin-recommendation/src/main/java/recommendationplugin/inputimpl/ReminderInput.java -text
+tvbrowser-plugins/plugin-recommendation/src/main/resources/recommendationplugin/recommendation.png -text
 tvbrowser-plugins/plugin-recommendation/src/main/resources/recommendationplugin/recommendationplugin.properties -text
 tvbrowser-plugins/plugin-recommendation/src/main/resources/recommendationplugin/recommendationplugin_de.properties -text
 tvbrowser-plugins/plugin-speech/pom.xml -text
