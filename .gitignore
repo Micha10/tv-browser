@@ -82,6 +82,8 @@ tvbrowser-plugins/tvbrowser-plugins.iml
 tvbrowser-plugins/tvbrowser-plugins.ipr
 tvbrowser-plugins/tvbrowser-plugins.iws
 tvbrowser/.classpath
+tvbrowser/.fbprefs
+tvbrowser/.pmd
 tvbrowser/.project
 tvbrowser/.settings
 tvbrowser/classes
@@ -122,6 +124,7 @@ tvbrowser/lib/commons-io-1.0.jar
 tvbrowser/lib/commons-lang-2.0.jar
 tvbrowser/lib/poi-3.0-alpha1-20050704.jar
 tvbrowser/lib/xercesImpl.jar
+tvbrowser/reports
 tvbrowser/runtime
 tvbrowser/src/primarydatamanager/primarydataservice/secret
 tvbrowser/src/tvraterplugin/imgs/tvbrowser_pie.psd
