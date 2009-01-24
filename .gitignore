@@ -43,6 +43,8 @@ tvbrowser-plugins/plugin-teletext/.settings
 tvbrowser-plugins/plugin-teletext/target
 tvbrowser-plugins/plugin-teletext/tvbrowser-plugins-teletext.iml
 tvbrowser-plugins/plugin-timeline/.classpath
+tvbrowser-plugins/plugin-timeline/.fbprefs
+tvbrowser-plugins/plugin-timeline/.pmd
 tvbrowser-plugins/plugin-timeline/.project
 tvbrowser-plugins/plugin-timeline/.settings
 tvbrowser-plugins/plugin-timeline/target

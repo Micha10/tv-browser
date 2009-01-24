@@ -185,6 +185,7 @@ tvbrowser-plugins/plugin-timeline/src/main/java/timelineplugin/TimeHeader.java -
 tvbrowser-plugins/plugin-timeline/src/main/java/timelineplugin/TimelineDialog.java -text
 tvbrowser-plugins/plugin-timeline/src/main/java/timelineplugin/TimelinePlugin.java -text
 tvbrowser-plugins/plugin-timeline/src/main/java/timelineplugin/TimelinePluginSettingsTab.java -text
+tvbrowser-plugins/plugin-timeline/src/main/java/timelineplugin/TimelineSettings.java -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-timeline/src/main/java/timelineplugin/format/ITextObject.java -text
 tvbrowser-plugins/plugin-timeline/src/main/java/timelineplugin/format/TextFont.java -text
 tvbrowser-plugins/plugin-timeline/src/main/java/timelineplugin/format/TextFormatter.java -text
