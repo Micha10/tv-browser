@@ -828,6 +828,7 @@ tvbrowser/src/simplemarkerplugin/MarkListFilterComponent.java -text
 tvbrowser/src/simplemarkerplugin/MarkListsVector.java -text
 tvbrowser/src/simplemarkerplugin/SimpleMarkerPlugin.java -text
 tvbrowser/src/simplemarkerplugin/SimpleMarkerPluginSettingsTab.java -text
+tvbrowser/src/simplemarkerplugin/SimpleMarkerSettings.java -text svneol=unset#text/plain
 tvbrowser/src/simplemarkerplugin/simplemarkerplugin.properties -text
 tvbrowser/src/simplemarkerplugin/simplemarkerplugin_de.properties -text
 tvbrowser/src/simplemarkerplugin/simplemarkerplugin_sv.properties -text
