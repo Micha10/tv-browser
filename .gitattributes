@@ -104,6 +104,7 @@ tvbrowser-plugins/plugin-movieaward/src/main/java/movieawardplugin/MovieAwardDia
 tvbrowser-plugins/plugin-movieaward/src/main/java/movieawardplugin/MovieAwardForMovies.java -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-movieaward/src/main/java/movieawardplugin/MovieAwardHandler.java -text
 tvbrowser-plugins/plugin-movieaward/src/main/java/movieawardplugin/MovieAwardPlugin.java -text
+tvbrowser-plugins/plugin-movieaward/src/main/java/movieawardplugin/MovieAwardSettings.java -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-movieaward/src/main/java/movieawardplugin/MovieAwardSettingsTab.java -text
 tvbrowser-plugins/plugin-movieaward/src/main/java/movieawardplugin/MovieDataFactory.java -text
 tvbrowser-plugins/plugin-movieaward/src/main/java/movieawardplugin/MovieDatabase.java -text
