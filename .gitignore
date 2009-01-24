@@ -56,6 +56,7 @@ tvbrowser-plugins/plugin-tooltipcontrol/.settings
 tvbrowser-plugins/plugin-tooltipcontrol/target
 tvbrowser-plugins/plugin-tooltipcontrol/tvbrowser-plugins-tooltipcontrol.iml
 tvbrowser-plugins/plugin-tvpearl/.classpath
+tvbrowser-plugins/plugin-tvpearl/.pmd
 tvbrowser-plugins/plugin-tvpearl/.project
 tvbrowser-plugins/plugin-tvpearl/.settings
 tvbrowser-plugins/plugin-tvpearl/target
