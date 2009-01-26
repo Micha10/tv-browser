@@ -80,6 +80,8 @@ tvbrowser-plugins/plugin-wirschauen/.project
 tvbrowser-plugins/plugin-wirschauen/.settings
 tvbrowser-plugins/plugin-wirschauen/target
 tvbrowser-plugins/plugin-zattoo/.classpath
+tvbrowser-plugins/plugin-zattoo/.fbprefs
+tvbrowser-plugins/plugin-zattoo/.pmd
 tvbrowser-plugins/plugin-zattoo/.project
 tvbrowser-plugins/plugin-zattoo/.settings
 tvbrowser-plugins/plugin-zattoo/target
