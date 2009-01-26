@@ -15,6 +15,7 @@ tvbrowser-plugins/plugin-idontwant2see/src/main/java/idontwant2see/LICENSE.txt
 tvbrowser-plugins/plugin-idontwant2see/target
 tvbrowser-plugins/plugin-idontwant2see/tvbrowser-plugins-idontwant2see.iml
 tvbrowser-plugins/plugin-imdb/.classpath
+tvbrowser-plugins/plugin-imdb/.fbprefs
 tvbrowser-plugins/plugin-imdb/.pmd
 tvbrowser-plugins/plugin-imdb/.project
 tvbrowser-plugins/plugin-imdb/.settings
