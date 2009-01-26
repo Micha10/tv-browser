@@ -94,6 +94,8 @@ tvbrowser-plugins/plugin-mediathek/src/main/java/mediathekplugin/parser/ARDParse
 tvbrowser-plugins/plugin-mediathek/src/main/java/mediathekplugin/parser/AbstractParser.java -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-mediathek/src/main/java/mediathekplugin/parser/IParser.java -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-mediathek/src/main/java/mediathekplugin/parser/ZDFParser.java -text svneol=unset#text/plain
+tvbrowser-plugins/plugin-mediathek/src/main/resources/mediathekplugin/icons/ard.png -text
+tvbrowser-plugins/plugin-mediathek/src/main/resources/mediathekplugin/icons/zdf.png -text
 tvbrowser-plugins/plugin-mediathek/src/main/resources/mediathekplugin/mediathekplugin.properties -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-mediathek/src/main/resources/mediathekplugin/mediathekplugin_de.properties -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-movieaward/pom.xml -text

@@ -21,6 +21,8 @@ tvbrowser-plugins/plugin-imdb/.project
 tvbrowser-plugins/plugin-imdb/.settings
 tvbrowser-plugins/plugin-imdb/target
 tvbrowser-plugins/plugin-mediathek/.classpath
+tvbrowser-plugins/plugin-mediathek/.fbprefs
+tvbrowser-plugins/plugin-mediathek/.pmd
 tvbrowser-plugins/plugin-mediathek/.project
 tvbrowser-plugins/plugin-mediathek/.settings
 tvbrowser-plugins/plugin-mediathek/target
