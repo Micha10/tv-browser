@@ -115,6 +115,7 @@ tvbrowser-plugins/plugin-movieaward/src/main/java/movieawardplugin/MovieDatabase
 tvbrowser-plugins/plugin-movieaward/src/main/java/movieawardplugin/MovieHashMap.java -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-movieaward/src/main/resources/movieawardplugin/data/cannes.xml -text
 tvbrowser-plugins/plugin-movieaward/src/main/resources/movieawardplugin/data/deutscher_comedypreis.xml -text svneol=unset#text/plain
+tvbrowser-plugins/plugin-movieaward/src/main/resources/movieawardplugin/data/deutscher_filmpreis.xml -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-movieaward/src/main/resources/movieawardplugin/data/europeanmovieawards.xml -text
 tvbrowser-plugins/plugin-movieaward/src/main/resources/movieawardplugin/data/grimme.xml -text
 tvbrowser-plugins/plugin-movieaward/src/main/resources/movieawardplugin/data/max_ophuels.xml -text svneol=unset#text/plain

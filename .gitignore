@@ -27,8 +27,11 @@ tvbrowser-plugins/plugin-mediathek/.project
 tvbrowser-plugins/plugin-mediathek/.settings
 tvbrowser-plugins/plugin-mediathek/target
 tvbrowser-plugins/plugin-movieaward/.classpath
+tvbrowser-plugins/plugin-movieaward/.fbprefs
+tvbrowser-plugins/plugin-movieaward/.pmd
 tvbrowser-plugins/plugin-movieaward/.project
 tvbrowser-plugins/plugin-movieaward/.settings
+tvbrowser-plugins/plugin-movieaward/import
 tvbrowser-plugins/plugin-movieaward/src/main/java/movieawardplugin/ImportFilmPreis.java
 tvbrowser-plugins/plugin-movieaward/target
 tvbrowser-plugins/plugin-movieaward/tvbrowser-plugins-movieaward.iml
