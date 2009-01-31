@@ -117,6 +117,7 @@ tvbrowser-plugins/plugin-movieaward/src/main/resources/movieawardplugin/data/can
 tvbrowser-plugins/plugin-movieaward/src/main/resources/movieawardplugin/data/deutscher_comedypreis.xml -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-movieaward/src/main/resources/movieawardplugin/data/europeanmovieawards.xml -text
 tvbrowser-plugins/plugin-movieaward/src/main/resources/movieawardplugin/data/grimme.xml -text
+tvbrowser-plugins/plugin-movieaward/src/main/resources/movieawardplugin/data/max_ophuels.xml -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-movieaward/src/main/resources/movieawardplugin/data/menschenrechtsfilmpreis.xml -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-movieaward/src/main/resources/movieawardplugin/data/moviedatabase.xml -text
 tvbrowser-plugins/plugin-movieaward/src/main/resources/movieawardplugin/data/oscars.xml -text
