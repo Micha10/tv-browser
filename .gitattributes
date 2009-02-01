@@ -812,6 +812,15 @@ tvbrowser/src/imgs/tvbrowser32.png -text
 tvbrowser/src/imgs/tvbrowser48.png -text
 tvbrowser/src/knotifyplugin/knotify.png -text
 tvbrowser/src/primarydatamanager/primarydataservice/util/InfoCategoryParser.java -text
+tvbrowser/src/primarydatamanager/primarydataservice/util/category_arts.properties -text svneol=unset#text/plain
+tvbrowser/src/primarydatamanager/primarydataservice/util/category_documentary.properties -text svneol=unset#text/plain
+tvbrowser/src/primarydatamanager/primarydataservice/util/category_magazine.properties -text svneol=unset#text/plain
+tvbrowser/src/primarydatamanager/primarydataservice/util/category_movies.properties -text svneol=unset#text/plain
+tvbrowser/src/primarydatamanager/primarydataservice/util/category_news.properties -text svneol=unset#text/plain
+tvbrowser/src/primarydatamanager/primarydataservice/util/category_others.properties -text svneol=unset#text/plain
+tvbrowser/src/primarydatamanager/primarydataservice/util/category_series.properties -text svneol=unset#text/plain
+tvbrowser/src/primarydatamanager/primarydataservice/util/category_show.properties -text svneol=unset#text/plain
+tvbrowser/src/primarydatamanager/primarydataservice/util/category_sports.properties -text svneol=unset#text/plain
 tvbrowser/src/printplugin/dlgs/components/FilterSelectionPanel.java -text
 tvbrowser/src/printplugin/printer/singleprogramprinter/DocumentRenderer.java -text
 tvbrowser/src/programlistplugin/programlistplugin.properties -text
@@ -967,6 +976,7 @@ tvbrowser/src/webplugin/aclib/image/ico/spi/ICOMetaData.java -text
 tvbrowser/src/webplugin/aclib/image/ico/spi/ICOReader.java -text
 tvbrowser/test/src/primarydatamanager/DayProgramMapperTest.java -text
 tvbrowser/test/src/primarydatamanager/PrimaryDataManagerTest.java -text
+tvbrowser/test/src/primarydatamanager/primarydataservice/util/InfoCategoryParserTest.java -text svneol=unset#text/plain
 tvbrowser/test/src/tvbrowser/extras/favoritesplugin/core/ActorStringSearcherTest.java -text
 tvbrowser/test/src/tvbrowserdataservice/DayProgramFileTest.java -text
 tvbrowser/test/src/tvbrowserdataservice/SummaryFileTest.java -text
