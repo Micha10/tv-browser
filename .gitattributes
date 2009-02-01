@@ -46,6 +46,8 @@ pdatvbrowser/languages/Dansk.txt -text
 pdatvbrowser/languages/English.txt -text
 pdatvbrowser/languages/German.txt -text
 pdatvbrowser/languages/Norsk.txt -text
+tvbrowser-plugins/plugin-checker/pom.xml -text svneol=unset#text/plain
+tvbrowser-plugins/plugin-checker/src/main/java/checkerplugin/CheckerPlugin.java -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-countrycode/pom.xml -text
 tvbrowser-plugins/plugin-countrycode/src/main/java/countrycodeplugin/CountryCodePlugin.java -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-countrycode/src/main/resources/countrycodeplugin/countrycodeplugin.properties -text svneol=unset#text/plain
