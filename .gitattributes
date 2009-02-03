@@ -940,6 +940,13 @@ tvbrowser/src/util/io/DownloadJob.java -text
 tvbrowser/src/util/io/NtpMessage.java -text
 tvbrowser/src/util/io/ZipUtil.java -text
 tvbrowser/src/util/io/io_sv.properties -text
+tvbrowser/src/util/io/stream/BufferedReaderProcessor.java -text svneol=unset#text/plain
+tvbrowser/src/util/io/stream/BufferedWriterProcessor.java -text svneol=unset#text/plain
+tvbrowser/src/util/io/stream/InputStreamProcessor.java -text svneol=unset#text/plain
+tvbrowser/src/util/io/stream/ObjectInputStreamProcessor.java -text svneol=unset#text/plain
+tvbrowser/src/util/io/stream/ObjectOutputStreamProcessor.java -text svneol=unset#text/plain
+tvbrowser/src/util/io/stream/OutputStreamProcessor.java -text svneol=unset#text/plain
+tvbrowser/src/util/io/stream/StreamUtilities.java -text
 tvbrowser/src/util/misc/AppleScriptRunner.java -text
 tvbrowser/src/util/misc/ChangeTrackingProperties.java -text svneol=unset#text/plain
 tvbrowser/src/util/misc/SoftReferenceCache.java -text
