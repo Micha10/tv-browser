@@ -689,6 +689,7 @@ tvbrowser/src/calendarexportplugin/icons/16x16/apps/apple_ical.png -text
 tvbrowser/src/calendarexportplugin/icons/16x16/apps/google.png -text
 tvbrowser/src/calendarexportplugin/icons/16x16/apps/korganizer.png -text
 tvbrowser/src/calendarexportplugin/icons/16x16/apps/outlook.png -text
+tvbrowser/src/calendarexportplugin/utils/AbstractCalFile.java -text svneol=unset#text/plain
 tvbrowser/src/calendarexportplugin/utils/CalendarToolbox.java -text
 tvbrowser/src/calendarexportplugin/utils/ICalFile.java -text
 tvbrowser/src/calendarexportplugin/utils/VCalFile.java -text
