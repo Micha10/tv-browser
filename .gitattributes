@@ -947,6 +947,7 @@ tvbrowser/src/util/io/stream/InputStreamProcessor.java -text svneol=unset#text/p
 tvbrowser/src/util/io/stream/ObjectInputStreamProcessor.java -text svneol=unset#text/plain
 tvbrowser/src/util/io/stream/ObjectOutputStreamProcessor.java -text svneol=unset#text/plain
 tvbrowser/src/util/io/stream/OutputStreamProcessor.java -text svneol=unset#text/plain
+tvbrowser/src/util/io/stream/PrintStreamProcessor.java -text svneol=unset#text/plain
 tvbrowser/src/util/io/stream/StreamUtilities.java -text
 tvbrowser/src/util/misc/AppleScriptRunner.java -text
 tvbrowser/src/util/misc/ChangeTrackingProperties.java -text svneol=unset#text/plain
