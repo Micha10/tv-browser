@@ -181,9 +181,11 @@ tvbrowser-plugins/plugin-speech/src/main/resources/speechplugin/engine/engine_de
 tvbrowser-plugins/plugin-speech/src/main/resources/speechplugin/speechplugin.properties -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-speech/src/main/resources/speechplugin/speechplugin_de.properties -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-teletext/pom.xml -text
+tvbrowser-plugins/plugin-teletext/src/main/java/teletextplugin/ChannelProperties.java -text svneol=unset#text/plain
+tvbrowser-plugins/plugin-teletext/src/main/java/teletextplugin/TeleTextChannelProperties.java -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-teletext/src/main/java/teletextplugin/TeleTextPlugin.java svneol=native#text/plain
+tvbrowser-plugins/plugin-teletext/src/main/resources/teletextplugin/channels.properties -text
 tvbrowser-plugins/plugin-teletext/src/main/resources/teletextplugin/teletext.png -text
-tvbrowser-plugins/plugin-teletext/src/main/resources/teletextplugin/teletext.properties -text
 tvbrowser-plugins/plugin-teletext/src/main/resources/teletextplugin/teletextplugin.properties -text
 tvbrowser-plugins/plugin-teletext/src/main/resources/teletextplugin/teletextplugin_de.properties -text
 tvbrowser-plugins/plugin-timeline/pom.xml -text
