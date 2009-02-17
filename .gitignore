@@ -5,6 +5,8 @@ tvbrowser-plugins/plugin-checker/.project
 tvbrowser-plugins/plugin-checker/.settings
 tvbrowser-plugins/plugin-checker/target
 tvbrowser-plugins/plugin-countrycode/.classpath
+tvbrowser-plugins/plugin-countrycode/.fbprefs
+tvbrowser-plugins/plugin-countrycode/.pmd
 tvbrowser-plugins/plugin-countrycode/.project
 tvbrowser-plugins/plugin-countrycode/.settings
 tvbrowser-plugins/plugin-countrycode/target
