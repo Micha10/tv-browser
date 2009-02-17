@@ -264,12 +264,14 @@ tvbrowser-plugins/plugin-wirschauen/src/main/resources/wirschauenplugin/icons/16
 tvbrowser-plugins/plugin-wirschauen/src/main/resources/wirschauenplugin/wirschauenplugin.properties -text
 tvbrowser-plugins/plugin-wirschauen/src/main/resources/wirschauenplugin/wirschauenplugin_de.properties -text
 tvbrowser-plugins/plugin-zattoo/pom.xml -text
+tvbrowser-plugins/plugin-zattoo/src/main/java/zattooplugin/ChannelProperties.java -text svneol=unset#text/plain
+tvbrowser-plugins/plugin-zattoo/src/main/java/zattooplugin/ZattooChannelProperties.java -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-zattoo/src/main/java/zattooplugin/ZattooCountry.java -text
 tvbrowser-plugins/plugin-zattoo/src/main/java/zattooplugin/ZattooFilterComponent.java -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-zattoo/src/main/java/zattooplugin/ZattooPlugin.java -text
 tvbrowser-plugins/plugin-zattoo/src/main/java/zattooplugin/ZattooSettingsTab.java -text
-tvbrowser-plugins/plugin-zattoo/src/main/resources/zattooplugin/channelid_ch.properties -text
-tvbrowser-plugins/plugin-zattoo/src/main/resources/zattooplugin/channelid_de.properties -text
+tvbrowser-plugins/plugin-zattoo/src/main/resources/zattooplugin/channels_ch.properties -text
+tvbrowser-plugins/plugin-zattoo/src/main/resources/zattooplugin/channels_de.properties -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-zattoo/src/main/resources/zattooplugin/zattoo.png -text
 tvbrowser-plugins/plugin-zattoo/src/main/resources/zattooplugin/zattooplugin.properties -text
 tvbrowser-plugins/plugin-zattoo/src/main/resources/zattooplugin/zattooplugin_de.properties -text
