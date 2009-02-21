@@ -72,6 +72,8 @@ tvbrowser-plugins/plugin-timelist/.project
 tvbrowser-plugins/plugin-timelist/.settings
 tvbrowser-plugins/plugin-timelist/target
 tvbrowser-plugins/plugin-tooltipcontrol/.classpath
+tvbrowser-plugins/plugin-tooltipcontrol/.fbprefs
+tvbrowser-plugins/plugin-tooltipcontrol/.pmd
 tvbrowser-plugins/plugin-tooltipcontrol/.project
 tvbrowser-plugins/plugin-tooltipcontrol/.settings
 tvbrowser-plugins/plugin-tooltipcontrol/target
