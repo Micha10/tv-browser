@@ -64,6 +64,8 @@ tvbrowser-plugins/plugin-timeline/.project
 tvbrowser-plugins/plugin-timeline/.settings
 tvbrowser-plugins/plugin-timeline/target
 tvbrowser-plugins/plugin-timelist/.classpath
+tvbrowser-plugins/plugin-timelist/.fbprefs
+tvbrowser-plugins/plugin-timelist/.pmd
 tvbrowser-plugins/plugin-timelist/.project
 tvbrowser-plugins/plugin-timelist/.settings
 tvbrowser-plugins/plugin-timelist/target
