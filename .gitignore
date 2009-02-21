@@ -92,6 +92,8 @@ tvbrowser-plugins/plugin-twitter/.settings
 tvbrowser-plugins/plugin-twitter/target
 tvbrowser-plugins/plugin-twitter/tvbrowser-plugins-twitter.iml
 tvbrowser-plugins/plugin-widget/.classpath
+tvbrowser-plugins/plugin-widget/.fbprefs
+tvbrowser-plugins/plugin-widget/.pmd
 tvbrowser-plugins/plugin-widget/.project
 tvbrowser-plugins/plugin-widget/.settings
 tvbrowser-plugins/plugin-widget/target
