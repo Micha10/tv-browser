@@ -123,6 +123,7 @@ tvbrowser/.fbprefs
 tvbrowser/.pmd
 tvbrowser/.project
 tvbrowser/.settings
+tvbrowser/.settings/org.eclipse.mylyn.team.ui.prefs
 tvbrowser/classes
 tvbrowser/doc
 tvbrowser/images/themes/tango/16x16/actions/Makefile
