@@ -82,6 +82,8 @@ tvbrowser-plugins/plugin-tvpearl/.project
 tvbrowser-plugins/plugin-tvpearl/.settings
 tvbrowser-plugins/plugin-tvpearl/target
 tvbrowser-plugins/plugin-twitter/.classpath
+tvbrowser-plugins/plugin-twitter/.fbprefs
+tvbrowser-plugins/plugin-twitter/.pmd
 tvbrowser-plugins/plugin-twitter/.project
 tvbrowser-plugins/plugin-twitter/.settings
 tvbrowser-plugins/plugin-twitter/target
