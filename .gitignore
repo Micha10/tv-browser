@@ -49,6 +49,8 @@ tvbrowser-plugins/plugin-movieaward/src/main/java/movieawardplugin/ImportFilmPre
 tvbrowser-plugins/plugin-movieaward/target
 tvbrowser-plugins/plugin-movieaward/tvbrowser-plugins-movieaward.iml
 tvbrowser-plugins/plugin-recommendation/.classpath
+tvbrowser-plugins/plugin-recommendation/.fbprefs
+tvbrowser-plugins/plugin-recommendation/.pmd
 tvbrowser-plugins/plugin-recommendation/.project
 tvbrowser-plugins/plugin-recommendation/.settings
 tvbrowser-plugins/plugin-recommendation/target
