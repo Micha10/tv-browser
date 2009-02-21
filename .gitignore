@@ -89,6 +89,8 @@ tvbrowser-plugins/plugin-widget/.project
 tvbrowser-plugins/plugin-widget/.settings
 tvbrowser-plugins/plugin-widget/target
 tvbrowser-plugins/plugin-wirschauen/.classpath
+tvbrowser-plugins/plugin-wirschauen/.fbprefs
+tvbrowser-plugins/plugin-wirschauen/.pmd
 tvbrowser-plugins/plugin-wirschauen/.project
 tvbrowser-plugins/plugin-wirschauen/.settings
 tvbrowser-plugins/plugin-wirschauen/target
