@@ -51,6 +51,8 @@ tvbrowser-plugins/plugin-recommendation/.settings
 tvbrowser-plugins/plugin-recommendation/target
 tvbrowser-plugins/plugin-recommendation/tvbrowser-plugins-recommendation.iml
 tvbrowser-plugins/plugin-speech/.classpath
+tvbrowser-plugins/plugin-speech/.fbprefs
+tvbrowser-plugins/plugin-speech/.pmd
 tvbrowser-plugins/plugin-speech/.project
 tvbrowser-plugins/plugin-speech/.settings
 tvbrowser-plugins/plugin-speech/target
