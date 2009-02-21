@@ -38,6 +38,7 @@ tvbrowser-plugins/plugin-mediathek/.settings
 tvbrowser-plugins/plugin-mediathek/target
 tvbrowser-plugins/plugin-movieaward/.classpath
 tvbrowser-plugins/plugin-movieaward/.fbprefs
+tvbrowser-plugins/plugin-movieaward/.lint4jprefs
 tvbrowser-plugins/plugin-movieaward/.pmd
 tvbrowser-plugins/plugin-movieaward/.project
 tvbrowser-plugins/plugin-movieaward/.settings
