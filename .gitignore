@@ -1,6 +1,8 @@
 tvbrowser-plugins/.classpath
 tvbrowser-plugins/.project
 tvbrowser-plugins/plugin-checker/.classpath
+tvbrowser-plugins/plugin-checker/.lint4jprefs
+tvbrowser-plugins/plugin-checker/.pmd
 tvbrowser-plugins/plugin-checker/.project
 tvbrowser-plugins/plugin-checker/.settings
 tvbrowser-plugins/plugin-checker/target
