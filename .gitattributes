@@ -656,6 +656,7 @@ tvbrowser/lib/forms-1.2.1.jar -text
 tvbrowser/lib/gdata-calendar-1.0.jar -text
 tvbrowser/lib/gdata-client-1.0.jar -text
 tvbrowser/lib/gdata-core-1.0.jar -text
+tvbrowser/lib/htmlparser.jar -text
 tvbrowser/lib/jRegistryKey.jar -text
 tvbrowser/lib/jakarta-oro-2.0.8.jar -text
 tvbrowser/lib/jcom.jar -text
