@@ -281,6 +281,11 @@ tvbrowser-plugins/plugin-zattoo/src/main/resources/zattooplugin/zattoo.png -text
 tvbrowser-plugins/plugin-zattoo/src/main/resources/zattooplugin/zattooplugin.properties -text
 tvbrowser-plugins/plugin-zattoo/src/main/resources/zattooplugin/zattooplugin_de.properties -text
 tvbrowser-plugins/pom.xml -text
+tvbrowser-plugins/soundreminder/LICENSE.txt -text
+tvbrowser-plugins/soundreminder/icons/16x16/status/audio-volume-high.png -text
+tvbrowser-plugins/soundreminder/icons/22x22/status/audio-volume-high.png -text
+tvbrowser-plugins/soundreminder/soundreminder.properties -text
+tvbrowser-plugins/soundreminder/soundreminder_de.properties -text
 tvbrowser/.settings/org.eclipse.core.resources.prefs -text
 tvbrowser/.settings/org.eclipse.jdt.core.prefs -text
 tvbrowser/.settings/org.eclipse.jdt.ui.prefs -text
