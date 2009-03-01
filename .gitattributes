@@ -149,6 +149,15 @@ tvbrowser-plugins/plugin-recommendation/src/main/java/recommendationplugin/input
 tvbrowser-plugins/plugin-recommendation/src/main/resources/recommendationplugin/recommendation.png -text
 tvbrowser-plugins/plugin-recommendation/src/main/resources/recommendationplugin/recommendationplugin.properties -text
 tvbrowser-plugins/plugin-recommendation/src/main/resources/recommendationplugin/recommendationplugin_de.properties -text
+tvbrowser-plugins/plugin-soundreminder/pom.xml -text svneol=unset#text/plain
+tvbrowser-plugins/plugin-soundreminder/src/main/java/soundreminderplugin/SoundEntry.java -text
+tvbrowser-plugins/plugin-soundreminder/src/main/java/soundreminderplugin/SoundReminderPlugin.java -text
+tvbrowser-plugins/plugin-soundreminder/src/main/java/soundreminderplugin/SoundReminderSettingsTableModel.java -text
+tvbrowser-plugins/plugin-soundreminder/src/main/java/soundreminderplugin/SoundReminderSettingsTableRenderer.java -text
+tvbrowser-plugins/plugin-soundreminder/src/main/resources/soundreminderplugin/icons/16x16/status/audio-volume-high.png -text svneol=unset#unset
+tvbrowser-plugins/plugin-soundreminder/src/main/resources/soundreminderplugin/icons/22x22/status/audio-volume-high.png -text svneol=unset#unset
+tvbrowser-plugins/plugin-soundreminder/src/main/resources/soundreminderplugin/soundreminderplugin.properties -text
+tvbrowser-plugins/plugin-soundreminder/src/main/resources/soundreminderplugin/soundreminderplugin_de.properties -text
 tvbrowser-plugins/plugin-speech/pom.xml -text
 tvbrowser-plugins/plugin-speech/src/main/cpp/quadmore/QUADINIT.H -text
 tvbrowser-plugins/plugin-speech/src/main/cpp/quadmore/QuadTTS.clw -text
@@ -281,15 +290,6 @@ tvbrowser-plugins/plugin-zattoo/src/main/resources/zattooplugin/zattoo.png -text
 tvbrowser-plugins/plugin-zattoo/src/main/resources/zattooplugin/zattooplugin.properties -text
 tvbrowser-plugins/plugin-zattoo/src/main/resources/zattooplugin/zattooplugin_de.properties -text
 tvbrowser-plugins/pom.xml -text
-tvbrowser-plugins/soundreminder/pom.xml -text svneol=unset#text/plain
-tvbrowser-plugins/soundreminder/src/main/java/soundreminderplugin/SoundEntry.java -text
-tvbrowser-plugins/soundreminder/src/main/java/soundreminderplugin/SoundReminderPlugin.java -text
-tvbrowser-plugins/soundreminder/src/main/java/soundreminderplugin/SoundReminderSettingsTableModel.java -text
-tvbrowser-plugins/soundreminder/src/main/java/soundreminderplugin/SoundReminderSettingsTableRenderer.java -text
-tvbrowser-plugins/soundreminder/src/main/resources/soundreminderplugin/icons/16x16/status/audio-volume-high.png -text svneol=unset#unset
-tvbrowser-plugins/soundreminder/src/main/resources/soundreminderplugin/icons/22x22/status/audio-volume-high.png -text svneol=unset#unset
-tvbrowser-plugins/soundreminder/src/main/resources/soundreminderplugin/soundreminderplugin.properties -text
-tvbrowser-plugins/soundreminder/src/main/resources/soundreminderplugin/soundreminderplugin_de.properties -text
 tvbrowser/.settings/org.eclipse.core.resources.prefs -text
 tvbrowser/.settings/org.eclipse.jdt.core.prefs -text
 tvbrowser/.settings/org.eclipse.jdt.ui.prefs -text

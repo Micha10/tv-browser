@@ -55,6 +55,12 @@ tvbrowser-plugins/plugin-recommendation/.project
 tvbrowser-plugins/plugin-recommendation/.settings
 tvbrowser-plugins/plugin-recommendation/target
 tvbrowser-plugins/plugin-recommendation/tvbrowser-plugins-recommendation.iml
+tvbrowser-plugins/plugin-soundreminder/.classpath
+tvbrowser-plugins/plugin-soundreminder/.fbprefs
+tvbrowser-plugins/plugin-soundreminder/.pmd
+tvbrowser-plugins/plugin-soundreminder/.project
+tvbrowser-plugins/plugin-soundreminder/.settings
+tvbrowser-plugins/plugin-soundreminder/target
 tvbrowser-plugins/plugin-speech/.classpath
 tvbrowser-plugins/plugin-speech/.fbprefs
 tvbrowser-plugins/plugin-speech/.pmd
@@ -119,12 +125,6 @@ tvbrowser-plugins/plugin-zattoo/.project
 tvbrowser-plugins/plugin-zattoo/.settings
 tvbrowser-plugins/plugin-zattoo/target
 tvbrowser-plugins/plugin-zattoo/tvbrowser-plugins-zattoo.iml
-tvbrowser-plugins/soundreminder/.classpath
-tvbrowser-plugins/soundreminder/.fbprefs
-tvbrowser-plugins/soundreminder/.pmd
-tvbrowser-plugins/soundreminder/.project
-tvbrowser-plugins/soundreminder/.settings
-tvbrowser-plugins/soundreminder/target
 tvbrowser-plugins/target
 tvbrowser-plugins/tvbrowser-plugins.iml
 tvbrowser-plugins/tvbrowser-plugins.ipr
