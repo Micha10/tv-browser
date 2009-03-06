@@ -1,5 +1,11 @@
 tvbrowser-plugins/.classpath
 tvbrowser-plugins/.project
+tvbrowser-plugins/plugin-balloon/.classpath
+tvbrowser-plugins/plugin-balloon/.fbprefs
+tvbrowser-plugins/plugin-balloon/.pmd
+tvbrowser-plugins/plugin-balloon/.project
+tvbrowser-plugins/plugin-balloon/.settings
+tvbrowser-plugins/plugin-balloon/target
 tvbrowser-plugins/plugin-checker/.classpath
 tvbrowser-plugins/plugin-checker/.lint4jprefs
 tvbrowser-plugins/plugin-checker/.pmd
