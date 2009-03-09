@@ -61,6 +61,12 @@ tvbrowser-plugins/plugin-recommendation/.project
 tvbrowser-plugins/plugin-recommendation/.settings
 tvbrowser-plugins/plugin-recommendation/target
 tvbrowser-plugins/plugin-recommendation/tvbrowser-plugins-recommendation.iml
+tvbrowser-plugins/plugin-snarl/.classpath
+tvbrowser-plugins/plugin-snarl/.fbprefs
+tvbrowser-plugins/plugin-snarl/.pmd
+tvbrowser-plugins/plugin-snarl/.project
+tvbrowser-plugins/plugin-snarl/.settings
+tvbrowser-plugins/plugin-snarl/target
 tvbrowser-plugins/plugin-soundreminder/.classpath
 tvbrowser-plugins/plugin-soundreminder/.fbprefs
 tvbrowser-plugins/plugin-soundreminder/.pmd
