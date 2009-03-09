@@ -48,6 +48,7 @@ pdatvbrowser/languages/German.txt -text
 pdatvbrowser/languages/Norsk.txt -text
 tvbrowser-plugins/plugin-balloon/pom.xml -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-balloon/src/main/java/balloonplugin/BalloonPlugin.java -text svneol=unset#text/plain
+tvbrowser-plugins/plugin-balloon/src/main/java/balloonplugin/JarApplicationExecuter.java -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-balloon/src/main/resources/balloonplugin/balloonplugin.properties -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-balloon/src/main/resources/balloonplugin/balloonplugin_de.properties -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-balloon/src/main/resources/balloonplugin/icons/16x16/balloon.png -text
