@@ -156,6 +156,14 @@ tvbrowser-plugins/plugin-recommendation/src/main/java/recommendationplugin/input
 tvbrowser-plugins/plugin-recommendation/src/main/resources/recommendationplugin/recommendation.png -text
 tvbrowser-plugins/plugin-recommendation/src/main/resources/recommendationplugin/recommendationplugin.properties -text
 tvbrowser-plugins/plugin-recommendation/src/main/resources/recommendationplugin/recommendationplugin_de.properties -text
+tvbrowser-plugins/plugin-snarl/pom.xml -text svneol=unset#text/plain
+tvbrowser-plugins/plugin-snarl/src/main/java/snarlplugin/JarApplicationExecuter.java -text svneol=unset#text/plain
+tvbrowser-plugins/plugin-snarl/src/main/java/snarlplugin/SnarlPlugin.java -text svneol=unset#text/plain
+tvbrowser-plugins/plugin-snarl/src/main/resources/snarlplugin/icons/16x16/snarl.png -text
+tvbrowser-plugins/plugin-snarl/src/main/resources/snarlplugin/icons/32x32/snarl.png -text
+tvbrowser-plugins/plugin-snarl/src/main/resources/snarlplugin/snarl_command.exe -text
+tvbrowser-plugins/plugin-snarl/src/main/resources/snarlplugin/snarlplugin.properties -text svneol=unset#text/plain
+tvbrowser-plugins/plugin-snarl/src/main/resources/snarlplugin/snarlplugin_de.properties -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-soundreminder/pom.xml -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-soundreminder/src/main/java/soundreminderplugin/SoundEntry.java -text
 tvbrowser-plugins/plugin-soundreminder/src/main/java/soundreminderplugin/SoundReminderPlugin.java -text
