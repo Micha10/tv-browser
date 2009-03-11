@@ -348,9 +348,9 @@ tvbrowser/deployment/win/jRegistryKey/jRegistryKey.dll -text
 tvbrowser/deployment/win/jcom/jcom.dll -text
 tvbrowser/deployment/win/launch4j/bin/ld.exe -text
 tvbrowser/deployment/win/launch4j/bin/windres.exe -text
-tvbrowser/deployment/win/launch4j/head/guihead.o -text
-tvbrowser/deployment/win/launch4j/head/head.o -text
-tvbrowser/deployment/win/launch4j/launch4j.jar -text
+tvbrowser/deployment/win/launch4j/head/guihead.o -text svneol=unset#unset
+tvbrowser/deployment/win/launch4j/head/head.o -text svneol=unset#unset
+tvbrowser/deployment/win/launch4j/launch4j.jar -text svneol=unset#unset
 tvbrowser/deployment/win/launch4j/lib/xstream.jar -text
 tvbrowser/deployment/win/launch4j/tvbrowser-transportable.xml -text
 tvbrowser/deployment/win/launch4j/tvbrowser.xml -text
