@@ -1004,19 +1004,6 @@ tvbrowser/src/util/ui/PictureAreaIcon.java -text
 tvbrowser/src/util/ui/TimeFormatter.java -text
 tvbrowser/src/util/ui/progress/ProgressInputStream.java -text
 tvbrowser/src/webplugin/FavIconFetcher.java -text
-tvbrowser/src/webplugin/aclib/image/ico/AbstractBitmap.java -text
-tvbrowser/src/webplugin/aclib/image/ico/AbstractBitmapIndexed.java -text
-tvbrowser/src/webplugin/aclib/image/ico/AbstractBitmapRGB.java -text
-tvbrowser/src/webplugin/aclib/image/ico/BitmapDescriptor.java -text
-tvbrowser/src/webplugin/aclib/image/ico/BitmapHeader.java -text
-tvbrowser/src/webplugin/aclib/image/ico/BitmapIndexed1BPP.java -text
-tvbrowser/src/webplugin/aclib/image/ico/BitmapIndexed4BPP.java -text
-tvbrowser/src/webplugin/aclib/image/ico/BitmapIndexed8BPP.java -text
-tvbrowser/src/webplugin/aclib/image/ico/BitmapMask.java -text
-tvbrowser/src/webplugin/aclib/image/ico/BitmapRGB24BPP.java -text
-tvbrowser/src/webplugin/aclib/image/ico/BitmapRGB32BPP.java -text
-tvbrowser/src/webplugin/aclib/image/ico/ICOFile.java -text
-tvbrowser/src/webplugin/aclib/image/ico/TypeCompression.java -text
 tvbrowser/test/src/primarydatamanager/DayProgramMapperTest.java -text
 tvbrowser/test/src/primarydatamanager/PrimaryDataManagerTest.java -text
 tvbrowser/test/src/primarydatamanager/primarydataservice/util/InfoCategoryParserTest.java -text svneol=unset#text/plain
