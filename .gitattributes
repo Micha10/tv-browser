@@ -83,7 +83,7 @@ tvbrowser-plugins/plugin-imdb/src/main/java/imdbplugin/ImdbIcon.java -text
 tvbrowser-plugins/plugin-imdb/src/main/java/imdbplugin/ImdbParser.java -text
 tvbrowser-plugins/plugin-imdb/src/main/java/imdbplugin/ImdbPlugin.java -text
 tvbrowser-plugins/plugin-imdb/src/main/java/imdbplugin/ImdbRating.java -text
-tvbrowser-plugins/plugin-imdb/src/main/java/imdbplugin/ImdbSettings.java -text
+tvbrowser-plugins/plugin-imdb/src/main/java/imdbplugin/ImdbSettingsTab.java -text
 tvbrowser-plugins/plugin-imdb/src/main/java/imdbplugin/ImdbUpdateDialog.java -text
 tvbrowser-plugins/plugin-imdb/src/main/java/imdbplugin/RatingNode.java -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-imdb/src/main/resources/imdbplugin/imdbplugin.properties -text
