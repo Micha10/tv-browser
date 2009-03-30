@@ -118,6 +118,11 @@ tvbrowser-plugins/plugin-twitter/.project
 tvbrowser-plugins/plugin-twitter/.settings
 tvbrowser-plugins/plugin-twitter/target
 tvbrowser-plugins/plugin-twitter/tvbrowser-plugins-twitter.iml
+tvbrowser-plugins/plugin-virtualdataservice/.classpath
+tvbrowser-plugins/plugin-virtualdataservice/.pmd
+tvbrowser-plugins/plugin-virtualdataservice/.project
+tvbrowser-plugins/plugin-virtualdataservice/.settings
+tvbrowser-plugins/plugin-virtualdataservice/target
 tvbrowser-plugins/plugin-widget/.classpath
 tvbrowser-plugins/plugin-widget/.fbprefs
 tvbrowser-plugins/plugin-widget/.pmd
