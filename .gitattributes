@@ -388,8 +388,8 @@ tvbrowser/deployment/macosx/tvbdmg.png -text
 tvbrowser/deployment/macosx/tvbrowser.dmg -text
 tvbrowser/deployment/macosx/tvbrowser.psd -text
 tvbrowser/deployment/win/installer/Contrib/Graphics/Checks/modern.bmp -text
-tvbrowser/deployment/win/installer/Contrib/Graphics/Icons/murfman-install.ico -text
-tvbrowser/deployment/win/installer/Contrib/Graphics/Icons/murfman-uninstall.ico -text
+tvbrowser/deployment/win/installer/Contrib/Graphics/Icons/orange-install.ico -text
+tvbrowser/deployment/win/installer/Contrib/Graphics/Icons/orange-uninstall.ico -text
 tvbrowser/deployment/win/installer/Contrib/Graphics/Wizard/win.bmp -text
 tvbrowser/deployment/win/installer/Contrib/Language[!!-~]files/English.nlf -text svneol=unset#application/octet-stream
 tvbrowser/deployment/win/installer/Contrib/Language[!!-~]files/English.nsh -text
@@ -401,6 +401,8 @@ tvbrowser/deployment/win/installer/Contrib/UIs/modern_nodesc.exe -text
 tvbrowser/deployment/win/installer/Contrib/UIs/modern_smalldesc.exe -text
 tvbrowser/deployment/win/installer/Include/InstallOptions.nsh -text
 tvbrowser/deployment/win/installer/Include/LangFile.nsh -text
+tvbrowser/deployment/win/installer/Include/LogicLib.nsh -text
+tvbrowser/deployment/win/installer/Include/Sections.nsh -text
 tvbrowser/deployment/win/installer/Include/WinMessages.nsh -text svneol=unset#application/octet-stream
 tvbrowser/deployment/win/installer/Plugins/InstallOptions.dll -text
 tvbrowser/deployment/win/installer/Plugins/LangDLL.dll -text
