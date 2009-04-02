@@ -1,5 +1,7 @@
 tvbrowser-plugins/.classpath
+tvbrowser-plugins/.pmd
 tvbrowser-plugins/.project
+tvbrowser-plugins/.settings
 tvbrowser-plugins/plugin-balloon/.classpath
 tvbrowser-plugins/plugin-balloon/.fbprefs
 tvbrowser-plugins/plugin-balloon/.pmd
