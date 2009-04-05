@@ -764,6 +764,7 @@ tvbrowser/lib/jRegistryKey.jar -text
 tvbrowser/lib/jakarta-oro-2.0.8.jar -text
 tvbrowser/lib/jcom.jar -text
 tvbrowser/lib/l2fprod-common-tasks.jar -text
+tvbrowser/lib/libgrowl.jar -text
 tvbrowser/lib/log4j-1.2.8.jar -text
 tvbrowser/lib/looks-2.2.1.jar -text
 tvbrowser/lib/opencsv-1.8.jar -text
@@ -862,6 +863,7 @@ tvbrowser/src/dreamboxdataservice/DreamboxSettingsPanel.java -text
 tvbrowser/src/dreamboxdataservice/dreamboxdataservice.properties -text
 tvbrowser/src/dreamboxdataservice/dreamboxdataservice_de.properties -text
 tvbrowser/src/genreplugin/IGenreSettings.java -text
+tvbrowser/src/growlplugin/GrowlSettings.java -text svneol=unset#text/plain
 tvbrowser/src/growlplugin/growlclaw.png -text
 tvbrowser/src/growlplugin/growlplugin_sv.properties -text
 tvbrowser/src/i18nplugin/AbstractHierarchicalNode.java -text svneol=unset#text/plain
