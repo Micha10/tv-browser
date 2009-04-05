@@ -197,5 +197,6 @@ tvbrowser/runtime
 tvbrowser/src/primarydatamanager/primarydataservice/secret
 tvbrowser/src/tvraterplugin/imgs/tvbrowser_pie.psd
 tvbrowser/src/webplugin/.pics
+tvbrowser/test/classes
 tvbrowser/testdata
 tvbrowser/unpacked
