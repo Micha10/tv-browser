@@ -105,11 +105,13 @@ tvbrowser-plugins/plugin-mediathek/src/main/java/mediathekplugin/UpdateThread.ja
 tvbrowser-plugins/plugin-mediathek/src/main/java/mediathekplugin/parser/ARDParser.java -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-mediathek/src/main/java/mediathekplugin/parser/AbstractParser.java -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-mediathek/src/main/java/mediathekplugin/parser/IParser.java -text svneol=unset#text/plain
+tvbrowser-plugins/plugin-mediathek/src/main/java/mediathekplugin/parser/NRKParser.java -text
 tvbrowser-plugins/plugin-mediathek/src/main/java/mediathekplugin/parser/ZDFParser.java -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-mediathek/src/main/resources/mediathekplugin/icons/16x16/mimetypes/audio-x-generic.png -text
 tvbrowser-plugins/plugin-mediathek/src/main/resources/mediathekplugin/icons/16x16/mimetypes/image-x-generic.png -text
 tvbrowser-plugins/plugin-mediathek/src/main/resources/mediathekplugin/icons/16x16/mimetypes/video-x-generic.png -text
 tvbrowser-plugins/plugin-mediathek/src/main/resources/mediathekplugin/icons/ard.png -text
+tvbrowser-plugins/plugin-mediathek/src/main/resources/mediathekplugin/icons/nrk.png -text
 tvbrowser-plugins/plugin-mediathek/src/main/resources/mediathekplugin/icons/zdf.png -text
 tvbrowser-plugins/plugin-mediathek/src/main/resources/mediathekplugin/mediathekplugin.properties -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-mediathek/src/main/resources/mediathekplugin/mediathekplugin_de.properties -text svneol=unset#text/plain
