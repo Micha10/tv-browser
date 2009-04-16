@@ -1079,6 +1079,7 @@ tvbrowser/src/util/ui/DontShowAgainMessageBox.java -text
 tvbrowser/src/util/ui/LocalizerClassloader.java -text
 tvbrowser/src/util/ui/NullProgressMonitor.java -text
 tvbrowser/src/util/ui/PictureAreaIcon.java -text
+tvbrowser/src/util/ui/TVBrowserIcons.java -text svneol=unset#text/plain
 tvbrowser/src/util/ui/TimeFormatter.java -text
 tvbrowser/src/util/ui/progress/ProgressInputStream.java -text
 tvbrowser/src/webplugin/FavIconFetcher.java -text
