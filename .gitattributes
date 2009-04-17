@@ -73,6 +73,9 @@ tvbrowser-plugins/plugin-dataviewer/src/main/resources/dataviewerplugin/icons/16
 tvbrowser-plugins/plugin-dataviewer/src/main/resources/dataviewerplugin/icons/22x22/actions/format-justify-fill.png -text
 tvbrowser-plugins/plugin-dataviewer/src/main/resources/dataviewerplugin/icons/Readme.txt -text
 tvbrowser-plugins/plugin-idontwant2see/pom.xml -text
+tvbrowser-plugins/plugin-idontwant2see/src/main/java/idontwant2see/ExclusionTablePanel.java -text svneol=unset#text/plain
+tvbrowser-plugins/plugin-idontwant2see/src/main/java/idontwant2see/IDontWant2SeeSettings.java -text svneol=unset#text/plain
+tvbrowser-plugins/plugin-idontwant2see/src/main/java/idontwant2see/IDontWant2SeeSettingsTab.java -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-idontwant2see/src/main/resources/idontwant2see/icons/16x16/apps/idontwant2see.png -text
 tvbrowser-plugins/plugin-idontwant2see/src/main/resources/idontwant2see/icons/22x22/apps/idontwant2see.png -text
 tvbrowser-plugins/plugin-idontwant2see/src/main/resources/idontwant2see/idontwant2see.properties -text
