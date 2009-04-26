@@ -416,6 +416,7 @@ tvbrowser/deployment/win/installer/Plugins/InstallOptions.dll -text
 tvbrowser/deployment/win/installer/Plugins/LangDLL.dll -text
 tvbrowser/deployment/win/installer/Plugins/LockedList.dll -text
 tvbrowser/deployment/win/installer/Plugins/StartMenu.dll -text
+tvbrowser/deployment/win/installer/Plugins/System.dll -text
 tvbrowser/deployment/win/installer/Plugins/UserInfo.dll -text
 tvbrowser/deployment/win/installer/Plugins/nsisFirewall.dll -text
 tvbrowser/deployment/win/installer/Plugins/nsisFirewallW.dll -text
