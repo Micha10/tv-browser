@@ -772,7 +772,7 @@ tvbrowser/lib/jRegistryKey.jar -text
 tvbrowser/lib/jakarta-oro-2.0.8.jar -text
 tvbrowser/lib/jcom.jar -text
 tvbrowser/lib/l2fprod-common-tasks.jar -text
-tvbrowser/lib/libgrowl.jar -text
+tvbrowser/lib/libgrowl.jar -text svneol=unset#unset
 tvbrowser/lib/log4j-1.2.8.jar -text
 tvbrowser/lib/looks-2.2.1.jar -text
 tvbrowser/lib/opencsv-1.8.jar -text
