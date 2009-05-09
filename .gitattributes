@@ -1086,6 +1086,7 @@ tvbrowser/src/util/program/program_de.properties -text
 tvbrowser/src/util/program/program_sv.properties -text
 tvbrowser/src/util/settings/FontProperty.java -text
 tvbrowser/src/util/settings/ProgramPanelSettings.java -text
+tvbrowser/src/util/ui/AsynchronousImageIcon.java -text
 tvbrowser/src/util/ui/AutoCompletion.java -text svneol=unset#text/plain
 tvbrowser/src/util/ui/CaretPositionCorrector.java -text
 tvbrowser/src/util/ui/CreditsScrollerPanel.java -text
