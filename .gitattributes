@@ -284,6 +284,7 @@ tvbrowser-plugins/plugin-tooltipcontrol/src/main/java/tooltipcontrolplugin/ToolT
 tvbrowser-plugins/plugin-tooltipcontrol/src/main/java/tooltipcontrolplugin/ToolTipControlPluginSettingsTab.java -text
 tvbrowser-plugins/plugin-tooltipcontrol/src/main/resources/tooltipcontrolplugin/tooltipcontrolplugin.properties -text
 tvbrowser-plugins/plugin-tooltipcontrol/src/main/resources/tooltipcontrolplugin/tooltipcontrolplugin_de.properties -text
+tvbrowser-plugins/plugin-tvbrowsermini/lib/sqlitejdbc-v054.jar -text
 tvbrowser-plugins/plugin-tvbrowsermini/src/TVBrowserMini.java -text
 tvbrowser-plugins/plugin-tvbrowsermini/src/TVBrowserMiniSettingsTab.java -text
 tvbrowser-plugins/plugin-tvbrowsermini/src/devices/AbstractExportDevice.java -text
