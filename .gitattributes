@@ -285,13 +285,13 @@ tvbrowser-plugins/plugin-tooltipcontrol/src/main/java/tooltipcontrolplugin/ToolT
 tvbrowser-plugins/plugin-tooltipcontrol/src/main/resources/tooltipcontrolplugin/tooltipcontrolplugin.properties -text
 tvbrowser-plugins/plugin-tooltipcontrol/src/main/resources/tooltipcontrolplugin/tooltipcontrolplugin_de.properties -text
 tvbrowser-plugins/plugin-tvbrowsermini/lib/sqlitejdbc-v054.jar -text
-tvbrowser-plugins/plugin-tvbrowsermini/src/TVBrowserMini.java -text
-tvbrowser-plugins/plugin-tvbrowsermini/src/TVBrowserMiniSettingsTab.java -text
-tvbrowser-plugins/plugin-tvbrowsermini/src/devices/AbstractExportDevice.java -text
-tvbrowser-plugins/plugin-tvbrowsermini/src/devices/Android.java -text
-tvbrowser-plugins/plugin-tvbrowsermini/src/devices/PDA.java -text
-tvbrowser-plugins/plugin-tvbrowsermini/src/tvbrowsermini.properties -text
-tvbrowser-plugins/plugin-tvbrowsermini/src/tvbrowsermini_de.properties -text
+tvbrowser-plugins/plugin-tvbrowsermini/src/main/java/tvbrowsermini/TVBrowserMini.java -text
+tvbrowser-plugins/plugin-tvbrowsermini/src/main/java/tvbrowsermini/TVBrowserMiniSettingsTab.java -text
+tvbrowser-plugins/plugin-tvbrowsermini/src/main/java/tvbrowsermini/devices/AbstractExportDevice.java -text
+tvbrowser-plugins/plugin-tvbrowsermini/src/main/java/tvbrowsermini/devices/Android.java -text
+tvbrowser-plugins/plugin-tvbrowsermini/src/main/java/tvbrowsermini/devices/PDA.java -text
+tvbrowser-plugins/plugin-tvbrowsermini/src/main/resources/tvbrowsermini/tvbrowsermini.properties -text
+tvbrowser-plugins/plugin-tvbrowsermini/src/main/resources/tvbrowsermini/tvbrowsermini_de.properties -text
 tvbrowser-plugins/plugin-tvpearl/pom.xml -text
 tvbrowser-plugins/plugin-tvpearl/src/main/java/tvpearlplugin/HTTPConverter.java -text
 tvbrowser-plugins/plugin-tvpearl/src/main/java/tvpearlplugin/IProgramStatus.java -text svneol=unset#text/plain
