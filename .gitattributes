@@ -16,13 +16,11 @@ androidtvbrowser/src/de/misi/tvbrowser/Utility.java -text
 androidtvbrowser/src/de/misi/tvbrowser/activities/info/InfoActivity.java -text
 androidtvbrowser/src/de/misi/tvbrowser/activities/search/SearchActivity.java -text
 androidtvbrowser/src/de/misi/tvbrowser/activities/search/SearchResult.java -text
-androidtvbrowser/src/de/misi/tvbrowser/activities/settings/SelectGroups.java -text
 androidtvbrowser/src/de/misi/tvbrowser/activities/settings/Settings.java -text
 androidtvbrowser/src/de/misi/tvbrowser/activities/settings/SettingsDialog.java -text
 androidtvbrowser/src/de/misi/tvbrowser/data/Broadcast.java -text
 androidtvbrowser/src/de/misi/tvbrowser/data/Channel.java -text
 androidtvbrowser/src/de/misi/tvbrowser/data/DataLoader.java -text
-androidtvbrowser/src/de/misi/tvbrowser/data/Group.java -text
 androidtvbrowser/src/de/misi/tvbrowser/dialogs/ReminderDialog.java -text
 androidtvbrowser/src/de/misi/tvbrowser/widgets/TVBrowserGridView.java -text
 pdatvbrowser/About.Designer.cs -text
