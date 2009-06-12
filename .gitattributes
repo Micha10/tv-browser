@@ -1057,7 +1057,11 @@ tvbrowser/src/tvbrowser/ui/configassistant/PictureConfigPanel.java -text
 tvbrowser/src/tvbrowser/ui/configassistant/TvBrowserPictureSettingsUpdateDialog.java -text
 tvbrowser/src/tvbrowser/ui/finder/AbstractDateSelector.java -text
 tvbrowser/src/tvbrowser/ui/finder/DateSelector.java -text
+tvbrowser/src/tvbrowser/ui/finder/calendar/AbstractCalendarPanel.java -text svneol=unset#text/plain
 tvbrowser/src/tvbrowser/ui/finder/calendar/CalendarPanel.java -text
+tvbrowser/src/tvbrowser/ui/finder/calendar/CalendarTableCellRenderer.java -text svneol=unset#text/plain
+tvbrowser/src/tvbrowser/ui/finder/calendar/CalendarTableModel.java -text svneol=unset#text/plain
+tvbrowser/src/tvbrowser/ui/finder/calendar/CalendarTablePanel.java -text svneol=unset#text/plain
 tvbrowser/src/tvbrowser/ui/mainframe/searchfield/searchfield_sv.properties -text
 tvbrowser/src/tvbrowser/ui/pluginview/contextmenu/PluginBasedPluginContextMenu.java -text
 tvbrowser/src/tvbrowser/ui/pluginview/contextmenu/ProxyBasedPluginContextMenu.java -text
