@@ -3,6 +3,7 @@ androidtvbrowser/AndroidManifest.xml -text
 androidtvbrowser/build.xml -text
 androidtvbrowser/default.properties -text
 androidtvbrowser/res/drawable/app_icon.png -text
+androidtvbrowser/res/drawable/notification.png -text
 androidtvbrowser/res/layout/info.xml -text
 androidtvbrowser/res/layout/main.xml -text
 androidtvbrowser/res/layout/reminderdlg.xml -text
