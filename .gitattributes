@@ -15,6 +15,9 @@ androidtvbrowser/res/values/strings.xml -text
 androidtvbrowser/src/de/misi/tvbrowser/TVBrowser.java -text
 androidtvbrowser/src/de/misi/tvbrowser/Utility.java -text
 androidtvbrowser/src/de/misi/tvbrowser/activities/info/InfoActivity.java -text
+androidtvbrowser/src/de/misi/tvbrowser/activities/reminder/ReminderAlarm.java -text
+androidtvbrowser/src/de/misi/tvbrowser/activities/reminder/ReminderDialog.java -text
+androidtvbrowser/src/de/misi/tvbrowser/activities/reminder/ReminderListActivity.java -text
 androidtvbrowser/src/de/misi/tvbrowser/activities/search/SearchActivity.java -text
 androidtvbrowser/src/de/misi/tvbrowser/activities/search/SearchResult.java -text
 androidtvbrowser/src/de/misi/tvbrowser/activities/settings/Settings.java -text
