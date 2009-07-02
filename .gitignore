@@ -56,6 +56,10 @@ tvbrowser-plugins/plugin-movieaward/import
 tvbrowser-plugins/plugin-movieaward/src/main/java/movieawardplugin/ImportFilmPreis.java
 tvbrowser-plugins/plugin-movieaward/target
 tvbrowser-plugins/plugin-movieaward/tvbrowser-plugins-movieaward.iml
+tvbrowser-plugins/plugin-notifyosd/.classpath
+tvbrowser-plugins/plugin-notifyosd/.project
+tvbrowser-plugins/plugin-notifyosd/.settings
+tvbrowser-plugins/plugin-notifyosd/target
 tvbrowser-plugins/plugin-recommendation/.classpath
 tvbrowser-plugins/plugin-recommendation/.fbprefs
 tvbrowser-plugins/plugin-recommendation/.pmd

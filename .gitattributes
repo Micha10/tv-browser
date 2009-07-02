@@ -178,6 +178,11 @@ tvbrowser-plugins/plugin-movieaward/src/main/resources/movieawardplugin/data/osc
 tvbrowser-plugins/plugin-movieaward/src/main/resources/movieawardplugin/movieaward.png -text
 tvbrowser-plugins/plugin-movieaward/src/main/resources/movieawardplugin/movieawardplugin.properties -text
 tvbrowser-plugins/plugin-movieaward/src/main/resources/movieawardplugin/movieawardplugin_de.properties -text
+tvbrowser-plugins/plugin-notifyosd/pom.xml -text
+tvbrowser-plugins/plugin-notifyosd/src/main/java/notifyosdplugin/NotifyOSDPlugin.java -text
+tvbrowser-plugins/plugin-notifyosd/src/main/resources/notifyosdplugin/icons/16x16/notify.png -text
+tvbrowser-plugins/plugin-notifyosd/src/main/resources/notifyosdplugin/notifyosdplugin.properties -text
+tvbrowser-plugins/plugin-notifyosd/src/main/resources/notifyosdplugin/notifyosdplugin_de.properties -text
 tvbrowser-plugins/plugin-recommendation/pom.xml -text
 tvbrowser-plugins/plugin-recommendation/src/main/java/recommendationplugin/ProgramWeight.java -text
 tvbrowser-plugins/plugin-recommendation/src/main/java/recommendationplugin/ProgramWeightWrapperModel.java -text
