@@ -839,7 +839,6 @@ tvbrowser/src/calendarexportplugin/exporter/CalExporter.java -text svneol=unset#
 tvbrowser/src/calendarexportplugin/exporter/ExporterFactory.java -text
 tvbrowser/src/calendarexportplugin/exporter/ExporterIf.java -text
 tvbrowser/src/calendarexportplugin/exporter/GoogleExporter.java -text
-tvbrowser/src/calendarexportplugin/exporter/GoogleLoginDialog.java -text
 tvbrowser/src/calendarexportplugin/exporter/GoogleSettingsDialog.java -text
 tvbrowser/src/calendarexportplugin/exporter/ICalExporter.java -text
 tvbrowser/src/calendarexportplugin/exporter/KOrganizerExporter.java -text
@@ -1147,6 +1146,10 @@ tvbrowser/src/util/ui/PictureAreaIcon.java -text
 tvbrowser/src/util/ui/TVBrowserIcons.java -text svneol=unset#text/plain
 tvbrowser/src/util/ui/TimeFormatter.java -text
 tvbrowser/src/util/ui/UIThreadRunner.java -text
+tvbrowser/src/util/ui/login/LoginDialog.java -text
+tvbrowser/src/util/ui/login/login.properties -text
+tvbrowser/src/util/ui/login/login_de.properties -text
+tvbrowser/src/util/ui/login/login_sv.properties -text
 tvbrowser/src/util/ui/progress/ProgressInputStream.java -text
 tvbrowser/src/webplugin/FavIconFetcher.java -text
 tvbrowser/test/src/primarydatamanager/DayProgramMapperTest.java -text
