@@ -418,6 +418,7 @@ tvbrowser-plugins/plugin-zattoo/src/main/java/zattooplugin/ZattooChannelProperti
 tvbrowser-plugins/plugin-zattoo/src/main/java/zattooplugin/ZattooCountry.java -text
 tvbrowser-plugins/plugin-zattoo/src/main/java/zattooplugin/ZattooFilterComponent.java -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-zattoo/src/main/java/zattooplugin/ZattooPlugin.java -text
+tvbrowser-plugins/plugin-zattoo/src/main/java/zattooplugin/ZattooSettings.java -text
 tvbrowser-plugins/plugin-zattoo/src/main/java/zattooplugin/ZattooSettingsTab.java -text
 tvbrowser-plugins/plugin-zattoo/src/main/resources/zattooplugin/channels_ch.properties -text
 tvbrowser-plugins/plugin-zattoo/src/main/resources/zattooplugin/channels_de.properties -text svneol=unset#text/plain
