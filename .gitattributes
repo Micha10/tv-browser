@@ -832,6 +832,8 @@ tvbrowser/src/bbcbackstagedataservice/BbcChannelGroup.java -text
 tvbrowser/src/bbcbackstagedataservice/BbcFileParser.java -text
 tvbrowser/src/bbcbackstagedataservice/bbcbackstagedataservice.properties -text
 tvbrowser/src/bbcbackstagedataservice/bbcbackstagedataservice_de.properties -text
+tvbrowser/src/blogthisplugin/BlogService.java -text
+tvbrowser/src/blogthisplugin/BlogSettings.java -text
 tvbrowser/src/blogthisplugin/blogthisplugin_sv.properties -text
 tvbrowser/src/calendarexportplugin/ExtendedDialog.java -text
 tvbrowser/src/calendarexportplugin/exporter/AbstractExporter.java -text
@@ -915,13 +917,15 @@ tvbrowser/src/dreamboxdataservice/DreamboxHandler.java -text
 tvbrowser/src/dreamboxdataservice/DreamboxSettingsPanel.java -text
 tvbrowser/src/dreamboxdataservice/dreamboxdataservice.properties -text
 tvbrowser/src/dreamboxdataservice/dreamboxdataservice_de.properties -text
-tvbrowser/src/genreplugin/IGenreSettings.java -text
+tvbrowser/src/emailplugin/EMailSettings.java -text
+tvbrowser/src/genreplugin/GenreSettings.java -text
 tvbrowser/src/growlplugin/GrowlSettings.java -text svneol=unset#text/plain
 tvbrowser/src/growlplugin/growlclaw.png -text
 tvbrowser/src/growlplugin/growlplugin_sv.properties -text
 tvbrowser/src/i18nplugin/AbstractHierarchicalNode.java -text svneol=unset#text/plain
 tvbrowser/src/i18nplugin/FilterNodeIf.java -text
 tvbrowser/src/i18nplugin/I18NPlugin.java -text
+tvbrowser/src/i18nplugin/I18NSettings.java -text
 tvbrowser/src/i18nplugin/LanguageChooser.java -text
 tvbrowser/src/i18nplugin/LanguageNodeIf.java -text
 tvbrowser/src/i18nplugin/PathNode.java -text
@@ -980,6 +984,7 @@ tvbrowser/src/imgs/tvbrowser128.png -text
 tvbrowser/src/imgs/tvbrowser16.png -text
 tvbrowser/src/imgs/tvbrowser32.png -text
 tvbrowser/src/imgs/tvbrowser48.png -text
+tvbrowser/src/knotifyplugin/KNotifySettings.java -text
 tvbrowser/src/knotifyplugin/knotify.png -text
 tvbrowser/src/primarydatamanager/primarydataservice/util/InfoCategoryParser.java -text
 tvbrowser/src/primarydatamanager/primarydataservice/util/category_arts.properties -text svneol=unset#text/plain
@@ -993,6 +998,7 @@ tvbrowser/src/primarydatamanager/primarydataservice/util/category_show.propertie
 tvbrowser/src/primarydatamanager/primarydataservice/util/category_sports.properties -text svneol=unset#text/plain
 tvbrowser/src/printplugin/dlgs/components/FilterSelectionPanel.java -text
 tvbrowser/src/printplugin/printer/singleprogramprinter/DocumentRenderer.java -text
+tvbrowser/src/programlistplugin/ProgramListSettings.java -text
 tvbrowser/src/programlistplugin/programlistplugin.properties -text
 tvbrowser/src/programlistplugin/programlistplugin_de.properties -text
 tvbrowser/src/radiotimesdataservice/RadioTimesChannelGroup.java -text
@@ -1098,6 +1104,8 @@ tvbrowser/src/tvbrowserdataservice/TvBrowserDataServiceSettings.java -text
 tvbrowser/src/tvdataservice/PictureSettingsIf.java -text
 tvbrowser/src/tvraterplugin/TVRaterFilter.java -text
 tvbrowser/src/tvraterplugin/TVRaterProgramFilter.java -text
+tvbrowser/src/tvraterplugin/TVRaterSettings.java -text
+tvbrowser/src/tvraterplugin/UpdateInterval.java -text
 tvbrowser/src/tvraterplugin/genre_sv.properties -text
 tvbrowser/src/tvraterplugin/imgs/-1.png -text
 tvbrowser/src/tvraterplugin/imgs/0.png -text
@@ -1136,11 +1144,13 @@ tvbrowser/src/util/program/program_de.properties -text
 tvbrowser/src/util/program/program_sv.properties -text
 tvbrowser/src/util/settings/FontProperty.java -text
 tvbrowser/src/util/settings/ProgramPanelSettings.java -text
+tvbrowser/src/util/settings/PropertyBasedSettings.java -text
 tvbrowser/src/util/ui/AsynchronousImageIcon.java -text
 tvbrowser/src/util/ui/AutoCompletion.java -text svneol=unset#text/plain
 tvbrowser/src/util/ui/CaretPositionCorrector.java -text
 tvbrowser/src/util/ui/CreditsScrollerPanel.java -text
 tvbrowser/src/util/ui/DontShowAgainMessageBox.java -text
+tvbrowser/src/util/ui/EnhancedPanelPuilder.java -text
 tvbrowser/src/util/ui/LocalizerClassloader.java -text
 tvbrowser/src/util/ui/NullProgressMonitor.java -text
 tvbrowser/src/util/ui/PictureAreaIcon.java -text
