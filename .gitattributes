@@ -1103,6 +1103,7 @@ tvbrowser/src/tvbrowser/ui/waiting/dlgs/dlgs_sv.properties -text
 tvbrowser/src/tvbrowserdataservice/TvBrowserDataServiceSettings.java -text
 tvbrowser/src/tvdataservice/PictureSettingsIf.java -text
 tvbrowser/src/tvraterplugin/TVRaterFilter.java -text
+tvbrowser/src/tvraterplugin/TVRaterFilterAllCategories.java -text
 tvbrowser/src/tvraterplugin/TVRaterProgramFilter.java -text
 tvbrowser/src/tvraterplugin/TVRaterSettings.java -text
 tvbrowser/src/tvraterplugin/UpdateInterval.java -text
