@@ -410,6 +410,7 @@ tvbrowser-plugins/plugin-widget/src/main/resources/widgetplugin/widgetplugin_de.
 tvbrowser-plugins/plugin-wirschauen/pom.xml -text
 tvbrowser-plugins/plugin-wirschauen/src/main/java/wirschauenplugin/WirSchauenFilterComponent.java -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-wirschauen/src/main/resources/wirschauenplugin/icons/16x16/apps/wirschauen.png -text
+tvbrowser-plugins/plugin-wirschauen/src/main/resources/wirschauenplugin/icons/16x16/apps/wirschauen_noDesc.png -text
 tvbrowser-plugins/plugin-wirschauen/src/main/resources/wirschauenplugin/wirschauenplugin.properties -text
 tvbrowser-plugins/plugin-wirschauen/src/main/resources/wirschauenplugin/wirschauenplugin_de.properties -text
 tvbrowser-plugins/plugin-zattoo/pom.xml -text
