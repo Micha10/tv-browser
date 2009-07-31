@@ -333,6 +333,11 @@ tvbrowser-plugins/plugin-twitter/src/main/java/twitterplugin/TwitterSettingsTab.
 tvbrowser-plugins/plugin-twitter/src/main/resources/twitterplugin/twitter.png -text
 tvbrowser-plugins/plugin-twitter/src/main/resources/twitterplugin/twitterplugin.properties -text
 tvbrowser-plugins/plugin-twitter/src/main/resources/twitterplugin/twitterplugin_de.properties -text
+tvbrowser-plugins/plugin-url4program/pom.xml -text
+tvbrowser-plugins/plugin-url4program/src/main/java/url4programplugin/URL4ProgramPlugin.java -text
+tvbrowser-plugins/plugin-url4program/src/main/java/url4programplugin/UrlListEntry.java -text
+tvbrowser-plugins/plugin-url4program/src/main/resources/url4programplugin/url4programplugin.properties -text
+tvbrowser-plugins/plugin-url4program/src/main/resources/url4programplugin/url4programplugin_de.properties -text
 tvbrowser-plugins/plugin-virtualdataservice/pom.xml -text
 tvbrowser-plugins/plugin-virtualdataservice/src/main/java/com/michaelbaranov/microba/Microba.java -text
 tvbrowser-plugins/plugin-virtualdataservice/src/main/java/com/michaelbaranov/microba/calendar/CalendarColors.java -text
