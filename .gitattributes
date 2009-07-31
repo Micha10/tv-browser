@@ -432,9 +432,6 @@ tvbrowser-plugins/plugin-zattoo/src/main/resources/zattooplugin/zattoo.png -text
 tvbrowser-plugins/plugin-zattoo/src/main/resources/zattooplugin/zattooplugin.properties -text
 tvbrowser-plugins/plugin-zattoo/src/main/resources/zattooplugin/zattooplugin_de.properties -text
 tvbrowser-plugins/pom.xml -text
-tvbrowser-plugins/url4programplugin/License.txt -text
-tvbrowser-plugins/url4programplugin/url4programplugin.properties -text
-tvbrowser-plugins/url4programplugin/url4programplugin_de.properties -text
 tvbrowser/.settings/org.eclipse.core.resources.prefs -text
 tvbrowser/.settings/org.eclipse.jdt.core.prefs -text
 tvbrowser/.settings/org.eclipse.jdt.ui.prefs -text
