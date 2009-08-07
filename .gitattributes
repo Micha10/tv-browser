@@ -252,6 +252,11 @@ tvbrowser-plugins/plugin-speech/src/main/resources/speechplugin/engine/engine.pr
 tvbrowser-plugins/plugin-speech/src/main/resources/speechplugin/engine/engine_de.properties -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-speech/src/main/resources/speechplugin/speechplugin.properties -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-speech/src/main/resources/speechplugin/speechplugin_de.properties -text svneol=unset#text/plain
+tvbrowser-plugins/plugin-tagging/pom.xml -text
+tvbrowser-plugins/plugin-tagging/src/main/java/taggingplugin/TaggingPlugin.java -text
+tvbrowser-plugins/plugin-tagging/src/main/resources/taggingplugin/tag.png -text
+tvbrowser-plugins/plugin-tagging/src/main/resources/taggingplugin/taggingplugin.properties -text
+tvbrowser-plugins/plugin-tagging/src/main/resources/taggingplugin/taggingplugin_de.properties -text
 tvbrowser-plugins/plugin-teletext/pom.xml -text
 tvbrowser-plugins/plugin-teletext/src/main/java/teletextplugin/ChannelProperties.java -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-teletext/src/main/java/teletextplugin/TeleTextChannelProperties.java -text svneol=unset#text/plain

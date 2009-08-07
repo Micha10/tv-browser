@@ -85,6 +85,10 @@ tvbrowser-plugins/plugin-speech/.pmd
 tvbrowser-plugins/plugin-speech/.project
 tvbrowser-plugins/plugin-speech/.settings
 tvbrowser-plugins/plugin-speech/target
+tvbrowser-plugins/plugin-tagging/.classpath
+tvbrowser-plugins/plugin-tagging/.project
+tvbrowser-plugins/plugin-tagging/.settings
+tvbrowser-plugins/plugin-tagging/target
 tvbrowser-plugins/plugin-teletext/.classpath
 tvbrowser-plugins/plugin-teletext/.fbprefs
 tvbrowser-plugins/plugin-teletext/.pmd
