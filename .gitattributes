@@ -254,6 +254,8 @@ tvbrowser-plugins/plugin-speech/src/main/resources/speechplugin/speechplugin.pro
 tvbrowser-plugins/plugin-speech/src/main/resources/speechplugin/speechplugin_de.properties -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-tagging/pom.xml -text
 tvbrowser-plugins/plugin-tagging/src/main/java/taggingplugin/ProgramListDialog.java -text svneol=unset#text/plain
+tvbrowser-plugins/plugin-tagging/src/main/java/taggingplugin/TagFilterComponent.java -text
+tvbrowser-plugins/plugin-tagging/src/main/java/taggingplugin/TagValidation.java -text
 tvbrowser-plugins/plugin-tagging/src/main/java/taggingplugin/TaggingPlugin.java -text
 tvbrowser-plugins/plugin-tagging/src/main/resources/taggingplugin/tag.png -text
 tvbrowser-plugins/plugin-tagging/src/main/resources/taggingplugin/taggingplugin.properties -text
