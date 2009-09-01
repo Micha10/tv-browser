@@ -421,6 +421,18 @@ tvbrowser-plugins/plugin-widget/src/main/resources/widgetplugin/widget.png -text
 tvbrowser-plugins/plugin-widget/src/main/resources/widgetplugin/widgetplugin.properties -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-widget/src/main/resources/widgetplugin/widgetplugin_de.properties -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-wirschauen/pom.xml -text
+tvbrowser-plugins/plugin-wirschauen/src/main/java/wirschauenplugin/CreateOmdbAbstractDialog.java -text svneol=unset#text/plain
+tvbrowser-plugins/plugin-wirschauen/src/main/java/wirschauenplugin/CreateOmdbLinkDialog.java -text svneol=unset#text/plain
+tvbrowser-plugins/plugin-wirschauen/src/main/java/wirschauenplugin/CreateWirSchauenDataDialog.java -text svneol=unset#text/plain
+tvbrowser-plugins/plugin-wirschauen/src/main/java/wirschauenplugin/DescriptionInputField.java -text svneol=unset#text/plain
+tvbrowser-plugins/plugin-wirschauen/src/main/java/wirschauenplugin/DialogController.java -text svneol=unset#text/plain
+tvbrowser-plugins/plugin-wirschauen/src/main/java/wirschauenplugin/DialogUtil.java -text svneol=unset#text/plain
+tvbrowser-plugins/plugin-wirschauen/src/main/java/wirschauenplugin/DocumentAndItemButtonController.java -text svneol=unset#text/plain
+tvbrowser-plugins/plugin-wirschauen/src/main/java/wirschauenplugin/DocumentButtonController.java -text svneol=unset#text/plain
+tvbrowser-plugins/plugin-wirschauen/src/main/java/wirschauenplugin/LoadingInfoDialog.java -text svneol=unset#text/plain
+tvbrowser-plugins/plugin-wirschauen/src/main/java/wirschauenplugin/OmdbConnection.java -text svneol=unset#text/plain
+tvbrowser-plugins/plugin-wirschauen/src/main/java/wirschauenplugin/WirSchauenConnection.java -text svneol=unset#text/plain
+tvbrowser-plugins/plugin-wirschauen/src/main/java/wirschauenplugin/WirSchauenEvent.java -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-wirschauen/src/main/java/wirschauenplugin/WirSchauenFilterComponent.java -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-wirschauen/src/main/resources/wirschauenplugin/icons/16x16/apps/wirschauen.png -text
 tvbrowser-plugins/plugin-wirschauen/src/main/resources/wirschauenplugin/icons/16x16/apps/wirschauen_noDesc.png -text
