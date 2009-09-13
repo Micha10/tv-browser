@@ -943,6 +943,7 @@ tvbrowser/src/dreamboxdataservice/DreamboxHandler.java -text
 tvbrowser/src/dreamboxdataservice/DreamboxSettingsPanel.java -text
 tvbrowser/src/dreamboxdataservice/dreamboxdataservice.properties -text
 tvbrowser/src/dreamboxdataservice/dreamboxdataservice_de.properties -text
+tvbrowser/src/emailplugin/EMailParamLibrary.java -text
 tvbrowser/src/emailplugin/EMailSettings.java -text
 tvbrowser/src/genreplugin/GenreSettings.java -text
 tvbrowser/src/growlplugin/GrowlSettings.java -text svneol=unset#text/plain
