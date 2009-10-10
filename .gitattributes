@@ -1107,7 +1107,6 @@ tvbrowser/src/tvbrowser/extras/programinfo/ProgramInfoSettings.java -text svneol
 tvbrowser/src/tvbrowser/extras/reminderplugin/ReminderContent.java -text
 tvbrowser/src/tvbrowser/extras/reminderplugin/ReminderPluginProxy.java -text
 tvbrowser/src/tvbrowser/extras/searchplugin/RepetitionDialog.java -text
-tvbrowser/src/tvbrowser/tvbrowser_en_US.properties -text
 tvbrowser/src/tvbrowser/ui/configassistant/PictureConfigPanel.java -text
 tvbrowser/src/tvbrowser/ui/configassistant/TvBrowserPictureSettingsUpdateDialog.java -text
 tvbrowser/src/tvbrowser/ui/finder/AbstractDateSelector.java -text
@@ -1117,6 +1116,12 @@ tvbrowser/src/tvbrowser/ui/finder/calendar/CalendarPanel.java -text
 tvbrowser/src/tvbrowser/ui/finder/calendar/CalendarTableCellRenderer.java -text svneol=unset#text/plain
 tvbrowser/src/tvbrowser/ui/finder/calendar/CalendarTableModel.java -text svneol=unset#text/plain
 tvbrowser/src/tvbrowser/ui/finder/calendar/CalendarTablePanel.java -text svneol=unset#text/plain
+tvbrowser/src/tvbrowser/ui/mainframe/actions/TVBrowserAction.java -text
+tvbrowser/src/tvbrowser/ui/mainframe/actions/TVBrowserActions.java -text
+tvbrowser/src/tvbrowser/ui/mainframe/actions/TVBrowserUpdateAction.java -text
+tvbrowser/src/tvbrowser/ui/mainframe/actions/actions.properties -text
+tvbrowser/src/tvbrowser/ui/mainframe/actions/actions_de.properties -text
+tvbrowser/src/tvbrowser/ui/mainframe/actions/actions_sv.properties -text
 tvbrowser/src/tvbrowser/ui/mainframe/searchfield/searchfield_sv.properties -text
 tvbrowser/src/tvbrowser/ui/pluginview/contextmenu/PluginBasedPluginContextMenu.java -text
 tvbrowser/src/tvbrowser/ui/pluginview/contextmenu/ProxyBasedPluginContextMenu.java -text
