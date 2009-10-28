@@ -1259,6 +1259,7 @@ tvbrowser/src/tvbrowser/ui/settings/tablebackgroundstyles/tablebackgroundstyles_
 tvbrowser/src/tvbrowser/ui/settings/util/util_da.properties -text
 tvbrowser/src/tvbrowser/ui/settings/util/util_sk_SK.properties -text
 tvbrowser/src/tvbrowser/ui/splashscreen/splashscreen_da.properties -text
+tvbrowser/src/tvbrowser/ui/splashscreen/splashscreen_sk_SK.properties -text
 tvbrowser/src/tvbrowser/ui/tray/tray.properties -text
 tvbrowser/src/tvbrowser/ui/tray/tray_da.properties -text
 tvbrowser/src/tvbrowser/ui/tray/tray_de.properties -text
@@ -1327,6 +1328,7 @@ tvbrowser/src/util/program/LocalPluginProgramFormating.java -text
 tvbrowser/src/util/program/program.properties -text
 tvbrowser/src/util/program/program_da.properties -text
 tvbrowser/src/util/program/program_de.properties -text
+tvbrowser/src/util/program/program_sk_SK.properties -text
 tvbrowser/src/util/program/program_sv.properties -text
 tvbrowser/src/util/settings/FontProperty.java -text
 tvbrowser/src/util/settings/ProgramPanelSettings.java -text
