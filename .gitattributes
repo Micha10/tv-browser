@@ -1168,6 +1168,7 @@ tvbrowser/src/tvbrowser/core/search/booleansearch/booleansearch_sk_SK.properties
 tvbrowser/src/tvbrowser/core/settings/DeferredFontProperty.java -text
 tvbrowser/src/tvbrowser/core/settings/JGoodiesThemeProperty.java -text
 tvbrowser/src/tvbrowser/core/tvdataservice/tvdataservice_da.properties -text
+tvbrowser/src/tvbrowser/core/tvdataservice/tvdataservice_sk_SK.properties -text
 tvbrowser/src/tvbrowser/extras/common/DayListCellRenderer.java -text
 tvbrowser/src/tvbrowser/extras/common/common.properties -text
 tvbrowser/src/tvbrowser/extras/common/common_da.properties -text
@@ -1268,6 +1269,7 @@ tvbrowser/src/tvbrowser/ui/tray/tray_sv.properties -text
 tvbrowser/src/tvbrowser/ui/ui.properties -text
 tvbrowser/src/tvbrowser/ui/ui_da.properties -text
 tvbrowser/src/tvbrowser/ui/ui_de.properties -text
+tvbrowser/src/tvbrowser/ui/ui_sk_SK.properties -text
 tvbrowser/src/tvbrowser/ui/update/update_da.properties -text
 tvbrowser/src/tvbrowser/ui/update/update_sk_SK.properties -text
 tvbrowser/src/tvbrowser/ui/waiting/dlgs/dlgs_da.properties -text
@@ -1349,6 +1351,7 @@ tvbrowser/src/util/ui/UIThreadRunner.java -text
 tvbrowser/src/util/ui/customizableitems/customizableitems_da.properties -text
 tvbrowser/src/util/ui/customizableitems/customizableitems_sk_SK.properties -text
 tvbrowser/src/util/ui/findasyoutype/findasyoutype_da.properties -text
+tvbrowser/src/util/ui/findasyoutype/findasyoutype_sk_SK.properties -text
 tvbrowser/src/util/ui/login/LoginDialog.java -text
 tvbrowser/src/util/ui/login/login.properties -text
 tvbrowser/src/util/ui/login/login_de.properties -text
