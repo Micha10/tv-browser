@@ -1170,6 +1170,7 @@ tvbrowser/src/tvbrowser/core/settings/DeferredFontProperty.java -text
 tvbrowser/src/tvbrowser/core/settings/JGoodiesThemeProperty.java -text
 tvbrowser/src/tvbrowser/core/tvdataservice/tvdataservice_da.properties -text
 tvbrowser/src/tvbrowser/core/tvdataservice/tvdataservice_sk_SK.properties -text
+tvbrowser/src/tvbrowser/extras/common/AbstractInternalPluginProxy.java -text
 tvbrowser/src/tvbrowser/extras/common/DayListCellRenderer.java -text
 tvbrowser/src/tvbrowser/extras/common/common.properties -text
 tvbrowser/src/tvbrowser/extras/common/common_da.properties -text
