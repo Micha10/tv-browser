@@ -880,7 +880,10 @@ tvbrowser/src/blogthisplugin/BlogService.java -text
 tvbrowser/src/blogthisplugin/BlogSettings.java -text
 tvbrowser/src/blogthisplugin/blogthisplugin_da.properties -text
 tvbrowser/src/blogthisplugin/blogthisplugin_sv.properties -text
+tvbrowser/src/calendarexportplugin/CalendarExportSettings.java -text
+tvbrowser/src/calendarexportplugin/Classification.java -text
 tvbrowser/src/calendarexportplugin/ExtendedDialog.java -text
+tvbrowser/src/calendarexportplugin/Reservation.java -text
 tvbrowser/src/calendarexportplugin/calendarexportplugin_da.properties -text
 tvbrowser/src/calendarexportplugin/calendarexportplugin_sk.properties -text
 tvbrowser/src/calendarexportplugin/exporter/AbstractExporter.java -text
