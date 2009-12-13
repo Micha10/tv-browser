@@ -347,10 +347,12 @@ tvbrowser-plugins/plugin-tvpearl/src/main/resources/tvpearlplugin/icons/22x22/ac
 tvbrowser-plugins/plugin-tvpearl/src/main/resources/tvpearlplugin/tvpearlplugin.properties -text
 tvbrowser-plugins/plugin-tvpearl/src/main/resources/tvpearlplugin/tvpearlplugin_de.properties -text
 tvbrowser-plugins/plugin-twitter/pom.xml -text
+tvbrowser-plugins/plugin-twitter/src/main/java/twitterplugin/PropertyBasedSettings.java -text
 tvbrowser-plugins/plugin-twitter/src/main/java/twitterplugin/TwitterDialog.java -text
 tvbrowser-plugins/plugin-twitter/src/main/java/twitterplugin/TwitterLoginDialog.java -text
 tvbrowser-plugins/plugin-twitter/src/main/java/twitterplugin/TwitterPlugin.java -text
 tvbrowser-plugins/plugin-twitter/src/main/java/twitterplugin/TwitterSender.java -text
+tvbrowser-plugins/plugin-twitter/src/main/java/twitterplugin/TwitterSettings.java -text
 tvbrowser-plugins/plugin-twitter/src/main/java/twitterplugin/TwitterSettingsTab.java -text
 tvbrowser-plugins/plugin-twitter/src/main/resources/twitterplugin/twitter.png -text
 tvbrowser-plugins/plugin-twitter/src/main/resources/twitterplugin/twitterplugin.properties -text
