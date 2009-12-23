@@ -1132,10 +1132,12 @@ tvbrowser/src/simplemarkerplugin/simplemarkerplugin_de.properties -text
 tvbrowser/src/simplemarkerplugin/simplemarkerplugin_sk.properties -text
 tvbrowser/src/simplemarkerplugin/simplemarkerplugin_sv.properties -text
 tvbrowser/src/simplemarkerplugin/table/MarkListPriorityCellEditor.java -text
+tvbrowser/src/simplemarkerplugin/table/MarkListSendToPluginCellEditor.java -text
 tvbrowser/src/simplemarkerplugin/table/MarkListTableModel.java -text
 tvbrowser/src/simplemarkerplugin/table/MarkerIDRenderer.java -text
 tvbrowser/src/simplemarkerplugin/table/MarkerIconRenderer.java -text
 tvbrowser/src/simplemarkerplugin/table/MarkerPriorityRenderer.java -text
+tvbrowser/src/simplemarkerplugin/table/MarkerSendToPluginRenderer.java -text
 tvbrowser/src/swedbtvdataservice/DataHydraChannelContainer.java -text
 tvbrowser/src/swedbtvdataservice/DataHydraChannelGroup.java -text
 tvbrowser/src/swedbtvdataservice/DataHydraChannelParser.java -text
