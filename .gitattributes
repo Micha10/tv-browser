@@ -1158,7 +1158,6 @@ tvbrowser/src/swedbtvdataservice/swedbtvdataservice.properties -text
 tvbrowser/src/swedbtvdataservice/swedbtvdataservice_da.properties -text
 tvbrowser/src/swedbtvdataservice/swedbtvdataservice_de.properties -text
 tvbrowser/src/swedbtvdataservice/swedbtvdataservice_sv.properties -text
-tvbrowser/src/teletextplugin/teletextplugin_da.properties -text
 tvbrowser/src/tvbrowser/core/DuplicateChannelNameCounter.java -text
 tvbrowser/src/tvbrowser/core/contextmenu/LeaveFullScreenMenuItem.java -text
 tvbrowser/src/tvbrowser/core/contextmenu/contextmenu_da.properties -text
