@@ -285,6 +285,7 @@ tvbrowser-plugins/plugin-teletext/src/main/java/teletextplugin/TeleTextPlugin.ja
 tvbrowser-plugins/plugin-teletext/src/main/resources/teletextplugin/channels.properties -text
 tvbrowser-plugins/plugin-teletext/src/main/resources/teletextplugin/teletext.png -text
 tvbrowser-plugins/plugin-teletext/src/main/resources/teletextplugin/teletextplugin.properties -text
+tvbrowser-plugins/plugin-teletext/src/main/resources/teletextplugin/teletextplugin_da.properties -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-teletext/src/main/resources/teletextplugin/teletextplugin_de.properties -text
 tvbrowser-plugins/plugin-timeline/pom.xml -text
 tvbrowser-plugins/plugin-timeline/src/main/java/timelineplugin/ChannelHeader.java -text
