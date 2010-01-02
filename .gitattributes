@@ -1252,7 +1252,6 @@ tvbrowser/src/swedbtvdataservice/DataHydraDayParser.java -text
 tvbrowser/src/swedbtvdataservice/DataHydraFileParser.java -text
 tvbrowser/src/swedbtvdataservice/DataHydraSettings.java -text
 tvbrowser/src/swedbtvdataservice/DataHydraSettingsPanel.java -text
-tvbrowser/src/swedbtvdataservice/IconLoader.java -text
 tvbrowser/src/swedbtvdataservice/SweDBTvDataService.java -text
 tvbrowser/src/swedbtvdataservice/swedbtvdataservice.properties -text
 tvbrowser/src/swedbtvdataservice/swedbtvdataservice_da.properties -text
@@ -1401,6 +1400,7 @@ tvbrowser/src/tvbrowser/ui/update/update_sk.properties -text
 tvbrowser/src/tvbrowser/ui/waiting/dlgs/dlgs_da.properties -text
 tvbrowser/src/tvbrowser/ui/waiting/dlgs/dlgs_sv.properties -text
 tvbrowser/src/tvbrowserdataservice/TvBrowserDataServiceSettings.java -text
+tvbrowser/src/tvbrowserdataservice/file/IconLoader.java -text svneol=unset#text/plain
 tvbrowser/src/tvbrowserdataservice/file/file_da.properties -text
 tvbrowser/src/tvbrowserdataservice/tvbrowserdataservice_da.properties -text
 tvbrowser/src/tvbrowserdataservice/tvbrowserdataservice_sk.properties -text
