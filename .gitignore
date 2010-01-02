@@ -26,6 +26,7 @@ tvbrowser-plugins/plugin-dataviewer/.pmd
 tvbrowser-plugins/plugin-dataviewer/.project
 tvbrowser-plugins/plugin-dataviewer/.settings
 tvbrowser-plugins/plugin-dataviewer/target
+tvbrowser-plugins/plugin-dvb/target
 tvbrowser-plugins/plugin-idontwant2see/.classpath
 tvbrowser-plugins/plugin-idontwant2see/.fbprefs
 tvbrowser-plugins/plugin-idontwant2see/.pmd
