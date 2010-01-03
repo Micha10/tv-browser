@@ -164,7 +164,6 @@ tvbrowser-plugins/plugin-dvb/src/main/resources/dvbplugin/fastRemIcon16.gif -tex
 tvbrowser-plugins/plugin-dvb/src/main/resources/dvbplugin/icon16.png -text
 tvbrowser-plugins/plugin-dvb/src/main/resources/dvbplugin/icon24.png -text
 tvbrowser-plugins/plugin-dvb/src/main/resources/dvbplugin/reloadIcon24.gif -text
-tvbrowser-plugins/plugin-dvb/tvbrowser-plugins-dvb.iml -text
 tvbrowser-plugins/plugin-dvbviewerdataservice/lib/com4j.dll -text
 tvbrowser-plugins/plugin-dvbviewerdataservice/pom.xml -text
 tvbrowser-plugins/plugin-dvbviewerdataservice/src/main/java/dvbviewer/DVBViewerCOM.java -text
@@ -225,7 +224,6 @@ tvbrowser-plugins/plugin-dvbviewerdataservice/src/main/resources/dvbviewer/dvbvi
 tvbrowser-plugins/plugin-dvbviewerdataservice/src/main/resources/dvbviewer/dvbviewer_de.properties -text
 tvbrowser-plugins/plugin-dvbviewerdataservice/src/main/resources/dvbviewerdataservice/dvbviewerdataservice.properties -text
 tvbrowser-plugins/plugin-dvbviewerdataservice/src/main/resources/dvbviewerdataservice/dvbviewerdataservice_de.properties -text
-tvbrowser-plugins/plugin-dvbviewerdataservice/tvbrowser-plugins-dvbdataservice.iml -text
 tvbrowser-plugins/plugin-idontwant2see/pom.xml -text
 tvbrowser-plugins/plugin-idontwant2see/src/main/java/idontwant2see/ExclusionTablePanel.java -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-idontwant2see/src/main/java/idontwant2see/IDontWant2SeeSettings.java -text svneol=unset#text/plain

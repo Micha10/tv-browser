@@ -26,10 +26,12 @@ tvbrowser-plugins/plugin-dataviewer/.pmd
 tvbrowser-plugins/plugin-dataviewer/.project
 tvbrowser-plugins/plugin-dataviewer/.settings
 tvbrowser-plugins/plugin-dataviewer/target
+tvbrowser-plugins/plugin-dvb/*.iml
 tvbrowser-plugins/plugin-dvb/.classpath
 tvbrowser-plugins/plugin-dvb/.project
 tvbrowser-plugins/plugin-dvb/.settings
 tvbrowser-plugins/plugin-dvb/target
+tvbrowser-plugins/plugin-dvbviewerdataservice/*.iml
 tvbrowser-plugins/plugin-dvbviewerdataservice/.classpath
 tvbrowser-plugins/plugin-dvbviewerdataservice/.project
 tvbrowser-plugins/plugin-dvbviewerdataservice/.settings
