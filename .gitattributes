@@ -86,6 +86,30 @@ tvbrowser-plugins/plugin-checker/pom.xml -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-checker/src/main/java/checkerplugin/CheckerPlugin.java -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-checker/src/main/java/checkerplugin/CheckerSettings.java -text
 tvbrowser-plugins/plugin-checker/src/main/java/checkerplugin/CheckerSettingsTab.java -text
+tvbrowser-plugins/plugin-checker/src/main/java/checkerplugin/ErrorIssue.java -text svneol=unset#text/plain
+tvbrowser-plugins/plugin-checker/src/main/java/checkerplugin/Issue.java -text svneol=unset#text/plain
+tvbrowser-plugins/plugin-checker/src/main/java/checkerplugin/WarningIssue.java -text svneol=unset#text/plain
+tvbrowser-plugins/plugin-checker/src/main/java/checkerplugin/check/AbstractCheck.java -text svneol=unset#text/plain
+tvbrowser-plugins/plugin-checker/src/main/java/checkerplugin/check/DescriptionRepetitionCheck.java -text svneol=unset#text/plain
+tvbrowser-plugins/plugin-checker/src/main/java/checkerplugin/check/DurationCheck.java -text svneol=unset#text/plain
+tvbrowser-plugins/plugin-checker/src/main/java/checkerplugin/check/EllipsisCheck.java -text svneol=unset#text/plain
+tvbrowser-plugins/plugin-checker/src/main/java/checkerplugin/check/EmptyLinesCheck.java -text svneol=unset#text/plain
+tvbrowser-plugins/plugin-checker/src/main/java/checkerplugin/check/FormatCheck.java -text svneol=unset#text/plain
+tvbrowser-plugins/plugin-checker/src/main/java/checkerplugin/check/GenreCategoryCheck.java -text svneol=unset#text/plain
+tvbrowser-plugins/plugin-checker/src/main/java/checkerplugin/check/LiveCheck.java -text svneol=unset#text/plain
+tvbrowser-plugins/plugin-checker/src/main/java/checkerplugin/check/ModerationCheck.java -text svneol=unset#text/plain
+tvbrowser-plugins/plugin-checker/src/main/java/checkerplugin/check/NetPlayTimeCheck.java -text svneol=unset#text/plain
+tvbrowser-plugins/plugin-checker/src/main/java/checkerplugin/check/NewCheck.java -text svneol=unset#text/plain
+tvbrowser-plugins/plugin-checker/src/main/java/checkerplugin/check/PersonsCheck.java -text svneol=unset#text/plain
+tvbrowser-plugins/plugin-checker/src/main/java/checkerplugin/check/RepetitionCheck.java -text svneol=unset#text/plain
+tvbrowser-plugins/plugin-checker/src/main/java/checkerplugin/check/SeriesEpisodeCheck.java -text svneol=unset#text/plain
+tvbrowser-plugins/plugin-checker/src/main/java/checkerplugin/check/SeriesNumberCheck.java -text svneol=unset#text/plain
+tvbrowser-plugins/plugin-checker/src/main/java/checkerplugin/check/ShortDescriptionLengthCheck.java -text svneol=unset#text/plain
+tvbrowser-plugins/plugin-checker/src/main/java/checkerplugin/check/TextFieldFormatCheck.java -text svneol=unset#text/plain
+tvbrowser-plugins/plugin-checker/src/main/java/checkerplugin/check/TitleFormatCheck.java -text svneol=unset#text/plain
+tvbrowser-plugins/plugin-checker/src/main/java/checkerplugin/check/UrlCheck.java -text svneol=unset#text/plain
+tvbrowser-plugins/plugin-checker/src/main/resources/checkerplugin/check/check.properties -text svneol=unset#text/plain
+tvbrowser-plugins/plugin-checker/src/main/resources/checkerplugin/check/check_de.properties -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-checker/src/main/resources/checkerplugin/checkerplugin.properties -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-checker/src/main/resources/checkerplugin/checkerplugin_de.properties -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-countrycode/pom.xml -text
