@@ -228,6 +228,35 @@ tvbrowser-plugins/plugin-imdb/src/main/java/imdbplugin/VoteCountFilterComponent.
 tvbrowser-plugins/plugin-imdb/src/main/resources/imdbplugin/imdbplugin.properties -text
 tvbrowser-plugins/plugin-imdb/src/main/resources/imdbplugin/imdbplugin_de.properties -text
 tvbrowser-plugins/plugin-imdb/src/main/resources/imdbplugin/rating.png -text
+tvbrowser-plugins/plugin-logging/pom.xml -text
+tvbrowser-plugins/plugin-logging/src/main/java/aconsole/AConsole.java -text
+tvbrowser-plugins/plugin-logging/src/main/java/aconsole/config/PropertyPanel.java -text
+tvbrowser-plugins/plugin-logging/src/main/java/aconsole/data/Console.java -text
+tvbrowser-plugins/plugin-logging/src/main/java/aconsole/gui/AbstractGuiTask.java -text
+tvbrowser-plugins/plugin-logging/src/main/java/aconsole/gui/AbstractNotifyTask.java -text
+tvbrowser-plugins/plugin-logging/src/main/java/aconsole/gui/ConsoleFrame.java -text
+tvbrowser-plugins/plugin-logging/src/main/java/aconsole/gui/ConsolePanel.java -text
+tvbrowser-plugins/plugin-logging/src/main/java/aconsole/gui/RecordFormatter.java -text
+tvbrowser-plugins/plugin-logging/src/main/java/aconsole/help/TVBUtilitiesHelpDialog.java -text
+tvbrowser-plugins/plugin-logging/src/main/java/aconsole/help/TVBUtilitiesHelpPanel.java -text
+tvbrowser-plugins/plugin-logging/src/main/java/aconsole/properties/BaseProperty.java -text
+tvbrowser-plugins/plugin-logging/src/main/java/aconsole/properties/BooleanProperty.java -text
+tvbrowser-plugins/plugin-logging/src/main/java/aconsole/properties/ColorProperty.java -text
+tvbrowser-plugins/plugin-logging/src/main/java/aconsole/properties/DimensionProperty.java -text
+tvbrowser-plugins/plugin-logging/src/main/java/aconsole/properties/IntProperty.java -text
+tvbrowser-plugins/plugin-logging/src/main/java/aconsole/properties/Property.java -text
+tvbrowser-plugins/plugin-logging/src/main/java/aconsole/properties/StringProperty.java -text
+tvbrowser-plugins/plugin-logging/src/main/resources/aconsole/aconsole.properties -text
+tvbrowser-plugins/plugin-logging/src/main/resources/aconsole/aconsole_de.properties -text
+tvbrowser-plugins/plugin-logging/src/main/resources/aconsole/config/config.properties -text
+tvbrowser-plugins/plugin-logging/src/main/resources/aconsole/config/config_de.properties -text
+tvbrowser-plugins/plugin-logging/src/main/resources/aconsole/gui/gui.properties -text
+tvbrowser-plugins/plugin-logging/src/main/resources/aconsole/gui/gui_de.properties -text
+tvbrowser-plugins/plugin-logging/src/main/resources/aconsole/help/default/index.html -text
+tvbrowser-plugins/plugin-logging/src/main/resources/aconsole/help/help.properties -text
+tvbrowser-plugins/plugin-logging/src/main/resources/aconsole/help/help_de.properties -text
+tvbrowser-plugins/plugin-logging/src/main/resources/aconsole/log16.gif -text
+tvbrowser-plugins/plugin-logging/src/main/resources/aconsole/log24.gif -text
 tvbrowser-plugins/plugin-mediathek/pom.xml -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-mediathek/src/main/java/mediathekplugin/EpisodeNode.java -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-mediathek/src/main/java/mediathekplugin/ItemListCellRenderer.java -text svneol=unset#text/plain
