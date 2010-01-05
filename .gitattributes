@@ -90,6 +90,7 @@ tvbrowser-plugins/plugin-checker/src/main/java/checkerplugin/ErrorIssue.java -te
 tvbrowser-plugins/plugin-checker/src/main/java/checkerplugin/Issue.java -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-checker/src/main/java/checkerplugin/WarningIssue.java -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-checker/src/main/java/checkerplugin/check/AbstractCheck.java -text svneol=unset#text/plain
+tvbrowser-plugins/plugin-checker/src/main/java/checkerplugin/check/ArticleCheck.java -text
 tvbrowser-plugins/plugin-checker/src/main/java/checkerplugin/check/DescriptionRepetitionCheck.java -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-checker/src/main/java/checkerplugin/check/DurationCheck.java -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-checker/src/main/java/checkerplugin/check/EllipsisCheck.java -text svneol=unset#text/plain
