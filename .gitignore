@@ -50,6 +50,10 @@ tvbrowser-plugins/plugin-imdb/.pmd
 tvbrowser-plugins/plugin-imdb/.project
 tvbrowser-plugins/plugin-imdb/.settings
 tvbrowser-plugins/plugin-imdb/target
+tvbrowser-plugins/plugin-logging/.classpath
+tvbrowser-plugins/plugin-logging/.project
+tvbrowser-plugins/plugin-logging/.settings
+tvbrowser-plugins/plugin-logging/target
 tvbrowser-plugins/plugin-mediathek/.classpath
 tvbrowser-plugins/plugin-mediathek/.fbprefs
 tvbrowser-plugins/plugin-mediathek/.pmd
