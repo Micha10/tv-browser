@@ -508,6 +508,19 @@ tvbrowser-plugins/plugin-sharedchannelautoupdate/src/main/java/sharedchannelauto
 tvbrowser-plugins/plugin-sharedchannelautoupdate/src/main/resources/sharedchannelautoupdateplugin/icons/shared.png -text
 tvbrowser-plugins/plugin-sharedchannelautoupdate/src/main/resources/sharedchannelautoupdateplugin/sharedchannelautoupdateplugin.properties -text
 tvbrowser-plugins/plugin-sharedchannelautoupdate/src/main/resources/sharedchannelautoupdateplugin/sharedchannelautoupdateplugin_de.properties -text
+tvbrowser-plugins/plugin-shareddataservice/pom.xml -text
+tvbrowser-plugins/plugin-shareddataservice/src/main/java/sharedchanneldataservice/ChannelChooserDialog.java -text
+tvbrowser-plugins/plugin-shareddataservice/src/main/java/sharedchanneldataservice/ChannelSettingDialog.java -text
+tvbrowser-plugins/plugin-shareddataservice/src/main/java/sharedchanneldataservice/HelperMethods.java -text
+tvbrowser-plugins/plugin-shareddataservice/src/main/java/sharedchanneldataservice/SharedChannelDataService.java -text
+tvbrowser-plugins/plugin-shareddataservice/src/main/java/sharedchanneldataservice/SharedChannelDataServiceData.java -text
+tvbrowser-plugins/plugin-shareddataservice/src/main/java/sharedchanneldataservice/SharedChannelDataServicePanel.java -text
+tvbrowser-plugins/plugin-shareddataservice/src/main/java/sharedchanneldataservice/jbUtilities.java -text
+tvbrowser-plugins/plugin-shareddataservice/src/main/java/sharedchanneldataservice/sharedchanneldataservice.properties -text
+tvbrowser-plugins/plugin-shareddataservice/src/main/java/sharedchanneldataservice/sharedchanneldataservice_de.properties -text
+tvbrowser-plugins/plugin-shareddataservice/src/main/resources/sharedchanneldataservice/icons/shared.png -text
+tvbrowser-plugins/plugin-shareddataservice/src/main/resources/sharedchanneldataservice/sharedchanneldataservice.properties -text
+tvbrowser-plugins/plugin-shareddataservice/src/main/resources/sharedchanneldataservice/sharedchanneldataservice_de.properties -text
 tvbrowser-plugins/plugin-snarl/pom.xml -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-snarl/src/main/java/snarlplugin/JarApplicationExecuter.java -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-snarl/src/main/java/snarlplugin/SnarlPlugin.java -text svneol=unset#text/plain
