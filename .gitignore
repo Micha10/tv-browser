@@ -86,6 +86,10 @@ tvbrowser-plugins/plugin-nextviewdataservice/.classpath
 tvbrowser-plugins/plugin-nextviewdataservice/.project
 tvbrowser-plugins/plugin-nextviewdataservice/.settings
 tvbrowser-plugins/plugin-nextviewdataservice/target
+tvbrowser-plugins/plugin-nextviewdataupdatewatcher/.classpath
+tvbrowser-plugins/plugin-nextviewdataupdatewatcher/.project
+tvbrowser-plugins/plugin-nextviewdataupdatewatcher/.settings
+tvbrowser-plugins/plugin-nextviewdataupdatewatcher/target
 tvbrowser-plugins/plugin-notifyosd/.classpath
 tvbrowser-plugins/plugin-notifyosd/.project
 tvbrowser-plugins/plugin-notifyosd/.settings
