@@ -68,6 +68,10 @@ tvbrowser-plugins/plugin-mixeddataservice/.classpath
 tvbrowser-plugins/plugin-mixeddataservice/.project
 tvbrowser-plugins/plugin-mixeddataservice/.settings
 tvbrowser-plugins/plugin-mixeddataservice/target
+tvbrowser-plugins/plugin-mixedupdatelock/.classpath
+tvbrowser-plugins/plugin-mixedupdatelock/.project
+tvbrowser-plugins/plugin-mixedupdatelock/.settings
+tvbrowser-plugins/plugin-mixedupdatelock/target
 tvbrowser-plugins/plugin-movieaward/.classpath
 tvbrowser-plugins/plugin-movieaward/.fbprefs
 tvbrowser-plugins/plugin-movieaward/.lint4jprefs

@@ -327,6 +327,14 @@ tvbrowser-plugins/plugin-mixeddataservice/src/main/resources/mixeddataservice/fi
 tvbrowser-plugins/plugin-mixeddataservice/src/main/resources/mixeddataservice/icons/mixed.png -text
 tvbrowser-plugins/plugin-mixeddataservice/src/main/resources/mixeddataservice/mixeddataservice.properties -text
 tvbrowser-plugins/plugin-mixeddataservice/src/main/resources/mixeddataservice/mixeddataservice_de.properties -text
+tvbrowser-plugins/plugin-mixedupdatelock/pom.xml -text
+tvbrowser-plugins/plugin-mixedupdatelock/src/main/java/mixedupdatelockplugin/MixedUpdateLockPlugin.java -text
+tvbrowser-plugins/plugin-mixedupdatelock/src/main/java/mixedupdatelockplugin/MixedUpdateLockPluginSettingTab.java -text
+tvbrowser-plugins/plugin-mixedupdatelock/src/main/java/mixedupdatelockplugin/mixedupdatelockplugin.properties -text
+tvbrowser-plugins/plugin-mixedupdatelock/src/main/java/mixedupdatelockplugin/mixedupdatelockplugin_de.properties -text
+tvbrowser-plugins/plugin-mixedupdatelock/src/main/resources/mixedupdatelockplugin/icons/lock.png -text
+tvbrowser-plugins/plugin-mixedupdatelock/src/main/resources/mixedupdatelockplugin/mixedupdatelockplugin.properties -text
+tvbrowser-plugins/plugin-mixedupdatelock/src/main/resources/mixedupdatelockplugin/mixedupdatelockplugin_de.properties -text
 tvbrowser-plugins/plugin-movieaward/pom.xml -text
 tvbrowser-plugins/plugin-movieaward/src/main/java/movieawardplugin/Award.java -text
 tvbrowser-plugins/plugin-movieaward/src/main/java/movieawardplugin/Movie.java -text
