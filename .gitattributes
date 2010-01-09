@@ -307,6 +307,12 @@ tvbrowser-plugins/plugin-mediathek/src/main/resources/mediathekplugin/icons/nrk.
 tvbrowser-plugins/plugin-mediathek/src/main/resources/mediathekplugin/icons/zdf.png -text
 tvbrowser-plugins/plugin-mediathek/src/main/resources/mediathekplugin/mediathekplugin.properties -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-mediathek/src/main/resources/mediathekplugin/mediathekplugin_de.properties -text svneol=unset#text/plain
+tvbrowser-plugins/plugin-mixeddataautoupdate/pom.xml -text
+tvbrowser-plugins/plugin-mixeddataautoupdate/src/main/java/mixeddataautoupdateplugin/MixedDataAutoUpdatePlugin.java -text
+tvbrowser-plugins/plugin-mixeddataautoupdate/src/main/java/mixeddataautoupdateplugin/MixedDataAutoUpdatePluginSettingTab.java -text
+tvbrowser-plugins/plugin-mixeddataautoupdate/src/main/resources/mixeddataautoupdateplugin/icons/mixed.png -text
+tvbrowser-plugins/plugin-mixeddataautoupdate/src/main/resources/mixeddataautoupdateplugin/mixeddataautoupdateplugin.properties -text
+tvbrowser-plugins/plugin-mixeddataautoupdate/src/main/resources/mixeddataautoupdateplugin/mixeddataautoupdateplugin_de.properties -text
 tvbrowser-plugins/plugin-movieaward/pom.xml -text
 tvbrowser-plugins/plugin-movieaward/src/main/java/movieawardplugin/Award.java -text
 tvbrowser-plugins/plugin-movieaward/src/main/java/movieawardplugin/Movie.java -text

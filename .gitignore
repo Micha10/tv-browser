@@ -60,6 +60,10 @@ tvbrowser-plugins/plugin-mediathek/.pmd
 tvbrowser-plugins/plugin-mediathek/.project
 tvbrowser-plugins/plugin-mediathek/.settings
 tvbrowser-plugins/plugin-mediathek/target
+tvbrowser-plugins/plugin-mixeddataautoupdate/.classpath
+tvbrowser-plugins/plugin-mixeddataautoupdate/.project
+tvbrowser-plugins/plugin-mixeddataautoupdate/.settings
+tvbrowser-plugins/plugin-mixeddataautoupdate/target
 tvbrowser-plugins/plugin-movieaward/.classpath
 tvbrowser-plugins/plugin-movieaward/.fbprefs
 tvbrowser-plugins/plugin-movieaward/.lint4jprefs
