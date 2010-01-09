@@ -500,6 +500,14 @@ tvbrowser-plugins/plugin-recommendation/src/main/resources/recommendationplugin/
 tvbrowser-plugins/plugin-recommendation/src/main/resources/recommendationplugin/recommendationplugin_de.properties -text
 tvbrowser-plugins/plugin-recommendation/src/main/resources/recommendationplugin/weighting/weighting.properties -text
 tvbrowser-plugins/plugin-recommendation/src/main/resources/recommendationplugin/weighting/weighting_de.properties -text
+tvbrowser-plugins/plugin-sharedchannelautoupdate/pom.xml -text
+tvbrowser-plugins/plugin-sharedchannelautoupdate/src/main/java/sharedchannelautoupdateplugin/SharedChannelAutoUpdatePlugin.java -text
+tvbrowser-plugins/plugin-sharedchannelautoupdate/src/main/java/sharedchannelautoupdateplugin/SharedChannelAutoUpdatePluginSettingTab.java -text
+tvbrowser-plugins/plugin-sharedchannelautoupdate/src/main/java/sharedchannelautoupdateplugin/sharedchannelautoupdateplugin.properties -text
+tvbrowser-plugins/plugin-sharedchannelautoupdate/src/main/java/sharedchannelautoupdateplugin/sharedchannelautoupdateplugin_de.properties -text
+tvbrowser-plugins/plugin-sharedchannelautoupdate/src/main/resources/sharedchannelautoupdateplugin/icons/shared.png -text
+tvbrowser-plugins/plugin-sharedchannelautoupdate/src/main/resources/sharedchannelautoupdateplugin/sharedchannelautoupdateplugin.properties -text
+tvbrowser-plugins/plugin-sharedchannelautoupdate/src/main/resources/sharedchannelautoupdateplugin/sharedchannelautoupdateplugin_de.properties -text
 tvbrowser-plugins/plugin-snarl/pom.xml -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-snarl/src/main/java/snarlplugin/JarApplicationExecuter.java -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-snarl/src/main/java/snarlplugin/SnarlPlugin.java -text svneol=unset#text/plain

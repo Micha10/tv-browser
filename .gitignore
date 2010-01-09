@@ -101,6 +101,10 @@ tvbrowser-plugins/plugin-recommendation/.project
 tvbrowser-plugins/plugin-recommendation/.settings
 tvbrowser-plugins/plugin-recommendation/target
 tvbrowser-plugins/plugin-recommendation/tvbrowser-plugins-recommendation.iml
+tvbrowser-plugins/plugin-sharedchannelautoupdate/.classpath
+tvbrowser-plugins/plugin-sharedchannelautoupdate/.project
+tvbrowser-plugins/plugin-sharedchannelautoupdate/.settings
+tvbrowser-plugins/plugin-sharedchannelautoupdate/target
 tvbrowser-plugins/plugin-snarl/.classpath
 tvbrowser-plugins/plugin-snarl/.fbprefs
 tvbrowser-plugins/plugin-snarl/.pmd
