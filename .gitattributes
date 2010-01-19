@@ -670,6 +670,15 @@ tvbrowser-plugins/plugin-url4program/src/main/java/url4programplugin/URL4Program
 tvbrowser-plugins/plugin-url4program/src/main/java/url4programplugin/UrlListEntry.java -text
 tvbrowser-plugins/plugin-url4program/src/main/resources/url4programplugin/url4programplugin.properties -text
 tvbrowser-plugins/plugin-url4program/src/main/resources/url4programplugin/url4programplugin_de.properties -text
+tvbrowser-plugins/plugin-verysimplelist/pom.xml -text
+tvbrowser-plugins/plugin-verysimplelist/src/main/java/verysimplelist/VerySimpleList.java -text
+tvbrowser-plugins/plugin-verysimplelist/src/main/java/verysimplelist/VerySimpleListDialog.java -text
+tvbrowser-plugins/plugin-verysimplelist/src/main/java/verysimplelist/VerySimpleListSettingsTab.java -text
+tvbrowser-plugins/plugin-verysimplelist/src/main/java/verysimplelist/VerySimpleListUtilities.java -text
+tvbrowser-plugins/plugin-verysimplelist/src/main/resources/verysimplelist/greenlist.png -text
+tvbrowser-plugins/plugin-verysimplelist/src/main/resources/verysimplelist/greenlist24.png -text
+tvbrowser-plugins/plugin-verysimplelist/src/main/resources/verysimplelist/verysimplelist.properties -text
+tvbrowser-plugins/plugin-verysimplelist/src/main/resources/verysimplelist/verysimplelist_de.properties -text
 tvbrowser-plugins/plugin-virtualdataservice/pom.xml -text
 tvbrowser-plugins/plugin-virtualdataservice/src/main/java/com/michaelbaranov/microba/Microba.java -text
 tvbrowser-plugins/plugin-virtualdataservice/src/main/java/com/michaelbaranov/microba/calendar/CalendarColors.java -text
