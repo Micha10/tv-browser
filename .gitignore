@@ -178,6 +178,10 @@ tvbrowser-plugins/plugin-url4program/.classpath
 tvbrowser-plugins/plugin-url4program/.project
 tvbrowser-plugins/plugin-url4program/.settings
 tvbrowser-plugins/plugin-url4program/target
+tvbrowser-plugins/plugin-verysimplelist/.classpath
+tvbrowser-plugins/plugin-verysimplelist/.project
+tvbrowser-plugins/plugin-verysimplelist/.settings
+tvbrowser-plugins/plugin-verysimplelist/target
 tvbrowser-plugins/plugin-virtualdataservice/.classpath
 tvbrowser-plugins/plugin-virtualdataservice/.pmd
 tvbrowser-plugins/plugin-virtualdataservice/.project
