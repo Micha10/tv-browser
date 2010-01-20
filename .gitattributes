@@ -1673,7 +1673,6 @@ tvbrowser/src/util/program/program_sv.properties -text
 tvbrowser/src/util/settings/FontProperty.java -text
 tvbrowser/src/util/settings/ProgramPanelSettings.java -text
 tvbrowser/src/util/settings/PropertyBasedSettings.java -text
-tvbrowser/src/util/ui/AsynchronousImageIcon.java -text
 tvbrowser/src/util/ui/AutoCompletion.java -text svneol=unset#text/plain
 tvbrowser/src/util/ui/CaretPositionCorrector.java -text
 tvbrowser/src/util/ui/CreditsScrollerPanel.java -text
@@ -1681,6 +1680,7 @@ tvbrowser/src/util/ui/DefaultProgramImportanceSelectionPanel.java -text
 tvbrowser/src/util/ui/DisclosureTriangle.java -text
 tvbrowser/src/util/ui/DontShowAgainMessageBox.java -text
 tvbrowser/src/util/ui/EnhancedPanelBuilder.java -text
+tvbrowser/src/util/ui/LazyImageIcon.java -text
 tvbrowser/src/util/ui/LocalizerClassloader.java -text
 tvbrowser/src/util/ui/NullProgressMonitor.java -text
 tvbrowser/src/util/ui/PictureAreaIcon.java -text
