@@ -375,6 +375,7 @@ tvbrowser-plugins/plugin-nextviewdataservice/src/main/java/nextviewdataservice/N
 tvbrowser-plugins/plugin-nextviewdataservice/src/main/java/nextviewdataservice/NextViewDataServiceData.java -text
 tvbrowser-plugins/plugin-nextviewdataservice/src/main/java/nextviewdataservice/NextViewDataServicePanel.java -text
 tvbrowser-plugins/plugin-nextviewdataservice/src/main/java/nextviewdataservice/NextViewDataServiceXMLHandler.java -text
+tvbrowser-plugins/plugin-nextviewdataservice/src/main/java/nextviewdataservice/ProgramDispatcher.java -text
 tvbrowser-plugins/plugin-nextviewdataservice/src/main/java/nextviewdataservice/jbUtilities.java -text
 tvbrowser-plugins/plugin-nextviewdataservice/src/main/java/nextviewdataservice/nextviewdataservice.properties -text
 tvbrowser-plugins/plugin-nextviewdataservice/src/main/java/nextviewdataservice/nextviewdataservice_de.properties -text
