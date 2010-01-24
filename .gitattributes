@@ -102,12 +102,14 @@ tvbrowser-plugins/plugin-checker/src/main/java/checkerplugin/check/ModerationChe
 tvbrowser-plugins/plugin-checker/src/main/java/checkerplugin/check/NetPlayTimeCheck.java -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-checker/src/main/java/checkerplugin/check/NewCheck.java -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-checker/src/main/java/checkerplugin/check/PersonsCheck.java -text svneol=unset#text/plain
+tvbrowser-plugins/plugin-checker/src/main/java/checkerplugin/check/PrintableCharactersCheck.java -text
 tvbrowser-plugins/plugin-checker/src/main/java/checkerplugin/check/RepetitionCheck.java -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-checker/src/main/java/checkerplugin/check/SeriesEpisodeCheck.java -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-checker/src/main/java/checkerplugin/check/SeriesNumberCheck.java -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-checker/src/main/java/checkerplugin/check/ShortDescriptionLengthCheck.java -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-checker/src/main/java/checkerplugin/check/TextFieldFormatCheck.java -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-checker/src/main/java/checkerplugin/check/TitleFormatCheck.java -text svneol=unset#text/plain
+tvbrowser-plugins/plugin-checker/src/main/java/checkerplugin/check/UnknownProgramCheck.java -text
 tvbrowser-plugins/plugin-checker/src/main/java/checkerplugin/check/UrlCheck.java -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-checker/src/main/resources/checkerplugin/check/check.properties -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-checker/src/main/resources/checkerplugin/check/check_de.properties -text svneol=unset#text/plain
