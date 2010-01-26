@@ -1194,7 +1194,7 @@ tvbrowser/lib/stax-1.2.0.jar -text
 tvbrowser/lib/stax-api-1.0.1.jar -text
 tvbrowser/lib/texhyphj.jar -text
 tvbrowser/lib/xercesImpl.jar -text
-tvbrowser/lib/xtvd-lib-2.0.jar -text
+tvbrowser/lib/xtvd-lib-2.0.2.jar -text
 tvbrowser/src/bbcbackstagedataservice/BbcBackstageDataService.java -text
 tvbrowser/src/bbcbackstagedataservice/BbcChannelGroup.java -text
 tvbrowser/src/bbcbackstagedataservice/BbcFileParser.java -text
