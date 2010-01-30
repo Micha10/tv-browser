@@ -46,6 +46,7 @@ tvbrowser-plugins/plugin-idontwant2see/target
 tvbrowser-plugins/plugin-idontwant2see/tvbrowser-plugins-idontwant2see.iml
 tvbrowser-plugins/plugin-imdb/.classpath
 tvbrowser-plugins/plugin-imdb/.fbprefs
+tvbrowser-plugins/plugin-imdb/.lint4jprefs
 tvbrowser-plugins/plugin-imdb/.pmd
 tvbrowser-plugins/plugin-imdb/.project
 tvbrowser-plugins/plugin-imdb/.settings
@@ -195,6 +196,7 @@ tvbrowser-plugins/plugin-widget/.settings
 tvbrowser-plugins/plugin-widget/target
 tvbrowser-plugins/plugin-wirschauen/.classpath
 tvbrowser-plugins/plugin-wirschauen/.fbprefs
+tvbrowser-plugins/plugin-wirschauen/.lint4jprefs
 tvbrowser-plugins/plugin-wirschauen/.pmd
 tvbrowser-plugins/plugin-wirschauen/.project
 tvbrowser-plugins/plugin-wirschauen/.settings

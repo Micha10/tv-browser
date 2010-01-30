@@ -371,6 +371,7 @@ tvbrowser-plugins/plugin-nextviewdataservice/pom.xml -text
 tvbrowser-plugins/plugin-nextviewdataservice/src/main/java/nextviewdataservice/AlternativeChannelDialog.java -text
 tvbrowser-plugins/plugin-nextviewdataservice/src/main/java/nextviewdataservice/AlternativeFineTuningDialog.java -text
 tvbrowser-plugins/plugin-nextviewdataservice/src/main/java/nextviewdataservice/HelperMethods.java -text
+tvbrowser-plugins/plugin-nextviewdataservice/src/main/java/nextviewdataservice/JbUtilities.java -text
 tvbrowser-plugins/plugin-nextviewdataservice/src/main/java/nextviewdataservice/NextViewChannelFinder.java -text
 tvbrowser-plugins/plugin-nextviewdataservice/src/main/java/nextviewdataservice/NextViewChannelGroup.java -text
 tvbrowser-plugins/plugin-nextviewdataservice/src/main/java/nextviewdataservice/NextViewDataService.java -text
@@ -378,7 +379,6 @@ tvbrowser-plugins/plugin-nextviewdataservice/src/main/java/nextviewdataservice/N
 tvbrowser-plugins/plugin-nextviewdataservice/src/main/java/nextviewdataservice/NextViewDataServicePanel.java -text
 tvbrowser-plugins/plugin-nextviewdataservice/src/main/java/nextviewdataservice/NextViewDataServiceXMLHandler.java -text
 tvbrowser-plugins/plugin-nextviewdataservice/src/main/java/nextviewdataservice/ProgramDispatcher.java -text
-tvbrowser-plugins/plugin-nextviewdataservice/src/main/java/nextviewdataservice/jbUtilities.java -text
 tvbrowser-plugins/plugin-nextviewdataservice/src/main/java/nextviewdataservice/nextviewdataservice.properties -text
 tvbrowser-plugins/plugin-nextviewdataservice/src/main/java/nextviewdataservice/nextviewdataservice_de.properties -text
 tvbrowser-plugins/plugin-nextviewdataservice/src/main/resources/nextviewdataservice/files/alternative_fields.properties -text
