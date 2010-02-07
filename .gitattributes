@@ -115,6 +115,17 @@ tvbrowser-plugins/plugin-checker/src/main/resources/checkerplugin/check/check.pr
 tvbrowser-plugins/plugin-checker/src/main/resources/checkerplugin/check/check_de.properties -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-checker/src/main/resources/checkerplugin/checkerplugin.properties -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-checker/src/main/resources/checkerplugin/checkerplugin_de.properties -text svneol=unset#text/plain
+tvbrowser-plugins/plugin-clock/pom.xml -text
+tvbrowser-plugins/plugin-clock/src/main/java/clockplugin/Clock.java -text
+tvbrowser-plugins/plugin-clock/src/main/java/clockplugin/ClockPlugin.java -text
+tvbrowser-plugins/plugin-clock/src/main/java/clockplugin/ClockSettingsTab.java -text
+tvbrowser-plugins/plugin-clock/src/main/java/clockplugin/TitleBarClock.java -text
+tvbrowser-plugins/plugin-clock/src/main/resources/clockplugin/License.txt -text
+tvbrowser-plugins/plugin-clock/src/main/resources/clockplugin/clockplugin.properties -text
+tvbrowser-plugins/plugin-clock/src/main/resources/clockplugin/clockplugin_de.properties -text
+tvbrowser-plugins/plugin-clock/src/main/resources/clockplugin/icon-license.txt -text
+tvbrowser-plugins/plugin-clock/src/main/resources/clockplugin/icons/16x16/apps/clock.png -text
+tvbrowser-plugins/plugin-clock/src/main/resources/clockplugin/icons/22x22/apps/clock.png -text
 tvbrowser-plugins/plugin-countrycode/pom.xml -text
 tvbrowser-plugins/plugin-countrycode/src/main/java/countrycodeplugin/CountryCodePlugin.java -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-countrycode/src/main/resources/countrycodeplugin/countrycodeplugin.properties -text svneol=unset#text/plain
