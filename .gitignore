@@ -14,6 +14,10 @@ tvbrowser-plugins/plugin-checker/.pmd
 tvbrowser-plugins/plugin-checker/.project
 tvbrowser-plugins/plugin-checker/.settings
 tvbrowser-plugins/plugin-checker/target
+tvbrowser-plugins/plugin-clock/.classpath
+tvbrowser-plugins/plugin-clock/.project
+tvbrowser-plugins/plugin-clock/.settings
+tvbrowser-plugins/plugin-clock/target
 tvbrowser-plugins/plugin-countrycode/.classpath
 tvbrowser-plugins/plugin-countrycode/.fbprefs
 tvbrowser-plugins/plugin-countrycode/.pmd
