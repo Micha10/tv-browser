@@ -394,6 +394,7 @@ tvbrowser-plugins/plugin-nextviewdataservice/src/main/java/nextviewdataservice/n
 tvbrowser-plugins/plugin-nextviewdataservice/src/main/java/nextviewdataservice/nextviewdataservice_de.properties -text
 tvbrowser-plugins/plugin-nextviewdataservice/src/main/resources/nextviewdataservice/files/alternative_fields.properties -text
 tvbrowser-plugins/plugin-nextviewdataservice/src/main/resources/nextviewdataservice/files/alternative_sources.properties -text
+tvbrowser-plugins/plugin-nextviewdataservice/src/main/resources/nextviewdataservice/files/autoUpLck.bak -text
 tvbrowser-plugins/plugin-nextviewdataservice/src/main/resources/nextviewdataservice/files/cni.desc.properties -text
 tvbrowser-plugins/plugin-nextviewdataservice/src/main/resources/nextviewdataservice/files/cni.map.properties -text
 tvbrowser-plugins/plugin-nextviewdataservice/src/main/resources/nextviewdataservice/icons/CNI0487.png -text
