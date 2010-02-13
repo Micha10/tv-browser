@@ -100,14 +100,14 @@ tv-browserm/tv-browserm/src/main.qrc -text
 tv-browserm/tv-browserm/src/mainwindow.cpp -text
 tv-browserm/tv-browserm/src/mainwindow.h -text
 tv-browserm/tv-browserm/src/mainwindow.ui -text
-tv-browserm/tv-browserm/src/mymodel.cpp -text
-tv-browserm/tv-browserm/src/mymodel.h -text
 tv-browserm/tv-browserm/src/qrc_main.cpp -text
 tv-browserm/tv-browserm/src/res/Refresh.png -text
 tv-browserm/tv-browserm/src/res/tvbrowser.ico -text
 tv-browserm/tv-browserm/src/res/tvbrowser.png -text
 tv-browserm/tv-browserm/src/res/tvbrowser26.png -text
 tv-browserm/tv-browserm/src/res/tvbrowser64.png -text
+tv-browserm/tv-browserm/src/runsnowmodel.cpp -text
+tv-browserm/tv-browserm/src/runsnowmodel.h -text
 tv-browserm/tv-browserm/src/sqlite_source/sqlite3.c -text
 tv-browserm/tv-browserm/src/sqlite_source/sqlite3.h -text
 tv-browserm/tv-browserm/src/sqlite_source/sqlite3ext.h -text
