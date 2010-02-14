@@ -102,6 +102,8 @@ tv-browserm/tv-browserm/src/mainwindow.h -text
 tv-browserm/tv-browserm/src/mainwindow.ui -text
 tv-browserm/tv-browserm/src/qrc_main.cpp -text
 tv-browserm/tv-browserm/src/res/Refresh.png -text
+tv-browserm/tv-browserm/src/res/back_alt.png -text
+tv-browserm/tv-browserm/src/res/forward_alt.png -text
 tv-browserm/tv-browserm/src/res/tvbrowser.ico -text
 tv-browserm/tv-browserm/src/res/tvbrowser.png -text
 tv-browserm/tv-browserm/src/res/tvbrowser26.png -text
