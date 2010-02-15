@@ -78,6 +78,7 @@ pdatvbrowser/languages/Norsk.txt -text
 tv-browserm/tv-browserm/1Bereinigen.bat -text
 tv-browserm/tv-browserm/2maddebuild_src -text
 tv-browserm/tv-browserm/3maddebuild_bin -text
+tv-browserm/tv-browserm/HowTo/HowTo[!!-~]TV-Browser[!!-~]for[!!-~]Maemo.txt -text
 tv-browserm/tv-browserm/build-stamp -text
 tv-browserm/tv-browserm/debian/README.Debian -text
 tv-browserm/tv-browserm/debian/changelog -text
