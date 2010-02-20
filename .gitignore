@@ -1,3 +1,8 @@
+androidtvbrowser/.classpath
+androidtvbrowser/.project
+androidtvbrowser/.settings
+androidtvbrowser/assets
+androidtvbrowser/bin
 tvbrowser-plugins/.classpath
 tvbrowser-plugins/.pmd
 tvbrowser-plugins/.project
