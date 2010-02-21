@@ -689,7 +689,10 @@ tvbrowser-plugins/plugin-tooltipcontrol/src/main/resources/tooltipcontrolplugin/
 tvbrowser-plugins/plugin-tooltipcontrol/src/main/resources/tooltipcontrolplugin/tooltipcontrolplugin_de.properties -text
 tvbrowser-plugins/plugin-tvbrowsermini/lib/sqlitejdbc-v054.jar -text
 tvbrowser-plugins/plugin-tvbrowsermini/pom.xml -text
+tvbrowser-plugins/plugin-tvbrowsermini/src/main/java/tvbrowsermini/EnhancedPanelBuilder.java -text
+tvbrowser-plugins/plugin-tvbrowsermini/src/main/java/tvbrowsermini/PropertyBasedSettings.java -text
 tvbrowser-plugins/plugin-tvbrowsermini/src/main/java/tvbrowsermini/TVBrowserMini.java -text
+tvbrowser-plugins/plugin-tvbrowsermini/src/main/java/tvbrowsermini/TVBrowserMiniSettings.java -text
 tvbrowser-plugins/plugin-tvbrowsermini/src/main/java/tvbrowsermini/TVBrowserMiniSettingsTab.java -text
 tvbrowser-plugins/plugin-tvbrowsermini/src/main/java/tvbrowsermini/devices/AbstractExportDevice.java -text
 tvbrowser-plugins/plugin-tvbrowsermini/src/main/java/tvbrowsermini/devices/Android.java -text
