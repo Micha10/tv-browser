@@ -45,6 +45,8 @@ tvbrowser-plugins/plugin-dvbviewerdataservice/.classpath
 tvbrowser-plugins/plugin-dvbviewerdataservice/.project
 tvbrowser-plugins/plugin-dvbviewerdataservice/.settings
 tvbrowser-plugins/plugin-dvbviewerdataservice/target
+tvbrowser-plugins/plugin-golem/*.iml
+tvbrowser-plugins/plugin-golem/target
 tvbrowser-plugins/plugin-idontwant2see/.classpath
 tvbrowser-plugins/plugin-idontwant2see/.fbprefs
 tvbrowser-plugins/plugin-idontwant2see/.pmd
