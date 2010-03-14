@@ -1785,6 +1785,7 @@ tvbrowser/src/util/ui/ui_sk.properties -text
 tvbrowser/src/webplugin/FavIconFetcher.java -text
 tvbrowser/src/webplugin/webplugin_da.properties -text
 tvbrowser/src/webplugin/webplugin_sk.properties -text
+tvbrowser/test/src/devplugin/DateTest.java -text
 tvbrowser/test/src/primarydatamanager/DayProgramMapperTest.java -text
 tvbrowser/test/src/primarydatamanager/PrimaryDataManagerTest.java -text
 tvbrowser/test/src/primarydatamanager/primarydataservice/util/InfoCategoryParserTest.java -text svneol=unset#text/plain
