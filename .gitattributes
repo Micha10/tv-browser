@@ -1480,6 +1480,7 @@ tvbrowser/src/newsplugin/newsplugin_da.properties -text
 tvbrowser/src/newsplugin/newsplugin_sk.properties -text
 tvbrowser/src/primarydatamanager/primarydataservice/util/InfoCategoryParser.java -text
 tvbrowser/src/primarydatamanager/primarydataservice/util/category_arts.properties -text svneol=unset#text/plain
+tvbrowser/src/primarydatamanager/primarydataservice/util/category_childrens.properties -text
 tvbrowser/src/primarydatamanager/primarydataservice/util/category_documentary.properties -text svneol=unset#text/plain
 tvbrowser/src/primarydatamanager/primarydataservice/util/category_magazine.properties -text svneol=unset#text/plain
 tvbrowser/src/primarydatamanager/primarydataservice/util/category_movies.properties -text svneol=unset#text/plain
