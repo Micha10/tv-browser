@@ -294,9 +294,11 @@ tvbrowser-plugins/plugin-golem/src/main/java/golemplugin/GolemRating.java -text
 tvbrowser-plugins/plugin-golem/src/main/java/golemplugin/GolemSettings.java -text
 tvbrowser-plugins/plugin-golem/src/main/java/golemplugin/GolemSettingsTab.java -text
 tvbrowser-plugins/plugin-golem/src/main/java/golemplugin/GolemUpdater.java -text
+tvbrowser-plugins/plugin-golem/src/main/resources/commons-logging.properties -text
 tvbrowser-plugins/plugin-golem/src/main/resources/golemplugin/golem.png -text
 tvbrowser-plugins/plugin-golem/src/main/resources/golemplugin/golemplugin.properties -text
 tvbrowser-plugins/plugin-golem/src/main/resources/golemplugin/golemplugin_de.properties -text
+tvbrowser-plugins/plugin-golem/src/main/resources/ical4j.properties -text
 tvbrowser-plugins/plugin-idontwant2see/pom.xml -text
 tvbrowser-plugins/plugin-idontwant2see/src/main/java/idontwant2see/ExclusionTablePanel.java -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-idontwant2see/src/main/java/idontwant2see/IDontWant2SeeSettings.java -text svneol=unset#text/plain
