@@ -806,6 +806,7 @@ tvbrowser-plugins/plugin-virtualdataservice/src/main/java/virtualdataservice/ui/
 tvbrowser-plugins/plugin-virtualdataservice/src/main/java/virtualdataservice/ui/WeeklyRepeaterPanel.java -text
 tvbrowser-plugins/plugin-virtualdataservice/src/main/java/virtualdataservice/ui/YearlyRepeaterPanel.java -text
 tvbrowser-plugins/plugin-virtualdataservice/src/main/java/virtualdataservice/virtual/DailyRepeater.java -text
+tvbrowser-plugins/plugin-virtualdataservice/src/main/java/virtualdataservice/virtual/HelperMethods.java -text
 tvbrowser-plugins/plugin-virtualdataservice/src/main/java/virtualdataservice/virtual/MonthlyExRepeater.java -text
 tvbrowser-plugins/plugin-virtualdataservice/src/main/java/virtualdataservice/virtual/MonthlyRepeater.java -text
 tvbrowser-plugins/plugin-virtualdataservice/src/main/java/virtualdataservice/virtual/Repeat.java -text
