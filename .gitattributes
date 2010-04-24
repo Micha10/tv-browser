@@ -1583,6 +1583,7 @@ tvbrowser/src/tvbrowser/core/plugin/programformating/programformating_da.propert
 tvbrowser/src/tvbrowser/core/plugin/programformating/programformating_de.properties -text
 tvbrowser/src/tvbrowser/core/plugin/programformating/programformating_sk.properties -text
 tvbrowser/src/tvbrowser/core/plugin/programformating/programformating_sv.properties -text
+tvbrowser/src/tvbrowser/core/search/booleansearch/OperandMatcher.java -text
 tvbrowser/src/tvbrowser/core/search/booleansearch/booleansearch_da.properties -text
 tvbrowser/src/tvbrowser/core/search/booleansearch/booleansearch_sk.properties -text
 tvbrowser/src/tvbrowser/core/settings/DeferredFontProperty.java -text
