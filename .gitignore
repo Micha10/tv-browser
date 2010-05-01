@@ -3,6 +3,7 @@ androidtvbrowser/.project
 androidtvbrowser/.settings
 androidtvbrowser/assets
 androidtvbrowser/bin
+androidtvbrowser/local.properties
 tvbrowser-plugins/.classpath
 tvbrowser-plugins/.pmd
 tvbrowser-plugins/.project
