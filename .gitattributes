@@ -1,5 +1,6 @@
 * text=auto !eol
 androidtvbrowser/AndroidManifest.xml -text
+androidtvbrowser/build.properties -text
 androidtvbrowser/build.xml -text
 androidtvbrowser/default.properties -text
 androidtvbrowser/res/drawable/app_icon.png -text
