@@ -1274,7 +1274,6 @@ tvbrowser/lib/stax-api-1.0.1.jar -text
 tvbrowser/lib/texhyphj-1.1.jar -text
 tvbrowser/lib/xtvd-lib-2.0.2.jar -text
 tvbrowser/src/bbcbackstagedataservice/BbcBackstageDataService.java -text
-tvbrowser/src/bbcbackstagedataservice/BbcChannelGroup.java -text
 tvbrowser/src/bbcbackstagedataservice/BbcFileParser.java -text
 tvbrowser/src/bbcbackstagedataservice/bbcbackstagedataservice.properties -text
 tvbrowser/src/bbcbackstagedataservice/bbcbackstagedataservice_da.properties -text
@@ -1390,7 +1389,6 @@ tvbrowser/src/devplugin/ProgramReceiveTarget.java -text
 tvbrowser/src/devplugin/devplugin_da.properties -text
 tvbrowser/src/devplugin/devplugin_en_US.properties -text
 tvbrowser/src/devplugin/devplugin_sk.properties -text
-tvbrowser/src/dreamboxdataservice/DreamboxChannelGroup.java -text
 tvbrowser/src/dreamboxdataservice/DreamboxChannelHandler.java -text
 tvbrowser/src/dreamboxdataservice/DreamboxDataService.java -text
 tvbrowser/src/dreamboxdataservice/DreamboxHandler.java -text
@@ -1506,14 +1504,12 @@ tvbrowser/src/programlistplugin/programlistplugin.properties -text
 tvbrowser/src/programlistplugin/programlistplugin_da.properties -text
 tvbrowser/src/programlistplugin/programlistplugin_de.properties -text
 tvbrowser/src/programlistplugin/programlistplugin_sk.properties -text
-tvbrowser/src/radiotimesdataservice/RadioTimesChannelGroup.java -text
 tvbrowser/src/radiotimesdataservice/RadioTimesDataService.java -text
 tvbrowser/src/radiotimesdataservice/RadioTimesFileParser.java -text
 tvbrowser/src/radiotimesdataservice/radiotimesdataservice.properties -text
 tvbrowser/src/radiotimesdataservice/radiotimesdataservice_da.properties -text
 tvbrowser/src/radiotimesdataservice/radiotimesdataservice_de.properties -text
 tvbrowser/src/radiotimesdataservice/radiotimesdataservice_sv.properties -text
-tvbrowser/src/schedulesdirectdataservice/SchedulesDirectChannelGroup.java -text
 tvbrowser/src/schedulesdirectdataservice/SchedulesDirectDataService.java -text
 tvbrowser/src/schedulesdirectdataservice/SchedulesDirectSettingsPanel.java -text
 tvbrowser/src/schedulesdirectdataservice/schedulesdirectdataservice.properties -text
@@ -1578,7 +1574,6 @@ tvbrowser/src/tvbrowser/core/plugin/plugin_da.properties -text
 tvbrowser/src/tvbrowser/core/plugin/plugin_sk.properties -text
 tvbrowser/src/tvbrowser/core/plugin/programformating/GlobalPluginProgramFormating.java -text
 tvbrowser/src/tvbrowser/core/plugin/programformating/GlobalPluginProgramFormatingManager.java -text
-tvbrowser/src/tvbrowser/core/plugin/programformating/GlobalPluginProgramFormatingSettingsDialog.java -text
 tvbrowser/src/tvbrowser/core/plugin/programformating/programformating.properties -text
 tvbrowser/src/tvbrowser/core/plugin/programformating/programformating_da.properties -text
 tvbrowser/src/tvbrowser/core/plugin/programformating/programformating_de.properties -text
