@@ -392,10 +392,10 @@ tvbrowser-plugins/plugin-mixeddataservice/pom.xml -text
 tvbrowser-plugins/plugin-mixeddataservice/src/main/java/mixeddataservice/ChannelChooserDialog.java -text
 tvbrowser-plugins/plugin-mixeddataservice/src/main/java/mixeddataservice/ChannelSettingDialog.java -text
 tvbrowser-plugins/plugin-mixeddataservice/src/main/java/mixeddataservice/HelperMethods.java -text
+tvbrowser-plugins/plugin-mixeddataservice/src/main/java/mixeddataservice/JbUtilities.java -text
 tvbrowser-plugins/plugin-mixeddataservice/src/main/java/mixeddataservice/MixedDataService.java -text
 tvbrowser-plugins/plugin-mixeddataservice/src/main/java/mixeddataservice/MixedDataServiceData.java -text
 tvbrowser-plugins/plugin-mixeddataservice/src/main/java/mixeddataservice/MixedDataServicePanel.java -text
-tvbrowser-plugins/plugin-mixeddataservice/src/main/java/mixeddataservice/jbUtilities.java -text
 tvbrowser-plugins/plugin-mixeddataservice/src/main/java/mixeddataservice/mixeddataservice.properties -text
 tvbrowser-plugins/plugin-mixeddataservice/src/main/java/mixeddataservice/mixeddataservice_de.properties -text
 tvbrowser-plugins/plugin-mixeddataservice/src/main/resources/mixeddataservice/files/fields.properties -text
@@ -589,10 +589,10 @@ tvbrowser-plugins/plugin-shareddataservice/pom.xml -text
 tvbrowser-plugins/plugin-shareddataservice/src/main/java/sharedchanneldataservice/ChannelChooserDialog.java -text
 tvbrowser-plugins/plugin-shareddataservice/src/main/java/sharedchanneldataservice/ChannelSettingDialog.java -text
 tvbrowser-plugins/plugin-shareddataservice/src/main/java/sharedchanneldataservice/HelperMethods.java -text
+tvbrowser-plugins/plugin-shareddataservice/src/main/java/sharedchanneldataservice/JbUtilities.java -text
 tvbrowser-plugins/plugin-shareddataservice/src/main/java/sharedchanneldataservice/SharedChannelDataService.java -text
 tvbrowser-plugins/plugin-shareddataservice/src/main/java/sharedchanneldataservice/SharedChannelDataServiceData.java -text
 tvbrowser-plugins/plugin-shareddataservice/src/main/java/sharedchanneldataservice/SharedChannelDataServicePanel.java -text
-tvbrowser-plugins/plugin-shareddataservice/src/main/java/sharedchanneldataservice/jbUtilities.java -text
 tvbrowser-plugins/plugin-shareddataservice/src/main/java/sharedchanneldataservice/sharedchanneldataservice.properties -text
 tvbrowser-plugins/plugin-shareddataservice/src/main/java/sharedchanneldataservice/sharedchanneldataservice_de.properties -text
 tvbrowser-plugins/plugin-shareddataservice/src/main/resources/sharedchanneldataservice/icons/shared.png -text
