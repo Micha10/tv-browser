@@ -46,6 +46,10 @@ tvbrowser-plugins/plugin-dvbviewerdataservice/.classpath
 tvbrowser-plugins/plugin-dvbviewerdataservice/.project
 tvbrowser-plugins/plugin-dvbviewerdataservice/.settings
 tvbrowser-plugins/plugin-dvbviewerdataservice/target
+tvbrowser-plugins/plugin-filterview/.classpath
+tvbrowser-plugins/plugin-filterview/.project
+tvbrowser-plugins/plugin-filterview/.settings
+tvbrowser-plugins/plugin-filterview/target
 tvbrowser-plugins/plugin-golem/*.iml
 tvbrowser-plugins/plugin-golem/.classpath
 tvbrowser-plugins/plugin-golem/.project
