@@ -801,7 +801,6 @@ tvbrowser-plugins/plugin-virtualdataservice/src/main/java/com/michaelbaranov/mic
 tvbrowser-plugins/plugin-virtualdataservice/src/main/java/com/michaelbaranov/microba/common/Policy.java -text
 tvbrowser-plugins/plugin-virtualdataservice/src/main/java/com/michaelbaranov/microba/common/PolicyEvent.java -text
 tvbrowser-plugins/plugin-virtualdataservice/src/main/java/com/michaelbaranov/microba/common/PolicyListener.java -text
-tvbrowser-plugins/plugin-virtualdataservice/src/main/java/virtualdataservice/VirtualChannelGroup.java -text
 tvbrowser-plugins/plugin-virtualdataservice/src/main/java/virtualdataservice/VirtualDataService.java -text
 tvbrowser-plugins/plugin-virtualdataservice/src/main/java/virtualdataservice/VirtualDataServiceSettingsPanel.java -text
 tvbrowser-plugins/plugin-virtualdataservice/src/main/java/virtualdataservice/gpl.txt -text
