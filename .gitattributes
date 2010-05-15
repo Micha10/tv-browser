@@ -172,6 +172,7 @@ tvbrowser-plugins/plugin-clock/src/main/java/clockplugin/ClockSettingsTab.java -
 tvbrowser-plugins/plugin-clock/src/main/java/clockplugin/TitleBarClock.java -text
 tvbrowser-plugins/plugin-clock/src/main/resources/clockplugin/License.txt -text
 tvbrowser-plugins/plugin-clock/src/main/resources/clockplugin/clockplugin.properties -text
+tvbrowser-plugins/plugin-clock/src/main/resources/clockplugin/clockplugin_da.properties -text
 tvbrowser-plugins/plugin-clock/src/main/resources/clockplugin/clockplugin_de.properties -text
 tvbrowser-plugins/plugin-clock/src/main/resources/clockplugin/icon-license.txt -text
 tvbrowser-plugins/plugin-clock/src/main/resources/clockplugin/icons/16x16/apps/clock.png -text
@@ -179,6 +180,7 @@ tvbrowser-plugins/plugin-clock/src/main/resources/clockplugin/icons/22x22/apps/c
 tvbrowser-plugins/plugin-countrycode/pom.xml -text
 tvbrowser-plugins/plugin-countrycode/src/main/java/countrycodeplugin/CountryCodePlugin.java -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-countrycode/src/main/resources/countrycodeplugin/countrycodeplugin.properties -text svneol=unset#text/plain
+tvbrowser-plugins/plugin-countrycode/src/main/resources/countrycodeplugin/countrycodeplugin_da.properties -text
 tvbrowser-plugins/plugin-countrycode/src/main/resources/countrycodeplugin/countrycodeplugin_de.properties -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-dataviewer/pom.xml -text
 tvbrowser-plugins/plugin-dataviewer/src/main/java/dataviewerplugin/ChannelTableCellRenderer.java -text
@@ -333,6 +335,7 @@ tvbrowser-plugins/plugin-imdb/src/main/java/imdbplugin/RatingDiagram.java -text
 tvbrowser-plugins/plugin-imdb/src/main/java/imdbplugin/RatingNode.java -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-imdb/src/main/java/imdbplugin/VoteCountFilterComponent.java -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-imdb/src/main/resources/imdbplugin/imdbplugin.properties -text
+tvbrowser-plugins/plugin-imdb/src/main/resources/imdbplugin/imdbplugin_da.properties -text
 tvbrowser-plugins/plugin-imdb/src/main/resources/imdbplugin/imdbplugin_de.properties -text
 tvbrowser-plugins/plugin-imdb/src/main/resources/imdbplugin/rating.png -text
 tvbrowser-plugins/plugin-logging/pom.xml -text
@@ -581,8 +584,10 @@ tvbrowser-plugins/plugin-recommendation/src/main/java/recommendationplugin/weigh
 tvbrowser-plugins/plugin-recommendation/src/main/java/recommendationplugin/weighting/ReminderWeighting.java -text
 tvbrowser-plugins/plugin-recommendation/src/main/resources/recommendationplugin/recommendation.png -text
 tvbrowser-plugins/plugin-recommendation/src/main/resources/recommendationplugin/recommendationplugin.properties -text
+tvbrowser-plugins/plugin-recommendation/src/main/resources/recommendationplugin/recommendationplugin_da.properties -text
 tvbrowser-plugins/plugin-recommendation/src/main/resources/recommendationplugin/recommendationplugin_de.properties -text
 tvbrowser-plugins/plugin-recommendation/src/main/resources/recommendationplugin/weighting/weighting.properties -text
+tvbrowser-plugins/plugin-recommendation/src/main/resources/recommendationplugin/weighting/weighting_da.properties -text
 tvbrowser-plugins/plugin-recommendation/src/main/resources/recommendationplugin/weighting/weighting_de.properties -text
 tvbrowser-plugins/plugin-sharedchannelautoupdate/pom.xml -text
 tvbrowser-plugins/plugin-sharedchannelautoupdate/src/main/java/sharedchannelautoupdateplugin/SharedChannelAutoUpdatePlugin.java -text
@@ -612,6 +617,7 @@ tvbrowser-plugins/plugin-snarl/src/main/resources/snarlplugin/icons/16x16/snarl.
 tvbrowser-plugins/plugin-snarl/src/main/resources/snarlplugin/icons/32x32/snarl.png -text
 tvbrowser-plugins/plugin-snarl/src/main/resources/snarlplugin/snarl_command.exe -text
 tvbrowser-plugins/plugin-snarl/src/main/resources/snarlplugin/snarlplugin.properties -text svneol=unset#text/plain
+tvbrowser-plugins/plugin-snarl/src/main/resources/snarlplugin/snarlplugin_da.properties -text
 tvbrowser-plugins/plugin-snarl/src/main/resources/snarlplugin/snarlplugin_de.properties -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-soundreminder/pom.xml -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-soundreminder/src/main/java/soundreminderplugin/SoundEntry.java -text
@@ -621,6 +627,7 @@ tvbrowser-plugins/plugin-soundreminder/src/main/java/soundreminderplugin/SoundRe
 tvbrowser-plugins/plugin-soundreminder/src/main/resources/soundreminderplugin/icons/16x16/status/audio-volume-high.png -text svneol=unset#unset
 tvbrowser-plugins/plugin-soundreminder/src/main/resources/soundreminderplugin/icons/22x22/status/audio-volume-high.png -text svneol=unset#unset
 tvbrowser-plugins/plugin-soundreminder/src/main/resources/soundreminderplugin/soundreminderplugin.properties -text
+tvbrowser-plugins/plugin-soundreminder/src/main/resources/soundreminderplugin/soundreminderplugin_da.properties -text
 tvbrowser-plugins/plugin-soundreminder/src/main/resources/soundreminderplugin/soundreminderplugin_de.properties -text
 tvbrowser-plugins/plugin-speech/pom.xml -text
 tvbrowser-plugins/plugin-speech/src/main/cpp/quadmore/QUADINIT.H -text
@@ -692,6 +699,7 @@ tvbrowser-plugins/plugin-timeline/src/main/java/timelineplugin/format/TextString
 tvbrowser-plugins/plugin-timeline/src/main/resources/timelineplugin/icons/16x16/actions/timeline.png -text
 tvbrowser-plugins/plugin-timeline/src/main/resources/timelineplugin/icons/22x22/actions/timeline.png -text
 tvbrowser-plugins/plugin-timeline/src/main/resources/timelineplugin/timelineplugin.properties -text
+tvbrowser-plugins/plugin-timeline/src/main/resources/timelineplugin/timelineplugin_da.properties -text
 tvbrowser-plugins/plugin-timeline/src/main/resources/timelineplugin/timelineplugin_de.properties -text
 tvbrowser-plugins/plugin-timelist/pom.xml -text
 tvbrowser-plugins/plugin-timelist/src/main/java/timelistplugin/ProgramListDialog.java -text
@@ -706,6 +714,7 @@ tvbrowser-plugins/plugin-tooltipcontrol/pom.xml -text
 tvbrowser-plugins/plugin-tooltipcontrol/src/main/java/tooltipcontrolplugin/ToolTipControlPlugin.java -text
 tvbrowser-plugins/plugin-tooltipcontrol/src/main/java/tooltipcontrolplugin/ToolTipControlPluginSettingsTab.java -text
 tvbrowser-plugins/plugin-tooltipcontrol/src/main/resources/tooltipcontrolplugin/tooltipcontrolplugin.properties -text
+tvbrowser-plugins/plugin-tooltipcontrol/src/main/resources/tooltipcontrolplugin/tooltipcontrolplugin_da.properties -text
 tvbrowser-plugins/plugin-tooltipcontrol/src/main/resources/tooltipcontrolplugin/tooltipcontrolplugin_de.properties -text
 tvbrowser-plugins/plugin-tvbrowsermini/lib/sqlitejdbc-v054.jar -text
 tvbrowser-plugins/plugin-tvbrowsermini/pom.xml -text
@@ -862,6 +871,7 @@ tvbrowser-plugins/plugin-wirschauen/src/main/java/wirschauenplugin/WirSchauenSet
 tvbrowser-plugins/plugin-wirschauen/src/main/resources/wirschauenplugin/icons/16x16/apps/wirschauen.png -text
 tvbrowser-plugins/plugin-wirschauen/src/main/resources/wirschauenplugin/icons/16x16/apps/wirschauen_noDesc.png -text
 tvbrowser-plugins/plugin-wirschauen/src/main/resources/wirschauenplugin/wirschauenplugin.properties -text
+tvbrowser-plugins/plugin-wirschauen/src/main/resources/wirschauenplugin/wirschauenplugin_da.properties -text
 tvbrowser-plugins/plugin-wirschauen/src/main/resources/wirschauenplugin/wirschauenplugin_de.properties -text
 tvbrowser-plugins/plugin-zattoo/pom.xml -text
 tvbrowser-plugins/plugin-zattoo/src/main/java/zattooplugin/ChannelProperties.java -text svneol=unset#text/plain
