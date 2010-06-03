@@ -47,6 +47,7 @@ tvbrowser-plugins/plugin-dvbviewerdataservice/.project
 tvbrowser-plugins/plugin-dvbviewerdataservice/.settings
 tvbrowser-plugins/plugin-dvbviewerdataservice/target
 tvbrowser-plugins/plugin-filterview/.classpath
+tvbrowser-plugins/plugin-filterview/.escabaseline
 tvbrowser-plugins/plugin-filterview/.project
 tvbrowser-plugins/plugin-filterview/.settings
 tvbrowser-plugins/plugin-filterview/target
