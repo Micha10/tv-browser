@@ -117,6 +117,7 @@ tvbrowser-plugins/plugin-notifyosd/.project
 tvbrowser-plugins/plugin-notifyosd/.settings
 tvbrowser-plugins/plugin-notifyosd/target
 tvbrowser-plugins/plugin-recommendation/.classpath
+tvbrowser-plugins/plugin-recommendation/.escabaseline
 tvbrowser-plugins/plugin-recommendation/.fbprefs
 tvbrowser-plugins/plugin-recommendation/.pmd
 tvbrowser-plugins/plugin-recommendation/.project
