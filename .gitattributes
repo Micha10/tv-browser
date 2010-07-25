@@ -290,6 +290,12 @@ tvbrowser-plugins/plugin-dvbviewerdataservice/src/main/resources/dvbviewer/dvbvi
 tvbrowser-plugins/plugin-dvbviewerdataservice/src/main/resources/dvbviewer/dvbviewer_de.properties -text
 tvbrowser-plugins/plugin-dvbviewerdataservice/src/main/resources/dvbviewerdataservice/dvbviewerdataservice.properties -text
 tvbrowser-plugins/plugin-dvbviewerdataservice/src/main/resources/dvbviewerdataservice/dvbviewerdataservice_de.properties -text
+tvbrowser-plugins/plugin-feeds/pom.xml -text
+tvbrowser-plugins/plugin-feeds/src/main/java/feedsplugin/FeedsPlugin.java -text
+tvbrowser-plugins/plugin-feeds/src/main/resources/feedsplugin/feedsplugin.properties -text
+tvbrowser-plugins/plugin-feeds/src/main/resources/feedsplugin/feedsplugin_de.properties -text
+tvbrowser-plugins/plugin-feeds/src/main/resources/feedsplugin/icons/16x16/apps/feeds.png -text
+tvbrowser-plugins/plugin-feeds/src/main/resources/feedsplugin/icons/22x22/apps/feeds.png -text
 tvbrowser-plugins/plugin-filterview/pom.xml -text
 tvbrowser-plugins/plugin-filterview/src/main/java/filterviewplugin/FilterViewPlugin.java -text
 tvbrowser-plugins/plugin-filterview/src/main/java/filterviewplugin/FilterViewSettings.java -text
