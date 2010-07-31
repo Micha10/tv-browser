@@ -856,6 +856,7 @@ tvbrowser-plugins/plugin-widget/src/main/java/widgetplugin/nanohttpd/NanoHTTPD.j
 tvbrowser-plugins/plugin-widget/src/main/resources/widgetplugin/widget.png -text
 tvbrowser-plugins/plugin-widget/src/main/resources/widgetplugin/widgetplugin.properties -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-widget/src/main/resources/widgetplugin/widgetplugin_de.properties -text svneol=unset#text/plain
+tvbrowser-plugins/plugin-wirschauen/lib/jortho.jar -text
 tvbrowser-plugins/plugin-wirschauen/pom.xml -text
 tvbrowser-plugins/plugin-wirschauen/src/main/java/wirschauenplugin/CreateOmdbAbstractDialog.java -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-wirschauen/src/main/java/wirschauenplugin/CreateOmdbLinkDialog.java -text svneol=unset#text/plain
@@ -875,6 +876,8 @@ tvbrowser-plugins/plugin-wirschauen/src/main/java/wirschauenplugin/WirSchauenEve
 tvbrowser-plugins/plugin-wirschauen/src/main/java/wirschauenplugin/WirSchauenFilterComponent.java -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-wirschauen/src/main/java/wirschauenplugin/WirSchauenSettings.java -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-wirschauen/src/main/java/wirschauenplugin/WirSchauenSettingsTab.java -text svneol=unset#text/plain
+tvbrowser-plugins/plugin-wirschauen/src/main/resources/wirschauenplugin/dictionaries/dictionaries.cnf -text
+tvbrowser-plugins/plugin-wirschauen/src/main/resources/wirschauenplugin/dictionaries/dictionary_de.ortho -text
 tvbrowser-plugins/plugin-wirschauen/src/main/resources/wirschauenplugin/icons/16x16/apps/wirschauen.png -text
 tvbrowser-plugins/plugin-wirschauen/src/main/resources/wirschauenplugin/icons/16x16/apps/wirschauen_noDesc.png -text
 tvbrowser-plugins/plugin-wirschauen/src/main/resources/wirschauenplugin/wirschauenplugin.properties -text
