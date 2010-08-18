@@ -916,6 +916,7 @@ tvbrowser/deployment/macosx/jarbundler-2.0.0.jar -text
 tvbrowser/deployment/macosx/tvbdmg.png -text
 tvbrowser/deployment/macosx/tvbrowser.dmg -text
 tvbrowser/deployment/macosx/tvbrowser.psd -text
+tvbrowser/deployment/packer.txt -text
 tvbrowser/deployment/win/installer/Contrib/Graphics/Checks/modern.bmp -text
 tvbrowser/deployment/win/installer/Contrib/Graphics/Icons/orange-install.ico -text
 tvbrowser/deployment/win/installer/Contrib/Graphics/Icons/orange-uninstall.ico -text
