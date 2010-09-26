@@ -1612,6 +1612,7 @@ tvbrowser/src/tvbrowser/core/filters/filtercomponents/DateFilterComponent.java -
 tvbrowser/src/tvbrowser/core/filters/filtercomponents/FavoritesFilterComponent.java -text
 tvbrowser/src/tvbrowser/core/filters/filtercomponents/ProgramTypeFilterComponent.java -text svneol=unset#text/plain
 tvbrowser/src/tvbrowser/core/filters/filtercomponents/ReminderFilterComponent.java -text
+tvbrowser/src/tvbrowser/core/filters/filtercomponents/SingleTitleFilterComponent.java -text
 tvbrowser/src/tvbrowser/core/filters/filtercomponents/filtercomponents_da.properties -text
 tvbrowser/src/tvbrowser/core/filters/filtercomponents/filtercomponents_sk.properties -text
 tvbrowser/src/tvbrowser/core/filters/filters_da.properties -text
