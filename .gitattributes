@@ -306,6 +306,13 @@ tvbrowser-plugins/plugin-filterview/src/main/java/filterviewplugin/FilterViewSet
 tvbrowser-plugins/plugin-filterview/src/main/java/filterviewplugin/SetFilterAction.java -text
 tvbrowser-plugins/plugin-filterview/src/main/resources/filterviewplugin/filterviewplugin.properties -text
 tvbrowser-plugins/plugin-filterview/src/main/resources/filterviewplugin/filterviewplugin_de.properties -text
+tvbrowser-plugins/plugin-freetuxtv/pom.xml -text
+tvbrowser-plugins/plugin-freetuxtv/src/main/java/freetuxtvplugin/FreetuxTVPlugin.java -text
+tvbrowser-plugins/plugin-freetuxtv/src/main/resources/freetuxtvplugin/freetuxtvplugin.properties -text
+tvbrowser-plugins/plugin-freetuxtv/src/main/resources/freetuxtvplugin/freetuxtvplugin_da.properties -text
+tvbrowser-plugins/plugin-freetuxtv/src/main/resources/freetuxtvplugin/freetuxtvplugin_de.properties -text
+tvbrowser-plugins/plugin-freetuxtv/src/main/resources/freetuxtvplugin/icons/16x16/actions/freetuxtv.png -text
+tvbrowser-plugins/plugin-freetuxtv/src/main/resources/freetuxtvplugin/icons/22x22/actions/freetuxtv.png -text
 tvbrowser-plugins/plugin-golem/pom.xml -text
 tvbrowser-plugins/plugin-golem/src/main/java/golemplugin/GolemDialog.java -text
 tvbrowser-plugins/plugin-golem/src/main/java/golemplugin/GolemPlugin.java -text

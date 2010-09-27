@@ -63,6 +63,11 @@ tvbrowser-plugins/plugin-filterview/.escabaseline
 tvbrowser-plugins/plugin-filterview/.project
 tvbrowser-plugins/plugin-filterview/.settings
 tvbrowser-plugins/plugin-filterview/target
+tvbrowser-plugins/plugin-freetuxtv/.classpath
+tvbrowser-plugins/plugin-freetuxtv/.escabaseline
+tvbrowser-plugins/plugin-freetuxtv/.project
+tvbrowser-plugins/plugin-freetuxtv/.settings
+tvbrowser-plugins/plugin-freetuxtv/target
 tvbrowser-plugins/plugin-golem/*.iml
 tvbrowser-plugins/plugin-golem/.classpath
 tvbrowser-plugins/plugin-golem/.escabaseline
