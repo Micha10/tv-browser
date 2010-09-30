@@ -599,7 +599,8 @@ tvbrowser-plugins/plugin-recommendation/src/main/java/recommendationplugin/weigh
 tvbrowser-plugins/plugin-recommendation/src/main/java/recommendationplugin/weighting/MarkerWeighting.java -text
 tvbrowser-plugins/plugin-recommendation/src/main/java/recommendationplugin/weighting/RatingWeighting.java -text
 tvbrowser-plugins/plugin-recommendation/src/main/java/recommendationplugin/weighting/ReminderWeighting.java -text
-tvbrowser-plugins/plugin-recommendation/src/main/resources/recommendationplugin/recommendation.png -text
+tvbrowser-plugins/plugin-recommendation/src/main/resources/recommendationplugin/icons/16x16/actions/recommendation.png -text
+tvbrowser-plugins/plugin-recommendation/src/main/resources/recommendationplugin/icons/22x22/actions/recommendation.png -text
 tvbrowser-plugins/plugin-recommendation/src/main/resources/recommendationplugin/recommendationplugin.properties -text
 tvbrowser-plugins/plugin-recommendation/src/main/resources/recommendationplugin/recommendationplugin_da.properties -text
 tvbrowser-plugins/plugin-recommendation/src/main/resources/recommendationplugin/recommendationplugin_de.properties -text
