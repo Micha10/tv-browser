@@ -15,6 +15,11 @@ tvbrowser-plugins/plugin-balloon/.pmd
 tvbrowser-plugins/plugin-balloon/.project
 tvbrowser-plugins/plugin-balloon/.settings
 tvbrowser-plugins/plugin-balloon/target
+tvbrowser-plugins/plugin-bbcdataservice/.classpath
+tvbrowser-plugins/plugin-bbcdataservice/.escabaseline
+tvbrowser-plugins/plugin-bbcdataservice/.project
+tvbrowser-plugins/plugin-bbcdataservice/.settings
+tvbrowser-plugins/plugin-bbcdataservice/target
 tvbrowser-plugins/plugin-checker/.classpath
 tvbrowser-plugins/plugin-checker/.escabaseline
 tvbrowser-plugins/plugin-checker/.lint4jprefs

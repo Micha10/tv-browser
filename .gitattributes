@@ -132,6 +132,11 @@ tvbrowser-plugins/plugin-balloon/src/main/resources/balloonplugin/balloonplugin.
 tvbrowser-plugins/plugin-balloon/src/main/resources/balloonplugin/balloonplugin_de.properties -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-balloon/src/main/resources/balloonplugin/icons/16x16/balloon.png -text
 tvbrowser-plugins/plugin-balloon/src/main/resources/balloonplugin/notifu.exe -text
+tvbrowser-plugins/plugin-bbcdataservice/pom.xml -text
+tvbrowser-plugins/plugin-bbcdataservice/src/main/java/bbcdataservice/BBCDataService.java -text
+tvbrowser-plugins/plugin-bbcdataservice/src/main/java/bbcdataservice/BBCProgrammesParser.java -text
+tvbrowser-plugins/plugin-bbcdataservice/src/main/resources/bbcdataservice/bbcdataservice.properties -text
+tvbrowser-plugins/plugin-bbcdataservice/src/main/resources/bbcdataservice/bbcdataservice_de.properties -text
 tvbrowser-plugins/plugin-checker/pom.xml -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-checker/src/main/java/checkerplugin/CheckerPlugin.java -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-checker/src/main/java/checkerplugin/CheckerSettings.java -text
