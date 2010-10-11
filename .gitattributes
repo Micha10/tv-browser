@@ -1853,6 +1853,7 @@ tvbrowser/test/src/devplugin/DateTest.java -text
 tvbrowser/test/src/primarydatamanager/DayProgramMapperTest.java -text
 tvbrowser/test/src/primarydatamanager/PrimaryDataManagerTest.java -text
 tvbrowser/test/src/primarydatamanager/primarydataservice/util/InfoCategoryParserTest.java -text svneol=unset#text/plain
+tvbrowser/test/src/primarydatamanager/primarydataservice/util/html2txt/Html2TxtConverterTest.java -text svneol=unset#text/plain
 tvbrowser/test/src/tvbrowser/extras/favoritesplugin/core/ActorStringSearcherTest.java -text
 tvbrowser/test/src/tvbrowserdataservice/DayProgramFileTest.java -text
 tvbrowser/test/src/tvbrowserdataservice/SummaryFileTest.java -text
