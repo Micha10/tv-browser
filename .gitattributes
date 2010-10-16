@@ -326,9 +326,9 @@ tvbrowser-plugins/plugin-golem/src/main/java/golemplugin/GolemSettings.java -tex
 tvbrowser-plugins/plugin-golem/src/main/java/golemplugin/GolemSettingsTab.java -text
 tvbrowser-plugins/plugin-golem/src/main/java/golemplugin/GolemUpdater.java -text
 tvbrowser-plugins/plugin-golem/src/main/resources/commons-logging.properties -text
-tvbrowser-plugins/plugin-golem/src/main/resources/golemplugin/golem.png -text
 tvbrowser-plugins/plugin-golem/src/main/resources/golemplugin/golemplugin.properties -text
 tvbrowser-plugins/plugin-golem/src/main/resources/golemplugin/golemplugin_de.properties -text
+tvbrowser-plugins/plugin-golem/src/main/resources/golemplugin/icons/16x16/actions/golem.png -text
 tvbrowser-plugins/plugin-golem/src/main/resources/ical4j.properties -text
 tvbrowser-plugins/plugin-idontwant2see/pom.xml -text
 tvbrowser-plugins/plugin-idontwant2see/src/main/java/idontwant2see/ExclusionTablePanel.java -text svneol=unset#text/plain
@@ -691,7 +691,7 @@ tvbrowser-plugins/plugin-tagging/src/main/java/taggingplugin/ProgramListDialog.j
 tvbrowser-plugins/plugin-tagging/src/main/java/taggingplugin/TagFilterComponent.java -text
 tvbrowser-plugins/plugin-tagging/src/main/java/taggingplugin/TagValidation.java -text
 tvbrowser-plugins/plugin-tagging/src/main/java/taggingplugin/TaggingPlugin.java -text
-tvbrowser-plugins/plugin-tagging/src/main/resources/taggingplugin/tag.png -text
+tvbrowser-plugins/plugin-tagging/src/main/resources/taggingplugin/icons/16x16/actions/tag.png -text
 tvbrowser-plugins/plugin-tagging/src/main/resources/taggingplugin/taggingplugin.properties -text
 tvbrowser-plugins/plugin-tagging/src/main/resources/taggingplugin/taggingplugin_de.properties -text
 tvbrowser-plugins/plugin-teletext/pom.xml -text
