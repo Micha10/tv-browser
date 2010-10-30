@@ -1660,6 +1660,7 @@ tvbrowser/src/tvbrowser/ui/configassistant/PictureConfigPanel.java -text
 tvbrowser/src/tvbrowser/ui/configassistant/TvBrowserPictureSettingsUpdateDialog.java -text
 tvbrowser/src/tvbrowser/ui/configassistant/configassistant_da.properties -text
 tvbrowser/src/tvbrowser/ui/configassistant/configassistant_sk.properties -text
+tvbrowser/src/tvbrowser/ui/filter/dlgs/Utilities.java -text
 tvbrowser/src/tvbrowser/ui/filter/dlgs/dlgs_da.properties -text
 tvbrowser/src/tvbrowser/ui/filter/dlgs/dlgs_sk.properties -text
 tvbrowser/src/tvbrowser/ui/finder/AbstractDateSelector.java -text
