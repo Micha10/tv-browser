@@ -1264,11 +1264,9 @@ tvbrowser/images/themes/tango/22x22/status/mail-attachment.png -text
 tvbrowser/images/themes/tango/22x22/status/network-transmit-receive.png -text
 tvbrowser/images/themes/tango/22x22/status/view-filter-set-list.png -text
 tvbrowser/images/themes/tango/22x22/status/view-filter-set.png -text
-tvbrowser/lib/TVAnytimeAPI-1.3.jar -text
 tvbrowser/lib/aclibico-2.1.jar -text
 tvbrowser/lib/bsh-2.0b4.jar -text
 tvbrowser/lib/commons-codec-1.4.jar -text
-tvbrowser/lib/commons-compress-1.1.jar -text
 tvbrowser/lib/commons-lang-2.5.jar -text
 tvbrowser/lib/commons-net-2.0.jar -text
 tvbrowser/lib/forms-1.3.0.jar -text
@@ -1290,11 +1288,6 @@ tvbrowser/lib/stax-1.2.0.jar -text
 tvbrowser/lib/stax-api-1.0.1.jar -text
 tvbrowser/lib/texhyphj-1.1.jar -text
 tvbrowser/lib/xtvd-lib-2.0.2.jar -text
-tvbrowser/src/bbcbackstagedataservice/BbcBackstageDataService.java -text
-tvbrowser/src/bbcbackstagedataservice/BbcFileParser.java -text
-tvbrowser/src/bbcbackstagedataservice/bbcbackstagedataservice.properties -text
-tvbrowser/src/bbcbackstagedataservice/bbcbackstagedataservice_da.properties -text
-tvbrowser/src/bbcbackstagedataservice/bbcbackstagedataservice_de.properties -text
 tvbrowser/src/blogthisplugin/BlogService.java -text
 tvbrowser/src/blogthisplugin/BlogSettings.java -text
 tvbrowser/src/blogthisplugin/blogthisplugin_da.properties -text
