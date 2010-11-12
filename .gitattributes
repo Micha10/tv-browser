@@ -397,7 +397,6 @@ tvbrowser-plugins/plugin-mediathek/src/main/java/mediathekplugin/MediathekPlugin
 tvbrowser-plugins/plugin-mediathek/src/main/java/mediathekplugin/MediathekProgramItem.java -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-mediathek/src/main/java/mediathekplugin/MediathekSettings.java -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-mediathek/src/main/java/mediathekplugin/MediathekSettingsTab.java -text svneol=unset#text/plain
-tvbrowser-plugins/plugin-mediathek/src/main/java/mediathekplugin/ProgramsDialog.java -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-mediathek/src/main/java/mediathekplugin/WebMediathek.java -text
 tvbrowser-plugins/plugin-mediathek/src/main/resources/mediathekplugin/icons/16x16/mimetypes/audio-x-generic.png -text
 tvbrowser-plugins/plugin-mediathek/src/main/resources/mediathekplugin/icons/16x16/mimetypes/image-x-generic.png -text
