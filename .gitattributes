@@ -1294,6 +1294,7 @@ tvbrowser/src/calendarexportplugin/Reservation.java -text
 tvbrowser/src/calendarexportplugin/calendarexportplugin_da.properties -text
 tvbrowser/src/calendarexportplugin/calendarexportplugin_sk.properties -text
 tvbrowser/src/calendarexportplugin/exporter/AbstractExporter.java -text
+tvbrowser/src/calendarexportplugin/exporter/AppleSettingsDialog.java -text
 tvbrowser/src/calendarexportplugin/exporter/AppleiCalExporter.java -text
 tvbrowser/src/calendarexportplugin/exporter/CalExporter.java -text svneol=unset#text/plain
 tvbrowser/src/calendarexportplugin/exporter/ExporterFactory.java -text
