@@ -1665,6 +1665,7 @@ tvbrowser/src/tvbrowser/ui/finder/calendar/CalendarTablePanel.java -text svneol=
 tvbrowser/src/tvbrowser/ui/finder/finder_da.properties -text
 tvbrowser/src/tvbrowser/ui/licensebox/licensebox_da.properties -text
 tvbrowser/src/tvbrowser/ui/licensebox/licensebox_sk.properties -text
+tvbrowser/src/tvbrowser/ui/mainframe/UserAwayDetector.java -text
 tvbrowser/src/tvbrowser/ui/mainframe/actions/TVBrowserAction.java -text
 tvbrowser/src/tvbrowser/ui/mainframe/actions/TVBrowserActions.java -text
 tvbrowser/src/tvbrowser/ui/mainframe/actions/TVBrowserUpdateAction.java -text
