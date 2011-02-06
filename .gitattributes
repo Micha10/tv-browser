@@ -439,6 +439,7 @@ tvbrowser-plugins/plugin-mixedupdatelock/src/main/resources/mixedupdatelockplugi
 tvbrowser-plugins/plugin-mixedupdatelock/src/main/resources/mixedupdatelockplugin/mixedupdatelockplugin_de.properties -text
 tvbrowser-plugins/plugin-movieaward/pom.xml -text
 tvbrowser-plugins/plugin-movieaward/src/main/java/movieawardplugin/Award.java -text
+tvbrowser-plugins/plugin-movieaward/src/main/java/movieawardplugin/AwardNameHandler.java -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-movieaward/src/main/java/movieawardplugin/Movie.java -text
 tvbrowser-plugins/plugin-movieaward/src/main/java/movieawardplugin/MovieAward.java -text
 tvbrowser-plugins/plugin-movieaward/src/main/java/movieawardplugin/MovieAwardCategory.java -text
@@ -453,6 +454,7 @@ tvbrowser-plugins/plugin-movieaward/src/main/java/movieawardplugin/MovieDatabase
 tvbrowser-plugins/plugin-movieaward/src/main/java/movieawardplugin/MovieDatabaseHandler.java -text
 tvbrowser-plugins/plugin-movieaward/src/main/java/movieawardplugin/MovieHashMap.java -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-movieaward/src/main/java/movieawardplugin/SelectedAwardsFilterComponent.java -text svneol=unset#text/plain
+tvbrowser-plugins/plugin-movieaward/src/main/java/movieawardplugin/StopParserException.java -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-movieaward/src/main/resources/movieawardplugin/data/cannes.xml -text
 tvbrowser-plugins/plugin-movieaward/src/main/resources/movieawardplugin/data/deutscher_comedypreis.xml -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-movieaward/src/main/resources/movieawardplugin/data/deutscher_filmpreis.xml -text svneol=unset#text/plain
