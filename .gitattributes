@@ -1448,6 +1448,7 @@ tvbrowser/src/i18nplugin/SortedProperties.java -text
 tvbrowser/src/i18nplugin/TranslationDialog.java -text
 tvbrowser/src/i18nplugin/TranslationNode.java -text
 tvbrowser/src/i18nplugin/TranslatorEditor.java -text
+tvbrowser/src/i18nplugin/UnsortedPathNode.java -text
 tvbrowser/src/i18nplugin/i18nplugin.properties -text
 tvbrowser/src/i18nplugin/i18nplugin_da.properties -text
 tvbrowser/src/i18nplugin/i18nplugin_de.properties -text
