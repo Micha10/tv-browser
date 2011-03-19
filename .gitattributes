@@ -1394,6 +1394,7 @@ tvbrowser/src/captureplugin/drivers/topfield/TopfieldRollTableCellEditor.java -t
 tvbrowser/src/captureplugin/drivers/topfield/TopfieldServiceInfo.java -text
 tvbrowser/src/captureplugin/drivers/topfield/TopfieldTimerEntry.java -text
 tvbrowser/src/captureplugin/drivers/topfield/TopfieldTimerMode.java -text
+tvbrowser/src/captureplugin/drivers/topfield/TopfieldWaitWindow.java -text
 tvbrowser/src/captureplugin/drivers/topfield/connector/TopfieldConnectionException.java -text
 tvbrowser/src/captureplugin/drivers/topfield/connector/TopfieldConnector.java -text
 tvbrowser/src/captureplugin/drivers/topfield/connector/TopfieldServiceException.java -text
