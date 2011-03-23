@@ -302,6 +302,7 @@ tvbrowser/.settings
 tvbrowser/.settings/org.eclipse.mylyn.team.ui.prefs
 tvbrowser/bin
 tvbrowser/classes
+tvbrowser/doc
 tvbrowser/docs
 tvbrowser/images/themes/tango/16x16/actions/Makefile
 tvbrowser/images/themes/tango/16x16/actions/Makefile.in
