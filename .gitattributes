@@ -1265,7 +1265,7 @@ tvbrowser/lib/aclibico-2.1.jar -text
 tvbrowser/lib/bsh-2.0b4.jar -text
 tvbrowser/lib/commons-codec-1.5.jar -text
 tvbrowser/lib/commons-lang-2.6.jar -text
-tvbrowser/lib/commons-net-2.2.jar -text
+tvbrowser/lib/commons-net-3.0.1.jar -text
 tvbrowser/lib/gdata-calendar-2.0.jar -text
 tvbrowser/lib/gdata-client-1.0.jar -text
 tvbrowser/lib/gdata-core-1.0.jar -text
