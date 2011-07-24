@@ -1031,6 +1031,7 @@ tvbrowser/images/themes/CrystalClear/16x16/devices/printer.png -text
 tvbrowser/images/themes/CrystalClear/16x16/emblems/emblem-favorite.png -text
 tvbrowser/images/themes/CrystalClear/16x16/emblems/emblem-important.png -text
 tvbrowser/images/themes/CrystalClear/16x16/emblems/emblem-symbolic-link.png -text
+tvbrowser/images/themes/CrystalClear/16x16/emblems/separator.png -text
 tvbrowser/images/themes/CrystalClear/16x16/mimetypes/image-x-generic.png -text
 tvbrowser/images/themes/CrystalClear/16x16/mimetypes/video-x-generic.png -text
 tvbrowser/images/themes/CrystalClear/16x16/status/close-over.png -text
@@ -1106,6 +1107,7 @@ tvbrowser/images/themes/CrystalClear/22x22/devices/printer.png -text
 tvbrowser/images/themes/CrystalClear/22x22/emblems/emblem-favorite.png -text
 tvbrowser/images/themes/CrystalClear/22x22/emblems/emblem-important.png -text
 tvbrowser/images/themes/CrystalClear/22x22/emblems/emblem-symbolic-link.png -text
+tvbrowser/images/themes/CrystalClear/22x22/emblems/separator.png -text
 tvbrowser/images/themes/CrystalClear/22x22/mimetypes/video-x-generic.png -text
 tvbrowser/images/themes/CrystalClear/22x22/status/dialog-information.png -text
 tvbrowser/images/themes/CrystalClear/22x22/status/dialog-warning.png -text
@@ -1182,6 +1184,7 @@ tvbrowser/images/themes/tango/16x16/devices/printer.png -text
 tvbrowser/images/themes/tango/16x16/emblems/emblem-favorite.png -text
 tvbrowser/images/themes/tango/16x16/emblems/emblem-important.png -text
 tvbrowser/images/themes/tango/16x16/emblems/emblem-symbolic-link.png -text
+tvbrowser/images/themes/tango/16x16/emblems/separator.png -text
 tvbrowser/images/themes/tango/16x16/mimetypes/image-x-generic.png -text
 tvbrowser/images/themes/tango/16x16/mimetypes/video-x-generic.png -text
 tvbrowser/images/themes/tango/16x16/status/close-over.png -text
@@ -1254,6 +1257,7 @@ tvbrowser/images/themes/tango/22x22/devices/printer.png -text
 tvbrowser/images/themes/tango/22x22/emblems/emblem-favorite.png -text
 tvbrowser/images/themes/tango/22x22/emblems/emblem-important.png -text
 tvbrowser/images/themes/tango/22x22/emblems/emblem-symbolic-link.png -text
+tvbrowser/images/themes/tango/22x22/emblems/separator.png -text
 tvbrowser/images/themes/tango/22x22/mimetypes/video-x-generic.png -text
 tvbrowser/images/themes/tango/22x22/status/dialog-information.png -text
 tvbrowser/images/themes/tango/22x22/status/folder-open.png -text
