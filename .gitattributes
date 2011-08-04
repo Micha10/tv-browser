@@ -640,15 +640,15 @@ tvbrowser-plugins/plugin-snarl/src/main/resources/snarlplugin/snarlplugin.proper
 tvbrowser-plugins/plugin-snarl/src/main/resources/snarlplugin/snarlplugin_da.properties -text
 tvbrowser-plugins/plugin-snarl/src/main/resources/snarlplugin/snarlplugin_de.properties -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-soundreminder/pom.xml -text svneol=unset#text/plain
-tvbrowser-plugins/plugin-soundreminder/src/main/java/soundreminderplugin/SoundEntry.java -text
-tvbrowser-plugins/plugin-soundreminder/src/main/java/soundreminderplugin/SoundReminderPlugin.java -text
-tvbrowser-plugins/plugin-soundreminder/src/main/java/soundreminderplugin/SoundReminderSettingsTableModel.java -text
-tvbrowser-plugins/plugin-soundreminder/src/main/java/soundreminderplugin/SoundReminderSettingsTableRenderer.java -text
-tvbrowser-plugins/plugin-soundreminder/src/main/resources/soundreminderplugin/icons/16x16/status/audio-volume-high.png -text svneol=unset#unset
-tvbrowser-plugins/plugin-soundreminder/src/main/resources/soundreminderplugin/icons/22x22/status/audio-volume-high.png -text svneol=unset#unset
-tvbrowser-plugins/plugin-soundreminder/src/main/resources/soundreminderplugin/soundreminderplugin.properties -text
-tvbrowser-plugins/plugin-soundreminder/src/main/resources/soundreminderplugin/soundreminderplugin_da.properties -text
-tvbrowser-plugins/plugin-soundreminder/src/main/resources/soundreminderplugin/soundreminderplugin_de.properties -text
+tvbrowser-plugins/plugin-soundreminder/src/main/java/soundreminder/SoundEntry.java -text
+tvbrowser-plugins/plugin-soundreminder/src/main/java/soundreminder/SoundReminder.java -text
+tvbrowser-plugins/plugin-soundreminder/src/main/java/soundreminder/SoundReminderSettingsTableModel.java -text
+tvbrowser-plugins/plugin-soundreminder/src/main/java/soundreminder/SoundReminderSettingsTableRenderer.java -text
+tvbrowser-plugins/plugin-soundreminder/src/main/resources/soundreminder/icons/16x16/status/audio-volume-high.png -text svneol=unset#unset
+tvbrowser-plugins/plugin-soundreminder/src/main/resources/soundreminder/icons/22x22/status/audio-volume-high.png -text svneol=unset#unset
+tvbrowser-plugins/plugin-soundreminder/src/main/resources/soundreminder/soundreminder.properties -text
+tvbrowser-plugins/plugin-soundreminder/src/main/resources/soundreminder/soundreminder_da.properties -text
+tvbrowser-plugins/plugin-soundreminder/src/main/resources/soundreminder/soundreminder_de.properties -text
 tvbrowser-plugins/plugin-speech/pom.xml -text
 tvbrowser-plugins/plugin-speech/src/main/cpp/quadmore/QUADINIT.H -text
 tvbrowser-plugins/plugin-speech/src/main/cpp/quadmore/QuadTTS.clw -text
