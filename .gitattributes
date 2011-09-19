@@ -1903,7 +1903,9 @@ tvbrowser/src/util/ui/login/login_de.properties -text
 tvbrowser/src/util/ui/login/login_it.properties -text
 tvbrowser/src/util/ui/login/login_sv.properties -text
 tvbrowser/src/util/ui/persona/Persona.java -text
+tvbrowser/src/util/ui/persona/PersonaBackgroundPanel.java -text
 tvbrowser/src/util/ui/persona/PersonaInfo.java -text
+tvbrowser/src/util/ui/persona/PersonaListener.java -text
 tvbrowser/src/util/ui/persona/persona.properties -text
 tvbrowser/src/util/ui/persona/persona_de.properties -text
 tvbrowser/src/util/ui/progress/ProgressInputStream.java -text
