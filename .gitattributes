@@ -1761,6 +1761,8 @@ tvbrowser/src/tvbrowser/ui/pluginview/contextmenu/contextmenu_da.properties -tex
 tvbrowser/src/tvbrowser/ui/pluginview/contextmenu/contextmenu_sk.properties -text
 tvbrowser/src/tvbrowser/ui/programtable/OptimizedCompactTimeBlockLayout.java -text svneol=unset#text/plain
 tvbrowser/src/tvbrowser/ui/programtable/RealCompactLayout.java -text
+tvbrowser/src/tvbrowser/ui/programtable/background/UiColorBackPainter.java -text
+tvbrowser/src/tvbrowser/ui/programtable/background/UiTimeBlockBackPainter.java -text
 tvbrowser/src/tvbrowser/ui/programtable/programtable_da.properties -text
 tvbrowser/src/tvbrowser/ui/programtable/programtable_it.properties -text
 tvbrowser/src/tvbrowser/ui/programtable/programtable_sk.properties -text
@@ -1781,6 +1783,8 @@ tvbrowser/src/tvbrowser/ui/settings/looksSettings/looksSettings_sv.properties -t
 tvbrowser/src/tvbrowser/ui/settings/settings_da.properties -text
 tvbrowser/src/tvbrowser/ui/settings/settings_it.properties -text
 tvbrowser/src/tvbrowser/ui/settings/settings_sk.properties -text
+tvbrowser/src/tvbrowser/ui/settings/tablebackgroundstyles/UiColorBackgroundStyle.java -text
+tvbrowser/src/tvbrowser/ui/settings/tablebackgroundstyles/UiTimeBlockBackgroundStyle.java -text
 tvbrowser/src/tvbrowser/ui/settings/tablebackgroundstyles/tablebackgroundstyles_da.properties -text
 tvbrowser/src/tvbrowser/ui/settings/tablebackgroundstyles/tablebackgroundstyles_sk.properties -text
 tvbrowser/src/tvbrowser/ui/settings/util/util_da.properties -text
