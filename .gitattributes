@@ -1714,6 +1714,8 @@ tvbrowser/src/tvbrowser/extras/searchplugin/searchplugin_sk.properties -text
 tvbrowser/src/tvbrowser/tvbrowser_da.properties -text
 tvbrowser/src/tvbrowser/tvbrowser_it.properties -text
 tvbrowser/src/tvbrowser/tvbrowser_sk.properties -text
+tvbrowser/src/tvbrowser/ui/BrownSugarDark.java -text
+tvbrowser/src/tvbrowser/ui/DarkStarDark.java -text
 tvbrowser/src/tvbrowser/ui/aboutbox/aboutbox_da.properties -text
 tvbrowser/src/tvbrowser/ui/aboutbox/aboutbox_it.properties -text
 tvbrowser/src/tvbrowser/ui/aboutbox/aboutbox_sk.properties -text
