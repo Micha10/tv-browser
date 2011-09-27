@@ -954,6 +954,8 @@ tvbrowser/deployment/win/launch4j/w32api/libuser32.a -text
 tvbrowser/deployment/win/launcher/bin/JarWinJavaExeLauncher.jar -text
 tvbrowser/deployment/win/launcher/src/launcher/JarWinJavaExeLauncher.java -text
 tvbrowser/deployment/windows.properties eol=crlf
+tvbrowser/development/TV-Browser[!!-~]Eclipse[!!-~]components.p2f -text
+tvbrowser/development/readme.txt svneol=native#text/plain
 tvbrowser/images/additional/TVBrowser.ico -text
 tvbrowser/images/additional/desktop.ico -text
 tvbrowser/images/additional/systray.ico -text
