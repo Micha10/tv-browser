@@ -125,6 +125,7 @@ tv-browserm/tv-browserm/src/tv-browserm_en_EN.qm -text
 tv-browserm/tv-browserm/src/tv-browserm_en_EN.ts -text
 tv-browserm/tv-browserm/src/ui_mainwindow.h -text
 tv-browserm/tv-browserm/tv-browserm.pro -text
+tvbrowser-plugins/Package[!!-~]selected[!!-~]plugin.launch -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-alldataperchannel/pom.xml -text
 tvbrowser-plugins/plugin-alldataperchannel/src/main/java/alldataperchannelplugin/AllDataPerChannelPlugin.java -text
 tvbrowser-plugins/plugin-alldataperchannel/src/main/resources/alldataperchannelplugin/alldataperchannelplugin.properties -text
