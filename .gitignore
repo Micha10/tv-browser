@@ -26,6 +26,7 @@ tvbrowser-plugins/plugin-bbcdataservice/.escabaseline
 tvbrowser-plugins/plugin-bbcdataservice/.project
 tvbrowser-plugins/plugin-bbcdataservice/.settings
 tvbrowser-plugins/plugin-bbcdataservice/target
+tvbrowser-plugins/plugin-blogthis/target
 tvbrowser-plugins/plugin-checker/.classpath
 tvbrowser-plugins/plugin-checker/.escabaseline
 tvbrowser-plugins/plugin-checker/.lint4jprefs

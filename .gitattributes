@@ -142,6 +142,21 @@ tvbrowser-plugins/plugin-bbcdataservice/src/main/java/bbcdataservice/BBCDataServ
 tvbrowser-plugins/plugin-bbcdataservice/src/main/java/bbcdataservice/BBCProgrammesParser.java -text
 tvbrowser-plugins/plugin-bbcdataservice/src/main/resources/bbcdataservice/bbcdataservice.properties -text
 tvbrowser-plugins/plugin-bbcdataservice/src/main/resources/bbcdataservice/bbcdataservice_de.properties -text
+tvbrowser-plugins/plugin-blogthis/.classpath -text
+tvbrowser-plugins/plugin-blogthis/.project -text
+tvbrowser-plugins/plugin-blogthis/.settings/org.eclipse.core.resources.prefs -text
+tvbrowser-plugins/plugin-blogthis/.settings/org.eclipse.jdt.core.prefs -text
+tvbrowser-plugins/plugin-blogthis/.settings/org.eclipse.m2e.core.prefs -text
+tvbrowser-plugins/plugin-blogthis/pom.xml -text
+tvbrowser-plugins/plugin-blogthis/src/main/java/blogthisplugin/BlogService.java -text
+tvbrowser-plugins/plugin-blogthis/src/main/java/blogthisplugin/BlogSettings.java -text
+tvbrowser-plugins/plugin-blogthis/src/main/java/blogthisplugin/BlogSettingsTab.java -text
+tvbrowser-plugins/plugin-blogthis/src/main/java/blogthisplugin/BlogThisPlugin.java -text
+tvbrowser-plugins/plugin-blogthis/src/main/resources/blogthisplugin/blogthisplugin.properties -text
+tvbrowser-plugins/plugin-blogthis/src/main/resources/blogthisplugin/blogthisplugin_da.properties -text
+tvbrowser-plugins/plugin-blogthis/src/main/resources/blogthisplugin/blogthisplugin_de.properties -text
+tvbrowser-plugins/plugin-blogthis/src/main/resources/blogthisplugin/blogthisplugin_it.properties -text
+tvbrowser-plugins/plugin-blogthis/src/main/resources/blogthisplugin/blogthisplugin_sv.properties -text
 tvbrowser-plugins/plugin-checker/pom.xml -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-checker/src/main/java/checkerplugin/CheckerPlugin.java -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-checker/src/main/java/checkerplugin/CheckerSettings.java -text
