@@ -166,6 +166,7 @@ tvbrowser-plugins/plugin-notifyosd/.escabaseline
 tvbrowser-plugins/plugin-notifyosd/.project
 tvbrowser-plugins/plugin-notifyosd/.settings
 tvbrowser-plugins/plugin-notifyosd/target
+tvbrowser-plugins/plugin-personahandler/target
 tvbrowser-plugins/plugin-print/target
 tvbrowser-plugins/plugin-programlist/target
 tvbrowser-plugins/plugin-radiotimesdataservice/target
