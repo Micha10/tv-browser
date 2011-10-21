@@ -206,6 +206,7 @@ tvbrowser-plugins/plugin-calendarexport/src/main/resources/calendarexportplugin/
 tvbrowser-plugins/plugin-calendarexport/src/main/resources/calendarexportplugin/utils/utils_de.properties -text
 tvbrowser-plugins/plugin-calendarexport/src/main/resources/calendarexportplugin/utils/utils_it.properties -text
 tvbrowser-plugins/plugin-calendarexport/src/main/resources/calendarexportplugin/utils/utils_sv.properties -text
+tvbrowser-plugins/plugin-calendarexport/src/main/resources/jcom.dll -text
 tvbrowser-plugins/plugin-capture/.classpath -text
 tvbrowser-plugins/plugin-capture/.project -text
 tvbrowser-plugins/plugin-capture/.settings/org.eclipse.core.resources.prefs -text
