@@ -1114,8 +1114,6 @@ tvbrowser-plugins/plugin-schedulesdirectdataservice/src/main/resources/schedules
 tvbrowser-plugins/plugin-sharedchannelautoupdate/pom.xml -text
 tvbrowser-plugins/plugin-sharedchannelautoupdate/src/main/java/sharedchannelautoupdateplugin/SharedChannelAutoUpdatePlugin.java -text
 tvbrowser-plugins/plugin-sharedchannelautoupdate/src/main/java/sharedchannelautoupdateplugin/SharedChannelAutoUpdatePluginSettingTab.java -text
-tvbrowser-plugins/plugin-sharedchannelautoupdate/src/main/java/sharedchannelautoupdateplugin/sharedchannelautoupdateplugin.properties -text
-tvbrowser-plugins/plugin-sharedchannelautoupdate/src/main/java/sharedchannelautoupdateplugin/sharedchannelautoupdateplugin_de.properties -text
 tvbrowser-plugins/plugin-sharedchannelautoupdate/src/main/resources/sharedchannelautoupdateplugin/icons/shared.png -text
 tvbrowser-plugins/plugin-sharedchannelautoupdate/src/main/resources/sharedchannelautoupdateplugin/sharedchannelautoupdateplugin.properties -text
 tvbrowser-plugins/plugin-sharedchannelautoupdate/src/main/resources/sharedchannelautoupdateplugin/sharedchannelautoupdateplugin_de.properties -text
@@ -1127,8 +1125,6 @@ tvbrowser-plugins/plugin-shareddataservice/src/main/java/sharedchanneldataservic
 tvbrowser-plugins/plugin-shareddataservice/src/main/java/sharedchanneldataservice/SharedChannelDataService.java -text
 tvbrowser-plugins/plugin-shareddataservice/src/main/java/sharedchanneldataservice/SharedChannelDataServiceData.java -text
 tvbrowser-plugins/plugin-shareddataservice/src/main/java/sharedchanneldataservice/SharedChannelDataServicePanel.java -text
-tvbrowser-plugins/plugin-shareddataservice/src/main/java/sharedchanneldataservice/sharedchanneldataservice.properties -text
-tvbrowser-plugins/plugin-shareddataservice/src/main/java/sharedchanneldataservice/sharedchanneldataservice_de.properties -text
 tvbrowser-plugins/plugin-shareddataservice/src/main/resources/sharedchanneldataservice/icons/shared.png -text
 tvbrowser-plugins/plugin-shareddataservice/src/main/resources/sharedchanneldataservice/sharedchanneldataservice.properties -text
 tvbrowser-plugins/plugin-shareddataservice/src/main/resources/sharedchanneldataservice/sharedchanneldataservice_de.properties -text
