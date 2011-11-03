@@ -1900,7 +1900,6 @@ tvbrowser/lib/bsh-2.0b4.jar -text
 tvbrowser/lib/commons-codec-1.5.jar -text
 tvbrowser/lib/commons-lang-2.6.jar -text
 tvbrowser/lib/commons-net-3.0.1.jar -text
-tvbrowser/lib/guava-r09.jar -text
 tvbrowser/lib/htmlparser-1.6.jar -text
 tvbrowser/lib/jRegistryKey-1.4.5.jar -text
 tvbrowser/lib/jgoodies-common-1.2.1.jar -text
@@ -1991,6 +1990,9 @@ tvbrowser/src/imgs/tvbrowser48.png -text
 tvbrowser/src/newsplugin/newsplugin_da.properties -text
 tvbrowser/src/newsplugin/newsplugin_it.properties -text
 tvbrowser/src/newsplugin/newsplugin_sk.properties -text
+tvbrowser/src/personatimeswitcher/PersonaTimeSwitcher.java -text
+tvbrowser/src/personatimeswitcher/personatimeswitcher.properties -text
+tvbrowser/src/personatimeswitcher/personatimeswitcher_de.properties -text
 tvbrowser/src/primarydatamanager/primarydataservice/util/InfoCategoryParser.java -text
 tvbrowser/src/primarydatamanager/primarydataservice/util/category_arts.properties -text svneol=unset#text/plain
 tvbrowser/src/primarydatamanager/primarydataservice/util/category_childrens.properties -text
