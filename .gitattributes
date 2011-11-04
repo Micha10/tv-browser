@@ -1999,9 +1999,6 @@ tvbrowser/src/imgs/tvbrowser48.png -text
 tvbrowser/src/newsplugin/newsplugin_da.properties -text
 tvbrowser/src/newsplugin/newsplugin_it.properties -text
 tvbrowser/src/newsplugin/newsplugin_sk.properties -text
-tvbrowser/src/personatimeswitcher/PersonaTimeSwitcher.java -text
-tvbrowser/src/personatimeswitcher/personatimeswitcher.properties -text
-tvbrowser/src/personatimeswitcher/personatimeswitcher_de.properties -text
 tvbrowser/src/primarydatamanager/primarydataservice/util/InfoCategoryParser.java -text
 tvbrowser/src/primarydatamanager/primarydataservice/util/category_arts.properties -text svneol=unset#text/plain
 tvbrowser/src/primarydatamanager/primarydataservice/util/category_childrens.properties -text
