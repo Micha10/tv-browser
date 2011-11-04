@@ -953,6 +953,15 @@ tvbrowser-plugins/plugin-personahandler/src/main/java/personahandler/PersonaHand
 tvbrowser-plugins/plugin-personahandler/src/main/java/personahandler/PersonaHandlerPanel.java -text
 tvbrowser-plugins/plugin-personahandler/src/main/resources/personahandler/personahandler.properties -text
 tvbrowser-plugins/plugin-personahandler/src/main/resources/personahandler/personahandler_de.properties -text
+tvbrowser-plugins/plugin-personatimeswitcher/.classpath -text
+tvbrowser-plugins/plugin-personatimeswitcher/.project -text
+tvbrowser-plugins/plugin-personatimeswitcher/.settings/org.eclipse.core.resources.prefs -text
+tvbrowser-plugins/plugin-personatimeswitcher/.settings/org.eclipse.jdt.core.prefs -text
+tvbrowser-plugins/plugin-personatimeswitcher/.settings/org.eclipse.m2e.core.prefs -text
+tvbrowser-plugins/plugin-personatimeswitcher/pom.xml -text
+tvbrowser-plugins/plugin-personatimeswitcher/src/main/java/personatimeswitcher/PersonaTimeSwitcher.java -text
+tvbrowser-plugins/plugin-personatimeswitcher/src/main/resources/personatimeswitcher/personatimeswitcher.properties -text
+tvbrowser-plugins/plugin-personatimeswitcher/src/main/resources/personatimeswitcher/personatimeswitcher_de.properties -text
 tvbrowser-plugins/plugin-print/.classpath -text
 tvbrowser-plugins/plugin-print/.project -text
 tvbrowser-plugins/plugin-print/.settings/org.eclipse.core.resources.prefs -text
