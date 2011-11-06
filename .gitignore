@@ -111,6 +111,7 @@ tvbrowser-plugins/plugin-imdb/.pmd
 tvbrowser-plugins/plugin-imdb/.project
 tvbrowser-plugins/plugin-imdb/.settings
 tvbrowser-plugins/plugin-imdb/target
+tvbrowser-plugins/plugin-jumptoprogram/target
 tvbrowser-plugins/plugin-knotify/target
 tvbrowser-plugins/plugin-listview/target
 tvbrowser-plugins/plugin-logging/.classpath

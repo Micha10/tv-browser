@@ -694,6 +694,15 @@ tvbrowser-plugins/plugin-imdb/src/main/resources/imdbplugin/imdbplugin.propertie
 tvbrowser-plugins/plugin-imdb/src/main/resources/imdbplugin/imdbplugin_da.properties -text
 tvbrowser-plugins/plugin-imdb/src/main/resources/imdbplugin/imdbplugin_de.properties -text
 tvbrowser-plugins/plugin-imdb/src/main/resources/imdbplugin/rating.png -text
+tvbrowser-plugins/plugin-jumptoprogram/.classpath -text
+tvbrowser-plugins/plugin-jumptoprogram/.project -text
+tvbrowser-plugins/plugin-jumptoprogram/.settings/org.eclipse.core.resources.prefs -text
+tvbrowser-plugins/plugin-jumptoprogram/.settings/org.eclipse.jdt.core.prefs -text
+tvbrowser-plugins/plugin-jumptoprogram/.settings/org.eclipse.m2e.core.prefs -text
+tvbrowser-plugins/plugin-jumptoprogram/pom.xml -text
+tvbrowser-plugins/plugin-jumptoprogram/src/main/java/jumptoprogramplugin/JumpToProgramPlugin.java -text
+tvbrowser-plugins/plugin-jumptoprogram/src/main/resources/jumptoprogramplugin/jumptoprogramplugin.properties -text
+tvbrowser-plugins/plugin-jumptoprogram/src/main/resources/jumptoprogramplugin/jumptoprogramplugin_de.properties -text
 tvbrowser-plugins/plugin-knotify/.classpath -text
 tvbrowser-plugins/plugin-knotify/.project -text
 tvbrowser-plugins/plugin-knotify/.settings/org.eclipse.core.resources.prefs -text
