@@ -277,6 +277,8 @@ tvbrowser-plugins/plugin-capture/src/main/java/captureplugin/drivers/topfield/co
 tvbrowser-plugins/plugin-capture/src/main/java/captureplugin/drivers/topfield/connector/TopfieldServiceException.java -text
 tvbrowser-plugins/plugin-capture/src/main/java/captureplugin/drivers/topfield/connector/TopfieldServiceType.java -text
 tvbrowser-plugins/plugin-capture/src/main/java/captureplugin/drivers/topfield/connector/TopfieldTunerException.java -text
+tvbrowser-plugins/plugin-capture/src/main/java/captureplugin/drivers/topfield/connector/connector.properties -text
+tvbrowser-plugins/plugin-capture/src/main/java/captureplugin/drivers/topfield/connector/connector_de.properties -text
 tvbrowser-plugins/plugin-capture/src/main/java/captureplugin/drivers/utils/IDGenerator.java -text
 tvbrowser-plugins/plugin-capture/src/main/java/captureplugin/drivers/utils/ProgramTime.java -text
 tvbrowser-plugins/plugin-capture/src/main/java/captureplugin/drivers/utils/ProgramTimeDialog.java -text
