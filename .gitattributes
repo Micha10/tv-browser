@@ -267,6 +267,7 @@ tvbrowser-plugins/plugin-capture/src/main/java/captureplugin/drivers/topfield/To
 tvbrowser-plugins/plugin-capture/src/main/java/captureplugin/drivers/topfield/TopfieldConfigurationDialog.java -text
 tvbrowser-plugins/plugin-capture/src/main/java/captureplugin/drivers/topfield/TopfieldDevice.java -text
 tvbrowser-plugins/plugin-capture/src/main/java/captureplugin/drivers/topfield/TopfieldDriver.java -text
+tvbrowser-plugins/plugin-capture/src/main/java/captureplugin/drivers/topfield/TopfieldProgramTimeComponent.java -text
 tvbrowser-plugins/plugin-capture/src/main/java/captureplugin/drivers/topfield/TopfieldRollTableCellEditor.java -text
 tvbrowser-plugins/plugin-capture/src/main/java/captureplugin/drivers/topfield/TopfieldServiceInfo.java -text
 tvbrowser-plugins/plugin-capture/src/main/java/captureplugin/drivers/topfield/TopfieldTimerEntry.java -text
