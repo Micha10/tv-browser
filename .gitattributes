@@ -930,6 +930,7 @@ tvbrowser-plugins/plugin-news/.classpath -text
 tvbrowser-plugins/plugin-news/.project -text
 tvbrowser-plugins/plugin-news/.settings/org.eclipse.core.resources.prefs -text
 tvbrowser-plugins/plugin-news/.settings/org.eclipse.jdt.core.prefs -text
+tvbrowser-plugins/plugin-news/.settings/org.eclipse.m2e.core.prefs -text
 tvbrowser-plugins/plugin-news/pom.xml -text
 tvbrowser-plugins/plugin-news/src/main/java/newsplugin/News.java -text
 tvbrowser-plugins/plugin-news/src/main/java/newsplugin/NewsDialog.java -text
