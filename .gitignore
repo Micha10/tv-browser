@@ -5,6 +5,7 @@ androidtvbrowser/.settings
 androidtvbrowser/assets
 androidtvbrowser/bin
 androidtvbrowser/local.properties
+primarydatamanager/tvdatastarterkit/target
 tvbrowser-plugins/.classpath
 tvbrowser-plugins/.pmd
 tvbrowser-plugins/.project

@@ -77,6 +77,11 @@ pdatvbrowser/languages/English.txt -text
 pdatvbrowser/languages/German.txt -text
 pdatvbrowser/languages/Norsk.txt -text
 primarydatamanager/pom.xml -text
+primarydatamanager/tvdatastarterkit/.classpath -text
+primarydatamanager/tvdatastarterkit/.project -text
+primarydatamanager/tvdatastarterkit/build.properties -text
+primarydatamanager/tvdatastarterkit/build.xml -text
+primarydatamanager/tvdatastarterkit/pom.xml -text
 tv-browserm/tv-browserm/1Bereinigen.bat -text
 tv-browserm/tv-browserm/2maddebuild_src -text
 tv-browserm/tv-browserm/3maddebuild_bin -text
