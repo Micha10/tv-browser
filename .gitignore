@@ -371,8 +371,4 @@ tvbrowser/runtime
 tvbrowser/src/primarydatamanager/primarydataservice/secret
 tvbrowser/test/classes
 tvbrowser/testdata
-tvbrowser/tvdatakit/.classpath
-tvbrowser/tvdatakit/.escabaseline
-tvbrowser/tvdatakit/.project
-tvbrowser/tvdatakit/.settings
 tvbrowser/unpacked

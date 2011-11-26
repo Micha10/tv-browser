@@ -2142,17 +2142,6 @@ tvbrowser/src/imgs/tvbrowser128.png -text
 tvbrowser/src/imgs/tvbrowser16.png -text
 tvbrowser/src/imgs/tvbrowser32.png -text
 tvbrowser/src/imgs/tvbrowser48.png -text
-tvbrowser/src/primarydatamanager/primarydataservice/util/InfoCategoryParser.java -text
-tvbrowser/src/primarydatamanager/primarydataservice/util/category_arts.properties -text svneol=unset#text/plain
-tvbrowser/src/primarydatamanager/primarydataservice/util/category_childrens.properties -text
-tvbrowser/src/primarydatamanager/primarydataservice/util/category_documentary.properties -text svneol=unset#text/plain
-tvbrowser/src/primarydatamanager/primarydataservice/util/category_magazine.properties -text svneol=unset#text/plain
-tvbrowser/src/primarydatamanager/primarydataservice/util/category_movies.properties -text svneol=unset#text/plain
-tvbrowser/src/primarydatamanager/primarydataservice/util/category_news.properties -text svneol=unset#text/plain
-tvbrowser/src/primarydatamanager/primarydataservice/util/category_others.properties -text svneol=unset#text/plain
-tvbrowser/src/primarydatamanager/primarydataservice/util/category_series.properties -text svneol=unset#text/plain
-tvbrowser/src/primarydatamanager/primarydataservice/util/category_show.properties -text svneol=unset#text/plain
-tvbrowser/src/primarydatamanager/primarydataservice/util/category_sports.properties -text svneol=unset#text/plain
 tvbrowser/src/tvbrowser/core/DuplicateChannelNameCounter.java -text
 tvbrowser/src/tvbrowser/core/contextmenu/LeaveFullScreenMenuItem.java -text
 tvbrowser/src/tvbrowser/core/contextmenu/SelectProgramContextMenuItem.java -text
@@ -2333,12 +2322,6 @@ tvbrowser/src/tvbrowser/ui/update/update_it.properties -text
 tvbrowser/src/tvbrowser/ui/update/update_sk.properties -text
 tvbrowser/src/tvbrowser/ui/waiting/dlgs/dlgs_da.properties -text
 tvbrowser/src/tvbrowser/ui/waiting/dlgs/dlgs_sv.properties -text
-tvbrowser/src/tvbrowserdataservice/TvBrowserDataServiceSettings.java -text
-tvbrowser/src/tvbrowserdataservice/file/file_da.properties -text
-tvbrowser/src/tvbrowserdataservice/file/file_it.properties -text
-tvbrowser/src/tvbrowserdataservice/tvbrowserdataservice_da.properties -text
-tvbrowser/src/tvbrowserdataservice/tvbrowserdataservice_it.properties -text
-tvbrowser/src/tvbrowserdataservice/tvbrowserdataservice_sk.properties -text
 tvbrowser/src/tvdataservice/PictureSettingsIf.java -text
 tvbrowser/src/util/browserlauncher/browserlauncher_da.properties -text
 tvbrowser/src/util/browserlauncher/browserlauncher_it.properties -text
@@ -2426,15 +2409,7 @@ tvbrowser/src/util/ui/ui_da.properties -text
 tvbrowser/src/util/ui/ui_it.properties -text
 tvbrowser/src/util/ui/ui_sk.properties -text
 tvbrowser/test/src/devplugin/DateTest.java -text
-tvbrowser/test/src/primarydatamanager/DayProgramMapperTest.java -text
-tvbrowser/test/src/primarydatamanager/PrimaryDataManagerTest.java -text
-tvbrowser/test/src/primarydatamanager/primarydataservice/util/InfoCategoryParserTest.java -text svneol=unset#text/plain
-tvbrowser/test/src/primarydatamanager/primarydataservice/util/html2txt/Html2TxtConverterTest.java -text svneol=unset#text/plain
 tvbrowser/test/src/tvbrowser/extras/favoritesplugin/core/ActorStringSearcherTest.java -text
-tvbrowser/test/src/tvbrowserdataservice/DayProgramFileTest.java -text
-tvbrowser/test/src/tvbrowserdataservice/SummaryFileTest.java -text
-tvbrowser/test/src/tvbrowserdataservice/file/ChannelListTest.java -text
-tvbrowser/test/src/tvbrowserdataservice/file/test_channellist.txt -text
 tvbrowser/test/src/util/io/IniFileReaderTest.java -text
 tvbrowser/test/src/util/io/index.theme -text
 tvbrowser/test/src/util/misc/TextLineBreakerTest.java -text
@@ -2443,9 +2418,4 @@ tvbrowser/test/src/util/settings/StringArrayProperties.properties -text
 tvbrowser/test/src/util/settings/StringArrayPropertiesTest.java -text
 tvbrowser/test/src/util/ui/html/HTMLTextHelperTest.java -text
 tvbrowser/themepacks/themepack.zip -text
-tvbrowser/tvdatakit/build.xml -text
-tvbrowser/tvdatakit/config/MirrorUpdater.ini -text
-tvbrowser/tvdatakit/input/images/test.jpg -text
-tvbrowser/tvdatakit/java/XmlTvDataHandler.java -text
-tvbrowser/tvdatakit/lib/xercesImpl.jar -text
 tvbrowser/txt/COPYRIGHT.txt -text
