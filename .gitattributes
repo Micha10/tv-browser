@@ -2142,9 +2142,6 @@ tvbrowser/src/imgs/tvbrowser128.png -text
 tvbrowser/src/imgs/tvbrowser16.png -text
 tvbrowser/src/imgs/tvbrowser32.png -text
 tvbrowser/src/imgs/tvbrowser48.png -text
-tvbrowser/src/newsplugin/newsplugin_da.properties -text
-tvbrowser/src/newsplugin/newsplugin_it.properties -text
-tvbrowser/src/newsplugin/newsplugin_sk.properties -text
 tvbrowser/src/primarydatamanager/primarydataservice/util/InfoCategoryParser.java -text
 tvbrowser/src/primarydatamanager/primarydataservice/util/category_arts.properties -text svneol=unset#text/plain
 tvbrowser/src/primarydatamanager/primarydataservice/util/category_childrens.properties -text
