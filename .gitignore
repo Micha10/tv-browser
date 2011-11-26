@@ -368,7 +368,6 @@ tvbrowser/lib/xercesImpl.jar
 tvbrowser/public
 tvbrowser/reports
 tvbrowser/runtime
-tvbrowser/src/primarydatamanager/primarydataservice/secret
 tvbrowser/test/classes
 tvbrowser/testdata
 tvbrowser/unpacked
