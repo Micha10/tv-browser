@@ -813,6 +813,7 @@ tvbrowser-plugins/plugin-listview/src/main/java/listviewplugin/ListTable.java -t
 tvbrowser-plugins/plugin-listview/src/main/java/listviewplugin/ListTableCellRenderer.java -text
 tvbrowser-plugins/plugin-listview/src/main/java/listviewplugin/ListTableModel.java -text
 tvbrowser-plugins/plugin-listview/src/main/java/listviewplugin/ListViewDialog.java -text
+tvbrowser-plugins/plugin-listview/src/main/java/listviewplugin/ListViewPanel.java -text
 tvbrowser-plugins/plugin-listview/src/main/java/listviewplugin/ListViewPlugin.java -text
 tvbrowser-plugins/plugin-listview/src/main/java/listviewplugin/ListViewSettings.java -text
 tvbrowser-plugins/plugin-listview/src/main/resources/listviewplugin/ChangeLog.txt -text
