@@ -2201,6 +2201,7 @@ tvbrowser/src/tvbrowser/extras/favoritesplugin/core/core_da.properties -text
 tvbrowser/src/tvbrowser/extras/favoritesplugin/core/core_it.properties -text
 tvbrowser/src/tvbrowser/extras/favoritesplugin/core/core_sk.properties -text
 tvbrowser/src/tvbrowser/extras/favoritesplugin/core/core_sv.properties -text
+tvbrowser/src/tvbrowser/extras/favoritesplugin/dlgs/ManageFavoritesPanel.java -text
 tvbrowser/src/tvbrowser/extras/favoritesplugin/dlgs/dlgs_da.properties -text
 tvbrowser/src/tvbrowser/extras/favoritesplugin/dlgs/dlgs_it.properties -text
 tvbrowser/src/tvbrowser/extras/favoritesplugin/dlgs/dlgs_sk.properties -text
