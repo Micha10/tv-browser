@@ -2218,6 +2218,7 @@ tvbrowser/src/tvbrowser/extras/programinfo/programinfo_da.properties -text
 tvbrowser/src/tvbrowser/extras/programinfo/programinfo_it.properties -text
 tvbrowser/src/tvbrowser/extras/programinfo/programinfo_sk.properties -text
 tvbrowser/src/tvbrowser/extras/reminderplugin/ReminderContent.java -text
+tvbrowser/src/tvbrowser/extras/reminderplugin/ReminderListPanel.java -text
 tvbrowser/src/tvbrowser/extras/reminderplugin/ReminderPluginProxy.java -text
 tvbrowser/src/tvbrowser/extras/reminderplugin/reminderplugin_da.properties -text
 tvbrowser/src/tvbrowser/extras/reminderplugin/reminderplugin_it.properties -text
