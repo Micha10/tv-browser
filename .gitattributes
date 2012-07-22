@@ -1173,6 +1173,7 @@ tvbrowser-plugins/plugin-programlist/.settings/org.eclipse.core.resources.prefs 
 tvbrowser-plugins/plugin-programlist/.settings/org.eclipse.jdt.core.prefs -text
 tvbrowser-plugins/plugin-programlist/.settings/org.eclipse.m2e.core.prefs -text
 tvbrowser-plugins/plugin-programlist/pom.xml -text
+tvbrowser-plugins/plugin-programlist/src/main/java/programlistplugin/ProgramListPanel.java -text
 tvbrowser-plugins/plugin-programlist/src/main/java/programlistplugin/ProgramListPlugin.java -text
 tvbrowser-plugins/plugin-programlist/src/main/java/programlistplugin/ProgramListSettings.java -text
 tvbrowser-plugins/plugin-programlist/src/main/resources/programlistplugin/programlistplugin.properties -text
