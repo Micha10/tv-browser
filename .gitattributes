@@ -1783,6 +1783,7 @@ tvbrowser/images/themes/CrystalClear/16x16/actions/mail-message-new.png -text
 tvbrowser/images/themes/CrystalClear/16x16/actions/media-playback-start.png -text
 tvbrowser/images/themes/CrystalClear/16x16/actions/media-seek-forward.png -text
 tvbrowser/images/themes/CrystalClear/16x16/actions/process-stop.png -text
+tvbrowser/images/themes/CrystalClear/16x16/actions/reminder-stop.png -text
 tvbrowser/images/themes/CrystalClear/16x16/actions/scroll-to-channel-list.png -text
 tvbrowser/images/themes/CrystalClear/16x16/actions/scroll-to-channel.png -text
 tvbrowser/images/themes/CrystalClear/16x16/actions/scroll-to-now.png -text
@@ -1861,6 +1862,7 @@ tvbrowser/images/themes/CrystalClear/22x22/actions/mail-message-new.png -text
 tvbrowser/images/themes/CrystalClear/22x22/actions/media-playback-start.png -text
 tvbrowser/images/themes/CrystalClear/22x22/actions/media-seek-forward.png -text
 tvbrowser/images/themes/CrystalClear/22x22/actions/process-stop.png -text
+tvbrowser/images/themes/CrystalClear/22x22/actions/reminder-stop.png -text
 tvbrowser/images/themes/CrystalClear/22x22/actions/scroll-to-channel-list.png -text
 tvbrowser/images/themes/CrystalClear/22x22/actions/scroll-to-channel.png -text
 tvbrowser/images/themes/CrystalClear/22x22/actions/scroll-to-now.png -text
@@ -1935,6 +1937,7 @@ tvbrowser/images/themes/tango/16x16/actions/mail-message-new.png -text
 tvbrowser/images/themes/tango/16x16/actions/media-playback-start.png -text
 tvbrowser/images/themes/tango/16x16/actions/media-seek-forward.png -text
 tvbrowser/images/themes/tango/16x16/actions/process-stop.png -text
+tvbrowser/images/themes/tango/16x16/actions/reminder-stop.png -text
 tvbrowser/images/themes/tango/16x16/actions/scroll-to-channel-list.png -text
 tvbrowser/images/themes/tango/16x16/actions/scroll-to-channel.png -text
 tvbrowser/images/themes/tango/16x16/actions/scroll-to-now.png -text
@@ -2011,6 +2014,7 @@ tvbrowser/images/themes/tango/22x22/actions/mail-message-new.png -text
 tvbrowser/images/themes/tango/22x22/actions/media-playback-start.png -text
 tvbrowser/images/themes/tango/22x22/actions/media-seek-forward.png -text
 tvbrowser/images/themes/tango/22x22/actions/process-stop.png -text
+tvbrowser/images/themes/tango/22x22/actions/reminder-stop.png -text
 tvbrowser/images/themes/tango/22x22/actions/scroll-to-channel-list.png -text
 tvbrowser/images/themes/tango/22x22/actions/scroll-to-channel.png -text
 tvbrowser/images/themes/tango/22x22/actions/scroll-to-now.png -text
