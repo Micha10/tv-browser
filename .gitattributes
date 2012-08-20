@@ -1260,6 +1260,7 @@ tvbrowser-plugins/plugin-simplemarker/.settings/org.eclipse.jdt.core.prefs -text
 tvbrowser-plugins/plugin-simplemarker/.settings/org.eclipse.m2e.core.prefs -text
 tvbrowser-plugins/plugin-simplemarker/pom.xml -text
 tvbrowser-plugins/plugin-simplemarker/src/main/java/simplemarkerplugin/GroupUnmarkAction.java -text
+tvbrowser-plugins/plugin-simplemarker/src/main/java/simplemarkerplugin/ManageDialog.java -text
 tvbrowser-plugins/plugin-simplemarker/src/main/java/simplemarkerplugin/ManagePanel.java -text
 tvbrowser-plugins/plugin-simplemarker/src/main/java/simplemarkerplugin/MarkList.java -text
 tvbrowser-plugins/plugin-simplemarker/src/main/java/simplemarkerplugin/MarkListFilterComponent.java -text
