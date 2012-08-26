@@ -1380,6 +1380,7 @@ tvbrowser-plugins/plugin-timeline/src/main/java/timelineplugin/ProgramScrollPane
 tvbrowser-plugins/plugin-timeline/src/main/java/timelineplugin/ProgramToolTip.java -text
 tvbrowser-plugins/plugin-timeline/src/main/java/timelineplugin/TimeHeader.java -text
 tvbrowser-plugins/plugin-timeline/src/main/java/timelineplugin/TimelineDialog.java -text
+tvbrowser-plugins/plugin-timeline/src/main/java/timelineplugin/TimelinePanel.java -text
 tvbrowser-plugins/plugin-timeline/src/main/java/timelineplugin/TimelinePlugin.java -text
 tvbrowser-plugins/plugin-timeline/src/main/java/timelineplugin/TimelinePluginSettingsTab.java -text
 tvbrowser-plugins/plugin-timeline/src/main/java/timelineplugin/TimelineSettings.java -text svneol=unset#text/plain
