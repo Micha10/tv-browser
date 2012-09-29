@@ -2290,6 +2290,7 @@ tvbrowser/src/tvbrowser/ui/mainframe/searchfield/searchfield_sk.properties -text
 tvbrowser/src/tvbrowser/ui/mainframe/searchfield/searchfield_sv.properties -text
 tvbrowser/src/tvbrowser/ui/mainframe/toolbar/toolbar_da.properties -text
 tvbrowser/src/tvbrowser/ui/mainframe/toolbar/toolbar_sk.properties -text
+tvbrowser/src/tvbrowser/ui/pluginview/PluginViewWrapper.java -text
 tvbrowser/src/tvbrowser/ui/pluginview/contextmenu/PluginBasedPluginContextMenu.java -text
 tvbrowser/src/tvbrowser/ui/pluginview/contextmenu/ProxyBasedPluginContextMenu.java -text
 tvbrowser/src/tvbrowser/ui/pluginview/contextmenu/contextmenu_da.properties -text
