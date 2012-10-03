@@ -2100,6 +2100,7 @@ tvbrowser/personas/ecb70d5c-f606-4052-9059-5c501842d6c3/icon -text
 tvbrowser/personas/ecb70d5c-f606-4052-9059-5c501842d6c3/persona.prop -text
 tvbrowser/src/devplugin/AfterDataUpdateInfoPanel.java -text
 tvbrowser/src/devplugin/CancelableSettingsTab.java -text
+tvbrowser/src/devplugin/ChannelFilter.java -text
 tvbrowser/src/devplugin/FilterManager.java -text
 tvbrowser/src/devplugin/PluginCenterPanel.java -text
 tvbrowser/src/devplugin/PluginCenterPanelWrapper.java -text
