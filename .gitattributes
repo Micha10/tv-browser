@@ -1565,8 +1565,6 @@ tvbrowser-plugins/plugin-unityglobalmenusupport/.settings/org.eclipse.jdt.core.p
 tvbrowser-plugins/plugin-unityglobalmenusupport/.settings/org.eclipse.m2e.core.prefs -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-unityglobalmenusupport/pom.xml -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-unityglobalmenusupport/src/main/java/tvbunityglobalmenusupport/TvbUnityGlobalMenuSupport.java -text svneol=unset#text/plain
-tvbrowser-plugins/plugin-unityglobalmenusupport/target/classes/org/plugin/unityglobalmenusupport/App.class -text
-tvbrowser-plugins/plugin-unityglobalmenusupport/target/test-classes/org/plugin/unityglobalmenusupport/AppTest.class -text
 tvbrowser-plugins/plugin-url4program/pom.xml -text
 tvbrowser-plugins/plugin-url4program/src/main/java/url4programplugin/URL4ProgramPlugin.java -text
 tvbrowser-plugins/plugin-url4program/src/main/java/url4programplugin/UrlListEntry.java -text
