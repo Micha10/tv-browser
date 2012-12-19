@@ -2118,6 +2118,7 @@ tvbrowser/src/devplugin/ProgramReceiveIf.java -text
 tvbrowser/src/devplugin/ProgramReceiveTarget.java -text
 tvbrowser/src/devplugin/devplugin_da.properties -text
 tvbrowser/src/devplugin/devplugin_en_US.properties -text
+tvbrowser/src/devplugin/devplugin_hr.properties -text svneol=unset#text/plain
 tvbrowser/src/devplugin/devplugin_it.properties -text
 tvbrowser/src/devplugin/devplugin_sk.properties -text
 tvbrowser/src/imgs/Filter16.png -text
@@ -2172,10 +2173,12 @@ tvbrowser/src/tvbrowser/core/DuplicateChannelNameCounter.java -text
 tvbrowser/src/tvbrowser/core/contextmenu/LeaveFullScreenMenuItem.java -text
 tvbrowser/src/tvbrowser/core/contextmenu/SelectProgramContextMenuItem.java -text
 tvbrowser/src/tvbrowser/core/contextmenu/contextmenu_da.properties -text
+tvbrowser/src/tvbrowser/core/contextmenu/contextmenu_hr.properties -text svneol=unset#text/plain
 tvbrowser/src/tvbrowser/core/contextmenu/contextmenu_it.properties -text
 tvbrowser/src/tvbrowser/core/contextmenu/contextmenu_sk.properties -text
 tvbrowser/src/tvbrowser/core/contextmenu/contextmenu_sv.properties -text
 tvbrowser/src/tvbrowser/core/core_da.properties -text
+tvbrowser/src/tvbrowser/core/core_hr.properties -text svneol=unset#text/plain
 tvbrowser/src/tvbrowser/core/core_it.properties -text
 tvbrowser/src/tvbrowser/core/core_sk.properties -text
 tvbrowser/src/tvbrowser/core/filters/FilterManagerImpl.java -text
@@ -2188,51 +2191,63 @@ tvbrowser/src/tvbrowser/core/filters/filtercomponents/ProgramTypeFilterComponent
 tvbrowser/src/tvbrowser/core/filters/filtercomponents/ReminderFilterComponent.java -text
 tvbrowser/src/tvbrowser/core/filters/filtercomponents/SingleTitleFilterComponent.java -text
 tvbrowser/src/tvbrowser/core/filters/filtercomponents/filtercomponents_da.properties -text
+tvbrowser/src/tvbrowser/core/filters/filtercomponents/filtercomponents_hr.properties -text svneol=unset#text/plain
 tvbrowser/src/tvbrowser/core/filters/filtercomponents/filtercomponents_it.properties -text
 tvbrowser/src/tvbrowser/core/filters/filtercomponents/filtercomponents_sk.properties -text
 tvbrowser/src/tvbrowser/core/filters/filters_da.properties -text
+tvbrowser/src/tvbrowser/core/filters/filters_hr.properties -text svneol=unset#text/plain
 tvbrowser/src/tvbrowser/core/filters/filters_sk.properties -text
 tvbrowser/src/tvbrowser/core/plugin/ButtonActionIf.java -text
 tvbrowser/src/tvbrowser/core/plugin/plugin_da.properties -text
+tvbrowser/src/tvbrowser/core/plugin/plugin_hr.properties -text svneol=unset#text/plain
 tvbrowser/src/tvbrowser/core/plugin/plugin_sk.properties -text
 tvbrowser/src/tvbrowser/core/plugin/programformating/GlobalPluginProgramFormating.java -text
 tvbrowser/src/tvbrowser/core/plugin/programformating/GlobalPluginProgramFormatingManager.java -text
 tvbrowser/src/tvbrowser/core/plugin/programformating/programformating.properties -text
 tvbrowser/src/tvbrowser/core/plugin/programformating/programformating_da.properties -text
 tvbrowser/src/tvbrowser/core/plugin/programformating/programformating_de.properties -text
+tvbrowser/src/tvbrowser/core/plugin/programformating/programformating_hr.properties -text svneol=unset#text/plain
 tvbrowser/src/tvbrowser/core/plugin/programformating/programformating_it.properties -text
 tvbrowser/src/tvbrowser/core/plugin/programformating/programformating_sk.properties -text
 tvbrowser/src/tvbrowser/core/plugin/programformating/programformating_sv.properties -text
 tvbrowser/src/tvbrowser/core/search/booleansearch/OperandMatcher.java -text
 tvbrowser/src/tvbrowser/core/search/booleansearch/booleansearch_da.properties -text
+tvbrowser/src/tvbrowser/core/search/booleansearch/booleansearch_hr.properties -text svneol=unset#text/plain
 tvbrowser/src/tvbrowser/core/search/booleansearch/booleansearch_sk.properties -text
+tvbrowser/src/tvbrowser/core/search/regexsearch/regexsearch_hr.properties -text svneol=unset#text/plain
 tvbrowser/src/tvbrowser/core/settings/DeferredFontProperty.java -text
 tvbrowser/src/tvbrowser/core/settings/JGoodiesThemeProperty.java -text
 tvbrowser/src/tvbrowser/core/tvdataservice/tvdataservice_da.properties -text
+tvbrowser/src/tvbrowser/core/tvdataservice/tvdataservice_hr.properties -text svneol=unset#text/plain
 tvbrowser/src/tvbrowser/core/tvdataservice/tvdataservice_sk.properties -text
 tvbrowser/src/tvbrowser/extras/common/AbstractInternalPluginProxy.java -text
 tvbrowser/src/tvbrowser/extras/common/DayListCellRenderer.java -text
 tvbrowser/src/tvbrowser/extras/common/common.properties -text
 tvbrowser/src/tvbrowser/extras/common/common_da.properties -text
 tvbrowser/src/tvbrowser/extras/common/common_de.properties -text
+tvbrowser/src/tvbrowser/extras/common/common_hr.properties -text svneol=unset#text/plain
 tvbrowser/src/tvbrowser/extras/common/common_it.properties -text
 tvbrowser/src/tvbrowser/extras/common/common_sk.properties -text
 tvbrowser/src/tvbrowser/extras/common/common_sv.properties -text
 tvbrowser/src/tvbrowser/extras/favoritesplugin/ContextMenuProvider.java -text
 tvbrowser/src/tvbrowser/extras/favoritesplugin/core/ActorSearcher.java -text
 tvbrowser/src/tvbrowser/extras/favoritesplugin/core/core_da.properties -text
+tvbrowser/src/tvbrowser/extras/favoritesplugin/core/core_hr.properties -text svneol=unset#text/plain
 tvbrowser/src/tvbrowser/extras/favoritesplugin/core/core_it.properties -text
 tvbrowser/src/tvbrowser/extras/favoritesplugin/core/core_sk.properties -text
 tvbrowser/src/tvbrowser/extras/favoritesplugin/core/core_sv.properties -text
 tvbrowser/src/tvbrowser/extras/favoritesplugin/dlgs/ManageFavoritesPanel.java -text
 tvbrowser/src/tvbrowser/extras/favoritesplugin/dlgs/dlgs_da.properties -text
+tvbrowser/src/tvbrowser/extras/favoritesplugin/dlgs/dlgs_hr.properties -text svneol=unset#text/plain
 tvbrowser/src/tvbrowser/extras/favoritesplugin/dlgs/dlgs_it.properties -text
 tvbrowser/src/tvbrowser/extras/favoritesplugin/dlgs/dlgs_sk.properties -text
 tvbrowser/src/tvbrowser/extras/favoritesplugin/favoritesplugin_da.properties -text
+tvbrowser/src/tvbrowser/extras/favoritesplugin/favoritesplugin_hr.properties -text svneol=unset#text/plain
 tvbrowser/src/tvbrowser/extras/favoritesplugin/favoritesplugin_sk.properties -text
 tvbrowser/src/tvbrowser/extras/favoritesplugin/wizards/AbstractWizardStep.java -text
 tvbrowser/src/tvbrowser/extras/favoritesplugin/wizards/RenameWizardStep.java -text
 tvbrowser/src/tvbrowser/extras/favoritesplugin/wizards/wizards_da.properties -text
+tvbrowser/src/tvbrowser/extras/favoritesplugin/wizards/wizards_hr.properties -text svneol=unset#text/plain
 tvbrowser/src/tvbrowser/extras/favoritesplugin/wizards/wizards_it.properties -text
 tvbrowser/src/tvbrowser/extras/favoritesplugin/wizards/wizards_sk.properties -text
 tvbrowser/src/tvbrowser/extras/favoritesplugin/wizards/wizards_sv.properties -text
@@ -2240,33 +2255,40 @@ tvbrowser/src/tvbrowser/extras/programinfo/ProgramInfoProxy.java -text
 tvbrowser/src/tvbrowser/extras/programinfo/ProgramInfoSettings.java -text svneol=unset#text/plain
 tvbrowser/src/tvbrowser/extras/programinfo/ProgramInfoToolBar.java -text
 tvbrowser/src/tvbrowser/extras/programinfo/programinfo_da.properties -text
+tvbrowser/src/tvbrowser/extras/programinfo/programinfo_hr.properties -text svneol=unset#text/plain
 tvbrowser/src/tvbrowser/extras/programinfo/programinfo_it.properties -text
 tvbrowser/src/tvbrowser/extras/programinfo/programinfo_sk.properties -text
 tvbrowser/src/tvbrowser/extras/reminderplugin/ReminderContent.java -text
 tvbrowser/src/tvbrowser/extras/reminderplugin/ReminderListPanel.java -text
 tvbrowser/src/tvbrowser/extras/reminderplugin/ReminderPluginProxy.java -text
 tvbrowser/src/tvbrowser/extras/reminderplugin/reminderplugin_da.properties -text
+tvbrowser/src/tvbrowser/extras/reminderplugin/reminderplugin_hr.properties -text svneol=unset#text/plain
 tvbrowser/src/tvbrowser/extras/reminderplugin/reminderplugin_it.properties -text
 tvbrowser/src/tvbrowser/extras/reminderplugin/reminderplugin_sk.properties -text
 tvbrowser/src/tvbrowser/extras/searchplugin/RepetitionDialog.java -text
 tvbrowser/src/tvbrowser/extras/searchplugin/searchplugin_da.properties -text
+tvbrowser/src/tvbrowser/extras/searchplugin/searchplugin_hr.properties -text svneol=unset#text/plain
 tvbrowser/src/tvbrowser/extras/searchplugin/searchplugin_it.properties -text
 tvbrowser/src/tvbrowser/extras/searchplugin/searchplugin_sk.properties -text
 tvbrowser/src/tvbrowser/tvbrowser_da.properties -text
+tvbrowser/src/tvbrowser/tvbrowser_hr.properties -text svneol=unset#text/plain
 tvbrowser/src/tvbrowser/tvbrowser_it.properties -text
 tvbrowser/src/tvbrowser/tvbrowser_sk.properties -text
 tvbrowser/src/tvbrowser/ui/BrownSugarDark.java -text
 tvbrowser/src/tvbrowser/ui/DarkStarDark.java -text
 tvbrowser/src/tvbrowser/ui/aboutbox/aboutbox_da.properties -text
+tvbrowser/src/tvbrowser/ui/aboutbox/aboutbox_hr.properties -text svneol=unset#text/plain
 tvbrowser/src/tvbrowser/ui/aboutbox/aboutbox_it.properties -text
 tvbrowser/src/tvbrowser/ui/aboutbox/aboutbox_sk.properties -text
 tvbrowser/src/tvbrowser/ui/configassistant/PictureConfigPanel.java -text
 tvbrowser/src/tvbrowser/ui/configassistant/TvBrowserPictureSettingsUpdateDialog.java -text
 tvbrowser/src/tvbrowser/ui/configassistant/configassistant_da.properties -text
+tvbrowser/src/tvbrowser/ui/configassistant/configassistant_hr.properties -text svneol=unset#text/plain
 tvbrowser/src/tvbrowser/ui/configassistant/configassistant_it.properties -text
 tvbrowser/src/tvbrowser/ui/configassistant/configassistant_sk.properties -text
 tvbrowser/src/tvbrowser/ui/filter/dlgs/Utilities.java -text
 tvbrowser/src/tvbrowser/ui/filter/dlgs/dlgs_da.properties -text
+tvbrowser/src/tvbrowser/ui/filter/dlgs/dlgs_hr.properties -text svneol=unset#text/plain
 tvbrowser/src/tvbrowser/ui/filter/dlgs/dlgs_it.properties -text
 tvbrowser/src/tvbrowser/ui/filter/dlgs/dlgs_sk.properties -text
 tvbrowser/src/tvbrowser/ui/finder/AbstractDateSelector.java -text
@@ -2277,8 +2299,10 @@ tvbrowser/src/tvbrowser/ui/finder/calendar/CalendarTableCellRenderer.java -text 
 tvbrowser/src/tvbrowser/ui/finder/calendar/CalendarTableModel.java -text svneol=unset#text/plain
 tvbrowser/src/tvbrowser/ui/finder/calendar/CalendarTablePanel.java -text svneol=unset#text/plain
 tvbrowser/src/tvbrowser/ui/finder/finder_da.properties -text
+tvbrowser/src/tvbrowser/ui/finder/finder_hr.properties -text svneol=unset#text/plain
 tvbrowser/src/tvbrowser/ui/finder/finder_it.properties -text
 tvbrowser/src/tvbrowser/ui/licensebox/licensebox_da.properties -text
+tvbrowser/src/tvbrowser/ui/licensebox/licensebox_hr.properties -text svneol=unset#text/plain
 tvbrowser/src/tvbrowser/ui/licensebox/licensebox_it.properties -text
 tvbrowser/src/tvbrowser/ui/licensebox/licensebox_sk.properties -text
 tvbrowser/src/tvbrowser/ui/mainframe/FaytFilter.java -text
@@ -2289,19 +2313,24 @@ tvbrowser/src/tvbrowser/ui/mainframe/actions/TVBrowserActions.java -text
 tvbrowser/src/tvbrowser/ui/mainframe/actions/TVBrowserUpdateAction.java -text
 tvbrowser/src/tvbrowser/ui/mainframe/actions/actions.properties -text
 tvbrowser/src/tvbrowser/ui/mainframe/actions/actions_de.properties -text
+tvbrowser/src/tvbrowser/ui/mainframe/actions/actions_hr.properties -text svneol=unset#text/plain
 tvbrowser/src/tvbrowser/ui/mainframe/actions/actions_it.properties -text
 tvbrowser/src/tvbrowser/ui/mainframe/actions/actions_sv.properties -text
 tvbrowser/src/tvbrowser/ui/mainframe/mainframe_da.properties -text
+tvbrowser/src/tvbrowser/ui/mainframe/mainframe_hr.properties -text svneol=unset#text/plain
 tvbrowser/src/tvbrowser/ui/mainframe/mainframe_sk.properties -text
 tvbrowser/src/tvbrowser/ui/mainframe/searchfield/searchfield_da.properties -text
+tvbrowser/src/tvbrowser/ui/mainframe/searchfield/searchfield_hr.properties -text svneol=unset#text/plain
 tvbrowser/src/tvbrowser/ui/mainframe/searchfield/searchfield_sk.properties -text
 tvbrowser/src/tvbrowser/ui/mainframe/searchfield/searchfield_sv.properties -text
 tvbrowser/src/tvbrowser/ui/mainframe/toolbar/toolbar_da.properties -text
+tvbrowser/src/tvbrowser/ui/mainframe/toolbar/toolbar_hr.properties -text svneol=unset#text/plain
 tvbrowser/src/tvbrowser/ui/mainframe/toolbar/toolbar_sk.properties -text
 tvbrowser/src/tvbrowser/ui/pluginview/PluginViewWrapper.java -text
 tvbrowser/src/tvbrowser/ui/pluginview/contextmenu/PluginBasedPluginContextMenu.java -text
 tvbrowser/src/tvbrowser/ui/pluginview/contextmenu/ProxyBasedPluginContextMenu.java -text
 tvbrowser/src/tvbrowser/ui/pluginview/contextmenu/contextmenu_da.properties -text
+tvbrowser/src/tvbrowser/ui/pluginview/contextmenu/contextmenu_hr.properties -text svneol=unset#text/plain
 tvbrowser/src/tvbrowser/ui/pluginview/contextmenu/contextmenu_sk.properties -text
 tvbrowser/src/tvbrowser/ui/programtable/OptimizedCompactTimeBlockLayout.java -text svneol=unset#text/plain
 tvbrowser/src/tvbrowser/ui/programtable/ProgramTableScrollPaneWrapper.java -text
@@ -2309,6 +2338,7 @@ tvbrowser/src/tvbrowser/ui/programtable/RealCompactLayout.java -text
 tvbrowser/src/tvbrowser/ui/programtable/background/UiColorBackPainter.java -text
 tvbrowser/src/tvbrowser/ui/programtable/background/UiTimeBlockBackPainter.java -text
 tvbrowser/src/tvbrowser/ui/programtable/programtable_da.properties -text
+tvbrowser/src/tvbrowser/ui/programtable/programtable_hr.properties -text svneol=unset#text/plain
 tvbrowser/src/tvbrowser/ui/programtable/programtable_it.properties -text
 tvbrowser/src/tvbrowser/ui/programtable/programtable_sk.properties -text
 tvbrowser/src/tvbrowser/ui/settings/AbstractSettingsTab.java -text
@@ -2321,45 +2351,57 @@ tvbrowser/src/tvbrowser/ui/settings/TrayNowSettingsTab.java -text
 tvbrowser/src/tvbrowser/ui/settings/TrayOnTimeSettingsTab.java -text
 tvbrowser/src/tvbrowser/ui/settings/TraySoonSettingsTab.java -text
 tvbrowser/src/tvbrowser/ui/settings/channel/channel_da.properties -text
+tvbrowser/src/tvbrowser/ui/settings/channel/channel_hr.properties -text svneol=unset#text/plain
 tvbrowser/src/tvbrowser/ui/settings/channel/channel_it.properties -text
 tvbrowser/src/tvbrowser/ui/settings/channel/channel_sk.properties -text
 tvbrowser/src/tvbrowser/ui/settings/looksSettings/looksSettings_da.properties -text
+tvbrowser/src/tvbrowser/ui/settings/looksSettings/looksSettings_hr.properties -text svneol=unset#text/plain
 tvbrowser/src/tvbrowser/ui/settings/looksSettings/looksSettings_it.properties -text
 tvbrowser/src/tvbrowser/ui/settings/looksSettings/looksSettings_sv.properties -text
 tvbrowser/src/tvbrowser/ui/settings/settings_da.properties -text
+tvbrowser/src/tvbrowser/ui/settings/settings_hr.properties -text svneol=unset#text/plain
 tvbrowser/src/tvbrowser/ui/settings/settings_it.properties -text
 tvbrowser/src/tvbrowser/ui/settings/settings_sk.properties -text
 tvbrowser/src/tvbrowser/ui/settings/tablebackgroundstyles/UiColorBackgroundStyle.java -text
 tvbrowser/src/tvbrowser/ui/settings/tablebackgroundstyles/UiTimeBlockBackgroundStyle.java -text
 tvbrowser/src/tvbrowser/ui/settings/tablebackgroundstyles/tablebackgroundstyles_da.properties -text
+tvbrowser/src/tvbrowser/ui/settings/tablebackgroundstyles/tablebackgroundstyles_hr.properties -text svneol=unset#text/plain
 tvbrowser/src/tvbrowser/ui/settings/tablebackgroundstyles/tablebackgroundstyles_sk.properties -text
 tvbrowser/src/tvbrowser/ui/settings/util/util_da.properties -text
+tvbrowser/src/tvbrowser/ui/settings/util/util_hr.properties -text svneol=unset#text/plain
 tvbrowser/src/tvbrowser/ui/settings/util/util_it.properties -text
 tvbrowser/src/tvbrowser/ui/settings/util/util_sk.properties -text
 tvbrowser/src/tvbrowser/ui/splashscreen/splashscreen_da.properties -text
+tvbrowser/src/tvbrowser/ui/splashscreen/splashscreen_hr.properties -text svneol=unset#text/plain
 tvbrowser/src/tvbrowser/ui/splashscreen/splashscreen_it.properties -text
 tvbrowser/src/tvbrowser/ui/splashscreen/splashscreen_sk.properties -text
 tvbrowser/src/tvbrowser/ui/tray/tray.properties -text
 tvbrowser/src/tvbrowser/ui/tray/tray_da.properties -text
 tvbrowser/src/tvbrowser/ui/tray/tray_de.properties -text
+tvbrowser/src/tvbrowser/ui/tray/tray_hr.properties -text svneol=unset#text/plain
 tvbrowser/src/tvbrowser/ui/tray/tray_it.properties -text
 tvbrowser/src/tvbrowser/ui/tray/tray_sk.properties -text
 tvbrowser/src/tvbrowser/ui/tray/tray_sv.properties -text
 tvbrowser/src/tvbrowser/ui/ui.properties -text
 tvbrowser/src/tvbrowser/ui/ui_da.properties -text
 tvbrowser/src/tvbrowser/ui/ui_de.properties -text
+tvbrowser/src/tvbrowser/ui/ui_hr.properties -text svneol=unset#text/plain
 tvbrowser/src/tvbrowser/ui/ui_sk.properties -text
 tvbrowser/src/tvbrowser/ui/update/update_da.properties -text
+tvbrowser/src/tvbrowser/ui/update/update_hr.properties -text svneol=unset#text/plain
 tvbrowser/src/tvbrowser/ui/update/update_it.properties -text
 tvbrowser/src/tvbrowser/ui/update/update_sk.properties -text
 tvbrowser/src/tvbrowser/ui/waiting/dlgs/dlgs_da.properties -text
+tvbrowser/src/tvbrowser/ui/waiting/dlgs/dlgs_hr.properties -text svneol=unset#text/plain
 tvbrowser/src/tvbrowser/ui/waiting/dlgs/dlgs_sv.properties -text
 tvbrowser/src/tvdataservice/PictureSettingsIf.java -text
 tvbrowser/src/util/browserlauncher/browserlauncher_da.properties -text
+tvbrowser/src/util/browserlauncher/browserlauncher_hr.properties -text svneol=unset#text/plain
 tvbrowser/src/util/browserlauncher/browserlauncher_it.properties -text
 tvbrowser/src/util/browserlauncher/browserlauncher_sk.properties -text
 tvbrowser/src/util/browserlauncher/browserlauncher_sv.properties -text
 tvbrowser/src/util/exc/exc_da.properties -text
+tvbrowser/src/util/exc/exc_hr.properties -text svneol=unset#text/plain
 tvbrowser/src/util/exc/exc_it.properties -text
 tvbrowser/src/util/exc/exc_sk.properties -text
 tvbrowser/src/util/i18n/WritingConversion.java -text
@@ -2368,6 +2410,7 @@ tvbrowser/src/util/io/DownloadJob.java -text
 tvbrowser/src/util/io/NtpMessage.java -text
 tvbrowser/src/util/io/ZipUtil.java -text
 tvbrowser/src/util/io/io_da.properties -text
+tvbrowser/src/util/io/io_hr.properties -text svneol=unset#text/plain
 tvbrowser/src/util/io/io_it.properties -text
 tvbrowser/src/util/io/io_sk.properties -text
 tvbrowser/src/util/io/io_sv.properties -text
@@ -2385,6 +2428,7 @@ tvbrowser/src/util/misc/ChangeTrackingProperties.java -text svneol=unset#text/pl
 tvbrowser/src/util/misc/HashCodeUtilities.java -text
 tvbrowser/src/util/misc/SoftReferenceCache.java -text
 tvbrowser/src/util/paramhandler/paramhandler_da.properties -text
+tvbrowser/src/util/paramhandler/paramhandler_hr.properties -text svneol=unset#text/plain
 tvbrowser/src/util/paramhandler/paramhandler_it.properties -text
 tvbrowser/src/util/paramhandler/paramhandler_sk.properties -text
 tvbrowser/src/util/paramhandler/paramhandler_sv.properties -text
@@ -2393,6 +2437,7 @@ tvbrowser/src/util/program/LocalPluginProgramFormating.java -text
 tvbrowser/src/util/program/program.properties -text
 tvbrowser/src/util/program/program_da.properties -text
 tvbrowser/src/util/program/program_de.properties -text
+tvbrowser/src/util/program/program_hr.properties -text svneol=unset#text/plain
 tvbrowser/src/util/program/program_it.properties -text
 tvbrowser/src/util/program/program_sk.properties -text
 tvbrowser/src/util/program/program_sv.properties -text
@@ -2420,14 +2465,17 @@ tvbrowser/src/util/ui/TVBrowserIcons.java -text svneol=unset#text/plain
 tvbrowser/src/util/ui/TimeFormatter.java -text
 tvbrowser/src/util/ui/UIThreadRunner.java -text
 tvbrowser/src/util/ui/customizableitems/customizableitems_da.properties -text
+tvbrowser/src/util/ui/customizableitems/customizableitems_hr.properties -text svneol=unset#text/plain
 tvbrowser/src/util/ui/customizableitems/customizableitems_it.properties -text
 tvbrowser/src/util/ui/customizableitems/customizableitems_sk.properties -text
 tvbrowser/src/util/ui/findasyoutype/findasyoutype_da.properties -text
+tvbrowser/src/util/ui/findasyoutype/findasyoutype_hr.properties -text svneol=unset#text/plain
 tvbrowser/src/util/ui/findasyoutype/findasyoutype_it.properties -text
 tvbrowser/src/util/ui/findasyoutype/findasyoutype_sk.properties -text
 tvbrowser/src/util/ui/login/LoginDialog.java -text
 tvbrowser/src/util/ui/login/login.properties -text
 tvbrowser/src/util/ui/login/login_de.properties -text
+tvbrowser/src/util/ui/login/login_hr.properties -text svneol=unset#text/plain
 tvbrowser/src/util/ui/login/login_it.properties -text
 tvbrowser/src/util/ui/login/login_sv.properties -text
 tvbrowser/src/util/ui/persona/Persona.java -text
@@ -2436,11 +2484,14 @@ tvbrowser/src/util/ui/persona/PersonaInfo.java -text
 tvbrowser/src/util/ui/persona/PersonaListener.java -text
 tvbrowser/src/util/ui/persona/persona.properties -text
 tvbrowser/src/util/ui/persona/persona_de.properties -text
+tvbrowser/src/util/ui/persona/persona_hr.properties -text svneol=unset#text/plain
 tvbrowser/src/util/ui/progress/ProgressInputStream.java -text
 tvbrowser/src/util/ui/textcomponentpopup/textcomponentpopup_da.properties -text
+tvbrowser/src/util/ui/textcomponentpopup/textcomponentpopup_hr.properties -text svneol=unset#text/plain
 tvbrowser/src/util/ui/textcomponentpopup/textcomponentpopup_it.properties -text
 tvbrowser/src/util/ui/textcomponentpopup/textcomponentpopup_sk.properties -text
 tvbrowser/src/util/ui/ui_da.properties -text
+tvbrowser/src/util/ui/ui_hr.properties -text svneol=unset#text/plain
 tvbrowser/src/util/ui/ui_it.properties -text
 tvbrowser/src/util/ui/ui_sk.properties -text
 tvbrowser/test/src/devplugin/DateTest.java -text
