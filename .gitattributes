@@ -220,6 +220,7 @@ tvbrowser-plugins/plugin-balloon/src/main/java/balloonplugin/BalloonPlugin.java 
 tvbrowser-plugins/plugin-balloon/src/main/java/balloonplugin/JarApplicationExecuter.java -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-balloon/src/main/resources/balloonplugin/balloonplugin.properties -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-balloon/src/main/resources/balloonplugin/balloonplugin_de.properties -text svneol=unset#text/plain
+tvbrowser-plugins/plugin-balloon/src/main/resources/balloonplugin/balloonplugin_hr.properties -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-balloon/src/main/resources/balloonplugin/icons/16x16/balloon.png -text
 tvbrowser-plugins/plugin-balloon/src/main/resources/balloonplugin/notifu.exe -text
 tvbrowser-plugins/plugin-bbcdataservice/pom.xml -text
@@ -227,6 +228,7 @@ tvbrowser-plugins/plugin-bbcdataservice/src/main/java/bbcdataservice/BBCDataServ
 tvbrowser-plugins/plugin-bbcdataservice/src/main/java/bbcdataservice/BBCProgrammesParser.java -text
 tvbrowser-plugins/plugin-bbcdataservice/src/main/resources/bbcdataservice/bbcdataservice.properties -text
 tvbrowser-plugins/plugin-bbcdataservice/src/main/resources/bbcdataservice/bbcdataservice_de.properties -text
+tvbrowser-plugins/plugin-bbcdataservice/src/main/resources/bbcdataservice/bbcdataservice_hr.properties -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-blogthis/.classpath -text
 tvbrowser-plugins/plugin-blogthis/.project -text
 tvbrowser-plugins/plugin-blogthis/.settings/org.eclipse.core.resources.prefs -text
@@ -273,12 +275,14 @@ tvbrowser-plugins/plugin-calendarexport/src/main/java/calendarexportplugin/utils
 tvbrowser-plugins/plugin-calendarexport/src/main/resources/calendarexportplugin/calendarexportplugin.properties -text
 tvbrowser-plugins/plugin-calendarexport/src/main/resources/calendarexportplugin/calendarexportplugin_da.properties -text
 tvbrowser-plugins/plugin-calendarexport/src/main/resources/calendarexportplugin/calendarexportplugin_de.properties -text
+tvbrowser-plugins/plugin-calendarexport/src/main/resources/calendarexportplugin/calendarexportplugin_hr.properties -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-calendarexport/src/main/resources/calendarexportplugin/calendarexportplugin_it.properties -text
 tvbrowser-plugins/plugin-calendarexport/src/main/resources/calendarexportplugin/calendarexportplugin_sk.properties -text
 tvbrowser-plugins/plugin-calendarexport/src/main/resources/calendarexportplugin/calendarexportplugin_sv.properties -text
 tvbrowser-plugins/plugin-calendarexport/src/main/resources/calendarexportplugin/exporter/exporter.properties -text
 tvbrowser-plugins/plugin-calendarexport/src/main/resources/calendarexportplugin/exporter/exporter_da.properties -text
 tvbrowser-plugins/plugin-calendarexport/src/main/resources/calendarexportplugin/exporter/exporter_de.properties -text
+tvbrowser-plugins/plugin-calendarexport/src/main/resources/calendarexportplugin/exporter/exporter_hr.properties -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-calendarexport/src/main/resources/calendarexportplugin/exporter/exporter_it.properties -text
 tvbrowser-plugins/plugin-calendarexport/src/main/resources/calendarexportplugin/exporter/exporter_sk.properties -text
 tvbrowser-plugins/plugin-calendarexport/src/main/resources/calendarexportplugin/exporter/exporter_sv.properties -text
@@ -289,6 +293,7 @@ tvbrowser-plugins/plugin-calendarexport/src/main/resources/calendarexportplugin/
 tvbrowser-plugins/plugin-calendarexport/src/main/resources/calendarexportplugin/utils/utils.properties -text
 tvbrowser-plugins/plugin-calendarexport/src/main/resources/calendarexportplugin/utils/utils_da.properties -text
 tvbrowser-plugins/plugin-calendarexport/src/main/resources/calendarexportplugin/utils/utils_de.properties -text
+tvbrowser-plugins/plugin-calendarexport/src/main/resources/calendarexportplugin/utils/utils_hr.properties -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-calendarexport/src/main/resources/calendarexportplugin/utils/utils_it.properties -text
 tvbrowser-plugins/plugin-calendarexport/src/main/resources/calendarexportplugin/utils/utils_sv.properties -text
 tvbrowser-plugins/plugin-calendarexport/src/main/resources/jcom.dll -text
@@ -391,47 +396,55 @@ tvbrowser-plugins/plugin-capture/src/main/java/captureplugin/utils/ProgramTimeCo
 tvbrowser-plugins/plugin-capture/src/main/resources/captureplugin/captureplugin.properties -text
 tvbrowser-plugins/plugin-capture/src/main/resources/captureplugin/captureplugin_da.properties -text
 tvbrowser-plugins/plugin-capture/src/main/resources/captureplugin/captureplugin_de.properties -text
+tvbrowser-plugins/plugin-capture/src/main/resources/captureplugin/captureplugin_hr.properties -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-capture/src/main/resources/captureplugin/captureplugin_it.properties -text
 tvbrowser-plugins/plugin-capture/src/main/resources/captureplugin/captureplugin_sk.properties -text
 tvbrowser-plugins/plugin-capture/src/main/resources/captureplugin/captureplugin_sv.properties -text
 tvbrowser-plugins/plugin-capture/src/main/resources/captureplugin/drivers/defaultdriver/configpanels/configpanels.properties -text
 tvbrowser-plugins/plugin-capture/src/main/resources/captureplugin/drivers/defaultdriver/configpanels/configpanels_da.properties -text
 tvbrowser-plugins/plugin-capture/src/main/resources/captureplugin/drivers/defaultdriver/configpanels/configpanels_de.properties -text
+tvbrowser-plugins/plugin-capture/src/main/resources/captureplugin/drivers/defaultdriver/configpanels/configpanels_hr.properties -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-capture/src/main/resources/captureplugin/drivers/defaultdriver/configpanels/configpanels_it.properties -text
 tvbrowser-plugins/plugin-capture/src/main/resources/captureplugin/drivers/defaultdriver/configpanels/configpanels_sk.properties -text
 tvbrowser-plugins/plugin-capture/src/main/resources/captureplugin/drivers/defaultdriver/configpanels/configpanels_sv.properties -text
 tvbrowser-plugins/plugin-capture/src/main/resources/captureplugin/drivers/defaultdriver/defaultdriver.properties -text
 tvbrowser-plugins/plugin-capture/src/main/resources/captureplugin/drivers/defaultdriver/defaultdriver_da.properties -text
 tvbrowser-plugins/plugin-capture/src/main/resources/captureplugin/drivers/defaultdriver/defaultdriver_de.properties -text
+tvbrowser-plugins/plugin-capture/src/main/resources/captureplugin/drivers/defaultdriver/defaultdriver_hr.properties -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-capture/src/main/resources/captureplugin/drivers/defaultdriver/defaultdriver_it.properties -text
 tvbrowser-plugins/plugin-capture/src/main/resources/captureplugin/drivers/defaultdriver/defaultdriver_sk.properties -text
 tvbrowser-plugins/plugin-capture/src/main/resources/captureplugin/drivers/defaultdriver/defaultdriver_sv.properties -text
 tvbrowser-plugins/plugin-capture/src/main/resources/captureplugin/drivers/dreambox/dreambox.properties -text
 tvbrowser-plugins/plugin-capture/src/main/resources/captureplugin/drivers/dreambox/dreambox_da.properties -text
 tvbrowser-plugins/plugin-capture/src/main/resources/captureplugin/drivers/dreambox/dreambox_de.properties -text
+tvbrowser-plugins/plugin-capture/src/main/resources/captureplugin/drivers/dreambox/dreambox_hr.properties -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-capture/src/main/resources/captureplugin/drivers/dreambox/dreambox_it.properties -text
 tvbrowser-plugins/plugin-capture/src/main/resources/captureplugin/drivers/dreambox/dreambox_sk.properties -text
 tvbrowser-plugins/plugin-capture/src/main/resources/captureplugin/drivers/dreambox/dreambox_sv.properties -text
 tvbrowser-plugins/plugin-capture/src/main/resources/captureplugin/drivers/drivers.properties -text
 tvbrowser-plugins/plugin-capture/src/main/resources/captureplugin/drivers/drivers_da.properties -text
 tvbrowser-plugins/plugin-capture/src/main/resources/captureplugin/drivers/drivers_de.properties -text
+tvbrowser-plugins/plugin-capture/src/main/resources/captureplugin/drivers/drivers_hr.properties -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-capture/src/main/resources/captureplugin/drivers/drivers_it.properties -text
 tvbrowser-plugins/plugin-capture/src/main/resources/captureplugin/drivers/drivers_sk.properties -text
 tvbrowser-plugins/plugin-capture/src/main/resources/captureplugin/drivers/drivers_sv.properties -text
 tvbrowser-plugins/plugin-capture/src/main/resources/captureplugin/drivers/elgatodriver/elgatodriver.properties -text
 tvbrowser-plugins/plugin-capture/src/main/resources/captureplugin/drivers/elgatodriver/elgatodriver_da.properties -text
 tvbrowser-plugins/plugin-capture/src/main/resources/captureplugin/drivers/elgatodriver/elgatodriver_de.properties -text
+tvbrowser-plugins/plugin-capture/src/main/resources/captureplugin/drivers/elgatodriver/elgatodriver_hr.properties -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-capture/src/main/resources/captureplugin/drivers/elgatodriver/elgatodriver_it.properties -text
 tvbrowser-plugins/plugin-capture/src/main/resources/captureplugin/drivers/elgatodriver/elgatodriver_sv.properties -text
 tvbrowser-plugins/plugin-capture/src/main/resources/captureplugin/drivers/simpledevice/simpledevice.properties -text
 tvbrowser-plugins/plugin-capture/src/main/resources/captureplugin/drivers/simpledevice/simpledevice_da.properties -text
 tvbrowser-plugins/plugin-capture/src/main/resources/captureplugin/drivers/simpledevice/simpledevice_de.properties -text
+tvbrowser-plugins/plugin-capture/src/main/resources/captureplugin/drivers/simpledevice/simpledevice_hr.properties -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-capture/src/main/resources/captureplugin/drivers/simpledevice/simpledevice_it.properties -text
 tvbrowser-plugins/plugin-capture/src/main/resources/captureplugin/drivers/simpledevice/simpledevice_sk.properties -text
 tvbrowser-plugins/plugin-capture/src/main/resources/captureplugin/drivers/simpledevice/simpledevice_sv.properties -text
 tvbrowser-plugins/plugin-capture/src/main/resources/captureplugin/drivers/thetubedriver/thetubedriver.properties -text
 tvbrowser-plugins/plugin-capture/src/main/resources/captureplugin/drivers/thetubedriver/thetubedriver_da.properties -text
 tvbrowser-plugins/plugin-capture/src/main/resources/captureplugin/drivers/thetubedriver/thetubedriver_de.properties -text
+tvbrowser-plugins/plugin-capture/src/main/resources/captureplugin/drivers/thetubedriver/thetubedriver_hr.properties -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-capture/src/main/resources/captureplugin/drivers/thetubedriver/thetubedriver_it.properties -text
 tvbrowser-plugins/plugin-capture/src/main/resources/captureplugin/drivers/thetubedriver/thetubedriver_sk.properties -text
 tvbrowser-plugins/plugin-capture/src/main/resources/captureplugin/drivers/thetubedriver/thetubedriver_sv.properties -text
@@ -440,23 +453,28 @@ tvbrowser-plugins/plugin-capture/src/main/resources/captureplugin/drivers/topfie
 tvbrowser-plugins/plugin-capture/src/main/resources/captureplugin/drivers/topfield/connector/TopfieldServiceException.java -text
 tvbrowser-plugins/plugin-capture/src/main/resources/captureplugin/drivers/topfield/connector/TopfieldServiceType.java -text
 tvbrowser-plugins/plugin-capture/src/main/resources/captureplugin/drivers/topfield/connector/TopfieldTunerException.java -text
+tvbrowser-plugins/plugin-capture/src/main/resources/captureplugin/drivers/topfield/connector/connector_hr.properties -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-capture/src/main/resources/captureplugin/drivers/topfield/topfield.properties -text
 tvbrowser-plugins/plugin-capture/src/main/resources/captureplugin/drivers/topfield/topfield_de.properties -text
+tvbrowser-plugins/plugin-capture/src/main/resources/captureplugin/drivers/topfield/topfield_hr.properties -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-capture/src/main/resources/captureplugin/drivers/topfield/topfield_it.properties -text
 tvbrowser-plugins/plugin-capture/src/main/resources/captureplugin/drivers/utils/utils.properties -text
 tvbrowser-plugins/plugin-capture/src/main/resources/captureplugin/drivers/utils/utils_da.properties -text
 tvbrowser-plugins/plugin-capture/src/main/resources/captureplugin/drivers/utils/utils_de.properties -text
+tvbrowser-plugins/plugin-capture/src/main/resources/captureplugin/drivers/utils/utils_hr.properties -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-capture/src/main/resources/captureplugin/drivers/utils/utils_it.properties -text
 tvbrowser-plugins/plugin-capture/src/main/resources/captureplugin/drivers/utils/utils_sv.properties -text
 tvbrowser-plugins/plugin-capture/src/main/resources/captureplugin/tabs/tabs.properties -text
 tvbrowser-plugins/plugin-capture/src/main/resources/captureplugin/tabs/tabs_da.properties -text
 tvbrowser-plugins/plugin-capture/src/main/resources/captureplugin/tabs/tabs_de.properties -text
+tvbrowser-plugins/plugin-capture/src/main/resources/captureplugin/tabs/tabs_hr.properties -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-capture/src/main/resources/captureplugin/tabs/tabs_it.properties -text
 tvbrowser-plugins/plugin-capture/src/main/resources/captureplugin/tabs/tabs_sk.properties -text
 tvbrowser-plugins/plugin-capture/src/main/resources/captureplugin/tabs/tabs_sv.properties -text
 tvbrowser-plugins/plugin-capture/src/main/resources/captureplugin/utils/utils.properties -text
 tvbrowser-plugins/plugin-capture/src/main/resources/captureplugin/utils/utils_da.properties -text
 tvbrowser-plugins/plugin-capture/src/main/resources/captureplugin/utils/utils_de.properties -text
+tvbrowser-plugins/plugin-capture/src/main/resources/captureplugin/utils/utils_hr.properties -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-capture/src/main/resources/captureplugin/utils/utils_it.properties -text
 tvbrowser-plugins/plugin-capture/src/main/resources/captureplugin/utils/utils_sk.properties -text
 tvbrowser-plugins/plugin-capture/src/main/resources/captureplugin/utils/utils_sv.properties -text
@@ -504,6 +522,7 @@ tvbrowser-plugins/plugin-clipboard/src/main/java/clipboardplugin/ClipboardSettin
 tvbrowser-plugins/plugin-clipboard/src/main/resources/clipboardplugin/clipboardplugin.properties -text
 tvbrowser-plugins/plugin-clipboard/src/main/resources/clipboardplugin/clipboardplugin_da.properties -text
 tvbrowser-plugins/plugin-clipboard/src/main/resources/clipboardplugin/clipboardplugin_de.properties -text
+tvbrowser-plugins/plugin-clipboard/src/main/resources/clipboardplugin/clipboardplugin_hr.properties -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-clipboard/src/main/resources/clipboardplugin/clipboardplugin_it.properties -text
 tvbrowser-plugins/plugin-clipboard/src/main/resources/clipboardplugin/clipboardplugin_sk.properties -text
 tvbrowser-plugins/plugin-clipboard/src/main/resources/clipboardplugin/clipboardplugin_sv.properties -text
@@ -516,6 +535,7 @@ tvbrowser-plugins/plugin-clock/src/main/resources/clockplugin/License.txt -text
 tvbrowser-plugins/plugin-clock/src/main/resources/clockplugin/clockplugin.properties -text
 tvbrowser-plugins/plugin-clock/src/main/resources/clockplugin/clockplugin_da.properties -text
 tvbrowser-plugins/plugin-clock/src/main/resources/clockplugin/clockplugin_de.properties -text
+tvbrowser-plugins/plugin-clock/src/main/resources/clockplugin/clockplugin_hr.properties -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-clock/src/main/resources/clockplugin/icon-license.txt -text
 tvbrowser-plugins/plugin-clock/src/main/resources/clockplugin/icons/16x16/apps/clock.png -text
 tvbrowser-plugins/plugin-clock/src/main/resources/clockplugin/icons/22x22/apps/clock.png -text
@@ -524,6 +544,7 @@ tvbrowser-plugins/plugin-countrycode/src/main/java/countrycodeplugin/CountryCode
 tvbrowser-plugins/plugin-countrycode/src/main/resources/countrycodeplugin/countrycodeplugin.properties -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-countrycode/src/main/resources/countrycodeplugin/countrycodeplugin_da.properties -text
 tvbrowser-plugins/plugin-countrycode/src/main/resources/countrycodeplugin/countrycodeplugin_de.properties -text svneol=unset#text/plain
+tvbrowser-plugins/plugin-countrycode/src/main/resources/countrycodeplugin/countrycodeplugin_hr.properties -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-dataviewer/pom.xml -text
 tvbrowser-plugins/plugin-dataviewer/src/main/java/dataviewerplugin/ChannelTableCellRenderer.java -text
 tvbrowser-plugins/plugin-dataviewer/src/main/java/dataviewerplugin/DataTableCellRenderer.java -text
@@ -532,6 +553,7 @@ tvbrowser-plugins/plugin-dataviewer/src/main/java/dataviewerplugin/DataViewerPlu
 tvbrowser-plugins/plugin-dataviewer/src/main/java/dataviewerplugin/DataViewerPluginSettingsTab.java -text
 tvbrowser-plugins/plugin-dataviewer/src/main/resources/dataviewerplugin/dataviewerplugin.properties -text
 tvbrowser-plugins/plugin-dataviewer/src/main/resources/dataviewerplugin/dataviewerplugin_de.properties -text
+tvbrowser-plugins/plugin-dataviewer/src/main/resources/dataviewerplugin/dataviewerplugin_hr.properties -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-dataviewer/src/main/resources/dataviewerplugin/icons/16x16/actions/format-justify-fill.png -text
 tvbrowser-plugins/plugin-dataviewer/src/main/resources/dataviewerplugin/icons/22x22/actions/format-justify-fill.png -text
 tvbrowser-plugins/plugin-dataviewer/src/main/resources/dataviewerplugin/icons/Readme.txt -text
@@ -661,6 +683,7 @@ tvbrowser-plugins/plugin-email/src/main/java/emailplugin/MailCreator.java -text
 tvbrowser-plugins/plugin-email/src/main/resources/emailplugin/emailplugin.properties -text
 tvbrowser-plugins/plugin-email/src/main/resources/emailplugin/emailplugin_da.properties -text
 tvbrowser-plugins/plugin-email/src/main/resources/emailplugin/emailplugin_de.properties -text
+tvbrowser-plugins/plugin-email/src/main/resources/emailplugin/emailplugin_hr.properties -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-email/src/main/resources/emailplugin/emailplugin_it.properties -text
 tvbrowser-plugins/plugin-email/src/main/resources/emailplugin/emailplugin_sv.properties -text
 tvbrowser-plugins/plugin-feeds/pom.xml -text
@@ -700,6 +723,7 @@ tvbrowser-plugins/plugin-genre/src/main/java/genreplugin/HideGenreAction.java -t
 tvbrowser-plugins/plugin-genre/src/main/resources/genreplugin/genreplugin.properties -text
 tvbrowser-plugins/plugin-genre/src/main/resources/genreplugin/genreplugin_da.properties -text
 tvbrowser-plugins/plugin-genre/src/main/resources/genreplugin/genreplugin_de.properties -text
+tvbrowser-plugins/plugin-genre/src/main/resources/genreplugin/genreplugin_hr.properties -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-genre/src/main/resources/genreplugin/genreplugin_it.properties -text
 tvbrowser-plugins/plugin-genre/src/main/resources/genreplugin/genreplugin_sk.properties -text
 tvbrowser-plugins/plugin-genre/src/main/resources/genreplugin/genreplugin_sv.properties -text
@@ -755,6 +779,7 @@ tvbrowser-plugins/plugin-i18n/src/main/java/i18nplugin/UnsortedPathNode.java -te
 tvbrowser-plugins/plugin-i18n/src/main/resources/i18nplugin/i18nplugin.properties -text
 tvbrowser-plugins/plugin-i18n/src/main/resources/i18nplugin/i18nplugin_da.properties -text
 tvbrowser-plugins/plugin-i18n/src/main/resources/i18nplugin/i18nplugin_de.properties -text
+tvbrowser-plugins/plugin-i18n/src/main/resources/i18nplugin/i18nplugin_hr.properties -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-i18n/src/main/resources/i18nplugin/i18nplugin_it.properties -text
 tvbrowser-plugins/plugin-i18n/src/main/resources/i18nplugin/i18nplugin_sk.properties -text
 tvbrowser-plugins/plugin-i18n/src/main/resources/i18nplugin/i18nplugin_sv.properties -text
@@ -766,6 +791,7 @@ tvbrowser-plugins/plugin-idontwant2see/src/main/resources/idontwant2see/icons/16
 tvbrowser-plugins/plugin-idontwant2see/src/main/resources/idontwant2see/icons/22x22/apps/idontwant2see.png -text
 tvbrowser-plugins/plugin-idontwant2see/src/main/resources/idontwant2see/idontwant2see.properties -text
 tvbrowser-plugins/plugin-idontwant2see/src/main/resources/idontwant2see/idontwant2see_de.properties -text
+tvbrowser-plugins/plugin-idontwant2see/src/main/resources/idontwant2see/idontwant2see_hr.properties -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-imdb/pom.xml -text
 tvbrowser-plugins/plugin-imdb/src/main/java/imdbplugin/ImdbAka.java -text
 tvbrowser-plugins/plugin-imdb/src/main/java/imdbplugin/ImdbDatabase.java -text
@@ -787,6 +813,7 @@ tvbrowser-plugins/plugin-imdb/src/main/java/imdbplugin/VoteCountFilterComponent.
 tvbrowser-plugins/plugin-imdb/src/main/resources/imdbplugin/imdbplugin.properties -text
 tvbrowser-plugins/plugin-imdb/src/main/resources/imdbplugin/imdbplugin_da.properties -text
 tvbrowser-plugins/plugin-imdb/src/main/resources/imdbplugin/imdbplugin_de.properties -text
+tvbrowser-plugins/plugin-imdb/src/main/resources/imdbplugin/imdbplugin_hr.properties -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-imdb/src/main/resources/imdbplugin/rating.png -text
 tvbrowser-plugins/plugin-jumptoprogram/.classpath -text
 tvbrowser-plugins/plugin-jumptoprogram/.project -text
@@ -797,6 +824,7 @@ tvbrowser-plugins/plugin-jumptoprogram/pom.xml -text
 tvbrowser-plugins/plugin-jumptoprogram/src/main/java/jumptoprogramplugin/JumpToProgramPlugin.java -text
 tvbrowser-plugins/plugin-jumptoprogram/src/main/resources/jumptoprogramplugin/jumptoprogramplugin.properties -text
 tvbrowser-plugins/plugin-jumptoprogram/src/main/resources/jumptoprogramplugin/jumptoprogramplugin_de.properties -text
+tvbrowser-plugins/plugin-jumptoprogram/src/main/resources/jumptoprogramplugin/jumptoprogramplugin_hr.properties -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-knotify/.classpath -text
 tvbrowser-plugins/plugin-knotify/.project -text
 tvbrowser-plugins/plugin-knotify/.settings/org.eclipse.core.resources.prefs -text
@@ -826,6 +854,7 @@ tvbrowser-plugins/plugin-listview/src/main/resources/listviewplugin/ChangeLog.tx
 tvbrowser-plugins/plugin-listview/src/main/resources/listviewplugin/listviewplugin.properties -text
 tvbrowser-plugins/plugin-listview/src/main/resources/listviewplugin/listviewplugin_da.properties -text
 tvbrowser-plugins/plugin-listview/src/main/resources/listviewplugin/listviewplugin_de.properties -text
+tvbrowser-plugins/plugin-listview/src/main/resources/listviewplugin/listviewplugin_hr.properties -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-listview/src/main/resources/listviewplugin/listviewplugin_it.properties -text
 tvbrowser-plugins/plugin-listview/src/main/resources/listviewplugin/listviewplugin_sk.properties -text
 tvbrowser-plugins/plugin-listview/src/main/resources/listviewplugin/listviewplugin_sv.properties -text
@@ -947,6 +976,7 @@ tvbrowser-plugins/plugin-news/src/main/resources/newsplugin/ChangeLog.txt -text
 tvbrowser-plugins/plugin-news/src/main/resources/newsplugin/newsplugin.properties -text
 tvbrowser-plugins/plugin-news/src/main/resources/newsplugin/newsplugin_da.properties -text
 tvbrowser-plugins/plugin-news/src/main/resources/newsplugin/newsplugin_de.properties -text
+tvbrowser-plugins/plugin-news/src/main/resources/newsplugin/newsplugin_hr.properties -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-news/src/main/resources/newsplugin/newsplugin_it.properties -text
 tvbrowser-plugins/plugin-news/src/main/resources/newsplugin/newsplugin_sk.properties -text
 tvbrowser-plugins/plugin-news/src/main/resources/newsplugin/newsplugin_sv.properties -text
@@ -1145,31 +1175,37 @@ tvbrowser-plugins/plugin-print/src/main/resources/printplugin/ChangeLog.txt -tex
 tvbrowser-plugins/plugin-print/src/main/resources/printplugin/dlgs/components/components.properties -text
 tvbrowser-plugins/plugin-print/src/main/resources/printplugin/dlgs/components/components_da.properties -text
 tvbrowser-plugins/plugin-print/src/main/resources/printplugin/dlgs/components/components_de.properties -text
+tvbrowser-plugins/plugin-print/src/main/resources/printplugin/dlgs/components/components_hr.properties -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-print/src/main/resources/printplugin/dlgs/components/components_it.properties -text
 tvbrowser-plugins/plugin-print/src/main/resources/printplugin/dlgs/components/components_sv.properties -text
 tvbrowser-plugins/plugin-print/src/main/resources/printplugin/dlgs/dlgs.properties -text
 tvbrowser-plugins/plugin-print/src/main/resources/printplugin/dlgs/dlgs_da.properties -text
 tvbrowser-plugins/plugin-print/src/main/resources/printplugin/dlgs/dlgs_de.properties -text
+tvbrowser-plugins/plugin-print/src/main/resources/printplugin/dlgs/dlgs_hr.properties -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-print/src/main/resources/printplugin/dlgs/dlgs_it.properties -text
 tvbrowser-plugins/plugin-print/src/main/resources/printplugin/dlgs/dlgs_sv.properties -text
 tvbrowser-plugins/plugin-print/src/main/resources/printplugin/dlgs/printdayprogramsdialog/printdayprogramsdialog.properties -text
 tvbrowser-plugins/plugin-print/src/main/resources/printplugin/dlgs/printdayprogramsdialog/printdayprogramsdialog_da.properties -text
 tvbrowser-plugins/plugin-print/src/main/resources/printplugin/dlgs/printdayprogramsdialog/printdayprogramsdialog_de.properties -text
+tvbrowser-plugins/plugin-print/src/main/resources/printplugin/dlgs/printdayprogramsdialog/printdayprogramsdialog_hr.properties -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-print/src/main/resources/printplugin/dlgs/printdayprogramsdialog/printdayprogramsdialog_it.properties -text
 tvbrowser-plugins/plugin-print/src/main/resources/printplugin/dlgs/printdayprogramsdialog/printdayprogramsdialog_sv.properties -text
 tvbrowser-plugins/plugin-print/src/main/resources/printplugin/dlgs/printfromqueuedialog/printfromqueuedialog.properties -text
 tvbrowser-plugins/plugin-print/src/main/resources/printplugin/dlgs/printfromqueuedialog/printfromqueuedialog_da.properties -text
 tvbrowser-plugins/plugin-print/src/main/resources/printplugin/dlgs/printfromqueuedialog/printfromqueuedialog_de.properties -text
+tvbrowser-plugins/plugin-print/src/main/resources/printplugin/dlgs/printfromqueuedialog/printfromqueuedialog_hr.properties -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-print/src/main/resources/printplugin/dlgs/printfromqueuedialog/printfromqueuedialog_it.properties -text
 tvbrowser-plugins/plugin-print/src/main/resources/printplugin/dlgs/printfromqueuedialog/printfromqueuedialog_sv.properties -text
 tvbrowser-plugins/plugin-print/src/main/resources/printplugin/printer/printer.properties -text
 tvbrowser-plugins/plugin-print/src/main/resources/printplugin/printer/printer_da.properties -text
 tvbrowser-plugins/plugin-print/src/main/resources/printplugin/printer/printer_de.properties -text
+tvbrowser-plugins/plugin-print/src/main/resources/printplugin/printer/printer_hr.properties -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-print/src/main/resources/printplugin/printer/printer_it.properties -text
 tvbrowser-plugins/plugin-print/src/main/resources/printplugin/printer/printer_sv.properties -text
 tvbrowser-plugins/plugin-print/src/main/resources/printplugin/printplugin.properties -text
 tvbrowser-plugins/plugin-print/src/main/resources/printplugin/printplugin_da.properties -text
 tvbrowser-plugins/plugin-print/src/main/resources/printplugin/printplugin_de.properties -text
+tvbrowser-plugins/plugin-print/src/main/resources/printplugin/printplugin_hr.properties -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-print/src/main/resources/printplugin/printplugin_it.properties -text
 tvbrowser-plugins/plugin-print/src/main/resources/printplugin/printplugin_sv.properties -text
 tvbrowser-plugins/plugin-print/src/main/resources/printplugin/todos.txt -text
@@ -1185,6 +1221,7 @@ tvbrowser-plugins/plugin-programlist/src/main/java/programlistplugin/ProgramList
 tvbrowser-plugins/plugin-programlist/src/main/resources/programlistplugin/programlistplugin.properties -text
 tvbrowser-plugins/plugin-programlist/src/main/resources/programlistplugin/programlistplugin_da.properties -text
 tvbrowser-plugins/plugin-programlist/src/main/resources/programlistplugin/programlistplugin_de.properties -text
+tvbrowser-plugins/plugin-programlist/src/main/resources/programlistplugin/programlistplugin_hr.properties -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-programlist/src/main/resources/programlistplugin/programlistplugin_it.properties -text
 tvbrowser-plugins/plugin-programlist/src/main/resources/programlistplugin/programlistplugin_sk.properties -text
 tvbrowser-plugins/plugin-radiotimesdataservice/.classpath -text
@@ -1198,6 +1235,7 @@ tvbrowser-plugins/plugin-radiotimesdataservice/src/main/java/radiotimesdataservi
 tvbrowser-plugins/plugin-radiotimesdataservice/src/main/resources/radiotimesdataservice/radiotimesdataservice.properties -text
 tvbrowser-plugins/plugin-radiotimesdataservice/src/main/resources/radiotimesdataservice/radiotimesdataservice_da.properties -text
 tvbrowser-plugins/plugin-radiotimesdataservice/src/main/resources/radiotimesdataservice/radiotimesdataservice_de.properties -text
+tvbrowser-plugins/plugin-radiotimesdataservice/src/main/resources/radiotimesdataservice/radiotimesdataservice_hr.properties -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-radiotimesdataservice/src/main/resources/radiotimesdataservice/radiotimesdataservice_it.properties -text
 tvbrowser-plugins/plugin-radiotimesdataservice/src/main/resources/radiotimesdataservice/radiotimesdataservice_sv.properties -text
 tvbrowser-plugins/plugin-recommendation/pom.xml -text
@@ -1226,9 +1264,11 @@ tvbrowser-plugins/plugin-recommendation/src/main/resources/recommendationplugin/
 tvbrowser-plugins/plugin-recommendation/src/main/resources/recommendationplugin/recommendationplugin.properties -text
 tvbrowser-plugins/plugin-recommendation/src/main/resources/recommendationplugin/recommendationplugin_da.properties -text
 tvbrowser-plugins/plugin-recommendation/src/main/resources/recommendationplugin/recommendationplugin_de.properties -text
+tvbrowser-plugins/plugin-recommendation/src/main/resources/recommendationplugin/recommendationplugin_hr.properties -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-recommendation/src/main/resources/recommendationplugin/weighting/weighting.properties -text
 tvbrowser-plugins/plugin-recommendation/src/main/resources/recommendationplugin/weighting/weighting_da.properties -text
 tvbrowser-plugins/plugin-recommendation/src/main/resources/recommendationplugin/weighting/weighting_de.properties -text
+tvbrowser-plugins/plugin-recommendation/src/main/resources/recommendationplugin/weighting/weighting_hr.properties -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-schedulesdirectdataservice/.classpath -text
 tvbrowser-plugins/plugin-schedulesdirectdataservice/.project -text
 tvbrowser-plugins/plugin-schedulesdirectdataservice/.settings/org.eclipse.core.resources.prefs -text
@@ -1240,6 +1280,7 @@ tvbrowser-plugins/plugin-schedulesdirectdataservice/src/main/java/schedulesdirec
 tvbrowser-plugins/plugin-schedulesdirectdataservice/src/main/resources/schedulesdirectdataservice/schedulesdirectdataservice.properties -text
 tvbrowser-plugins/plugin-schedulesdirectdataservice/src/main/resources/schedulesdirectdataservice/schedulesdirectdataservice_da.properties -text
 tvbrowser-plugins/plugin-schedulesdirectdataservice/src/main/resources/schedulesdirectdataservice/schedulesdirectdataservice_de.properties -text
+tvbrowser-plugins/plugin-schedulesdirectdataservice/src/main/resources/schedulesdirectdataservice/schedulesdirectdataservice_hr.properties -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-schedulesdirectdataservice/src/main/resources/schedulesdirectdataservice/schedulesdirectdataservice_it.properties -text
 tvbrowser-plugins/plugin-schedulesdirectdataservice/src/main/resources/schedulesdirectdataservice/schedulesdirectdataservice_sk.properties -text
 tvbrowser-plugins/plugin-sharedchannelautoupdate/pom.xml -text
@@ -1286,6 +1327,7 @@ tvbrowser-plugins/plugin-simplemarker/src/main/java/simplemarkerplugin/table/Mar
 tvbrowser-plugins/plugin-simplemarker/src/main/resources/simplemarkerplugin/simplemarkerplugin.properties -text
 tvbrowser-plugins/plugin-simplemarker/src/main/resources/simplemarkerplugin/simplemarkerplugin_da.properties -text
 tvbrowser-plugins/plugin-simplemarker/src/main/resources/simplemarkerplugin/simplemarkerplugin_de.properties -text
+tvbrowser-plugins/plugin-simplemarker/src/main/resources/simplemarkerplugin/simplemarkerplugin_hr.properties -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-simplemarker/src/main/resources/simplemarkerplugin/simplemarkerplugin_it.properties -text
 tvbrowser-plugins/plugin-simplemarker/src/main/resources/simplemarkerplugin/simplemarkerplugin_sk.properties -text
 tvbrowser-plugins/plugin-simplemarker/src/main/resources/simplemarkerplugin/simplemarkerplugin_sv.properties -text
@@ -1308,6 +1350,7 @@ tvbrowser-plugins/plugin-soundreminder/src/main/resources/soundreminder/icons/22
 tvbrowser-plugins/plugin-soundreminder/src/main/resources/soundreminder/soundreminder.properties -text
 tvbrowser-plugins/plugin-soundreminder/src/main/resources/soundreminder/soundreminder_da.properties -text
 tvbrowser-plugins/plugin-soundreminder/src/main/resources/soundreminder/soundreminder_de.properties -text
+tvbrowser-plugins/plugin-soundreminder/src/main/resources/soundreminder/soundreminder_hr.properties -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-speech/pom.xml -text
 tvbrowser-plugins/plugin-speech/src/main/cpp/quadmore/QUADINIT.H -text
 tvbrowser-plugins/plugin-speech/src/main/cpp/quadmore/QuadTTS.clw -text
@@ -1359,6 +1402,7 @@ tvbrowser-plugins/plugin-swedbdataservice/src/main/java/swedbtvdataservice/SweDB
 tvbrowser-plugins/plugin-swedbdataservice/src/main/resources/swedbtvdataservice/swedbtvdataservice.properties -text
 tvbrowser-plugins/plugin-swedbdataservice/src/main/resources/swedbtvdataservice/swedbtvdataservice_da.properties -text
 tvbrowser-plugins/plugin-swedbdataservice/src/main/resources/swedbtvdataservice/swedbtvdataservice_de.properties -text
+tvbrowser-plugins/plugin-swedbdataservice/src/main/resources/swedbtvdataservice/swedbtvdataservice_hr.properties -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-swedbdataservice/src/main/resources/swedbtvdataservice/swedbtvdataservice_it.properties -text
 tvbrowser-plugins/plugin-swedbdataservice/src/main/resources/swedbtvdataservice/swedbtvdataservice_sv.properties -text
 tvbrowser-plugins/plugin-tagging/pom.xml -text
@@ -1378,6 +1422,7 @@ tvbrowser-plugins/plugin-teletext/src/main/resources/teletextplugin/teletext.png
 tvbrowser-plugins/plugin-teletext/src/main/resources/teletextplugin/teletextplugin.properties -text
 tvbrowser-plugins/plugin-teletext/src/main/resources/teletextplugin/teletextplugin_da.properties -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-teletext/src/main/resources/teletextplugin/teletextplugin_de.properties -text
+tvbrowser-plugins/plugin-teletext/src/main/resources/teletextplugin/teletextplugin_hr.properties -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-timeline/pom.xml -text
 tvbrowser-plugins/plugin-timeline/src/main/java/timelineplugin/ChannelHeader.java -text
 tvbrowser-plugins/plugin-timeline/src/main/java/timelineplugin/ProgramLabel.java -text
@@ -1415,6 +1460,7 @@ tvbrowser-plugins/plugin-tooltipcontrol/src/main/java/tooltipcontrolplugin/ToolT
 tvbrowser-plugins/plugin-tooltipcontrol/src/main/resources/tooltipcontrolplugin/tooltipcontrolplugin.properties -text
 tvbrowser-plugins/plugin-tooltipcontrol/src/main/resources/tooltipcontrolplugin/tooltipcontrolplugin_da.properties -text
 tvbrowser-plugins/plugin-tooltipcontrol/src/main/resources/tooltipcontrolplugin/tooltipcontrolplugin_de.properties -text
+tvbrowser-plugins/plugin-tooltipcontrol/src/main/resources/tooltipcontrolplugin/tooltipcontrolplugin_hr.properties -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-treeview/pom.xml -text
 tvbrowser-plugins/plugin-treeview/src/main/java/treeviewplugin/BroadcastNode.java -text
 tvbrowser-plugins/plugin-treeview/src/main/java/treeviewplugin/CHANGELOG.txt -text
@@ -1460,11 +1506,13 @@ tvbrowser-plugins/plugin-tvbrowserdataservice/src/main/java/tvbrowserdataservice
 tvbrowser-plugins/plugin-tvbrowserdataservice/src/main/resources/tvbrowserdataservice/file/file.properties -text
 tvbrowser-plugins/plugin-tvbrowserdataservice/src/main/resources/tvbrowserdataservice/file/file_da.properties -text
 tvbrowser-plugins/plugin-tvbrowserdataservice/src/main/resources/tvbrowserdataservice/file/file_de.properties -text
+tvbrowser-plugins/plugin-tvbrowserdataservice/src/main/resources/tvbrowserdataservice/file/file_hr.properties -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-tvbrowserdataservice/src/main/resources/tvbrowserdataservice/file/file_it.properties -text
 tvbrowser-plugins/plugin-tvbrowserdataservice/src/main/resources/tvbrowserdataservice/file/file_sv.properties -text
 tvbrowser-plugins/plugin-tvbrowserdataservice/src/main/resources/tvbrowserdataservice/tvbrowserdataservice.properties -text
 tvbrowser-plugins/plugin-tvbrowserdataservice/src/main/resources/tvbrowserdataservice/tvbrowserdataservice_da.properties -text
 tvbrowser-plugins/plugin-tvbrowserdataservice/src/main/resources/tvbrowserdataservice/tvbrowserdataservice_de.properties -text
+tvbrowser-plugins/plugin-tvbrowserdataservice/src/main/resources/tvbrowserdataservice/tvbrowserdataservice_hr.properties -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-tvbrowserdataservice/src/main/resources/tvbrowserdataservice/tvbrowserdataservice_it.properties -text
 tvbrowser-plugins/plugin-tvbrowserdataservice/src/main/resources/tvbrowserdataservice/tvbrowserdataservice_sk.properties -text
 tvbrowser-plugins/plugin-tvbrowserdataservice/src/main/resources/tvbrowserdataservice/tvbrowserdataservice_sv.properties -text
@@ -1642,6 +1690,7 @@ tvbrowser-plugins/plugin-virtualdataservice/src/main/resources/com/michaelbarano
 tvbrowser-plugins/plugin-virtualdataservice/src/main/resources/com/michaelbaranov/microba/calendar/resource/forward-16.png -text
 tvbrowser-plugins/plugin-virtualdataservice/src/main/resources/com/michaelbaranov/microba/calendar/resource/forward-fast-16.png -text
 tvbrowser-plugins/plugin-virtualdataservice/src/main/resources/com/michaelbaranov/microba/calendar/resource/picker-16.png -text
+tvbrowser-plugins/plugin-virtualdataservice/src/main/resources/virtualdataservice/vdrdataservice_hr.properties -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-virtualdataservice/src/main/resources/virtualdataservice/virtualdataservice.properties -text
 tvbrowser-plugins/plugin-virtualdataservice/src/main/resources/virtualdataservice/virtualdataservice_de.properties -text
 tvbrowser-plugins/plugin-web/.classpath -text
@@ -1659,6 +1708,7 @@ tvbrowser-plugins/plugin-web/src/main/java/webplugin/WebSettingsTab.java -text
 tvbrowser-plugins/plugin-web/src/main/resources/webplugin/webplugin.properties -text
 tvbrowser-plugins/plugin-web/src/main/resources/webplugin/webplugin_da.properties -text
 tvbrowser-plugins/plugin-web/src/main/resources/webplugin/webplugin_de.properties -text
+tvbrowser-plugins/plugin-web/src/main/resources/webplugin/webplugin_hr.properties -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-web/src/main/resources/webplugin/webplugin_it.properties -text
 tvbrowser-plugins/plugin-web/src/main/resources/webplugin/webplugin_sk.properties -text
 tvbrowser-plugins/plugin-web/src/main/resources/webplugin/webplugin_sv.properties -text
