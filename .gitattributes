@@ -1083,7 +1083,6 @@ tvbrowser-plugins/plugin-nextviewdataupdatewatcher/src/main/resources/nextviewda
 tvbrowser-plugins/plugin-nextviewdataupdatewatcher/src/main/resources/nextviewdataupdatewatcherplugin/nextviewdataupdatewatcherplugin.properties -text
 tvbrowser-plugins/plugin-nextviewdataupdatewatcher/src/main/resources/nextviewdataupdatewatcherplugin/nextviewdataupdatewatcherplugin_de.properties -text
 tvbrowser-plugins/plugin-notifyosd/pom.xml -text
-tvbrowser-plugins/plugin-notifyosd/src/main/java/notifyosdplugin/EnhancedPanelBuilder.java -text
 tvbrowser-plugins/plugin-notifyosd/src/main/java/notifyosdplugin/NotifyOSDPlugin.java -text
 tvbrowser-plugins/plugin-notifyosd/src/main/java/notifyosdplugin/NotifyOSDSettings.java -text
 tvbrowser-plugins/plugin-notifyosd/src/main/java/notifyosdplugin/NotifyOSDSettingsTab.java -text
