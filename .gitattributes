@@ -2218,7 +2218,6 @@ tvbrowser/src/imgs/tvbrowser128.png -text
 tvbrowser/src/imgs/tvbrowser16.png -text
 tvbrowser/src/imgs/tvbrowser32.png -text
 tvbrowser/src/imgs/tvbrowser48.png -text
-tvbrowser/src/tvbnetcontrol/TvbNetControl.java -text svneol=unset#text/plain
 tvbrowser/src/tvbrowser/core/DuplicateChannelNameCounter.java -text
 tvbrowser/src/tvbrowser/core/contextmenu/LeaveFullScreenMenuItem.java -text
 tvbrowser/src/tvbrowser/core/contextmenu/SelectProgramContextMenuItem.java -text
