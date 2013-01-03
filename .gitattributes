@@ -920,6 +920,7 @@ tvbrowser-plugins/plugin-mixeddataservice/src/main/java/mixeddataservice/mixedda
 tvbrowser-plugins/plugin-mixeddataservice/src/main/java/mixeddataservice/mixeddataservice_de.properties -text
 tvbrowser-plugins/plugin-mixeddataservice/src/main/resources/mixeddataservice/files/fields.properties -text
 tvbrowser-plugins/plugin-mixeddataservice/src/main/resources/mixeddataservice/icons/mixed.png -text
+tvbrowser-plugins/plugin-mixeddataservice/src/main/resources/mixeddataservice/mixeddataautoupdateplugin_hr.properties -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-mixeddataservice/src/main/resources/mixeddataservice/mixeddataservice.properties -text
 tvbrowser-plugins/plugin-mixeddataservice/src/main/resources/mixeddataservice/mixeddataservice_de.properties -text
 tvbrowser-plugins/plugin-mixedupdatelock/pom.xml -text
