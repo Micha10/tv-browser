@@ -1076,6 +1076,7 @@ tvbrowser-plugins/plugin-nextviewdataservice/src/main/resources/nextviewdataserv
 tvbrowser-plugins/plugin-nextviewdataservice/src/main/resources/nextviewdataservice/icons/nxtvepg.png -text
 tvbrowser-plugins/plugin-nextviewdataservice/src/main/resources/nextviewdataservice/nextviewdataservice.properties -text
 tvbrowser-plugins/plugin-nextviewdataservice/src/main/resources/nextviewdataservice/nextviewdataservice_de.properties -text
+tvbrowser-plugins/plugin-nextviewdataservice/src/main/resources/nextviewdataservice/nextviewdataservice_hr.properties -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-nextviewdataupdatewatcher/pom.xml -text
 tvbrowser-plugins/plugin-nextviewdataupdatewatcher/src/main/java/nextviewdataupdatewatcherplugin/NextViewDataUpdateWatcherPlugin.java -text
 tvbrowser-plugins/plugin-nextviewdataupdatewatcher/src/main/java/nextviewdataupdatewatcherplugin/NextViewDataUpdateWatcherPluginSettingTab.java -text
