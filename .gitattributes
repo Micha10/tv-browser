@@ -1546,7 +1546,6 @@ tvbrowser-plugins/plugin-treeview/src/main/resources/treeviewplugin/icons/16x16/
 tvbrowser-plugins/plugin-treeview/src/main/resources/treeviewplugin/icons/22x22/actions/treeview.png -text
 tvbrowser-plugins/plugin-treeview/src/main/resources/treeviewplugin/treeviewplugin.properties -text
 tvbrowser-plugins/plugin-treeview/src/main/resources/treeviewplugin/treeviewplugin_de.properties -text
-tvbrowser-plugins/plugin-tvbnetcontrol/pom.xml -text
 tvbrowser-plugins/plugin-tvbrowserdataservice/.classpath -text
 tvbrowser-plugins/plugin-tvbrowserdataservice/.project -text
 tvbrowser-plugins/plugin-tvbrowserdataservice/.settings/org.eclipse.core.resources.prefs -text

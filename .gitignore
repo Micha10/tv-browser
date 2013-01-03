@@ -257,9 +257,6 @@ tvbrowser-plugins/plugin-tooltipcontrol/.project
 tvbrowser-plugins/plugin-tooltipcontrol/.settings
 tvbrowser-plugins/plugin-tooltipcontrol/target
 tvbrowser-plugins/plugin-tooltipcontrol/tvbrowser-plugins-tooltipcontrol.iml
-tvbrowser-plugins/plugin-tvbnetcontrol/.classpath
-tvbrowser-plugins/plugin-tvbnetcontrol/.project
-tvbrowser-plugins/plugin-tvbnetcontrol/.settings
 tvbrowser-plugins/plugin-tvbrowserdataservice/target
 tvbrowser-plugins/plugin-tvbrowsermini/.classpath
 tvbrowser-plugins/plugin-tvbrowsermini/.escabaseline
