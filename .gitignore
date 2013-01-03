@@ -279,6 +279,7 @@ tvbrowser-plugins/plugin-twitter/.project
 tvbrowser-plugins/plugin-twitter/.settings
 tvbrowser-plugins/plugin-twitter/target
 tvbrowser-plugins/plugin-twitter/tvbrowser-plugins-twitter.iml
+tvbrowser-plugins/plugin-unityglobalmenusupport/target
 tvbrowser-plugins/plugin-url4program/.classpath
 tvbrowser-plugins/plugin-url4program/.escabaseline
 tvbrowser-plugins/plugin-url4program/.project
