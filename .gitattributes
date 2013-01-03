@@ -2197,7 +2197,6 @@ tvbrowser/lib/htmlparser-1.6.jar -text
 tvbrowser/lib/jRegistryKey-1.4.5.jar -text
 tvbrowser/lib/jgoodies-common-1.4.0.jar -text
 tvbrowser/lib/jgoodies-forms-1.6.0.jar -text
-tvbrowser/lib/jgoodies-looks-2.4.2.jar -text
 tvbrowser/lib/jgoodies-looks-2.5.2.jar -text
 tvbrowser/lib/l2fprod-common-tasks-7.3.jar -text
 tvbrowser/lib/opencsv-2.3.jar -text
