@@ -1404,6 +1404,17 @@ tvbrowser-plugins/plugin-swedbdataservice/src/main/resources/swedbtvdataservice/
 tvbrowser-plugins/plugin-swedbdataservice/src/main/resources/swedbtvdataservice/swedbtvdataservice_hr.properties -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-swedbdataservice/src/main/resources/swedbtvdataservice/swedbtvdataservice_it.properties -text
 tvbrowser-plugins/plugin-swedbdataservice/src/main/resources/swedbtvdataservice/swedbtvdataservice_sv.properties -text
+tvbrowser-plugins/plugin-switch/pom.xml -text svneol=unset#text/plain
+tvbrowser-plugins/plugin-switch/src/main/java/switchplugin/ChannelTable.java -text svneol=unset#text/plain
+tvbrowser-plugins/plugin-switch/src/main/java/switchplugin/ChannelTableCellRenderer.java -text svneol=unset#text/plain
+tvbrowser-plugins/plugin-switch/src/main/java/switchplugin/ProcessStreamReader.java -text svneol=unset#text/plain
+tvbrowser-plugins/plugin-switch/src/main/java/switchplugin/SwitchParamLibrary.java -text svneol=unset#text/plain
+tvbrowser-plugins/plugin-switch/src/main/java/switchplugin/SwitchPlugin.java -text svneol=unset#text/plain
+tvbrowser-plugins/plugin-switch/src/main/java/switchplugin/SwitchPluginSettingsTab.java -text svneol=unset#text/plain
+tvbrowser-plugins/plugin-switch/src/main/resources/switchplugin/License.txt -text svneol=unset#text/plain
+tvbrowser-plugins/plugin-switch/src/main/resources/switchplugin/icons/16x16/devices/video-display.png -text
+tvbrowser-plugins/plugin-switch/src/main/resources/switchplugin/switchplugin.properties -text svneol=unset#text/plain
+tvbrowser-plugins/plugin-switch/src/main/resources/switchplugin/switchplugin_de.properties -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-tagging/pom.xml -text
 tvbrowser-plugins/plugin-tagging/src/main/java/taggingplugin/ProgramListDialog.java -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-tagging/src/main/java/taggingplugin/TagFilterComponent.java -text

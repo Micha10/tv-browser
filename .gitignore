@@ -216,6 +216,7 @@ tvbrowser-plugins/plugin-speech/.project
 tvbrowser-plugins/plugin-speech/.settings
 tvbrowser-plugins/plugin-speech/target
 tvbrowser-plugins/plugin-swedbdataservice/target
+tvbrowser-plugins/plugin-switch/target
 tvbrowser-plugins/plugin-tagging/.classpath
 tvbrowser-plugins/plugin-tagging/.escabaseline
 tvbrowser-plugins/plugin-tagging/.project
