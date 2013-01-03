@@ -341,12 +341,33 @@ tvbrowser-plugins/plugin-capture/src/main/java/captureplugin/drivers/dreambox/co
 tvbrowser-plugins/plugin-capture/src/main/java/captureplugin/drivers/dreambox/connector/DreamboxHandler.java -text
 tvbrowser-plugins/plugin-capture/src/main/java/captureplugin/drivers/dreambox/connector/DreamboxStateHandler.java -text
 tvbrowser-plugins/plugin-capture/src/main/java/captureplugin/drivers/dreambox/connector/DreamboxTimerHandler.java -text
-tvbrowser-plugins/plugin-capture/src/main/java/captureplugin/drivers/dreambox/jaxb/e2abouts/generated/E2About.java -text
-tvbrowser-plugins/plugin-capture/src/main/java/captureplugin/drivers/dreambox/jaxb/e2abouts/generated/E2Abouts.java -text
-tvbrowser-plugins/plugin-capture/src/main/java/captureplugin/drivers/dreambox/jaxb/e2abouts/generated/E2Hddinfo.java -text
-tvbrowser-plugins/plugin-capture/src/main/java/captureplugin/drivers/dreambox/jaxb/e2abouts/generated/E2Nim.java -text
-tvbrowser-plugins/plugin-capture/src/main/java/captureplugin/drivers/dreambox/jaxb/e2abouts/generated/E2Tunerinfo.java -text
-tvbrowser-plugins/plugin-capture/src/main/java/captureplugin/drivers/dreambox/jaxb/e2abouts/generated/ObjectFactory.java -text
+tvbrowser-plugins/plugin-capture/src/main/java/captureplugin/drivers/dreambox/connector/cs/BooleanCellRenderer.java -text svneol=unset#text/plain
+tvbrowser-plugins/plugin-capture/src/main/java/captureplugin/drivers/dreambox/connector/cs/ButtonCellEditor.java -text svneol=unset#text/plain
+tvbrowser-plugins/plugin-capture/src/main/java/captureplugin/drivers/dreambox/connector/cs/ButtonCellRenderer.java -text svneol=unset#text/plain
+tvbrowser-plugins/plugin-capture/src/main/java/captureplugin/drivers/dreambox/connector/cs/ComboBoxCellEditor.java -text svneol=unset#text/plain
+tvbrowser-plugins/plugin-capture/src/main/java/captureplugin/drivers/dreambox/connector/cs/ComboBoxCellRenderer.java -text svneol=unset#text/plain
+tvbrowser-plugins/plugin-capture/src/main/java/captureplugin/drivers/dreambox/connector/cs/DateCellEditor.java -text svneol=unset#text/plain
+tvbrowser-plugins/plugin-capture/src/main/java/captureplugin/drivers/dreambox/connector/cs/DateCellRenderer.java -text svneol=unset#text/plain
+tvbrowser-plugins/plugin-capture/src/main/java/captureplugin/drivers/dreambox/connector/cs/DreamboxInfoListPanel.java -text svneol=unset#text/plain
+tvbrowser-plugins/plugin-capture/src/main/java/captureplugin/drivers/dreambox/connector/cs/DreamboxMovieListPanel.java -text svneol=unset#text/plain
+tvbrowser-plugins/plugin-capture/src/main/java/captureplugin/drivers/dreambox/connector/cs/DreamboxMovieTableModel.java -text svneol=unset#text/plain
+tvbrowser-plugins/plugin-capture/src/main/java/captureplugin/drivers/dreambox/connector/cs/DreamboxOptionPane.java -text svneol=unset#text/plain
+tvbrowser-plugins/plugin-capture/src/main/java/captureplugin/drivers/dreambox/connector/cs/DreamboxTimerChartPanel.java -text svneol=unset#text/plain
+tvbrowser-plugins/plugin-capture/src/main/java/captureplugin/drivers/dreambox/connector/cs/DreamboxTimerListPanel.java -text svneol=unset#text/plain
+tvbrowser-plugins/plugin-capture/src/main/java/captureplugin/drivers/dreambox/connector/cs/DreamboxTimerTableModel.java -text svneol=unset#text/plain
+tvbrowser-plugins/plugin-capture/src/main/java/captureplugin/drivers/dreambox/connector/cs/E2InfoHelper.java -text svneol=unset#text/plain
+tvbrowser-plugins/plugin-capture/src/main/java/captureplugin/drivers/dreambox/connector/cs/E2ListItemHandler.java -text svneol=unset#text/plain
+tvbrowser-plugins/plugin-capture/src/main/java/captureplugin/drivers/dreambox/connector/cs/E2ListMapHandler.java -text svneol=unset#text/plain
+tvbrowser-plugins/plugin-capture/src/main/java/captureplugin/drivers/dreambox/connector/cs/E2LocationHelper.java -text svneol=unset#text/plain
+tvbrowser-plugins/plugin-capture/src/main/java/captureplugin/drivers/dreambox/connector/cs/E2MovieHelper.java -text svneol=unset#text/plain
+tvbrowser-plugins/plugin-capture/src/main/java/captureplugin/drivers/dreambox/connector/cs/E2ServiceHelper.java -text svneol=unset#text/plain
+tvbrowser-plugins/plugin-capture/src/main/java/captureplugin/drivers/dreambox/connector/cs/E2TimerHelper.java -text svneol=unset#text/plain
+tvbrowser-plugins/plugin-capture/src/main/java/captureplugin/drivers/dreambox/connector/cs/FtpHelper.java -text svneol=unset#text/plain
+tvbrowser-plugins/plugin-capture/src/main/java/captureplugin/drivers/dreambox/connector/cs/JPanelRefreshAbstract.java -text svneol=unset#text/plain
+tvbrowser-plugins/plugin-capture/src/main/java/captureplugin/drivers/dreambox/connector/cs/JTabbedPaneRefresh.java -text svneol=unset#text/plain
+tvbrowser-plugins/plugin-capture/src/main/java/captureplugin/drivers/dreambox/connector/cs/LabelCellEditor.java -text svneol=unset#text/plain
+tvbrowser-plugins/plugin-capture/src/main/java/captureplugin/drivers/dreambox/connector/cs/LabelCellRenderer.java -text svneol=unset#text/plain
+tvbrowser-plugins/plugin-capture/src/main/java/captureplugin/drivers/dreambox/connector/cs/ProgramOptionPanel.java -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-capture/src/main/java/captureplugin/drivers/elgatodriver/ElgatoConnection.java -text
 tvbrowser-plugins/plugin-capture/src/main/java/captureplugin/drivers/elgatodriver/ElgatoDriver.java -text
 tvbrowser-plugins/plugin-capture/src/main/java/captureplugin/drivers/simpledevice/SimpleChannel.java -text
@@ -362,7 +383,6 @@ tvbrowser-plugins/plugin-capture/src/main/java/captureplugin/drivers/topfield/To
 tvbrowser-plugins/plugin-capture/src/main/java/captureplugin/drivers/topfield/TopfieldConfigurationDialog.java -text
 tvbrowser-plugins/plugin-capture/src/main/java/captureplugin/drivers/topfield/TopfieldDevice.java -text
 tvbrowser-plugins/plugin-capture/src/main/java/captureplugin/drivers/topfield/TopfieldDriver.java -text
-tvbrowser-plugins/plugin-capture/src/main/java/captureplugin/drivers/topfield/TopfieldProgramTimeComponent.java -text
 tvbrowser-plugins/plugin-capture/src/main/java/captureplugin/drivers/topfield/TopfieldRollTableCellEditor.java -text
 tvbrowser-plugins/plugin-capture/src/main/java/captureplugin/drivers/topfield/TopfieldServiceInfo.java -text
 tvbrowser-plugins/plugin-capture/src/main/java/captureplugin/drivers/topfield/TopfieldTimerEntry.java -text
@@ -373,8 +393,6 @@ tvbrowser-plugins/plugin-capture/src/main/java/captureplugin/drivers/topfield/co
 tvbrowser-plugins/plugin-capture/src/main/java/captureplugin/drivers/topfield/connector/TopfieldServiceException.java -text
 tvbrowser-plugins/plugin-capture/src/main/java/captureplugin/drivers/topfield/connector/TopfieldServiceType.java -text
 tvbrowser-plugins/plugin-capture/src/main/java/captureplugin/drivers/topfield/connector/TopfieldTunerException.java -text
-tvbrowser-plugins/plugin-capture/src/main/java/captureplugin/drivers/topfield/connector/connector.properties -text
-tvbrowser-plugins/plugin-capture/src/main/java/captureplugin/drivers/topfield/connector/connector_de.properties -text
 tvbrowser-plugins/plugin-capture/src/main/java/captureplugin/drivers/utils/IDGenerator.java -text
 tvbrowser-plugins/plugin-capture/src/main/java/captureplugin/drivers/utils/ProgramTime.java -text
 tvbrowser-plugins/plugin-capture/src/main/java/captureplugin/drivers/utils/ProgramTimeDialog.java -text
@@ -400,6 +418,13 @@ tvbrowser-plugins/plugin-capture/src/main/resources/captureplugin/captureplugin_
 tvbrowser-plugins/plugin-capture/src/main/resources/captureplugin/captureplugin_it.properties -text
 tvbrowser-plugins/plugin-capture/src/main/resources/captureplugin/captureplugin_sk.properties -text
 tvbrowser-plugins/plugin-capture/src/main/resources/captureplugin/captureplugin_sv.properties -text
+tvbrowser-plugins/plugin-capture/src/main/resources/captureplugin/drivers/defaultdriver/configpanels/ApplicationPanel.java -text svneol=unset#text/plain
+tvbrowser-plugins/plugin-capture/src/main/resources/captureplugin/drivers/defaultdriver/configpanels/ChannelPanel.java -text svneol=unset#text/plain
+tvbrowser-plugins/plugin-capture/src/main/resources/captureplugin/drivers/defaultdriver/configpanels/ChannelTableModel.java -text svneol=unset#text/plain
+tvbrowser-plugins/plugin-capture/src/main/resources/captureplugin/drivers/defaultdriver/configpanels/ParameterPanel.java -text svneol=unset#text/plain
+tvbrowser-plugins/plugin-capture/src/main/resources/captureplugin/drivers/defaultdriver/configpanels/SettingsPanel.java -text svneol=unset#text/plain
+tvbrowser-plugins/plugin-capture/src/main/resources/captureplugin/drivers/defaultdriver/configpanels/VariablePanel.java -text svneol=unset#text/plain
+tvbrowser-plugins/plugin-capture/src/main/resources/captureplugin/drivers/defaultdriver/configpanels/VariableTableModel.java -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-capture/src/main/resources/captureplugin/drivers/defaultdriver/configpanels/configpanels.properties -text
 tvbrowser-plugins/plugin-capture/src/main/resources/captureplugin/drivers/defaultdriver/configpanels/configpanels_da.properties -text
 tvbrowser-plugins/plugin-capture/src/main/resources/captureplugin/drivers/defaultdriver/configpanels/configpanels_de.properties -text
@@ -414,6 +439,29 @@ tvbrowser-plugins/plugin-capture/src/main/resources/captureplugin/drivers/defaul
 tvbrowser-plugins/plugin-capture/src/main/resources/captureplugin/drivers/defaultdriver/defaultdriver_it.properties -text
 tvbrowser-plugins/plugin-capture/src/main/resources/captureplugin/drivers/defaultdriver/defaultdriver_sk.properties -text
 tvbrowser-plugins/plugin-capture/src/main/resources/captureplugin/drivers/defaultdriver/defaultdriver_sv.properties -text
+tvbrowser-plugins/plugin-capture/src/main/resources/captureplugin/drivers/dreambox/connector/connector.properties -text svneol=unset#text/plain
+tvbrowser-plugins/plugin-capture/src/main/resources/captureplugin/drivers/dreambox/connector/connector_de.properties -text svneol=unset#text/plain
+tvbrowser-plugins/plugin-capture/src/main/resources/captureplugin/drivers/dreambox/connector/connector_hr.properties -text svneol=unset#text/plain
+tvbrowser-plugins/plugin-capture/src/main/resources/captureplugin/drivers/dreambox/connector/cs/SD_HD.properties -text svneol=unset#text/plain
+tvbrowser-plugins/plugin-capture/src/main/resources/captureplugin/drivers/dreambox/connector/cs/build.xml -text svneol=unset#text/plain
+tvbrowser-plugins/plugin-capture/src/main/resources/captureplugin/drivers/dreambox/connector/cs/cs.properties -text svneol=unset#text/plain
+tvbrowser-plugins/plugin-capture/src/main/resources/captureplugin/drivers/dreambox/connector/cs/cs_de.properties -text svneol=unset#text/plain
+tvbrowser-plugins/plugin-capture/src/main/resources/captureplugin/drivers/dreambox/connector/cs/cs_hr.properties -text svneol=unset#text/plain
+tvbrowser-plugins/plugin-capture/src/main/resources/captureplugin/drivers/dreambox/connector/cs/images/activ.gif -text
+tvbrowser-plugins/plugin-capture/src/main/resources/captureplugin/drivers/dreambox/connector/cs/images/cleanup.gif -text
+tvbrowser-plugins/plugin-capture/src/main/resources/captureplugin/drivers/dreambox/connector/cs/images/copy.gif -text
+tvbrowser-plugins/plugin-capture/src/main/resources/captureplugin/drivers/dreambox/connector/cs/images/delete.gif -text
+tvbrowser-plugins/plugin-capture/src/main/resources/captureplugin/drivers/dreambox/connector/cs/images/edit.gif -text
+tvbrowser-plugins/plugin-capture/src/main/resources/captureplugin/drivers/dreambox/connector/cs/images/expired.gif -text
+tvbrowser-plugins/plugin-capture/src/main/resources/captureplugin/drivers/dreambox/connector/cs/images/export.gif -text
+tvbrowser-plugins/plugin-capture/src/main/resources/captureplugin/drivers/dreambox/connector/cs/images/import.gif -text
+tvbrowser-plugins/plugin-capture/src/main/resources/captureplugin/drivers/dreambox/connector/cs/images/paste.gif -text
+tvbrowser-plugins/plugin-capture/src/main/resources/captureplugin/drivers/dreambox/connector/cs/images/print.gif -text
+tvbrowser-plugins/plugin-capture/src/main/resources/captureplugin/drivers/dreambox/connector/cs/images/repeated.gif -text
+tvbrowser-plugins/plugin-capture/src/main/resources/captureplugin/drivers/dreambox/connector/cs/images/stream.gif -text
+tvbrowser-plugins/plugin-capture/src/main/resources/captureplugin/drivers/dreambox/connector/cs/images/zap.gif -text
+tvbrowser-plugins/plugin-capture/src/main/resources/captureplugin/drivers/dreambox/connector/cs/testdata/prepared/mirrorlist.txt -text svneol=unset#text/plain
+tvbrowser-plugins/plugin-capture/src/main/resources/captureplugin/drivers/dreambox/connector/cs/tvbrowser_console.cmd -text
 tvbrowser-plugins/plugin-capture/src/main/resources/captureplugin/drivers/dreambox/dreambox.properties -text
 tvbrowser-plugins/plugin-capture/src/main/resources/captureplugin/drivers/dreambox/dreambox_da.properties -text
 tvbrowser-plugins/plugin-capture/src/main/resources/captureplugin/drivers/dreambox/dreambox_de.properties -text
@@ -448,12 +496,6 @@ tvbrowser-plugins/plugin-capture/src/main/resources/captureplugin/drivers/thetub
 tvbrowser-plugins/plugin-capture/src/main/resources/captureplugin/drivers/thetubedriver/thetubedriver_it.properties -text
 tvbrowser-plugins/plugin-capture/src/main/resources/captureplugin/drivers/thetubedriver/thetubedriver_sk.properties -text
 tvbrowser-plugins/plugin-capture/src/main/resources/captureplugin/drivers/thetubedriver/thetubedriver_sv.properties -text
-tvbrowser-plugins/plugin-capture/src/main/resources/captureplugin/drivers/topfield/connector/TopfieldConnectionException.java -text
-tvbrowser-plugins/plugin-capture/src/main/resources/captureplugin/drivers/topfield/connector/TopfieldConnector.java -text
-tvbrowser-plugins/plugin-capture/src/main/resources/captureplugin/drivers/topfield/connector/TopfieldServiceException.java -text
-tvbrowser-plugins/plugin-capture/src/main/resources/captureplugin/drivers/topfield/connector/TopfieldServiceType.java -text
-tvbrowser-plugins/plugin-capture/src/main/resources/captureplugin/drivers/topfield/connector/TopfieldTunerException.java -text
-tvbrowser-plugins/plugin-capture/src/main/resources/captureplugin/drivers/topfield/connector/connector_hr.properties -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-capture/src/main/resources/captureplugin/drivers/topfield/topfield.properties -text
 tvbrowser-plugins/plugin-capture/src/main/resources/captureplugin/drivers/topfield/topfield_de.properties -text
 tvbrowser-plugins/plugin-capture/src/main/resources/captureplugin/drivers/topfield/topfield_hr.properties -text svneol=unset#text/plain
@@ -471,6 +513,15 @@ tvbrowser-plugins/plugin-capture/src/main/resources/captureplugin/tabs/tabs_hr.p
 tvbrowser-plugins/plugin-capture/src/main/resources/captureplugin/tabs/tabs_it.properties -text
 tvbrowser-plugins/plugin-capture/src/main/resources/captureplugin/tabs/tabs_sk.properties -text
 tvbrowser-plugins/plugin-capture/src/main/resources/captureplugin/tabs/tabs_sv.properties -text
+tvbrowser-plugins/plugin-capture/src/main/resources/captureplugin/utils/CaptureUtilities.java -text svneol=unset#text/plain
+tvbrowser-plugins/plugin-capture/src/main/resources/captureplugin/utils/ChannelComparator.java -text svneol=unset#text/plain
+tvbrowser-plugins/plugin-capture/src/main/resources/captureplugin/utils/ConfigIf.java -text svneol=unset#text/plain
+tvbrowser-plugins/plugin-capture/src/main/resources/captureplugin/utils/ConfigTableModel.java -text svneol=unset#text/plain
+tvbrowser-plugins/plugin-capture/src/main/resources/captureplugin/utils/DeviceImportAndExport.java -text svneol=unset#text/plain
+tvbrowser-plugins/plugin-capture/src/main/resources/captureplugin/utils/ExternalChannelIf.java -text svneol=unset#text/plain
+tvbrowser-plugins/plugin-capture/src/main/resources/captureplugin/utils/ExternalChannelTableCellEditor.java -text svneol=unset#text/plain
+tvbrowser-plugins/plugin-capture/src/main/resources/captureplugin/utils/ExternalChannelTableCellRenderer.java -text svneol=unset#text/plain
+tvbrowser-plugins/plugin-capture/src/main/resources/captureplugin/utils/ProgramTimeComparator.java -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-capture/src/main/resources/captureplugin/utils/utils.properties -text
 tvbrowser-plugins/plugin-capture/src/main/resources/captureplugin/utils/utils_da.properties -text
 tvbrowser-plugins/plugin-capture/src/main/resources/captureplugin/utils/utils_de.properties -text
