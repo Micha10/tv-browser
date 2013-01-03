@@ -1415,6 +1415,7 @@ tvbrowser-plugins/plugin-switch/src/main/resources/switchplugin/License.txt -tex
 tvbrowser-plugins/plugin-switch/src/main/resources/switchplugin/icons/16x16/devices/video-display.png -text
 tvbrowser-plugins/plugin-switch/src/main/resources/switchplugin/switchplugin.properties -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-switch/src/main/resources/switchplugin/switchplugin_de.properties -text svneol=unset#text/plain
+tvbrowser-plugins/plugin-switch/src/main/resources/switchplugin/switchplugin_hr.properties -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-tagging/pom.xml -text
 tvbrowser-plugins/plugin-tagging/src/main/java/taggingplugin/ProgramListDialog.java -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-tagging/src/main/java/taggingplugin/TagFilterComponent.java -text
