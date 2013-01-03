@@ -1014,6 +1014,7 @@ tvbrowser-plugins/plugin-movieaward/src/main/resources/movieawardplugin/data/osc
 tvbrowser-plugins/plugin-movieaward/src/main/resources/movieawardplugin/movieaward.png -text
 tvbrowser-plugins/plugin-movieaward/src/main/resources/movieawardplugin/movieawardplugin.properties -text
 tvbrowser-plugins/plugin-movieaward/src/main/resources/movieawardplugin/movieawardplugin_de.properties -text
+tvbrowser-plugins/plugin-netcontrol/src/main/java/tvbnetcontrol/TvbNetControl.java -text
 tvbrowser-plugins/plugin-news/.classpath -text
 tvbrowser-plugins/plugin-news/.project -text
 tvbrowser-plugins/plugin-news/.settings/org.eclipse.core.resources.prefs -text
