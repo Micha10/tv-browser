@@ -1015,6 +1015,8 @@ tvbrowser-plugins/plugin-movieaward/src/main/resources/movieawardplugin/movieawa
 tvbrowser-plugins/plugin-movieaward/src/main/resources/movieawardplugin/movieawardplugin.properties -text
 tvbrowser-plugins/plugin-movieaward/src/main/resources/movieawardplugin/movieawardplugin_de.properties -text
 tvbrowser-plugins/plugin-netcontrol/pom.xml -text
+tvbrowser-plugins/plugin-netcontrol/src/main/java/tvbnetcontrol/Commands.java -text
+tvbrowser-plugins/plugin-netcontrol/src/main/java/tvbnetcontrol/KeyCommand.java -text
 tvbrowser-plugins/plugin-netcontrol/src/main/java/tvbnetcontrol/TvbNetControl.java -text
 tvbrowser-plugins/plugin-news/.classpath -text
 tvbrowser-plugins/plugin-news/.project -text
