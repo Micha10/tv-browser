@@ -210,6 +210,15 @@ tv-browserm/tv-browserm/src/tv-browserm_en_EN.qm -text
 tv-browserm/tv-browserm/src/tv-browserm_en_EN.ts -text
 tv-browserm/tv-browserm/src/ui_mainwindow.h -text
 tv-browserm/tv-browserm/tv-browserm.pro -text
+tvbrowser-lens/.project -text
+tvbrowser-lens/License.txt -text
+tvbrowser-lens/build.properties -text
+tvbrowser-lens/build.xml -text
+tvbrowser-lens/deployment/ant-deb-task/ant-deb-0.0.1.jar -text
+tvbrowser-lens/src/tvbrowser-lens -text
+tvbrowser-lens/src/tvbrowser.lens -text
+tvbrowser-lens/src/tvbrowser.svg -text
+tvbrowser-lens/src/unity-lens-tvbrowser.service -text
 tvbrowser-plugins/Package[!!-~]selected[!!-~]plugin.launch -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-alldataperchannel/pom.xml -text
 tvbrowser-plugins/plugin-alldataperchannel/src/main/java/alldataperchannelplugin/AllDataPerChannelPlugin.java -text

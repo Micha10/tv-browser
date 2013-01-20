@@ -6,6 +6,7 @@ androidtvbrowser/assets
 androidtvbrowser/bin
 androidtvbrowser/local.properties
 primarydatamanager/tvdatastarterkit/target
+tvbrowser-lens/build-target
 tvbrowser-plugins/.classpath
 tvbrowser-plugins/.pmd
 tvbrowser-plugins/.project
