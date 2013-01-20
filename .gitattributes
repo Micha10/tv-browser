@@ -875,6 +875,13 @@ tvbrowser-plugins/plugin-imdb/src/main/resources/imdbplugin/imdbplugin_da.proper
 tvbrowser-plugins/plugin-imdb/src/main/resources/imdbplugin/imdbplugin_de.properties -text
 tvbrowser-plugins/plugin-imdb/src/main/resources/imdbplugin/imdbplugin_hr.properties -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-imdb/src/main/resources/imdbplugin/rating.png -text
+tvbrowser-plugins/plugin-infoserver/.classpath -text
+tvbrowser-plugins/plugin-infoserver/.project -text
+tvbrowser-plugins/plugin-infoserver/.settings/org.eclipse.core.resources.prefs -text
+tvbrowser-plugins/plugin-infoserver/.settings/org.eclipse.jdt.core.prefs -text
+tvbrowser-plugins/plugin-infoserver/.settings/org.eclipse.m2e.core.prefs -text
+tvbrowser-plugins/plugin-infoserver/pom.xml -text
+tvbrowser-plugins/plugin-infoserver/src/main/java/tvbinfoserver/TvbInfoServer.java -text
 tvbrowser-plugins/plugin-jumptoprogram/.classpath -text
 tvbrowser-plugins/plugin-jumptoprogram/.project -text
 tvbrowser-plugins/plugin-jumptoprogram/.settings/org.eclipse.core.resources.prefs -text
