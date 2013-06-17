@@ -2672,6 +2672,8 @@ tvbrowser/src/util/programmouseevent/ProgramContextMenuListener.java -text
 tvbrowser/src/util/programmouseevent/ProgramMouseActionListener.java -text
 tvbrowser/src/util/programmouseevent/ProgramMouseAndContextMenuListener.java -text
 tvbrowser/src/util/programmouseevent/ProgramMouseEventHandler.java -text
+tvbrowser/src/util/settings/ContextMenuMouseActionArrayProperty.java -text
+tvbrowser/src/util/settings/ContextMenuMouseActionSetting.java -text
 tvbrowser/src/util/settings/FontProperty.java -text
 tvbrowser/src/util/settings/ProgramPanelSettings.java -text
 tvbrowser/src/util/settings/PropertyBasedSettings.java -text
