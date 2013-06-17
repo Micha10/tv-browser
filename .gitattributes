@@ -2668,6 +2668,10 @@ tvbrowser/src/util/program/program_hr.properties -text svneol=unset#text/plain
 tvbrowser/src/util/program/program_it.properties -text
 tvbrowser/src/util/program/program_sk.properties -text
 tvbrowser/src/util/program/program_sv.properties -text
+tvbrowser/src/util/programmouseevent/ProgramContextMenuListener.java -text
+tvbrowser/src/util/programmouseevent/ProgramMouseActionListener.java -text
+tvbrowser/src/util/programmouseevent/ProgramMouseAndContextMenuListener.java -text
+tvbrowser/src/util/programmouseevent/ProgramMouseEventHandler.java -text
 tvbrowser/src/util/settings/FontProperty.java -text
 tvbrowser/src/util/settings/ProgramPanelSettings.java -text
 tvbrowser/src/util/settings/PropertyBasedSettings.java -text
