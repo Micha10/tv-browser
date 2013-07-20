@@ -2427,6 +2427,7 @@ tvbrowser/src/tvbrowser/extras/programinfo/programinfo_el.properties -text
 tvbrowser/src/tvbrowser/extras/programinfo/programinfo_hr.properties -text svneol=unset#text/plain
 tvbrowser/src/tvbrowser/extras/programinfo/programinfo_it.properties -text
 tvbrowser/src/tvbrowser/extras/programinfo/programinfo_sk.properties -text
+tvbrowser/src/tvbrowser/extras/reminderplugin/RemindValue.java -text
 tvbrowser/src/tvbrowser/extras/reminderplugin/ReminderContent.java -text
 tvbrowser/src/tvbrowser/extras/reminderplugin/ReminderListPanel.java -text
 tvbrowser/src/tvbrowser/extras/reminderplugin/ReminderPluginProxy.java -text
