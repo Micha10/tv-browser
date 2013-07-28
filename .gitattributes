@@ -428,13 +428,6 @@ tvbrowser-plugins/plugin-capture/src/main/resources/captureplugin/captureplugin_
 tvbrowser-plugins/plugin-capture/src/main/resources/captureplugin/captureplugin_it.properties -text
 tvbrowser-plugins/plugin-capture/src/main/resources/captureplugin/captureplugin_sk.properties -text
 tvbrowser-plugins/plugin-capture/src/main/resources/captureplugin/captureplugin_sv.properties -text
-tvbrowser-plugins/plugin-capture/src/main/resources/captureplugin/drivers/defaultdriver/configpanels/ApplicationPanel.java -text svneol=unset#text/plain
-tvbrowser-plugins/plugin-capture/src/main/resources/captureplugin/drivers/defaultdriver/configpanels/ChannelPanel.java -text svneol=unset#text/plain
-tvbrowser-plugins/plugin-capture/src/main/resources/captureplugin/drivers/defaultdriver/configpanels/ChannelTableModel.java -text svneol=unset#text/plain
-tvbrowser-plugins/plugin-capture/src/main/resources/captureplugin/drivers/defaultdriver/configpanels/ParameterPanel.java -text svneol=unset#text/plain
-tvbrowser-plugins/plugin-capture/src/main/resources/captureplugin/drivers/defaultdriver/configpanels/SettingsPanel.java -text svneol=unset#text/plain
-tvbrowser-plugins/plugin-capture/src/main/resources/captureplugin/drivers/defaultdriver/configpanels/VariablePanel.java -text svneol=unset#text/plain
-tvbrowser-plugins/plugin-capture/src/main/resources/captureplugin/drivers/defaultdriver/configpanels/VariableTableModel.java -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-capture/src/main/resources/captureplugin/drivers/defaultdriver/configpanels/configpanels.properties -text
 tvbrowser-plugins/plugin-capture/src/main/resources/captureplugin/drivers/defaultdriver/configpanels/configpanels_da.properties -text
 tvbrowser-plugins/plugin-capture/src/main/resources/captureplugin/drivers/defaultdriver/configpanels/configpanels_de.properties -text
