@@ -358,6 +358,7 @@ tvbrowser-plugins/plugin-capture/src/main/java/captureplugin/drivers/dreambox/co
 tvbrowser-plugins/plugin-capture/src/main/java/captureplugin/drivers/dreambox/connector/cs/ComboBoxCellRenderer.java -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-capture/src/main/java/captureplugin/drivers/dreambox/connector/cs/DateCellEditor.java -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-capture/src/main/java/captureplugin/drivers/dreambox/connector/cs/DateCellRenderer.java -text svneol=unset#text/plain
+tvbrowser-plugins/plugin-capture/src/main/java/captureplugin/drivers/dreambox/connector/cs/DefaultValueReturnMap.java -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-capture/src/main/java/captureplugin/drivers/dreambox/connector/cs/DreamboxInfoListPanel.java -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-capture/src/main/java/captureplugin/drivers/dreambox/connector/cs/DreamboxMovieListPanel.java -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-capture/src/main/java/captureplugin/drivers/dreambox/connector/cs/DreamboxMovieTableModel.java -text svneol=unset#text/plain
