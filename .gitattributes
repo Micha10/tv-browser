@@ -1338,6 +1338,19 @@ tvbrowser-plugins/plugin-recommendation/src/main/resources/recommendationplugin/
 tvbrowser-plugins/plugin-recommendation/src/main/resources/recommendationplugin/weighting/weighting_da.properties -text
 tvbrowser-plugins/plugin-recommendation/src/main/resources/recommendationplugin/weighting/weighting_de.properties -text
 tvbrowser-plugins/plugin-recommendation/src/main/resources/recommendationplugin/weighting/weighting_hr.properties -text svneol=unset#text/plain
+tvbrowser-plugins/plugin-rememberme/.classpath -text svneol=unset#text/plain
+tvbrowser-plugins/plugin-rememberme/.project -text svneol=unset#text/plain
+tvbrowser-plugins/plugin-rememberme/.settings/org.eclipse.core.resources.prefs -text svneol=unset#text/plain
+tvbrowser-plugins/plugin-rememberme/.settings/org.eclipse.jdt.core.prefs -text svneol=unset#text/plain
+tvbrowser-plugins/plugin-rememberme/.settings/org.eclipse.m2e.core.prefs -text svneol=unset#text/plain
+tvbrowser-plugins/plugin-rememberme/pom.xml -text svneol=unset#text/plain
+tvbrowser-plugins/plugin-rememberme/src/main/java/rememberme/RemeberMeSettingsTab.java -text svneol=unset#text/plain
+tvbrowser-plugins/plugin-rememberme/src/main/java/rememberme/RememberMe.java -text svneol=unset#text/plain
+tvbrowser-plugins/plugin-rememberme/src/main/java/rememberme/RememberMeManagePanel.java -text svneol=unset#text/plain
+tvbrowser-plugins/plugin-rememberme/src/main/java/rememberme/RememberedProgram.java -text svneol=unset#text/plain
+tvbrowser-plugins/plugin-rememberme/src/main/java/rememberme/RememberedProgramsList.java -text svneol=unset#text/plain
+tvbrowser-plugins/plugin-rememberme/src/main/resources/rememberme/rememberme.properties -text svneol=unset#text/plain
+tvbrowser-plugins/plugin-rememberme/src/main/resources/rememberme/rememberme_de.properties -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-schedulesdirectdataservice/.classpath -text
 tvbrowser-plugins/plugin-schedulesdirectdataservice/.project -text
 tvbrowser-plugins/plugin-schedulesdirectdataservice/.settings/org.eclipse.core.resources.prefs -text

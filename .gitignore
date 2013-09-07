@@ -188,6 +188,7 @@ tvbrowser-plugins/plugin-recommendation/.project
 tvbrowser-plugins/plugin-recommendation/.settings
 tvbrowser-plugins/plugin-recommendation/target
 tvbrowser-plugins/plugin-recommendation/tvbrowser-plugins-recommendation.iml
+tvbrowser-plugins/plugin-rememberme/target
 tvbrowser-plugins/plugin-schedulesdirectdataservice/target
 tvbrowser-plugins/plugin-sharedchannelautoupdate/.classpath
 tvbrowser-plugins/plugin-sharedchannelautoupdate/.escabaseline
