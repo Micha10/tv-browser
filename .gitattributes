@@ -2224,6 +2224,7 @@ tvbrowser/images/themes/tango/22x22/status/mail-attachment.png -text
 tvbrowser/images/themes/tango/22x22/status/network-transmit-receive.png -text
 tvbrowser/images/themes/tango/22x22/status/view-filter-set-list.png -text
 tvbrowser/images/themes/tango/22x22/status/view-filter-set.png -text
+tvbrowser/images/themes/tango_system-restart.svg -text
 tvbrowser/lib/bsh-2.0b4.jar -text
 tvbrowser/lib/commons-codec-1.7.jar -text
 tvbrowser/lib/commons-lang3-3.1.jar -text
