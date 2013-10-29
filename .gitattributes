@@ -1630,6 +1630,7 @@ tvbrowser-plugins/plugin-tvpearl/src/main/java/tvpearlplugin/IProgramStatus.java
 tvbrowser-plugins/plugin-tvpearl/src/main/java/tvpearlplugin/PearlDialog.java -text
 tvbrowser-plugins/plugin-tvpearl/src/main/java/tvpearlplugin/PearlFilterComponent.java -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-tvpearl/src/main/java/tvpearlplugin/PearlInfoDialog.java -text
+tvbrowser-plugins/plugin-tvpearl/src/main/java/tvpearlplugin/PearlPanel.java -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-tvpearl/src/main/java/tvpearlplugin/TVPGrabber.java -text
 tvbrowser-plugins/plugin-tvpearl/src/main/java/tvpearlplugin/TVPProgram.java -text
 tvbrowser-plugins/plugin-tvpearl/src/main/java/tvpearlplugin/TVPProgramFilter.java -text
