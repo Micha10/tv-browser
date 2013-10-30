@@ -1627,14 +1627,18 @@ tvbrowser-plugins/plugin-tvbrowsermini/src/main/resources/tvbrowsermini/tvbrowse
 tvbrowser-plugins/plugin-tvpearl/pom.xml -text
 tvbrowser-plugins/plugin-tvpearl/src/main/java/tvpearlplugin/HTTPConverter.java -text
 tvbrowser-plugins/plugin-tvpearl/src/main/java/tvpearlplugin/IProgramStatus.java -text svneol=unset#text/plain
+tvbrowser-plugins/plugin-tvpearl/src/main/java/tvpearlplugin/PearlCreationJPanel.java -text svneol=unset#text/plain
+tvbrowser-plugins/plugin-tvpearl/src/main/java/tvpearlplugin/PearlCreationTableCellRenderer.java -text svneol=unset#text/plain
+tvbrowser-plugins/plugin-tvpearl/src/main/java/tvpearlplugin/PearlCreationTableModel.java -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-tvpearl/src/main/java/tvpearlplugin/PearlDialog.java -text
+tvbrowser-plugins/plugin-tvpearl/src/main/java/tvpearlplugin/PearlDisplayPanel.java -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-tvpearl/src/main/java/tvpearlplugin/PearlFilterComponent.java -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-tvpearl/src/main/java/tvpearlplugin/PearlInfoDialog.java -text
-tvbrowser-plugins/plugin-tvpearl/src/main/java/tvpearlplugin/PearlPanel.java -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-tvpearl/src/main/java/tvpearlplugin/TVPGrabber.java -text
 tvbrowser-plugins/plugin-tvpearl/src/main/java/tvpearlplugin/TVPProgram.java -text
 tvbrowser-plugins/plugin-tvpearl/src/main/java/tvpearlplugin/TVPProgramFilter.java -text
 tvbrowser-plugins/plugin-tvpearl/src/main/java/tvpearlplugin/TVPearl.java -text
+tvbrowser-plugins/plugin-tvpearl/src/main/java/tvpearlplugin/TVPearlCreation.java -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-tvpearl/src/main/java/tvpearlplugin/TVPearlListCellRenderer.java -text
 tvbrowser-plugins/plugin-tvpearl/src/main/java/tvpearlplugin/TVPearlPlugin.java -text
 tvbrowser-plugins/plugin-tvpearl/src/main/java/tvpearlplugin/TVPearlPluginSettingsTab.java -text
