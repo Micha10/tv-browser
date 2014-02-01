@@ -2414,6 +2414,7 @@ tvbrowser/src/tvbrowser/extras/common/common_sk.properties -text
 tvbrowser/src/tvbrowser/extras/common/common_sv.properties -text
 tvbrowser/src/tvbrowser/extras/favoritesplugin/ContextMenuProvider.java -text
 tvbrowser/src/tvbrowser/extras/favoritesplugin/core/ActorSearcher.java -text
+tvbrowser/src/tvbrowser/extras/favoritesplugin/core/FavoriteFilter.java -text
 tvbrowser/src/tvbrowser/extras/favoritesplugin/core/core_cs.properties -text svneol=unset#text/plain
 tvbrowser/src/tvbrowser/extras/favoritesplugin/core/core_da.properties -text
 tvbrowser/src/tvbrowser/extras/favoritesplugin/core/core_el.properties -text
