@@ -2457,6 +2457,7 @@ tvbrowser/src/tvbrowser/extras/reminderplugin/RemindValue.java -text
 tvbrowser/src/tvbrowser/extras/reminderplugin/ReminderContent.java -text
 tvbrowser/src/tvbrowser/extras/reminderplugin/ReminderListPanel.java -text
 tvbrowser/src/tvbrowser/extras/reminderplugin/ReminderPluginProxy.java -text
+tvbrowser/src/tvbrowser/extras/reminderplugin/ReminderPropertyDefaults.java -text svneol=unset#text/plain
 tvbrowser/src/tvbrowser/extras/reminderplugin/reminderplugin_cs.properties -text svneol=unset#text/plain
 tvbrowser/src/tvbrowser/extras/reminderplugin/reminderplugin_da.properties -text
 tvbrowser/src/tvbrowser/extras/reminderplugin/reminderplugin_el.properties -text
@@ -2676,6 +2677,7 @@ tvbrowser/src/util/misc/AbstractXmlTvDataHandler.java -text
 tvbrowser/src/util/misc/AppleScriptRunner.java -text
 tvbrowser/src/util/misc/ChangeTrackingProperties.java -text svneol=unset#text/plain
 tvbrowser/src/util/misc/HashCodeUtilities.java -text
+tvbrowser/src/util/misc/PropertyDefaults.java -text svneol=unset#text/plain
 tvbrowser/src/util/misc/SoftReferenceCache.java -text
 tvbrowser/src/util/paramhandler/paramhandler_cs.properties -text svneol=unset#text/plain
 tvbrowser/src/util/paramhandler/paramhandler_da.properties -text
