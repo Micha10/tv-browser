@@ -2639,6 +2639,7 @@ tvbrowser/src/tvbrowser/ui/waiting/dlgs/dlgs_da.properties -text
 tvbrowser/src/tvbrowser/ui/waiting/dlgs/dlgs_el.properties -text
 tvbrowser/src/tvbrowser/ui/waiting/dlgs/dlgs_hr.properties -text svneol=unset#text/plain
 tvbrowser/src/tvbrowser/ui/waiting/dlgs/dlgs_sv.properties -text
+tvbrowser/src/tvdataservice/MarkedProgramsMap.java -text svneol=unset#text/plain
 tvbrowser/src/tvdataservice/PictureSettingsIf.java -text
 tvbrowser/src/util/browserlauncher/browserlauncher_cs.properties -text svneol=unset#text/plain
 tvbrowser/src/util/browserlauncher/browserlauncher_da.properties -text
@@ -2731,6 +2732,7 @@ tvbrowser/src/util/ui/PopupButton.java -text
 tvbrowser/src/util/ui/TVBrowserIcons.java -text svneol=unset#text/plain
 tvbrowser/src/util/ui/TimeFormatter.java -text
 tvbrowser/src/util/ui/UIThreadRunner.java -text
+tvbrowser/src/util/ui/WideComboBox.java -text svneol=unset#text/plain
 tvbrowser/src/util/ui/customizableitems/customizableitems_da.properties -text
 tvbrowser/src/util/ui/customizableitems/customizableitems_el.properties -text
 tvbrowser/src/util/ui/customizableitems/customizableitems_hr.properties -text svneol=unset#text/plain
