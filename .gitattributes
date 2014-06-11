@@ -2065,6 +2065,7 @@ tvbrowser/images/themes/CrystalClear/16x16/status/network-transmit-receive.png -
 tvbrowser/images/themes/CrystalClear/16x16/status/software-update-available.png -text
 tvbrowser/images/themes/CrystalClear/16x16/status/view-filter-set-list.png -text
 tvbrowser/images/themes/CrystalClear/16x16/status/view-filter-set.png -text
+tvbrowser/images/themes/CrystalClear/22x22/actions/add-line-break.png -text
 tvbrowser/images/themes/CrystalClear/22x22/actions/appointment-new.png -text
 tvbrowser/images/themes/CrystalClear/22x22/actions/document-edit.png -text
 tvbrowser/images/themes/CrystalClear/22x22/actions/document-new.png -text
@@ -2221,6 +2222,7 @@ tvbrowser/images/themes/tango/16x16/status/mail-attachment.png -text
 tvbrowser/images/themes/tango/16x16/status/network-transmit-receive.png -text
 tvbrowser/images/themes/tango/16x16/status/software-update-available.png -text
 tvbrowser/images/themes/tango/16x16/status/view-filter-set.png -text
+tvbrowser/images/themes/tango/22x22/actions/add-line-break.png -text
 tvbrowser/images/themes/tango/22x22/actions/appointment-new.png -text
 tvbrowser/images/themes/tango/22x22/actions/document-edit.png -text
 tvbrowser/images/themes/tango/22x22/actions/document-new.png -text
