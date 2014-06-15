@@ -2404,6 +2404,11 @@ tvbrowser/src/tvbrowser/core/filters/filters_hr.properties -text svneol=unset#te
 tvbrowser/src/tvbrowser/core/filters/filters_sk.properties -text
 tvbrowser/src/tvbrowser/core/icontheme/InfoIconTheme.java -text svneol=unset#text/plain
 tvbrowser/src/tvbrowser/core/icontheme/InfoThemeLoader.java -text svneol=unset#text/plain
+tvbrowser/src/tvbrowser/core/icontheme/ThemeDownloadDlg.java -text
+tvbrowser/src/tvbrowser/core/icontheme/ThemeDownloadItem.java -text
+tvbrowser/src/tvbrowser/core/icontheme/ThemeDownloader.java -text
+tvbrowser/src/tvbrowser/core/icontheme/icontheme.properties -text
+tvbrowser/src/tvbrowser/core/icontheme/icontheme_de.properties -text
 tvbrowser/src/tvbrowser/core/plugin/ButtonActionIf.java -text
 tvbrowser/src/tvbrowser/core/plugin/plugin_cs.properties -text svneol=unset#text/plain
 tvbrowser/src/tvbrowser/core/plugin/plugin_da.properties -text
