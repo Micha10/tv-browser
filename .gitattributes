@@ -2386,6 +2386,7 @@ tvbrowser/src/tvbrowser/core/core_hr.properties -text svneol=unset#text/plain
 tvbrowser/src/tvbrowser/core/core_it.properties -text
 tvbrowser/src/tvbrowser/core/core_sk.properties -text
 tvbrowser/src/tvbrowser/core/filters/FilterManagerImpl.java -text
+tvbrowser/src/tvbrowser/core/filters/GenericFilterMap.java -text svneol=unset#text/plain
 tvbrowser/src/tvbrowser/core/filters/InfoBitFilter.java -text svneol=unset#text/plain
 tvbrowser/src/tvbrowser/core/filters/filtercomponents/AbstractFilterComponent.java -text svneol=unset#text/plain
 tvbrowser/src/tvbrowser/core/filters/filtercomponents/AgeLimitFilterComponent.java -text svneol=unset#text/plain
