@@ -16,6 +16,10 @@ tvbrowser-plugins/plugin-alldataperchannel/.escabaseline
 tvbrowser-plugins/plugin-alldataperchannel/.project
 tvbrowser-plugins/plugin-alldataperchannel/.settings
 tvbrowser-plugins/plugin-alldataperchannel/target
+tvbrowser-plugins/plugin-androidsync/.classpath
+tvbrowser-plugins/plugin-androidsync/.project
+tvbrowser-plugins/plugin-androidsync/.settings
+tvbrowser-plugins/plugin-androidsync/target
 tvbrowser-plugins/plugin-balloon/.classpath
 tvbrowser-plugins/plugin-balloon/.escabaseline
 tvbrowser-plugins/plugin-balloon/.fbprefs
