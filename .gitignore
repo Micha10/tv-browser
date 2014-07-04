@@ -20,6 +20,10 @@ tvbrowser-plugins/plugin-androidsync/.classpath
 tvbrowser-plugins/plugin-androidsync/.project
 tvbrowser-plugins/plugin-androidsync/.settings
 tvbrowser-plugins/plugin-androidsync/target
+tvbrowser-plugins/plugin-autoscrolltonow/.classpath
+tvbrowser-plugins/plugin-autoscrolltonow/.project
+tvbrowser-plugins/plugin-autoscrolltonow/.settings
+tvbrowser-plugins/plugin-autoscrolltonow/target
 tvbrowser-plugins/plugin-balloon/.classpath
 tvbrowser-plugins/plugin-balloon/.escabaseline
 tvbrowser-plugins/plugin-balloon/.fbprefs

@@ -238,6 +238,8 @@ tvbrowser-plugins/plugin-androidsync/src/main/resources/androidsync/icons/22x22/
 tvbrowser-plugins/plugin-androidsync/src/main/resources/androidsync/icons/22x22/actions/export-programs.png -text
 tvbrowser-plugins/plugin-androidsync/src/main/resources/androidsync/icons/22x22/apps/android_robot.png -text
 tvbrowser-plugins/plugin-androidsync/src/main/resources/androidsync/icons/icon_info.txt -text svneol=unset#text/plain
+tvbrowser-plugins/plugin-autoscrolltonow/pom.xml -text
+tvbrowser-plugins/plugin-autoscrolltonow/src/main/java/autoscrolltonowplugin/AutoScrollToNowPlugin.java -text
 tvbrowser-plugins/plugin-balloon/pom.xml -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-balloon/src/main/java/balloonplugin/BalloonPlugin.java -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-balloon/src/main/java/balloonplugin/JarApplicationExecuter.java -text svneol=unset#text/plain
