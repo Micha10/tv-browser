@@ -2344,6 +2344,7 @@ tvbrowser/personas/ecb70d5c-f606-4052-9059-5c501842d6c3/persona.prop -text
 tvbrowser/src/devplugin/AfterDataUpdateInfoPanel.java -text
 tvbrowser/src/devplugin/CancelableSettingsTab.java -text
 tvbrowser/src/devplugin/ChannelFilter.java -text
+tvbrowser/src/devplugin/ChannelFilterChangeListener.java -text
 tvbrowser/src/devplugin/FilterChangeListener.java -text svneol=unset#text/plain
 tvbrowser/src/devplugin/FilterChangeListenerV2.java -text
 tvbrowser/src/devplugin/FilterManager.java -text
@@ -2402,6 +2403,7 @@ tvbrowser/src/tvbrowser/core/core_el.properties -text
 tvbrowser/src/tvbrowser/core/core_hr.properties -text svneol=unset#text/plain
 tvbrowser/src/tvbrowser/core/core_it.properties -text
 tvbrowser/src/tvbrowser/core/core_sk.properties -text
+tvbrowser/src/tvbrowser/core/filters/ChannelFilterList.java -text
 tvbrowser/src/tvbrowser/core/filters/FilterManagerImpl.java -text
 tvbrowser/src/tvbrowser/core/filters/GenericFilterMap.java -text svneol=unset#text/plain
 tvbrowser/src/tvbrowser/core/filters/InfoBitFilter.java -text svneol=unset#text/plain
