@@ -611,6 +611,11 @@ tvbrowser-plugins/plugin-clock/src/main/resources/clockplugin/clockplugin_hr.pro
 tvbrowser-plugins/plugin-clock/src/main/resources/clockplugin/icon-license.txt -text
 tvbrowser-plugins/plugin-clock/src/main/resources/clockplugin/icons/16x16/apps/clock.png -text
 tvbrowser-plugins/plugin-clock/src/main/resources/clockplugin/icons/22x22/apps/clock.png -text
+tvbrowser-plugins/plugin-colorme/pom.xml -text
+tvbrowser-plugins/plugin-colorme/src/main/java/colorme/ColorMe.java -text
+tvbrowser-plugins/plugin-colorme/src/main/resources/colorme/colorme.properties -text
+tvbrowser-plugins/plugin-colorme/src/main/resources/colorme/colorme_de.properties -text
+tvbrowser-plugins/plugin-colorme/src/main/resources/colorme/icons/16x16/apps/colorme.png -text
 tvbrowser-plugins/plugin-countrycode/pom.xml -text
 tvbrowser-plugins/plugin-countrycode/src/main/java/countrycodeplugin/CountryCodePlugin.java -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-countrycode/src/main/resources/countrycodeplugin/countrycodeplugin.properties -text svneol=unset#text/plain
@@ -770,6 +775,12 @@ tvbrowser-plugins/plugin-feeds/src/main/resources/feedsplugin/feedsplugin.proper
 tvbrowser-plugins/plugin-feeds/src/main/resources/feedsplugin/feedsplugin_de.properties -text
 tvbrowser-plugins/plugin-feeds/src/main/resources/feedsplugin/icons/16x16/apps/feeds.png -text
 tvbrowser-plugins/plugin-feeds/src/main/resources/feedsplugin/icons/22x22/apps/feeds.png -text
+tvbrowser-plugins/plugin-filterinfoicons/pom.xml -text
+tvbrowser-plugins/plugin-filterinfoicons/src/main/java/filterinfoicon/FilterEntry.java -text
+tvbrowser-plugins/plugin-filterinfoicons/src/main/java/filterinfoicon/FilterInfoIcon.java -text
+tvbrowser-plugins/plugin-filterinfoicons/src/main/java/filterinfoicon/FilterInfoIconManagePanel.java -text
+tvbrowser-plugins/plugin-filterinfoicons/src/main/resources/filterinfoicon/filterinfoicon.properties -text
+tvbrowser-plugins/plugin-filterinfoicons/src/main/resources/filterinfoicon/filterinfoicon_de.properties -text
 tvbrowser-plugins/plugin-filterview/pom.xml -text
 tvbrowser-plugins/plugin-filterview/src/main/java/filterviewplugin/FilterViewPlugin.java -text
 tvbrowser-plugins/plugin-filterview/src/main/java/filterviewplugin/FilterViewSettings.java -text
@@ -777,6 +788,8 @@ tvbrowser-plugins/plugin-filterview/src/main/java/filterviewplugin/FilterViewSet
 tvbrowser-plugins/plugin-filterview/src/main/java/filterviewplugin/SetFilterAction.java -text
 tvbrowser-plugins/plugin-filterview/src/main/resources/filterviewplugin/filterviewplugin.properties -text
 tvbrowser-plugins/plugin-filterview/src/main/resources/filterviewplugin/filterviewplugin_de.properties -text
+tvbrowser-plugins/plugin-fixprogramdudation/pom.xml -text
+tvbrowser-plugins/plugin-fixprogramdudation/src/main/java/fixprogramduration/FixProgramDuration.java -text
 tvbrowser-plugins/plugin-freetuxtv/pom.xml -text
 tvbrowser-plugins/plugin-freetuxtv/src/main/java/freetuxtvplugin/FreetuxTVPlugin.java -text
 tvbrowser-plugins/plugin-freetuxtv/src/main/resources/freetuxtvplugin/freetuxtvplugin.properties -text
