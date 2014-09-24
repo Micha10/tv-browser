@@ -2420,12 +2420,14 @@ tvbrowser/src/tvbrowser/core/filters/ChannelFilterList.java -text
 tvbrowser/src/tvbrowser/core/filters/FilterManagerImpl.java -text
 tvbrowser/src/tvbrowser/core/filters/GenericFilterMap.java -text svneol=unset#text/plain
 tvbrowser/src/tvbrowser/core/filters/InfoBitFilter.java -text svneol=unset#text/plain
+tvbrowser/src/tvbrowser/core/filters/SingleChannelFilter.java -text svneol=unset#text/plain
 tvbrowser/src/tvbrowser/core/filters/filtercomponents/AbstractFilterComponent.java -text svneol=unset#text/plain
 tvbrowser/src/tvbrowser/core/filters/filtercomponents/AgeLimitFilterComponent.java -text svneol=unset#text/plain
 tvbrowser/src/tvbrowser/core/filters/filtercomponents/DateFilterComponent.java -text svneol=unset#text/plain
 tvbrowser/src/tvbrowser/core/filters/filtercomponents/FavoritesFilterComponent.java -text
 tvbrowser/src/tvbrowser/core/filters/filtercomponents/ProgramTypeFilterComponent.java -text svneol=unset#text/plain
 tvbrowser/src/tvbrowser/core/filters/filtercomponents/ReminderFilterComponent.java -text
+tvbrowser/src/tvbrowser/core/filters/filtercomponents/SingleChannelFilterComponent.java -text svneol=unset#text/plain
 tvbrowser/src/tvbrowser/core/filters/filtercomponents/SingleTitleFilterComponent.java -text
 tvbrowser/src/tvbrowser/core/filters/filtercomponents/filtercomponents_cs.properties -text svneol=unset#text/plain
 tvbrowser/src/tvbrowser/core/filters/filtercomponents/filtercomponents_da.properties -text
