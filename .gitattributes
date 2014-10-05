@@ -1371,6 +1371,11 @@ tvbrowser-plugins/plugin-recommendation/src/main/resources/recommendationplugin/
 tvbrowser-plugins/plugin-recommendation/src/main/resources/recommendationplugin/weighting/weighting_da.properties -text
 tvbrowser-plugins/plugin-recommendation/src/main/resources/recommendationplugin/weighting/weighting_de.properties -text
 tvbrowser-plugins/plugin-recommendation/src/main/resources/recommendationplugin/weighting/weighting_hr.properties -text svneol=unset#text/plain
+tvbrowser-plugins/plugin-relativetimefiltercomponent/pom.xml -text
+tvbrowser-plugins/plugin-relativetimefiltercomponent/src/main/java/relativetimefiltercomponent/RelativeTimeFilterComp.java -text
+tvbrowser-plugins/plugin-relativetimefiltercomponent/src/main/java/relativetimefiltercomponent/RelativeTimeFilterComponent.java -text
+tvbrowser-plugins/plugin-relativetimefiltercomponent/src/main/resources/relativetimefiltercomponent/relativetimefiltercomponent.properties -text
+tvbrowser-plugins/plugin-relativetimefiltercomponent/src/main/resources/relativetimefiltercomponent/relativetimefiltercomponent_de.properties -text
 tvbrowser-plugins/plugin-rememberme/.classpath -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-rememberme/.project -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-rememberme/.settings/org.eclipse.core.resources.prefs -text svneol=unset#text/plain
