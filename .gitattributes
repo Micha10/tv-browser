@@ -776,10 +776,10 @@ tvbrowser-plugins/plugin-feeds/src/main/resources/feedsplugin/feedsplugin_de.pro
 tvbrowser-plugins/plugin-feeds/src/main/resources/feedsplugin/icons/16x16/apps/feeds.png -text
 tvbrowser-plugins/plugin-feeds/src/main/resources/feedsplugin/icons/22x22/apps/feeds.png -text
 tvbrowser-plugins/plugin-filterfiltercomponent/pom.xml -text
-tvbrowser-plugins/plugin-filterfiltercomponent/src/main/java/relativetimefiltercomponent/FilterFilterComp.java -text
-tvbrowser-plugins/plugin-filterfiltercomponent/src/main/java/relativetimefiltercomponent/FilterFilterComponent.java -text
-tvbrowser-plugins/plugin-filterfiltercomponent/src/main/resources/relativetimefiltercomponent/filterfiltercomponent.properties -text
-tvbrowser-plugins/plugin-filterfiltercomponent/src/main/resources/relativetimefiltercomponent/filterfiltercomponent_de.properties -text
+tvbrowser-plugins/plugin-filterfiltercomponent/src/main/java/filterfiltercomponent/FilterFilterComp.java -text
+tvbrowser-plugins/plugin-filterfiltercomponent/src/main/java/filterfiltercomponent/FilterFilterComponent.java -text
+tvbrowser-plugins/plugin-filterfiltercomponent/src/main/resources/filterfiltercomponent/filterfiltercomponent.properties -text
+tvbrowser-plugins/plugin-filterfiltercomponent/src/main/resources/filterfiltercomponent/filterfiltercomponent_de.properties -text
 tvbrowser-plugins/plugin-filterinfoicons/pom.xml -text
 tvbrowser-plugins/plugin-filterinfoicons/src/main/java/filterinfoicon/FilterEntry.java -text
 tvbrowser-plugins/plugin-filterinfoicons/src/main/java/filterinfoicon/FilterInfoIcon.java -text
