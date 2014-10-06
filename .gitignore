@@ -89,6 +89,10 @@ tvbrowser-plugins/plugin-feeds/.escabaseline
 tvbrowser-plugins/plugin-feeds/.project
 tvbrowser-plugins/plugin-feeds/.settings
 tvbrowser-plugins/plugin-feeds/target
+tvbrowser-plugins/plugin-filterfiltercomponent/.classpath
+tvbrowser-plugins/plugin-filterfiltercomponent/.project
+tvbrowser-plugins/plugin-filterfiltercomponent/.settings
+tvbrowser-plugins/plugin-filterfiltercomponent/target
 tvbrowser-plugins/plugin-filterinfoicons/.classpath
 tvbrowser-plugins/plugin-filterinfoicons/.project
 tvbrowser-plugins/plugin-filterinfoicons/.settings
