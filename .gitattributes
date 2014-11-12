@@ -1924,6 +1924,7 @@ tvbrowser/deployment/macosx/jarbundler-2.0.0.jar -text
 tvbrowser/deployment/macosx/tvbdmg.png -text
 tvbrowser/deployment/macosx/tvbrowser.dmg -text
 tvbrowser/deployment/macosx/tvbrowser.psd -text
+tvbrowser/deployment/macosx7/appbundler-1.0ea.jar -text
 tvbrowser/deployment/packer.txt -text
 tvbrowser/deployment/win/installer/Plugins/LockedList.dll -text
 tvbrowser/deployment/win/installer/Plugins/nsisFirewall.dll -text
