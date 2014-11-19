@@ -89,6 +89,9 @@ primarydatamanager/tvdatastarterkit/build.properties -text
 primarydatamanager/tvdatastarterkit/build.xml -text
 primarydatamanager/tvdatastarterkit/lib/maven-ant-tasks-2.1.3.jar -text
 primarydatamanager/tvdatastarterkit/pom.xml -text
+primarydatamanager/tvdatastarterkit/src/main/java/helper/newseditor/GroupNewsChannel.java -text svneol=unset#text/plain
+primarydatamanager/tvdatastarterkit/src/main/java/helper/newseditor/GroupNewsEditor.java -text svneol=unset#text/plain
+primarydatamanager/tvdatastarterkit/src/main/java/helper/newseditor/NewsEditor.java -text svneol=unset#text/plain
 primarydatamanager/tvdatastarterkit/src/main/java/primarydatamanager/DayProgramFileTranslator.java -text
 primarydatamanager/tvdatastarterkit/src/main/java/primarydatamanager/DayProgramMapper.java -text
 primarydatamanager/tvdatastarterkit/src/main/java/primarydatamanager/PDSRunner.java -text
