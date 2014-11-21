@@ -1633,6 +1633,7 @@ tvbrowser-plugins/plugin-tvbrowserdataservice/pom.xml -text
 tvbrowser-plugins/plugin-tvbrowserdataservice/src/main/java/tvbrowserdataservice/ChannelGroupDialog.java -text
 tvbrowser-plugins/plugin-tvbrowserdataservice/src/main/java/tvbrowserdataservice/DayProgramReceiveDH.java -text
 tvbrowser-plugins/plugin-tvbrowserdataservice/src/main/java/tvbrowserdataservice/DayProgramUpdateDH.java -text
+tvbrowser-plugins/plugin-tvbrowserdataservice/src/main/java/tvbrowserdataservice/GroupNews.java -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-tvbrowserdataservice/src/main/java/tvbrowserdataservice/TvBrowserDataService.java -text
 tvbrowser-plugins/plugin-tvbrowserdataservice/src/main/java/tvbrowserdataservice/TvBrowserDataServiceChannelGroup.java -text
 tvbrowser-plugins/plugin-tvbrowserdataservice/src/main/java/tvbrowserdataservice/TvBrowserDataServiceSettings.java -text
