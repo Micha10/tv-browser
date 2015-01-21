@@ -159,6 +159,7 @@ primarydatamanager/tvdatastarterkit/tvdatakit/input/images/test.jpg -text
 primarydatamanager/tvdatastarterkit/tvdatakit/java/SimplePDS.java -text
 primarydatamanager/tvdatastarterkit/tvdatakit/java/XmlTvDataHandler.java -text
 primarydatamanager/tvdatastarterkit/tvdatakit/java/XmlTvPDS.java -text
+primarydatamanager/tvdatastarterkit/tvdatakit/lib/commons-lang3-3.1.jar -text
 primarydatamanager/tvdatastarterkit/tvdatakit/lib/xercesImpl.jar -text
 primarydatamanager/tvdatastarterkit/txt/COPYRIGHT.txt -text
 primarydatamanager/tvdatastarterkit/txt/LICENSE.txt -text
