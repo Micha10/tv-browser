@@ -230,6 +230,7 @@ tvbrowser-plugins/plugin-alldataperchannel/src/main/resources/alldataperchannelp
 tvbrowser-plugins/plugin-alldataperchannel/src/main/resources/alldataperchannelplugin/alldataperchannelplugin_de.properties -text
 tvbrowser-plugins/plugin-androidsync/pom.xml -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-androidsync/src/main/java/androidsync/AndroidSync.java -text svneol=unset#text/plain
+tvbrowser-plugins/plugin-androidsync/src/main/java/androidsync/AndroidSyncCommunication.java -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-androidsync/src/main/resources/androidsync/License.txt -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-androidsync/src/main/resources/androidsync/androidsync.properties -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-androidsync/src/main/resources/androidsync/androidsync_de.properties -text svneol=unset#text/plain
