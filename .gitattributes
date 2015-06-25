@@ -1335,6 +1335,7 @@ tvbrowser-plugins/plugin-programlist/src/main/resources/programlistplugin/progra
 tvbrowser-plugins/plugin-programlist/src/main/resources/programlistplugin/programlistplugin_de.properties -text
 tvbrowser-plugins/plugin-programlist/src/main/resources/programlistplugin/programlistplugin_hr.properties -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-programlist/src/main/resources/programlistplugin/programlistplugin_it.properties -text
+tvbrowser-plugins/plugin-programlist/src/main/resources/programlistplugin/programlistplugin_pl.properties -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-programlist/src/main/resources/programlistplugin/programlistplugin_sk.properties -text
 tvbrowser-plugins/plugin-radiotimesdataservice/.classpath -text
 tvbrowser-plugins/plugin-radiotimesdataservice/.project -text
