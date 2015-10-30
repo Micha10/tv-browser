@@ -366,7 +366,6 @@ tvbrowser/.lint4jprefs
 tvbrowser/.project
 tvbrowser/.review*.xml
 tvbrowser/.settings
-tvbrowser/.settings/org.eclipse.mylyn.team.ui.prefs
 tvbrowser/bin
 tvbrowser/classes
 tvbrowser/doc
