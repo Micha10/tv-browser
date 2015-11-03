@@ -247,13 +247,11 @@ tvbrowser-plugins/plugin-autoscrolltonow/pom.xml -text
 tvbrowser-plugins/plugin-autoscrolltonow/src/main/java/autoscrolltonowplugin/AutoScrollToNowPlugin.java -text
 tvbrowser-plugins/plugin-balloon/pom.xml -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-balloon/src/main/java/balloonplugin/BalloonPlugin.java -text svneol=unset#text/plain
-tvbrowser-plugins/plugin-balloon/src/main/java/balloonplugin/JarApplicationExecuter.java -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-balloon/src/main/resources/balloonplugin/balloonplugin.properties -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-balloon/src/main/resources/balloonplugin/balloonplugin_cs.properties -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-balloon/src/main/resources/balloonplugin/balloonplugin_de.properties -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-balloon/src/main/resources/balloonplugin/balloonplugin_hr.properties -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-balloon/src/main/resources/balloonplugin/icons/16x16/balloon.png -text
-tvbrowser-plugins/plugin-balloon/src/main/resources/balloonplugin/notifu.exe -text
 tvbrowser-plugins/plugin-bbcdataservice/pom.xml -text
 tvbrowser-plugins/plugin-bbcdataservice/src/main/java/bbcdataservice/BBCDataService.java -text
 tvbrowser-plugins/plugin-bbcdataservice/src/main/java/bbcdataservice/BBCProgrammesParser.java -text
