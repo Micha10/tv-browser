@@ -1959,9 +1959,7 @@ tvbrowser/deployment/windows.properties eol=crlf
 tvbrowser/development/TV-Browser[!!-~]Eclipse[!!-~]Indigo[!!-~]components.p2f -text
 tvbrowser/development/TV-Browser[!!-~]Eclipse[!!-~]Luna[!!-~]Minimum[!!-~]components.p2f -text
 tvbrowser/development/readme.txt svneol=native#text/plain
-tvbrowser/images/additional/TVBrowser.ico -text
 tvbrowser/images/additional/desktop.ico -text
-tvbrowser/images/additional/systray.ico -text
 tvbrowser/images/additional/tvbrowser.icns -text
 tvbrowser/images/infothemes/tvb_colored/Info_16to9.gif -text
 tvbrowser/images/infothemes/tvb_colored/Info_Arts.png -text
@@ -2021,13 +2019,13 @@ tvbrowser/images/infothemes/tvb_default/Info_SubtitleForAurallyHandicapped_US.gi
 tvbrowser/images/infothemes/tvb_default/Info_TwoChannelTone.gif -text
 tvbrowser/images/infothemes/tvb_default/name -text
 tvbrowser/images/infothemes/tvb_default/name_de -text
+tvbrowser/images/inkscape/TV-Browser-Icon.svg -text
+tvbrowser/images/inkscape/splash-template.svg -text
+tvbrowser/images/inkscape/tvbabout-template.svg -text
 tvbrowser/images/photoshop/liste16.psd -text
 tvbrowser/images/photoshop/liste22.psd -text
-tvbrowser/images/photoshop/logo_phpBB.psd -text
 tvbrowser/images/photoshop/plugins.psd -text
 tvbrowser/images/photoshop/plugins16.psd -text
-tvbrowser/images/photoshop/tvabout.psd -text
-tvbrowser/images/photoshop/tvb_splash.psd -text
 tvbrowser/images/photoshop/tvrater/tvrater.psd -text
 tvbrowser/images/photoshop/tvrater/tvrater22.psd -text
 tvbrowser/images/themes/CrystalClear/16x16/actions/appointment-new.png -text
