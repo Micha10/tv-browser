@@ -2692,6 +2692,7 @@ tvbrowser/src/tvbrowser/ui/programtable/programtable_pl.properties -text svneol=
 tvbrowser/src/tvbrowser/ui/programtable/programtable_sk.properties -text
 tvbrowser/src/tvbrowser/ui/settings/AbstractSettingsTab.java -text
 tvbrowser/src/tvbrowser/ui/settings/CenterPanelSettingsTab.java -text
+tvbrowser/src/tvbrowser/ui/settings/DataPluginPostProcessingOrderSettingsTab.java -text svneol=unset#text/plain
 tvbrowser/src/tvbrowser/ui/settings/GenericPluginFilterSettingsTab.java -text
 tvbrowser/src/tvbrowser/ui/settings/GlobalPluginProgramFormatingSettings.java -text
 tvbrowser/src/tvbrowser/ui/settings/NetworkSettingsTab.java -text
