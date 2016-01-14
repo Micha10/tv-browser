@@ -2378,11 +2378,13 @@ tvbrowser/src/devplugin/PluginCenterPanelWrapper.java -text
 tvbrowser/src/devplugin/PluginCommunication.java -text
 tvbrowser/src/devplugin/PluginsFilterComponent.java -text
 tvbrowser/src/devplugin/PluginsProgramFilter.java -text
+tvbrowser/src/devplugin/ProgramInfo.java -text svneol=unset#text/plain
 tvbrowser/src/devplugin/ProgramRatingIf.java -text
 tvbrowser/src/devplugin/ProgramReceiveIf.java -text
 tvbrowser/src/devplugin/ProgramReceiveTarget.java -text
 tvbrowser/src/devplugin/ProgressMonitorExtended.java -text svneol=unset#text/plain
 tvbrowser/src/devplugin/ToolTipIcon.java -text svneol=unset#text/plain
+tvbrowser/src/devplugin/UniqueIdNameGenericValue.java -text svneol=unset#text/plain
 tvbrowser/src/devplugin/devplugin_cs.properties -text svneol=unset#text/plain
 tvbrowser/src/devplugin/devplugin_da.properties -text
 tvbrowser/src/devplugin/devplugin_el.properties -text
