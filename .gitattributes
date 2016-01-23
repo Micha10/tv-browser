@@ -2876,6 +2876,7 @@ tvbrowser/src/util/ui/TVBrowserIcons.java -text svneol=unset#text/plain
 tvbrowser/src/util/ui/TimeFormatter.java -text
 tvbrowser/src/util/ui/UIThreadRunner.java -text
 tvbrowser/src/util/ui/WideComboBox.java -text svneol=unset#text/plain
+tvbrowser/src/util/ui/WrapperFilter.java -text svneol=unset#text/plain
 tvbrowser/src/util/ui/customizableitems/customizableitems_da.properties -text
 tvbrowser/src/util/ui/customizableitems/customizableitems_el.properties -text
 tvbrowser/src/util/ui/customizableitems/customizableitems_hr.properties -text svneol=unset#text/plain
