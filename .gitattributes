@@ -1534,6 +1534,8 @@ tvbrowser-plugins/plugin-swedbdataservice/src/main/resources/swedbtvdataservice/
 tvbrowser-plugins/plugin-swedbdataservice/src/main/resources/swedbtvdataservice/swedbtvdataservice_de.properties -text
 tvbrowser-plugins/plugin-swedbdataservice/src/main/resources/swedbtvdataservice/swedbtvdataservice_hr.properties -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-swedbdataservice/src/main/resources/swedbtvdataservice/swedbtvdataservice_it.properties -text
+tvbrowser-plugins/plugin-swedbdataservice/src/main/resources/swedbtvdataservice/swedbtvdataservice_pl.properties -text svneol=unset#text/plain
+tvbrowser-plugins/plugin-swedbdataservice/src/main/resources/swedbtvdataservice/swedbtvdataservice_pl_PL.properties -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-swedbdataservice/src/main/resources/swedbtvdataservice/swedbtvdataservice_sv.properties -text
 tvbrowser-plugins/plugin-switch/pom.xml -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-switch/src/main/java/switchplugin/ChannelTable.java -text svneol=unset#text/plain
