@@ -1654,12 +1654,15 @@ tvbrowser-plugins/plugin-tvbrowserdataservice/src/main/resources/tvbrowserdatase
 tvbrowser-plugins/plugin-tvbrowserdataservice/src/main/resources/tvbrowserdataservice/file/file_de.properties -text
 tvbrowser-plugins/plugin-tvbrowserdataservice/src/main/resources/tvbrowserdataservice/file/file_hr.properties -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-tvbrowserdataservice/src/main/resources/tvbrowserdataservice/file/file_it.properties -text
+tvbrowser-plugins/plugin-tvbrowserdataservice/src/main/resources/tvbrowserdataservice/file/file_pl.properties -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-tvbrowserdataservice/src/main/resources/tvbrowserdataservice/file/file_sv.properties -text
 tvbrowser-plugins/plugin-tvbrowserdataservice/src/main/resources/tvbrowserdataservice/tvbrowserdataservice.properties -text
 tvbrowser-plugins/plugin-tvbrowserdataservice/src/main/resources/tvbrowserdataservice/tvbrowserdataservice_da.properties -text
 tvbrowser-plugins/plugin-tvbrowserdataservice/src/main/resources/tvbrowserdataservice/tvbrowserdataservice_de.properties -text
 tvbrowser-plugins/plugin-tvbrowserdataservice/src/main/resources/tvbrowserdataservice/tvbrowserdataservice_hr.properties -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-tvbrowserdataservice/src/main/resources/tvbrowserdataservice/tvbrowserdataservice_it.properties -text
+tvbrowser-plugins/plugin-tvbrowserdataservice/src/main/resources/tvbrowserdataservice/tvbrowserdataservice_pl.properties -text svneol=unset#text/plain
+tvbrowser-plugins/plugin-tvbrowserdataservice/src/main/resources/tvbrowserdataservice/tvbrowserdataservice_pl_PL.properties -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-tvbrowserdataservice/src/main/resources/tvbrowserdataservice/tvbrowserdataservice_sk.properties -text
 tvbrowser-plugins/plugin-tvbrowserdataservice/src/main/resources/tvbrowserdataservice/tvbrowserdataservice_sv.properties -text
 tvbrowser-plugins/plugin-tvbrowsermini/lib/sqlitejdbc-v054.jar -text
