@@ -999,6 +999,7 @@ tvbrowser-plugins/plugin-mediathek/src/main/java/mediathekplugin/EpisodeNode.jav
 tvbrowser-plugins/plugin-mediathek/src/main/java/mediathekplugin/LaunchBrowserAction.java -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-mediathek/src/main/java/mediathekplugin/MediathekPlugin.java -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-mediathek/src/main/java/mediathekplugin/MediathekProgramItem.java -text svneol=unset#text/plain
+tvbrowser-plugins/plugin-mediathek/src/main/java/mediathekplugin/MediathekQuality.java -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-mediathek/src/main/java/mediathekplugin/MediathekSettings.java -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-mediathek/src/main/java/mediathekplugin/MediathekSettingsTab.java -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-mediathek/src/main/java/mediathekplugin/WebMediathek.java -text
