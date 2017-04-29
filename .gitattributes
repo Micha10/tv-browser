@@ -2573,7 +2573,10 @@ tvbrowser/src/tvbrowser/extras/programinfo/programinfo_hr.properties -text svneo
 tvbrowser/src/tvbrowser/extras/programinfo/programinfo_it.properties -text
 tvbrowser/src/tvbrowser/extras/programinfo/programinfo_pl.properties -text svneol=unset#text/plain
 tvbrowser/src/tvbrowser/extras/programinfo/programinfo_sk.properties -text
+tvbrowser/src/tvbrowser/extras/reminderplugin/FrameReminders.java -text svneol=unset#text/plain
+tvbrowser/src/tvbrowser/extras/reminderplugin/PanelReminder.java -text svneol=unset#text/plain
 tvbrowser/src/tvbrowser/extras/reminderplugin/RemindValue.java -text
+tvbrowser/src/tvbrowser/extras/reminderplugin/ReminderConstants.java -text svneol=unset#text/plain
 tvbrowser/src/tvbrowser/extras/reminderplugin/ReminderContent.java -text
 tvbrowser/src/tvbrowser/extras/reminderplugin/ReminderListPanel.java -text
 tvbrowser/src/tvbrowser/extras/reminderplugin/ReminderPluginProxy.java -text
