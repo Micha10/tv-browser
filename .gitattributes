@@ -2070,6 +2070,7 @@ tvbrowser/images/themes/CrystalClear/16x16/actions/scroll-to-now.png -text
 tvbrowser/images/themes/CrystalClear/16x16/actions/scroll-to-specific-time.png -text
 tvbrowser/images/themes/CrystalClear/16x16/actions/scroll-to-time-list.png -text
 tvbrowser/images/themes/CrystalClear/16x16/actions/scroll-to-time.png -text
+tvbrowser/images/themes/CrystalClear/16x16/actions/show-menu.png -text
 tvbrowser/images/themes/CrystalClear/16x16/actions/sort-list-numerical.png -text
 tvbrowser/images/themes/CrystalClear/16x16/actions/sort-list.png -text
 tvbrowser/images/themes/CrystalClear/16x16/actions/system-log-out.png -text
@@ -2151,6 +2152,7 @@ tvbrowser/images/themes/CrystalClear/22x22/actions/scroll-to-now.png -text
 tvbrowser/images/themes/CrystalClear/22x22/actions/scroll-to-specific-time.png -text
 tvbrowser/images/themes/CrystalClear/22x22/actions/scroll-to-time-list.png -text
 tvbrowser/images/themes/CrystalClear/22x22/actions/scroll-to-time.png -text
+tvbrowser/images/themes/CrystalClear/22x22/actions/show-menu.png -text
 tvbrowser/images/themes/CrystalClear/22x22/actions/sort-list-numerical.png -text
 tvbrowser/images/themes/CrystalClear/22x22/actions/sort-list.png -text
 tvbrowser/images/themes/CrystalClear/22x22/actions/system-log-out.png -text
@@ -2227,6 +2229,7 @@ tvbrowser/images/themes/tango/16x16/actions/scroll-to-now.png -text
 tvbrowser/images/themes/tango/16x16/actions/scroll-to-specific-time.png -text
 tvbrowser/images/themes/tango/16x16/actions/scroll-to-time-list.png -text
 tvbrowser/images/themes/tango/16x16/actions/scroll-to-time.png -text
+tvbrowser/images/themes/tango/16x16/actions/show-menu.png -text
 tvbrowser/images/themes/tango/16x16/actions/sort-list-numerical.png -text
 tvbrowser/images/themes/tango/16x16/actions/sort-list.png -text
 tvbrowser/images/themes/tango/16x16/actions/system-log-out.png -text
@@ -2306,6 +2309,7 @@ tvbrowser/images/themes/tango/22x22/actions/scroll-to-now.png -text
 tvbrowser/images/themes/tango/22x22/actions/scroll-to-specific-time.png -text
 tvbrowser/images/themes/tango/22x22/actions/scroll-to-time-list.png -text
 tvbrowser/images/themes/tango/22x22/actions/scroll-to-time.png -text
+tvbrowser/images/themes/tango/22x22/actions/show-menu.png -text
 tvbrowser/images/themes/tango/22x22/actions/sort-list-numerical.png -text
 tvbrowser/images/themes/tango/22x22/actions/sort-list.png -text
 tvbrowser/images/themes/tango/22x22/actions/system-log-out.png -text
