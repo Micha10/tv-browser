@@ -214,6 +214,11 @@ tv-browserm/tv-browserm/src/tv-browserm_en_EN.qm -text
 tv-browserm/tv-browserm/src/tv-browserm_en_EN.ts -text
 tv-browserm/tv-browserm/src/ui_mainwindow.h -text
 tv-browserm/tv-browserm/tv-browserm.pro -text
+tvb-compat/.classpath -text svneol=unset#text/plain
+tvb-compat/pom.xml -text svneol=unset#text/plain
+tvb-compat/src/LICENSE.txt -text svneol=unset#text/plain
+tvb-compat/src/main/java/compat/MenuCompat.java -text svneol=unset#text/plain
+tvb-compat/src/main/java/compat/VersionCompat.java -text svneol=unset#text/plain
 tvbrowser-lens/.project -text
 tvbrowser-lens/License.txt -text
 tvbrowser-lens/build.properties -text
