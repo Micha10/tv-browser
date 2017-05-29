@@ -217,8 +217,36 @@ tv-browserm/tv-browserm/tv-browserm.pro -text
 tvb-compat/.classpath -text svneol=unset#text/plain
 tvb-compat/pom.xml -text svneol=unset#text/plain
 tvb-compat/src/LICENSE.txt -text svneol=unset#text/plain
+tvb-compat/src/main/java/compat/BordersCompat.java -text svneol=unset#text/plain
+tvb-compat/src/main/java/compat/ChannelCompat.java -text svneol=unset#text/plain
+tvb-compat/src/main/java/compat/FilterCompat.java -text svneol=unset#text/plain
+tvb-compat/src/main/java/compat/IOCompat.java -text svneol=unset#text/plain
 tvb-compat/src/main/java/compat/MenuCompat.java -text svneol=unset#text/plain
+tvb-compat/src/main/java/compat/PersonaCompat.java -text svneol=unset#text/plain
+tvb-compat/src/main/java/compat/PersonaCompatListener.java -text svneol=unset#text/plain
+tvb-compat/src/main/java/compat/PluginCompat.java -text svneol=unset#text/plain
+tvb-compat/src/main/java/compat/ProgramCompat.java -text svneol=unset#text/plain
+tvb-compat/src/main/java/compat/ProgramListCompat.java -text svneol=unset#text/plain
+tvb-compat/src/main/java/compat/StringUtils.java -text svneol=unset#text/plain
+tvb-compat/src/main/java/compat/TvBrowserSettingsCompat.java -text svneol=unset#text/plain
+tvb-compat/src/main/java/compat/UiCompat.java -text svneol=unset#text/plain
 tvb-compat/src/main/java/compat/VersionCompat.java -text svneol=unset#text/plain
+tvb-compat/src/main/java/devplugin/AfterDataUpdateInfoPanel.java -text svneol=unset#text/plain
+tvb-compat/src/main/java/devplugin/ChannelFilter.java -text svneol=unset#text/plain
+tvb-compat/src/main/java/devplugin/PluginCenterPanel.java -text svneol=unset#text/plain
+tvb-compat/src/main/java/devplugin/PluginCenterPanelWrapper.java -text svneol=unset#text/plain
+tvb-compat/src/main/java/devplugin/ToolTipIcon.java -text svneol=unset#text/plain
+tvb-compat/src/main/java/util/programkeyevent/ProgramKeyActionListener.java -text svneol=unset#text/plain
+tvb-compat/src/main/java/util/programkeyevent/ProgramKeyAndContextMenuListener.java -text svneol=unset#text/plain
+tvb-compat/src/main/java/util/programkeyevent/ProgramKeyContextMenuListener.java -text svneol=unset#text/plain
+tvb-compat/src/main/java/util/programkeyevent/ProgramKeyEventHandler.java -text svneol=unset#text/plain
+tvb-compat/src/main/java/util/programmouseevent/ProgramContextMenuListener.java -text svneol=unset#text/plain
+tvb-compat/src/main/java/util/programmouseevent/ProgramMouseActionListener.java -text svneol=unset#text/plain
+tvb-compat/src/main/java/util/programmouseevent/ProgramMouseAndContextMenuListener.java -text svneol=unset#text/plain
+tvb-compat/src/main/java/util/programmouseevent/ProgramMouseEventHandler.java -text svneol=unset#text/plain
+tvb-compat/src/main/java/util/settings/ContextMenuMouseActionSetting.java -text svneol=unset#text/plain
+tvb-compat/src/main/resources/compat/compat.properties -text svneol=unset#text/plain
+tvb-compat/src/main/resources/compat/compat_de.properties -text svneol=unset#text/plain
 tvbrowser-lens/.project -text
 tvbrowser-lens/License.txt -text
 tvbrowser-lens/build.properties -text
