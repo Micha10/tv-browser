@@ -235,6 +235,7 @@ tvb-compat/src/main/java/devplugin/AfterDataUpdateInfoPanel.java -text svneol=un
 tvb-compat/src/main/java/devplugin/ChannelFilter.java -text svneol=unset#text/plain
 tvb-compat/src/main/java/devplugin/PluginCenterPanel.java -text svneol=unset#text/plain
 tvb-compat/src/main/java/devplugin/PluginCenterPanelWrapper.java -text svneol=unset#text/plain
+tvb-compat/src/main/java/devplugin/TabListener.java -text svneol=unset#text/plain
 tvb-compat/src/main/java/devplugin/ToolTipIcon.java -text svneol=unset#text/plain
 tvb-compat/src/main/java/util/programkeyevent/ProgramKeyActionListener.java -text svneol=unset#text/plain
 tvb-compat/src/main/java/util/programkeyevent/ProgramKeyAndContextMenuListener.java -text svneol=unset#text/plain
@@ -245,6 +246,7 @@ tvb-compat/src/main/java/util/programmouseevent/ProgramMouseActionListener.java 
 tvb-compat/src/main/java/util/programmouseevent/ProgramMouseAndContextMenuListener.java -text svneol=unset#text/plain
 tvb-compat/src/main/java/util/programmouseevent/ProgramMouseEventHandler.java -text svneol=unset#text/plain
 tvb-compat/src/main/java/util/settings/ContextMenuMouseActionSetting.java -text svneol=unset#text/plain
+tvb-compat/src/main/java/util/ui/TabListenerPanel.java -text svneol=unset#text/plain
 tvb-compat/src/main/resources/compat/compat.properties -text svneol=unset#text/plain
 tvb-compat/src/main/resources/compat/compat_de.properties -text svneol=unset#text/plain
 tvbrowser-lens/.project -text
