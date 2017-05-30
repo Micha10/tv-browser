@@ -2429,6 +2429,7 @@ tvbrowser/src/devplugin/ProgramRatingIf.java -text
 tvbrowser/src/devplugin/ProgramReceiveIf.java -text
 tvbrowser/src/devplugin/ProgramReceiveTarget.java -text
 tvbrowser/src/devplugin/ProgressMonitorExtended.java -text svneol=unset#text/plain
+tvbrowser/src/devplugin/TabListener.java -text svneol=unset#text/plain
 tvbrowser/src/devplugin/ToolTipIcon.java -text svneol=unset#text/plain
 tvbrowser/src/devplugin/UniqueIdNameGenericValue.java -text svneol=unset#text/plain
 tvbrowser/src/devplugin/devplugin_cs.properties -text svneol=unset#text/plain
@@ -2924,6 +2925,7 @@ tvbrowser/src/util/ui/PictureAreaIcon.java -text
 tvbrowser/src/util/ui/PooledLocalizer.java -text
 tvbrowser/src/util/ui/PopupButton.java -text
 tvbrowser/src/util/ui/TVBrowserIcons.java -text svneol=unset#text/plain
+tvbrowser/src/util/ui/TabListenerPanel.java -text svneol=unset#text/plain
 tvbrowser/src/util/ui/TimeFormatter.java -text
 tvbrowser/src/util/ui/UIThreadRunner.java -text
 tvbrowser/src/util/ui/WideComboBox.java -text svneol=unset#text/plain
