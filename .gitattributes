@@ -653,11 +653,6 @@ tvbrowser-plugins/plugin-dataviewer/src/main/resources/dataviewerplugin/dataview
 tvbrowser-plugins/plugin-dataviewer/src/main/resources/dataviewerplugin/icons/16x16/actions/format-justify-fill.png -text
 tvbrowser-plugins/plugin-dataviewer/src/main/resources/dataviewerplugin/icons/22x22/actions/format-justify-fill.png -text
 tvbrowser-plugins/plugin-dataviewer/src/main/resources/dataviewerplugin/icons/Readme.txt -text
-tvbrowser-plugins/plugin-dreamboxdataservice/.classpath -text
-tvbrowser-plugins/plugin-dreamboxdataservice/.project -text
-tvbrowser-plugins/plugin-dreamboxdataservice/.settings/org.eclipse.core.resources.prefs -text
-tvbrowser-plugins/plugin-dreamboxdataservice/.settings/org.eclipse.jdt.core.prefs -text
-tvbrowser-plugins/plugin-dreamboxdataservice/.settings/org.eclipse.m2e.core.prefs -text
 tvbrowser-plugins/plugin-dreamboxdataservice/pom.xml -text
 tvbrowser-plugins/plugin-dreamboxdataservice/src/main/java/dreamboxdataservice/DreamboxChannelHandler.java -text
 tvbrowser-plugins/plugin-dreamboxdataservice/src/main/java/dreamboxdataservice/DreamboxDataService.java -text
@@ -767,11 +762,6 @@ tvbrowser-plugins/plugin-dvbviewerdataservice/src/main/resources/dvbviewer/dvbvi
 tvbrowser-plugins/plugin-dvbviewerdataservice/src/main/resources/dvbviewerdataservice/dvbviewerdataservice.properties -text
 tvbrowser-plugins/plugin-dvbviewerdataservice/src/main/resources/dvbviewerdataservice/dvbviewerdataservice_cs.properties -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-dvbviewerdataservice/src/main/resources/dvbviewerdataservice/dvbviewerdataservice_de.properties -text
-tvbrowser-plugins/plugin-email/.classpath -text
-tvbrowser-plugins/plugin-email/.project -text
-tvbrowser-plugins/plugin-email/.settings/org.eclipse.core.resources.prefs -text
-tvbrowser-plugins/plugin-email/.settings/org.eclipse.jdt.core.prefs -text
-tvbrowser-plugins/plugin-email/.settings/org.eclipse.m2e.core.prefs -text
 tvbrowser-plugins/plugin-email/pom.xml -text
 tvbrowser-plugins/plugin-email/src/main/java/emailplugin/EMailParamLibrary.java -text
 tvbrowser-plugins/plugin-email/src/main/java/emailplugin/EMailPlugin.java -text
@@ -822,11 +812,6 @@ tvbrowser-plugins/plugin-freetuxtv/src/main/resources/freetuxtvplugin/freetuxtvp
 tvbrowser-plugins/plugin-freetuxtv/src/main/resources/freetuxtvplugin/freetuxtvplugin_de.properties -text
 tvbrowser-plugins/plugin-freetuxtv/src/main/resources/freetuxtvplugin/icons/16x16/actions/freetuxtv.png -text
 tvbrowser-plugins/plugin-freetuxtv/src/main/resources/freetuxtvplugin/icons/22x22/actions/freetuxtv.png -text
-tvbrowser-plugins/plugin-genre/.classpath -text
-tvbrowser-plugins/plugin-genre/.project -text
-tvbrowser-plugins/plugin-genre/.settings/org.eclipse.core.resources.prefs -text
-tvbrowser-plugins/plugin-genre/.settings/org.eclipse.jdt.core.prefs -text
-tvbrowser-plugins/plugin-genre/.settings/org.eclipse.m2e.core.prefs -text
 tvbrowser-plugins/plugin-genre/pom.xml -text
 tvbrowser-plugins/plugin-genre/src/main/java/genreplugin/GenrePlugin.java -text
 tvbrowser-plugins/plugin-genre/src/main/java/genreplugin/GenreSettings.java -text
@@ -851,11 +836,6 @@ tvbrowser-plugins/plugin-golem/src/main/resources/golemplugin/golemplugin.proper
 tvbrowser-plugins/plugin-golem/src/main/resources/golemplugin/golemplugin_de.properties -text
 tvbrowser-plugins/plugin-golem/src/main/resources/golemplugin/icons/16x16/actions/golem.png -text
 tvbrowser-plugins/plugin-golem/src/main/resources/ical4j.properties -text
-tvbrowser-plugins/plugin-growl/.classpath -text
-tvbrowser-plugins/plugin-growl/.project -text
-tvbrowser-plugins/plugin-growl/.settings/org.eclipse.core.resources.prefs -text
-tvbrowser-plugins/plugin-growl/.settings/org.eclipse.jdt.core.prefs -text
-tvbrowser-plugins/plugin-growl/.settings/org.eclipse.m2e.core.prefs -text
 tvbrowser-plugins/plugin-growl/pom.xml -text
 tvbrowser-plugins/plugin-growl/src/main/java/growlplugin/GrowlContainer.java -text
 tvbrowser-plugins/plugin-growl/src/main/java/growlplugin/GrowlPlugin.java -text
@@ -867,11 +847,6 @@ tvbrowser-plugins/plugin-growl/src/main/resources/growlplugin/growlplugin_da.pro
 tvbrowser-plugins/plugin-growl/src/main/resources/growlplugin/growlplugin_de.properties -text
 tvbrowser-plugins/plugin-growl/src/main/resources/growlplugin/growlplugin_it.properties -text
 tvbrowser-plugins/plugin-growl/src/main/resources/growlplugin/growlplugin_sv.properties -text
-tvbrowser-plugins/plugin-i18n/.classpath -text
-tvbrowser-plugins/plugin-i18n/.project -text
-tvbrowser-plugins/plugin-i18n/.settings/org.eclipse.core.resources.prefs -text
-tvbrowser-plugins/plugin-i18n/.settings/org.eclipse.jdt.core.prefs -text
-tvbrowser-plugins/plugin-i18n/.settings/org.eclipse.m2e.core.prefs -text
 tvbrowser-plugins/plugin-i18n/pom.xml -text
 tvbrowser-plugins/plugin-i18n/src/main/java/i18nplugin/AbstractHierarchicalNode.java -text
 tvbrowser-plugins/plugin-i18n/src/main/java/i18nplugin/FilterNodeIf.java -text
@@ -930,28 +905,13 @@ tvbrowser-plugins/plugin-imdb/src/main/resources/imdbplugin/imdbplugin_da.proper
 tvbrowser-plugins/plugin-imdb/src/main/resources/imdbplugin/imdbplugin_de.properties -text
 tvbrowser-plugins/plugin-imdb/src/main/resources/imdbplugin/imdbplugin_hr.properties -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-imdb/src/main/resources/imdbplugin/rating.png -text
-tvbrowser-plugins/plugin-infoserver/.classpath -text
-tvbrowser-plugins/plugin-infoserver/.project -text
-tvbrowser-plugins/plugin-infoserver/.settings/org.eclipse.core.resources.prefs -text
-tvbrowser-plugins/plugin-infoserver/.settings/org.eclipse.jdt.core.prefs -text
-tvbrowser-plugins/plugin-infoserver/.settings/org.eclipse.m2e.core.prefs -text
 tvbrowser-plugins/plugin-infoserver/pom.xml -text
 tvbrowser-plugins/plugin-infoserver/src/main/java/tvbinfoserver/TvbInfoServer.java -text
-tvbrowser-plugins/plugin-jumptoprogram/.classpath -text
-tvbrowser-plugins/plugin-jumptoprogram/.project -text
-tvbrowser-plugins/plugin-jumptoprogram/.settings/org.eclipse.core.resources.prefs -text
-tvbrowser-plugins/plugin-jumptoprogram/.settings/org.eclipse.jdt.core.prefs -text
-tvbrowser-plugins/plugin-jumptoprogram/.settings/org.eclipse.m2e.core.prefs -text
 tvbrowser-plugins/plugin-jumptoprogram/pom.xml -text
 tvbrowser-plugins/plugin-jumptoprogram/src/main/java/jumptoprogramplugin/JumpToProgramPlugin.java -text
 tvbrowser-plugins/plugin-jumptoprogram/src/main/resources/jumptoprogramplugin/jumptoprogramplugin.properties -text
 tvbrowser-plugins/plugin-jumptoprogram/src/main/resources/jumptoprogramplugin/jumptoprogramplugin_de.properties -text
 tvbrowser-plugins/plugin-jumptoprogram/src/main/resources/jumptoprogramplugin/jumptoprogramplugin_hr.properties -text svneol=unset#text/plain
-tvbrowser-plugins/plugin-knotify/.classpath -text
-tvbrowser-plugins/plugin-knotify/.project -text
-tvbrowser-plugins/plugin-knotify/.settings/org.eclipse.core.resources.prefs -text
-tvbrowser-plugins/plugin-knotify/.settings/org.eclipse.jdt.core.prefs -text
-tvbrowser-plugins/plugin-knotify/.settings/org.eclipse.m2e.core.prefs -text
 tvbrowser-plugins/plugin-knotify/pom.xml -text
 tvbrowser-plugins/plugin-knotify/src/main/java/knotifyplugin/KNotifyPlugin.java -text
 tvbrowser-plugins/plugin-knotify/src/main/java/knotifyplugin/KNotifySettings.java -text
@@ -1085,11 +1045,6 @@ tvbrowser-plugins/plugin-netcontrol/pom.xml -text
 tvbrowser-plugins/plugin-netcontrol/src/main/java/tvbnetcontrol/Commands.java -text
 tvbrowser-plugins/plugin-netcontrol/src/main/java/tvbnetcontrol/KeyCommand.java -text
 tvbrowser-plugins/plugin-netcontrol/src/main/java/tvbnetcontrol/TvbNetControl.java -text
-tvbrowser-plugins/plugin-news/.classpath -text
-tvbrowser-plugins/plugin-news/.project -text
-tvbrowser-plugins/plugin-news/.settings/org.eclipse.core.resources.prefs -text
-tvbrowser-plugins/plugin-news/.settings/org.eclipse.jdt.core.prefs -text
-tvbrowser-plugins/plugin-news/.settings/org.eclipse.m2e.core.prefs -text
 tvbrowser-plugins/plugin-news/pom.xml -text
 tvbrowser-plugins/plugin-news/src/main/java/newsplugin/News.java -text
 tvbrowser-plugins/plugin-news/src/main/java/newsplugin/NewsDialog.java -text
@@ -1214,11 +1169,6 @@ tvbrowser-plugins/plugin-notifyosd/src/main/java/notifyosdplugin/PropertyBasedSe
 tvbrowser-plugins/plugin-notifyosd/src/main/resources/notifyosdplugin/icons/16x16/actions/notify.png -text
 tvbrowser-plugins/plugin-notifyosd/src/main/resources/notifyosdplugin/notifyosdplugin.properties -text
 tvbrowser-plugins/plugin-notifyosd/src/main/resources/notifyosdplugin/notifyosdplugin_de.properties -text
-tvbrowser-plugins/plugin-personahandler/.classpath -text
-tvbrowser-plugins/plugin-personahandler/.project -text
-tvbrowser-plugins/plugin-personahandler/.settings/org.eclipse.core.resources.prefs -text
-tvbrowser-plugins/plugin-personahandler/.settings/org.eclipse.jdt.core.prefs -text
-tvbrowser-plugins/plugin-personahandler/.settings/org.eclipse.m2e.core.prefs -text
 tvbrowser-plugins/plugin-personahandler/pom.xml -text
 tvbrowser-plugins/plugin-personahandler/src/main/java/personahandler/ColorPanel.java -text
 tvbrowser-plugins/plugin-personahandler/src/main/java/personahandler/PersonaDialog.java -text
@@ -1227,20 +1177,10 @@ tvbrowser-plugins/plugin-personahandler/src/main/java/personahandler/PersonaHand
 tvbrowser-plugins/plugin-personahandler/src/main/java/personahandler/PersonaHandlerPanel.java -text
 tvbrowser-plugins/plugin-personahandler/src/main/resources/personahandler/personahandler.properties -text
 tvbrowser-plugins/plugin-personahandler/src/main/resources/personahandler/personahandler_de.properties -text
-tvbrowser-plugins/plugin-personatimeswitcher/.classpath -text
-tvbrowser-plugins/plugin-personatimeswitcher/.project -text
-tvbrowser-plugins/plugin-personatimeswitcher/.settings/org.eclipse.core.resources.prefs -text
-tvbrowser-plugins/plugin-personatimeswitcher/.settings/org.eclipse.jdt.core.prefs -text
-tvbrowser-plugins/plugin-personatimeswitcher/.settings/org.eclipse.m2e.core.prefs -text
 tvbrowser-plugins/plugin-personatimeswitcher/pom.xml -text
 tvbrowser-plugins/plugin-personatimeswitcher/src/main/java/personatimeswitcher/PersonaTimeSwitcher.java -text
 tvbrowser-plugins/plugin-personatimeswitcher/src/main/resources/personatimeswitcher/personatimeswitcher.properties -text
 tvbrowser-plugins/plugin-personatimeswitcher/src/main/resources/personatimeswitcher/personatimeswitcher_de.properties -text
-tvbrowser-plugins/plugin-print/.classpath -text
-tvbrowser-plugins/plugin-print/.project -text
-tvbrowser-plugins/plugin-print/.settings/org.eclipse.core.resources.prefs -text
-tvbrowser-plugins/plugin-print/.settings/org.eclipse.jdt.core.prefs -text
-tvbrowser-plugins/plugin-print/.settings/org.eclipse.m2e.core.prefs -text
 tvbrowser-plugins/plugin-print/pom.xml -text
 tvbrowser-plugins/plugin-print/src/main/java/printplugin/EmptyQueueAction.java -text
 tvbrowser-plugins/plugin-print/src/main/java/printplugin/PrintPlugin.java -text
@@ -1332,11 +1272,6 @@ tvbrowser-plugins/plugin-print/src/main/resources/printplugin/printplugin_hr.pro
 tvbrowser-plugins/plugin-print/src/main/resources/printplugin/printplugin_it.properties -text
 tvbrowser-plugins/plugin-print/src/main/resources/printplugin/printplugin_sv.properties -text
 tvbrowser-plugins/plugin-print/src/main/resources/printplugin/todos.txt -text
-tvbrowser-plugins/plugin-programlist/.classpath -text
-tvbrowser-plugins/plugin-programlist/.project -text
-tvbrowser-plugins/plugin-programlist/.settings/org.eclipse.core.resources.prefs -text
-tvbrowser-plugins/plugin-programlist/.settings/org.eclipse.jdt.core.prefs -text
-tvbrowser-plugins/plugin-programlist/.settings/org.eclipse.m2e.core.prefs -text
 tvbrowser-plugins/plugin-programlist/pom.xml -text
 tvbrowser-plugins/plugin-programlist/src/main/java/programlistplugin/ProgramListPanel.java -text
 tvbrowser-plugins/plugin-programlist/src/main/java/programlistplugin/ProgramListPlugin.java -text
@@ -1348,11 +1283,6 @@ tvbrowser-plugins/plugin-programlist/src/main/resources/programlistplugin/progra
 tvbrowser-plugins/plugin-programlist/src/main/resources/programlistplugin/programlistplugin_it.properties -text
 tvbrowser-plugins/plugin-programlist/src/main/resources/programlistplugin/programlistplugin_pl.properties -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-programlist/src/main/resources/programlistplugin/programlistplugin_sk.properties -text
-tvbrowser-plugins/plugin-radiotimesdataservice/.classpath -text
-tvbrowser-plugins/plugin-radiotimesdataservice/.project -text
-tvbrowser-plugins/plugin-radiotimesdataservice/.settings/org.eclipse.core.resources.prefs -text
-tvbrowser-plugins/plugin-radiotimesdataservice/.settings/org.eclipse.jdt.core.prefs -text
-tvbrowser-plugins/plugin-radiotimesdataservice/.settings/org.eclipse.m2e.core.prefs -text
 tvbrowser-plugins/plugin-radiotimesdataservice/pom.xml -text
 tvbrowser-plugins/plugin-radiotimesdataservice/src/main/java/radiotimesdataservice/RadioTimesDataService.java -text
 tvbrowser-plugins/plugin-radiotimesdataservice/src/main/java/radiotimesdataservice/RadioTimesFileParser.java -text
@@ -1398,11 +1328,6 @@ tvbrowser-plugins/plugin-relativetimefiltercomponent/src/main/java/relativetimef
 tvbrowser-plugins/plugin-relativetimefiltercomponent/src/main/java/relativetimefiltercomponent/RelativeTimeFilterComponent.java -text
 tvbrowser-plugins/plugin-relativetimefiltercomponent/src/main/resources/relativetimefiltercomponent/relativetimefiltercomponent.properties -text
 tvbrowser-plugins/plugin-relativetimefiltercomponent/src/main/resources/relativetimefiltercomponent/relativetimefiltercomponent_de.properties -text
-tvbrowser-plugins/plugin-rememberme/.classpath -text svneol=unset#text/plain
-tvbrowser-plugins/plugin-rememberme/.project -text svneol=unset#text/plain
-tvbrowser-plugins/plugin-rememberme/.settings/org.eclipse.core.resources.prefs -text svneol=unset#text/plain
-tvbrowser-plugins/plugin-rememberme/.settings/org.eclipse.jdt.core.prefs -text svneol=unset#text/plain
-tvbrowser-plugins/plugin-rememberme/.settings/org.eclipse.m2e.core.prefs -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-rememberme/pom.xml -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-rememberme/src/main/java/rememberme/RemeberMeSettingsTab.java -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-rememberme/src/main/java/rememberme/RememberMe.java -text svneol=unset#text/plain
@@ -1411,11 +1336,6 @@ tvbrowser-plugins/plugin-rememberme/src/main/java/rememberme/RememberedProgram.j
 tvbrowser-plugins/plugin-rememberme/src/main/java/rememberme/RememberedProgramsList.java -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-rememberme/src/main/resources/rememberme/rememberme.properties -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-rememberme/src/main/resources/rememberme/rememberme_de.properties -text svneol=unset#text/plain
-tvbrowser-plugins/plugin-schedulesdirectdataservice/.classpath -text
-tvbrowser-plugins/plugin-schedulesdirectdataservice/.project -text
-tvbrowser-plugins/plugin-schedulesdirectdataservice/.settings/org.eclipse.core.resources.prefs -text
-tvbrowser-plugins/plugin-schedulesdirectdataservice/.settings/org.eclipse.jdt.core.prefs -text
-tvbrowser-plugins/plugin-schedulesdirectdataservice/.settings/org.eclipse.m2e.core.prefs -text
 tvbrowser-plugins/plugin-schedulesdirectdataservice/pom.xml -text
 tvbrowser-plugins/plugin-schedulesdirectdataservice/src/main/java/schedulesdirectdataservice/SchedulesDirectDataService.java -text
 tvbrowser-plugins/plugin-schedulesdirectdataservice/src/main/java/schedulesdirectdataservice/SchedulesDirectSettingsPanel.java -text
@@ -1442,11 +1362,6 @@ tvbrowser-plugins/plugin-shareddataservice/src/main/java/sharedchanneldataservic
 tvbrowser-plugins/plugin-shareddataservice/src/main/resources/sharedchanneldataservice/icons/shared.png -text
 tvbrowser-plugins/plugin-shareddataservice/src/main/resources/sharedchanneldataservice/sharedchanneldataservice.properties -text
 tvbrowser-plugins/plugin-shareddataservice/src/main/resources/sharedchanneldataservice/sharedchanneldataservice_de.properties -text
-tvbrowser-plugins/plugin-simplemarker/.classpath -text
-tvbrowser-plugins/plugin-simplemarker/.project -text
-tvbrowser-plugins/plugin-simplemarker/.settings/org.eclipse.core.resources.prefs -text
-tvbrowser-plugins/plugin-simplemarker/.settings/org.eclipse.jdt.core.prefs -text
-tvbrowser-plugins/plugin-simplemarker/.settings/org.eclipse.m2e.core.prefs -text
 tvbrowser-plugins/plugin-simplemarker/pom.xml -text
 tvbrowser-plugins/plugin-simplemarker/src/main/java/simplemarkerplugin/GroupUnmarkAction.java -text
 tvbrowser-plugins/plugin-simplemarker/src/main/java/simplemarkerplugin/ManageDialog.java -text
@@ -1528,11 +1443,6 @@ tvbrowser-plugins/plugin-speech/src/main/resources/speechplugin/engine/engine.pr
 tvbrowser-plugins/plugin-speech/src/main/resources/speechplugin/engine/engine_de.properties -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-speech/src/main/resources/speechplugin/speechplugin.properties -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-speech/src/main/resources/speechplugin/speechplugin_de.properties -text svneol=unset#text/plain
-tvbrowser-plugins/plugin-swedbdataservice/.classpath -text
-tvbrowser-plugins/plugin-swedbdataservice/.project -text
-tvbrowser-plugins/plugin-swedbdataservice/.settings/org.eclipse.core.resources.prefs -text
-tvbrowser-plugins/plugin-swedbdataservice/.settings/org.eclipse.jdt.core.prefs -text
-tvbrowser-plugins/plugin-swedbdataservice/.settings/org.eclipse.m2e.core.prefs -text
 tvbrowser-plugins/plugin-swedbdataservice/pom.xml -text
 tvbrowser-plugins/plugin-swedbdataservice/src/main/java/swedbtvdataservice/DataHydraChannelContainer.java -text
 tvbrowser-plugins/plugin-swedbdataservice/src/main/java/swedbtvdataservice/DataHydraChannelGroup.java -text
@@ -1640,11 +1550,6 @@ tvbrowser-plugins/plugin-treeview/src/main/resources/treeviewplugin/icons/16x16/
 tvbrowser-plugins/plugin-treeview/src/main/resources/treeviewplugin/icons/22x22/actions/treeview.png -text
 tvbrowser-plugins/plugin-treeview/src/main/resources/treeviewplugin/treeviewplugin.properties -text
 tvbrowser-plugins/plugin-treeview/src/main/resources/treeviewplugin/treeviewplugin_de.properties -text
-tvbrowser-plugins/plugin-tvbrowserdataservice/.classpath -text
-tvbrowser-plugins/plugin-tvbrowserdataservice/.project -text
-tvbrowser-plugins/plugin-tvbrowserdataservice/.settings/org.eclipse.core.resources.prefs -text
-tvbrowser-plugins/plugin-tvbrowserdataservice/.settings/org.eclipse.jdt.core.prefs -text
-tvbrowser-plugins/plugin-tvbrowserdataservice/.settings/org.eclipse.m2e.core.prefs -text
 tvbrowser-plugins/plugin-tvbrowserdataservice/pom.xml -text
 tvbrowser-plugins/plugin-tvbrowserdataservice/src/main/java/tvbrowserdataservice/ChannelGroupDialog.java -text
 tvbrowser-plugins/plugin-tvbrowserdataservice/src/main/java/tvbrowserdataservice/DayProgramReceiveDH.java -text
@@ -1718,11 +1623,6 @@ tvbrowser-plugins/plugin-tvpearl/src/main/resources/tvpearlplugin/icons/16x16/ac
 tvbrowser-plugins/plugin-tvpearl/src/main/resources/tvpearlplugin/icons/22x22/actions/pearl.png -text
 tvbrowser-plugins/plugin-tvpearl/src/main/resources/tvpearlplugin/tvpearlplugin.properties -text
 tvbrowser-plugins/plugin-tvpearl/src/main/resources/tvpearlplugin/tvpearlplugin_de.properties -text
-tvbrowser-plugins/plugin-tvrater/.classpath -text
-tvbrowser-plugins/plugin-tvrater/.project -text
-tvbrowser-plugins/plugin-tvrater/.settings/org.eclipse.core.resources.prefs -text
-tvbrowser-plugins/plugin-tvrater/.settings/org.eclipse.jdt.core.prefs -text
-tvbrowser-plugins/plugin-tvrater/.settings/org.eclipse.m2e.core.prefs -text
 tvbrowser-plugins/plugin-tvrater/pom.xml -text
 tvbrowser-plugins/plugin-tvrater/src/main/java/tvraterplugin/CompositeIcon.java -text
 tvbrowser-plugins/plugin-tvrater/src/main/java/tvraterplugin/Database.java -text
@@ -1774,11 +1674,6 @@ tvbrowser-plugins/plugin-twitter/src/main/java/twitterplugin/TwitterSettingsTab.
 tvbrowser-plugins/plugin-twitter/src/main/resources/twitterplugin/twitter.png -text
 tvbrowser-plugins/plugin-twitter/src/main/resources/twitterplugin/twitterplugin.properties -text
 tvbrowser-plugins/plugin-twitter/src/main/resources/twitterplugin/twitterplugin_de.properties -text
-tvbrowser-plugins/plugin-unityglobalmenusupport/.classpath -text svneol=unset#text/plain
-tvbrowser-plugins/plugin-unityglobalmenusupport/.project -text svneol=unset#text/plain
-tvbrowser-plugins/plugin-unityglobalmenusupport/.settings/org.eclipse.core.resources.prefs -text svneol=unset#text/plain
-tvbrowser-plugins/plugin-unityglobalmenusupport/.settings/org.eclipse.jdt.core.prefs -text svneol=unset#text/plain
-tvbrowser-plugins/plugin-unityglobalmenusupport/.settings/org.eclipse.m2e.core.prefs -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-unityglobalmenusupport/pom.xml -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-unityglobalmenusupport/src/main/java/tvbunityglobalmenusupport/TvbUnityGlobalMenuSupport.java -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-url4program/pom.xml -text
@@ -1861,11 +1756,6 @@ tvbrowser-plugins/plugin-virtualdataservice/src/main/resources/com/michaelbarano
 tvbrowser-plugins/plugin-virtualdataservice/src/main/resources/virtualdataservice/vdrdataservice_hr.properties -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-virtualdataservice/src/main/resources/virtualdataservice/virtualdataservice.properties -text
 tvbrowser-plugins/plugin-virtualdataservice/src/main/resources/virtualdataservice/virtualdataservice_de.properties -text
-tvbrowser-plugins/plugin-web/.classpath -text
-tvbrowser-plugins/plugin-web/.project -text
-tvbrowser-plugins/plugin-web/.settings/org.eclipse.core.resources.prefs -text
-tvbrowser-plugins/plugin-web/.settings/org.eclipse.jdt.core.prefs -text
-tvbrowser-plugins/plugin-web/.settings/org.eclipse.m2e.core.prefs -text
 tvbrowser-plugins/plugin-web/pom.xml -text
 tvbrowser-plugins/plugin-web/src/main/java/webplugin/FavIconFetcher.java -text
 tvbrowser-plugins/plugin-web/src/main/java/webplugin/WebAddress.java -text

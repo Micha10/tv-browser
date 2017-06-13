@@ -256,9 +256,6 @@ tvbrowser-plugins/plugin-speech/target
 tvbrowser-plugins/plugin-swedbdataservice/target
 tvbrowser-plugins/plugin-switch/.classpath
 tvbrowser-plugins/plugin-switch/.project
-tvbrowser-plugins/plugin-switch/.settings/org.eclipse.core.resources.prefs
-tvbrowser-plugins/plugin-switch/.settings/org.eclipse.jdt.core.prefs
-tvbrowser-plugins/plugin-switch/.settings/org.eclipse.m2e.core.prefs
 tvbrowser-plugins/plugin-switch/target
 tvbrowser-plugins/plugin-tagging/.classpath
 tvbrowser-plugins/plugin-tagging/.escabaseline
