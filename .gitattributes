@@ -607,11 +607,6 @@ tvbrowser-plugins/plugin-checker/src/main/resources/checkerplugin/check/check.pr
 tvbrowser-plugins/plugin-checker/src/main/resources/checkerplugin/check/check_de.properties -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-checker/src/main/resources/checkerplugin/checkerplugin.properties -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-checker/src/main/resources/checkerplugin/checkerplugin_de.properties -text svneol=unset#text/plain
-tvbrowser-plugins/plugin-clipboard/.classpath -text
-tvbrowser-plugins/plugin-clipboard/.project -text
-tvbrowser-plugins/plugin-clipboard/.settings/org.eclipse.core.resources.prefs -text
-tvbrowser-plugins/plugin-clipboard/.settings/org.eclipse.jdt.core.prefs -text
-tvbrowser-plugins/plugin-clipboard/.settings/org.eclipse.m2e.core.prefs -text
 tvbrowser-plugins/plugin-clipboard/pom.xml -text
 tvbrowser-plugins/plugin-clipboard/src/main/java/clipboardplugin/ClipboardPlugin.java -text
 tvbrowser-plugins/plugin-clipboard/src/main/java/clipboardplugin/ClipboardSettingsTab.java -text
