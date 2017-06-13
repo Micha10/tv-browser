@@ -820,6 +820,7 @@ tvbrowser-plugins/plugin-filterfiltercomponent/src/main/java/filterfiltercompone
 tvbrowser-plugins/plugin-filterfiltercomponent/src/main/resources/filterfiltercomponent/filterfiltercomponent.properties -text
 tvbrowser-plugins/plugin-filterfiltercomponent/src/main/resources/filterfiltercomponent/filterfiltercomponent_de.properties -text
 tvbrowser-plugins/plugin-filterinfoicons/pom.xml -text
+tvbrowser-plugins/plugin-filterinfoicons/src/main/java/devplugin/ToolTipIcon.java -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-filterinfoicons/src/main/java/filterinfoicon/FilterEntry.java -text
 tvbrowser-plugins/plugin-filterinfoicons/src/main/java/filterinfoicon/FilterInfoIcon.java -text
 tvbrowser-plugins/plugin-filterinfoicons/src/main/java/filterinfoicon/FilterInfoIconManagePanel.java -text
