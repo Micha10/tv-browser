@@ -979,11 +979,6 @@ tvbrowser-plugins/plugin-knotify/src/main/java/knotifyplugin/KNotifySettingsTab.
 tvbrowser-plugins/plugin-knotify/src/main/resources/knotifyplugin/knotify.png -text
 tvbrowser-plugins/plugin-knotify/src/main/resources/knotifyplugin/knotifyplugin.properties -text
 tvbrowser-plugins/plugin-knotify/src/main/resources/knotifyplugin/knotifyplugin_de.properties -text
-tvbrowser-plugins/plugin-listview/.classpath -text
-tvbrowser-plugins/plugin-listview/.project -text
-tvbrowser-plugins/plugin-listview/.settings/org.eclipse.core.resources.prefs -text
-tvbrowser-plugins/plugin-listview/.settings/org.eclipse.jdt.core.prefs -text
-tvbrowser-plugins/plugin-listview/.settings/org.eclipse.m2e.core.prefs -text
 tvbrowser-plugins/plugin-listview/pom.xml -text
 tvbrowser-plugins/plugin-listview/src/main/java/listviewplugin/ListTable.java -text
 tvbrowser-plugins/plugin-listview/src/main/java/listviewplugin/ListTableCellRenderer.java -text
