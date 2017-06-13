@@ -912,6 +912,7 @@ tvbrowser-plugins/plugin-jumptoprogram/src/main/java/jumptoprogramplugin/JumpToP
 tvbrowser-plugins/plugin-jumptoprogram/src/main/resources/jumptoprogramplugin/jumptoprogramplugin.properties -text
 tvbrowser-plugins/plugin-jumptoprogram/src/main/resources/jumptoprogramplugin/jumptoprogramplugin_de.properties -text
 tvbrowser-plugins/plugin-jumptoprogram/src/main/resources/jumptoprogramplugin/jumptoprogramplugin_hr.properties -text svneol=unset#text/plain
+tvbrowser-plugins/plugin-jumptoprogram/src/main/resources/jumptoprogramplugin/jumptoprogramplugin_pl.properties -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-knotify/pom.xml -text
 tvbrowser-plugins/plugin-knotify/src/main/java/knotifyplugin/KNotifyPlugin.java -text
 tvbrowser-plugins/plugin-knotify/src/main/java/knotifyplugin/KNotifySettings.java -text
