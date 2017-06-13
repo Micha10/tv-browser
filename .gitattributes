@@ -221,6 +221,7 @@ tvb-compat/src/LICENSE.txt -text svneol=unset#text/plain
 tvb-compat/src/main/java/compat/BordersCompat.java -text svneol=unset#text/plain
 tvb-compat/src/main/java/compat/ChannelCompat.java -text svneol=unset#text/plain
 tvb-compat/src/main/java/compat/FilterCompat.java -text svneol=unset#text/plain
+tvb-compat/src/main/java/compat/FormSpecsCompat.java -text svneol=unset#text/plain
 tvb-compat/src/main/java/compat/IOCompat.java -text svneol=unset#text/plain
 tvb-compat/src/main/java/compat/MenuCompat.java -text svneol=unset#text/plain
 tvb-compat/src/main/java/compat/PersonaCompat.java -text svneol=unset#text/plain
