@@ -797,6 +797,10 @@ tvbrowser-plugins/plugin-filterinfoicons/src/main/java/filterinfoicon/FilterInfo
 tvbrowser-plugins/plugin-filterinfoicons/src/main/java/filterinfoicon/FilterInfoIconManagePanel.java -text
 tvbrowser-plugins/plugin-filterinfoicons/src/main/resources/filterinfoicon/filterinfoicon.properties -text
 tvbrowser-plugins/plugin-filterinfoicons/src/main/resources/filterinfoicon/filterinfoicon_de.properties -text
+tvbrowser-plugins/plugin-filtershortcuts/pom.xml -text svneol=unset#text/plain
+tvbrowser-plugins/plugin-filtershortcuts/src/main/java/filtershortcuts/FilterShortcuts.java -text svneol=unset#text/plain
+tvbrowser-plugins/plugin-filtershortcuts/src/main/resources/filtershortcuts/filtershortcuts.properties -text svneol=unset#text/plain
+tvbrowser-plugins/plugin-filtershortcuts/src/main/resources/filtershortcuts/filtershortcuts_de.properties -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-filterview/pom.xml -text
 tvbrowser-plugins/plugin-filterview/src/main/java/filterviewplugin/FilterViewPlugin.java -text
 tvbrowser-plugins/plugin-filterview/src/main/java/filterviewplugin/FilterViewSettings.java -text

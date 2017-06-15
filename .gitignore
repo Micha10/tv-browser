@@ -118,6 +118,8 @@ tvbrowser-plugins/plugin-filterinfoicons/.classpath
 tvbrowser-plugins/plugin-filterinfoicons/.project
 tvbrowser-plugins/plugin-filterinfoicons/.settings
 tvbrowser-plugins/plugin-filterinfoicons/target
+tvbrowser-plugins/plugin-filtershortcuts/src/test
+tvbrowser-plugins/plugin-filtershortcuts/target
 tvbrowser-plugins/plugin-filterview/.classpath
 tvbrowser-plugins/plugin-filterview/.escabaseline
 tvbrowser-plugins/plugin-filterview/.project
