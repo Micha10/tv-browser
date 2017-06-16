@@ -801,6 +801,8 @@ tvbrowser-plugins/plugin-filtershortcuts/pom.xml -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-filtershortcuts/src/main/java/filtershortcuts/FilterShortcuts.java -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-filtershortcuts/src/main/resources/filtershortcuts/filtershortcuts.properties -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-filtershortcuts/src/main/resources/filtershortcuts/filtershortcuts_de.properties -text svneol=unset#text/plain
+tvbrowser-plugins/plugin-filtershortcuts/src/main/resources/filtershortcuts/icons/16x16/apps/filter-shortcut.png -text
+tvbrowser-plugins/plugin-filtershortcuts/src/main/resources/filtershortcuts/icons/22x22/apps/filter-shortcut.png -text
 tvbrowser-plugins/plugin-filterview/pom.xml -text
 tvbrowser-plugins/plugin-filterview/src/main/java/filterviewplugin/FilterViewPlugin.java -text
 tvbrowser-plugins/plugin-filterview/src/main/java/filterviewplugin/FilterViewSettings.java -text
