@@ -2799,6 +2799,7 @@ tvbrowser/src/util/ui/ObjectSelectionListener.java -text
 tvbrowser/src/util/ui/PictureAreaIcon.java -text
 tvbrowser/src/util/ui/PooledLocalizer.java -text
 tvbrowser/src/util/ui/PopupButton.java -text
+tvbrowser/src/util/ui/ProgramGetter.java -text svneol=unset#text/plain
 tvbrowser/src/util/ui/TVBrowserIcons.java -text svneol=unset#text/plain
 tvbrowser/src/util/ui/TabListenerPanel.java -text svneol=unset#text/plain
 tvbrowser/src/util/ui/TimeFormatter.java -text
