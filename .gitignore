@@ -248,6 +248,7 @@ tvbrowser-plugins/plugin-notifyosd/.classpath
 tvbrowser-plugins/plugin-notifyosd/.escabaseline
 tvbrowser-plugins/plugin-notifyosd/.project
 tvbrowser-plugins/plugin-notifyosd/.settings
+tvbrowser-plugins/plugin-notifyosd/src/test
 tvbrowser-plugins/plugin-notifyosd/target
 tvbrowser-plugins/plugin-personahandler/.classpath
 tvbrowser-plugins/plugin-personahandler/.project
