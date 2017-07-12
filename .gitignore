@@ -302,6 +302,7 @@ tvbrowser-plugins/plugin-shareddataservice/target
 tvbrowser-plugins/plugin-simplemarker/.classpath
 tvbrowser-plugins/plugin-simplemarker/.project
 tvbrowser-plugins/plugin-simplemarker/.settings
+tvbrowser-plugins/plugin-simplemarker/src/test
 tvbrowser-plugins/plugin-simplemarker/target
 tvbrowser-plugins/plugin-snarl/.classpath
 tvbrowser-plugins/plugin-snarl/.escabaseline
