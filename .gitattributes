@@ -126,6 +126,7 @@ primarydatamanager/tvdatastarterkit/src/main/java/primarydatamanager/primarydata
 primarydatamanager/tvdatastarterkit/src/main/java/primarydatamanager/primarydataservice/util/category_magazine.properties -text
 primarydatamanager/tvdatastarterkit/src/main/java/primarydatamanager/primarydataservice/util/category_movies.properties -text
 primarydatamanager/tvdatastarterkit/src/main/java/primarydatamanager/primarydataservice/util/category_news.properties -text
+primarydatamanager/tvdatastarterkit/src/main/java/primarydatamanager/primarydataservice/util/category_none.properties -text svneol=unset#text/plain
 primarydatamanager/tvdatastarterkit/src/main/java/primarydatamanager/primarydataservice/util/category_others.properties -text
 primarydatamanager/tvdatastarterkit/src/main/java/primarydatamanager/primarydataservice/util/category_series.properties -text
 primarydatamanager/tvdatastarterkit/src/main/java/primarydatamanager/primarydataservice/util/category_show.properties -text
