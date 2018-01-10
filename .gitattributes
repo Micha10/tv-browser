@@ -1574,6 +1574,7 @@ tvbrowser-plugins/plugin-tvbrowserdataservice/src/main/java/tvbrowserdataservice
 tvbrowser-plugins/plugin-tvbrowserdataservice/src/main/java/tvbrowserdataservice/file/AbstractFile.java -text
 tvbrowser-plugins/plugin-tvbrowserdataservice/src/main/java/tvbrowserdataservice/file/ChannelList.java -text
 tvbrowser-plugins/plugin-tvbrowserdataservice/src/main/java/tvbrowserdataservice/file/DayProgramFile.java -text
+tvbrowser-plugins/plugin-tvbrowserdataservice/src/main/java/tvbrowserdataservice/file/PictureUtils.java -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-tvbrowserdataservice/src/main/java/tvbrowserdataservice/file/ProgramField.java -text
 tvbrowser-plugins/plugin-tvbrowserdataservice/src/main/java/tvbrowserdataservice/file/ProgramFrame.java -text
 tvbrowser-plugins/plugin-tvbrowserdataservice/src/main/java/tvbrowserdataservice/file/SummaryFile.java -text
