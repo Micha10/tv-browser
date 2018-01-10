@@ -119,7 +119,6 @@ primarydatamanager/tvdatastarterkit/src/main/java/primarydatamanager/primarydata
 primarydatamanager/tvdatastarterkit/src/main/java/primarydatamanager/primarydataservice/ProgramFrameDispatcher.java -text
 primarydatamanager/tvdatastarterkit/src/main/java/primarydatamanager/primarydataservice/util/CarCountryCode.java -text
 primarydatamanager/tvdatastarterkit/src/main/java/primarydatamanager/primarydataservice/util/InfoCategoryParser.java -text
-primarydatamanager/tvdatastarterkit/src/main/java/primarydatamanager/primarydataservice/util/PictureUtils.java -text svneol=unset#text/plain
 primarydatamanager/tvdatastarterkit/src/main/java/primarydatamanager/primarydataservice/util/RtfFilterReader.java -text
 primarydatamanager/tvdatastarterkit/src/main/java/primarydatamanager/primarydataservice/util/category_arts.properties -text
 primarydatamanager/tvdatastarterkit/src/main/java/primarydatamanager/primarydataservice/util/category_childrens.properties -text
