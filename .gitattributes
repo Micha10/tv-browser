@@ -2775,6 +2775,7 @@ tvbrowser/src/util/programkeyevent/ProgramKeyActionListener.java -text svneol=un
 tvbrowser/src/util/programkeyevent/ProgramKeyAndContextMenuListener.java -text svneol=unset#text/plain
 tvbrowser/src/util/programkeyevent/ProgramKeyContextMenuListener.java -text svneol=unset#text/plain
 tvbrowser/src/util/programkeyevent/ProgramKeyEventHandler.java -text svneol=unset#text/plain
+tvbrowser/src/util/programmouseevent/AutoScrollerAndClickKeyHandler.java svneol=native#text/plain
 tvbrowser/src/util/programmouseevent/ProgramContextMenuListener.java -text
 tvbrowser/src/util/programmouseevent/ProgramMouseActionListener.java -text
 tvbrowser/src/util/programmouseevent/ProgramMouseAndContextMenuListener.java -text
