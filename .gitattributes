@@ -2262,9 +2262,9 @@ tvbrowser/images/themes/tango/22x22/status/view-filter-set-list.png -text
 tvbrowser/images/themes/tango/22x22/status/view-filter-set.png -text
 tvbrowser/images/themes/tango_system-restart.svg -text
 tvbrowser/lib/bsh-2.0b4.jar -text
-tvbrowser/lib/commons-codec-1.7.jar -text
-tvbrowser/lib/commons-lang3-3.1.jar -text
-tvbrowser/lib/commons-net-3.2.jar -text
+tvbrowser/lib/commons-codec-1.11.jar -text
+tvbrowser/lib/commons-lang3-3.8.1.jar -text
+tvbrowser/lib/commons-net-3.6.jar -text
 tvbrowser/lib/htmlparser-1.6.jar -text
 tvbrowser/lib/jRegistryKey-1.4.5.jar -text
 tvbrowser/lib/jgoodies-common-1.4.0.jar -text
@@ -2273,10 +2273,6 @@ tvbrowser/lib/jgoodies-looks-2.5.2.jar -text
 tvbrowser/lib/jnativehook-2.1.0.jar -text
 tvbrowser/lib/l2fprod-common-tasks-7.3.jar -text
 tvbrowser/lib/opencsv-2.3.jar -text
-tvbrowser/lib/skinlf-6.7.jar -text
-tvbrowser/lib/stax-1.2.0.jar -text
-tvbrowser/lib/stax-api-1.0.1.jar -text
-tvbrowser/lib/substance-6.1.jar -text
 tvbrowser/lib/texhyphj-1.1.jar -text
 tvbrowser/lib/trident-1.3.jar -text
 tvbrowser/personas/3b862288-9900-4c09-99e9-b34d5f926a42/footer.jpg -text
@@ -2340,6 +2336,7 @@ tvbrowser/src/imgs/tvbrowser16.png -text
 tvbrowser/src/imgs/tvbrowser32.png -text
 tvbrowser/src/imgs/tvbrowser48.png -text
 tvbrowser/src/imgs/unknown_channel.png -text
+tvbrowser/src/module-info.java -text svneol=unset#text/plain
 tvbrowser/src/tvbrowser/core/DummyChannel.java -text
 tvbrowser/src/tvbrowser/core/DuplicateChannelNameCounter.java -text
 tvbrowser/src/tvbrowser/core/PendingMarkings.java -text svneol=unset#text/plain
