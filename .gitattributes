@@ -1851,6 +1851,7 @@ tvbrowser/deployment/packer.txt -text
 tvbrowser/deployment/win/installer/Plugins/LockedList.dll -text
 tvbrowser/deployment/win/installer/Plugins/nsisFirewall.dll -text
 tvbrowser/deployment/win/installer/Plugins/nsisFirewallW.dll -text
+tvbrowser/deployment/win/installer/jre.nsi -text
 tvbrowser/deployment/win/installer/tvbrowser_english.nsh -text
 tvbrowser/deployment/win/installer/tvbrowser_german.nsh -text
 tvbrowser/deployment/win/jRegistryKey/jRegistryKey.dll -text
