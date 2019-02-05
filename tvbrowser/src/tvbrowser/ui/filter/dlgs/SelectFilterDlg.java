@@ -54,6 +54,7 @@ import devplugin.ProgramFilter;
 import tvbrowser.core.Settings;
 import tvbrowser.core.filters.FilterList;
 import tvbrowser.core.filters.InfoBitFilter;
+import tvbrowser.core.filters.ParserException;
 import tvbrowser.core.filters.PluginFilter;
 import tvbrowser.core.filters.SeparatorFilter;
 import tvbrowser.core.filters.ShowAllFilter;
@@ -73,7 +74,7 @@ public class SelectFilterDlg extends JDialog implements ActionListener, WindowCl
 
   private static SelectFilterDlg mInstance;
 
-  private JButton mHelpBtn, mNewFolder, mEditBtn, mRemoveBtn, mNewBtn, mOkBtn, mUpBtn, mDownBtn, mSeperator, mDefaultFilterBtn, mSortAlphabetically;
+  private JButton mHelpBtn, mNewFolder, mCopyBtn, mEditBtn, mRemoveBtn, mNewBtn, mOkBtn, mUpBtn, mDownBtn, mSeperator, mDefaultFilterBtn, mSortAlphabetically;
 
   private FilterList mFilterList;
   private FilterTree mFilterTree;
@@ -106,6 +107,7 @@ public class SelectFilterDlg extends JDialog implements ActionListener, WindowCl
     
     mNewBtn = UiUtilities.createToolBarButton(FilterTree.mLocalizer.msg("newFilter", "New Filter"),TVBrowserIcons.newIcon(TVBrowserIcons.SIZE_LARGE));
     mNewFolder = UiUtilities.createToolBarButton(FilterTree.mLocalizer.msg("newFolder", "New folder"),IconLoader.getInstance().getIconFromTheme("actions", "folder-new", 22));
+    mCopyBtn = UiUtilities.createToolBarButton(Localizer.getEllipsisLocalization(Localizer.I18N_COPY),TVBrowserIcons.copy(TVBrowserIcons.SIZE_LARGE));
     mEditBtn = UiUtilities.createToolBarButton(Localizer.getEllipsisLocalization(Localizer.I18N_EDIT),TVBrowserIcons.edit(TVBrowserIcons.SIZE_LARGE));
     mRemoveBtn = UiUtilities.createToolBarButton(Localizer.getLocalization(Localizer.I18N_DELETE),TVBrowserIcons.delete(TVBrowserIcons.SIZE_LARGE));
     mSeperator = UiUtilities.createToolBarButton(FilterTree.mLocalizer.msg("newSeparator", "Add separator"),IconLoader.getInstance().getIconFromTheme("emblems", "separator", 22));
@@ -122,6 +124,7 @@ public class SelectFilterDlg extends JDialog implements ActionListener, WindowCl
     addToolbarSeperator(toolbarPn);
     toolbarPn.add(mNewBtn);
     toolbarPn.add(mEditBtn);
+    toolbarPn.add(mCopyBtn);
     toolbarPn.add(mSeperator);
     toolbarPn.add(mRemoveBtn);
     addToolbarSeperator(toolbarPn);
@@ -132,6 +135,7 @@ public class SelectFilterDlg extends JDialog implements ActionListener, WindowCl
     toolbarPn.add(mSortAlphabetically);
 
     mNewBtn.addActionListener(this);
+    mCopyBtn.addActionListener(this);
     mEditBtn.addActionListener(this);
     mRemoveBtn.addActionListener(this);
     mSeperator.addActionListener(this);
@@ -199,9 +203,11 @@ public class SelectFilterDlg extends JDialog implements ActionListener, WindowCl
             (Settings.propDefaultFilter.getString().trim().length() < 1 && node.getFilter() instanceof ShowAllFilter)));
         
         mEditBtn.setEnabled(!(node.getFilter() instanceof FavoriteFilter || node.getFilter() instanceof ShowAllFilter || node.getFilter() instanceof PluginFilter || node.getFilter() instanceof PluginsProgramFilter || node.getFilter() instanceof InfoBitFilter || node.getFilter() instanceof SingleChannelFilter));
+        mCopyBtn.setEnabled(mEditBtn.isEnabled());
       }
       else {
         mEditBtn.setEnabled(row > 0 && node.isDirectoryNode());
+        mCopyBtn.setEnabled(false);
         mDefaultFilterBtn.setEnabled(false);
       }
       
@@ -209,6 +215,7 @@ public class SelectFilterDlg extends JDialog implements ActionListener, WindowCl
       
     }
     else {
+      mCopyBtn.setEnabled(false);
       mUpBtn.setEnabled(false);
       mDownBtn.setEnabled(false);
       mDefaultFilterBtn.setEnabled(false);
@@ -242,6 +249,8 @@ public class SelectFilterDlg extends JDialog implements ActionListener, WindowCl
       
       if (e.getSource() == mNewBtn) {
         createNewFilter(last);
+      } else if (e.getSource() == mCopyBtn) {
+        copySelectedFilter(last);
       } else if (e.getSource() == mEditBtn) {
         editSelectedFilter(last);
       } else if (e.getSource() == mRemoveBtn) {
@@ -273,6 +282,55 @@ public class SelectFilterDlg extends JDialog implements ActionListener, WindowCl
     
     setVisible(false);
     mInstance = null;
+  }
+  
+  void copySelectedFilter(FilterNode node) {
+	UserFilter filter = (UserFilter)node.getFilter();
+	
+	String name = filter.getName();
+	int count = name.lastIndexOf("_");
+	
+	if(count != -1) {
+	  try {
+		count = Integer.parseInt(name.substring(count+1))+1;
+		name = name.substring(0,name.lastIndexOf("_"));
+	  }catch(NumberFormatException nfe) {
+	    count = 1;
+	  }
+	}
+	else {
+	  count = 1;
+	}
+	
+	while(mFilterList.containsFilter(name+"_"+count)) {
+	  count++;
+	}
+	
+	UserFilter filterNew = new UserFilter(name+"_"+count);
+	
+	try {
+	  filterNew.setRule(filter.getRule());
+	  final EditFilterDlg dlg = new EditFilterDlg(this, FilterList.getInstance(), filterNew, true);
+	  
+	  if (dlg.getOkWasPressed()) {
+	      FilterNode nodeNew = new FilterNode(filterNew);
+	      int rows[] = mFilterTree.getSelectionRows();
+	      FilterNode parent = (FilterNode)node.getParent();
+	      
+	      if(parent.equals(mFilterTree.getRoot()) || parent.isDirectoryNode()) {
+	    	parent.add(nodeNew);
+	        mFilterTree.expandPath(new TreePath(parent.getPath()));
+	      } else {
+	        ((FilterNode)parent.getParent()).insert(nodeNew,parent.getParent().getIndex(parent));
+	      }
+	      
+	      mFilterTree.getModel().fireFilterAdded(filterNew);
+	      
+	      mFilterTree.reload((FilterNode)node.getParent());
+	      mFilterTree.setSelectionRows(rows);
+	    }
+	} catch (ParserException e) {}
+	
   }
   
   void editSelectedFilter(FilterNode node) {

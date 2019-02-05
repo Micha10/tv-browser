@@ -91,7 +91,7 @@ public class EditFilterDlg extends JDialog implements ActionListener, DocumentLi
 
   private static final util.ui.Localizer mFilterLocalizer = util.ui.Localizer.getLocalizerFor(UserFilter.class);
 
-  private JButton mNewBtn, mEditBtn, mRemoveBtn, mOkBtn, mCancelBtn;
+  private JButton mNewBtn, mEditBtn, mCopyButton, mRemoveBtn, mOkBtn, mCancelBtn;
 
   private Window mParent;
 
@@ -161,18 +161,21 @@ public class EditFilterDlg extends JDialog implements ActionListener, DocumentLi
     mFilterRuleErrorLb = filterCreation.addLabel(mLocalizer.msg("ruleExample",
     "example: component1 or (component2 and not component3)"), CC.xy(2,8));
     
-    FormLayout filterCompLayout = new FormLayout("default:grow,5dlu,default","default,5dlu,default,5dlu,default,fill:min:grow");
+    FormLayout filterCompLayout = new FormLayout("default:grow,5dlu,default","default,5dlu,default,5dlu,default,5dlu,default,fill:min:grow");
     PanelBuilder filterComponents = new PanelBuilder(filterCompLayout);
 
     mNewBtn = new JButton(TVBrowserIcons.newIcon(TVBrowserIcons.SIZE_SMALL));
     mNewBtn.setToolTipText(mLocalizer.msg("newButton", "Create new filter component..."));
     mEditBtn = new JButton(TVBrowserIcons.edit(TVBrowserIcons.SIZE_SMALL));
     mEditBtn.setToolTipText(mLocalizer.msg("editButton", "Edit selected filter component..."));
+    mCopyButton = new JButton(TVBrowserIcons.copy(TVBrowserIcons.SIZE_SMALL));
+    mCopyButton.setToolTipText(mLocalizer.msg("copyButton", "Copy selected filter component..."));
     mRemoveBtn = new JButton(TVBrowserIcons.delete(TVBrowserIcons.SIZE_SMALL));
     mRemoveBtn.setToolTipText(mLocalizer.msg("removeButton", "Delete selected filter component"));
 
     mNewBtn.addActionListener(this);
     mEditBtn.addActionListener(this);
+    mCopyButton.addActionListener(this);
     mRemoveBtn.addActionListener(this);
 
     ButtonBarBuilder bottomBar = Utilities.createFilterButtonBar();
@@ -340,9 +343,10 @@ public class EditFilterDlg extends JDialog implements ActionListener, DocumentLi
         
     filterComponents.add(mNewBtn, CC.xy(3,1));
     filterComponents.add(mEditBtn, CC.xy(3,3));
-    filterComponents.add(mRemoveBtn, CC.xy(3,5));
+    filterComponents.add(mCopyButton, CC.xy(3,5));
+    filterComponents.add(mRemoveBtn, CC.xy(3,7));
     
-    filterComponents.add(new JScrollPane(mFilterComponentList), CC.xywh(1,1,1,6));
+    filterComponents.add(new JScrollPane(mFilterComponentList), CC.xywh(1,1,1,8));
     
     PanelBuilder listPanel = new PanelBuilder(new FormLayout("5dlu,min:grow,5dlu,10dlu,5dlu,min:grow,5dlu","default,5dlu,fill:min:grow"));
     listPanel.addSeparator(mLocalizer.msg("componentsTitle","Available filter components:"), CC.xyw(5,1,3));
@@ -378,10 +382,12 @@ public class EditFilterDlg extends JDialog implements ActionListener, DocumentLi
       mRemoveBtn.setEnabled(!item.isAndItem() && !item.isOrItem() && !item.isNotItem() && !item.isOpenBracketItem() && !item.isCloseBracketItem() && !(item.getComponent() instanceof SingleChannelFilterComponent));
       
       mEditBtn.setEnabled(mRemoveBtn.isEnabled() && !(item.getComponent() instanceof AcceptNoneFilterComponent));
+      mCopyButton.setEnabled(mEditBtn.isEnabled());
     }
     else {
       mEditBtn.setEnabled(false);
       mRemoveBtn.setEnabled(false);
+      mCopyButton.setEnabled(false);
     }
 
     boolean validRule = true;
@@ -423,9 +429,10 @@ public class EditFilterDlg extends JDialog implements ActionListener, DocumentLi
         mFilterRuleTF.setText(text);
         fillFilterConstruction();
       }
+    } else if (o == mCopyButton) {
+      copySelectedFilterComponent();
     } else if (o == mEditBtn) {
       editSelectedFilterComponent();
-
     } else if (o == mFilterComponentList) {
       updateBtns();
     } else if (o == mRemoveBtn) {
@@ -815,6 +822,56 @@ public class EditFilterDlg extends JDialog implements ActionListener, DocumentLi
       }
       level = Math.max(level,0);
     }
+  }
+  
+  private void copySelectedFilterComponent() {
+    int inx = mFilterComponentList.getSelectedIndex();
+
+    if(inx == -1) {
+      return;
+    }
+
+    FilterComponent rule = ((FilterItem)mFilterComponentListModel.getElementAt(inx)).getComponent();
+    
+    String name = rule.getName();
+	int count = name.lastIndexOf("_");
+	
+	if(count != -1) {
+	  try {
+		count = Integer.parseInt(name.substring(count+1))+1;
+		name = name.substring(0,name.lastIndexOf("_"));
+	  }catch(NumberFormatException nfe) {
+	    count = 1;
+	  }
+	}
+	else {
+	  count = 1;
+	}
+	
+	while(FilterComponentList.getInstance().exists(name+"_"+count)) {
+	  count++;
+	}
+	
+	rule = FilterComponentList.getInstance().createCopy(rule, name + "_" + count);
+    
+    EditFilterComponentDlg dlg = null;
+    
+    if((mParent instanceof JFrame)) {
+      dlg = new EditFilterComponentDlg((JFrame)mParent,rule);
+    }
+    else {
+      dlg = new EditFilterComponentDlg((JDialog)mParent,rule);
+    }
+    
+    FilterComponent newRule = dlg.getFilterComponent();
+    
+    if (newRule != null) {
+      FilterComponentList.getInstance().add(newRule);
+    
+      mFilterComponentListModel.addElement(new FilterItem(newRule,0));
+      mFilterConstruction.repaint();
+    }
+    updateBtns();
   }
 
   private void editSelectedFilterComponent() {

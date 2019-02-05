@@ -26,6 +26,8 @@
 
 package tvbrowser.core.filters;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -261,12 +263,36 @@ public class FilterComponentList {
     out.writeObject(comp.getDescription());
     comp.write(out);
   }
-
-  private FilterComponent readComponent(ObjectInputStream in) throws IOException, ClassNotFoundException {
-    String className=(String)in.readObject();
-    int version = in.readInt();
-    String name = (String)in.readObject();
-    String description = (String)in.readObject();
+  
+  public FilterComponent createCopy(final FilterComponent source, final String nameNew) {
+	FilterComponent copy = null;
+	
+    try {
+      byte[] outArr = null;
+      
+      try(ByteArrayOutputStream tempOut = new ByteArrayOutputStream()) {
+    
+	    try(ObjectOutputStream out = new ObjectOutputStream(tempOut)) {
+	      writeComponent(out, source);
+	    }
+        tempOut.flush();
+        
+	    outArr = tempOut.toByteArray();
+      }
+      
+      if(outArr != null) {
+        try(ObjectInputStream in = new ObjectInputStream(new ByteArrayInputStream(outArr))) {
+          copy = readComponent(in);
+          copy.setName(nameNew);
+        } catch (ClassNotFoundException e) {}
+      }
+      
+    }catch(IOException ioe) {}
+    
+    return copy;
+  }
+  
+  private FilterComponent loadComponent(final String className, final String name, final String description) {
     FilterComponent filterComponent = null;
     if (className.endsWith(".AgeLimitFilterComponent")) {
       filterComponent = new AgeLimitFilterComponent(name, description);
@@ -337,7 +363,16 @@ public class FilterComponentList {
         return null;
       }
     }
-
+	return filterComponent;
+  }
+  
+  private FilterComponent readComponent(ObjectInputStream in) throws IOException, ClassNotFoundException {
+    String className=(String)in.readObject();
+    int version = in.readInt();
+    String name = (String)in.readObject();
+    String description = (String)in.readObject();
+    FilterComponent filterComponent = loadComponent(className,name,description);
+    
     if (filterComponent!=null) {
       filterComponent.read(in, version);
 
