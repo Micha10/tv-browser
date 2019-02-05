@@ -783,9 +783,14 @@ public class TVBrowser {
 		if (java==null) return null;
 		java = java.concat("/bin/java");
 		cmd.add(java);
+		
+		boolean splash = false;
 		// vm arguments
 		List<String> vmArguments = ManagementFactory.getRuntimeMXBean().getInputArguments();
 		for (String arg : vmArguments) {
+			if(arg.startsWith("-splash:")) {
+				splash = true;
+			}
 			// if it's the agent argument : we ignore it otherwise the
 			// address of the old application and the new one will be in
 			// conflict
@@ -810,9 +815,15 @@ public class TVBrowser {
 			cmd.add(new File(jarFile).getPath());
 		} else {*/
 			// else it's a .class, add the classpath and mainClass
-			if (System.getProperty("java.class.path")==null) return null;
-			cmd.add("-cp");
-			cmd.add(System.getProperty("java.class.path"));
+		    if(System.getProperty("java.class.path") != null && !System.getProperty("java.class.path").isBlank()) {
+		      cmd.add("-cp");
+			  cmd.add(System.getProperty("java.class.path"));
+		    }
+		    
+		    if(!splash) {
+		    	cmd.add("-splash:imgs/splash.png");
+		    }
+		    
 			cmd.add("-m");
 			cmd.add(mainCommand[0]);
 	    mainCommandSize = 1;
