@@ -837,8 +837,6 @@ public class TVBrowser {
 			cmdarr[i] = cmd.get(i);
 		}
 		
-		IOUtilities.printStringArray("Restart CMD",cmdarr);
-		
 		return cmdarr;
 		} catch (Exception e) {			// something went wrong
 			e.printStackTrace();
