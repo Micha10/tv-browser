@@ -40,7 +40,7 @@ public class PersonaHandler extends Plugin implements PersonaListener {
   private static PersonaHandler mInstance;
   private PersonaDialog mPersonaDialog;
   
-  public PersonaHandler() {System.out.println("gg");
+  public PersonaHandler() {
     mInstance = this;
     mPluginInfo = new PluginInfo(PersonaHandler.class,"PersonaHandler",mLocalizer.msg("description","Let's you install, create, delete and edit Personas for TV-Browser in an easy way."),"Ren\u00e9 Mach","GPL",mLocalizer.msg("website","http://enwiki.tvbrowser.org/index.php/PersonaHandler"));
     Persona.getInstance().registerPersonaListener(this);
