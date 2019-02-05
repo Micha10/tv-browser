@@ -739,12 +739,12 @@ private static Font getDynamicFontSize(Font font, int offset) {
       mHasChanged = false;
     }
 
-    /* Prevent accidentally set program importance to take effect */
+    // Prevent accidentally set program importance to take effect
     if(mSettings.isIgnoringProgramImportance() || mProgram.getProgramState() == Program.STATE_WAS_DELETED) {
       mProgramImportance = Program.IMPORTANCE_PROGRAM_MAX;
     }
     
-    /* This is for debugging of the marking problem after an data update */
+    // This is for debugging of the marking problem after an data update
     if(mProgram.getProgramState() == Program.STATE_WAS_DELETED) {
       setForeground(Color.red);
       mTextColor = Color.red;

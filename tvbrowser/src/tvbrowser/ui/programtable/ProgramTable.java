@@ -314,7 +314,7 @@ public class ProgramTable extends JPanel
 
             // calculate clipping intersection between global clip border and current cell rectangle
             Shape oldClip = grp.getClip();
-            rec = rec.intersection((Rectangle)oldClip);
+            rec = rec.intersection(oldClip.getBounds());
 
             // Paint the cell
             if (rec.width > 0 || rec.height > 0) {
