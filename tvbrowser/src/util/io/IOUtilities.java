@@ -1340,4 +1340,21 @@ public class IOUtilities {
         }
       }
     }
+    
+    /**
+     * Prints the given array with a line break after each entry.
+     * <p>
+     * @param arr The array to print
+     * @since 4.1
+     */
+    public static final void printStringArray(final String header, final String[] arr) {
+      if(header != null) {
+        System.out.println(header);
+        System.out.println("---------------");
+      }
+      
+      for(String a : arr) {
+        System.out.println(a);
+      }
+    }
 }

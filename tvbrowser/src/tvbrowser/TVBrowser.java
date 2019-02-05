@@ -803,12 +803,12 @@ public class TVBrowser {
 		for (mainCommandSize=1; mainCommandSize < mainCommand.length && !mainCommand[mainCommandSize-1].endsWith(".jar"); mainCommandSize++) {
 		  sb.append(' ').append(mainCommand[mainCommandSize]);
 		}
-		String jarFile = sb.toString();
+		/*String jarFile = sb.toString();
 		if (jarFile.endsWith(".jar")) {
 			// if it's a jar, add -jar mainJar
 			cmd.add("-jar");
 			cmd.add(new File(jarFile).getPath());
-		} else {
+		} else {*/
 			// else it's a .class, add the classpath and mainClass
 			if (System.getProperty("java.class.path")==null) return null;
 			cmd.add("-cp");
@@ -816,7 +816,7 @@ public class TVBrowser {
 			cmd.add("-m");
 			cmd.add(mainCommand[0]);
 	    mainCommandSize = 1;
-		}
+		//}
     for (int i= mainCommandSize; i < mainCommand.length; i++) {
       cmd.add(mainCommand[i]);
     }
@@ -825,6 +825,9 @@ public class TVBrowser {
 		for(int i=0;i<cmd.size();++i){
 			cmdarr[i] = cmd.get(i);
 		}
+		
+		IOUtilities.printStringArray("Restart CMD",cmdarr);
+		
 		return cmdarr;
 		} catch (Exception e) {			// something went wrong
 			e.printStackTrace();

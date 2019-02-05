@@ -218,7 +218,8 @@ public class SearchHelper {
           if(!showDialog) {
             String title = mLocalizer.msg("hitsTitle", "Programs with {0}", searcherSettings.getSearchText());
 
-            UiUtilities.centerAndShow(createHitsDialog(comp, programArr, title, searcherSettings, pictureSettings));
+            createHitsDialog(comp, programArr, title, searcherSettings, pictureSettings).setVisible(true);
+           
             mDialog = null;
           }
           else if(mProgressBar != null) {
