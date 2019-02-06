@@ -62,7 +62,7 @@ public class FontChooserPanel extends JPanel {
       mLocalizer.msg("bolditalic", "bold italic"),
       };
 
-  private static final int FONTSIZE_MIN = 8;
+  private static final int FONTSIZE_MIN = 6;
 
   private static final int FONTSIZE_MAX = 40;
 
