@@ -453,7 +453,7 @@ public class TvBrowserDataServiceChannelGroup extends ChannelGroupImpl {
         toLoadMd5.delete();
       }
       
-      String url = serverUrl + "/" + metaFileName;
+      String url = serverUrl + (serverUrl.endsWith("/") ? "" : "/") + metaFileName;
       mLog.fine("Updating Metafile " + url);
       try {
         if(IOUtilities.download(new URL(url), toLoad, Plugin.getPluginManager().getTvBrowserSettings().getDefaultNetworkConnectionTimeout())) {
@@ -487,8 +487,7 @@ public class TvBrowserDataServiceChannelGroup extends ChannelGroupImpl {
           }
         }
       } catch (Exception exc) {
-        throw new TvBrowserException(getClass(), "error.1", "Downloading file from '{0}' to '{1}' failed", url, file
-                .getAbsolutePath(), exc);
+    	  mLog.log(Level.WARNING, mLocalizer.msg("error.1", "Downloading file from '{0}' to '{1}' failed", url, file.getAbsolutePath()), exc);
       }
     }
   }
