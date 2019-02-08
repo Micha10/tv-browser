@@ -42,7 +42,7 @@ import util.ui.persona.PersonaListener;
 
 public class PersonaHandler extends Plugin implements PersonaListener {
   private final static Localizer mLocalizer = Localizer.getLocalizerFor(PersonaHandler.class);
-  private static Version mVersion = new Version(0,15,0,true);
+  private static Version mVersion = new Version(0,15,1,true);
   private PluginInfo mPluginInfo;
   
   private static PersonaHandler mInstance;
@@ -184,7 +184,7 @@ try{
     }
     
     Pattern xpi = Pattern.compile("\"status\":\"public\",\"url\":\"(.*?.xpi)\\?src=\"");
-    Pattern idPattern = Pattern.compile("\"id\":(\\d+)");
+    Pattern idPattern = Pattern.compile("\"guid\":\"\\{(.*?)\\}");
     Pattern authorPattern = Pattern.compile("\\{\"authors\":\\[\\{.*?,\"name\":\"(.*?)\".*?\\}\\]");
     
     Matcher m2 = xpi.matcher(string.toString());
@@ -212,7 +212,7 @@ try{
       }
       
       IOUtilities.download(new URL(m2.group(1).replace("\\u002F", "/")), target);
-      
+      System.out.println(author + " " + target.isFile() + " " + id);
       if(target.isFile()) {
         ZipFile zip = null;
         
@@ -250,7 +250,7 @@ try{
             String footerURL = "footerURL";
             String accentcolor = "accentcolor";
             String textcolor = "textcolor";
-            
+            System.out.println(string);
             final StringBuilder pattern = new StringBuilder("\"(");
             pattern.append(name).append("|").append(description).append("|");
             pattern.append(headerURL).append("|").append(footerURL).append("|").append(accentcolor).append("|");
@@ -265,7 +265,7 @@ try{
             while(m.find(lastPos)) {
           	  String key = m.group(1);
               String value = m.group(2);
-              
+              System.out.println(key+"="+value);
               if(key.equals(name)) {
                 name = value;
               }
@@ -288,7 +288,7 @@ try{
             }
             
             File versionDir = new File(Persona.getUserPersonaDir(),id);
-            
+            System.out.println(versionDir.getAbsolutePath());
             if(!versionDir.isDirectory()) {
               if(versionDir.mkdirs()) {
                 Properties prop = new Properties();
@@ -297,7 +297,7 @@ try{
                 File footerImage = new File(versionDir,"footer.jpg");
                 File iconImage = new File(versionDir,"icon");
                 boolean accepted = false;
-                
+                System.out.println(headerURL);
                 if(!headerURL.equals("headerURL")) {
                   headerImage = new File(versionDir,"header"+headerURL.substring(headerURL.lastIndexOf(".")));
                   
