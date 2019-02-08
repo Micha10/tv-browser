@@ -165,7 +165,6 @@ public class EditFilterComponentDlg extends JDialog implements ActionListener, D
     
     mTypeDescriptionPanel = new JPanel(new FormLayout("min:grow","fill:default:grow"));
     mTypeDescriptionPanel.add(mFilterComponentDescription, CC.xy(1, 1));
-    mTypeDescriptionPanel.setBackground(Color.red);
     
     mCenterPanel = new JPanel(new BorderLayout());
     JScrollPane scrollPane = new JScrollPane(mCenterPanel);
