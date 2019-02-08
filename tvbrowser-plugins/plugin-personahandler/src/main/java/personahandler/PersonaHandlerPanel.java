@@ -38,6 +38,7 @@ import javax.swing.event.ListSelectionListener;
 import util.browserlauncher.Launch;
 import util.ui.LinkButton;
 import util.ui.Localizer;
+import util.ui.TVBrowserIcons;
 import util.ui.UiUtilities;
 import util.ui.persona.Persona;
 import util.ui.persona.PersonaInfo;
@@ -354,7 +355,19 @@ public class PersonaHandlerPanel extends JPanel {
     public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
       PersonaInfo info = (PersonaInfo)value;
       
-      JLabel iconLabel = new JLabel(info.getIcon());
+      Icon icon = null;
+      
+      try {
+        icon = info.getIcon();
+      }catch(NullPointerException npe) {
+        
+      }
+      
+      if(icon == null) {
+        icon = TVBrowserIcons.plugin(TVBrowserIcons.SIZE_LARGE);
+      }
+      
+      JLabel iconLabel = new JLabel(icon);
       JLabel name = new JLabel(info.getName());
       Font font = name.getFont();
       font = font.deriveFont(Font.BOLD);

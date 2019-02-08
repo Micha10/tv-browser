@@ -3,17 +3,25 @@ package personahandler;
 import java.awt.Color;
 import java.awt.Frame;
 import java.awt.event.ActionEvent;
+import java.awt.image.BufferedImage;
 import java.io.BufferedInputStream;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.net.MalformedURLException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.lang.reflect.Method;
 import java.net.URL;
+import java.nio.charset.Charset;
 import java.util.Properties;
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 
+import javax.imageio.ImageIO;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.Icon;
@@ -34,7 +42,7 @@ import util.ui.persona.PersonaListener;
 
 public class PersonaHandler extends Plugin implements PersonaListener {
   private final static Localizer mLocalizer = Localizer.getLocalizerFor(PersonaHandler.class);
-  private static Version mVersion = new Version(0,14,0,true);
+  private static Version mVersion = new Version(0,15,0,true);
   private PluginInfo mPluginInfo;
   
   private static PersonaHandler mInstance;
@@ -175,173 +183,288 @@ try{
       e1.printStackTrace();
     }
     
-    String id = "id";
-    String name = "name";
-    String description = "description";
-    String headerURL = "headerURL";
-    String footerURL = "footerURL";
-    String accentcolor = "accentcolor";
-    String textcolor = "textcolor";
-    String author = "author";
-    String detailURL = "detailURL";
-    String iconURL = "iconURL";
+    Pattern xpi = Pattern.compile("\"status\":\"public\",\"url\":\"(.*?.xpi)\\?src=\"");
+    Pattern idPattern = Pattern.compile("\"id\":(\\d+)");
+    Pattern authorPattern = Pattern.compile("\\{\"authors\":\\[\\{.*?,\"name\":\"(.*?)\".*?\\}\\]");
     
-    final StringBuilder pattern = new StringBuilder("\"(");
-    pattern.append(id).append("|").append(name).append("|").append(description).append("|");
-    pattern.append(headerURL).append("|").append(footerURL).append("|").append(accentcolor).append("|");
-    pattern.append(textcolor).append("|").append(author).append("|").append(detailURL).append("|").append(iconURL);
-    pattern.append(")\":\"(.*?)\"");
-
-    Pattern p1 = Pattern.compile("\\{(.*?"+detailURL+".*?)\\}");
-    Matcher m1 = p1.matcher(string.toString());
+    Matcher m2 = xpi.matcher(string.toString());
     
-    if(m1.find()) {
+    File target = new File(System.getProperty("java.io.tmpdir"),"persona.zip");
     
-      Pattern p = Pattern.compile(pattern.toString());
-      Matcher m = p.matcher(m1.group(1));
-
-      int lastPos = 0;
-    
-      while(m.find(lastPos)) {
-    	String key = m.group(1);
-        String value = m.group(2);
-        
-        if(key.equals(id)) {
-          id = value;
-        }
-        else if(key.equals(name)) {
-          name = value;
-        }
-        else if(key.equals(description)) {
-          description = value;
-        }
-        else if(key.equals(headerURL)) {
-          headerURL = value.replace("\\u002F", "/") ;
-        }
-        else if(key.equals(footerURL)) {
-          footerURL = value.replace("\\u002F", "/") ;
-        }
-        else if(key.equals(accentcolor)) {
-          accentcolor = value;
-        }
-        else if(key.equals(textcolor)) {
-          textcolor = value;
-        }
-        else if(key.equals(author)) {
-          author = value;
-        }
-        else if(key.equals(detailURL)) {
-          detailURL = value.replace("\\u002F", "/") ;
-        }
-        else if(key.equals(iconURL)) {
-          iconURL = value.replace("\\u002F", "/") ;
-        }
-    	lastPos = m.end();
+    if(m2.find()) {
+      String id = "id";
+      String author = "author";
+      
+      Matcher m3 = idPattern.matcher(string.toString());
+      
+      if(m3.find()) {
+        id = m3.group(1);
       }
-    }
-    
-    File versionDir = new File(Persona.getUserPersonaDir(),id);
-    
-    if(!versionDir.isDirectory()) {
-      if(versionDir.mkdirs()) {
-        Properties prop = new Properties();
-        
-        File headerImage = new File(versionDir,"header.jpg");        
-        File footerImage = new File(versionDir,"footer.jpg");
-        File iconImage = new File(versionDir,"icon");
-        boolean accepted = false;
+      
+      m3 = authorPattern.matcher(string.toString());
+      
+      if(m3.find()) {
+        author = m3.group(1);
+      }
+      
+      if(target.isFile()) {
+        target.delete();
+      }
+      
+      IOUtilities.download(new URL(m2.group(1).replace("\\u002F", "/")), target);
+      
+      if(target.isFile()) {
+        ZipFile zip = null;
         
         try {
-          IOUtilities.download(new URL(headerURL),headerImage);
-          accepted = true;
-          IOUtilities.download(new URL(footerURL),footerImage);
-          IOUtilities.download(new URL(iconURL),iconImage);
-        } catch (MalformedURLException e1) {
-          // ignore
-        } catch (IOException e1) {
-          // ignore
-        }
+          zip = new ZipFile(target,Charset.forName("UTF-8"));
         
-        if(accepted) {
-	        prop.setProperty(Persona.NAME_KEY, name.replace("$",",") + " by " + author);
-	        prop.setProperty(Persona.DESCRIPTION_KEY, description.replace("$",",").replace("null",""));
-	        prop.setProperty(Persona.HEADER_IMAGE_KEY, Persona.USER_PERSONA + "/" + headerImage.getName());
-	        prop.setProperty(Persona.FOOTER_IMAGE_KEY, Persona.USER_PERSONA + "/" + footerImage.getName());
-	        prop.setProperty(Persona.DETAIL_URL_KEY, detailURL);
-	        
-	        Color textColor = UIManager.getColor("Menu.foreground");
-	        
-	        if(!textcolor.equals("null") && textcolor.length() == 7) {
-	          textColor = new Color(Integer.parseInt(textcolor.substring(1,3),16),Integer.parseInt(textcolor.substring(3,5),16),Integer.parseInt(textcolor.substring(5,7),16));          
-	        }
-	        
-	        prop.setProperty(Persona.TEXT_COLOR_KEY, textColor.getRed() + "," + textColor.getGreen() + "," + textColor.getBlue());
-	                      
-	        double test = (0.2126 * textColor.getRed()) + (0.7152 * textColor.getGreen()) + (0.0722 * textColor.getBlue()); 
-	        
-	        Color accentColor = null;
-	        
-	        if(!accentcolor.equals("null") && accentcolor.length() == 7) {
-	          accentColor = new Color(Integer.parseInt(accentcolor.substring(1,3),16),Integer.parseInt(accentcolor.substring(3,5),16),Integer.parseInt(accentcolor.substring(5,7),16));
-	        }
-	        else if(test <= 127) {
-	          accentColor = textColor.brighter().brighter().brighter();
-	        }
-	        else if(test > 127) {
-	          accentColor = textColor.darker().darker().darker();
-	        }
-	        
-	        prop.setProperty(Persona.ACCENT_COLOR_KEY, accentColor.getRed() + "," + accentColor.getGreen() + "," + accentColor.getBlue());
-	        
-	        Color shadowColor = null;
-	        
-	        if(test <= 30) {
-	          shadowColor = textColor;
-	        }
-	        else if(test <= 40) {
-	          shadowColor = textColor.brighter().brighter().brighter().brighter().brighter().brighter();
-	        }
-	        else if(test <= 60) {
-	          shadowColor = textColor.brighter().brighter().brighter();
-	        }
-	        else if(test <= 100) {
-	          shadowColor = textColor.brighter().brighter();
-	        }
-	        else if(test <= 145) {
-	          shadowColor = textColor;
-	        }
-	        else if(test <= 170) {
-	          shadowColor = textColor.darker();
-	        }
-	        else if(test <= 205) {
-	          shadowColor = textColor.darker().darker();
-	        }
-	        else if(test <= 220){
-	          shadowColor = textColor.darker().darker().darker();
-	        }
-	        else if(test <= 235){
-	          shadowColor = textColor.darker().darker().darker().darker();
-	        }
-	        else {
-	          shadowColor = textColor.darker().darker().darker().darker().darker();
-	        }
-	        
-	        prop.setProperty(Persona.SHADOW_COLOR_KEY, shadowColor.getRed() + "," + shadowColor.getGreen() + "," + shadowColor.getBlue());
-	
-	        try {
-	          FileOutputStream out = new FileOutputStream(new File(versionDir,"persona.prop"));
-	          prop.store(out,"");
-	          out.close();
-	        } catch (Exception e1) {
-	          // TODO Auto-generated catch block
-	          e1.printStackTrace();
-	        }
-	        
-	        Persona.getInstance().loadPersonas();
+          ZipEntry entry = zip.getEntry("manifest.json");
+          
+          if(entry != null) {
+            BufferedReader read = null;
+            
+            string.setLength(0);
+            
+            try {
+              read = new BufferedReader(new InputStreamReader(zip.getInputStream(entry),"UTF-8"));
+              String line = null;
+              
+              while((line = read.readLine()) != null) {
+                string.append(line).append("\n");
+              }
+            }catch(IOException ioe2) {
+              ioe2.printStackTrace();
+            }finally {
+              if(read != null) {
+                try {
+                  read.close();
+                }catch(IOException ioe3) {}
+              }
+            }
+            
+            
+            String name = "name";
+            String description = "description";
+            String headerURL = "headerURL";
+            String footerURL = "footerURL";
+            String accentcolor = "accentcolor";
+            String textcolor = "textcolor";
+            
+            final StringBuilder pattern = new StringBuilder("\"(");
+            pattern.append(name).append("|").append(description).append("|");
+            pattern.append(headerURL).append("|").append(footerURL).append("|").append(accentcolor).append("|");
+            pattern.append(textcolor);
+            pattern.append(")\"\\s*:\\s*\"(.*?)\"");
+            
+            Pattern p = Pattern.compile(pattern.toString());
+            Matcher m = p.matcher(string.toString());
+      
+            int lastPos = 0;
+          
+            while(m.find(lastPos)) {
+          	  String key = m.group(1);
+              String value = m.group(2);
+              
+              if(key.equals(name)) {
+                name = value;
+              }
+              else if(key.equals(description)) {
+                description = value.replace("\\n", " ").replaceAll("\\s{2,}", " ");
+              }
+              else if(key.equals(headerURL)) {
+                headerURL = value.replace("\\u002F", "/") ;
+              }
+              else if(key.equals(footerURL)) {
+                footerURL = value.replace("\\u002F", "/") ;
+              }
+              else if(key.equals(accentcolor)) {
+                accentcolor = value;
+              }
+              else if(key.equals(textcolor)) {
+                textcolor = value;
+              }
+              lastPos = m.end();
+            }
+            
+            File versionDir = new File(Persona.getUserPersonaDir(),id);
+            
+            if(!versionDir.isDirectory()) {
+              if(versionDir.mkdirs()) {
+                Properties prop = new Properties();
+                
+                File headerImage = new File(versionDir,"header.jpg");        
+                File footerImage = new File(versionDir,"footer.jpg");
+                File iconImage = new File(versionDir,"icon");
+                boolean accepted = false;
+                
+                if(!headerURL.equals("headerURL")) {
+                  headerImage = new File(versionDir,"header"+headerURL.substring(headerURL.lastIndexOf(".")));
+                  
+                  ZipEntry header = zip.getEntry(headerURL);
+                  
+                  if(header != null) {
+                    InputStream in = null;
+                    
+                    try {
+                      in = zip.getInputStream(header);
+                      Method saveStream = IOUtilities.class.getDeclaredMethod("saveStream", InputStream.class, File.class);
+                      
+                      if(saveStream != null) {
+                        saveStream.invoke(null, in, headerImage);
+                      }
+                      
+                      accepted = !author.equals("author");
+                    }catch(IOException ioe4) {ioe4.printStackTrace();}
+                    finally {
+                      if(in != null) {
+                        try {
+                          in.close();
+                        }catch(IOException ioe5) {}
+                      }
+                    }
+                  }
+                }
+                
+                if(!footerURL.equals("footerURL")) {
+                  footerImage = new File(versionDir,"footer"+footerURL.substring(footerURL.lastIndexOf(".")));
+                  
+                  ZipEntry footer = zip.getEntry(footerURL);
+                  
+                  if(footer != null) {
+                    InputStream in = null;
+                    
+                    try {
+                      in = zip.getInputStream(footer);
+                      Method saveStream = IOUtilities.class.getDeclaredMethod("saveStream", InputStream.class, File.class);
+                      
+                      if(saveStream != null) {
+                        saveStream.invoke(null, in, footerImage);
+                      }
+                    }catch(IOException ioe4) {ioe4.printStackTrace();}
+                    finally {
+                      if(in != null) {
+                        try {
+                          in.close();
+                        }catch(IOException ioe5) {}
+                      }
+                    }
+                  }
+                }
+                
+                File toUseForIcon = null;
+                
+                if(headerImage.isFile()) {
+                  toUseForIcon = headerImage;
+                }
+                else if(footerImage.isFile()) {
+                  toUseForIcon = footerImage;
+                }
+                
+                if(toUseForIcon != null) {
+                  try {
+                    BufferedImage img = ImageIO.read(toUseForIcon);
+                    
+                    img = img.getSubimage(img.getWidth()-80, 10, 32, 32);
+                    
+                    ImageIO.write(img, toUseForIcon.getName().substring(toUseForIcon.getName().lastIndexOf(".")+1), iconImage);
+                  }catch(Exception e) {e.printStackTrace();}
+                }
+                
+                if(accepted) {
+        	        prop.setProperty(Persona.NAME_KEY, name.replace("$",",") + " by " + author);
+        	        prop.setProperty(Persona.DESCRIPTION_KEY, description.replace("$",",").replace("null",""));
+        	        prop.setProperty(Persona.HEADER_IMAGE_KEY, Persona.USER_PERSONA + "/" + headerImage.getName());
+        	        prop.setProperty(Persona.FOOTER_IMAGE_KEY, Persona.USER_PERSONA + "/" + footerImage.getName());
+        	        prop.setProperty(Persona.DETAIL_URL_KEY, url);
+        	        
+        	        Color textColor = UIManager.getColor("Menu.foreground");
+        	        
+        	        if(!textcolor.equals("null") && textcolor.length() == 7) {
+        	          textColor = new Color(Integer.parseInt(textcolor.substring(1,3),16),Integer.parseInt(textcolor.substring(3,5),16),Integer.parseInt(textcolor.substring(5,7),16));          
+        	        }
+        	        
+        	        prop.setProperty(Persona.TEXT_COLOR_KEY, textColor.getRed() + "," + textColor.getGreen() + "," + textColor.getBlue());
+        	                      
+        	        double test = (0.2126 * textColor.getRed()) + (0.7152 * textColor.getGreen()) + (0.0722 * textColor.getBlue()); 
+        	        
+        	        Color accentColor = null;
+        	        
+        	        if(!accentcolor.equals("null") && accentcolor.length() == 7) {
+        	          accentColor = new Color(Integer.parseInt(accentcolor.substring(1,3),16),Integer.parseInt(accentcolor.substring(3,5),16),Integer.parseInt(accentcolor.substring(5,7),16));
+        	        }
+        	        else if(test <= 127) {
+        	          accentColor = textColor.brighter().brighter().brighter();
+        	        }
+        	        else if(test > 127) {
+        	          accentColor = textColor.darker().darker().darker();
+        	        }
+        	        
+        	        prop.setProperty(Persona.ACCENT_COLOR_KEY, accentColor.getRed() + "," + accentColor.getGreen() + "," + accentColor.getBlue());
+        	        
+        	        Color shadowColor = null;
+        	        
+        	        if(test <= 30) {
+        	          shadowColor = textColor;
+        	        }
+        	        else if(test <= 40) {
+        	          shadowColor = textColor.brighter().brighter().brighter().brighter().brighter().brighter();
+        	        }
+        	        else if(test <= 60) {
+        	          shadowColor = textColor.brighter().brighter().brighter();
+        	        }
+        	        else if(test <= 100) {
+        	          shadowColor = textColor.brighter().brighter();
+        	        }
+        	        else if(test <= 145) {
+        	          shadowColor = textColor;
+        	        }
+        	        else if(test <= 170) {
+        	          shadowColor = textColor.darker();
+        	        }
+        	        else if(test <= 205) {
+        	          shadowColor = textColor.darker().darker();
+        	        }
+        	        else if(test <= 220){
+        	          shadowColor = textColor.darker().darker().darker();
+        	        }
+        	        else if(test <= 235){
+        	          shadowColor = textColor.darker().darker().darker().darker();
+        	        }
+        	        else {
+        	          shadowColor = textColor.darker().darker().darker().darker().darker();
+        	        }
+        	        
+        	        prop.setProperty(Persona.SHADOW_COLOR_KEY, shadowColor.getRed() + "," + shadowColor.getGreen() + "," + shadowColor.getBlue());
+        	
+        	        try {
+        	          FileOutputStream out = new FileOutputStream(new File(versionDir,"persona.prop"));
+        	          prop.store(out,"");
+        	          out.close();
+        	        } catch (Exception e1) {
+        	          // TODO Auto-generated catch block
+        	          e1.printStackTrace();
+        	        }
+        	        
+        	        Persona.getInstance().loadPersonas();
+                }
+                
+                return Persona.getInstance().getPersonaInfo(id);
+              }
+            }
+          }
+        }catch(IOException ioe) {
+          ioe.printStackTrace();
+        }finally {
+          if(zip != null) {
+            try {
+              zip.close();
+            }catch(IOException ioe1) {}
+          }
         }
-        
-        return Persona.getInstance().getPersonaInfo(id);
       }
+      
+      target.delete();
     }
   }catch(Throwable t) {t.printStackTrace();}
     
