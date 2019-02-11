@@ -34,6 +34,7 @@ import javax.swing.JEditorPane;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import util.ui.ImageIconEnhanced;
 import util.ui.UiUtilities;
 
 import com.jgoodies.forms.layout.CellConstraints;
@@ -54,7 +55,7 @@ class WelcomeCardPanel extends AbstractCardPanel {
     
     JEditorPane textfield = new JEditorPane();
     
-    JLabel icon = new JLabel(new ImageIcon("imgs/tvbrowser128.png"));
+    JLabel icon = new JLabel(new ImageIconEnhanced("imgs/tvbrowser128.png"));
     icon.setOpaque(false);
     
     mContent.setBackground(textfield.getBackground());

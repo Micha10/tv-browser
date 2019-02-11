@@ -95,7 +95,7 @@ public class ColorButton extends JButton implements ActionListener{
         g.setColor(mColor);
         g.fillRect(0,0,50,10);
         
-        ImageIcon icon = new ImageIcon(img);
+        ImageIcon icon = new ImageIconEnhanced(img);
         
         return icon;
     }

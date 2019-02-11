@@ -37,7 +37,6 @@ import java.io.File;
 import java.util.Calendar;
 
 import javax.swing.Icon;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
@@ -65,6 +64,7 @@ import tvbrowser.core.Settings;
 import util.io.IOUtilities;
 import util.ui.CaretPositionCorrector;
 import util.ui.ColorButton;
+import util.ui.ImageIconEnhanced;
 import util.ui.ImageUtilities;
 import util.ui.Localizer;
 import util.ui.UiUtilities;
@@ -319,7 +319,7 @@ public class ChannelConfigDlg extends JDialog implements ActionListener, WindowC
     if ((mIconFile != null) && (mIconFile.exists())) {
       Image img = ImageUtilities.createImageAsynchronous(mIconFile.getAbsolutePath());
       if (img != null) {
-        icon = UiUtilities.createChannelIcon(new ImageIcon(img));
+        icon = UiUtilities.createChannelIcon(new ImageIconEnhanced(img));
       } else {
         icon = UiUtilities.createChannelIcon(mChannel.getIcon());
       }

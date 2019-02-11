@@ -28,7 +28,6 @@ import java.awt.Dimension;
 import java.awt.Font;
 
 import javax.swing.Icon;
-import javax.swing.ImageIcon;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -39,15 +38,16 @@ import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 
+import com.jgoodies.forms.factories.Borders;
+import com.jgoodies.forms.layout.CellConstraints;
+import com.jgoodies.forms.layout.FormLayout;
+
 import tvbrowser.core.plugin.PluginProxy;
 import tvbrowser.core.tvdataservice.TvDataServiceProxy;
 import tvbrowser.extras.common.InternalPluginProxyIf;
 import util.ui.FixedSizeIcon;
+import util.ui.ImageIconEnhanced;
 import util.ui.html.HTMLTextHelper;
-
-import com.jgoodies.forms.factories.Borders;
-import com.jgoodies.forms.layout.CellConstraints;
-import com.jgoodies.forms.layout.FormLayout;
 
 /**
  * The CellRenderer for the plugin table
@@ -71,7 +71,7 @@ public class PluginTableCellRenderer extends DefaultTableCellRenderer {
   /**
    * default icon for items without an own icon
    */
-  private static final Icon DEFAULT_ICON = new ImageIcon("imgs/Jar16.gif");
+  private static final Icon DEFAULT_ICON = new ImageIconEnhanced("imgs/Jar16.gif");
 
   /**
    * singleton implementation

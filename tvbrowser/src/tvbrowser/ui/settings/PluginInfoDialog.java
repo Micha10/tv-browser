@@ -4,7 +4,6 @@ import java.awt.Dimension;
 import java.net.URL;
 
 import javax.swing.Icon;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JEditorPane;
@@ -23,6 +22,7 @@ import com.jgoodies.forms.layout.FormLayout;
 import devplugin.PluginInfo;
 import tvbrowser.core.Settings;
 import util.browserlauncher.Launch;
+import util.ui.ImageIconEnhanced;
 import util.ui.Localizer;
 import util.ui.UiUtilities;
 import util.ui.WindowClosingIf;
@@ -66,7 +66,7 @@ public class PluginInfoDialog extends JDialog implements WindowClosingIf {
     mPluginInfo = pluginInfo;
 
     if (icon == null) {
-      icon = new ImageIcon("imgs/Jar16.gif");
+      icon = new ImageIconEnhanced("imgs/Jar16.gif");
     }
 
     mPluginIcon = icon;

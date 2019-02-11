@@ -47,6 +47,7 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 
 import tvbrowser.TVBrowser;
+import util.ui.ImageIconEnhanced;
 import util.ui.ImageUtilities;
 import util.ui.Localizer;
 import util.ui.UiUtilities;
@@ -124,7 +125,7 @@ public class AboutBox extends JDialog implements WindowClosingIf{
     Image image = ImageUtilities.createImage("imgs/tvabout.png");
     if (image != null) {
       ImageUtilities.waitForImageData(image, null);
-      JLabel gfx = new JLabel(new ImageIcon(image));
+      JLabel gfx = new JLabel(new ImageIconEnhanced(image));
 
       JPanel gfxPanel = new JPanel(new BorderLayout());
       gfxPanel.setBackground(new Color(80,170,233));

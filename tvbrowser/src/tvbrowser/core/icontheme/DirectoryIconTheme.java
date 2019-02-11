@@ -33,6 +33,7 @@ import java.io.InputStream;
 
 import javax.swing.ImageIcon;
 
+import util.ui.ImageIconEnhanced;
 import util.ui.ImageUtilities;
 
 /**
@@ -79,7 +80,7 @@ public class DirectoryIconTheme extends IconTheme {
    * @return Image
    */
   protected ImageIcon getImageFromTheme(String image) {
-    return new ImageIcon(ImageUtilities.createImageAsynchronous(new File(getBase(), image).getAbsolutePath()));
+    return new ImageIconEnhanced(ImageUtilities.createImageAsynchronous(new File(getBase(), image).getAbsolutePath()));
   }
 
 }

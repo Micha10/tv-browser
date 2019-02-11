@@ -29,8 +29,9 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
+
+import util.ui.ImageIconEnhanced;
 
 /**
  * A Simple Button that contains a Line as Icon.
@@ -49,7 +50,7 @@ public class LineButton extends JButton {
     
     g2.setColor(getForeground());
     g2.drawLine(0, 11, 22, 11);
-    setIcon(new ImageIcon(image));
+    setIcon(new ImageIconEnhanced(image));
   }
   
 }

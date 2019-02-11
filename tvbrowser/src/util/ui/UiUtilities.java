@@ -881,7 +881,7 @@ public class UiUtilities {
       g2.dispose();
       BufferedImage scaled = scaleIconToBufferedImage(iconImage, width, height);
       // Return new Icon
-      return new ImageIcon(scaled);
+      return new ImageIconEnhanced(scaled);
     } catch (Exception ex) {
       ex.printStackTrace();
     }
@@ -997,6 +997,8 @@ public class UiUtilities {
   public static ImageIcon createChannelIcon(Icon ic) {
     BufferedImage img = new BufferedImage(getChannelIconWidth(), getChannelIconHeight(), BufferedImage.TYPE_INT_RGB);
     
+    Graphics2D g = img.createGraphics();
+    
     if (ic == null) {
       ic = TVBrowserIcons.defaultChannelLogo();
     }
@@ -1008,15 +1010,13 @@ public class UiUtilities {
       double iWidth = ic.getIconWidth();
       double iHeight = ic.getIconHeight();
       if (iWidth / iHeight < 2.0) {
-        width = (int) (iWidth * (20.0 / iHeight));
+        width = (int) (iWidth * (height / iHeight));
       } else {
-        height = (int) (iHeight * (40.0 / iWidth));
+        height = (int) (iHeight * (width / iWidth));
       }
     }
     ic = scaleIcon(ic, width, height);
-
-    Graphics2D g = img.createGraphics();
-
+    
     g.setColor(Color.WHITE);
     g.fillRect(1, 1, 40, 20);
 
@@ -1028,7 +1028,7 @@ public class UiUtilities {
     g.setColor(Color.BLACK);
     g.drawRect(0, 0, 42, 22);
 
-    return new ImageIcon(img);
+    return new ImageIconEnhanced(img);
   }
 
 	public static int getChannelIconHeight() {

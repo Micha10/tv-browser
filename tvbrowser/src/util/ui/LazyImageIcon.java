@@ -6,10 +6,9 @@ import java.awt.Image;
 import java.awt.Toolkit;
 import java.net.URL;
 
-import javax.swing.ImageIcon;
 import javax.swing.plaf.UIResource;
 
-public class LazyImageIcon extends ImageIcon implements UIResource {
+public class LazyImageIcon extends ImageIconEnhanced implements UIResource {
     private URL location;
 
     public LazyImageIcon(URL location) {

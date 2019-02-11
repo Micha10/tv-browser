@@ -22,6 +22,8 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 import java.awt.image.FilteredImageSource;
 import java.awt.image.ImageFilter;
 import java.awt.image.RGBImageFilter;
@@ -103,7 +105,7 @@ public class PictureAreaIcon implements Icon {
     byte[] picture = p.getBinaryField(ProgramFieldType.PICTURE_TYPE);
 
     if(picture != null) {
-      ImageIcon imic = new ImageIcon(picture);
+      ImageIcon imic = new ImageIconEnhanced(picture);
 
       if(width == -1) {
         width = imic.getIconWidth()+6;
@@ -168,7 +170,11 @@ public class PictureAreaIcon implements Icon {
     y += 2;
 
     Color color = g.getColor();
-
+    
+    if(g instanceof Graphics2D) {
+      ((Graphics2D) g).setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
+    }
+    
     if(!Settings.propTableBackgroundStyle.getString().equals("uiColor") && !Settings.propTableBackgroundStyle.getString().equals("uiTimeBlock") && !UiUtilities.colorsInEqualRange(c.getBackground(),c.getForeground(),MAX_COLOR_DIFF) && !mProgram.isExpired()) {
       g.setColor(c.getBackground());
       g.fillRect(x,y,getIconWidth(),getIconHeight()-2);

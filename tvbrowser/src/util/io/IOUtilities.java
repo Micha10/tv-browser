@@ -63,6 +63,7 @@ import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.StringUtils;
 
 import tvbrowser.core.Settings;
+import util.ui.ImageIconEnhanced;
 import util.ui.TimeFormatter;
 import devplugin.Plugin;
 
@@ -1050,7 +1051,7 @@ public class IOUtilities {
      */
     public static ImageIcon readImageIconFromFile(File srcFile) {
       try {
-        return new ImageIcon(ImageIO.read(srcFile));
+        return new ImageIconEnhanced(ImageIO.read(srcFile));
       }catch(Exception e) {}
 
       return null;

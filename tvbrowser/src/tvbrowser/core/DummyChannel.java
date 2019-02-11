@@ -30,6 +30,7 @@ import javax.swing.Icon;
 import javax.swing.ImageIcon;
 
 import tvbrowser.core.tvdataservice.TvDataServiceProxy;
+import util.ui.ImageIconEnhanced;
 import util.ui.Localizer;
 
 import devplugin.Channel;
@@ -42,7 +43,7 @@ import devplugin.ChannelGroup;
  */
 public class DummyChannel extends Channel {
   private static final Localizer LOCALIZER = Localizer.getLocalizerFor(DummyChannel.class);
-  private static final ImageIcon ICON = new ImageIcon("imgs/unknown_channel.png");
+  private static final ImageIcon ICON = new ImageIconEnhanced("imgs/unknown_channel.png");
   private static final HashMap<String, DummyGroup> DUMMY_GROUP_MAP = new HashMap<String, DummyChannel.DummyGroup>();
   private Channel mOriginal;
   

@@ -60,6 +60,7 @@ import tvbrowser.extras.favoritesplugin.core.Favorite;
 import tvbrowser.extras.favoritesplugin.dlgs.FavoriteTreeModel;
 import util.settings.PluginPictureSettings;
 import util.settings.ProgramPanelSettings;
+import util.ui.ImageIconEnhanced;
 import util.ui.Localizer;
 import util.ui.UiUtilities;
 import util.ui.html.ExtendedHTMLDocument;
@@ -436,7 +437,7 @@ public class ProgramTextCreator {
         String line = "<tr><td></td><td valign=\"top\" style=\"color:"+HTMLTextHelper.getCssRgbColorEntry(foreground)+"; font-size:0\">";
         buffer.append(line);
         try {
-          ImageIcon imageIcon = new ImageIcon(image);
+          ImageIcon imageIcon = new ImageIconEnhanced(image);
 
           if(config.mZoom != 100) {
             imageIcon = (ImageIcon)UiUtilities.scaleIcon(imageIcon, imageIcon.getIconWidth() * config.mZoom/100);

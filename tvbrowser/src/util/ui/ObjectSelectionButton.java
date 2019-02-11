@@ -54,12 +54,11 @@ import javax.swing.JScrollPane;
 import javax.swing.ListCellRenderer;
 import javax.swing.SwingUtilities;
 
+import devplugin.Program;
 import tvbrowser.core.Settings;
 import tvbrowser.ui.mainframe.MainFrame;
 import util.io.IOUtilities;
 import util.misc.StringPool;
-
-import devplugin.Program;
 
 /**
  * A Button with an attached dialog to
@@ -121,7 +120,7 @@ public class ObjectSelectionButton<E> extends JButton implements ActionListener 
       }
     };
     
-    setIcon(new ImageIcon(icon.getImage()) {      
+    setIcon(new ImageIconEnhanced(icon.getImage()) {      
       public void paintIcon(Component c,Graphics g,int x,int y) {
         super.paintIcon(c, g, x, y);
         

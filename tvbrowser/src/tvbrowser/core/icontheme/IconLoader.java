@@ -34,13 +34,13 @@ import java.util.logging.Logger;
 
 import javax.swing.ImageIcon;
 
+import devplugin.Plugin;
+import devplugin.ThemeIcon;
 import tvbrowser.core.Settings;
 import util.misc.OperatingSystem;
 import util.misc.SoftReferenceCache;
 import util.ui.ImageUtilities;
 import util.ui.TVBrowserIcons;
-import devplugin.Plugin;
-import devplugin.ThemeIcon;
 
 /**
  * The IconLoader manages the IconThemes and loads an Icon.

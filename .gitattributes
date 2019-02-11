@@ -2793,6 +2793,7 @@ tvbrowser/src/util/ui/DisclosureTriangle.java -text
 tvbrowser/src/util/ui/DontShowAgainMessageBox.java -text
 tvbrowser/src/util/ui/EnhancedPanelBuilder.java -text
 tvbrowser/src/util/ui/FilterableProgramListPanel.java -text svneol=unset#text/plain
+tvbrowser/src/util/ui/ImageIconEnhanced.java -text
 tvbrowser/src/util/ui/LazyImageIcon.java -text
 tvbrowser/src/util/ui/NullProgressMonitor.java -text
 tvbrowser/src/util/ui/ObjectSelectionButton.java -text

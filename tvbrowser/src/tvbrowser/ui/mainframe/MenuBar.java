@@ -95,6 +95,7 @@ import util.browserlauncher.Launch;
 import util.exc.TvBrowserException;
 import util.misc.OperatingSystem;
 import util.ui.FixedSizeIcon;
+import util.ui.ImageIconEnhanced;
 import util.ui.Localizer;
 import util.ui.ScrollableMenu;
 import util.ui.TVBrowserIcons;
@@ -396,7 +397,7 @@ public abstract class MenuBar extends JMenuBar implements ActionListener {
 				"menuinfo.pluginInfoDlg",
 				"Describes the Plugin functionality of TV-Browser."), mLabel);
 
-		mDebugMI = createMenuItem("menuitem.debug", "Create debug info", new ImageIcon(
+		mDebugMI = createMenuItem("menuitem.debug", "Create debug info", new ImageIconEnhanced(
         "imgs/tvbrowser16.png"), false);
 		mDebugMI.addActionListener(this);
 		MenuHelpTextAdapter.create(mDebugMI, mLocalizer.msg("menuinfo.debug", ""),
@@ -407,7 +408,7 @@ public abstract class MenuBar extends JMenuBar implements ActionListener {
     MenuHelpTextAdapter.create(mDonateMI, mLocalizer.msg("menuinfo.donate", ""),
         mLabel);
 		
-		mAboutMI = createMenuItem("menuitem.about", "About", new ImageIcon(
+		mAboutMI = createMenuItem("menuitem.about", "About", new ImageIconEnhanced(
 				"imgs/tvbrowser16.png"), false);
 		mAboutMI.addActionListener(this);
 		MenuHelpTextAdapter.create(mAboutMI, mLocalizer.msg("menuinfo.about", ""),
@@ -715,7 +716,7 @@ public abstract class MenuBar extends JMenuBar implements ActionListener {
 			final String license = service.getInfo().getLicense();
 			if (license != null) {
 				String name = service.getInfo().getName();
-				JMenuItem item = new JMenuItem(name, new ImageIcon(
+				JMenuItem item = new JMenuItem(name, new ImageIconEnhanced(
 						"imgs/tvbrowser16.png"));
 				setMnemonic(item);
 				item.addActionListener(e -> {

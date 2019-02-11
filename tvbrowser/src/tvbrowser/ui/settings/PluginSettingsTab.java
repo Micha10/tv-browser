@@ -38,7 +38,6 @@ import java.util.logging.Logger;
 
 import javax.swing.Action;
 import javax.swing.Icon;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
@@ -82,6 +81,7 @@ import tvbrowser.ui.update.SoftwareUpdateDlg.FilterItem;
 import util.browserlauncher.Launch;
 import util.exc.ErrorHandler;
 import util.exc.TvBrowserException;
+import util.ui.ImageIconEnhanced;
 import util.ui.Localizer;
 import util.ui.TVBrowserIcons;
 import util.ui.UiUtilities;
@@ -534,7 +534,7 @@ public class PluginSettingsTab implements devplugin.SettingsTab, TableModelListe
     }
     
     if (ico == null) {
-      ico = new ImageIcon("imgs/Jar16.gif");
+      ico = new ImageIconEnhanced("imgs/Jar16.gif");
     }
     
     PluginInfoDialog dialog = new PluginInfoDialog(mSettingsDialog.getDialog(), ico, plugin.getInfo());

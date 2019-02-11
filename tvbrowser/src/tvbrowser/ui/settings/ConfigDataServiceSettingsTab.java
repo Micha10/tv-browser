@@ -30,13 +30,13 @@ package tvbrowser.ui.settings;
 import java.awt.BorderLayout;
 
 import javax.swing.Icon;
-import javax.swing.ImageIcon;
 import javax.swing.JPanel;
+
+import com.jgoodies.forms.factories.Borders;
 
 import tvbrowser.core.tvdataservice.TvDataServiceProxy;
 import tvdataservice.SettingsPanel;
-
-import com.jgoodies.forms.factories.Borders;
+import util.ui.ImageIconEnhanced;
 
 public class ConfigDataServiceSettingsTab extends AbstractSettingsTab implements devplugin.CancelableSettingsTab {
 
@@ -86,7 +86,7 @@ public class ConfigDataServiceSettingsTab extends AbstractSettingsTab implements
      * Returns the name of the tab-sheet.
      */
     public Icon getIcon() {
-      return new ImageIcon("imgs/Jar16.gif");
+      return new ImageIconEnhanced("imgs/Jar16.gif");
     }
 
 

@@ -30,7 +30,9 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Rectangle;
+import java.awt.RenderingHints;
 import java.util.ArrayList;
 
 import javax.swing.JComponent;
@@ -290,6 +292,10 @@ public class UiTimeBlockBackPainter extends AbstractBackPainter {
     }
 
     public void paintComponent(Graphics grp) {
+      if(Settings.propEnableAntialiasing.getBoolean() && grp instanceof Graphics2D) {
+        ((Graphics2D) grp).setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+      }
+    	
       // We make a local copy of the block y array to get thread savety
       // (layoutChanged() may set mBlockYArr to null during paining)
       TimeBlock[] blockArr = mBlockArr;

@@ -116,7 +116,7 @@ public class ImageUtilities {
     if (img == null) {
       return null;
     } else {
-      return new ImageIcon(img);
+      return new ImageIconEnhanced(img);
     }
   }
   
@@ -190,7 +190,7 @@ public class ImageUtilities {
       BufferedImage img = new BufferedImage(icon.getIconWidth()+border, icon.getIconHeight()+border, BufferedImage.TYPE_INT_RGB);
       
       Graphics2D g = img.createGraphics();
-
+      
       if(background != null) {
         g.setColor(background);
         g.fillRect(0, 0, icon.getIconWidth()+border, icon.getIconHeight()+border);
@@ -198,7 +198,7 @@ public class ImageUtilities {
       
       icon.paintIcon(null, g, border/2, border/2);
       
-      return new ImageIcon(img);
+      return new ImageIconEnhanced(img);
     }
     
     return null;

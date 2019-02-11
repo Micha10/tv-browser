@@ -47,6 +47,7 @@ import tvbrowser.core.tvdataservice.TvDataServiceProxy;
 import tvbrowser.core.tvdataservice.TvDataServiceProxyManager;
 import util.io.IOUtilities;
 import util.misc.StringPool;
+import util.ui.ImageIconEnhanced;
 import util.ui.ImageUtilities;
 import util.ui.TVBrowserIcons;
 
@@ -245,6 +246,10 @@ public class Channel implements Comparable<Channel> {
     mWebpage = StringPool.getString(webpage);
     mGroup = group;
     mDefaultIcon = icon;
+    
+    if(mDefaultIcon != null && mDefaultIcon instanceof ImageIcon) {
+      mDefaultIcon = new ImageIconEnhanced(((ImageIcon)mDefaultIcon).getImage());
+    }
     mCategories = categories;
     mUnescapedName = unescapedName;
     mSharedChannelId = sharedChannelId;
@@ -768,7 +773,7 @@ public class Channel implements Comparable<Channel> {
     if (isUsingUserIcon() && (mIcon == null) && (getUserIconFileName() != null)){
       Image img = ImageUtilities.createImageAsynchronous(getUserIconFileName());
       if (img != null) {
-        mIcon = new ImageIcon(img);
+        mIcon = new ImageIconEnhanced(img);
       }
     }
 

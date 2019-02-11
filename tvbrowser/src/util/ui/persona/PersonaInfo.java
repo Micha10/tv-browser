@@ -38,6 +38,7 @@ import javax.swing.ImageIcon;
 
 import tvbrowser.core.Settings;
 import tvbrowser.core.icontheme.IconLoader;
+import util.ui.ImageIconEnhanced;
 import util.ui.Localizer;
 
 /**
@@ -240,7 +241,7 @@ public final class PersonaInfo {
           File test = new File(mSettings.getParentFile(),"icon");
           
           if(test.isFile()) {
-            mIcon = new ImageIcon(ImageIO.read(test));
+            mIcon = new ImageIconEnhanced(ImageIO.read(test));
           }
           else {
             mIcon = IconLoader.getInstance().getIconFromTheme("apps", "preferences-desktop-theme", 22);

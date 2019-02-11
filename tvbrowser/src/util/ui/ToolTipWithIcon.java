@@ -26,6 +26,8 @@ package util.ui;
 import java.awt.Dimension;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
@@ -54,6 +56,11 @@ public class ToolTipWithIcon extends JToolTip {
     public void paint(Graphics g, JComponent c) {
       FontMetrics metrics = c.getFontMetrics(c.getFont());
       Dimension size = c.getSize();
+      
+      if(g instanceof Graphics2D) {
+    	 ((Graphics2D)g).setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
+      }
+      
       g.setColor(c.getBackground());
       g.fillRect(0, 0, size.width, size.height);
       int x = 3;

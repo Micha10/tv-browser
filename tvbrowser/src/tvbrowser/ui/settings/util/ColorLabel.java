@@ -35,6 +35,8 @@ import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 
+import util.ui.ImageIconEnhanced;
+
 /**
  * Created by: Martin Oberhauser (martin@tvbrowser.org)
  * Date: 01.05.2005
@@ -90,7 +92,7 @@ public class ColorLabel extends JLabel {
     g.setColor(Color.BLACK);
     g.drawRect(0, 0, 24, 14);
     
-    ImageIcon icon = new ImageIcon(img);
+    ImageIcon icon = new ImageIconEnhanced(img);
 
     return icon;
   }
