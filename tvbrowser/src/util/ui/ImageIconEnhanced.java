@@ -11,7 +11,7 @@ import javax.swing.ImageIcon;
 /**
  * A class for drawing icons with better interpolation.
  * 
- * @author René Mach
+ * @author RenÃ© Mach
  * @since 4.1
  */
 public class ImageIconEnhanced extends ImageIcon {
