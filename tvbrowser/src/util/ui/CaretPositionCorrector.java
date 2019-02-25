@@ -35,6 +35,7 @@ public class CaretPositionCorrector {
     mStartPosition = startPosition;
     mClickLocation = null;
     mCaretPosition = -1;
+    field.setHorizontalAlignment(JFormattedTextField.RIGHT);
     
     if(jumpCharacters != null && jumpCharacters.length > 0) {
       createCaretListener(field);

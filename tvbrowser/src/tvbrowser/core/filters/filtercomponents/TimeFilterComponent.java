@@ -108,7 +108,7 @@ public class TimeFilterComponent extends AbstractFilterComponent {
   }
 
   public JPanel getSettingsPanel() {
-    JPanel content = new JPanel(new FormLayout("5dlu,default,3dlu,default:grow",
+    JPanel content = new JPanel(new FormLayout("5dlu,default,3dlu,default,0dlu:grow",
         "5dlu,default,5dlu,default,1dlu,default,5dlu,default"));
 
     mFromTimeSp = new JSpinner(new SpinnerDateModel());
@@ -131,13 +131,13 @@ public class TimeFilterComponent extends AbstractFilterComponent {
     mIncludeBtn.setSelected(mShowRunning);
     
     content.add(DefaultComponentFactory.getInstance().createSeparator(mLocalizer.msg(
-        "TimeOfDay", "Time of day")), CC.xyw(1, 2, 4));
+        "TimeOfDay", "Time of day")), CC.xyw(1, 2, 5));
     
     content.add(new JLabel(mLocalizer.msg("from", "from")), CC.xy(2, 4));
     content.add(mFromTimeSp, CC.xy(4, 4));
     content.add(new JLabel(mLocalizer.msg("till", "till")), CC.xy(2, 6));
     content.add(mToTimeSp, CC.xy(4, 6));
-    content.add(mIncludeBtn, CC.xyw(2, 8, 3));
+    content.add(mIncludeBtn, CC.xyw(2, 8, 4));
 
     JPanel centerPanel = new JPanel(new BorderLayout());
     centerPanel.add(content, BorderLayout.NORTH);
