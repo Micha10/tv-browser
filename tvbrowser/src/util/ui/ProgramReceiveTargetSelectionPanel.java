@@ -24,7 +24,11 @@
 package util.ui;
 
 import java.awt.Window;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -47,10 +51,18 @@ import devplugin.ProgramReceiveTarget;
  * @since 3.0
  */
 public class ProgramReceiveTargetSelectionPanel extends JPanel {
+  private static final Comparator<ProgramReceiveIf> COMPARTOR = new Comparator<ProgramReceiveIf>() {
+    @Override
+    public int compare(ProgramReceiveIf p1, ProgramReceiveIf p2) {
+      return p1.toString().compareToIgnoreCase(p2.toString());
+    }
+  };
+  
   private static final Localizer LOCALIZER = Localizer.getLocalizerFor(ProgramReceiveTargetSelectionPanel.class);
   private JLabel mReceiveTargetLabel;
   private ProgramReceiveTarget[] mReceiveTargets;
   private ChangeListener[] mChangeListenerArray = new ChangeListener[0];
+  private long mLastPluginSelectionHandling = 0;
   
   /**
    * Creates an program receive target selection panel.
@@ -65,14 +77,19 @@ public class ProgramReceiveTargetSelectionPanel extends JPanel {
    */
   public ProgramReceiveTargetSelectionPanel(final Window parent, ProgramReceiveTarget[] receiveTargetArr,
       final String description, final ProgramReceiveIf caller, boolean withTitle, String title) {
-    PanelBuilder pb = new PanelBuilder(new FormLayout("5dlu,default,5dlu:grow,default,5dlu",withTitle? "pref,5dlu,pref" : "pref"),this);
+    PanelBuilder pb = new PanelBuilder(new FormLayout("5dlu,150dlu:grow,5dlu,default,5dlu",withTitle? "pref,5dlu,pref" : "pref"),this);
     
     mReceiveTargets = receiveTargetArr;
     
     mReceiveTargetLabel = new JLabel();
-    JButton selectionButton = new JButton(LOCALIZER.msg("selectionButton","Select targets"));
+    mReceiveTargetLabel.addComponentListener(new ComponentAdapter() {
+      @Override
+      public void componentResized(ComponentEvent arg0) {
+        handlePluginSelection();
+      }
+    });
     
-    final ProgramReceiveTargetSelectionPanel thisPanel = this;
+    final JButton selectionButton = new JButton(LOCALIZER.msg("selectionButton","Select targets"));
     
     selectionButton.addActionListener(e -> {try{
       Window w = UiUtilities.getLastModalChildOf(parent);
@@ -85,7 +102,7 @@ public class ProgramReceiveTargetSelectionPanel extends JPanel {
         mReceiveTargets = chooser.getReceiveTargets();
         
         for(ChangeListener listener : mChangeListenerArray) {
-          listener.stateChanged(new ChangeEvent(thisPanel));
+          listener.stateChanged(new ChangeEvent(ProgramReceiveTargetSelectionPanel.this));
         }
       }
       
@@ -110,34 +127,58 @@ public class ProgramReceiveTargetSelectionPanel extends JPanel {
   }
   
   private void handlePluginSelection() {
-    final ArrayList<ProgramReceiveIf> plugins = new ArrayList<ProgramReceiveIf>();
-
-    if (mReceiveTargets != null) {
-      for (ProgramReceiveTarget target : mReceiveTargets) {
-        if (!plugins.contains(target.getReceifeIfForIdOfTarget()) && target.getReceifeIfForIdOfTarget() != null) {
-          plugins.add(target.getReceifeIfForIdOfTarget());
+    if(System.currentTimeMillis() - mLastPluginSelectionHandling > 10) {
+      final ArrayList<ProgramReceiveIf> plugins = new ArrayList<ProgramReceiveIf>();
+  
+      if (mReceiveTargets != null) {
+        for (ProgramReceiveTarget target : mReceiveTargets) {
+          if (!plugins.contains(target.getReceifeIfForIdOfTarget()) && target.getReceifeIfForIdOfTarget() != null) {
+            plugins.add(target.getReceifeIfForIdOfTarget());
+          }
+        }
+  
+        final ProgramReceiveIf[] mClientPlugins = plugins
+            .toArray(new ProgramReceiveIf[0]);
+        Arrays.parallelSort(mClientPlugins, COMPARTOR);
+  
+        if(mClientPlugins.length > 0) {
+          mReceiveTargetLabel.setText(mClientPlugins[0].toString());
+          
+          int i = 1;
+          final String others = LOCALIZER.ellipsisMsg("otherTargets", "others");
+          int otherLength = mReceiveTargetLabel.getFontMetrics(mReceiveTargetLabel.getFont()).stringWidth(others)+30;
+          
+          do {
+            String text = mReceiveTargetLabel.getText() + ", " + mClientPlugins[i];
+            int addLength = otherLength;
+            
+            if(i == mClientPlugins.length-1) {
+              addLength = 0;
+            }
+            
+            if(mReceiveTargetLabel.getFontMetrics(mReceiveTargetLabel.getFont()).stringWidth(text)+addLength < mReceiveTargetLabel.getWidth()) {
+              mReceiveTargetLabel.setText(text);
+            }
+            else {
+              break;
+            }
+          }while(i++ < mClientPlugins.length-1);
+      
+          if (i < mClientPlugins.length) {
+            mReceiveTargetLabel.setText(mReceiveTargetLabel.getText() + " (" + (mClientPlugins.length - i) + " " + others + ")");
+          }
+        }
+        else {
+          mReceiveTargetLabel.setText(LOCALIZER.msg("noTargets", "No targets choosen"));
         }
       }
-
-      final ProgramReceiveIf[] mClientPlugins = plugins
-          .toArray(new ProgramReceiveIf[plugins.size()]);
-
-      if (mClientPlugins.length > 0) {
-        mReceiveTargetLabel.setText(mClientPlugins[0].toString());
-        mReceiveTargetLabel.setEnabled(true);
-      } else {
+      else {
         mReceiveTargetLabel.setText(LOCALIZER.msg("noTargets", "No targets choosen"));
-        mReceiveTargetLabel.setEnabled(false);
       }
-
-      for (int i = 1; i < (mClientPlugins.length > 4 ? 3 : mClientPlugins.length); i++) {
-        mReceiveTargetLabel.setText(mReceiveTargetLabel.getText() + ", " + mClientPlugins[i]);
-      }
-
-      if (mClientPlugins.length > 4) {
-        mReceiveTargetLabel.setText(mReceiveTargetLabel.getText() + " (" + (mClientPlugins.length - 3) + " " + LOCALIZER.msg("otherTargets", "others...") + ")");
-      }
+      
+      mLastPluginSelectionHandling = System.currentTimeMillis();
     }
+    System.out.println(mReceiveTargetLabel.getText());
   }
   
   /**

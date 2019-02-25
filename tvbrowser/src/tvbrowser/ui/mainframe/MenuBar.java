@@ -42,7 +42,6 @@ import javax.swing.Action;
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
 import javax.swing.Icon;
-import javax.swing.ImageIcon;
 import javax.swing.InputMap;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JDialog;
@@ -1110,6 +1109,7 @@ public abstract class MenuBar extends JMenuBar implements ActionListener {
 		  infoBuilder.append("\nIcons: ").append(Settings.propIcontheme.getString());
 		  infoBuilder.append("\nInfo-Icons: ").append(Settings.propInfoIconThemeID.getString());
 		  infoBuilder.append("\nNumber of markings: ").append(MarkedProgramsMap.getInstance().getMarkedPrograms().length);
+		  infoBuilder.append("\nActive filter: ").append(mMainFrame.getProgramFilter());
 		  infoBuilder.append("\n\nInstalled plugins:");
 		  
 		  PluginProxy[] plugins = PluginProxyManager.getInstance().getAllPlugins();

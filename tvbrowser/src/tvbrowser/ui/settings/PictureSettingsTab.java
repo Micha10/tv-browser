@@ -20,6 +20,8 @@ package tvbrowser.ui.settings;
 
 import java.awt.Color;
 import java.awt.Window;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.awt.event.ItemEvent;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -100,7 +102,8 @@ public class PictureSettingsTab extends AbstractSettingsTab {
   private SettingsDialog mSettingsDialog;
   
   private static int PLUGIN_PICTURE_SELECTION_ORIGINAL = -1;
-    
+  private long mLastPluginSelectionHandling = 0;
+  
   public PictureSettingsTab(SettingsDialog settingsDialog) {
     mSettingsDialog = settingsDialog;
   }
@@ -186,11 +189,18 @@ public class PictureSettingsTab extends AbstractSettingsTab {
       final JLabel minutesLabel = pb.addLabel(mLocalizer.msg("minutes", "Minutes"), CC.xy(8, y));
       y++;
       if (Settings.propPicturePluginIds.getStringArray() != null) {
-        JPanel mSubPanel = new JPanel(new FormLayout("15dlu,pref:grow,5dlu,pref", "pref,2dlu,pref"));
+        JPanel mSubPanel = new JPanel(new FormLayout("15dlu,150dlu:grow,5dlu,pref", "pref,2dlu,pref"));
 
         mShowPicturesForPlugins = new JCheckBox(mLocalizer.msg("showPicturesForPlugins", "Show for programs that are marked by plugins:"), ProgramPanelSettings.typeContainsType(Settings.propPictureType.getInt(), ProgramPanelSettings.SHOW_PICTURES_FOR_PLUGINS));
         mPluginLabel = new JLabel();
-        mPluginLabel.setEnabled(ProgramPanelSettings.typeContainsType(Settings.propPictureType.getInt(), ProgramPanelSettings.SHOW_PICTURES_FOR_PLUGINS));
+        mPluginLabel.addComponentListener(new ComponentAdapter() {
+          @Override
+          public void componentResized(ComponentEvent e) {
+            handlePluginSelection();
+          }
+        });
+        
+        mPluginLabel.setEnabled(mShowPicturesForPlugins.isSelected());
 
         choose = new JButton(mLocalizer.msg("selectPlugins", "Choose Plugins"));
         choose.addActionListener(e -> {
@@ -203,7 +213,7 @@ public class PictureSettingsTab extends AbstractSettingsTab {
           chooser.setVisible(true);
 
           mClientPlugins = chooser.getMarker();
-
+          
           handlePluginSelection();
         });
         choose.setEnabled(ProgramPanelSettings.typeContainsType(Settings.propPictureType.getInt(), ProgramPanelSettings.SHOW_PICTURES_FOR_PLUGINS));
@@ -229,9 +239,7 @@ public class PictureSettingsTab extends AbstractSettingsTab {
         }
 
         mClientPlugins = clientPlugins.toArray(new Marker[clientPlugins.size()]);
-
-        handlePluginSelection();
-
+        
         mSubPanel.add(mShowPicturesForPlugins, CC.xyw(1, 1, 4));
         mSubPanel.add(mPluginLabel, CC.xy(2, 3));
         mSubPanel.add(choose, CC.xy(4, 3));
@@ -241,6 +249,9 @@ public class PictureSettingsTab extends AbstractSettingsTab {
         pb.add(mSubPanel, CC.xyw(3, y, 7));
         layout.insertRow(y+=1, RowSpec.decode("2dlu"));
         y++;
+      }
+      else {
+        mPluginLabel.setEnabled(false);
       }
       
       final JButton editFilter = new JButton(mLocalizer.msg("editFilter", "Edit filter"));
@@ -401,25 +412,46 @@ public class PictureSettingsTab extends AbstractSettingsTab {
     Settings.propPluginsPictureSetting.setInt(mPluginsPictureSettings.getSettings().getType());
     Settings.propPictureDescriptionLines.setInt((Integer) mDescriptionLines.getValue());
   }
-
+  
   /**
    * @since 2.6
    */
-  private void handlePluginSelection() {
-    if (mClientPlugins.length > 0) {
-      mPluginLabel.setText(mClientPlugins[0].toString());
-      mPluginLabel.setEnabled(true);
-    } else {
-      mPluginLabel.setText(mLocalizer.msg("noPlugins", "No Plugins choosen"));
-      mPluginLabel.setEnabled(false);
-    }
-
-    for (int i = 1; i < (mClientPlugins.length > 4 ? 3 : mClientPlugins.length); i++) {
-      mPluginLabel.setText(mPluginLabel.getText() + ", " + mClientPlugins[i]);
-    }
-
-    if (mClientPlugins.length > 4) {
-      mPluginLabel.setText(mPluginLabel.getText() + " (" + (mClientPlugins.length - 3) + " " + mLocalizer.ellipsisMsg("otherPlugins", "others") + ")");
+  private synchronized void handlePluginSelection() {
+    if(System.currentTimeMillis() - mLastPluginSelectionHandling > 10) {
+      if (mClientPlugins.length > 0) {
+        mPluginLabel.setText(mClientPlugins[0].toString());
+        mPluginLabel.setEnabled(mShowPicturesForPlugins.isSelected());
+        
+        int i = 1;
+        final String others = mLocalizer.ellipsisMsg("otherPlugins", "others");
+        int otherLength = mPluginLabel.getFontMetrics(mPluginLabel.getFont()).stringWidth(others)+30;
+        
+        do {
+          String text = mPluginLabel.getText() + ", " + mClientPlugins[i];
+          int addLength = otherLength;
+          
+          if(i == mClientPlugins.length-1) {
+            addLength = 0;
+          }
+          
+          if(mPluginLabel.getFontMetrics(mPluginLabel.getFont()).stringWidth(text)+addLength < mPluginLabel.getWidth()) {
+          
+            mPluginLabel.setText(text);
+          }
+          else {
+            break;
+          }
+        }while(i++ < mClientPlugins.length-1);
+    
+        if (i < mClientPlugins.length) {
+          mPluginLabel.setText(mPluginLabel.getText() + " (" + (mClientPlugins.length - i) + " " + others + ")");
+        }
+      } else {
+        mPluginLabel.setText(mLocalizer.msg("noPlugins", "No Plugins choosen"));
+        mPluginLabel.setEnabled(false);
+      }
+      
+      mLastPluginSelectionHandling = System.currentTimeMillis();
     }
   }
 

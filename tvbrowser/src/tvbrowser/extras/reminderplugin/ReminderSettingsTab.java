@@ -33,7 +33,6 @@ import java.awt.event.ItemListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.io.File;
-import java.util.ArrayList;
 import java.util.Properties;
 
 import javax.sound.midi.Sequencer;
@@ -60,8 +59,6 @@ import com.jgoodies.forms.factories.Borders;
 import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
 
-import devplugin.ProgramReceiveIf;
-import devplugin.ProgramReceiveTarget;
 import devplugin.SettingsTab;
 import tvbrowser.core.icontheme.IconLoader;
 import tvbrowser.ui.mainframe.MainFrame;
@@ -70,7 +67,7 @@ import util.ui.DefaultMarkingPrioritySelectionPanel;
 import util.ui.ExecuteSettingsDialog;
 import util.ui.ExtensionFileFilter;
 import util.ui.FileCheckBox;
-import util.ui.PluginChooserDlg;
+import util.ui.ProgramReceiveTargetSelectionPanel;
 import util.ui.ScrollableJPanel;
 import util.ui.UiUtilities;
 
@@ -118,8 +115,7 @@ public class ReminderSettingsTab implements SettingsTab {
   private String mExecFileStr, mExecParamStr;
   private Object mTestSound;
 
-  private JLabel mPluginLabel;
-  private ProgramReceiveTarget[] mClientPluginTargets;
+  private ProgramReceiveTargetSelectionPanel mPluginTargetSelectionPanel;
   
   private DefaultMarkingPrioritySelectionPanel mMarkingsPanel;
 
@@ -248,30 +244,9 @@ public class ReminderSettingsTab implements SettingsTab {
 
     mExecFileDialogBtn = new JButton(mLocalizer.msg("executeConfig", "Configure"));
     mExecFileDialogBtn.setEnabled(mExecChB.isSelected());
-
-    mPluginLabel = new JLabel();
-    JButton choose = new JButton(mLocalizer.msg("selectPlugins","Choose Plugins"));
-
-    mClientPluginTargets = ReminderPlugin.getInstance().getClientPluginsTargets();
-
-    handlePluginSelection();
-
-    choose.addActionListener(e -> {try{
-      Window parent = UiUtilities.getLastModalChildOf(MainFrame
-            .getInstance());
-      PluginChooserDlg chooser = null;
-      chooser = new PluginChooserDlg(parent, mClientPluginTargets, null,
-            ReminderPluginProxy.getInstance());
-      
-      chooser.setVisible(true);
-
-      if(chooser.getReceiveTargets() != null) {
-        mClientPluginTargets = chooser.getReceiveTargets();
-      }
-
-      handlePluginSelection();}catch(Exception ee) {ee.printStackTrace();}
-    });
-
+    
+    mPluginTargetSelectionPanel = new ProgramReceiveTargetSelectionPanel(MainFrame.getInstance(), ReminderPlugin.getInstance().getClientPluginsTargets(), null, ReminderPluginProxy.getInstance(), false, null);
+    
     int autoCloseReminderTime = 10;
     try {
       String asString = mSettings.getProperty("autoCloseReminderTime", "10");
@@ -357,8 +332,7 @@ public class ReminderSettingsTab implements SettingsTab {
 
     pb.addSeparator(mLocalizer.msg("sendToPlugin", "Send reminded program to"), CC.xyw(1,13,10));
 
-    pb.add(mPluginLabel, CC.xyw(2,15,4));
-    pb.add(choose, CC.xyw(7,15,3));
+    pb.add(mPluginTargetSelectionPanel, CC.xyw(1,15,10));
 
     final JLabel c = (JLabel) pb.addSeparator(mLocalizer.msg("autoCloseReminder", "Automatically close reminder"), CC.xyw(1,17,10)).getComponent(0);
     c.setEnabled(mReminderWindowChB.isSelected() || mFrameRemindersChB.isSelected());
@@ -549,7 +523,7 @@ public class ReminderSettingsTab implements SettingsTab {
 
     return pb.getPanel();
   }
-
+/*
   private void handlePluginSelection() {
     ArrayList<ProgramReceiveIf> plugins = new ArrayList<ProgramReceiveIf>();
 
@@ -580,7 +554,7 @@ public class ReminderSettingsTab implements SettingsTab {
       }
     }
   }
-
+*/
   /**
    * Shows the Settings-Dialog for the Executable
    */
@@ -631,7 +605,7 @@ public class ReminderSettingsTab implements SettingsTab {
     mSettings.setProperty("usebeep", String.valueOf(mBeep.isSelected()));
     mSettings.setProperty("useexec", String.valueOf(mExecChB.isSelected()));
 
-    ReminderPlugin.getInstance().setClientPluginsTargets(mClientPluginTargets);
+    ReminderPlugin.getInstance().setClientPluginsTargets(mPluginTargetSelectionPanel.getCurrentSelection());
 
     mSettings.setProperty("autoCloseBehaviour", mCloseOnEnd.isSelected() ? "onEnd" : mCloseNever.isSelected() ? "never" : "onTime");
 
