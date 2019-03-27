@@ -67,7 +67,11 @@ final class RatingDiagram extends JPanel {
     GridLayout gridLayout = new GridLayout(1, 10, 4, 0);
     barPanel.setLayout(gridLayout);
     for (int i = 0; i < 10; i++) {
-      barPanel.add(new SlotPanel(i + 1, mValues[i] *100 / mMaxValue));
+      if (mMaxValue > 0) {
+        barPanel.add(new SlotPanel(i + 1, mValues[i] *100 / mMaxValue));
+      } else {
+        barPanel.add(new SlotPanel(i + 1, 0));  	  
+      }
     }
     add(barPanel, cc.xyw(1, layout.getRowCount(), layout.getColumnCount()));
   }

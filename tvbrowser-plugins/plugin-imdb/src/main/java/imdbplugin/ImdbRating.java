@@ -1,3 +1,5 @@
+package imdbplugin;
+
 /*
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -12,7 +14,6 @@
  * You should have received a copy of the GNU General Public License along with
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package imdbplugin;
 
 import java.text.DecimalFormat;
 
@@ -26,19 +27,17 @@ public final class ImdbRating {
   private String mDistribution;
   private int mVotes;
   private byte mRating;
-  private String mMovieId;
+  private String mTitleId;
 
-  public ImdbRating(final byte rating, final int votes,
-      final String distribution, final String movieid) {
+  public ImdbRating(final byte rating, final int votes, final String titleid) {
     mRating = rating;
     mVotes = votes;
-    mDistribution = distribution;
-    mMovieId = movieid;
+    mDistribution = "..........";
+    mTitleId = titleid;
   }
-
-  public ImdbRating(final int rating, final int votes,
-      final String distribution, final String movieid) {
-    this((byte)rating, votes, distribution, movieid);
+  
+  public ImdbRating(final int rating, final int votes, final String titleid) {
+    this((byte)rating, votes, titleid);
   }
 
   public byte getRating() {
@@ -62,6 +61,6 @@ public final class ImdbRating {
   }
 
   public String getMovieId() {
-    return mMovieId;  
+    return mTitleId;  
   }
 }

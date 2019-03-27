@@ -20,6 +20,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.net.URL;
 import java.security.CodeSource;
 import java.util.ArrayList;
@@ -66,14 +68,16 @@ public final class ImdbPlugin extends Plugin {
    * Translator
    */
   private static final Localizer mLocalizer = Localizer.getLocalizerFor(ImdbPlugin.class);
+  private static final java.util.logging.Logger mLog = java.util.logging.Logger
+	      .getLogger(ImdbPlugin.class.getName());
 
-  private static final boolean IS_STABLE = true;
+  private static final boolean IS_STABLE = false;
 
-  private static final Version mVersion = new Version(1, 8, IS_STABLE);
+  private static final Version mVersion = new Version(1, 11, IS_STABLE);
 
   // Empty Rating for Cache
-  private static final ImdbRating DUMMY_RATING = new ImdbRating(0, 0, "", "");
-  private static final ImdbRating EXAMPLE_RATING = new ImdbRating(70, 123, "123456789", null);
+  private static final ImdbRating DUMMY_RATING = new ImdbRating(0, 0, "");
+  private static final ImdbRating EXAMPLE_RATING = new ImdbRating(70, 123, "123456789");
 
   private static ImdbPlugin instance;
 
@@ -173,11 +177,16 @@ public final class ImdbPlugin extends Plugin {
         final String cacheKey = getCacheKey(program);
         rating = mRatingCache.get(cacheKey);
         if (rating == null) {
-          rating = getEpisodeRating(program);
-          if (rating == null) {
-            rating = getProgramRating(program);
-          }
+//          mLog.info("getRatingFor: <" + program.getTitle() + "> <" + program.getTextField(ProgramFieldType.EPISODE_TYPE) + "> <" +
+//          		program.getTextField(ProgramFieldType.ORIGINAL_TITLE_TYPE) + "> <" +
+//          	    program.getTextField(ProgramFieldType.ORIGINAL_EPISODE_TYPE) + "> <" +
+//          		program.getIntField(ProgramFieldType.PRODUCTION_YEAR_TYPE) + "> "+
+//          	    program.getIntField(ProgramFieldType.EPISODE_NUMBER_TYPE) + ", " +
+//        	    program.getIntField(ProgramFieldType.EPISODE_TOTAL_NUMBER_TYPE) + ", " +
+//        	    program.getIntField(ProgramFieldType.SEASON_NUMBER_TYPE));
+          rating = mImdbDatabase.getRating(program);
           if (rating != null) {
+//          	mLog.info("  Rating: " + rating.getRating() + ", " + rating.getVotes() + " (" + rating.getMovieId() + ")");
             mRatingCache.put(cacheKey, rating);
           } else {
             mRatingCache.put(cacheKey, DUMMY_RATING);
@@ -206,21 +215,6 @@ public final class ImdbPlugin extends Plugin {
     builder.append('~');
     builder.append(program.getIntField(ProgramFieldType.PRODUCTION_YEAR_TYPE));
     return builder.toString();
-  }
-
-  public ImdbRating getEpisodeRating(final Program program) {
-    return mImdbDatabase.getRatingForId(mImdbDatabase.getMovieEpisodeId(program
-        .getTitle(), program.getTextField(ProgramFieldType.EPISODE_TYPE),
-        program.getTextField(ProgramFieldType.ORIGINAL_TITLE_TYPE),
-        program.getTextField(ProgramFieldType.ORIGINAL_EPISODE_TYPE), program
-            .getIntField(ProgramFieldType.PRODUCTION_YEAR_TYPE)));
-  }
-
-  public ImdbRating getProgramRating(final Program program) {
-    return mImdbDatabase.getRatingForId(mImdbDatabase.getMovieId(program.getTitle(), "",
-        program.getTextField(ProgramFieldType.ORIGINAL_TITLE_TYPE),
-        program.getTextField(ProgramFieldType.ORIGINAL_EPISODE_TYPE),
-        program.getIntField(ProgramFieldType.PRODUCTION_YEAR_TYPE)));
   }
 
   @Override
@@ -289,7 +283,7 @@ public final class ImdbPlugin extends Plugin {
           final JCheckBox askAgain = new JCheckBox(mLocalizer.msg(
               "dontShowAgain", "Don't show this message again"));
           Object[] shownObjects = new Object[2];
-          shownObjects[0] = mLocalizer.msg("downloadData", "No IMDb-Database available, should I download the ImDB-Data now (approx. {0} MB)? It will take around {1} MB on disk.", 20, 400);
+          shownObjects[0] = mLocalizer.msg("downloadData", "No IMDb-Database available, should I download the ImDB-Data now (approx. {0} MB)? It will take around {1} MB on disk.", 180, 180);
           shownObjects[1] = askAgain;
 
           final int ret = JOptionPane.showConfirmDialog(getParentFrame(),
@@ -313,21 +307,29 @@ public final class ImdbPlugin extends Plugin {
 
   private void initializeDatabase() {
     try {
-			if (mImdbDatabase == null) {
-			  File dataBase = new File(new File(Plugin.getPluginManager()
-                  .getTvBrowserSettings().getTvBrowserUserHome()).getParentFile(), "imdbDatabase");
+		if (mImdbDatabase == null) {
+		  Path databasePath = Paths.get(new File(Plugin.getPluginManager().getTvBrowserSettings().getTvBrowserUserHome()).getParent(), "imdb", "lucene");
+		  Path importPath = Paths.get(new File(Plugin.getPluginManager().getTvBrowserSettings().getTvBrowserUserHome()).getParent(), "imdb", "import");
+		  File importDir = importPath.toFile();
+
+		  if (!importDir.exists()) {
+		    try {
+		    	importDir.mkdirs();
+		    } catch (Exception e) {
+		      e.printStackTrace();
+		    }
+		  }		  
 			  
-			  mImdbDatabase = new ImdbDatabase(dataBase);
-			  mImdbDatabase.init();
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
+		  mImdbDatabase = new ImdbDatabase(databasePath.toFile());
+		  mImdbDatabase.init();
 		}
+	} catch (Exception e) {
+		e.printStackTrace();
+	}
   }
 
   public void showUpdateDialog() {
-    final JComboBox box = new JComboBox(new String[] { "ftp.fu-berlin.de",
-        "ftp.funet.fi", "ftp.sunet.se" });
+    final JComboBox box = new JComboBox(new String[] { "IMDB-Server", "TV-Browser Verzeichnis" });
     Object[] shownObjects = new Object[2];
     shownObjects[0] = mLocalizer.msg("serverMsg", "Choose server:");
     shownObjects[1] = box;
@@ -339,12 +341,10 @@ public final class ImdbPlugin extends Plugin {
     if (ret == JOptionPane.OK_OPTION) {
       String server = null;
       switch (box.getSelectedIndex()) {
-        case 1 : server = "ftp://ftp.funet.fi/pub/mirrors/ftp.imdb.com/pub/";
-                 break;
-        case 2 : server = "ftp://ftp.sunet.se/pub/tv+movies/imdb/";
-                 break;
-        default:
-        server = "ftp://ftp.fu-berlin.de/pub/misc/movies/database/";
+      	case 1:	File tvBrowserUserHome = new File(new File(Plugin.getPluginManager().getTvBrowserSettings().getTvBrowserUserHome()).getParentFile(), "imdb/import");
+      			server = "file://localhost" + tvBrowserUserHome.getAbsolutePath() + "/";
+      			break;
+        default: server = "https://datasets.imdbws.com";
       }
       final Window w = UiUtilities.getBestDialogParent(getParentFrame());
 
@@ -374,33 +374,6 @@ public final class ImdbPlugin extends Plugin {
   public void readData(final ObjectInputStream in) throws IOException,
       ClassNotFoundException {
     int version = in.readInt(); // version
-    
-    if(version < 2) {
-      File dataBase = new File(new File(Plugin.getPluginManager()
-          .getTvBrowserSettings().getTvBrowserUserHome()).getParentFile(), "imdbDatabase");
-      
-      if(!dataBase.isDirectory()) {
-        dataBase.mkdirs();
-        
-        File oldDataBase = new File(Plugin.getPluginManager()
-            .getTvBrowserSettings().getTvBrowserUserHome(), "imdbDatabase");
-        
-        if(oldDataBase.isDirectory()) {
-          File[] dataBaseFiles = oldDataBase.listFiles();
-          IOUtilities.copy(oldDataBase.listFiles(), dataBase);
-          
-          for(File file : dataBaseFiles) {
-            if(!file.delete()) {
-              file.deleteOnExit();
-            }
-          }
-          
-          if(!oldDataBase.delete()) {
-            oldDataBase.deleteOnExit();
-          }
-        }
-      }
-    }
 
     final int count = in.readInt();
 
@@ -495,7 +468,7 @@ public final class ImdbPlugin extends Plugin {
       }
 
       public Icon getIcon() {
-        return new ImdbIcon(new ImdbRating(75, 100, "", ""));
+        return new ImdbIcon(new ImdbRating(75, 100, ""));
       }
 
       public int getRatingForProgram(final Program p) {

@@ -1,3 +1,5 @@
+package imdbplugin;
+
 /*
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -12,23 +14,17 @@
  * You should have received a copy of the GNU General Public License along with
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package imdbplugin;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.HashMap;
 import java.util.zip.GZIPInputStream;
-
-import org.apache.commons.lang3.StringUtils;
 
 import util.io.IOUtilities;
 import util.ui.Localizer;
@@ -38,19 +34,15 @@ import devplugin.ProgressMonitor;
 
 public class ImdbParser {
   private static final Localizer mLocalizer = Localizer.getLocalizerFor(ImdbParser.class);
-
-  private static final java.util.logging.Logger mLog = java.util.logging.Logger
-      .getLogger(ImdbParser.class.getName());
-
-  private static final Pattern EPISODE_PATTERN = Pattern
-      .compile("^(.*?)(?:\\W\\(\\#.*\\))?$");
-  private static final Pattern MOVIE_PREFIX_PATTERN = Pattern.compile("(.*), ([A-Z][a-z']{0,2})");
-
-  private static final int STEPS_TO_REPORT_PROGRESS = 1000;
+  
+  private static final int STEPS_TO_REPORT_PROGRESS = 10000;
 
   private ImdbDatabase mDatabase;
   private String mServer;
   private boolean mRunParser = true;
+  private HashMap<String, Boolean> ratingIds = null;
+  ProgressInputStream progressInputStream = null;
+  private int position = 0;
 
   public ImdbParser(final ImdbDatabase db, final String server) {
     mDatabase = db;
@@ -59,254 +51,219 @@ public class ImdbParser {
 
   public void startParsing(final ProgressMonitor monitor) throws IOException {
     int ratingCount = 0;
+    	
+    monitor.setMaximum((60 + 100 + 20 + 5) * 1024 * 1024); // title.akas.tsv.gz + title.basic.tsv.gz + title.episode.tsv.gz + title.ratings.tsv.gz
+    position = 0;
+    
     mDatabase.deleteDatabase();
-
-    monitor.setMaximum(getFileSize(mServer));
-
     mRunParser = true;
-
-    BufferedInputStream akaFile = downloadFile(monitor, "aka-titles.list.gz");
-    BufferedInputStream ratingsFile = downloadFile(monitor,"ratings.list.gz");
-
-    ProgressInputStream progressInputStream = new ProgressInputStream(akaFile, monitor);
+	ratingIds = new HashMap<String, Boolean>();
 
     if (mRunParser) {
-      parseAkaTitles(new GZIPInputStream(progressInputStream), monitor);
+      ratingCount = importIMDbRatings(monitor);
     }
-    mDatabase.close();
+	
     if (mRunParser) {
-      mDatabase.openForWriting();
-      progressInputStream = new ProgressInputStream(ratingsFile, monitor, progressInputStream.getCurrentPosition());
-      ratingCount = parseRatings(new GZIPInputStream(progressInputStream), monitor);
+      importIMDbTitles(monitor);
     }
 
     if (mRunParser) {
-      optimizeDatabase(monitor);
+      importIMDbAkas(monitor);
+    }
+    
+    if (mRunParser) {
+        importIMDbEpisodes(monitor);
+    }
+    
+    if (mRunParser) {
       ImdbPlugin.getInstance().setCurrentDatabaseVersion(ratingCount);
     } else {
       // Cancel was pressed, all Files have to be deleted
       mDatabase.deleteDatabase();
     }
+    
+    ratingIds.clear();
+    ratingIds = null;
     mDatabase.openForReading();
   }
 
-  private BufferedInputStream downloadFile(final ProgressMonitor monitor,
-      final String fileName) throws MalformedURLException, IOException,
-      FileNotFoundException {
+  private BufferedReader downloadFile(final ProgressMonitor monitor, final String fileName) throws IOException {
     monitor.setMessage(mLocalizer.msg("download", "Downloading {0}", fileName));
-    final URL url = new URL(mServer + fileName);
+
+    final URL url = new URL(mServer + "/" + fileName);
     final File tempFile = File.createTempFile("imdb", null);
+    
     IOUtilities.download(url, tempFile);
-    final BufferedInputStream stream = new BufferedInputStream(
-        new FileInputStream(
-        tempFile));
+
+    final BufferedInputStream stream = new BufferedInputStream(new FileInputStream(tempFile));
     tempFile.deleteOnExit();
-    return stream;
+    
+    progressInputStream = new ProgressInputStream(stream, monitor, position);
+    InputStream gzipInputStream = new GZIPInputStream(progressInputStream);
+    InputStreamReader inputStreamReader = new InputStreamReader(gzipInputStream, "UTF-8");
+    BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+    
+    return bufferedReader;
   }
 
-  private void optimizeDatabase(final ProgressMonitor monitor)
-      throws IOException {
-    monitor.setMessage(mLocalizer.msg("optimize", "Optimizing database"));
-    mDatabase.close();
-    mDatabase.openForWriting();
-    mDatabase.optimizeIndex();
+  private void importIMDbTitles(final ProgressMonitor monitor) throws IOException {
+    int titleCount = 0;
+     
+	final BufferedReader basicsTitleReader = downloadFile(monitor, "title.basics.tsv.gz");
+	String basicLine = basicsTitleReader.readLine();
+
+	if (basicLine.startsWith("tconst")) {
+		basicLine = basicsTitleReader.readLine();
+	}
+	
+	while (mRunParser && (basicLine != null)) {
+	  String[] basicFields = basicLine.split("\t");
+      String titleId = basicFields[0].trim();
+      String titleType = basicFields[1].trim();
+      String primaryTitle = basicFields[2].trim();	// the more popular title
+      String originalTitle = basicFields[3].trim();	// original title, in the original language
+      int startYear = basicFields[5].equals("\\N") ? -1 : Integer.parseInt(basicFields[5].trim());
+      ImdbDatabase.TitleType tType = ImdbDatabase.TitleType.movie;	
+   		
+      if (titleType.equals("tvEpisode")) {
+       	tType = ImdbDatabase.TitleType.episode;
+      }
+
+      if (titleType.equals("tvSeries") || titleType.equals("tvMiniSeries")) {
+    	tType = ImdbDatabase.TitleType.series;
+      }
+
+      if ((ratingIds.containsKey(titleId) || (tType == ImdbDatabase.TitleType.series)) && !titleType.equals("videoGame")) {
+      
+    	mDatabase.addOriginalTitle(tType, titleId, originalTitle, startYear);
+
+        if (!primaryTitle.equals(originalTitle)) {
+          mDatabase.addAkaTitle(tType, titleId, primaryTitle, startYear);
+        }
+     		
+    	if (++titleCount % STEPS_TO_REPORT_PROGRESS == 0 || titleCount == 1) {
+          monitor.setMessage(mLocalizer.msg("titles", "Title {0}", titleCount));
+        }   	  
+      }
+
+      basicLine = basicsTitleReader.readLine();		
+	}
+
+	position = progressInputStream.getCurrentPosition();
+	basicsTitleReader.close();
+    monitor.setMessage(mLocalizer.msg("titles", "Title {0}", titleCount));
   }
 
-  private int getFileSize(final String server) {
-    final String[] fileNames = new String[] { "aka-titles", "ratings" };
-    final Integer[] fileSizes = new Integer[] { 5950067, 5067908 };
+  private void importIMDbAkas(final ProgressMonitor monitor) throws IOException {
+    int akaCount = 0;
+    ImdbDatabase.ImdbTitle imdbTitle = null;
+	     
+	final BufferedReader akasTitleReader = downloadFile(monitor, "title.akas.tsv.gz");
+	String akaLine = akasTitleReader.readLine();
 
-    try {
+	if (akaLine.startsWith("titleId")) {
+	  akaLine = akasTitleReader.readLine();
+	}
+	
+	mDatabase.openForReadingDuringImport();
 
-      int size = 0;
-      final String filesizes = new String(IOUtilities
-          .loadFileFromHttpServer(new URL(server + "filesizes")));
+	while (mRunParser && (akaLine != null)) {
+	  String[] akaFields = akaLine.split("\t");
+	  String titleId = akaFields[0].trim();
+	  
+      if (ratingIds.containsKey(titleId)) {
 
-      for (int i = 0; i < fileNames.length; i++) {
-        final Matcher m = Pattern.compile(
-            "^" + fileNames[i] + "\\.list\\W(\\d*)$",
-            Pattern.MULTILINE).matcher(filesizes);
+	    String akaTitle = akaFields[2].trim();
+	  
+	    if ((imdbTitle == null) || !titleId.equals(imdbTitle.getTitleId())) {
+	      imdbTitle = mDatabase.getImdbMovie(titleId);
+	    }
+	
+	    if ((imdbTitle != null) && titleId.equals(imdbTitle.getTitleId()) && !imdbTitle.hasTitle(akaTitle)) {
+	      mDatabase.addAkaTitle(imdbTitle.getTitleType(), titleId, akaTitle, imdbTitle.getReleaseYear());
+	      imdbTitle.addTitle(akaTitle);
 
-        if (m.find()) {
-          size += Integer.parseInt(m.group(1));
-        } else {
-          size += fileSizes[i];
+	      if (++akaCount % STEPS_TO_REPORT_PROGRESS == 0 || akaCount == 1) {
+		    monitor.setMessage(mLocalizer.msg("akaTitles", "Alternative title {0}", akaCount));
+		  }
+	    }
+      }
+	  akaLine = akasTitleReader.readLine();
+	}
+
+	position = progressInputStream.getCurrentPosition();
+	akasTitleReader.close();
+    monitor.setMessage(mLocalizer.msg("akaTitles", "Alternative title {0}", akaCount));
+  }
+
+  private int importIMDbRatings(final ProgressMonitor monitor) throws IOException {
+	int ratingsCount = 0;
+	final ImdbHistogram histogram = new ImdbHistogram();
+	final BufferedReader ratingsTitleReader = downloadFile(monitor, "title.ratings.tsv.gz");
+	String ratingLine = ratingsTitleReader.readLine();
+	
+	if (ratingLine.startsWith("tconst")) {
+	  ratingLine = ratingsTitleReader.readLine();
+	}
+	
+    while (mRunParser && (ratingLine != null))  {
+	  String[] ratingFields = ratingLine.split("\t");
+	  String titleId = ratingFields[0];
+	  String averageRating = ratingFields[1];
+	  String numVotes = ratingFields[2];
+
+      int rating = Integer.parseInt(averageRating.replaceAll("\\.", ""));
+      int votes = Integer.parseInt(numVotes);
+
+      mDatabase.addRating(titleId, rating, votes);
+      ratingIds.put(titleId, Boolean.TRUE);
+      histogram.addRating(rating, votes);
+        
+	  if (++ratingsCount % STEPS_TO_REPORT_PROGRESS == 0 || ratingsCount == 1) {
+        monitor.setMessage(mLocalizer.msg("ratings", "Rating {0}", ratingsCount));
+      }
+	  ratingLine = ratingsTitleReader.readLine();
+	}
+
+	position = progressInputStream.getCurrentPosition();
+    ratingsTitleReader.close();
+    ImdbPlugin.getInstance().storeHistogram(histogram);
+    monitor.setMessage(mLocalizer.msg("ratings", "Rating {0}", ratingsCount));
+    return ratingsCount;
+  }
+
+  private void importIMDbEpisodes(final ProgressMonitor monitor) throws IOException {
+	int episodesCount = 0;
+
+	final BufferedReader episodesReader = downloadFile(monitor, "title.episode.tsv.gz");
+	String episodeLine = episodesReader.readLine();
+
+	if (episodeLine.startsWith("tconst")) {
+	  episodeLine = episodesReader.readLine();
+	}
+	
+    while (mRunParser && (episodeLine != null))  {
+	  String[] episodeFields = episodeLine.split("\t");
+	  String episodeId = episodeFields[0];
+	  String seriesId = episodeFields[1];
+
+      if (ratingIds.containsKey(episodeId)) {
+	  
+        mDatabase.addSeriesEpisode(seriesId, episodeId);
+        
+	    if (++episodesCount % STEPS_TO_REPORT_PROGRESS == 0 || episodesCount == 1) {
+          monitor.setMessage(mLocalizer.msg("episodes", "Episode {0}", episodesCount));
         }
       }
-      return size;
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
+	  episodeLine = episodesReader.readLine();
+	}
 
-    // if an exception occurred, return the default sizes
-    int size = 0;
-    for (int i = 0; i < fileSizes.length; i++) {
-      size += fileSizes[i];
-    }
-    return size;
+	position = progressInputStream.getCurrentPosition();
+    episodesReader.close();
+    monitor.setMessage(mLocalizer.msg("episodes", "Episode {0}", episodesCount));
   }
 
   public void stopParsing() {
     mRunParser = false;
-  }
-
-  private void parseAkaTitles(final InputStream inputStream,
-      final ProgressMonitor monitor) throws IOException {
-    final BufferedReader reader = new BufferedReader(new InputStreamReader(
-        inputStream, "ISO-8859-15"));
-    String line = reader.readLine();
-
-    final Pattern moviePattern = Pattern
-        .compile("^(.*)\\((?:(\\d{4,4}).*|\\?\\?\\?\\?)\\)(?:\\W*\\((.*)\\))?(?:\\W\\{(.*)\\})?.*$");
-    final Pattern akaPattern = Pattern
-        .compile("^\\(aka (.*) \\((?:(\\d{4,4}).*|\\?\\?\\?\\?)\\)(?:\\W\\((.*)\\))?(?:\\W\\{(.*)\\})?\\).*$");
-
-    String movieId = null;
-    boolean startFound = false;
-    int count = 0;
-    while (line != null && mRunParser) {
-      line = line.trim();
-      if (!startFound && line.startsWith("==========")) {
-        startFound = true;
-      } else if (startFound) {
-
-        if (line.length() > 0) {
-          if (line.startsWith("(aka ")) {
-            if (movieId != null) {
-              final Matcher matcher = akaPattern.matcher(line);
-              if (matcher.matches()) {
-                final String title = cleanMovieTitle(matcher.group(1).trim());
-                int year = -1;
-                if (matcher.group(2) != null) {
-                  year = Integer.parseInt(matcher.group(2));
-                }
-                final String episode = cleanEpisodeTitle(matcher.group(4));
-
-                mDatabase.addAkaTitle(movieId, title, episode, year);
-                if (++count % STEPS_TO_REPORT_PROGRESS == 0 || count == 1) {
-                  monitor.setMessage(mLocalizer.msg("akaTitles",
-                      "Alternative title {0}", count));
-                }
-              }
-            }
-            else {
-              mLog.severe("Parse error: movieId unknown for alternative title");
-            }
-          } else {
-            final Matcher matcher = moviePattern.matcher(line);
-            if (matcher.matches()) {
-              final String movieTitle = cleanMovieTitle(matcher.group(1).trim());
-              int year = -1;
-              if (matcher.group(2) != null) {
-                year = Integer.parseInt(matcher.group(2));
-              }
-              final String episode = cleanEpisodeTitle(matcher.group(4));
-              movieId = mDatabase.getOrCreateMovieId(movieTitle, episode, year);
-            }
-          }
-        }
-        else {
-          // blank line, prepare for new movie
-          movieId = null;
-        }
-
-      }
-
-      line = reader.readLine();
-    }
-    reader.close();
-  }
-
-  private int parseRatings(final InputStream inputStream,
-      final ProgressMonitor monitor) throws IOException {
-    final Pattern ratingPattern = Pattern
-        .compile("^(.*)(?:\\W\\((\\d{4,4}|\\?\\?\\?\\?).*?\\))(?:\\W\\((.*)\\))?(?:\\W\\{(.*)\\})?$");
-    final ImdbHistogram histogram = new ImdbHistogram();
-
-    final BufferedReader reader = new BufferedReader(new InputStreamReader(
-        inputStream, "ISO-8859-15"));
-    String line = reader.readLine();
-
-    boolean startFound = false;
-    int count = 0;
-    while (line != null && mRunParser) {
-      line = line.trim();
-      if (!startFound && line.startsWith("MOVIE RATINGS REPORT")) {
-        startFound = true;
-      } else if (startFound && line.startsWith("-------------")) {
-        startFound = false;
-      } else if (startFound && line.startsWith("New  Distribution  Votes  Rank  Title")) {
-        // Ignore this line!
-      } else if (startFound && line.length() > 0) {
-        final String distribution = line.substring(0, 10);
-        final int votes = Integer.parseInt(line.substring(11, 19).trim());
-        final String ratingStr = line.substring(20, 25).trim();
-        final int rating = Integer.parseInt(ratingStr.replaceAll("\\.", ""));
-        final String title = line.substring(25).trim();
-
-        final Matcher matcher = ratingPattern.matcher(title);
-        if (matcher.matches()) {
-          final String movieTitle = cleanMovieTitle(matcher.group(1).trim());
-          int year = -1;
-          String yearString = matcher.group(2);
-          if (yearString != null) {
-            if (!yearString.equals("????")) {
-              try {
-                year = Integer.parseInt(yearString);
-              } catch (NumberFormatException e) {
-                mLog.warning("unexpected year: " + yearString);
-              }
-            }
-          }
-          else {
-            mLog.warning("unexpected null year");
-          }
-          final String episode = cleanEpisodeTitle(matcher.group(4));
-
-          mDatabase.addRating(mDatabase.getOrCreateMovieId(movieTitle, episode, year), rating, votes, distribution);
-
-          if (StringUtils.isEmpty(episode)) {
-            histogram.addRating(rating, votes);
-          }
-          if (++count % STEPS_TO_REPORT_PROGRESS == 0 || count == 1) {
-            monitor.setMessage(mLocalizer.msg("ratings", "Rating {0}", count));
-          }
-        }
-        else {
-          mLog.warning("Non matching line: " + line);
-        }
-      }
-
-
-      line = reader.readLine();
-    }
-
-    reader.close();
-    ImdbPlugin.getInstance().storeHistogram(histogram);
-    return count;
-  }
-
-  private String cleanEpisodeTitle(final String episode) {
-    if (episode == null) {
-      return "";
-    }
-
-    final Matcher m = EPISODE_PATTERN.matcher(episode);
-    m.find();
-
-    return m.group(1);
-  }
-
-  private String cleanMovieTitle(String movieTitle) {
-    if (movieTitle.startsWith("\"") && movieTitle.endsWith("\"")) {
-      movieTitle = movieTitle.substring(1, movieTitle.length() - 1);
-    }
-
-    final Matcher matcher = MOVIE_PREFIX_PATTERN.matcher(movieTitle);
-    if (matcher.matches()) {
-      movieTitle = matcher.group(2) + " " + matcher.group(1);
-    }
-
-    return movieTitle;
   }
 }

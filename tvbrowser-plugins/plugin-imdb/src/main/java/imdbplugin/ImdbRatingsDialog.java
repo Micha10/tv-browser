@@ -23,6 +23,7 @@ import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.RowSpec;
 
 import devplugin.Program;
+import devplugin.ProgramFieldType;
 
 public class ImdbRatingsDialog extends JDialog implements WindowClosingIf {
   /**
@@ -58,20 +59,33 @@ public class ImdbRatingsDialog extends JDialog implements WindowClosingIf {
 
     panel.setBorder(Borders.DLU4_BORDER);
 
-    ImdbRating rating = ImdbPlugin.getInstance().getProgramRating(mProgram);
-    ImdbRating episodeRating = ImdbPlugin.getInstance().getEpisodeRating(mProgram);
+    ImdbRating episodeRating = ImdbPlugin.getInstance().getDatabase().getEpisodeRating(mProgram);
     JComponent mainComponent;
-		if (episodeRating != null) {
-    	JTabbedPane pane = new JTabbedPane();
-    	JComponent editor = createEditor(rating);
+
+    if (episodeRating != null) {
+    	ImdbRating seriesRating = ImdbPlugin.getInstance().getDatabase().getSeriesRating(mProgram);
+    	
+    	if ((seriesRating != null) && (episodeRating.getMovieId().compareTo(seriesRating.getMovieId()) != 0)) {
+	    	JTabbedPane pane = new JTabbedPane();
+	    	JComponent editor = createEditor(seriesRating, mProgram.getTitle(), mProgram.getTextField(ProgramFieldType.ORIGINAL_TITLE_TYPE));
 			pane.addTab(mLocalizer.msg("rating", "Rating"), editor);
-			editor = createEditor(episodeRating);
-    	pane.addTab(mLocalizer.msg("episodeRating", "Rating of Episode"), editor);
-    	mainComponent = pane;
+			editor = createEditor(episodeRating, mProgram.getTextField(ProgramFieldType.EPISODE_TYPE), mProgram.getTextField(ProgramFieldType.ORIGINAL_EPISODE_TYPE));
+	    	pane.addTab(mLocalizer.msg("episodeRating", "Rating of Episode"), editor);
+	    	mainComponent = pane;
+    	}
+    	else {
+    		if (seriesRating != null) {
+    			mainComponent = createEditor(seriesRating, mProgram.getTitle(), mProgram.getTextField(ProgramFieldType.ORIGINAL_TITLE_TYPE));
+    		} else {
+    			ImdbRating rating = ImdbPlugin.getInstance().getRatingFor(mProgram);
+    			mainComponent = createEditor(rating, mProgram.getTitle(), mProgram.getTextField(ProgramFieldType.ORIGINAL_TITLE_TYPE));    			
+    		}
+    	}
     }
-		else {
-			mainComponent = createEditor(rating);
-		}
+	else {
+		ImdbRating rating = ImdbPlugin.getInstance().getRatingFor(mProgram);
+		mainComponent = createEditor(rating, mProgram.getTitle(), mProgram.getTextField(ProgramFieldType.ORIGINAL_TITLE_TYPE));
+	}
 
     layout.appendRow(RowSpec.decode("fill:min:grow"));
     panel.add(mainComponent, cc.xy(1,panel.getRowCount()));
@@ -98,8 +112,8 @@ public class ImdbRatingsDialog extends JDialog implements WindowClosingIf {
     okButton.requestFocusInWindow();
   }
 
-	private JComponent createEditor(final ImdbRating rating) {
-    return new JScrollPane(new ImdbRatingPanel(ImdbPlugin.getInstance().getDatabase().getMovieForId(rating.getMovieId()), rating));
+	private JComponent createEditor(final ImdbRating rating, final String title, final String origTitle) {
+    return new JScrollPane(new ImdbRatingPanel(ImdbPlugin.getInstance().getDatabase().getMovieForId(rating.getMovieId(), (title != null) && (title.length() > 0) ? title : origTitle), rating));
 	}
 
   public void close() {
