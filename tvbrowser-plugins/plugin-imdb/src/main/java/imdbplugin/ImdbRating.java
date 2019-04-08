@@ -32,7 +32,7 @@ public final class ImdbRating {
   public ImdbRating(final byte rating, final int votes, final String titleid) {
     mRating = rating;
     mVotes = votes;
-    mDistribution = "..........";
+    mDistribution = null;
     mTitleId = titleid;
   }
   

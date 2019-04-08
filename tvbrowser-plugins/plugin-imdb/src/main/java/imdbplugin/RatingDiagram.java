@@ -47,6 +47,7 @@ final class RatingDiagram extends JPanel {
     setOpaque(true);
     setBackground(mRatingBackground);
     CellConstraints cc = new CellConstraints();
+    
     layout.appendRow(RowSpec.decode("pref"));
     mLbRating = new JLabel(mRating.getRatingText());
     Font bigFont = mLbRating.getFont().deriveFont(18f);
@@ -60,24 +61,33 @@ final class RatingDiagram extends JPanel {
     mLbVotes.setFont(bigFont);
     mLbVotes.setForeground(mLegendBackground);
     add(mLbVotes, cc.xy(layout.getColumnCount(), layout.getRowCount()));
-    layout.appendRow(RowSpec.decode("10dlu"));
-    layout.appendRow(RowSpec.decode("fill:min:grow"));
-    JPanel barPanel = new JPanel();
-    barPanel.setBackground(mRatingBackground);
-    GridLayout gridLayout = new GridLayout(1, 10, 4, 0);
-    barPanel.setLayout(gridLayout);
-    for (int i = 0; i < 10; i++) {
-      if (mMaxValue > 0) {
-        barPanel.add(new SlotPanel(i + 1, mValues[i] *100 / mMaxValue));
-      } else {
-        barPanel.add(new SlotPanel(i + 1, 0));  	  
-      }
+    
+    if (mMaxValue > 0) {
+	    layout.appendRow(RowSpec.decode("10dlu"));
+	    layout.appendRow(RowSpec.decode("fill:min:grow"));
+	    JPanel barPanel = new JPanel();
+	    barPanel.setBackground(mRatingBackground);
+	    GridLayout gridLayout = new GridLayout(1, 10, 4, 0);
+	    barPanel.setLayout(gridLayout);
+	    for (int i = 0; i < 10; i++) {
+	      if (mMaxValue > 0) {
+	        barPanel.add(new SlotPanel(i + 1, mValues[i] *100 / mMaxValue));
+	      } else {
+	        barPanel.add(new SlotPanel(i + 1, 0));  	  
+	      }
+	    }
+	    add(barPanel, cc.xyw(1, layout.getRowCount(), layout.getColumnCount()));
     }
-    add(barPanel, cc.xyw(1, layout.getRowCount(), layout.getColumnCount()));
   }
 
   private void decodeDistribution() {
     String dist = mRating.getDistribution();
+    
+    mMaxValue = -1;
+    if (dist == null) {
+    	return;
+    }
+
     for (int i=0;i<10;i++){
       char character = dist.charAt(i);
 /*

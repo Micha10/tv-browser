@@ -89,9 +89,6 @@ public final class ImdbDatabase {
 
   private IndexSearcher mSearcher = null;
   private IndexWriter mWriter = null;
-  private ArrayList<Document> mCandidates = null;
-  private ArrayList<Document> mCandidatesExact = null;
-  private int mCandidatesYear;
   
   public class ImdbTitle {
 	private String titleId;
@@ -138,9 +135,54 @@ public final class ImdbDatabase {
 
     public TitleType getTitleType() {
       return titleType;
+    }    
+  }
+  
+  private class ImdbCandidate {
+	 private ArrayList<String> candidates = new ArrayList<String>();;
+	 
+	 public ImdbCandidate() {
+	 }
+	 
+	 public void reset() {
+		 candidates.clear();
+	 }
+	 
+	 public void add(Document document) {
+		 String titleId = document.get(TITLE_ID);
+		 
+		 if (!candidates.contains(titleId)) {
+			 candidates.add(titleId);
+		 }
+	 }
+	 
+	 public boolean isEmpty() {
+		 return candidates.isEmpty();
+	 }
+	 
+	 public int size() {
+		 return candidates.size();
+	 }
+	 
+	 public String getTitleId() {
+		 if (isEmpty()) {
+			 return null;
+		 }
+		 if (size() == 1) {
+			 return candidates.get(0);
+		 }
+		 return null;
+	 }
+	 
+	 public Iterator<String> getTitleIds() {
+    	return candidates.iterator();
     }
   }
 
+  private ImdbCandidate mCandidates = new ImdbCandidate();
+  private ImdbCandidate mCandidatesExact = new ImdbCandidate();
+  private int mCandidatesYear;
+  
   public ImdbDatabase(final File imdbDatabase) {
     mCurrentPath = imdbDatabase;
     // make sure the directory exists
@@ -447,7 +489,7 @@ public final class ImdbDatabase {
   }
   
   //sometimes the title and/or the original title is "<series name> - <episode name>"
-  // e.g. "Mord auf Shetland - Die Nacht der Raben", "Shetland - Raven Black"
+  // e.g. "Mord auf Shetland - Die Nacht der Raben", "Shetland - Raven Black", "Ein Herz und eine Seele - Frühjahrsputz"
   private String getIdFromTitle(final TitleType titleType, final String title, final int releaseYear) {
 	int delimIndex = 0;
 	
@@ -473,42 +515,42 @@ public final class ImdbDatabase {
 
       // search exact original title
       if((originalTitleName.length() > 0) && addCandidates(getTitleCandidates(titleType, originalTitleName, releaseYear, TYPE_ORIGINAL_NAME, TITLE_NAME))) {
-        return mCandidatesExact.get(0).get(TITLE_ID);
+        return mCandidatesExact.getTitleId();
       }
 	  	  
       // search exact title
       if(addCandidates(getTitleCandidates(titleType, titleName, releaseYear, TYPE_ORIGINAL_NAME, TITLE_NAME))) {
-        return mCandidatesExact.get(0).get(TITLE_ID);
+        return mCandidatesExact.getTitleId();
       }
 
       // search exact title in A.K.A. list
       if (addCandidates(getTitleCandidates(titleType, titleName, releaseYear, TYPE_AKA_NAME, TITLE_NAME))) {
-        return mCandidatesExact.get(0).get(TITLE_ID);
+        return mCandidatesExact.getTitleId();
       }
 
       // search exact original title in A.K.A. list
       if((originalTitleName.length() > 0) && addCandidates(getTitleCandidates(titleType, originalTitleName, releaseYear, TYPE_AKA_NAME, TITLE_NAME))) {
-        return mCandidatesExact.get(0).get(TITLE_ID);
+        return mCandidatesExact.getTitleId();
       }
       
       // search normalized original title
       if((normalisedOriginalTitle.length() > 0) &&  addCandidates(getTitleCandidates(titleType, normalisedOriginalTitle, releaseYear, TYPE_ORIGINAL_NAME, TITLE_NAME_NORMALIZED))) {
-        return mCandidatesExact.get(0).get(TITLE_ID);
+        return mCandidatesExact.getTitleId();
       }
       
       // search normalized title
       if(addCandidates(getTitleCandidates(titleType, normalizedTitle, releaseYear, TYPE_ORIGINAL_NAME, TITLE_NAME_NORMALIZED))) {
-        return mCandidatesExact.get(0).get(TITLE_ID);
+        return mCandidatesExact.getTitleId();
       }
 
       // search normalized title in A.K.A. list
       if (addCandidates(getTitleCandidates(titleType, normalizedTitle, releaseYear, TYPE_AKA_NAME, TITLE_NAME_NORMALIZED))) {
-        return mCandidatesExact.get(0).get(TITLE_ID);
+        return mCandidatesExact.getTitleId();
       }
       
       // search normalized original title in A.K.A. list
       if((normalisedOriginalTitle.length() > 0) &&  addCandidates(getTitleCandidates(titleType, normalisedOriginalTitle, releaseYear, TYPE_AKA_NAME, TITLE_NAME_NORMALIZED))) {
-        return mCandidatesExact.get(0).get(TITLE_ID);
+        return mCandidatesExact.getTitleId();
       }
        
       // and now try with shortened title if there is a common suffix
@@ -517,8 +559,8 @@ public final class ImdbDatabase {
         return titleId;
       }
 
-      if (!mCandidates.isEmpty()) {
-        return mCandidates.get(0).get(TITLE_ID);
+      if (mCandidates.size() == 1) {
+        return mCandidates.getTitleId();
       }
 
       // nothing found yet, so try everything again without year
@@ -626,46 +668,21 @@ public final class ImdbDatabase {
   private ArrayList<String> getTitleIdsOfCandidates() {
 	ArrayList<String> titleIds = new ArrayList<String>();
 
-	for(int i = 0; i < mCandidates.size(); i++) {
-	  if (!titleIds.contains(mCandidates.get(i).get(TITLE_ID))) {
-	    titleIds.add(mCandidates.get(i).get(TITLE_ID));
-	  }
-	}
-
-	for(int i = 0; i < mCandidatesExact.size(); i++) {
-	  if (!titleIds.contains(mCandidatesExact.get(i).get(TITLE_ID))) {
-	    titleIds.add(mCandidatesExact.get(i).get(TITLE_ID));
-	  }
-	}		  
-	  
-	  return titleIds;
-  }
-
-  private ImdbRating getSeriesOrEpisodeRating(final String seriesId, final ArrayList<String> seriesCandidateIds) {
-
-	// search series rating or rating of one of its episodes
-	ImdbRating rating = getRatingForId(seriesId);
-	  
-	if (rating != null) {
-	  return rating;
-	}
-
-	// series rating not found, search a rating of series episode
-	if (seriesCandidateIds.size() == 1) {
-	  ArrayList<String> episodeIdsOfSeries = getEpisodeIds(seriesId);
-
-	  if (episodeIdsOfSeries == null) {
-		return null;
-	  }
-	  for(int epi = 0; epi < episodeIdsOfSeries.size(); epi++) {
-		rating = getRatingForId(episodeIdsOfSeries.get(epi));
-
-		if (rating != null) {
-		  return rating;
+	for(Iterator<String> titleIdIter = mCandidates.getTitleIds(); titleIdIter.hasNext();) {
+		String titleId = titleIdIter.next();
+		if (!titleIds.contains(titleId)) {
+			titleIds.add(titleId);
 		}
-	  }
 	}
-	return null;	  
+
+	for(Iterator<String> titleIdIter = mCandidatesExact.getTitleIds(); titleIdIter.hasNext();) {
+		String titleId = titleIdIter.next();
+		if (!titleIds.contains(titleId)) {
+			titleIds.add(titleId);
+		}
+	}
+		  
+	return titleIds;
   }
   
   public ImdbRating getSeriesRating(final Program program) {
@@ -673,18 +690,10 @@ public final class ImdbDatabase {
 		return null;
 	  }
 
-	  String seriesId = getSeriesTitleId(program, true);
-
-	  // series not found
-	  if (seriesId == null) {
-		  return null;
-	  }
-
-	  ArrayList<String> seriesCandidateIds = getTitleIdsOfCandidates();
+	  String seriesId = getSeriesTitleId(program, false);
 	  
-	  return getSeriesOrEpisodeRating(seriesId, seriesCandidateIds);
+	  return seriesId == null ? null : getRatingForId(seriesId);
   }
-
   
   public ImdbRating getEpisodeRating(final Program program) {
 	  if (!isEpisode(program)) {
@@ -692,21 +701,20 @@ public final class ImdbDatabase {
 	  }
 
 	  String seriesId = getSeriesTitleId(program, true);
+	  ArrayList<String> seriesCandidateIds = getTitleIdsOfCandidates();
 
 	  // series not found - ignore episode
-	  if (seriesId == null) {
+	  if (seriesCandidateIds.size() < 1) {
 		  return null;
 	  }
-	  
-	  ArrayList<String> seriesCandidateIds = getTitleIdsOfCandidates();
-	 
-	  String episodeId = getEpisodeTitleId(program);
-	  
-	  if (episodeId == null) {
-	    return getSeriesOrEpisodeRating(seriesId, seriesCandidateIds);
-	  }
-
+	  	 
+	  getEpisodeTitleId(program);
 	  ArrayList<String> episodeCandidateIds = getTitleIdsOfCandidates();
+	  
+	  if (episodeCandidateIds.size() < 1) {
+		seriesId = getSeriesTitleId(program, false);
+	    return seriesId == null ? null : getRatingForId(seriesId);
+	  }
 	  
 	  for(int s = 0; s < seriesCandidateIds.size(); s++) {
 	    String sId = seriesCandidateIds.get(s);
@@ -724,15 +732,20 @@ public final class ImdbDatabase {
 				
 			if (seId.equals(ecId)) {
 			  ImdbRating rating = getRatingForId(ecId);
-			 			        
-			  return rating == null ? getSeriesOrEpisodeRating(sId, seriesCandidateIds) : rating;
+			  
+			  if (rating != null) {
+				  return rating;
+			  }
+			  seriesId = getSeriesTitleId(program, false);
+			  return seriesId == null ? null : getRatingForId(seriesId);
 			}
 		  }
 	    }
 	  }
 
 	  // episode candidates in series not found - search rating of the series or one of its episodes
-	  return getSeriesOrEpisodeRating(seriesId, seriesCandidateIds);
+	  seriesId = getSeriesTitleId(program, false);
+	  return seriesId == null ? null : getRatingForId(seriesId);
   }
 
   public ImdbRating getRating(final Program program) {
@@ -864,13 +877,14 @@ public final class ImdbDatabase {
         }
       }
     }
-    return !mCandidatesExact.isEmpty();
+
+    return mCandidatesExact.size() == 1 ? true : false;
   }
 
   private void resetCandidates(final int year) {
     mCandidatesYear = year;
-    mCandidates = new ArrayList<Document>();
-    mCandidatesExact = new ArrayList<Document>();
+    mCandidates.reset();
+    mCandidatesExact.reset();
   }
 
   public ImdbTitle getImdbMovie(final String titleId) { 
@@ -947,6 +961,7 @@ public final class ImdbDatabase {
 	  }
   }
   
+  @SuppressWarnings("unused")  
   private String getParentId(final String episodeId) {
     if (!isInitialised() || (episodeId == null)) {
         return episodeId;
