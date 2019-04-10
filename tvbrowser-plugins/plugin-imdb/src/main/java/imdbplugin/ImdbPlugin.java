@@ -73,7 +73,7 @@ public final class ImdbPlugin extends Plugin {
 
   private static final boolean IS_STABLE = false;
 
-  private static final Version mVersion = new Version(1, 12, IS_STABLE);
+  private static final Version mVersion = new Version(1, 13, IS_STABLE);
 
   // Empty Rating for Cache
   private static final ImdbRating DUMMY_RATING = new ImdbRating(0, 0, "");

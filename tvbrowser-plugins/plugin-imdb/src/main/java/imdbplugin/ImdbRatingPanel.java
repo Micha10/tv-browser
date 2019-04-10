@@ -53,7 +53,7 @@ public class ImdbRatingPanel extends JPanel {
 
     JLabel year = new JLabel("(" + Integer.toString(movie.getYear()) + ")");
     year.setFont(year.getFont().deriveFont(20f).deriveFont(Font.BOLD));
-    year.setForeground(new Color(166, 166, 166));
+    // year.setForeground(new Color(166, 166, 166));
     titlePanel.add(year);
 
     layout.appendRow(RowSpec.decode("pref"));

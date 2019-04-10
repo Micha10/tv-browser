@@ -55,11 +55,15 @@ final class RatingDiagram extends JPanel {
     add(mLbRating, cc.xy(1, layout.getRowCount()));
     JLabel label = new JLabel(" " + mLocalizer.msg("of10", "of 10"));
     label.setFont(bigFont);
-    label.setForeground(mLegendBackground);
+    if (mMaxValue > 0) {
+    	label.setForeground(mLegendBackground);
+    }
     add(label, cc.xy(2, layout.getRowCount()));
-    mLbVotes = new JLabel(mLocalizer.msg("votes", "votes", mRating.getVotes()));
+    mLbVotes = new JLabel(" (" + mLocalizer.msg("votes", "votes", mRating.getVotes()) + ")");
     mLbVotes.setFont(bigFont);
-    mLbVotes.setForeground(mLegendBackground);
+    if (mMaxValue > 0) {
+    	mLbVotes.setForeground(mLegendBackground);
+    }
     add(mLbVotes, cc.xy(layout.getColumnCount(), layout.getRowCount()));
     
     if (mMaxValue > 0) {
