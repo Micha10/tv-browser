@@ -89,6 +89,16 @@ public class ImdbRatingPanel extends JPanel {
       layout.appendRow(RowSpec.decode("10dlu"));
     }
 
+    try {
+        layout.appendRow(RowSpec.decode("pref"));
+        String link = "https://www.imdb.com/title/" + URLEncoder.encode(rating.getMovieId(), "ISO-8859-1") + "/";
+        LinkButton imdbLink = new LinkButton(mLocalizer.msg("imdbEntry","IMDb entry"), link);
+        add(imdbLink, cc.xy(1,layout.getRowCount()));
+        layout.appendRow(RowSpec.decode("10dlu"));
+      } catch (UnsupportedEncodingException e) {
+        //ignore
+      }
+    
     ImdbAka[] akas = movie.getAkas();
 
     if (akas.length > 0) {
@@ -124,14 +134,6 @@ public class ImdbRatingPanel extends JPanel {
       akaLabel.setFont(alternativeHead.getFont().deriveFont(12f).deriveFont(Font.PLAIN));
 
       add(akaLabel, cc.xy(1,layout.getRowCount()));
-    }
-    try {
-      layout.appendRow(RowSpec.decode("pref"));
-      String link = "https://www.imdb.com/title/" + URLEncoder.encode(rating.getMovieId(), "ISO-8859-1") + "/";
-      LinkButton imdbLink = new LinkButton(mLocalizer.msg("imdbEntry","IMDb entry"), link);
-      add(imdbLink, cc.xy(1,layout.getRowCount()));
-    } catch (UnsupportedEncodingException e) {
-      //ignore
     }
   }
 }

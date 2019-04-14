@@ -593,20 +593,36 @@ public final class ImdbDatabase {
 	  }
 	
 	  BooleanQuery.Builder  booleanQuery = new BooleanQuery.Builder();
-	
 	  booleanQuery.add(new TermQuery(new Term(ITEM_TYPE, TYPE_RATING)), BooleanClause.Occur.MUST);    
 	  booleanQuery.add(new TermQuery(new Term(TITLE_ID, titleId)), BooleanClause.Occur.MUST);
-	
+		  
 	  try {  				
 		TopDocs topDocs = mSearcher.search(booleanQuery.build(), 1);
 	
 	    if (topDocs.totalHits.value > 0) {
-	      final Document doc = mSearcher.doc(topDocs.scoreDocs[0].doc);
+	      Document doc = mSearcher.doc(topDocs.scoreDocs[0].doc);
 	      byte averageRating = Byte.parseByte(doc.get(AVERAGE_RATING));
 		  int numVotes = Integer.parseInt(doc.get(NUM_VOTES));
-	
-	      return new ImdbRating(averageRating, numVotes, titleId);
+
+		  BooleanQuery.Builder  titleQuery = new BooleanQuery.Builder();
+		  titleQuery.add(new TermQuery(new Term(ITEM_TYPE, TYPE_TITLE)), BooleanClause.Occur.MUST);    
+		  titleQuery.add(new TermQuery(new Term(NAME_TYPE, TYPE_ORIGINAL_NAME)), BooleanClause.Occur.MUST);
+		  titleQuery.add(new TermQuery(new Term(TITLE_ID, titleId)), BooleanClause.Occur.MUST);	  
 		  
+	      topDocs = mSearcher.search(titleQuery.build(), 1);
+		  	
+	  	  if (topDocs.totalHits.value > 0) {
+	  		  doc = mSearcher.doc(topDocs.scoreDocs[0].doc);
+	    	  String dTitleType = doc.get(TITLE_TYPE);
+	    	  Boolean isEpisode = TYPE_EPISODE.equals(dTitleType);
+	    	  
+		      ImdbRating rating = new ImdbRating(averageRating, numVotes, titleId, isEpisode);
+		      
+		      if (isEpisode) {
+		    	  rating.setSeriesId(getSeriesId(titleId));
+		      }
+		      return rating;
+	  	  }
 		}
 	  } catch (IOException e) {
 		e.printStackTrace();
@@ -1033,10 +1049,9 @@ public final class ImdbDatabase {
 	  }
   }
   
-  @SuppressWarnings("unused")  
-  private String getParentId(final String episodeId) {
+  private String getSeriesId(final String episodeId) {
     if (!isInitialised() || (episodeId == null)) {
-        return episodeId;
+        return null;
     }
 
     BooleanQuery.Builder  booleanQuery = new BooleanQuery.Builder();
@@ -1047,18 +1062,16 @@ public final class ImdbDatabase {
 	try {
       final TopDocs topDocs = mSearcher.search(booleanQuery.build(), 1);
 	
-	  if (topDocs.totalHits.value < 1) {
-	    return episodeId;
+	  if (topDocs.totalHits.value > 0) {
+		  ScoreDoc scoreDoc = topDocs.scoreDocs[0];
+		  Document document = mSearcher.doc(scoreDoc.doc);
+	  	  
+		  return document.get(SERIES_ID);
 	  }
-
-	  ScoreDoc scoreDoc = topDocs.scoreDocs[0];
-	  Document document = mSearcher.doc(scoreDoc.doc);
-  	  
-	  return document.get(SERIES_ID);
   	} catch (IOException e) {
       e.printStackTrace();
     }
-    return episodeId;
+    return null;
   }
 
   public ImdbMovie getMovieForId(final String movieId, final String title) {

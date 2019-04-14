@@ -161,7 +161,7 @@ public final class ImdbSettingsTab implements SettingsTab {
   }
 
   public Icon getIcon() {
-    return new ImdbIcon(new ImdbRating(75, 100, ""));
+    return new ImdbIcon(new ImdbRating(75, 100, "", true));
   }
 
   public String getTitle() {

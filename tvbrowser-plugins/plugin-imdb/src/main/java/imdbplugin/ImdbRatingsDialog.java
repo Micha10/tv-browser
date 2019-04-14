@@ -32,22 +32,24 @@ public class ImdbRatingsDialog extends JDialog implements WindowClosingIf {
   private static final Localizer mLocalizer = Localizer.getLocalizerFor(ImdbRatingsDialog.class);
 
   private Program mProgram;
+  private ImdbRating mRating;
 
-  public ImdbRatingsDialog(final JDialog parent, final Program program) {
+  public ImdbRatingsDialog(final JDialog parent, final Program program, final ImdbRating rating) {
     super(parent);
-    initialize(program);
+    initialize(program, rating);
   }
 
-	public ImdbRatingsDialog(final JFrame parent, final Program program) {
-    super(parent);
-    initialize(program);
+	public ImdbRatingsDialog(final JFrame parent, final Program program, final ImdbRating rating) {
+		super(parent);
+    	initialize(program, rating);
 	}
 
-	private void initialize(final Program prog) {
+	private void initialize(final Program prog, final ImdbRating rating) {
 		setModal(true);
-    mProgram = prog;
-    createGui();
-    UiUtilities.registerForClosing(this);
+		mProgram = prog;
+		mRating = rating;
+		createGui();
+		UiUtilities.registerForClosing(this);
 	}
 
   private void createGui() {
@@ -59,32 +61,18 @@ public class ImdbRatingsDialog extends JDialog implements WindowClosingIf {
 
     panel.setBorder(Borders.DLU4_BORDER);
 
-    ImdbRating episodeRating = ImdbPlugin.getInstance().getDatabase().getEpisodeRating(mProgram);
     JComponent mainComponent;
 
-    if (episodeRating != null) {
-    	ImdbRating seriesRating = ImdbPlugin.getInstance().getDatabase().getSeriesRating(mProgram);
-    	
-    	if ((seriesRating != null) && (episodeRating.getMovieId().compareTo(seriesRating.getMovieId()) != 0)) {
-	    	JTabbedPane pane = new JTabbedPane();
-	    	JComponent editor = createEditor(seriesRating, mProgram.getTitle(), mProgram.getTextField(ProgramFieldType.ORIGINAL_TITLE_TYPE));
-			pane.addTab(mLocalizer.msg("rating", "Rating"), editor);
-			editor = createEditor(episodeRating, mProgram.getTextField(ProgramFieldType.EPISODE_TYPE), mProgram.getTextField(ProgramFieldType.ORIGINAL_EPISODE_TYPE));
-	    	pane.addTab(mLocalizer.msg("episodeRating", "Rating of Episode"), editor);
-	    	mainComponent = pane;
-    	}
-    	else {
-    		if (seriesRating != null) {
-    			mainComponent = createEditor(seriesRating, mProgram.getTitle(), mProgram.getTextField(ProgramFieldType.ORIGINAL_TITLE_TYPE));
-    		} else {
-    			ImdbRating rating = ImdbPlugin.getInstance().getRatingFor(mProgram);
-    			mainComponent = createEditor(rating, mProgram.getTitle(), mProgram.getTextField(ProgramFieldType.ORIGINAL_TITLE_TYPE));    			
-    		}
-    	}
-    }
-	else {
-		ImdbRating rating = ImdbPlugin.getInstance().getRatingFor(mProgram);
-		mainComponent = createEditor(rating, mProgram.getTitle(), mProgram.getTextField(ProgramFieldType.ORIGINAL_TITLE_TYPE));
+    if (mRating.isEpisode() && (mRating.getSeriesId() != null) && (mRating.getMovieId().compareTo(mRating.getSeriesId()) != 0)) {
+    	ImdbRating seriesRating = ImdbPlugin.getInstance().getDatabase().getRatingForId(mRating.getSeriesId());
+		JTabbedPane pane = new JTabbedPane();
+		JComponent editor = createEditor(seriesRating, mProgram.getTitle(), mProgram.getTextField(ProgramFieldType.ORIGINAL_TITLE_TYPE));
+		pane.addTab(mLocalizer.msg("rating", "Rating"), editor);
+		editor = createEditor(mRating, mProgram.getTextField(ProgramFieldType.EPISODE_TYPE), mProgram.getTextField(ProgramFieldType.ORIGINAL_EPISODE_TYPE));
+		pane.addTab(mLocalizer.msg("episodeRating", "Rating of Episode"), editor);
+		mainComponent = pane;
+    } else {
+		mainComponent = createEditor(mRating, mProgram.getTitle(), mProgram.getTextField(ProgramFieldType.ORIGINAL_TITLE_TYPE));
 	}
 
     layout.appendRow(RowSpec.decode("fill:min:grow"));

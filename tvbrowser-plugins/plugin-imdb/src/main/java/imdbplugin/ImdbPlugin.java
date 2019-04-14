@@ -73,11 +73,11 @@ public final class ImdbPlugin extends Plugin {
 
   private static final boolean IS_STABLE = false;
 
-  private static final Version mVersion = new Version(1, 13, IS_STABLE);
+  private static final Version mVersion = new Version(1, 14, IS_STABLE);
 
   // Empty Rating for Cache
-  private static final ImdbRating DUMMY_RATING = new ImdbRating(0, 0, "");
-  private static final ImdbRating EXAMPLE_RATING = new ImdbRating(70, 123, "123456789");
+  private static final ImdbRating DUMMY_RATING = new ImdbRating(0, 0, "", false);
+  private static final ImdbRating EXAMPLE_RATING = new ImdbRating(70, 123, "123456789", false);
 
   private static ImdbPlugin instance;
 
@@ -241,11 +241,12 @@ public final class ImdbPlugin extends Plugin {
   private void showRatingDialog(final Program program) {
     Window dlgParent = UiUtilities.getBestDialogParent(getParentFrame());
 		ImdbRatingsDialog dialog;
+		ImdbRating rating = getRatingFor(program);
 		if (dlgParent instanceof JDialog) {
-			dialog = new ImdbRatingsDialog((JDialog) dlgParent, program);
+			dialog = new ImdbRatingsDialog((JDialog) dlgParent, program, rating);
 		}
 		else {
-			dialog = new ImdbRatingsDialog((JFrame) dlgParent, program);
+			dialog = new ImdbRatingsDialog((JFrame) dlgParent, program, rating);
 		}
     UiUtilities.centerAndShow(dialog);
   }
@@ -468,7 +469,7 @@ public final class ImdbPlugin extends Plugin {
       }
 
       public Icon getIcon() {
-        return new ImdbIcon(new ImdbRating(75, 100, ""));
+        return new ImdbIcon(new ImdbRating(75, 100, "", false));
       }
 
       public int getRatingForProgram(final Program p) {

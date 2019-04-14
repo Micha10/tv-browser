@@ -28,16 +28,19 @@ public final class ImdbRating {
   private int mVotes;
   private byte mRating;
   private String mTitleId;
+  private Boolean mIsEpisode;
+  private String mSeriesId = null;
 
-  public ImdbRating(final byte rating, final int votes, final String titleid) {
+  public ImdbRating(final byte rating, final int votes, final String titleid, final Boolean isEpisode) {
     mRating = rating;
     mVotes = votes;
     mDistribution = null;
     mTitleId = titleid;
+    mIsEpisode = isEpisode;
   }
   
-  public ImdbRating(final int rating, final int votes, final String titleid) {
-    this((byte)rating, votes, titleid);
+  public ImdbRating(final int rating, final int votes, final String titleid, final Boolean isEpisode) {
+    this((byte)rating, votes, titleid, isEpisode);
   }
 
   public byte getRating() {
@@ -62,5 +65,17 @@ public final class ImdbRating {
 
   public String getMovieId() {
     return mTitleId;  
+  }
+
+  public void setSeriesId(final String seriesId) {
+	  mSeriesId = seriesId;
+  }
+
+  public String getSeriesId() {
+	    return isEpisode() ? mSeriesId : null;  
+  }
+  
+  public Boolean isEpisode() {
+	    return mIsEpisode;  
   }
 }
