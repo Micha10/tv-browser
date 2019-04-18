@@ -109,7 +109,7 @@ public class TvBrowserDataService extends devplugin.AbstractTvDataService {
   public static final util.ui.Localizer mLocalizer
           = util.ui.Localizer.getLocalizerFor(TvBrowserDataService.class);
 
-  private static final Version VERSION = new Version(3,15,1);
+  private static final Version VERSION = new Version(3,15,2);
 
   protected static final String CHANNEL_GROUPS_FILENAME = "groups.txt";
   private static final String DEFAULT_CHANNEL_GROUPS_URL = "http://defaultdata.tvbrowser.org";
@@ -1144,7 +1144,7 @@ public class TvBrowserDataService extends devplugin.AbstractTvDataService {
     return new Mirror(DEFAULT_CHANNEL_GROUPS_URL);
   }
 
-  protected void downloadChannelGroupFile() throws TvBrowserException {
+  protected synchronized void downloadChannelGroupFile() throws TvBrowserException {
     if(!mGroupFileWasLoaded) {
       Mirror mirror = getChannelGroupsMirror();
       
@@ -1180,11 +1180,11 @@ public class TvBrowserDataService extends devplugin.AbstractTvDataService {
                 groupFileMirrosNew.renameTo(groupFileMirrosOld);
               }
             }
-            else if(fileMd5Hash.isFile()) {
+            else if(groupFileMirrosNew.isFile()) {
               groupFileMirrosNew.delete();
             }
             
-            if(!fileMd5Hash.delete()) {
+            if(fileMd5Hash.isFile() && !fileMd5Hash.delete()) {
               fileMd5Hash.deleteOnExit();
             }
           }
@@ -1213,7 +1213,6 @@ public class TvBrowserDataService extends devplugin.AbstractTvDataService {
           
           if(!channelGroupFileOld.isFile() && downloaded) {
             channelGroupFileNew.renameTo(channelGroupFileOld);
-            mGroupFileWasLoaded = true;
           }
           else if(downloaded) {
             final File fileMd5Hash = new File(channelGroupFileNew.getAbsolutePath() + ".md5");
@@ -1241,15 +1240,12 @@ public class TvBrowserDataService extends devplugin.AbstractTvDataService {
               String md5OfDownload = TvBrowserDataServiceChannelGroup.getMD5Hash(channelGroupFileNew);
               
               if(md5ToHave.length() > 0 && md5OfDownload.length() > 0 && md5ToHave.equals(md5OfDownload)) {
-                if(channelGroupFileOld.isFile()) {
-                  channelGroupFileOld.delete();
+                if(!channelGroupFileOld.isFile() || channelGroupFileOld.delete()) {
+                  channelGroupFileNew.renameTo(channelGroupFileOld);
                 }
-                
-                channelGroupFileNew.renameTo(channelGroupFileOld);
-                mGroupFileWasLoaded = true;
               }
             }
-            else if(fileMd5Hash.isFile()) {
+            else if(channelGroupFileNew.isFile()) {
               channelGroupFileNew.delete();
             }
             
@@ -1289,14 +1285,18 @@ public class TvBrowserDataService extends devplugin.AbstractTvDataService {
     }
   }
 
-  public devplugin.ChannelGroup[] checkForAvailableChannelGroups(ProgressMonitor monitor) throws TvBrowserException {
+  public synchronized devplugin.ChannelGroup[] checkForAvailableChannelGroups(ProgressMonitor monitor) throws TvBrowserException {
     mGroupFileWasLoaded = false;
     downloadChannelGroupFile();
-    refreshAvailableChannelGroups();
+    
+    if(mGroupFileWasLoaded) {
+      refreshAvailableChannelGroups();
+    }
+    
     return getAvailableGroups();
   }
 
-  public Channel[] checkForAvailableChannels(devplugin.ChannelGroup g, ProgressMonitor monitor) throws TvBrowserException {
+  public synchronized Channel[] checkForAvailableChannels(devplugin.ChannelGroup g, ProgressMonitor monitor) throws TvBrowserException {
     mHasRightToDownloadIcons = true;
     downloadChannelGroupFile();
 

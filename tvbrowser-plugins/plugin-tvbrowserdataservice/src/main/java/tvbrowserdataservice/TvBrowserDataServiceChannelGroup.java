@@ -474,11 +474,9 @@ public class TvBrowserDataServiceChannelGroup extends ChannelGroupImpl {
             
             if(toCheckHash == null || (toLoadHash.equals(toCheckHash) && toCheckHash.trim().length() > 0)) {
               // if old file exists delete it first
-              if(file.isFile()) {
-                file.delete();
+              if(!file.isFile() || file.delete()) {
+                toLoad.renameTo(file);
               }
-              
-              toLoad.renameTo(file);
             }
           }
           
@@ -494,15 +492,15 @@ public class TvBrowserDataServiceChannelGroup extends ChannelGroupImpl {
 
   private void updateChannelList(Mirror mirror, boolean forceUpdate) throws TvBrowserException {
     final String fileName = getId() + "_" + ChannelList.FILE_NAME;
-    final File oldFile = new File(mDataDir, fileName);
-    final File file = new File(mDataDir, fileName + ".new");
+    final File fileChannelListOld = new File(mDataDir, fileName);
+    final File fileChannelListNew = new File(mDataDir, fileName + ".new");
     final File fileMd5Hash = new File(mDataDir, fileName + ".md5");
     
-    if (forceUpdate || needsUpdate(oldFile,TYPE_META_DATA_CHANNELS)) {
+    if (forceUpdate || needsUpdate(fileChannelListOld,TYPE_META_DATA_CHANNELS)) {
       String url = mirror.getUrl() + (mirror.getUrl().endsWith("/") ? "" : "/") + fileName;
       
       try {
-        if(IOUtilities.download(new URL(url), file, Plugin.getPluginManager().getTvBrowserSettings().getDefaultNetworkConnectionTimeout())) {
+        if(IOUtilities.download(new URL(url), fileChannelListNew, Plugin.getPluginManager().getTvBrowserSettings().getDefaultNetworkConnectionTimeout())) {
           url += ".md5";
           boolean result = false;
           
@@ -511,22 +509,22 @@ public class TvBrowserDataServiceChannelGroup extends ChannelGroupImpl {
           }catch(Exception ioe) {/*ignore*/}
           
           if(result) {
-            if (file.canRead() && file.length() > 0 && fileMd5Hash.canRead() && fileMd5Hash.length() > 0) {
+            if (fileChannelListNew.canRead() && fileChannelListNew.length() > 0 && fileMd5Hash.canRead() && fileMd5Hash.length() > 0) {
               String serverFileHash = readMd5Hash(fileMd5Hash);
-              String fileHash = getMD5Hash(file);
+              String fileHash = getMD5Hash(fileChannelListNew);
               
-              if(serverFileHash.trim().length() > 0 && serverFileHash.equals(fileHash)) {
+              if(fileHash != null && fileHash.length() > 0 && serverFileHash.trim().length() > 0 && serverFileHash.equals(fileHash)) {
                 // try reading the file
                 devplugin.ChannelGroup group = new devplugin.ChannelGroupImpl(getId(), getName(), null, getProviderName());
                 final ChannelList channelList = new ChannelList(group);
-                channelList.readFromFile(file, mDataService);
+                channelList.readFromFile(fileChannelListNew, mDataService);
                 
                 // ok, we can read it, so use this new file instead of the old
-                if(oldFile.isFile()) {
-                  oldFile.delete();
+                if(fileChannelListOld.isFile()) {
+                  fileChannelListOld.delete();
                 }
                 
-                file.renameTo(oldFile);
+                fileChannelListNew.renameTo(fileChannelListOld);
                 
                 if(fileMd5Hash.isFile() && !fileMd5Hash.delete()) {
                   fileMd5Hash.deleteOnExit();
@@ -536,8 +534,8 @@ public class TvBrowserDataServiceChannelGroup extends ChannelGroupImpl {
                 mAvailableChannelArr = null;
               }
               else {
-                if(file.isFile() && !file.delete()) {
-                  file.deleteOnExit();
+                if(fileChannelListNew.isFile() && !fileChannelListNew.delete()) {
+                  fileChannelListNew.deleteOnExit();
                 }
                 if(fileMd5Hash.isFile() && !fileMd5Hash.delete()) {
                   fileMd5Hash.deleteOnExit();
@@ -545,18 +543,16 @@ public class TvBrowserDataServiceChannelGroup extends ChannelGroupImpl {
               }
             }
             else {
-              if(file.isFile() && !file.delete()) {
-                file.deleteOnExit();
+              if(fileChannelListNew.isFile() && !fileChannelListNew.delete()) {
+                fileChannelListNew.deleteOnExit();
               }
               if(fileMd5Hash.isFile() && !fileMd5Hash.delete()) {
                 fileMd5Hash.deleteOnExit();
               }
             }
           }
-          else {
-            if(file.isFile() && !file.delete()) {
-              file.deleteOnExit();
-            }
+          else if(fileChannelListNew.isFile() && !fileChannelListNew.delete()) {
+            fileChannelListNew.deleteOnExit();
           }
         }
       } catch (Exception exc) {
@@ -582,15 +578,19 @@ public class TvBrowserDataServiceChannelGroup extends ChannelGroupImpl {
 
     if(mirror != null) {
       mLog.info("Using mirror " + mirror.getUrl());
-
-      // Update the mirrorlist (for the next time)
-      updateMetaFile(mirror.getUrl(), getId() + "_" + Mirror.MIRROR_LIST_FILE_NAME);
-
-      // Update the groupname file
-      updateMetaFile(mirror.getUrl(), getId() + "_info");
-
-      // Update the channel list
-      updateChannelList(mirror, true);
+      
+      try {
+        // Update the mirrorlist (for the next time)
+        updateMetaFile(mirror.getUrl(), getId() + "_" + Mirror.MIRROR_LIST_FILE_NAME);
+  
+        // Update the groupname file
+        updateMetaFile(mirror.getUrl(), getId() + "_info");
+  
+        // Update the channel list
+        updateChannelList(mirror, true);
+      }catch(TvBrowserException tvbe) {
+        mLog.log(Level.SEVERE, "Error loading files for group: '"+getId()+"'", tvbe);
+      }
     }
     
     final Channel[] available = getAvailableChannels();
@@ -611,6 +611,11 @@ public class TvBrowserDataServiceChannelGroup extends ChannelGroupImpl {
   public synchronized Channel[] getAvailableChannels() {
     if (mAvailableChannelArr == null) {
       File channelFile = new File(mDataDir, getId() + "_" + ChannelList.FILE_NAME);
+      
+      if (!channelFile.exists()) {
+        channelFile = new File(mDataDir, getId() + "_" + ChannelList.FILE_NAME+".new");
+      }
+      
       if (channelFile.exists()) {
         try {
           devplugin.ChannelGroup group = new devplugin.ChannelGroupImpl(getId(), getName(), null, getProviderName());
@@ -674,7 +679,7 @@ public class TvBrowserDataServiceChannelGroup extends ChannelGroupImpl {
       try {
         in = new BufferedReader(new InputStreamReader(new FileInputStream(md5),"UTF-8"));
         
-        result = in.readLine();
+        result = in.readLine().trim();
         
         if(result.contains(" ")) {
           result = result.substring(0, result.indexOf(" ")).trim();
