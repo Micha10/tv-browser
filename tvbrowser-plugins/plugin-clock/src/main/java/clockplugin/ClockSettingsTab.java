@@ -5,7 +5,6 @@ import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.lang.reflect.Method;
 
 import javax.swing.Icon;
 import javax.swing.JCheckBox;
@@ -90,23 +89,11 @@ public class ClockSettingsTab implements SettingsTab, ActionListener {
       layout.insertRow(y,RowSpec.decode("default"));
       pb.add(mUsePersonaColors, cc.xyw(2, y++, 4));
     }catch(ClassNotFoundException e) {}
+
+    GraphicsDevice device = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
+    GraphicsConfiguration config = device.getDefaultConfiguration();
     
-    boolean showTransparencySelection = false;
-    
-    GraphicsDevice[] devices = GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices();
-    GraphicsConfiguration config = devices[0].getDefaultConfiguration();
-    
-    try {
-      Class<?> awtUtilities = Class.forName("com.sun.awt.AWTUtilities");
-      Method m = awtUtilities.getMethod("isTranslucencyCapable",new Class<?>[] {GraphicsConfiguration.class});
-      
-      showTransparencySelection = (Boolean)m.invoke(awtUtilities, new Object[] {config});      
-    }catch(Exception e) {e.printStackTrace();
-      try {
-        Method m = config.getClass().getMethod("isTranslucencyCapable()",new Class<?>[] {GraphicsConfiguration.class});
-        showTransparencySelection = (Boolean)m.invoke(config,new Object[0]);
-      } catch (Exception e1) {e1.printStackTrace();}
-    }
+    final boolean showTransparencySelection = config.isTranslucencyCapable();
     
     if(showTransparencySelection) {
       layout.insertRow(y,RowSpec.decode("default"));

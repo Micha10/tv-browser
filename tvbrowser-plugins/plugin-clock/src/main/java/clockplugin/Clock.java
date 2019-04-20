@@ -9,9 +9,9 @@ import java.awt.GraphicsConfiguration;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.awt.GridLayout;
+import java.awt.IllegalComponentStateException;
 import java.awt.Point;
 import java.awt.Toolkit;
-import java.awt.Window;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -293,31 +293,21 @@ public class Clock extends JDialog implements Runnable, MouseListener, MouseMoti
    * <p>
    * @param value <code>true</code> if the clock background should be transparent.
    */
+  /**
+   * Sets the if the clock background should be transparent.
+   * Copied from ClockPlugin.
+   * <p>
+   * @param value <code>true</code> if the clock background should be transparent.
+   */
   public void setTransparentBackground(boolean value) {
-    GraphicsDevice[] devices = GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices();
-    GraphicsConfiguration config = devices[0].getDefaultConfiguration();
+    GraphicsDevice device = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
+    GraphicsConfiguration config = device.getDefaultConfiguration();
     
-    try {
-      Class<?> awtUtilities = Class.forName("com.sun.awt.AWTUtilities");
-      Method m = awtUtilities.getMethod("isTranslucencyCapable",new Class<?>[] {GraphicsConfiguration.class});
-      
-      if((Boolean)m.invoke(awtUtilities, new Object[] {config})) {
-        m = awtUtilities.getMethod("setWindowOpaque",new Class<?>[] {Window.class,boolean.class});
-        m.invoke(awtUtilities, new Object[] {this,!value});
-        mTimePanel.setOpaque(!value);
-      }
-    } catch (Exception e) {e.printStackTrace();
-      
-      
+    if(config.isTranslucencyCapable()) {
       try {
-        Method m = config.getClass().getMethod("isTranslucencyCapable()",new Class<?>[] {GraphicsConfiguration.class});
-        
-        if((Boolean)m.invoke(config,new Object[0])) {
-          m = this.getClass().getMethod("setOpacity",new Class<?>[] {float.class});
-          m.invoke(this,new Object[] {(float)(value ? 0 : 1)});
-          mTimePanel.setOpaque(!value);
-        }
-      } catch (Exception e1) {}
-    }    
+        setOpacity((float)(value ? 0 : 1));
+        mTimePanel.setOpaque(!value);
+      }catch(IllegalComponentStateException e) {}
+    }
   }
 }

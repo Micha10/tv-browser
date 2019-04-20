@@ -55,7 +55,7 @@ public class ClockPlugin extends Plugin {
   private Timer mButtonUpdateTimer;
   private ClockIcon mTimeIcon;
 
-  private static final Version mVersion = new Version(1, 81, 7, true);
+  private static final Version mVersion = new Version(1, 81, 8, true);
 
   /** The localizer for this class. */
   public static final util.ui.Localizer mLocalizer = util.ui.Localizer.getLocalizerFor(ClockPlugin.class);
