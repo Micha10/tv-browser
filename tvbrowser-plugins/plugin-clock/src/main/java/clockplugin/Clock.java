@@ -12,6 +12,7 @@ import java.awt.GridLayout;
 import java.awt.IllegalComponentStateException;
 import java.awt.Point;
 import java.awt.Toolkit;
+import java.awt.GraphicsDevice.WindowTranslucency;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -145,6 +146,7 @@ public class Clock extends JDialog implements Runnable, MouseListener, MouseMoti
       }
     };
     mTime.setFont(f);
+    mTime.setOpaque(false);
     mTime.addMouseListener(this);
     mTimeFormat = new SimpleDateFormat(ClockPlugin.getInstance().getTimePattern().replace("mm", "mm:ss"));
     mTime.addMouseMotionListener(this);
@@ -305,8 +307,17 @@ public class Clock extends JDialog implements Runnable, MouseListener, MouseMoti
     
     if(config.isTranslucencyCapable()) {
       try {
-        setOpacity((float)(value ? 0 : 1));
-        mTimePanel.setOpaque(!value);
+    	if(value) {
+	      setBackground(new Color(0,0,0,0));
+	      mTimePanel.setOpaque(false);
+	      mTimePanel.setBorder(BorderFactory.createEmptyBorder());
+    	}
+    	else {
+    	  mTimePanel.setOpaque(true);
+    	  if (ClockPlugin.getInstance().getShowBorder()) {
+    		mTimePanel.setBorder(BorderFactory.createEtchedBorder());
+          }
+    	}
       }catch(IllegalComponentStateException e) {}
     }
   }
