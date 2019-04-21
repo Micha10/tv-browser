@@ -5,14 +5,8 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
-import java.awt.GraphicsConfiguration;
-import java.awt.GraphicsDevice;
-import java.awt.GraphicsEnvironment;
-import java.awt.GridLayout;
-import java.awt.IllegalComponentStateException;
 import java.awt.Point;
 import java.awt.Toolkit;
-import java.awt.GraphicsDevice.WindowTranslucency;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -27,6 +21,7 @@ import javax.swing.BoxLayout;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
 
 /**
@@ -84,13 +79,19 @@ public class Clock extends JDialog implements Runnable, MouseListener, MouseMoti
 
     mProperties.setProperty("oldFontSize", fontsize + "");
 
-    mTimePanel = new JPanel();
+    mTimePanel = new JPanel() {
+      @Override
+      protected void paintComponent(Graphics g) {
+        g.clearRect(0, 0, getWidth(), getHeight());
+        super.paintComponent(g);
+      }
+    };
     if (ClockPlugin.getInstance().getShowBorder()) {
       mTimePanel.setBorder(BorderFactory.createEtchedBorder());
     }
     mTimePanel.addMouseListener(this);
     mTimePanel.addMouseMotionListener(this);
-    mTimePanel.setLayout(new GridLayout());
+    mTimePanel.setLayout(new BoxLayout(mTimePanel, BoxLayout.X_AXIS));
     
     mTime = new JLabel() {
       private Object mPersonaObj = new String();
@@ -150,19 +151,20 @@ public class Clock extends JDialog implements Runnable, MouseListener, MouseMoti
     mTime.addMouseListener(this);
     mTimeFormat = new SimpleDateFormat(ClockPlugin.getInstance().getTimePattern().replace("mm", "mm:ss"));
     mTime.addMouseMotionListener(this);
+    mTimePanel.add(Box.createHorizontalGlue());
     mTimePanel.add(mTime);
+    mTimePanel.add(Box.createHorizontalGlue());
+    mTimePanel.setBackground(new Color(0,0,0,0));
+    mTimePanel.setOpaque(false);
 
     int xPos = Integer.parseInt(config.getProperty("xPos", "-1000"));
     int yPos = Integer.parseInt(config.getProperty("yPos", "-1000"));
     int width = Integer.parseInt(config.getProperty("xWidth", "-1000"));
     int height = Integer.parseInt(config.getProperty("yHeight", "-1000"));
     
-    this.getContentPane().setLayout(new BoxLayout(this.getContentPane(),BoxLayout.X_AXIS));
-    this.getContentPane().add(Box.createHorizontalGlue());
-    this.getContentPane().add(mTimePanel);
-    this.getContentPane().addMouseListener(this);
-    this.getContentPane().addMouseMotionListener(this);
+    setContentPane(mTimePanel);
     this.setUndecorated(true);
+    setTransparentBackground(true);
     this.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
     mTime.setText(mTimeFormat.format(new Date(System.currentTimeMillis())));
     ((JPanel)getContentPane()).setOpaque(false);
@@ -302,23 +304,23 @@ public class Clock extends JDialog implements Runnable, MouseListener, MouseMoti
    * @param value <code>true</code> if the clock background should be transparent.
    */
   public void setTransparentBackground(boolean value) {
-    GraphicsDevice device = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
-    GraphicsConfiguration config = device.getDefaultConfiguration();
+    final Color back = getBackground();
     
-    if(config.isTranslucencyCapable()) {
-      try {
-    	if(value) {
-	      setBackground(new Color(0,0,0,0));
-	      mTimePanel.setOpaque(false);
-	      mTimePanel.setBorder(BorderFactory.createEmptyBorder());
-    	}
-    	else {
-    	  mTimePanel.setOpaque(true);
-    	  if (ClockPlugin.getInstance().getShowBorder()) {
-    		mTimePanel.setBorder(BorderFactory.createEtchedBorder());
-          }
-    	}
-      }catch(IllegalComponentStateException e) {}
-    }
+  	if(value) {
+  	  setBackground(new Color(back.getRed(),back.getGreen(),back.getBlue(),0));
+  	  
+  	  if (ClockPlugin.getInstance().getShowBorder()) {
+  	    mTimePanel.setBorder(BorderFactory.createEmptyBorder(1,1,1,1));
+  	  }
+  	}
+  	else {
+  	  setBackground(new Color(back.getRed(),back.getGreen(),back.getBlue(),255));
+  	  
+  	  if (ClockPlugin.getInstance().getShowBorder()) {
+  		  mTimePanel.setBorder(BorderFactory.createEtchedBorder());
+      }
+  	}
+  
+    SwingUtilities.getWindowAncestor(this).repaint();
   }
 }

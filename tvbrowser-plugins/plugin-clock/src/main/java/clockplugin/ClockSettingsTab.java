@@ -1,8 +1,5 @@
 package clockplugin;
 
-import java.awt.GraphicsConfiguration;
-import java.awt.GraphicsDevice;
-import java.awt.GraphicsEnvironment;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -90,15 +87,8 @@ public class ClockSettingsTab implements SettingsTab, ActionListener {
       pb.add(mUsePersonaColors, cc.xyw(2, y++, 4));
     }catch(ClassNotFoundException e) {}
 
-    GraphicsDevice device = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
-    GraphicsConfiguration config = device.getDefaultConfiguration();
-    
-    final boolean showTransparencySelection = config.isTranslucencyCapable();
-    
-    if(showTransparencySelection) {
-      layout.insertRow(y,RowSpec.decode("default"));
-      pb.add(mUseTransparency, cc.xyw(2, y++, 4));
-    }
+    layout.insertRow(y,RowSpec.decode("default"));
+    pb.add(mUseTransparency, cc.xyw(2, y++, 4));
     
     mLabel = pb.addLabel(mLocalizer.msg("desc",
         "Duration of showing the clock in seconds")
