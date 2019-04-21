@@ -29,16 +29,13 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.GraphicsConfiguration;
-import java.awt.GraphicsDevice;
-import java.awt.GraphicsEnvironment;
-import java.awt.IllegalComponentStateException;
 import java.awt.Image;
 import java.awt.RenderingHints;
+import java.io.File;
 import java.io.IOException;
 
+import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
-import javax.swing.JPanel;
 import javax.swing.JWindow;
 import javax.swing.SwingUtilities;
 
@@ -79,8 +76,21 @@ public class SplashScreen implements Splash {
     if(mSplashScreen == null) {
       try {
         byte[] image = IOUtilities.loadFileFromJar("splash.png", SplashScreen.class);
-        mImage = new ImageIcon(image).getImage();
+        
+        if(image != null) {
+          mImage = new ImageIcon(image).getImage();
+        }
       }catch(IOException ioe) {}
+      
+      if(mImage == null) {
+        try {
+          final File splash = new File("imgs/splash.png");
+          
+          if(splash.isFile()) {
+            mImage = ImageIO.read(splash);
+          }
+        }catch(IOException ioe) {}
+      }
       
       if(mImage != null) {
         mSplashWindow = new JWindow() {
@@ -95,10 +105,7 @@ public class SplashScreen implements Splash {
           }
         };
         mSplashWindow.setSize(mImage.getWidth(null),mImage.getHeight(null));
-        
-        setTransparentBackground(true);
-        ((JPanel)mSplashWindow.getContentPane()).setOpaque(false);
-        ((JPanel)mSplashWindow.getContentPane()).setBackground(new Color(0,0,0,0));
+        mSplashWindow.setBackground(new Color(0,0,0,0));
       }
     }
   }
@@ -219,22 +226,5 @@ public class SplashScreen implements Splash {
     };
     thread.setPriority(Thread.NORM_PRIORITY);
     thread.start();
-  }
-  
-  /**
-   * Sets the if the clock background should be transparent.
-   * Copied from ClockPlugin.
-   * <p>
-   * @param value <code>true</code> if the clock background should be transparent.
-   */
-  public void setTransparentBackground(boolean value) {
-    GraphicsDevice[] devices = GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices();
-    GraphicsConfiguration config = devices[0].getDefaultConfiguration();
-    
-    if(config.isTranslucencyCapable()) {
-    	try {
-    		mSplashWindow.setOpacity((float)(value ? 0 : 1));
-    	}catch(IllegalComponentStateException e) {}
-    }
   }
 }
