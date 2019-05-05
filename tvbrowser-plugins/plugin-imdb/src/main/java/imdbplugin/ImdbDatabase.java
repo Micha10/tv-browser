@@ -561,7 +561,7 @@ public final class ImdbDatabase {
 	  return null;
   }
 
-  private int getReleaseYear(final Program program) {
+  public int getReleaseYear(final Program program) {
 	  int releaseYear = program.getIntField(ProgramFieldType.PRODUCTION_YEAR_TYPE);
 	  
 	  if (releaseYear > 0) {
@@ -702,7 +702,7 @@ public final class ImdbDatabase {
 
   // sometimes the title is "<series> - <episode>" or "<series>: <episode>"
   private ImdbRating searchEpisodeInTitle(final Program program) {
-	  int releaseYeaer = getReleaseYear(program);
+	  int releaseYear = getReleaseYear(program);
 
 	  for(int i = 0; i < episodesDelimiter.length; i++) {
 		  String possibleSeriesTitle = getSeriesPartOfTitle(program.getTitle(), episodesDelimiter[i]); 
@@ -712,11 +712,45 @@ public final class ImdbDatabase {
 	  
 
 		  if (((possibleSeriesTitle != null) && (possibleEpisodeTitle != null)) || ((possibleSeriesOriginalTitle != null) && (possibleEpisodeOriginalTitle != null))) {
-			  return getEpisodeRating(possibleSeriesTitle, possibleEpisodeTitle, possibleSeriesOriginalTitle, possibleEpisodeOriginalTitle, releaseYeaer);
+			  return getEpisodeRating(possibleSeriesTitle, possibleEpisodeTitle, possibleSeriesOriginalTitle, possibleEpisodeOriginalTitle, releaseYear);
 		  }
 	  }
 
 	  return null;
+  }
+
+  private String getTitlePart(final Program program, final boolean seriesTitle) {
+	  int releaseYear = getReleaseYear(program);
+
+	  for(int i = 0; i < episodesDelimiter.length; i++) {
+		  String possibleSeriesTitle = getSeriesPartOfTitle(program.getTitle(), episodesDelimiter[i]); 
+		  String possibleEpisodeTitle = getEpisodesPartOfTitle(program.getTitle(), episodesDelimiter[i]);
+		  String possibleSeriesOriginalTitle = getSeriesPartOfTitle(program.getTextField(ProgramFieldType.ORIGINAL_TITLE_TYPE), episodesDelimiter[i]);
+		  String possibleEpisodeOriginalTitle = getEpisodesPartOfTitle(program.getTextField(ProgramFieldType.ORIGINAL_TITLE_TYPE), episodesDelimiter[i]);
+	  
+
+		  if (((possibleSeriesTitle != null) && (possibleEpisodeTitle != null)) || ((possibleSeriesOriginalTitle != null) && (possibleEpisodeOriginalTitle != null))) {
+			  ImdbRating rating = getEpisodeRating(possibleSeriesTitle, possibleEpisodeTitle, possibleSeriesOriginalTitle, possibleEpisodeOriginalTitle, releaseYear);
+			  
+			  if (rating == null) {
+				  return null;
+			  }
+			  if (seriesTitle) {
+				  return (possibleSeriesTitle != null) && (possibleSeriesTitle.length() > 0) ? possibleSeriesTitle : possibleSeriesOriginalTitle;
+			  } else {
+				  return (possibleEpisodeTitle != null) && (possibleEpisodeTitle.length() > 0) ? possibleEpisodeTitle : possibleEpisodeOriginalTitle;				  
+			  }
+		  }
+	  }
+	  return null;
+  }
+  
+  public String getSeriesFromTitle(final Program program) {
+	  return getTitlePart(program, true); 
+  }
+
+  public String getEpisodeFromTitle(final Program program) {
+	  return getTitlePart(program, false); 
   }
   
   private String getSeriesTitleId(final Program program, boolean ignoreReleaseYear) {
@@ -1101,14 +1135,8 @@ public final class ImdbDatabase {
           releaseYear = Integer.parseInt(document.get(RELEASE_YEAR));
       }
       movie.setYear(releaseYear);
-      if (title == null) {
-          movie.setTitle(document.get(TITLE_NAME));
-      } else {
-          movie.setTitle(title);
-          if (title.compareTo(document.get(TITLE_NAME)) != 0) {
-        	  movie.addAka(new ImdbAka(document.get(TITLE_NAME), "", releaseYear));	
-          }
-      }
+      movie.setTitle(title == null ? document.get(TITLE_NAME) : title);
+      movie.setOriginalTitle(document.get(TITLE_NAME));
 
 	  BooleanQuery.Builder  akaQuery = new BooleanQuery.Builder();
   	
@@ -1123,8 +1151,8 @@ public final class ImdbDatabase {
 	    if (scoreDoc != null) {
 	      document = mSearcher.doc(scoreDoc.doc);
 	      
-          if ( movie.getTitle().compareTo(document.get(TITLE_NAME)) != 0) {
-    	      movie.addAka(new ImdbAka(document.get(TITLE_NAME), "", releaseYear));	    	  
+          if (movie.getTitle().compareTo(document.get(TITLE_NAME)) != 0) {
+    	      movie.addAka(new ImdbAka(document.get(TITLE_NAME), releaseYear));	    	  
           }	      
 	    }
 	  }

@@ -64,15 +64,24 @@ public class ImdbRatingsDialog extends JDialog implements WindowClosingIf {
     JComponent mainComponent;
 
     if (mRating.isEpisode() && (mRating.getSeriesId() != null) && (mRating.getMovieId().compareTo(mRating.getSeriesId()) != 0)) {
+    	String seriesTitle = mProgram.getTitle();
+    	String episodeTitle = mProgram.getTextField(ProgramFieldType.EPISODE_TYPE);
+    	
+    	//sometimes the title and/or the original title is "<series name> - <episode name>"
+    	if ((episodeTitle == null) || (episodeTitle.length() < 1)) {
+    		seriesTitle = ImdbPlugin.getInstance().getDatabase().getSeriesFromTitle(mProgram);
+    		episodeTitle = ImdbPlugin.getInstance().getDatabase().getEpisodeFromTitle(mProgram);
+    	}
+    	
     	ImdbRating seriesRating = ImdbPlugin.getInstance().getDatabase().getRatingForId(mRating.getSeriesId());
 		JTabbedPane pane = new JTabbedPane();
-		JComponent editor = createEditor(seriesRating, mProgram.getTitle(), mProgram.getTextField(ProgramFieldType.ORIGINAL_TITLE_TYPE));
-		pane.addTab(mLocalizer.msg("rating", "Rating"), editor);
-		editor = createEditor(mRating, mProgram.getTextField(ProgramFieldType.EPISODE_TYPE), mProgram.getTextField(ProgramFieldType.ORIGINAL_EPISODE_TYPE));
+		JComponent editor = createEditor(seriesRating, seriesTitle, -1);
+		pane.addTab(mLocalizer.msg("seriesRating", "Rating of Series"), editor);
+		editor = createEditor(mRating, episodeTitle, ImdbPlugin.getInstance().getDatabase().getReleaseYear(mProgram));
 		pane.addTab(mLocalizer.msg("episodeRating", "Rating of Episode"), editor);
 		mainComponent = pane;
     } else {
-		mainComponent = createEditor(mRating, mProgram.getTitle(), mProgram.getTextField(ProgramFieldType.ORIGINAL_TITLE_TYPE));
+		mainComponent = createEditor(mRating, mProgram.getTitle(), ImdbPlugin.getInstance().getDatabase().getReleaseYear(mProgram));
 	}
 
     layout.appendRow(RowSpec.decode("fill:min:grow"));
@@ -100,8 +109,8 @@ public class ImdbRatingsDialog extends JDialog implements WindowClosingIf {
     okButton.requestFocusInWindow();
   }
 
-	private JComponent createEditor(final ImdbRating rating, final String title, final String origTitle) {
-    return new JScrollPane(new ImdbRatingPanel(ImdbPlugin.getInstance().getDatabase().getMovieForId(rating.getMovieId(), (title != null) && (title.length() > 0) ? title : origTitle), rating));
+	private JComponent createEditor(final ImdbRating rating, final String title, final int releaseYear) {
+	  return new JScrollPane(new ImdbRatingPanel(ImdbPlugin.getInstance().getDatabase().getMovieForId(rating.getMovieId(), title), rating, releaseYear));
 	}
 
   public void close() {

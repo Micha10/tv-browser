@@ -26,10 +26,12 @@ public class ImdbRatingPanel extends JPanel {
 
   private ImdbRating rating;
   private ImdbMovie movie;
+  private int releaseYear;
 
-  public ImdbRatingPanel(final ImdbMovie movie, final ImdbRating rating) {
+  public ImdbRatingPanel(final ImdbMovie movie, final ImdbRating rating, final int releaseYear) {
     this.rating = rating;
     this.movie = movie;
+    this.releaseYear = releaseYear > 0 ? releaseYear : movie.getYear();
     createGui();
   }
 
@@ -51,27 +53,13 @@ public class ImdbRatingPanel extends JPanel {
     title.setForeground(Color.BLACK);
     titlePanel.add(title);
 
-    JLabel year = new JLabel("(" + Integer.toString(movie.getYear()) + ")");
+    JLabel year = new JLabel("(" + Integer.toString(releaseYear) + ")");
     year.setFont(year.getFont().deriveFont(20f).deriveFont(Font.BOLD));
     // year.setForeground(new Color(166, 166, 166));
     titlePanel.add(year);
 
     layout.appendRow(RowSpec.decode("pref"));
     add(titlePanel, cc.xy(1,layout.getRowCount()));
-
-    if (movie.getEpisode() != null && movie.getEpisode().length() > 0) {
-      layout.appendRow(RowSpec.decode("pref"));
-
-      JLabel episode = new JLabel(movie.getEpisode());
-      episode.setFont(year.getFont().deriveFont(18f).deriveFont(Font.PLAIN));
-      episode.setForeground(new Color(166, 166, 166));
-
-      JPanel episodePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-      episodePanel.setBackground(Color.WHITE);
-      episodePanel.add(episode);
-
-      add(episodePanel, cc.xy(1,layout.getRowCount()));
-    }
     layout.appendRow(RowSpec.decode("3dlu"));
 
     layout.appendRow(RowSpec.decode("pref"));
@@ -99,12 +87,33 @@ public class ImdbRatingPanel extends JPanel {
         //ignore
       }
     
+    // originalTitle - original title, in the original language
+    if (movie.getOriginalTitle() != null) {
+	    layout.appendRow(RowSpec.decode("pref"));
+	    JLabel originalTitle = new JLabel(mLocalizer.msg("originalTitle", "Original Title") + ":");
+	    originalTitle.setToolTipText(mLocalizer.msg("originalTitleToolTip", "Original title, in the original language."));    
+	    originalTitle.setForeground(Color.black);
+	    originalTitle.setFont(originalTitle.getFont().deriveFont(Font.BOLD));
+	    add(originalTitle, cc.xy(1,layout.getRowCount()));
+	    layout.appendRow(RowSpec.decode("3dlu"));
+	
+	    layout.appendRow(RowSpec.decode("pref"));
+	    JTextArea originalLabel = new JTextArea(movie.getOriginalTitle() + " (" + movie.getYear() + ")");
+	    originalLabel.setEditable(false);
+	    originalLabel.setBackground(Color.WHITE);
+	    originalLabel.setForeground(Color.BLACK);
+	    originalLabel.setFont(originalTitle.getFont().deriveFont(12f).deriveFont(Font.PLAIN));
+	    add(originalLabel, cc.xy(1,layout.getRowCount()));
+	    layout.appendRow(RowSpec.decode("3dlu"));
+    }
+    
     ImdbAka[] akas = movie.getAkas();
 
     if (akas.length > 0) {
       layout.appendRow(RowSpec.decode("pref"));
 
-      JLabel alternativeHead = new JLabel(mLocalizer.msg("alternativeTitle","Alternative Titles") + ":");
+      JLabel alternativeHead = new JLabel(mLocalizer.msg("alternativeTitle", "Alternative Titles") + ":");
+      alternativeHead.setToolTipText(mLocalizer.msg("alternativeTitleToolTip", "The localized titles."));    
       alternativeHead.setForeground(Color.black);
       alternativeHead.setFont(alternativeHead.getFont().deriveFont(Font.BOLD));
 
@@ -119,12 +128,7 @@ public class ImdbRatingPanel extends JPanel {
         if (akaString.length() > 0) {
           akaString.append(",\n");
         }
-        akaString.append(aka.getTitle());
-        akaString.append(" (");
-        if (aka.getEpisode() != null && aka.getEpisode().length() > 0) {
-          akaString.append(aka.getEpisode()).append(", ");
-        }
-        akaString.append(aka.getYear()).append(")");
+        akaString.append(aka.getTitle() + " (" + aka.getYear() + ")");
       }
 
       JTextArea akaLabel = new JTextArea(akaString.toString());

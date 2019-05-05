@@ -6,8 +6,8 @@ import java.util.HashSet;
 
 public class ImdbMovie {
   private String title;
+  private String originalTitle;
   private int year;
-  private String episode;
   private HashSet<ImdbAka> akaList = new HashSet<ImdbAka>();
  
   public void setTitle(String title) {
@@ -18,20 +18,20 @@ public class ImdbMovie {
     return title;
   }
 
+  public void setOriginalTitle(String originalTitle) {
+	this.originalTitle = originalTitle;
+  }
+
+  public String getOriginalTitle() {
+   return originalTitle;
+  }
+  
   public void setYear(int year) {
     this.year = year;
   }
 
   public int getYear() {
     return year;
-  }
-
-  public void setEpisode(String episode) {
-    this.episode = episode;
-  }
-
-  public String getEpisode() {
-    return episode;
   }
 
   public void addAka(ImdbAka imdbAka) {

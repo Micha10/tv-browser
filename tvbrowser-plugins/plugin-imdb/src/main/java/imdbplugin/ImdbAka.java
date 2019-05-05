@@ -1,22 +1,16 @@
 package imdbplugin;
 
 public class ImdbAka {
-  private String title;
-  private String episode;
+  private String akaTitle;
   private int year;
 
-  public ImdbAka(String title, String episode, int year) {
-    this.title = title;  
-    this.episode = episode;
+  public ImdbAka(String title, int year) {
+    this.akaTitle = title;  
     this.year = year;
   }
 
   public String getTitle() {
-    return title;
-  }
-
-  public String getEpisode() {
-    return episode;
+    return akaTitle;
   }
 
   public int getYear() {
@@ -38,13 +32,7 @@ public class ImdbAka {
     if (year != otherAka.year) {
       return false;
     }
-    if (!title.equalsIgnoreCase(otherAka.title)) {
-      return false;
-    }
-    if ((episode == null) != (otherAka.episode == null)) {
-      return false;
-    }
-    if (episode != null && !episode.equalsIgnoreCase(otherAka.episode)) {
+    if (!akaTitle.equalsIgnoreCase(otherAka.akaTitle)) {
       return false;
     }
     return true;
@@ -52,10 +40,8 @@ public class ImdbAka {
   
   @Override
   public int hashCode() {
-    int hash = title.hashCode() + year;
-    if (episode != null) {
-      hash += episode.hashCode();
-    }
+    int hash = akaTitle.hashCode() + year;
+
     return hash;
   }
 }
