@@ -58,6 +58,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
+import java.util.Properties;
 import java.util.TimeZone;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.logging.Formatter;
@@ -292,7 +293,7 @@ public class TVBrowser {
   /**
    * restart functionality
    */
-  private static String[] restartCMD = null;
+  private static String[] RESTART_CMD = null;
   
   /**
    * Entry point of the application
@@ -367,9 +368,8 @@ public class TVBrowser {
       }
     }
     
-    restartCMD = generateRestartCMD();
+    RESTART_CMD = generateRestartCMD();
     
-
     // Load the settings
     Settings.loadSettings();
     Locale.setDefault(new Locale(Settings.propLanguage.getString(), Settings.propCountry.getString()));
@@ -422,6 +422,7 @@ public class TVBrowser {
     if (timezone != null) {
       TimeZone.setDefault(TimeZone.getTimeZone(timezone));
     }
+    
     mLog.info("Using timezone "+TimeZone.getDefault().getDisplayName());
 
     // refresh the localizers because we know the language now
@@ -779,10 +780,20 @@ public class TVBrowser {
 		final String SUN_JAVA_COMMAND = "sun.java.command";
 		// init the command to execute, add the vm args
 		final List<String> cmd = new ArrayList<String>();
+		
 		// java binary
 		String java = System.getProperty("java.home");
-		if (java==null) return null;
-		java = java.concat("/bin/java");
+		
+		if(java == null) { 
+			return null;
+		}
+		
+		if(Launch.getOs() == Launch.OS_WINDOWS) {
+			java = java.concat("\\bin\\javaw");
+		}
+		else {
+			java = java.concat("/bin/java");
+		}
 		cmd.add(java);
 		
 		boolean splash = false;
@@ -802,13 +813,14 @@ public class TVBrowser {
 
 		// program main and program arguments
 		if (System.getProperty(SUN_JAVA_COMMAND) == null) return null;
+		
 		String[] mainCommand = System.getProperty(SUN_JAVA_COMMAND).split(" ");
 		// program main is a jar
-		StringBuilder sb = new StringBuilder(mainCommand[0]);
-		int mainCommandSize;
+		//StringBuilder sb = new StringBuilder(mainCommand[0]);
+/*		int mainCommandSize;
 		for (mainCommandSize=1; mainCommandSize < mainCommand.length && !mainCommand[mainCommandSize-1].endsWith(".jar"); mainCommandSize++) {
 		  sb.append(' ').append(mainCommand[mainCommandSize]);
-		}
+		}*/
 		/*String jarFile = sb.toString();
 		if (jarFile.endsWith(".jar")) {
 			// if it's a jar, add -jar mainJar
@@ -827,11 +839,11 @@ public class TVBrowser {
 		    
 			cmd.add("-m");
 			cmd.add(mainCommand[0]);
-	    mainCommandSize = 1;
+	/*    mainCommandSize = 1;
 		//}
     for (int i= mainCommandSize; i < mainCommand.length; i++) {
       cmd.add(mainCommand[i]);
-    }
+    }*/
 		// finally add program arguments		
 		String[] cmdarr = new String[cmd.size()];
 		for(int i=0;i<cmd.size();++i){
@@ -847,7 +859,7 @@ public class TVBrowser {
   }
   
   public static boolean restartEnabled(){
-	  return (restartCMD!=null);
+	  return (RESTART_CMD!=null);
   }
   
 	public static void addRestart() {
@@ -858,7 +870,7 @@ public class TVBrowser {
 				public void run() {
 					try {
 						Thread.sleep(250);
-						Runtime.getRuntime().exec(restartCMD);
+						Runtime.getRuntime().exec(RESTART_CMD);
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
