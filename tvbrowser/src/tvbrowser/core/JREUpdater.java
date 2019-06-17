@@ -80,6 +80,8 @@ public class JREUpdater {
 							boolean update = false;
 							
 							for(int i = 0; i < Math.min(cParts.length, sParts.length); i++) {
+								System.out.println(cParts[i] + "," +sParts[i]);
+								
 								if(Integer.parseInt(cParts[i]) < Integer.parseInt(sParts[i])) {
 									update = true;
 									break;
@@ -93,7 +95,7 @@ public class JREUpdater {
 								final File target = new File(Settings.getUserSettingsDirName(),"tvbrowser-jre_"+parts[0]+"_win"+System.getProperty("sun.arch.data.model")+".exe");
 								
 								if(!target.isFile()) {
-									IOUtilities.download(new java.net.URL(downloadUrl), target);
+									IOUtilities.download(new java.net.URL(downloadUrl), target, 30000);
 								}
 								
 								if(target.isFile()) {
@@ -123,7 +125,7 @@ public class JREUpdater {
 			}
 		}
 		else {
-		  File[] installer = new File(Settings.getUserSettingsDirName()).listFiles((f) -> {return f.getName().toLowerCase().endsWith(".exe") && f.getName().contains("tvbrowser-jre");});
+		  final File[] installer = new File(Settings.getUserSettingsDirName()).listFiles((f) -> {return f.getName().toLowerCase().endsWith(".exe") && f.getName().contains("tvbrowser-jre");});
 		  
 		  if(installer != null) {
 		    for(File file : installer) {

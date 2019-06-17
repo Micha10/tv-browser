@@ -38,6 +38,7 @@ import java.util.Properties;
 import java.util.logging.Logger;
 
 import tvbrowser.TVBrowser;
+import util.io.PropertiesSorted;
 import util.io.stream.OutputStreamProcessor;
 import util.io.stream.StreamUtilities;
 
@@ -51,14 +52,14 @@ public class PropertyManager {
   private static final Logger mLog
     = Logger.getLogger(PropertyManager.class.getName());
   
-  private Properties mProperties;
+  private PropertiesSorted mProperties;
   private HashMap<String, Property> mPropertyHash;
   private HashSet<String> mChangedKeySet;
   
   
   
   public PropertyManager() {
-    mProperties = new Properties();
+    mProperties = new PropertiesSorted();
     mPropertyHash = new HashMap<String, Property>();
     mChangedKeySet = new HashSet<String>();
     

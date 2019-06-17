@@ -32,6 +32,8 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Enumeration;
 import java.util.Properties;
+import java.util.Set;
+import java.util.TreeSet;
 import java.util.Vector;
 
 /**
@@ -46,7 +48,14 @@ public class PropertiesSorted extends Properties {
 		public int compare(Object o1, Object o2) {
 			return String.valueOf(o1).compareToIgnoreCase(String.valueOf(o2));
 		}
-	}; 
+	};
+	
+	private static final Comparator<java.util.Map.Entry<Object, Object>> COMPARATOR_ENTRIES = new Comparator<>() {
+		@Override
+		public int compare(java.util.Map.Entry<Object, Object> o1, java.util.Map.Entry<Object, Object> o2) {			
+			return String.valueOf(o1.getKey()).compareToIgnoreCase(String.valueOf(o2.getKey()));
+		}
+	};
 	
 	/**
      * Loads properties from a properties file.
@@ -70,6 +79,29 @@ public class PropertiesSorted extends Properties {
     	return prop;
     }
 	
+    @Override
+    public Set<java.util.Map.Entry<Object, Object>> entrySet() {
+    	final TreeSet<java.util.Map.Entry<Object, Object>> result = new TreeSet<>(COMPARATOR_ENTRIES);
+    	
+    	for(java.util.Map.Entry<Object, Object> entry : super.entrySet()) {
+    	  result.add(entry);
+    	}
+    	
+    	return Collections.synchronizedSet(result);
+    }
+    
+    @Override
+    public Set<Object> keySet() {
+    	final TreeSet<Object> result = new TreeSet<>(COMPARATOR);
+    	
+    	for(Object key : super.keySet()) {
+    		result.add(key);
+    	}
+    	
+    	return Collections.synchronizedSet(result);
+    }
+    
+    @Override
 	public Enumeration<Object> keys() {
 	    final Enumeration<Object> keysEnum = super.keys();
 	    final Vector<Object> keyList = new Vector<Object>();
@@ -79,6 +111,11 @@ public class PropertiesSorted extends Properties {
 	    }
 	    
 	    Collections.sort(keyList, COMPARATOR);
+	    
+	    for(Object o : keyList) {
+	    	System.out.println(o);
+	    }
+	    
 	    return keyList.elements();
 	}
 	
