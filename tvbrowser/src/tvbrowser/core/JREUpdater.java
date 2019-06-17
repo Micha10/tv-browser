@@ -25,6 +25,7 @@
 package tvbrowser.core;
 
 import java.io.File;
+import java.io.FileFilter;
 import java.io.IOException;
 import java.net.MalformedURLException;
 
@@ -120,6 +121,17 @@ public class JREUpdater {
 				Settings.propJreUpdate.setString(Settings.propJreUpdate.getString()+";install");
 				MainFrame.getInstance().quit();
 			}
+		}
+		else {
+		  File[] installer = new File(Settings.getUserSettingsDirName()).listFiles((f) -> {return f.getName().toLowerCase().endsWith(".exe") && f.getName().contains("tvbrowser-jre");});
+		  
+		  if(installer != null) {
+		    for(File file : installer) {
+		      if(!file.delete()) {
+		        file.deleteOnExit();
+		      }
+		    }
+		  }
 		}
 	}
 	
