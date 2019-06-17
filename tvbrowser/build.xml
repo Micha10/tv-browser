@@ -458,6 +458,8 @@
   	<echo message="Creating jlink image in ${jlink.image.dir}"/>
   	<echo message="Executing: ${jlink.command}"/>
   	<exec executable="${jlink.command}" failonerror="true">
+  		<arg value="--release-info"/>
+  		<arg value="add:tvbjre=true"/>
   		<arg value="--add-modules"/>
   		<arg value="${jlink.modules}"/>
   		<arg value="--include-locales=${jlink.locales}"/>
@@ -471,6 +473,8 @@
   	<echo message="Creating jlink image in ${jlink.image.dir}"/>
   	<echo message="Executing: ${jlink.command32}"/>
   	<exec executable="${jlink.command32}" failonerror="true">
+  		<arg value="--release-info"/>
+  		<arg value="add:tvbjre=true"/>
   		<arg value="--add-modules"/>
   		<arg value="${jlink.modules}"/>
   		<arg value="--include-locales=${jlink.locales}"/>

@@ -2215,6 +2215,13 @@ public class Settings {
   public static final StringArrayProperty propFavoriteBlockedFilterComponents = new StringArrayProperty(
       mProp, "favoriteBlockedFilterComponents", new String[] {"tvbrowser.core.filters.filtercomponents.BeanShellFilterComponent","tvbrowser.core.filters.filtercomponents.ProgramMarkingPriorityFilterComponent","tvbrowser.core.filters.filtercomponents.ReminderFilterComponent","tvbrowser.core.filters.filtercomponents.PluginFilterComponent"});
   
+  /**
+   * TV-Browser JRE update package path.
+   * <p>
+   * @since 4.1
+   */
+  public static final StringProperty propJreUpdate = new StringProperty(mProp, "jreUpdate", "");
+  public static final DateProperty propJreUpdateDateLast = new DateProperty(mProp, "jreUpdateDateLast", null);
   
   /**
    * Sets the window position and size for the given window with the values of

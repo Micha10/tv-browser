@@ -86,6 +86,7 @@ import devplugin.Date;
 import devplugin.ProgramFieldType;
 import devplugin.Version;
 import tvbrowser.core.ChannelList;
+import tvbrowser.core.JREUpdater;
 import tvbrowser.core.PendingMarkings;
 import tvbrowser.core.PluginLoader;
 import tvbrowser.core.Settings;
