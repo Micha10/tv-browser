@@ -28,6 +28,7 @@ module tvbrowser {
 	exports devplugin;
 	exports devplugin.beanshell;
 	exports tvbrowser;
+	exports tvbrowser.core.contextmenu;
 	exports util.ui;
 	exports util.ui.beanshell;
 	exports util.ui.customizableitems;
