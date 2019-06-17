@@ -257,12 +257,12 @@ public class PictureSettingsTab extends AbstractSettingsTab {
       final JButton editFilter = new JButton(mLocalizer.msg("editFilter", "Edit filter"));
       editFilter.setEnabled(mShowPicturesForFilter.isSelected());
       editFilter.addActionListener(e -> {
-        final UserFilter filter = GenericFilterMap.getInstance().getGenericPictureFilter();
+        final UserFilter filter = GenericFilterMap.getInstance().getGenericInternalFilter(GenericFilterMap.GENERIC_PICTURE_FILTER_NAME);
         
         final EditFilterDlg editFilter1 = new EditFilterDlg(UiUtilities.getLastModalChildOf(MainFrame.getInstance()), FilterList.getInstance(), filter, false);
         
         if(editFilter1.getOkWasPressed()) {
-          GenericFilterMap.getInstance().updateGenericPictureFilter(filter);
+          GenericFilterMap.getInstance().updateGenericInternalFilter(GenericFilterMap.GENERIC_PICTURE_FILTER_NAME, filter);
         }
       });
       

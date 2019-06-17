@@ -62,6 +62,7 @@ import devplugin.ProgramInfoHelper;
 import devplugin.ToolTipIcon;
 import tvbrowser.core.Settings;
 import tvbrowser.core.filters.GenericFilterMap;
+import tvbrowser.core.filters.UserFilter;
 import tvbrowser.core.icontheme.InfoIconTheme;
 import tvbrowser.core.icontheme.InfoThemeLoader;
 import tvbrowser.core.plugin.PluginProxy;
@@ -196,6 +197,8 @@ public class ProgramPanel extends JComponent implements ChangeListener, PluginSt
   private int mLogoWidth = 0;
   
   private String mTitleString = "[NO TITLE]";
+  
+  private boolean mIsAlternativeLayout = false;
 
   /**
    * Creates a new instance of ProgramPanel.
@@ -546,6 +549,12 @@ private static Font getDynamicFontSize(Font font, int offset) {
       if(mProgram.getProgramState() == Program.STATE_IS_VALID) {
         programHasChanged();
       }
+      
+      UserFilter filter = GenericFilterMap.getInstance().getGenericInternalFilter(GenericFilterMap.GENERIC_PROGRAM_PANEL_FILTER_NAME);
+      
+      if(!filter.isBrokenPartially()) {
+        mIsAlternativeLayout = filter.accept(program);
+      }
     }
     
     int length = program.getLength();
@@ -586,9 +595,10 @@ private static Font getDynamicFontSize(Font font, int offset) {
       // (Re)set the description text
       if (!mSettings.isShowingOnlyDateAndTitle() && program.getProgramState() == Program.STATE_IS_VALID && maxDescLines > 0) {
         mDescriptionIcon.setMaximumLineCount(maxDescLines);
-        ProgramFieldType[] infoFieldArr = Settings.propProgramInfoFields
+        ProgramFieldType[] infoFieldArr = mIsAlternativeLayout ? Settings.propProgramInfoFieldsAlternative
+            .getProgramFieldTypeArray() : Settings.propProgramInfoFields
             .getProgramFieldTypeArray();
-        String[] infoFieldSeparatorArr = Settings.propProgramInfoFieldsSeparators.getStringArray();
+        String[] infoFieldSeparatorArr = mIsAlternativeLayout ? Settings.propProgramInfoFieldsSeparatorsAlternative.getStringArray() : Settings.propProgramInfoFieldsSeparators.getStringArray();
         Reader infoReader = new MultipleFieldReader(program, infoFieldArr, infoFieldSeparatorArr);
         try {
           mDescriptionIcon.setText(infoReader);
@@ -635,7 +645,7 @@ private static Font getDynamicFontSize(Font font, int offset) {
          (mSettings
             .isShowingPictureForDuration() && mSettings.getDuration() <= program.getLength())
          ) ||
-         (mSettings.isShowingPictureForFilter() && GenericFilterMap.getInstance().getGenericPictureFilter().accept(program))) {
+         (mSettings.isShowingPictureForFilter() && GenericFilterMap.getInstance().getGenericInternalFilter(GenericFilterMap.GENERIC_PICTURE_FILTER_NAME).accept(program))) {
       dontShow = false;
     }
     
@@ -650,7 +660,7 @@ private static Font getDynamicFontSize(Font font, int offset) {
    * @return The icons for the program.
    */
   private Icon[] getPluginIcons(final Program program) {
-    String[] iconPluginArr = Settings.propProgramTableIconPlugins
+    String[] iconPluginArr = mIsAlternativeLayout ? Settings.propProgramTableIconPluginsAlternative.getStringArray() : Settings.propProgramTableIconPlugins
         .getStringArray();
 
     if (program.getProgramState() != Program.STATE_IS_VALID || (iconPluginArr == null) || (iconPluginArr.length == 0)) {
@@ -702,8 +712,13 @@ private static Font getDynamicFontSize(Font font, int offset) {
               // It was the old class name, not an ID
               // -> Change the class name to an ID and save it
               iconPluginArr[pluginIdx] = asId;
-              Settings.propProgramTableIconPlugins
-                  .setStringArray(iconPluginArr);
+              
+              if(mIsAlternativeLayout) {
+                Settings.propProgramTableIconPluginsAlternative.setStringArray(iconPluginArr);
+              }
+              else {
+                Settings.propProgramTableIconPlugins.setStringArray(iconPluginArr);
+              }
             }
           }
 

@@ -48,15 +48,16 @@ public class GenericFilterMap {
   private final static String GENRIC_FILTER_PROP = "genericfilters.prop";
   
   private HashMap<String, GenericFilterHolder> mGenericPluginFilterMap;
+  private HashMap<String, GenericFilterHolder> mGenericInternalFilterMap;
   
-  private GenericFilterHolder mGenericPictureFilterHolder;
-  
-  private static final String GENERIC_PICTURE_FILTER_NAME = "_picture"; 
+  public static final String GENERIC_PICTURE_FILTER_NAME = "_picture";
+  public static final String GENERIC_PROGRAM_PANEL_FILTER_NAME = "_programPanel";
   
   private static GenericFilterMap INSTANCE;
   
   private GenericFilterMap() {
     mGenericPluginFilterMap = new HashMap<String, GenericFilterHolder>();
+    mGenericInternalFilterMap = new HashMap<String, GenericFilterHolder>();
     create();
   }
   
@@ -107,18 +108,25 @@ public class GenericFilterMap {
         }
       }
       
-      final File pictureFilterFile = new File(mGenericFilterDirectory,GENERIC_PICTURE_FILTER_NAME+".filter");
-      
-      if(pictureFilterFile.isFile()) {
-        mGenericPictureFilterHolder = new GenericFilterHolder(true, pictureFilterFile);
-      }
-      else {
-        mGenericPictureFilterHolder = new GenericFilterHolder();
-        mGenericPictureFilterHolder.setActivated(true);
-        mGenericPictureFilterHolder.setFilter(new UserFilter(GENERIC_PICTURE_FILTER_NAME));
-        mGenericPictureFilterHolder.getFilter().setRule("");
-      }
+      loadInternalGenericFilter(GENERIC_PICTURE_FILTER_NAME);
+      loadInternalGenericFilter(GENERIC_PROGRAM_PANEL_FILTER_NAME);
     }catch(Throwable t) {t.printStackTrace();}
+  }
+  
+  private void loadInternalGenericFilter(final String name) throws ParserException {
+    final File pictureFilterFile = new File(mGenericFilterDirectory,name+".filter");
+    
+    if(pictureFilterFile.isFile()) {
+      mGenericInternalFilterMap.put(name, new GenericFilterHolder(true, pictureFilterFile));
+    }
+    else {
+      GenericFilterHolder genericFilterHolder = new GenericFilterHolder();
+      genericFilterHolder.setActivated(true);
+      genericFilterHolder.setFilter(new UserFilter(name));
+      genericFilterHolder.getFilter().setRule("");
+      
+      mGenericInternalFilterMap.put(name, genericFilterHolder);
+    }
   }
   
   public void updateGenericPluginFilterActivated(PluginProxy plugin, boolean activated) {
@@ -215,12 +223,18 @@ public class GenericFilterMap {
         }
       }
     }
-        
-    try {
-      mGenericPictureFilterHolder.initialize();
-    } catch (ParserException e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
+    
+    for(String key : mGenericInternalFilterMap.keySet()) {
+      GenericFilterHolder holder = mGenericInternalFilterMap.get(key);
+      
+      if(holder != null) {
+        try {
+          holder.initialize();
+        } catch (ParserException e) {
+          // TODO Auto-generated catch block
+          e.printStackTrace();
+        }
+      }
     }
   }
   
@@ -228,13 +242,25 @@ public class GenericFilterMap {
     return mGenericPluginFilterMap.containsKey(key);
   }
   
-  public UserFilter getGenericPictureFilter() {
-    return mGenericPictureFilterHolder.getFilter();
+  public UserFilter getGenericInternalFilter(final String type) {
+    UserFilter result = null;
+    
+    final GenericFilterHolder holder = mGenericInternalFilterMap.get(type);
+    
+    if(holder != null) {
+      result = holder.getFilter();
+    }
+    
+    return result;
   }
   
-  public void updateGenericPictureFilter(UserFilter filter) {
-    mGenericPictureFilterHolder.setFilter(filter);
-    mGenericPictureFilterHolder.getFilter().store(GENERIC_PLUGIN_FILTER_DIRECTORY, GENERIC_PICTURE_FILTER_NAME);
+  public void updateGenericInternalFilter(final String type, final UserFilter filter) {
+    final GenericFilterHolder holder = mGenericInternalFilterMap.get(type);
+    
+    if(holder != null) {
+      holder.setFilter(filter);
+      holder.getFilter().store(GENERIC_PLUGIN_FILTER_DIRECTORY, type);
+    }
     
     MainFrame.getInstance().getProgramTableScrollPane().forceRepaintAll();
   }

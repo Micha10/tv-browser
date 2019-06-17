@@ -1126,7 +1126,9 @@ public class Settings {
     }
 
     propArr = new Property[] { propProgramTableIconPlugins,
-        propProgramInfoFields, propProgramInfoFieldsSeparators };
+        propProgramInfoFields, propProgramInfoFieldsSeparators,
+        propProgramTableIconPluginsAlternative,
+        propProgramInfoFieldsAlternative, propProgramInfoFieldsSeparatorsAlternative};
     if (mProp.hasChanged(propArr)) {
       // Force a recreation of the table content
       DefaultProgramTableModel model = mainFrame.getProgramTableModel();
@@ -1661,11 +1663,28 @@ public class Settings {
          " - "," - ",
          " - "," - "
       });
+  
+  public static final ProgramFieldTypeArrayProperty propProgramInfoFieldsAlternative = new ProgramFieldTypeArrayProperty(
+      mProp, "programpanel.infoFieldsAlternative", new ProgramFieldType[] {
+          ProgramFieldType.GENRE_TYPE, ProgramFieldType.EPISODE_TYPE,
+          ProgramFieldType.ORIGIN_TYPE, ProgramFieldType.PRODUCTION_YEAR_TYPE,
+          ProgramFieldType.SHORT_DESCRIPTION_TYPE });
+  
+  /** Contains the separators for the selected program info filed of a program panel */
+  public static final StringArrayProperty propProgramInfoFieldsSeparatorsAlternative = new StringArrayProperty(
+      mProp, "programpanel.infoFieldsSeparatorsAlternative", new String[] {
+         " - "," - ",
+         " - "," - "
+      });
 
   public static final StringArrayProperty propProgramTableIconPlugins = new StringArrayProperty(
       mProp, "programpanel.iconPlugins", new String[] { PICTURE_ID,INFO_ID,
           "tvraterplugin.TVRaterPlugin", });
-
+  
+  public static final StringArrayProperty propProgramTableIconPluginsAlternative = new StringArrayProperty(
+      mProp, "programpanel.iconPluginsAlternative", new String[] { PICTURE_ID,INFO_ID,
+          "tvraterplugin.TVRaterPlugin", });
+  
   /** Used to enable border for on air programs */
   public static final BooleanProperty propProgramTableOnAirProgramsShowingBorder = new BooleanProperty(
       mProp, "programpanel.onAirProgramsShowingBorder", false);

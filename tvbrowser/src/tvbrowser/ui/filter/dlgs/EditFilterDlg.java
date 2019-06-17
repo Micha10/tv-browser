@@ -68,6 +68,7 @@ import com.jgoodies.forms.factories.Borders;
 import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.FormLayout;
+import com.jgoodies.forms.layout.RowSpec;
 
 import tvbrowser.core.Settings;
 import tvbrowser.core.filters.FilterComponent;
@@ -121,14 +122,14 @@ public class EditFilterDlg extends JDialog implements ActionListener, DocumentLi
   
   private void init(Window parent,FilterList filterList, UserFilter filter, boolean fromFilterList) {
     UiUtilities.registerForClosing(this);
-    
+    try {
     mFromFilterList = fromFilterList;
     mOkWasPressed = false;
     
     if (filter == null) {
       setTitle(mLocalizer.msg("titleNew", "Create filter"));
     } else {
-      setTitle(mLocalizer.msg("titleEdit", "Edit filter {0}", filter.toString()));
+      setTitle(mLocalizer.msg("titleEdit", "Edit filter {0}", fromFilterList ? filter.toString() : "").replaceAll("\\s+", " "));
       mFilterName = filter.toString();
     }
     
@@ -149,17 +150,29 @@ public class EditFilterDlg extends JDialog implements ActionListener, DocumentLi
     mFilterRuleTF.getDocument().addDocumentListener(this);
     mFilterRuleTF.addCaretListener(this);  
     
-    FormLayout layout = new FormLayout("5dlu,fill:min:grow,5dlu,default,5dlu","default,5dlu,default,10dlu,default,5dlu,default,default,5dlu,default,5dlu,fill:min:grow,5dlu,default,5dlu,default,5dlu,default");
+    FormLayout layout = new FormLayout("5dlu,fill:min:grow,5dlu,default,5dlu","default,5dlu,default,default,5dlu,default,5dlu,fill:min:grow,5dlu,default,5dlu,default,5dlu,default");
     PanelBuilder filterCreation = new PanelBuilder(layout);
     filterCreation.border(Borders.DIALOG);
     
-    filterCreation.addSeparator(mLocalizer.msg("filterName", "Filter name:"), CC.xyw(1,1,5));
-    filterCreation.add(mFilterNameTF, CC.xyw(2,3,3));
-    filterCreation.addSeparator(mLocalizer.msg("ruleString", "Filter rule:"), CC.xyw(1,5,5));
-    filterCreation.add(mFilterRuleTF, CC.xy(2,7));
-    mColLb = filterCreation.addLabel("0", CC.xy(4,7));
+    int y = 1;
+    
+    if(fromFilterList) {
+      layout.insertRow(1, RowSpec.decode("10dlu"));
+      layout.insertRow(1, RowSpec.decode("default"));
+      layout.insertRow(1, RowSpec.decode("5dlu"));
+      layout.insertRow(1, RowSpec.decode("default"));
+      
+      filterCreation.addSeparator(mLocalizer.msg("filterName", "Filter name:"), CC.xyw(1,y,5));
+      filterCreation.add(mFilterNameTF, CC.xyw(2,y+2,3));
+      
+      y = 5;
+    }
+    
+    filterCreation.addSeparator(mLocalizer.msg("ruleString", "Filter rule:"), CC.xyw(1,y,5));
+    filterCreation.add(mFilterRuleTF, CC.xy(2,y+2));
+    mColLb = filterCreation.addLabel("0", CC.xy(4,y+2));
     mFilterRuleErrorLb = filterCreation.addLabel(mLocalizer.msg("ruleExample",
-    "example: component1 or (component2 and not component3)"), CC.xy(2,8));
+    "example: component1 or (component2 and not component3)"), CC.xy(2,y+3));
     
     FormLayout filterCompLayout = new FormLayout("default:grow,5dlu,default","default,5dlu,default,5dlu,default,5dlu,default,fill:min:grow");
     PanelBuilder filterComponents = new PanelBuilder(filterCompLayout);
@@ -354,10 +367,10 @@ public class EditFilterDlg extends JDialog implements ActionListener, DocumentLi
     listPanel.addSeparator(mLocalizer.msg("filterConstruction", "Filter construction"), CC.xyw(1,1,3));
     listPanel.add(new JScrollPane(mFilterConstruction), CC.xy(2,3));
     
-    filterCreation.add(listPanel.getPanel(), CC.xyw(1,12,4));
-    filterCreation.add(UiUtilities.createHelpTextArea(mLocalizer.msg("help","To create or edit a filter you can enter the rules in the text field or drag and drop the rules to the left side.")), CC.xyw(2,14,4));
-    filterCreation.add(new JSeparator(JSeparator.HORIZONTAL), CC.xyw(1,16,4));
-    filterCreation.add(bottomBar.getPanel(), CC.xyw(1,18,4));
+    filterCreation.add(listPanel.getPanel(), CC.xyw(1,y+7,4));
+    filterCreation.add(UiUtilities.createHelpTextArea(mLocalizer.msg("help","To create or edit a filter you can enter the rules in the text field or drag and drop the rules to the left side.")), CC.xyw(2,y+9,4));
+    filterCreation.add(new JSeparator(JSeparator.HORIZONTAL), CC.xyw(1,y+11,4));
+    filterCreation.add(bottomBar.getPanel(), CC.xyw(1,y+13,4));
     
     updateBtns();
 
@@ -366,7 +379,8 @@ public class EditFilterDlg extends JDialog implements ActionListener, DocumentLi
     setLayout(new BorderLayout());
     
     add(filterCreation.getPanel(), BorderLayout.CENTER);
-    
+    }
+    catch(Throwable t) {t.printStackTrace();}
     Settings.layoutWindow("editFilterDlg",this,getMinimumSize(),mParent);
     setVisible(true);
   }

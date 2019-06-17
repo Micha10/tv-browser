@@ -223,6 +223,10 @@ public class PluginLoader {
             if (!Settings.propProgramTableIconPlugins.containsItem(((Plugin)plugin).getId())) {
               Settings.propProgramTableIconPlugins.addItem(((Plugin)plugin).getId());
             }
+            
+            if (!Settings.propProgramTableIconPluginsAlternative.containsItem(((Plugin)plugin).getId())) {
+              Settings.propProgramTableIconPluginsAlternative.addItem(((Plugin)plugin).getId());
+            } 
           }
           
           if(!Settings.propKnownContextMenuPlugins.containsItem(((Plugin)plugin).getId())) {
