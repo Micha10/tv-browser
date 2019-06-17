@@ -163,7 +163,6 @@ public class ProgramPanelSettingsTab implements SettingsTab {
     JButton editFilter = new JButton("Filter editieren...");
     editFilter.addActionListener(e -> {
       final UserFilter filter = GenericFilterMap.getInstance().getGenericInternalFilter(GenericFilterMap.GENERIC_PROGRAM_PANEL_FILTER_NAME);
-      
       final EditFilterDlg editFilter1 = new EditFilterDlg(UiUtilities.getLastModalChildOf(MainFrame.getInstance()), FilterList.getInstance(), filter, false);
       
       if(editFilter1.getOkWasPressed()) {
@@ -172,7 +171,6 @@ public class ProgramPanelSettingsTab implements SettingsTab {
     });
     
     filterPanel.add(editFilter, CC.xy(1, 1));
-    
     
     panel.addRow("top:default");
     panel.addRow("default");

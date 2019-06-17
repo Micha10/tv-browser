@@ -462,7 +462,13 @@ public class UserFilter implements devplugin.ProgramFilter {
 
   public void setRule(String rule) throws ParserException {
     mRule = rule;
-    createTokenTree(true);
+    
+    if(mRule.isBlank()) {
+      mRoot = null;
+    }
+    else {
+      createTokenTree(true);
+    }
   }
 
   public String getRule() {

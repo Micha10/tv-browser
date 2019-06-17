@@ -549,12 +549,15 @@ private static Font getDynamicFontSize(Font font, int offset) {
       if(mProgram.getProgramState() == Program.STATE_IS_VALID) {
         programHasChanged();
       }
-      
-      UserFilter filter = GenericFilterMap.getInstance().getGenericInternalFilter(GenericFilterMap.GENERIC_PROGRAM_PANEL_FILTER_NAME);
-      
-      if(!filter.isBrokenPartially()) {
-        mIsAlternativeLayout = filter.accept(program);
-      }
+    }
+    
+    UserFilter filter = GenericFilterMap.getInstance().getGenericInternalFilter(GenericFilterMap.GENERIC_PROGRAM_PANEL_FILTER_NAME);
+    
+    if(!filter.isBrokenPartially()) {
+      mIsAlternativeLayout = filter.accept(program);
+    }
+    else {
+      mIsAlternativeLayout = false;
     }
     
     int length = program.getLength();
