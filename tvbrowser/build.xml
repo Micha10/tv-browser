@@ -1077,6 +1077,7 @@
     <mkdir dir="${doc.dir}"/>
     <javadoc packagenames="*"
              sourcepathref="docpath"
+  			 modulepath="${lib.dir}"
              classpathref="classpath"
              destdir="${doc.dir}"
              doctitle="${doc.title}"
