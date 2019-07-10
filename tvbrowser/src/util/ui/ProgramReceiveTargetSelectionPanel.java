@@ -144,28 +144,30 @@ public class ProgramReceiveTargetSelectionPanel extends JPanel {
         if(mClientPlugins.length > 0) {
           mReceiveTargetLabel.setText(mClientPlugins[0].toString());
           
-          int i = 1;
-          final String others = LOCALIZER.ellipsisMsg("otherTargets", "others");
-          int otherLength = mReceiveTargetLabel.getFontMetrics(mReceiveTargetLabel.getFont()).stringWidth(others)+30;
-          
-          do {
-            String text = mReceiveTargetLabel.getText() + ", " + mClientPlugins[i];
-            int addLength = otherLength;
+          if(mClientPlugins.length > 1) {
+            int i = 1;
+            final String others = LOCALIZER.ellipsisMsg("otherTargets", "others");
+            int otherLength = mReceiveTargetLabel.getFontMetrics(mReceiveTargetLabel.getFont()).stringWidth(others)+30;
             
-            if(i == mClientPlugins.length-1) {
-              addLength = 0;
+            do {
+              String text = mReceiveTargetLabel.getText() + ", " + mClientPlugins[i];
+              int addLength = otherLength;
+              
+              if(i == mClientPlugins.length-1) {
+                addLength = 0;
+              }
+              
+              if(mReceiveTargetLabel.getFontMetrics(mReceiveTargetLabel.getFont()).stringWidth(text)+addLength < mReceiveTargetLabel.getWidth()) {
+                mReceiveTargetLabel.setText(text);
+              }
+              else {
+                break;
+              }
+            }while(i++ < mClientPlugins.length-1);
+        
+            if (i < mClientPlugins.length) {
+              mReceiveTargetLabel.setText(mReceiveTargetLabel.getText() + " (" + (mClientPlugins.length - i) + " " + others + ")");
             }
-            
-            if(mReceiveTargetLabel.getFontMetrics(mReceiveTargetLabel.getFont()).stringWidth(text)+addLength < mReceiveTargetLabel.getWidth()) {
-              mReceiveTargetLabel.setText(text);
-            }
-            else {
-              break;
-            }
-          }while(i++ < mClientPlugins.length-1);
-      
-          if (i < mClientPlugins.length) {
-            mReceiveTargetLabel.setText(mReceiveTargetLabel.getText() + " (" + (mClientPlugins.length - i) + " " + others + ")");
           }
         }
         else {
@@ -178,7 +180,6 @@ public class ProgramReceiveTargetSelectionPanel extends JPanel {
       
       mLastPluginSelectionHandling = System.currentTimeMillis();
     }
-    System.out.println(mReceiveTargetLabel.getText());
   }
   
   /**
