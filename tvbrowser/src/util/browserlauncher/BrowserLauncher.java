@@ -536,11 +536,11 @@ class BrowserLauncher {
                     putParameter.invoke(browser, new Object[] { keyDirectObject, aeDesc });
                     sendNoReply.invoke(browser, new Object[] { });
                 } catch (InvocationTargetException ite) {
-                    throw new IOException("InvocationTargetException while creating AEDesc: " + ite.getMessage());
+                    throw new IOException("InvocationTargetException while creating AEDesc: " + ite.getMessage(), ite);
                 } catch (IllegalAccessException iae) {
-                    throw new IOException("IllegalAccessException while building AppleEvent: " + iae.getMessage());
+                    throw new IOException("IllegalAccessException while building AppleEvent: " + iae.getMessage(), iae);
                 } catch (InstantiationException ie) {
-                    throw new IOException("InstantiationException while creating AEDesc: " + ie.getMessage());
+                    throw new IOException("InstantiationException while creating AEDesc: " + ie.getMessage(), ie);
                 } finally {
                     aeDesc = null;  // Encourage it to get disposed if it was created
                     browser = null; // Ditto
@@ -575,9 +575,9 @@ class BrowserLauncher {
                 try {
                     openURL.invoke(null, new Object[] { url });
                 } catch (InvocationTargetException ite) {
-                    throw new IOException("InvocationTargetException while calling openURL: " + ite.getMessage());
+                    throw new IOException("InvocationTargetException while calling openURL: " + ite.getMessage(), ite);
                 } catch (IllegalAccessException iae) {
-                    throw new IOException("IllegalAccessException while calling openURL: " + iae.getMessage());
+                    throw new IOException("IllegalAccessException while calling openURL: " + iae.getMessage(), iae);
                 }
                 break;
             case WINDOWS_NT:
@@ -607,7 +607,7 @@ class BrowserLauncher {
                     executionHandler.getProcess().waitFor();
                     executionHandler.exitValue();
                 } catch (InterruptedException ie) {
-                    throw new IOException("InterruptedException while launching browser: " + ie.getMessage());
+                    throw new IOException("InterruptedException while launching browser: " + ie.getMessage(), ie);
                 }
                 break;
             case OTHER:
@@ -627,7 +627,7 @@ class BrowserLauncher {
                         new ExecutionHandler(new String[] { (String) browser, url }).execute();
                     }
                 } catch (InterruptedException ie) {
-                    throw new IOException("InterruptedException while launching browser: " + ie.getMessage());
+                    throw new IOException("InterruptedException while launching browser: " + ie.getMessage(), ie);
                 }
                 break;
             default:

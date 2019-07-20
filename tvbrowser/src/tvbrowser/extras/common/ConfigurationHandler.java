@@ -75,7 +75,7 @@ public class ConfigurationHandler {
              LOGGER.severe("Data file '" + datFile.getAbsolutePath() + "' could not be read. Read old version instead '" +oldFile.getAbsolutePath() + "'");
            }
            catch(ClassNotFoundException e1) {
-             throw new IOException("Could not read file "+datFile.getAbsolutePath());
+             throw new IOException("Could not read file "+datFile.getAbsolutePath(), e1);
            }
          }
          else {
@@ -83,7 +83,7 @@ public class ConfigurationHandler {
          }
        }
        catch (ClassNotFoundException e) {
-         throw new IOException("Could not read file "+datFile.getAbsolutePath());
+         throw new IOException("Could not read file "+datFile.getAbsolutePath(), e);
        }
        finally {
          if (in != null) {
@@ -137,7 +137,7 @@ public class ConfigurationHandler {
       }
     }
     catch (IOException thr) {
-      throw new IOException("Could not read settings from "+propFile.getAbsolutePath());
+      throw new IOException("Could not read settings from "+propFile.getAbsolutePath(), thr);
     }
     finally {
       if (in != null) {
@@ -166,7 +166,7 @@ public class ConfigurationHandler {
       tmpPropFile.renameTo(propFile);
     }
     catch (Throwable thr) {
-      throw new IOException("Could not store settings to " + tmpPropFile.getAbsolutePath());
+      throw new IOException("Could not store settings to " + tmpPropFile.getAbsolutePath(), thr);
     }
     finally {
       if (fOut != null) {
