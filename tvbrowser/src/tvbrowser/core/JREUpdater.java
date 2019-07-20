@@ -25,9 +25,7 @@
 package tvbrowser.core;
 
 import java.io.File;
-import java.io.FileFilter;
 import java.io.IOException;
-import java.net.MalformedURLException;
 
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -51,70 +49,77 @@ import util.ui.UiUtilities;
 public class JREUpdater {
 	private static final Localizer LOCALIZER = Localizer.getLocalizerFor(JREUpdater.class);
 	private static final String URL = "https://www.tvbrowser.org/downloads/tvbjre"; 
+	public static final int INTERVAL = 28;
 	
 	public static void checkForUpdate(final JLabel infoLabel) {
-		if(Launch.getOs() == Launch.OS_WINDOWS) {
+		if(hasTvBrowserJRE() && Settings.propJreUpdateEnabled.getBoolean()) {
 			infoLabel.setText(LOCALIZER.msg("info.info","Searching for TV-Browser JRE updates..."));
-			final File release = new File("java"+File.separator+"release");
+			final File temp = new File(System.getProperty("java.io.tmpdir"),"tvbjre");
 			
-			if(release.isFile()) {
-				PropertiesSorted prop = PropertiesSorted.load(release);
-				
-				if(prop.getProperty("tvbjre", "false").equals("true")) {
-					final File temp = new File(System.getProperty("java.io.tmpdir"),"tvbjre");
+			if(temp.isFile()) {
+				temp.delete();
+			}
+			
+			try {
+				if(IOUtilities.download(new java.net.URL(URL), temp, 10000)) {
+					Settings.propJreUpdateDateLast.setDate(Date.getCurrentDate());
 					
-					if(temp.isFile()) {
-						temp.delete();
+					final String[] parts = new String(IOUtilities.getBytesFromFile(temp)).split(";");
+					final String currentVersion = System.getProperty("java.version");
+				
+					final String[] cParts = currentVersion.split("\\.");
+					final String[] sParts = parts[0].split("\\.");
+					
+					boolean update = false;
+					
+					for(int i = 0; i < Math.min(cParts.length, sParts.length); i++) {
+						if(Integer.parseInt(cParts[i]) < Integer.parseInt(sParts[i])) {
+							update = true;
+							break;
+						} else if(Integer.parseInt(cParts[i]) > Integer.parseInt(sParts[i])) {
+							break;
+						}
 					}
 					
-					try {
-						if(IOUtilities.download(new java.net.URL(URL), temp, 10000)) {
-							Settings.propJreUpdateDateLast.setDate(Date.getCurrentDate());
-							
-							final String[] parts = new String(IOUtilities.getBytesFromFile(temp)).split(";");
-							final String currentVersion = System.getProperty("java.version");
+					if(update) {
+						final String downloadUrl = parts[1].replace("%version%", parts[0]).replace("%arch%", "win"+System.getProperty("sun.arch.data.model"));
+						final File target = new File(Settings.getUserSettingsDirName(),"tvbrowser-jre_"+parts[0]+"_win"+System.getProperty("sun.arch.data.model")+".exe");
 						
-							final String[] cParts = currentVersion.split("\\.");
-							final String[] sParts = parts[0].split("\\.");
-							
-							boolean update = false;
-							
-							for(int i = 0; i < Math.min(cParts.length, sParts.length); i++) {
-								System.out.println(cParts[i] + "," +sParts[i]);
-								
-								if(Integer.parseInt(cParts[i]) < Integer.parseInt(sParts[i])) {
-									update = true;
-									break;
-								} else if(Integer.parseInt(cParts[i]) > Integer.parseInt(sParts[i])) {
-									break;
-								}
-							}
-							
-							if(update) {
-								final String downloadUrl = parts[1].replace("%version%", parts[0]).replace("%arch%", "win"+System.getProperty("sun.arch.data.model"));
-								final File target = new File(Settings.getUserSettingsDirName(),"tvbrowser-jre_"+parts[0]+"_win"+System.getProperty("sun.arch.data.model")+".exe");
-								
-								if(!target.isFile()) {
-									IOUtilities.download(new java.net.URL(downloadUrl), target, 30000);
-								}
-								
-								if(target.isFile()) {
-									Settings.propJreUpdate.setString(target.getAbsolutePath());
-									handlePossibleUpdate();
-								}
-							}
-							
-							temp.delete();
+						if(!target.isFile()) {
+							IOUtilities.download(new java.net.URL(downloadUrl), target, 30000);
 						}
-					} catch (Exception e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}		
+						
+						if(target.isFile()) {
+							Settings.propJreUpdate.setString(target.getAbsolutePath());
+							handlePossibleUpdate();
+						}
+					}
+					
+					temp.delete();
 				}
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 			
 			infoLabel.setText("");
 		}
+	}
+	
+	public static boolean hasTvBrowserJRE() {
+	  boolean result = false;
+	  
+	  if(Launch.getOs() == Launch.OS_WINDOWS) {
+      final File release = new File("java"+File.separator+"release");
+      
+      if(release.isFile()) {
+        PropertiesSorted prop = PropertiesSorted.load(release);
+        
+        result = prop.getProperty("tvbjre", "false").equals("true");
+      }
+	  }
+	  
+	  return result;
 	}
 	
 	public static void handlePossibleUpdate() {
@@ -125,7 +130,7 @@ public class JREUpdater {
 			}
 		}
 		else {
-		  final File[] installer = new File(Settings.getUserSettingsDirName()).listFiles((f) -> {return f.getName().toLowerCase().endsWith(".exe") && f.getName().contains("tvbrowser-jre");});
+		  File[] installer = new File(Settings.getUserSettingsDirName()).listFiles((f) -> {return f.getName().toLowerCase().endsWith(".exe") && f.getName().contains("tvbrowser-jre");});
 		  
 		  if(installer != null) {
 		    for(File file : installer) {

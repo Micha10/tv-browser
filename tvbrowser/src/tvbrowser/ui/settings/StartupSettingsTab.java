@@ -48,6 +48,7 @@ import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.RowSpec;
 
 import tvbrowser.TVBrowser;
+import tvbrowser.core.JREUpdater;
 import tvbrowser.core.Settings;
 import tvbrowser.core.icontheme.IconLoader;
 import tvbrowser.ui.mainframe.MainFrame;
@@ -86,6 +87,7 @@ public class StartupSettingsTab implements devplugin.SettingsTab {
 
   private JCheckBox mAutoDownload;
   private JCheckBox mAutoChannelDownload;
+  private JCheckBox mAutoJREUpdate;
 
   private JRadioButton mStartDownload;
   private JRadioButton mRecurrentDownload;
@@ -198,6 +200,15 @@ public class StartupSettingsTab implements devplugin.SettingsTab {
     y++;
 
     mSettingsPn.add(createRefreshPanel(), cc.xyw(1,++y,5));
+    
+    mAutoJREUpdate = new JCheckBox(mLocalizer.msg("autoJREUpdate","Search and download updates for TV-Browser JRE regularly"),Settings.propJreUpdateEnabled.getBoolean());
+    
+    if(JREUpdater.hasTvBrowserJRE()) {
+      layout.insertRow(++y, RowSpec.decode("5dlu"));
+      layout.insertRow(++y, RowSpec.decode("pref"));
+    
+      mSettingsPn.add(mAutoJREUpdate, cc.xyw(2,y,4));
+    }
 
     y++;
 
@@ -213,7 +224,7 @@ public class StartupSettingsTab implements devplugin.SettingsTab {
 
     mSettingsPn.add(mOnlyMinimizeWhenWindowClosingChB, cc.xyw(2,++y,4));
     mSettingsPn.add(mAskForExitConfirmation, cc.xyw(2,++y,4));
-
+    
     return mSettingsPn;
   }
 
@@ -306,6 +317,8 @@ public class StartupSettingsTab implements devplugin.SettingsTab {
     else if(!Settings.propHiddenMessageBoxes.containsItem("MainFrame.askForExitConfirm")){
       Settings.propHiddenMessageBoxes.addItem("MainFrame.askForExitConfirm");
     }
+    
+    Settings.propJreUpdateEnabled.setBoolean(mAutoJREUpdate.isSelected());
   }
 
   /**

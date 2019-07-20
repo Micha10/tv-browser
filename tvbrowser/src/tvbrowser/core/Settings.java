@@ -2241,6 +2241,7 @@ public class Settings {
    */
   public static final StringProperty propJreUpdate = new StringProperty(mProp, "jreUpdate", "");
   public static final DateProperty propJreUpdateDateLast = new DateProperty(mProp, "jreUpdateDateLast", null);
+  public static final BooleanProperty propJreUpdateEnabled = new BooleanProperty(mProp, "jreUpdateEnabled", true);
   
   /**
    * Sets the window position and size for the given window with the values of

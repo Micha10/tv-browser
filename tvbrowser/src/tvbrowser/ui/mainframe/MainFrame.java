@@ -2491,8 +2491,9 @@ public class MainFrame extends JFrame implements DateListener,DropTargetListener
                 && NetworkUtilities.checkConnection()) {
               PluginAutoUpdater.searchForPluginUpdates(mStatusBar.getLabel());
             }
-            else if(true || Settings.propJreUpdateDateLast.getDate() == null || Settings.propJreUpdateDateLast.getDate().addDays(21).compareTo(Date.getCurrentDate()) <= 0) {
-        	  JREUpdater.checkForUpdate(mStatusBar.getLabel());
+            else if((Settings.propJreUpdateDateLast.getDate() == null || Settings.propJreUpdateDateLast.getDate().addDays(JREUpdater.INTERVAL).compareTo(Date.getCurrentDate()) <= 0)
+                && NetworkUtilities.checkConnection()) {
+              JREUpdater.checkForUpdate(mStatusBar.getLabel());
           	}
             else {
               JREUpdater.handlePossibleUpdate();
