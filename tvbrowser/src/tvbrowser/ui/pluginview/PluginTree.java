@@ -29,6 +29,7 @@ package tvbrowser.ui.pluginview;
 import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Cursor;
+import java.awt.FontMetrics;
 import java.awt.GradientPaint;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -37,6 +38,7 @@ import java.awt.GraphicsEnvironment;
 import java.awt.Insets;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.awt.RenderingHints;
 import java.awt.Transparency;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
@@ -821,20 +823,16 @@ public class PluginTree extends JTree implements DragGestureListener,
           }
 
           String text = node.getNodeFormatter().format((ProgramItem)node.getUserObject());
-
-          // use an image to be able to display HTML content on the node
-          BufferedImage textImage = getImage(bounds);
-          Graphics lg = textImage.getGraphics();
           
-          mProgramLabel.setFont(tree.getFont());
-          mProgramLabel.setForeground(g.getColor());
-          mProgramLabel.setText(text);
-          mProgramLabel.setOpaque(false);
-          mProgramLabel.setBounds(0, 0, bounds.width, bounds.height);
-          mProgramLabel.paint(lg);
-
-          g.drawImage(textImage, bounds.x, bounds.y, mProgramLabel);
-          lg.dispose();
+          if(g instanceof Graphics2D) {
+  			((Graphics2D) g).setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_LCD_HRGB);
+  		  }
+          
+          g.setFont(tree.getFont());
+          
+          FontMetrics metrics = tree.getFontMetrics(tree.getFont());
+          
+          ((Graphics2D)g).drawString(text, bounds.x, bounds.y+metrics.getAscent()+1+insets.top);
         }
         else {
           super.paintRow(g,clipBounds,insets,bounds,path,row,isExpanded,hasBeenExpanded,isLeaf);

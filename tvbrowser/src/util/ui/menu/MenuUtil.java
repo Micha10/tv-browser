@@ -29,8 +29,10 @@ package util.ui.menu;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Insets;
 import java.awt.Rectangle;
+import java.awt.RenderingHints;
 
 import javax.swing.Action;
 import javax.swing.JCheckBoxMenuItem;
@@ -127,7 +129,12 @@ public class MenuUtil {
       if(item instanceof ScrollableMenu) {
         item.setUI(new BasicMenuUI() {
           protected void paintBackground(Graphics g, JMenuItem menuItem, Color bgColor) {
-            if(!menuItem.isSelected()) {
+        	  if(g instanceof Graphics2D) {
+        		  ((Graphics2D) g).setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_LCD_HRGB);
+        		  ((Graphics2D) g).setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        	  }
+        	  
+        	  if(!menuItem.isSelected()) {
               Insets i = menuItem.getInsets();
               
               g.clearRect(0,0,menuItem.getWidth(),menuItem.getHeight());
@@ -144,7 +151,8 @@ public class MenuUtil {
             }
             else {
               super.paintBackground(g,menuItem,bgColor);
-            }          }
+            }
+          }
           
           protected void paintText(Graphics g, JMenuItem menuItem, Rectangle textRect,
               String text) {
@@ -161,6 +169,11 @@ public class MenuUtil {
       else {
         item.setUI(new BasicMenuItemUI() {
           protected void paintBackground(Graphics g, JMenuItem menuItem, Color bgColor) {
+        	  if(g instanceof Graphics2D) {
+        		  ((Graphics2D) g).setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_LCD_HRGB);
+        		  ((Graphics2D) g).setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        	  }
+        	  
             if(!menuItem.isArmed()) {
               Insets i = menuItem.getInsets();
   
