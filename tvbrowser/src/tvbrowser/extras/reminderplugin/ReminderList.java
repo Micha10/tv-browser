@@ -134,23 +134,7 @@ public class ReminderList implements ActionListener {
   }
 
   private void add(final Program program, final int minutes, final int referenceCount) {
-    if (!program.isExpired() && minutes != ReminderConstants.NO_REMINDER) {
-      ReminderListItem item = getReminderItem(program);
-
-      if (item != null) {
-        item.incReferenceCount();
-      } else {
-        item = new ReminderListItem(program, minutes);
-        item.setReferenceCount(referenceCount);
-
-        synchronized (mList) {
-          mList.add(item);
-        }
-
-        needsSort = true;
-        program.mark(ReminderPluginProxy.getInstance());
-      }
-    }
+    add(program, new ReminderContent(minutes), referenceCount);
   }
 
   private void add(Program program, ReminderContent reminderContent, int referenceCount) {
@@ -159,6 +143,10 @@ public class ReminderList implements ActionListener {
 
       if (item != null) {
         item.incReferenceCount();
+        
+        if(item.getMinutes() >= 0 && item.getMinutes() < reminderContent.getReminderMinutes()) {
+          item.setMinutes(reminderContent.getReminderMinutes());
+        }
       } else {
         item = new ReminderListItem(program, reminderContent);
         item.setReferenceCount(referenceCount);
