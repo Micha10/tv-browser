@@ -292,9 +292,9 @@ public class IOUtilities {
         public void run() {
           int count = 0;
           
-          while((response.get() == HttpURLConnection.HTTP_CLIENT_TIMEOUT) && count++ < (timeout / 100) && possibleException.get() == null) {
+          while((response.get() == HttpURLConnection.HTTP_CLIENT_TIMEOUT) && count++ < (timeout / 50) && possibleException.get() == null) {
             try {
-              sleep(20);
+              sleep(50);
             } catch (InterruptedException e) {}
           }
         };
@@ -470,9 +470,9 @@ public class IOUtilities {
     
     Thread wait = new Thread("PIPE STREAM WAITING THREAD") {
       public void run() {
-        while(!wasSaved.get() && count.getAndIncrement() < (timeout / 100) && possibleException.get() == null) {
+        while(!wasSaved.get() && count.getAndIncrement() < (timeout / 50) && possibleException.get() == null) {
           try {
-            sleep(20);
+            sleep(50);
           } catch (InterruptedException e) {}
         }
       };
