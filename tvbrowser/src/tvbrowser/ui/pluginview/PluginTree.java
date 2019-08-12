@@ -29,17 +29,10 @@ package tvbrowser.ui.pluginview;
 import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Cursor;
-import java.awt.FontMetrics;
 import java.awt.GradientPaint;
-import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.GraphicsConfiguration;
-import java.awt.GraphicsEnvironment;
-import java.awt.Insets;
 import java.awt.Point;
 import java.awt.Rectangle;
-import java.awt.RenderingHints;
-import java.awt.Transparency;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
@@ -81,19 +74,14 @@ import devplugin.Plugin;
 import devplugin.Program;
 import devplugin.ProgramItem;
 import devplugin.ProgramReceiveTarget;
-import tvbrowser.core.Settings;
-import tvbrowser.core.filters.FilterManagerImpl;
 import tvbrowser.core.plugin.PluginProxy;
 import tvbrowser.core.plugin.PluginProxyManager;
 import tvbrowser.extras.favoritesplugin.FavoritesPlugin;
 import tvbrowser.extras.favoritesplugin.FavoritesPluginProxy;
 import tvbrowser.extras.reminderplugin.ReminderPlugin;
 import tvbrowser.extras.reminderplugin.ReminderPluginProxy;
-import util.io.IOUtilities;
 import util.ui.Localizer;
 import util.ui.OverlayListener;
-import util.ui.SingleAndDoubleClickTreeUI;
-import util.ui.UiUtilities;
 
 /**
  * Created by: Martin Oberhauser (martin@tvbrowser.org) Date: 01.01.2005 Time:
@@ -111,7 +99,6 @@ public class PluginTree extends JTree implements DragGestureListener,
   private BufferedImage mGhostImage, mTreeImage;
   private boolean rejected = false;
   private static PluginTree mInstance;
-  private static boolean mUpdateAllowed = true;
 
   public PluginTree(TreeModel model) {
     super(model);
@@ -263,7 +250,6 @@ public class PluginTree extends JTree implements DragGestureListener,
 
         ((PluginTreeModel) this.getModel()).setDisableUpdate(true);
 
-        mUpdateAllowed = false;
         Vector<Program> vec = this.getLeafElements(node, new Vector<Program>());
 
         if (vec.size() == 1) {
@@ -333,7 +319,6 @@ public class PluginTree extends JTree implements DragGestureListener,
     } catch (Exception ee) {
 
       ((PluginTreeModel) this.getModel()).setDisableUpdate(false);
-      mUpdateAllowed = true;
     }
   }
 
@@ -760,116 +745,9 @@ public class PluginTree extends JTree implements DragGestureListener,
 
   public void dragDropEnd(DragSourceDropEvent dsde) {
     ((PluginTreeModel) this.getModel()).setDisableUpdate(false);
-    mUpdateAllowed = true;
   }
 
   public void dragExit(DragSourceEvent dse) {}
-
-  public void updateUI() {
-    if(mUpdateAllowed) {
-      setUI(new PluginTreeUI(SingleAndDoubleClickTreeUI.EXPAND_AND_COLLAPSE, getSelectionPath()));
-      invalidate();
-    }
-  }
-
-  private static class PluginTreeUI extends SingleAndDoubleClickTreeUI {
-    private GraphicsConfiguration mGC;
-    private JLabel mProgramLabel = new JLabel();
-
-    protected PluginTreeUI(int type, TreePath selectionPath) {
-      super(type, selectionPath);
-    }
-
-    protected void paintRow(Graphics g, Rectangle clipBounds, Insets insets, Rectangle bounds, TreePath path, int row, boolean isExpanded, boolean hasBeenExpanded, boolean isLeaf)  {
-      if(path.getLastPathComponent() instanceof Node && (tree.getSelectionPath() == null || !tree.getSelectionPath().equals(path))) {
-        Node node = (Node)path.getLastPathComponent();
-
-        if(node.getType() == Node.PROGRAM) {
-          Program program = ((ProgramItem)node.getUserObject()).getProgram();
-
-          if(UiUtilities.isNimbusLookAndFeel()) {
-            bounds.setBounds(bounds.x,bounds.y+1,bounds.width,bounds.height);
-          }
-
-          boolean cleaned = false;
-
-          if(program.isOnAir()) {
-            if(!cleaned) {
-              g.setColor(Color.white);
-              g.fillRect(bounds.x, bounds.y+1, bounds.width, bounds.height-2);
-            }
-
-            int runTime = IOUtilities.getMinutesAfterMidnight() - program.getStartTime();
-            if (runTime < 0) {
-              runTime += 24 * 60;
-            }
-            int progressX = (int)((bounds.width)/(double)program.getLength() * runTime);
-
-            g.setColor(Settings.propProgramTableColorOnAirDark.getColor());
-            g.fillRect(bounds.x,bounds.y+1,progressX,bounds.height-2);
-
-            g.setColor(Settings.propProgramTableColorOnAirLight.getColor());
-            g.fillRect(bounds.x + progressX,bounds.y+1,bounds.width-progressX,bounds.height-2);
-          }
-
-          if(program.isExpired()) {
-            g.setColor(UIManager.getColor("ComboBox.disabledForeground"));
-          }
-          else if(FilterManagerImpl.getInstance().getCurrentFilter().accept(program)) {
-            g.setColor(program.isOnAir() ? Color.black : UIManager.getColor("Tree.foreground"));
-          }
-          else {
-            g.setColor(Color.red);
-          }
-
-          String text = node.getNodeFormatter().format((ProgramItem)node.getUserObject());
-          
-          if(g instanceof Graphics2D) {
-  			((Graphics2D) g).setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_LCD_HRGB);
-  		  }
-          
-          g.setFont(tree.getFont());
-          
-          FontMetrics metrics = tree.getFontMetrics(tree.getFont());
-          
-          ((Graphics2D)g).drawString(text, bounds.x, bounds.y+metrics.getAscent()+1+insets.top);
-        }
-        else {
-          super.paintRow(g,clipBounds,insets,bounds,path,row,isExpanded,hasBeenExpanded,isLeaf);
-        }
-      }
-      else {
-        super.paintRow(g,clipBounds,insets,bounds,path,row,isExpanded,hasBeenExpanded,isLeaf);
-      }
-    }
-
-    /**
-     * Returns a new image with size of the defined bounds.<p>
-     * This is used as target image to render the HTML label.
-     *
-     * @param bounds
-     * @return BufferedImage
-     */
-    private BufferedImage getImage(Rectangle bounds) {
-      GraphicsConfiguration gc = getGraphicsConfiguration();
-      BufferedImage textImage = gc.createCompatibleImage(bounds.width, bounds.height, Transparency.TRANSLUCENT);
-      return textImage;
-    }
-
-    /**
-     * Returns the default GraphicsConfiguration.
-     *
-     * @return
-     */
-    private GraphicsConfiguration getGraphicsConfiguration() {
-      if (mGC == null) {
-        // Caching of the GraphicsConfiguration
-        mGC = GraphicsEnvironment.getLocalGraphicsEnvironment()
-            .getDefaultScreenDevice().getDefaultConfiguration();
-      }
-      return mGC;
-    }
-  }
 }
 
 

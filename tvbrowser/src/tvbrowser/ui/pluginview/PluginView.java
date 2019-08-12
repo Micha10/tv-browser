@@ -27,7 +27,9 @@
 package tvbrowser.ui.pluginview;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Component;
+import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -50,7 +52,13 @@ import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
+import devplugin.ContextMenuIf;
+import devplugin.Plugin;
+import devplugin.Program;
+import devplugin.ProgramItem;
+import tvbrowser.core.Settings;
 import tvbrowser.core.contextmenu.ContextMenuManager;
+import tvbrowser.core.filters.FilterManagerImpl;
 import tvbrowser.core.plugin.PluginProxy;
 import tvbrowser.core.plugin.PluginProxyManager;
 import tvbrowser.extras.favoritesplugin.FavoritesPlugin;
@@ -62,11 +70,7 @@ import tvbrowser.ui.pluginview.contextmenu.ProgramContextMenu;
 import tvbrowser.ui.pluginview.contextmenu.ProxyBasedPluginContextMenu;
 import tvbrowser.ui.pluginview.contextmenu.RootNodeContextMenu;
 import tvbrowser.ui.pluginview.contextmenu.StructureNodeContextMenu;
-import util.ui.UiUtilities;
-import devplugin.ContextMenuIf;
-import devplugin.Plugin;
-import devplugin.Program;
-import devplugin.ProgramItem;
+import util.io.IOUtilities;
 
 
 public class PluginView extends JPanel implements MouseListener, KeyListener {
@@ -250,16 +254,22 @@ public class PluginView extends JPanel implements MouseListener, KeyListener {
   }
 
   private static class PluginTreeCellRenderer extends DefaultTreeCellRenderer {
-    public Component getTreeCellRendererComponent(JTree tree, Object value,
-        boolean sel,
-        boolean expanded,
-        boolean leaf, int row,
-        boolean cellHasFocus) {
-      JLabel label = (JLabel)super.getTreeCellRendererComponent(tree,value,sel,expanded,leaf,row,cellHasFocus);
-
+    private ProgressLabel label = new ProgressLabel(null);
+    
+    public Component getTreeCellRendererComponent(JTree tree, Object value, boolean sel, boolean expanded,
+        boolean leaf, int row,boolean cellHasFocus) {
       if (label != null) {
+        label.setText(value.toString());
         label.setBackground(tree.getBackground());
-        label.setOpaque(!sel && !cellHasFocus);
+        label.setOpaque(false);
+        label.setSelected(sel);
+        
+        if(sel) {
+          label.setForeground(getTextSelectionColor());
+        }
+        else {
+          label.setForeground(getTextNonSelectionColor());
+        }
 
         if (leaf && value instanceof Node) {
           Node node = (Node)value;
@@ -271,23 +281,37 @@ public class PluginView extends JPanel implements MouseListener, KeyListener {
         // get icon from node
         if (value instanceof Node) {
           Icon icon = ((Node)value).getIcon();
-
-          if (icon != null) {
-            label.setIcon(icon);
+          label.setIcon(icon);
+          
+          Node node = (Node)value;
+          
+          if(node.isLeaf() && node.getType() == Node.PROGRAM) {
+            Program p = ((ProgramItem)node.getUserObject()).getProgram();
+            String text = node.getNodeFormatter().format((ProgramItem)node.getUserObject());
+            label.setText(text);
+            label.setProgram(p);
+            
+            if(!sel) {
+              if(p.isExpired()) {
+                label.setForeground(UIManager.getColor("ComboBox.disabledForeground"));
+              }
+              else if(FilterManagerImpl.getInstance().getCurrentFilter().accept(p)) {
+                label.setForeground(p.isOnAir() ? Color.black : UIManager.getColor("Tree.foreground"));
+              }
+              else {
+                label.setForeground(Color.red);
+              }
+            }
           }
+          else {
+            label.setProgram(null);
+          }
+        }
+        else {
+          label.setIcon(null);
         }
       }
       
-      if(UiUtilities.isNimbusLookAndFeel()) {
-        if(sel) {
-          label.setOpaque(true);
-          label.setBackground(UIManager.getColor("Tree.selectionBackground"));
-        }
-        else {
-          label.setOpaque(false);
-        }
-      }
-
       return label;
     }
   }
@@ -321,5 +345,49 @@ public class PluginView extends JPanel implements MouseListener, KeyListener {
   @Override
   public void keyTyped(KeyEvent e) {
     // empty
+  }
+  
+  private static class ProgressLabel extends JLabel {
+    private Program mProgram;
+    private boolean mIsSelected;
+    
+    public ProgressLabel(Program p) {
+      mProgram = p;
+      mIsSelected = false;
+    }
+    
+    @Override
+    protected void paintComponent(Graphics g) {
+      if(!mIsSelected && mProgram != null && mProgram.isOnAir()) {
+        g.setColor(Color.white);
+        g.fillRect(0, 0, getWidth(), getHeight());
+          
+        int runTime = IOUtilities.getMinutesAfterMidnight() - mProgram.getStartTime();
+        if (runTime < 0) {
+          runTime += 24 * 60;
+        }
+        int progressX = (int)((getWidth())/(double)mProgram.getLength() * runTime);
+        
+        g.setColor(Settings.propProgramTableColorOnAirDark.getColor());
+        g.fillRect(0,0,progressX,getHeight());
+
+        g.setColor(Settings.propProgramTableColorOnAirLight.getColor());
+        g.fillRect(0 + progressX,0,getWidth()-progressX,getHeight());
+      }
+      else {
+        g.setColor(mIsSelected ? UIManager.getColor("Tree.selectionBackground") : UIManager.getColor("Tree.background"));
+        g.fillRect(0, 0, getWidth(), getHeight());
+      }
+      
+      super.paintComponent(g);
+    }
+    
+    public void setSelected(boolean isSelected) {
+      mIsSelected = isSelected;
+    }
+    
+    public void setProgram(Program program) {
+      mProgram = program;
+    }
   }
 }
