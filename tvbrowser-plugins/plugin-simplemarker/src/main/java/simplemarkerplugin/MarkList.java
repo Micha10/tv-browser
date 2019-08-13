@@ -50,6 +50,7 @@ import devplugin.PluginTreeNode;
 import devplugin.Program;
 import devplugin.ProgramItem;
 import devplugin.ProgramReceiveTarget;
+import devplugin.Version;
 import util.io.IOUtilities;
 import util.program.ProgramUtilities;
 import util.ui.Localizer;
@@ -67,7 +68,7 @@ import util.ui.UIThreadRunner;
  */
 public class MarkList extends Vector<Program> {
   private static final long serialVersionUID = 1L;
-
+  
   private String mName;
   private String mId;
   private transient PluginTreeNode mRootNode;
@@ -331,8 +332,7 @@ public class MarkList extends Vector<Program> {
       if (defaultText) {
         action.putValue(Action.NAME, SimpleMarkerPlugin.getLocalizer().msg("unmark", "Remove marking"));
       } else {
-        action.putValue(Action.NAME, SimpleMarkerPlugin.getLocalizer().msg(
-            "list.unmark", "Remove program from '{0}'", getName()));
+        action.putValue(Action.NAME, getUnmarkText());
       }
       action.putValue(Action.SMALL_ICON, SimpleMarkerPlugin.getInstance()
           .createIconForTree(0));
@@ -340,23 +340,58 @@ public class MarkList extends Vector<Program> {
       if (defaultText) {
         action.putValue(Action.NAME, SimpleMarkerPlugin.getLocalizer().msg("markProgram", "Mark program"));
       } else {
-        action.putValue(Action.NAME, SimpleMarkerPlugin.getLocalizer().msg(
-          "list.mark", "Add program to '{0}'", getName()));
+        action.putValue(Action.NAME, getMarkText());
       }
       action.putValue(Action.SMALL_ICON, mMarkIcon);
-      action.putValue(Program.MARK_PRIORITY, getMarkPriority());
     }
-
+    
+    action.putValue(Program.MARK_PRIORITY, getMarkPriority());
+    
     ActionMenu result = null;
     
     try {
       Constructor<ActionMenu> c = ActionMenu.class.getConstructor(int.class, Action.class);
       result = c.newInstance(mActionId, action);
     } catch (Exception e1) {
+    	e1.printStackTrace();
       result = new ActionMenu(action);
     }
     
     return result;
+  }
+  
+  private String getMarkText() {
+	  String text = null;
+	  
+	  if(SimpleMarkerPlugin.getInstance().isShowHtmlContextMenu()) {
+		  text = getPrefix() + SimpleMarkerPlugin.getLocalizer().msg(
+		          "list.mark", "on <b><i>{0}</i></b>", getName());
+	  }
+	  else {
+		  text = SimpleMarkerPlugin.getLocalizer().msg(
+		          "list.mark.old", "Mark on '{0}'", getName());
+	  }
+	  
+	  return text;
+  }
+  
+  private String getUnmarkText() {
+	  String text = null;
+	  
+	  if(SimpleMarkerPlugin.getInstance().isShowHtmlContextMenu()) {
+		  text = SimpleMarkerPlugin.getLocalizer().msg(
+				  "list.unmark", "Remove from <b><i>{0}</i></b>", getName());
+	  }
+	  else {
+		  text = SimpleMarkerPlugin.getLocalizer().msg(
+				  "list.unmark.old", "Remove program from '{0}'", getName());
+	  }
+	  
+	  return text;
+  }
+  
+  private String getPrefix() {
+	  return SimpleMarkerPlugin.getInstance().getSettings().isShowingInContextMenu() ? SimpleMarkerPlugin.getLocalizer().msg("mark", "Mark").replace("\u2026", "") + " " : ""; 
   }
 
   /**

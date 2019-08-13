@@ -94,7 +94,7 @@ import util.ui.WindowClosingIf;
  * @author René Mach
  */
 public class SimpleMarkerPlugin extends Plugin {
-  private static final Version mVersion = new Version(3,26,11,true);
+  private static final Version mVersion = new Version(3,27,0,true);
 
   /** The localizer for this class. */
   private static final util.ui.Localizer mLocalizer = util.ui.Localizer.getLocalizerFor(SimpleMarkerPlugin.class);
@@ -128,6 +128,8 @@ public class SimpleMarkerPlugin extends Plugin {
   private Thread mInfoShowingThread;
   
   private static int mActionIdCount;
+  
+  private boolean mShowHtmlContextMenu = true;
 
   /**
    * Standard constructor for this class.
@@ -148,6 +150,8 @@ public class SimpleMarkerPlugin extends Plugin {
   }
 
   public void onActivation() {
+	mShowHtmlContextMenu = getPluginManager().getTVBrowserVersion().compareTo(new Version(4,9,97,false)) > 0;
+	  
     mInfoCounter = 1;
     updateTree(true);
     
@@ -286,7 +290,7 @@ public class SimpleMarkerPlugin extends Plugin {
         }
       }
       
-      result = new ActionMenu(mLocalizer.msg("mark", "Mark"), createImageIcon("status", "mail-attachment", 16), submenu);
+      result = new ActionMenu(mLocalizer.msg("mark", "Mark\u2026"), createImageIcon("status", "mail-attachment", 16), submenu);
       result.getAction().putValue("showOnlySubMenus", mSettings.isShowingInContextMenu());
     }
     
@@ -733,6 +737,10 @@ public class SimpleMarkerPlugin extends Plugin {
     saveMe();
   }
   
+  public boolean isShowHtmlContextMenu() {
+	return mShowHtmlContextMenu;
+  }
+  
   public String getPluginCategory() {
     return PluginCompat.CATEGORY_OTHER;
   }
@@ -846,4 +854,6 @@ public class SimpleMarkerPlugin extends Plugin {
   public static int getAndIncrementActionIdCount() {
     return mActionIdCount++;
   }
+  
+  
 }
