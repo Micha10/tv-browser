@@ -270,7 +270,7 @@ public class PluginView extends JPanel implements MouseListener, KeyListener {
         else {
           label.setForeground(getTextNonSelectionColor());
         }
-
+        
         if (leaf && value instanceof Node) {
           Node node = (Node)value;
           if(node.isDirectoryNode()) {
@@ -360,7 +360,7 @@ public class PluginView extends JPanel implements MouseListener, KeyListener {
     protected void paintComponent(Graphics g) {
       if(!mIsSelected && mProgram != null && mProgram.isOnAir()) {
         g.setColor(Color.white);
-        g.fillRect(0, 0, getWidth(), getHeight());
+        g.fillRect(0, 1, getWidth(), getHeight()-1);
           
         int runTime = IOUtilities.getMinutesAfterMidnight() - mProgram.getStartTime();
         if (runTime < 0) {
@@ -369,10 +369,10 @@ public class PluginView extends JPanel implements MouseListener, KeyListener {
         int progressX = (int)((getWidth())/(double)mProgram.getLength() * runTime);
         
         g.setColor(Settings.propProgramTableColorOnAirDark.getColor());
-        g.fillRect(0,0,progressX,getHeight());
+        g.fillRect(0,1,progressX,getHeight()-1);
 
         g.setColor(Settings.propProgramTableColorOnAirLight.getColor());
-        g.fillRect(0 + progressX,0,getWidth()-progressX,getHeight());
+        g.fillRect(0 + progressX,1,getWidth()-progressX,getHeight()-1);
       }
       else {
         g.setColor(mIsSelected ? UIManager.getColor("Tree.selectionBackground") : UIManager.getColor("Tree.background"));
