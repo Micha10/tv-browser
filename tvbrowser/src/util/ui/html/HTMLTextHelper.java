@@ -165,4 +165,22 @@ public class HTMLTextHelper {
     }
     return null;
   }
+  
+  /**
+   * Checks a text for containing text formating html tags and adds
+   * missing html tag at start and end of the text.
+   * <p>
+   * @param text The text to check.
+   * @return A text with html tags at start and end if text contains text formating tags, a plain text otherwise.
+   * @since 4.1
+   */
+  public static String checkTextForTextFormatingTags(String text) {
+	  if(!text.startsWith("<html>") && (text.contains("<i>") || text.contains("<b>") || text.contains("<u>")
+			  || text.contains("<strong>") || text.contains("<em>") || text.contains("<mark>") || text.contains("<small>") 
+			  || text.contains("<del>") || text.contains("<ins>") || text.contains("<sub>") || text.contains("<sup>"))) {
+      	text = "<html>"+text+"</html>";
+      }
+	  
+	  return text;
+  }
 }

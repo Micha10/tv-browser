@@ -29,25 +29,19 @@ package util.ui.menu;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Insets;
-import java.awt.Rectangle;
-import java.awt.RenderingHints;
 
 import javax.swing.Action;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.UIManager;
-import javax.swing.plaf.basic.BasicMenuItemUI;
-import javax.swing.plaf.basic.BasicMenuUI;
 
 import devplugin.ActionMenu;
 import devplugin.ContextMenuSeparatorAction;
 import devplugin.Plugin;
 import devplugin.Program;
 import util.ui.ScrollableMenu;
-import util.ui.UiUtilities;
+import util.ui.html.HTMLTextHelper;
 
 /**
  * Created by: Martin Oberhauser (martin@tvbrowser.org)
@@ -79,7 +73,7 @@ public class MenuUtil {
     JMenuItem result = null;
     if (menu.hasSubItems()) {
       result = new ScrollableMenu(menu.getAction());
-      checkAndSetBackgroundColor(result);
+      
       ActionMenu[] subItems = menu.getSubItems();
       for (ActionMenu subItem : subItems) {
         JMenuItem item = createMenuItem(subItem, setFont);
@@ -87,126 +81,124 @@ public class MenuUtil {
         if (item == null) {
           ((JMenu) result).addSeparator();
         } else {
-          checkAndSetBackgroundColor(item);
           result.add(item);
         }
       }
     }
     else {
-      if (menu.isSelected()) {
-        result = new JCheckBoxMenuItem(menu.getAction().getValue(Action.NAME).toString(), true);
-      }
-      else if(ContextMenuSeparatorAction.getInstance().equals(menu.getAction())) {
+      if(ContextMenuSeparatorAction.getInstance().equals(menu.getAction())) {
         return null;
       }
       else if (menu.getAction()!=null) {
-        result = new JMenuItem(menu.getAction());
+    	  if(menu.isSelected()) {
+        	  result = new ColoredCheckBoxMenuItem(menu.getAction());
+        	  result.setSelected(true);
+          }
+    	  else {
+    		  result = new ColoredMenuItem(menu.getAction());
+    	  }
       }
     }
     if (result != null && setFont) {
       result.setFont(CONTEXT_MENU_PLAINFONT);
-      checkAndSetBackgroundColor(result);
     }
     return result;
   }
-
-  private static void checkAndSetBackgroundColor(JMenuItem item) {
-    Action action = item.getAction();
-    if (action == null) {
-      return;
-    }
-    Object o = action.getValue(Program.MARK_PRIORITY);
-    
-    if(o != null && o instanceof Integer && !UiUtilities.isGTKLookAndFeel()) {
-      Color color = Plugin.getPluginManager().getTvBrowserSettings().getColorForMarkingPriority((Integer)o);
-      
-      if(color == null) {
-        color = item.getBackground();
-      }
-      
-      final Color co = color;
-      
-      if(item instanceof ScrollableMenu) {
-        item.setUI(new BasicMenuUI() {
-          protected void paintBackground(Graphics g, JMenuItem menuItem, Color bgColor) {
-        	  if(g instanceof Graphics2D) {
-        		  ((Graphics2D) g).setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_LCD_HRGB);
-        		  ((Graphics2D) g).setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        	  }
-        	  
-        	  if(!menuItem.isSelected()) {
-              Insets i = menuItem.getInsets();
-              
-              g.clearRect(0,0,menuItem.getWidth(),menuItem.getHeight());
-              g.setColor(menuItem.getBackground());
-              g.fillRect(0,0,menuItem.getWidth(),menuItem.getHeight());
-              
-              if(!UiUtilities.colorsInEqualRange(menuItem.getForeground(),Color.white,20)) {
-                g.setColor(Color.white);
-                g.fillRect(i.left,i.top,menuItem.getWidth()-i.left-i.right,menuItem.getHeight()-i.top-i.bottom);
-              }
-              
-              g.setColor(co);
-              g.fillRect(i.left,i.top,menuItem.getWidth()-i.left-i.right,menuItem.getHeight()-i.top-i.bottom);
-            }
-            else {
-              super.paintBackground(g,menuItem,bgColor);
-            }
-          }
-          
-          protected void paintText(Graphics g, JMenuItem menuItem, Rectangle textRect,
-              String text) {
-            if (menuItem.isSelected()) {
-              g.setColor(selectionForeground);
-            }else {
-              g.setColor(menuItem.getForeground());
-            }
-            
-            g.drawString(menuItem.getText(), textRect.x, textRect.y + menuItem.getFontMetrics(menuItem.getFont()).getAscent());
-          }
-        });
-      }
-      else {
-        item.setUI(new BasicMenuItemUI() {
-          protected void paintBackground(Graphics g, JMenuItem menuItem, Color bgColor) {
-        	  if(g instanceof Graphics2D) {
-        		  ((Graphics2D) g).setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_LCD_HRGB);
-        		  ((Graphics2D) g).setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        	  }
-        	  
-            if(!menuItem.isArmed()) {
-              Insets i = menuItem.getInsets();
   
-              g.clearRect(0,0,menuItem.getWidth(),menuItem.getHeight());
-              g.setColor(menuItem.getBackground());
-              g.fillRect(0,0,menuItem.getWidth(),menuItem.getHeight());
-              
-              
-              if(!UiUtilities.colorsInEqualRange(menuItem.getForeground(),Color.white,20)) {
-                g.setColor(Color.white);
-                g.fillRect(i.left,i.top,menuItem.getWidth()-i.left-i.right,menuItem.getHeight()-i.top-i.bottom);
-              }
-              
-              g.setColor(co);
-              g.fillRect(i.left,i.top,menuItem.getWidth()-i.left-i.right,menuItem.getHeight()-i.top-i.bottom);
-            }
-            else {
-              super.paintBackground(g,menuItem,bgColor);
-            }
-          }
-          
-          protected void paintText(Graphics g, JMenuItem menuItem, Rectangle textRect,
-              String text) {
-            if (menuItem.isArmed()) {
-              g.setColor(selectionForeground);
-            }else {
-              g.setColor(menuItem.getForeground());
-            }
-            
-            g.drawString(text, textRect.x, textRect.y + menuItem.getFontMetrics(menuItem.getFont()).getAscent());
-          }
-        });
-      }
-    }
+  private static final class ColoredMenuItem extends JMenuItem {
+	private Color mBackground;
+	private String mText;
+	
+	public ColoredMenuItem(Action action) {
+		super(action);
+		mText = HTMLTextHelper.checkTextForTextFormatingTags(getText());
+		
+		Object o = action.getValue(Program.MARK_PRIORITY);
+		 
+		if(o != null && o instanceof Integer) {
+			mBackground = Plugin.getPluginManager().getTvBrowserSettings().getColorForMarkingPriority((Integer)o);
+		}
+	}
+	
+	@Override
+	protected void paintComponent(Graphics g) {
+		if(isArmed() && mText.startsWith("<html>")) {
+			setText("<html><div style=\"color:"+HTMLTextHelper.getCssRgbColorEntry(UIManager.getColor("MenuItem.selectionForeground"))+"\">" + mText.replace("<html>", "").replace("</html>", "<html>") + "</div><html>");
+		}
+		else if(mText.startsWith("<html>")) {
+			setText(mText);
+		}
+		
+		if(mBackground != null) {
+			if(!isArmed()){
+				setOpaque(false);
+				Color old = g.getColor();
+				g.clearRect(0, 0, getWidth(), getHeight());
+				g.setColor(getBackground());
+				g.fillRect(0, 0, getWidth(), getHeight());
+				g.setColor(mBackground);
+				g.fillRect(0, 0, getWidth(), getHeight());
+				g.setColor(old);
+			}
+			else {
+				setOpaque(true);
+			}			
+		}
+		
+		super.paintComponent(g);
+	}
   }
+  
+  private static final class ColoredCheckBoxMenuItem extends JCheckBoxMenuItem {
+		private Color mBackground;
+		private String mText;
+		
+		public ColoredCheckBoxMenuItem(Action action) {
+		  super(action);
+		  mText = HTMLTextHelper.checkTextForTextFormatingTags(getText());
+		  
+		  Object o = action.getValue(Program.MARK_PRIORITY);
+		 
+		  if(o != null && o instanceof Integer) {
+			mBackground = Plugin.getPluginManager().getTvBrowserSettings().getColorForMarkingPriority((Integer)o);
+		  }
+		}
+		
+		@Override
+		public void setSelected(boolean b) {
+			if(b) {
+				setIcon(null);
+			}
+			
+			super.setSelected(b);
+		}
+		
+		@Override
+		protected void paintComponent(Graphics g) {
+			if(isArmed() && mText.startsWith("<html>")) {
+				setText("<html><div style=\"color:"+HTMLTextHelper.getCssRgbColorEntry(UIManager.getColor("MenuItem.selectionForeground"))+"\">" + mText.replace("<html>", "").replace("</html>", "<html>") + "</div><html>");
+			}
+			else if(mText.startsWith("<html>")) {
+				setText(mText);
+			}
+		
+			if(mBackground != null) {
+				if(!isArmed()){
+					setOpaque(false);
+					Color old = g.getColor();
+					g.clearRect(0, 0, getWidth(), getHeight());
+					g.setColor(getBackground());
+					g.fillRect(0, 0, getWidth(), getHeight());
+					g.setColor(mBackground);
+					g.fillRect(0, 0, getWidth(), getHeight());
+					g.setColor(old);
+				}
+				else {
+					setOpaque(true);
+				}			
+			}
+			
+			super.paintComponent(g);
+		}
+	  }
 }

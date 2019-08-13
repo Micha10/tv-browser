@@ -81,6 +81,7 @@ import util.ui.customizableitems.SelectableItem;
 import util.ui.customizableitems.SelectableItemList;
 import util.ui.customizableitems.SelectableItemRendererCenterComponentIf;
 import util.ui.customizableitems.SortableItemList;
+import util.ui.html.HTMLTextHelper;
 
 public class ContextmenuSettingsTab implements devplugin.SettingsTab {
   public static final String SEPARATOR_SUB_MENUS_DISABLED = "##_#_##";
@@ -166,7 +167,7 @@ public class ContextmenuSettingsTab implements devplugin.SettingsTab {
           label.setIcon((Icon)icon);
         }
         
-        label.setText(value.getTitle());
+        label.setText(HTMLTextHelper.checkTextForTextFormatingTags(value.getTitle()));
         
         if (isSelected && isEnabled) {
           panel.setOpaque(true);
@@ -485,7 +486,7 @@ public class ContextmenuSettingsTab implements devplugin.SettingsTab {
         mItemSelected.setSelected(!mDeactivatedItems.contains(value));
 
         mItemLabel.setIcon(TVBrowserIcons.preferences(TVBrowserIcons.SIZE_SMALL));
-        mItemLabel.setText(value.toString());
+        mItemLabel.setText(HTMLTextHelper.checkTextForTextFormatingTags(value.toString()));
         mItemLabel.setForeground(label.getForeground());
 
         mItemPanel.setBackground(label.getBackground());
