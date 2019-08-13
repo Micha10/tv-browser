@@ -57,6 +57,7 @@ import util.ui.CustomComboBoxRenderer;
 import util.ui.EnhancedPanelBuilder;
 import util.ui.Localizer;
 import util.ui.TVBrowserIcons;
+import util.ui.html.HTMLTextHelper;
 
 import com.jgoodies.forms.factories.Borders;
 import com.jgoodies.forms.factories.CC;
@@ -367,7 +368,7 @@ public class MouseSettingsTab implements devplugin.SettingsTab {
 					}
 				}
 				label.setIcon(icon);
-        label.setText(text.toString());
+        label.setText(HTMLTextHelper.checkTextForTextFormatingTags(text.toString()));
 			}
 
 			return label;
