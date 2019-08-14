@@ -30,13 +30,7 @@ import javax.swing.JCheckBox;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JRadioButton;
-import javax.swing.JScrollPane;
 import javax.swing.JTextField;
-
-import util.ui.DefaultProgramImportanceSelectionPanel;
-import util.ui.Localizer;
-import util.ui.ScrollableJPanel;
-import util.ui.UiUtilities;
 
 import com.jgoodies.forms.builder.PanelBuilder;
 import com.jgoodies.forms.factories.CC;
@@ -45,6 +39,10 @@ import com.jgoodies.forms.layout.FormLayout;
 
 import compat.VersionCompat;
 import devplugin.SettingsTab;
+import util.ui.DefaultProgramImportanceSelectionPanel;
+import util.ui.Localizer;
+import util.ui.ScrollableJPanel;
+import util.ui.UiUtilities;
 
 /**
  * Settings tab for I don't want to see plugin.
@@ -193,17 +191,8 @@ public class IDontWant2SeeSettingsTab implements SettingsTab {
     y += 2;
     
     pb.add(mProgramImportancePanel, cc.xyw(1,y,5));
-    
-    final JPanel p = new JPanel(new FormLayout("0dlu,0dlu:grow",
-        "5dlu,fill:default:grow"));
-    
-    JScrollPane scrollPane = new JScrollPane(pb.getPanel());
-    scrollPane.setBorder(null);
-    scrollPane.setViewportBorder(null);
-    
-    p.add(scrollPane, cc.xy(2, 2));
 
-    return p;
+    return pb.getPanel();
   }
 
   public Icon getIcon() {
