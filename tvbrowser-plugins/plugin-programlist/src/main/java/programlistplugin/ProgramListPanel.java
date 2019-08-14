@@ -47,6 +47,7 @@ import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
+import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
@@ -61,6 +62,7 @@ import javax.swing.event.AncestorListener;
 import com.jgoodies.forms.factories.Borders;
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
+import com.jgoodies.forms.layout.Sizes;
 
 import compat.FilterCompat;
 import compat.PersonaCompat;
@@ -211,7 +213,8 @@ public class ProgramListPanel extends TabListenerPanel implements PersonaCompatL
     });
 
     mFilterBox = new JComboBox();
-
+    mFilterBox.setRenderer(new ChannelListCellRenderer());
+    
     if (mSettings.getFilterName().isEmpty()) {
       mSettings.setFilterName(Plugin.getPluginManager().getFilterManager().getAllFilter().getName());
     }
@@ -268,7 +271,8 @@ public class ProgramListPanel extends TabListenerPanel implements PersonaCompatL
           return sep;
         }
         
-        c.setBorder(BorderFactory.createEmptyBorder(3, 0, 3, 0));
+        final int border = Sizes.dialogUnitXAsPixel(2, list);
+        c.setBorder(BorderFactory.createEmptyBorder(border, border, border, border));
         
         return c;
       }
@@ -824,6 +828,11 @@ public class ProgramListPanel extends TabListenerPanel implements PersonaCompatL
 
       if (c instanceof JLabel && value instanceof Channel) {
         ((JLabel) c).setIcon(UiUtilities.createChannelIcon(((Channel) value).getIcon()));
+      }
+      
+      if(c instanceof JComponent) {
+        final int border = Sizes.dialogUnitXAsPixel(2, list);
+        ((JComponent) c).setBorder(BorderFactory.createEmptyBorder(border, border, border, border));
       }
 
       return c;
