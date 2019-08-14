@@ -57,6 +57,8 @@ import javax.swing.table.TableColumn;
 
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
+import com.jgoodies.forms.layout.RowSpec;
+import com.jgoodies.forms.layout.Sizes;
 
 import compat.ChannelCompat;
 import compat.FilterCompat;
@@ -93,16 +95,16 @@ public class ListViewPanel extends TabListenerPanel implements PersonaCompatList
   private ListTableModel mModel;
 
   /** Runs at ... */
-  private JRadioButton mRuns = new JRadioButton(mLocalizer.msg("runs", "Running"));
+  private JRadioButton mRuns;
 
   /** Runs on ... */
-  private JRadioButton mOn = new JRadioButton(mLocalizer.msg("on", "On"));
+  private JRadioButton mOn;
 
   /** Date-Select for mOn */
   private JComboBox mDate;
 
   /** Time-Spinner for mOn */
-  private JSpinner mTimeSpinner = new JSpinner(new SpinnerDateModel());
+  private JSpinner mTimeSpinner;
 
   /** Text for mRuns */
   private final static String[] TIMETEXT = { mLocalizer.msg("now", "Now"),
@@ -147,7 +149,7 @@ public class ListViewPanel extends TabListenerPanel implements PersonaCompatList
     createGUI();
   }
   
-  private void createGUI() {    
+  private void createGUI() {
     setLayout(new BorderLayout());
     setBorder(UiUtilities.DIALOG_BORDER);
     
@@ -174,6 +176,14 @@ public class ListViewPanel extends TabListenerPanel implements PersonaCompatList
 
     data.add(mLocalizer.ellipsisMsg("configureTimes","Configure Times"));
 
+    mRuns = new JRadioButton(mLocalizer.msg("runs", "Running"));
+    mRuns.setOpaque(false);
+    
+    mOn = new JRadioButton(mLocalizer.msg("on", "On"));
+    mOn.setOpaque(false);
+    
+    mTimeSpinner = new JSpinner(new SpinnerDateModel());
+    
     mBox = new JComboBox(data);
     UiUtilities.addSeparatorsAfterIndexes(mBox, separators.toArray(new Integer[separators.size()]));
     
@@ -612,7 +622,7 @@ public class ListViewPanel extends TabListenerPanel implements PersonaCompatList
           ChannelLabel label = UiCompat.createChannelLabel(showLogo,showName,false,false,true);
           label.setChannel(channel);
           label.validate();
-          width = Math.max(width, (int)label.getPreferredSize().getWidth()+5);
+          width = Math.max(width, (int)label.getPreferredSize().getWidth()+Sizes.dialogUnitXAsPixel(5, mProgramTable));
         }
         column.setPreferredWidth(width);
         column.setMaxWidth(250);
@@ -828,8 +838,6 @@ public class ListViewPanel extends TabListenerPanel implements PersonaCompatList
   public void updatePersona() {
     if(PersonaCompat.getInstance().getHeaderImage() != null) {
       setOpaque(false);
-      mOn.setOpaque(false);
-      mRuns.setOpaque(false);
       mOn.setForeground(PersonaCompat.getInstance().getTextColor());
       mRuns.setForeground(PersonaCompat.getInstance().getTextColor());
       mFilterLabel.setForeground(PersonaCompat.getInstance().getTextColor());
@@ -837,8 +845,6 @@ public class ListViewPanel extends TabListenerPanel implements PersonaCompatList
     }
     else {
       setOpaque(true);
-      mOn.setOpaque(true);
-      mRuns.setOpaque(true);
       mOn.setForeground(UIManager.getColor("Label.foreground"));
       mRuns.setForeground(UIManager.getColor("Label.foreground"));
       mFilterLabel.setForeground(UIManager.getColor("Label.foreground"));
