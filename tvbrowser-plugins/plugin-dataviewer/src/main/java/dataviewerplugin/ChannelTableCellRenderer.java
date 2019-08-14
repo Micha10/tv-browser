@@ -3,10 +3,13 @@ package dataviewerplugin;
 import java.awt.Color;
 import java.awt.Component;
 
+import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableCellRenderer;
+
+import com.jgoodies.forms.layout.Sizes;
 
 /**
  * DataViewer for TV-Browser.
@@ -29,6 +32,10 @@ public class ChannelTableCellRenderer extends DefaultTableCellRenderer {
       //label.setForeground(Color.black);
       //label.setBackground(new Color(255, 221, 221));
       label.setHorizontalAlignment(SwingConstants.RIGHT);
+      
+      final int border = Sizes.dialogUnitXAsPixel(3, table);
+      
+      label.setBorder(BorderFactory.createEmptyBorder(0,border,0,border));
    return label;
   }
 }
