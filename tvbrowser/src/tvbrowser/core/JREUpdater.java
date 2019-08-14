@@ -32,10 +32,12 @@ import javax.swing.JOptionPane;
 
 import devplugin.Date;
 import tvbrowser.ui.mainframe.MainFrame;
+import tvbrowser.ui.update.PluginAutoUpdater;
 import util.browserlauncher.Launch;
 import util.exc.TvBrowserException;
 import util.io.ExecutionHandler;
 import util.io.IOUtilities;
+import util.io.Mirror;
 import util.io.PropertiesSorted;
 import util.ui.Localizer;
 import util.ui.UiUtilities;
@@ -47,9 +49,13 @@ import util.ui.UiUtilities;
  * @since 4.1
  */
 public class JREUpdater {
+  /** The name of the updates file. */
+  public static final String FILENAME = "tvbjre";
+  /** The default download url */
+  public static final String DEFAULT_DOWNLOAD_URL = "http://download.tvbrowser.org/jre/";
+ 
 	private static final Localizer LOCALIZER = Localizer.getLocalizerFor(JREUpdater.class);
-	private static final String URL = "https://www.tvbrowser.org/downloads/tvbjre"; 
-	public static final int INTERVAL = 28;
+	public static final int INTERVAL = 13;
 	
 	public static void checkForUpdate(final JLabel infoLabel) {
 		if(hasTvBrowserJRE() && Settings.propJreUpdateEnabled.getBoolean()) {
@@ -61,14 +67,44 @@ public class JREUpdater {
 			}
 			
 			try {
-				if(IOUtilities.download(new java.net.URL(URL), temp, 10000)) {
+			  String url = DEFAULT_DOWNLOAD_URL + FILENAME;
+			  
+			  if(PluginAutoUpdater.downloadMirrorList()) {
+			    final Mirror mirror = PluginAutoUpdater.getPluginUpdatesMirror();
+			    
+			    if(mirror != null) {
+			      url = mirror.getUrl();
+			    }
+			    
+			    if(!url.endsWith("/")) {
+			      url += "/";
+			    }
+			    
+			    url += FILENAME;
+			  }
+			  
+			  String[] parts = null;
+			  
+			  try {
+  				if(IOUtilities.download(new java.net.URL(url), temp, 10000)) {
+  				  parts = new String(IOUtilities.getBytesFromFile(temp)).split("\n");
+  				  
+  				  if(parts.length != 2) {
+  				    throw new IOException();
+  				  }
+  				}
+			  }catch(IOException ioe1) {
+		      if(IOUtilities.download(new java.net.URL(DEFAULT_DOWNLOAD_URL+FILENAME), temp, 10000)) {
+            parts = new String(IOUtilities.getBytesFromFile(temp)).split("\n");
+          }
+			  }
+				
+				if(parts != null && parts.length == 2) {
 					Settings.propJreUpdateDateLast.setDate(Date.getCurrentDate());
 					
-					final String[] parts = new String(IOUtilities.getBytesFromFile(temp)).split(";");
 					final String currentVersion = System.getProperty("java.version");
-				
 					final String[] cParts = currentVersion.split("\\.");
-					final String[] sParts = parts[0].split("\\.");
+					final String[] sParts = parts[0].trim().split("\\.");
 					
 					boolean update = false;
 					
