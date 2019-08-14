@@ -53,17 +53,17 @@ public class MinutesCellRenderer extends DefaultTableCellRenderer {
    * Creates an instance of this class.
    */
   public MinutesCellRenderer() {
-    mPanel = new JPanel(new FormLayout("pref,pref:grow,pref,2dlu",
-        "pref:grow,pref,2dlu,pref,pref:grow"));
+    mPanel = new JPanel(new FormLayout("3dlu,default,default:grow,default,2dlu",
+        "0dlu:grow,default,2dlu,default,0dlu:grow"));
     CellConstraints cc = new CellConstraints();
     mTextLabel = new JLabel();
     mTextLabel.setOpaque(false);
     mIconLabel = new JLabel(TVBrowserIcons.edit(TVBrowserIcons.SIZE_SMALL));
     mNoteLabel = new JLabel("");
     
-    mPanel.add(mTextLabel, cc.xy(1, 2));
-    mPanel.add(mIconLabel, cc.xy(3, 2));
-    mPanel.add(mNoteLabel, cc.xy(1, 4));
+    mPanel.add(mTextLabel, cc.xy(2, 2));
+    mPanel.add(mIconLabel, cc.xy(4, 2));
+    mPanel.add(mNoteLabel, cc.xy(2, 4));
     
     mDateSeparator = new JPanel(new FormLayout("0dlu:grow,default,0dlu:grow","5dlu,default,5dlu"));
     mDateSeparator.setBorder(BorderFactory.createMatteBorder(2, 0, 2, 0, UIManager.getColor("Label.foreground")));

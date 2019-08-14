@@ -10,6 +10,8 @@ import javax.swing.AbstractCellEditor;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
 import javax.swing.JTable;
+import javax.swing.event.PopupMenuEvent;
+import javax.swing.event.PopupMenuListener;
 import javax.swing.table.TableCellEditor;
 
 public class MinutesCellEditor extends AbstractCellEditor implements TableCellEditor, ActionListener {
@@ -18,6 +20,18 @@ public class MinutesCellEditor extends AbstractCellEditor implements TableCellEd
   public MinutesCellEditor() {
     mComboBox = new JComboBox<>(new RemindValue[0]);
     mComboBox.putClientProperty("JComboBox.isTableCellEditor", Boolean.TRUE);
+    mComboBox.addPopupMenuListener(new PopupMenuListener() {
+      @Override
+      public void popupMenuWillBecomeVisible(PopupMenuEvent e) {}
+      
+      @Override
+      public void popupMenuCanceled(PopupMenuEvent e) {}
+      
+      @Override
+      public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
+        stopCellEditing();
+      }
+    });
   }
 
   private void setValue(ReminderListItem item) {
