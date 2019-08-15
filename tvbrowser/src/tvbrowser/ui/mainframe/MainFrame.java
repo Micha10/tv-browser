@@ -2487,15 +2487,11 @@ public class MainFrame extends JFrame implements DateListener,DropTargetListener
             onDownloadDone();
             newTvDataAvailable(scroll);
             
-            if((Settings.propLastPluginsUpdate.getDate() == null || Settings.propLastPluginsUpdate.getDate().addDays(7).compareTo(Date.getCurrentDate()) <= 0)
-                && NetworkUtilities.checkConnection()) {
-              PluginAutoUpdater.searchForPluginUpdates(mStatusBar.getLabel());
-            }
-            else if((Settings.propJreUpdateDateLast.getDate() == null || Settings.propJreUpdateDateLast.getDate().addDays(JREUpdater.INTERVAL).compareTo(Date.getCurrentDate()) <= 0)
-                && NetworkUtilities.checkConnection()) {
-              JREUpdater.checkForUpdate(mStatusBar.getLabel());
+            if((Settings.propJreUpdateDateLast.getDate() == null || Settings.propJreUpdateDateLast.getDate().addDays(JREUpdater.INTERVAL).compareTo(Date.getCurrentDate()) <= 0)
+                && NetworkUtilities.checkConnection() && !JREUpdater.checkForUpdate(mStatusBar.getLabel())) {
+              checkForPluginUpdate();
           	}
-            else {
+            else if(!checkForPluginUpdate()) {
               JREUpdater.handlePossibleUpdate();
             }
           });
@@ -2507,6 +2503,18 @@ public class MainFrame extends JFrame implements DateListener,DropTargetListener
     downloadingThread.start();
   }
 
+  private boolean checkForPluginUpdate() {
+    boolean result = false;
+    
+    if((Settings.propLastPluginsUpdate.getDate() == null || Settings.propLastPluginsUpdate.getDate().addDays(7).compareTo(Date.getCurrentDate()) <= 0)
+        && NetworkUtilities.checkConnection()) {
+      PluginAutoUpdater.searchForPluginUpdates(mStatusBar.getLabel());
+      result = true;
+    }
+    
+    return result;
+  }
+  
   public void updateChannellist() {
     updateChannelChooser();
     mMenuBar.updateChannelItems();

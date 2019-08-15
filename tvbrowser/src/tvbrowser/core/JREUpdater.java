@@ -57,7 +57,9 @@ public class JREUpdater {
 	private static final Localizer LOCALIZER = Localizer.getLocalizerFor(JREUpdater.class);
 	public static final int INTERVAL = 13;
 	
-	public static void checkForUpdate(final JLabel infoLabel) {
+	public static boolean checkForUpdate(final JLabel infoLabel) {
+	  boolean result = false;
+	  
 		if(hasTvBrowserJRE() && Settings.propJreUpdateEnabled.getBoolean()) {
 			infoLabel.setText(LOCALIZER.msg("info.info","Searching for TV-Browser JRE updates..."));
 			final File temp = new File(System.getProperty("java.io.tmpdir"),"tvbjre");
@@ -126,6 +128,7 @@ public class JREUpdater {
 						}
 						
 						if(target.isFile()) {
+						  result = true;
 							Settings.propJreUpdate.setString(target.getAbsolutePath());
 							handlePossibleUpdate();
 						}
@@ -140,6 +143,8 @@ public class JREUpdater {
 			
 			infoLabel.setText("");
 		}
+		
+		return result;
 	}
 	
 	public static boolean hasTvBrowserJRE() {
