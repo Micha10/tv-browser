@@ -42,7 +42,7 @@ import util.ui.persona.PersonaListener;
 
 public class PersonaHandler extends Plugin implements PersonaListener {
   private final static Localizer mLocalizer = Localizer.getLocalizerFor(PersonaHandler.class);
-  private static Version mVersion = new Version(0,15,1,true);
+  private static Version mVersion = new Version(0,15,2,true);
   private PluginInfo mPluginInfo;
   
   private static PersonaHandler mInstance;
@@ -247,14 +247,16 @@ try{
             String name = "name";
             String description = "description";
             String headerURL = "headerURL";
+            String themeFrame = "theme_frame";
             String footerURL = "footerURL";
             String accentcolor = "accentcolor";
             String textcolor = "textcolor";
-            System.out.println(string);
+            String tabBackgroundColor = "tab_background_text";
+            
             final StringBuilder pattern = new StringBuilder("\"(");
-            pattern.append(name).append("|").append(description).append("|");
-            pattern.append(headerURL).append("|").append(footerURL).append("|").append(accentcolor).append("|");
-            pattern.append(textcolor);
+            pattern.append(name).append("|").append(id).append("|").append(description).append("|").append(themeFrame).append("|");
+            pattern.append(headerURL).append("|").append(footerURL).append("|").append(tabBackgroundColor).append("|");
+            pattern.append(accentcolor).append("|").append(textcolor);
             pattern.append(")\"\\s*:\\s*\"(.*?)\"");
             
             Pattern p = Pattern.compile(pattern.toString());
@@ -269,10 +271,13 @@ try{
               if(key.equals(name)) {
                 name = value;
               }
+              else if(key.equals(id)) {
+                id = value.replace("@", "_at_").replaceAll("\\s+", "-");
+              }
               else if(key.equals(description)) {
                 description = value.replace("\\n", " ").replaceAll("\\s{2,}", " ");
               }
-              else if(key.equals(headerURL)) {
+              else if(key.equals(headerURL) || key.equals(themeFrame)) {
                 headerURL = value.replace("\\u002F", "/") ;
               }
               else if(key.equals(footerURL)) {
@@ -281,7 +286,7 @@ try{
               else if(key.equals(accentcolor)) {
                 accentcolor = value;
               }
-              else if(key.equals(textcolor)) {
+              else if(key.equals(textcolor) || key.equals(tabBackgroundColor)) {
                 textcolor = value;
               }
               lastPos = m.end();
@@ -289,7 +294,7 @@ try{
             
             File versionDir = new File(Persona.getUserPersonaDir(),id);
             System.out.println(versionDir.getAbsolutePath());
-            if(!versionDir.isDirectory()) {
+            if(!versionDir.isDirectory() && !id.equals("id")) {
               if(versionDir.mkdirs()) {
                 Properties prop = new Properties();
                 
@@ -379,9 +384,9 @@ try{
         	        prop.setProperty(Persona.DETAIL_URL_KEY, url);
         	        
         	        Color textColor = UIManager.getColor("Menu.foreground");
-        	        
-        	        if(!textcolor.equals("null") && textcolor.length() == 7) {
-        	          textColor = new Color(Integer.parseInt(textcolor.substring(1,3),16),Integer.parseInt(textcolor.substring(3,5),16),Integer.parseInt(textcolor.substring(5,7),16));          
+        	        System.out.println("T " + textcolor);
+        	        if(!textcolor.equals("null")) {
+        	          textColor = getColor(textcolor);
         	        }
         	        
         	        prop.setProperty(Persona.TEXT_COLOR_KEY, textColor.getRed() + "," + textColor.getGreen() + "," + textColor.getBlue());
@@ -469,6 +474,30 @@ try{
   }catch(Throwable t) {t.printStackTrace();}
     
     return null;
+  }
+  
+  private Color getColor(String textcolor) {
+    Color textColor = null;
+    
+    if(textcolor.startsWith("rgba(")) {
+      String[] parts = textcolor.replace("rgba(", "").replace(")", "").trim().split(", ");
+      
+      textColor = new Color(Integer.parseInt(parts[0]),Integer.parseInt(parts[1]),Integer.parseInt(parts[2]));
+      float[] components = textColor.getComponents(null);
+      components[components.length-1] = Float.parseFloat(parts[3]);
+      
+      textColor = new Color(components[0], components[1], components[2], components[3]);
+    }
+    else if(textcolor.startsWith("rgb(")) {
+      String[] parts = textcolor.replace("rgb(", "").replace(")", "").trim().split(", ");
+      
+      textColor = new Color(Integer.parseInt(parts[0]),Integer.parseInt(parts[1]),Integer.parseInt(parts[2]));
+    }
+    else if(textcolor.length() == 7) {
+      textColor = new Color(Integer.parseInt(textcolor.substring(1,3),16),Integer.parseInt(textcolor.substring(3,5),16),Integer.parseInt(textcolor.substring(5,7),16));
+    }
+    
+    return textColor;
   }
   
   public Frame getSuperFrame() {
