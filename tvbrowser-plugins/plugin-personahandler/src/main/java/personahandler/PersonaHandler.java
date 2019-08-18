@@ -42,7 +42,7 @@ import util.ui.persona.PersonaListener;
 
 public class PersonaHandler extends Plugin implements PersonaListener {
   private final static Localizer mLocalizer = Localizer.getLocalizerFor(PersonaHandler.class);
-  private static Version mVersion = new Version(0,15,2,true);
+  private static Version mVersion = new Version(0,15,3,true);
   private PluginInfo mPluginInfo;
   
   private static PersonaHandler mInstance;
@@ -386,7 +386,7 @@ try{
         	        Color textColor = UIManager.getColor("Menu.foreground");
         	        System.out.println("T " + textcolor);
         	        if(!textcolor.equals("null")) {
-        	          textColor = getColor(textcolor);
+        	          textColor = getColor(textColor,textcolor);
         	        }
         	        
         	        prop.setProperty(Persona.TEXT_COLOR_KEY, textColor.getRed() + "," + textColor.getGreen() + "," + textColor.getBlue());
@@ -476,9 +476,7 @@ try{
     return null;
   }
   
-  private Color getColor(String textcolor) {
-    Color textColor = null;
-    
+  private Color getColor(Color textColor, String textcolor) {
     if(textcolor.startsWith("rgba(")) {
       String[] parts = textcolor.replace("rgba(", "").replace(")", "").trim().split(", ");
       
@@ -495,6 +493,11 @@ try{
     }
     else if(textcolor.length() == 7) {
       textColor = new Color(Integer.parseInt(textcolor.substring(1,3),16),Integer.parseInt(textcolor.substring(3,5),16),Integer.parseInt(textcolor.substring(5,7),16));
+    }
+    else if(textcolor.startsWith("#")) {
+      try {
+        textColor = Color.decode(textcolor);
+      }catch(NumberFormatException nfe) {}
     }
     
     return textColor;
