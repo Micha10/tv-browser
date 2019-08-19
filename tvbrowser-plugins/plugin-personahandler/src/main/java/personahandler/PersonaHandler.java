@@ -42,7 +42,7 @@ import util.ui.persona.PersonaListener;
 
 public class PersonaHandler extends Plugin implements PersonaListener {
   private final static Localizer mLocalizer = Localizer.getLocalizerFor(PersonaHandler.class);
-  private static Version mVersion = new Version(0,15,3,true);
+  private static Version mVersion = new Version(0,15,4,true);
   private PluginInfo mPluginInfo;
   
   private static PersonaHandler mInstance;
@@ -161,58 +161,68 @@ public class PersonaHandler extends Plugin implements PersonaListener {
   }
   
   PersonaInfo getAndInstallPersona(String url) {
-try{
-    StringBuilder string = new StringBuilder();
-    
-    String url1 = url.replaceAll(" ","%20");
-    try {
-      BufferedInputStream in = new BufferedInputStream(IOUtilities.getStream(new URL(url1)));
-      
-      int len;
-      byte[] buffer = new byte[10240];
-      while ((len = (in.read(buffer))) != -1) {
-        String buf = new String(buffer,0,len);
-        string.append(buf);
-      }
-      
-      string.trimToSize();
-      
-      in.close();
-    } catch (Exception e1) {
-      // TODO Auto-generated catch block
-      e1.printStackTrace();
-    }
-    
-    Pattern xpi = Pattern.compile("\"status\":\"public\",\"url\":\"(.*?.xpi)\\?src=\"");
-    Pattern idPattern = Pattern.compile("\"guid\":\"\\{(.*?)\\}");
-    Pattern authorPattern = Pattern.compile("\\{\"authors\":\\[\\{.*?,\"name\":\"(.*?)\".*?\\}\\]");
-    
-    Matcher m2 = xpi.matcher(string.toString());
-    
+    try{
+    String link = null;
     File target = new File(System.getProperty("java.io.tmpdir"),"persona.zip");
     
-    if(m2.find()) {
-      String id = "id";
-      String author = "author";
+    if(!url.toLowerCase().contains(".xpi")) {
+      StringBuilder string = new StringBuilder();
       
-      Matcher m3 = idPattern.matcher(string.toString());
-      
-      if(m3.find()) {
-        id = m3.group(1);
+      String url1 = url.replaceAll(" ","%20");
+      try {
+        BufferedInputStream in = new BufferedInputStream(IOUtilities.getStream(new URL(url1)));
+        
+        int len;
+        byte[] buffer = new byte[10240];
+        while ((len = (in.read(buffer))) != -1) {
+          String buf = new String(buffer,0,len);
+          string.append(buf);
+        }
+        
+        string.trimToSize();
+        
+        in.close();
+      } catch (Exception e1) {
+        e1.printStackTrace();
       }
       
-      m3 = authorPattern.matcher(string.toString());
       
-      if(m3.find()) {
-        author = m3.group(1);
+      Pattern xpi = Pattern.compile("\"status\":\"public\",\"url\":\"(.*?.xpi)\\?src=\"");
+      //Pattern idPattern = Pattern.compile("\"guid\":\"\\{(.*?)\\}");
+      //Pattern authorPattern = Pattern.compile("\\{\"authors\":\\[\\{.*?,\"name\":\"(.*?)\".*?\\}\\]");
+      
+      Matcher m2 = xpi.matcher(string.toString());
+      
+      if(m2.find()) {
+        /*String id = "id";
+        String author = "author";
+        
+        Matcher m3 = idPattern.matcher(string.toString());
+        
+        if(m3.find()) {
+          id = m3.group(1);
+        }
+        
+        m3 = authorPattern.matcher(string.toString());
+        
+        if(m3.find()) {
+          author = m3.group(1);
+        }
+        */
+        link = m2.group(1);
       }
+    }
+    else {
+      link = url.replaceAll(" ","%20");
+    }
       
+    if(link != null) {
+      StringBuilder string = new StringBuilder();
       if(target.isFile()) {
         target.delete();
       }
-      
-      IOUtilities.download(new URL(m2.group(1).replace("\\u002F", "/")), target);
-      System.out.println(author + " " + target.isFile() + " " + id);
+      IOUtilities.download(new URL(link.replace("\\u002F", "/")), target);
+      System.out.println(target.getAbsolutePath() + " " + target.isFile() + " ");
       if(target.isFile()) {
         ZipFile zip = null;
         
@@ -243,7 +253,8 @@ try{
               }
             }
             
-            
+            String id = "id";
+            String author = "author";
             String name = "name";
             String description = "description";
             String headerURL = "headerURL";
@@ -256,7 +267,7 @@ try{
             final StringBuilder pattern = new StringBuilder("\"(");
             pattern.append(name).append("|").append(id).append("|").append(description).append("|").append(themeFrame).append("|");
             pattern.append(headerURL).append("|").append(footerURL).append("|").append(tabBackgroundColor).append("|");
-            pattern.append(accentcolor).append("|").append(textcolor);
+            pattern.append(accentcolor).append("|").append(textcolor).append("|").append(author);
             pattern.append(")\"\\s*:\\s*\"(.*?)\"");
             
             Pattern p = Pattern.compile(pattern.toString());
@@ -292,6 +303,23 @@ try{
               lastPos = m.end();
             }
             
+            if(id.equals("id") && !name.equals("name")) {
+              id = name;
+            }
+            
+            if(author.equals("author")) {
+              int index = name.indexOf("by");
+              
+              if(index != -1) {
+                author = name.substring(index+3).trim();
+                name = name.substring(0,index).trim();
+              }
+              else {
+                author = mLocalizer.msg("unknown", "Unknown");
+              }
+            }
+            
+            System.out.println("ID " + id);
             File versionDir = new File(Persona.getUserPersonaDir(),id);
             System.out.println(versionDir.getAbsolutePath());
             if(!versionDir.isDirectory() && !id.equals("id")) {
@@ -378,7 +406,11 @@ try{
                 
                 if(accepted) {
         	        prop.setProperty(Persona.NAME_KEY, name.replace("$",",") + " by " + author);
-        	        prop.setProperty(Persona.DESCRIPTION_KEY, description.replace("$",",").replace("null",""));
+        	        
+        	        if(!description.equals("description")) {
+        	          prop.setProperty(Persona.DESCRIPTION_KEY, description.replace("$",",").replace("null",""));
+        	        }
+        	        
         	        prop.setProperty(Persona.HEADER_IMAGE_KEY, Persona.USER_PERSONA + "/" + headerImage.getName());
         	        prop.setProperty(Persona.FOOTER_IMAGE_KEY, Persona.USER_PERSONA + "/" + footerImage.getName());
         	        prop.setProperty(Persona.DETAIL_URL_KEY, url);
@@ -447,7 +479,6 @@ try{
         	          prop.store(out,"");
         	          out.close();
         	        } catch (Exception e1) {
-        	          // TODO Auto-generated catch block
         	          e1.printStackTrace();
         	        }
         	        
@@ -509,7 +540,6 @@ try{
 
   @Override
   public void updatePersona() {
-    // TODO Auto-generated method stub
     if(mPersonaDialog != null) {
       mPersonaDialog.updatePersona();
     }
