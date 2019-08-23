@@ -42,7 +42,7 @@ public class WirSchauenSettingsTab implements SettingsTab
   /**
    * a panel to select the color for marking linked programs.
    */
-  private DefaultMarkingPrioritySelectionPanel mMarkingColorChooser;
+  private util.ui.DefaultMarkingPrioritySelectionPanel mMarkingColorChooser;
 
   /**
    * the underlying settings.
@@ -69,7 +69,7 @@ public class WirSchauenSettingsTab implements SettingsTab
   public JPanel createSettingsPanel()
   {
     mMarkerCheckbox = new JCheckBox(WirSchauenPlugin.LOCALIZER.msg("Settings.ShowMarking", "Highlight programs which are linked with the OMDB."), mSettings.getMarkPrograms());
-    mMarkingColorChooser = DefaultMarkingPrioritySelectionPanel.createPanel(new int[] {mSettings.getMarkPriorityForOmdbLink(), mSettings.getMarkPriorityForOwnOmdbLink()}, new String[] {WirSchauenPlugin.LOCALIZER.msg("Settings.LinkedPrio", "How to mark programs which are linked with omdb.org."), WirSchauenPlugin.LOCALIZER.msg("Settings.OwnLinkedPrio", "How to mark programs which I have linked with omdb.org.")}, false, false, false);
+    mMarkingColorChooser = util.ui.DefaultMarkingPrioritySelectionPanel.createPanel(new int[] {mSettings.getMarkPriorityForOmdbLink(), mSettings.getMarkPriorityForOwnOmdbLink()}, new String[] {WirSchauenPlugin.LOCALIZER.msg("Settings.LinkedPrio", "How to mark programs which are linked with omdb.org."), WirSchauenPlugin.LOCALIZER.msg("Settings.OwnLinkedPrio", "How to mark programs which I have linked with omdb.org.")}, false, false, false);
 //    mLinkedProgramColorChooser.setEnabled(mMarkerCheckbox.isSelected());
 
     CellConstraints cc = new CellConstraints();

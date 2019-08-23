@@ -19,6 +19,7 @@ package wirschauenplugin;
 import java.util.Properties;
 
 import devplugin.Program;
+import util.settings.PropertyBasedSettings;
 
 
 /**

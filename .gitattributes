@@ -1795,7 +1795,6 @@ tvbrowser-plugins/plugin-wirschauen/pom.xml -text
 tvbrowser-plugins/plugin-wirschauen/src/main/java/wirschauenplugin/CreateOmdbAbstractDialog.java -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-wirschauen/src/main/java/wirschauenplugin/CreateOmdbLinkDialog.java -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-wirschauen/src/main/java/wirschauenplugin/CreateWirSchauenDataDialog.java -text svneol=unset#text/plain
-tvbrowser-plugins/plugin-wirschauen/src/main/java/wirschauenplugin/DefaultMarkingPrioritySelectionPanel.java -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-wirschauen/src/main/java/wirschauenplugin/DescriptionInputField.java -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-wirschauen/src/main/java/wirschauenplugin/DialogController.java -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-wirschauen/src/main/java/wirschauenplugin/DialogUtil.java -text svneol=unset#text/plain
@@ -1804,7 +1803,6 @@ tvbrowser-plugins/plugin-wirschauen/src/main/java/wirschauenplugin/DocumentButto
 tvbrowser-plugins/plugin-wirschauen/src/main/java/wirschauenplugin/LoadingInfoDialog.java -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-wirschauen/src/main/java/wirschauenplugin/OmdbConnection.java -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-wirschauen/src/main/java/wirschauenplugin/ProgramId.java -text svneol=unset#text/plain
-tvbrowser-plugins/plugin-wirschauen/src/main/java/wirschauenplugin/PropertyBasedSettings.java -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-wirschauen/src/main/java/wirschauenplugin/WirSchauenConnection.java -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-wirschauen/src/main/java/wirschauenplugin/WirSchauenEvent.java -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-wirschauen/src/main/java/wirschauenplugin/WirSchauenFilterComponent.java -text svneol=unset#text/plain
