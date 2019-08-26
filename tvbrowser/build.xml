@@ -325,19 +325,6 @@
   <!-- Creates the platform independent runtime folder -->
   <target name="runtime" depends="clean-default, make-default, mkdirs, download-newsplugin">
     <echo message="Creating the jars ..."/>
-
-    <!-- Extract the libraries for the tvbrowser.jar into the temp.dir -->
-<!--    <unjar src="${lib.dir}/${lib.bsh.name}-${lib.bsh.version}.jar" dest="${unpacked.dir}/${lib.bsh.name}.jar"/>
-    <unjar src="${lib.dir}/${lib.jgoodies-common.name}-${lib.jgoodies-common.version}.jar" dest="${unpacked.dir}/${lib.jgoodies-common.name}.jar"/>
-    <unjar src="${lib.dir}/${lib.jgoodies-forms.name}-${lib.jgoodies-forms.version}.jar" dest="${unpacked.dir}/${lib.jgoodies-forms.name}.jar"/>
-  	<unjar src="${lib.dir}/${lib.jgoodies-looks.name}-${lib.jgoodies-looks.version}.jar" dest="${unpacked.dir}/${lib.jgoodies-looks.name}.jar"/>
-    <unjar src="${lib.dir}/${lib.tasks.name}-${lib.tasks.version}.jar" dest="${unpacked.dir}/${lib.tasks.name}.jar"/>
-    <unjar src="${lib.dir}/${lib.commons.codec.name}-${lib.commons.codec.version}.jar" dest="${unpacked.dir}/${lib.commons.codec.name}.jar" />
-    <unjar src="${lib.dir}/${lib.commons.lang.name}-${lib.commons.lang.version}.jar" dest="${unpacked.dir}/${lib.commons.lang.name}.jar" />
-    <unjar src="${lib.dir}/${lib.opencsv.name}-${lib.opencsv.version}.jar" dest="${unpacked.dir}/${lib.opencsv.name}.jar" />
-    <unjar src="${lib.dir}/${lib.htmlparser.name}-${lib.htmlparser.version}.jar" dest="${unpacked.dir}/${lib.htmlparser.name}.jar" />
-    <unjar src="${lib.dir}/${lib.texhyphj.name}-${lib.texhyphj.version}.jar" dest="${unpacked.dir}/${lib.texhyphj.name}.jar" />
-  	<unjar src="${lib.dir}/${lib.jnativehook.name}-${lib.jnativehook.version}.jar" dest="${unpacked.dir}/${lib.jnativehook.name}.jar"/> -->
   	
     <!-- Pack the tvbrowser.jar -->
     <jar jarfile="${tvbrowser-default.runtime.dir}/tvbrowser.jar"
