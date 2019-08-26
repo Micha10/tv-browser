@@ -2333,6 +2333,7 @@ tvbrowser/src/imgs/tvbrowser32.png -text
 tvbrowser/src/imgs/tvbrowser48.png -text
 tvbrowser/src/imgs/unknown_channel.png -text
 tvbrowser/src/module-info.java -text svneol=unset#text/plain
+tvbrowser/src/tvbrowser/UdpThread.java -text svneol=unset#text/plain
 tvbrowser/src/tvbrowser/core/DummyChannel.java -text
 tvbrowser/src/tvbrowser/core/DuplicateChannelNameCounter.java -text
 tvbrowser/src/tvbrowser/core/PendingMarkings.java -text svneol=unset#text/plain

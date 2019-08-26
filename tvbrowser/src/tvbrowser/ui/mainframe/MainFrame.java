@@ -2812,7 +2812,7 @@ public class MainFrame extends JFrame implements DateListener,DropTargetListener
     setExtendedState(state);
     mIsVisible = true;
   }
-
+  
   public void setVisible(boolean visible) {
     super.setVisible(visible);
     mIsVisible = visible;

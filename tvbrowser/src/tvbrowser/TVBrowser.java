@@ -25,7 +25,6 @@
  */
 package tvbrowser;
 
-import java.awt.AWTException;
 import java.awt.Color;
 import java.awt.Dialog.ModalityType;
 import java.awt.Dimension;
@@ -33,9 +32,7 @@ import java.awt.Font;
 import java.awt.Frame;
 import java.awt.Image;
 import java.awt.Point;
-import java.awt.Robot;
 import java.awt.Toolkit;
-import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.geom.Rectangle2D;
 import java.io.BufferedReader;
@@ -50,7 +47,11 @@ import java.io.StringWriter;
 import java.lang.management.ManagementFactory;
 import java.lang.reflect.InvocationTargetException;
 import java.net.Authenticator;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
 import java.net.PasswordAuthentication;
+import java.net.SocketException;
 import java.net.URL;
 import java.nio.channels.FileLock;
 import java.text.DateFormat;
@@ -135,7 +136,16 @@ import util.ui.textcomponentpopup.TextComponentPopupEventQueue;
  * @author Martin Oberhauser
  */
 public class TVBrowser {
-
+  private static final class LockFileResult {
+    private boolean mResult;
+    private String[] mLines;
+    
+    public LockFileResult(boolean result, String[] lines) {
+      mResult = result;
+      mLines = lines;
+    }
+  }
+  
   private static final String SUN_JAVA_WARNING = "TV-Browser was developed for Sun Java and may not run correctly with your Java implementation.";
 
   private static final Logger mLog
@@ -245,6 +255,8 @@ public class TVBrowser {
 
   private static MainFrame mainFrame;
 
+  private static AtomicReference<UdpThread> mToggleSocket = new AtomicReference<>(null);
+  
   private static AtomicReference<RandomAccessFile> mLockFile = new AtomicReference<>(null);
   private static AtomicReference<RandomAccessFile> mToggleLockFile = new AtomicReference<>(null);
   
@@ -378,11 +390,14 @@ public class TVBrowser {
       Settings.propFirstStartDate.setDate(Date.getCurrentDate());
     }
     
-    if (!createLockFile(mLockFile,mLock,".lock")) {
+    if (!createLockFile(mLockFile,mLock,".lock").mResult) {
       updateLookAndFeel();
-      showTVBrowserIsAlreadyRunningMessageBox(!createLockGlobalToggle());
+      showTVBrowserIsAlreadyRunningMessageBox(createLockGlobalToggle());
     }
-
+    else {
+      createLockGlobalToggle();
+    }
+    
     String logDirectory = Settings.propLogdirectory.getString();
     if (logDirectory != null) {
       try {
@@ -974,19 +989,53 @@ public class TVBrowser {
   }
 
 
-  public static boolean createLockGlobalToggle() {
-    return createLockFile(mToggleLockFile,mToggleLock,".toggle");
+  private static LockFileResult createLockGlobalToggle() {
+    String[] lines = null;
+    
+    try {
+      mToggleSocket.set(new UdpThread());
+      lines = new String[1];
+      lines[0] = String.valueOf(mToggleSocket.get().getSocket().getLocalPort());
+    } catch (SocketException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+    
+    return createLockFile(mToggleLockFile,mToggleLock,".toggle", lines);
   }
   
   public static void deleteLockGlobalToggle() {
+    if(mToggleSocket.get() != null) {
+      mToggleSocket.get().halt();
+    }
+    
     deleteLockFile(mToggleLockFile.get(),mToggleLock.get(),".toggle");
+  }
+  
+  private static String[] readLockFileContent(final File lockFile) { 
+    String[] readLines = null;
+    final ArrayList<String> readList = new ArrayList<String>();
+    
+    try(RandomAccessFile in = new RandomAccessFile(lockFile,"r")) {
+      String line = null;
+      
+      while((line = in.readLine()) != null) {
+        readList.add(line);
+      }
+    }catch(Exception ioe) {ioe.printStackTrace();}
+    
+    if(!readList.isEmpty()) {
+      readLines = readList.toArray(new String[0]);
+    }
+    
+    return readLines;
   }
   
   /**
    * Create the .lock file in the user home directory
    * @return false, if the .lock file exist and is locked or cannot be locked.
    */
-  private static boolean createLockFile(final AtomicReference<RandomAccessFile> lockFileAccess, final AtomicReference<FileLock> lockTarget, final String file) {
+  private static LockFileResult createLockFile(final AtomicReference<RandomAccessFile> lockFileAccess, final AtomicReference<FileLock> lockTarget, final String file, final String... lines) {
     String dir = Settings.getUserDirectoryName();
 
     if(!new File(dir).isDirectory()) {
@@ -994,17 +1043,19 @@ public class TVBrowser {
     }
 
     File lockFile = new File(dir, file);
-
+    
     if(lockFile.exists()) {
       try {
         lockFileAccess.set(new RandomAccessFile(lockFile.toString(),"rw"));
         lockTarget.set(lockFileAccess.get().getChannel().tryLock());
 
         if(lockTarget.get() == null) {
-          return false;
+          return new LockFileResult(false, readLockFileContent(lockFile));
         }
-      }catch(Exception e) {
-        return false;
+        
+        writeLinesToLogFile(lockFileAccess.get(), lines);
+      }catch(Exception e) {e.printStackTrace();
+        return new LockFileResult(false, readLockFileContent(lockFile));
       }
     }
     else {
@@ -1012,6 +1063,7 @@ public class TVBrowser {
         lockFile.createNewFile();
         lockFileAccess.set(new RandomAccessFile(lockFile.toString(),"rw"));
         lockTarget.set(lockFileAccess.get().getChannel().tryLock());
+        writeLinesToLogFile(lockFileAccess.get(), lines);
       }catch(Exception e){
         if(e instanceof IOException) {
           mLog.log(Level.WARNING, e.getLocalizedMessage(), e);
@@ -1019,7 +1071,17 @@ public class TVBrowser {
       }
     }
 
-    return true;
+    return new LockFileResult(true, null);
+  }
+  
+  private static void writeLinesToLogFile(final RandomAccessFile fileLockAccess, final String[] lines) {
+    if(lines != null) {
+      try {
+        for(final String line : lines) {
+          fileLockAccess.writeBytes(line+"\n");
+        }
+      }catch(IOException ioe) {}
+    }
   }
 
   private static void deleteLockFile(final RandomAccessFile fileLockAccess, final FileLock fileLock,final String file) {
@@ -1046,14 +1108,22 @@ public class TVBrowser {
   }
 
 
-  private static void showTVBrowserIsAlreadyRunningMessageBox(final boolean isToggleActive) {
+  private static void showTVBrowserIsAlreadyRunningMessageBox(final LockFileResult resultLockFile) {
     try {
       UIThreadRunner.invokeAndWait(() -> {
-        Object[] options = new Object[isToggleActive ? 3 : 2];
+        int port = Integer.MIN_VALUE;
+        
+        if(resultLockFile.mLines != null && resultLockFile.mLines.length == 1) {
+          try {
+            port = Integer.parseInt(resultLockFile.mLines[0]);
+          }catch(NumberFormatException nfe) {}
+        }
+        
+        Object[] options = new Object[!resultLockFile.mResult && port != Integer.MIN_VALUE ? 3 : 2];
         
         int index = 0;
         
-        if(isToggleActive) {
+        if(!resultLockFile.mResult && port != Integer.MIN_VALUE) {
           options[index++] = mLocalizer.msg("showTvBrowser", "Open running TV-Browser");
         }
         
@@ -1064,24 +1134,17 @@ public class TVBrowser {
             mLocalizer.msg("alreadyRunning", "TV-Browser is already running"), JOptionPane.DEFAULT_OPTION,
             JOptionPane.WARNING_MESSAGE, null, options, options[0]);
         
-        if (result == 0 && isToggleActive) {
-          try {
-            final Robot r = new Robot();
-            r.setAutoDelay(20);
-            r.keyPress(KeyEvent.VK_SHIFT);
-            r.keyPress(KeyEvent.VK_CONTROL);
-            r.keyPress(KeyEvent.VK_ALT);
-            r.keyPress(KeyEvent.VK_A);
-            r.delay(100);
-            r.keyRelease(KeyEvent.VK_A);
-            r.keyRelease(KeyEvent.VK_ALT);
-            r.keyRelease(KeyEvent.VK_CONTROL);
-            r.keyRelease(KeyEvent.VK_SHIFT);
-            r.delay(100);
+        if (result == 0 && !resultLockFile.mResult && port != Integer.MIN_VALUE) {
+          try(DatagramSocket socket = new DatagramSocket()) {
+            byte[] buf = "open_tvb".getBytes();
+            DatagramPacket packet = new DatagramPacket(buf, buf.length, InetAddress.getByName("localhost"), port);
+            socket.send(packet);
             System.exit(-1);
-          } catch (AWTException e) {e.printStackTrace();}
+          } catch (Exception e) {e.printStackTrace();
+            System.exit(-1);
+          }
           
-        } else if(result == 0 || (isToggleActive && result == 1)) {
+        } else if(result == 0 || (!resultLockFile.mResult && result == 1)) {
           System.exit(-1);
         }
       });
@@ -1107,7 +1170,15 @@ public class TVBrowser {
 
     if (mTray.initSystemTray()) {
         mTray.createMenus();
+        
+        if(mToggleSocket.get() != null) {
+          mToggleSocket.get().setTray(mTray);
+          mToggleSocket.get().start();
+        }
     } else {
+      if(mToggleSocket.get() != null) {
+        mToggleSocket.get().initMainFrame();
+      }
       mLog.info("platform independent mode is ON");
       addTrayWindowListener();
     }

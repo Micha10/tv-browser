@@ -29,8 +29,8 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
 import java.awt.Frame;
+import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
-import java.awt.event.ComponentListener;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -192,7 +192,7 @@ public class SystemTray {
         }
       });
 
-      MainFrame.getInstance().addComponentListener(new ComponentListener() {
+      MainFrame.getInstance().addComponentListener(new ComponentAdapter() {
 
         public void componentResized(ComponentEvent e) {
           int state = MainFrame.getInstance().getExtendedState();
@@ -202,15 +202,6 @@ public class SystemTray {
           } else if ((state & Frame.ICONIFIED) != Frame.ICONIFIED) {
             mState = Frame.NORMAL;
           }
-        }
-
-        public void componentHidden(ComponentEvent e) {
-        }
-
-        public void componentMoved(ComponentEvent e) {
-        }
-
-        public void componentShown(ComponentEvent e) {
         }
       });
 
@@ -962,6 +953,25 @@ public class SystemTray {
       mOpenCloseMenuItem.setText(mLocalizer.msg("menu.open", "Open"));
     } else {
       mOpenCloseMenuItem.setText(mLocalizer.msg("menu.close", "Close"));
+    }
+  }
+  
+  public void show() {
+    if (!MainFrame.getInstance().isVisible()
+        || ((MainFrame.getInstance().getExtendedState() & Frame.ICONIFIED) == Frame.ICONIFIED)) {
+      SwingUtilities.invokeLater(() -> {
+        MainFrame.getInstance().showFromTray(mState);
+        //toggleReminderState(true);
+
+        if (Settings.propNowOnRestore.getBoolean()) {
+          MainFrame.getInstance().scrollToNow();
+        }
+      });
+      toggleOpenCloseMenuItem(false);
+      MainFrame.getInstance().toFront();
+    }
+    else {
+      MainFrame.getInstance().toFront();
     }
   }
 
