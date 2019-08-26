@@ -1318,9 +1318,6 @@ public class Settings {
   public static final BooleanProperty propTrayMinimizeTo = new BooleanProperty(
       mProp, "MinimizeToTray", false);
   
-  public static final BooleanProperty propTrayGlobalKeyToggle = new BooleanProperty(
-      mProp, "trayGlobalKeyToggle", true);
-  
   public static final BooleanProperty propOnlyMinimizeWhenWindowClosing = new BooleanProperty(
       mProp, "onlyMinimizeWhenWindowClosing", false);
 

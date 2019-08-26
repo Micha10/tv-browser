@@ -56,7 +56,7 @@ public class TrayBaseSettingsTab implements SettingsTab {
   protected static final util.ui.Localizer mLocalizer = util.ui.Localizer
   .getLocalizerFor(TrayBaseSettingsTab.class);
 
-  private JCheckBox mTrayIsEnabled, mMinimizeToTrayChb, mNowOnRestore, mTrayIsAnialiasing, mTrayGlobalToggle;
+  private JCheckBox mTrayIsEnabled, mMinimizeToTrayChb, mNowOnRestore, mTrayIsAnialiasing;
   private boolean mOldState;
   private static boolean mIsEnabled = Settings.propTrayIsEnabled.getBoolean();
   private JRadioButton mFilterAll,mNoMarkedFiltering,mNoFiltering;
@@ -77,9 +77,6 @@ public class TrayBaseSettingsTab implements SettingsTab {
     boolean checked = Settings.propTrayMinimizeTo.getBoolean();
     mMinimizeToTrayChb = new JCheckBox(msg, checked && mOldState);
     mMinimizeToTrayChb.setEnabled(mTrayIsEnabled.isSelected());
-
-    msg = mLocalizer.msg("trayGlobalKeyToggle", "System wide key shortcuts enabled (Ctrl+Shift+A=Minimize/Restore, Ctrl+Shift+Alt+A=To front)");
-    mTrayGlobalToggle = new JCheckBox("<html>"+msg+"</html>", Settings.propTrayGlobalKeyToggle.getBoolean());
     
     msg = mLocalizer.msg("nowOnDeIconify", "Jump to now when restoring application");
     checked = Settings.propNowOnRestore.getBoolean();
@@ -125,11 +122,6 @@ public class TrayBaseSettingsTab implements SettingsTab {
     builder.add(mTrayIsAnialiasing, cc.xy(2,4));
     builder.add(mMinimizeToTrayChb, cc.xy(2,5));
     
-    if(OperatingSystem.is64Bit()) {
-      builder.add(mTrayGlobalToggle, cc.xy(2,6));
-      builder.add(mNowOnRestore, cc.xy(2,7));
-    }
-    
     builder.addSeparator(mLocalizer.msg("filter", "Filter settings"), cc.xyw(1,10,3));
     builder.add(mFilterAll, cc.xy(2,12));
     builder.add(mNoMarkedFiltering, cc.xy(2,13));
@@ -165,15 +157,6 @@ public class TrayBaseSettingsTab implements SettingsTab {
     if (mMinimizeToTrayChb != null) {
       boolean checked = mMinimizeToTrayChb.isSelected() && mTrayIsEnabled.isSelected();
       Settings.propTrayMinimizeTo.setBoolean(checked);
-    }
-    
-    Settings.propTrayGlobalKeyToggle.setBoolean(mTrayGlobalToggle.isSelected());
-    
-    if(mTrayGlobalToggle.isSelected() && TVBrowser.isUsingSystemTray()) {
-      TVBrowser.registerGlobalKeyToggle();
-    }
-    else {
-      TVBrowser.unregisterGlobalKeyToggle();
     }
     
     Settings.propNowOnRestore.setBoolean(mNowOnRestore.isSelected());

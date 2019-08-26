@@ -1282,24 +1282,11 @@ public class TVBrowser {
     }
   }
   
-  public static void registerGlobalKeyToggle() {
-    if(mTray.isTrayUsed()) {
-      mTray.registerGlobalKeyToggle();
-    }
-  }
-  
-  public static void unregisterGlobalKeyToggle() {
-    if(mTray.isTrayUsed()) {
-      mTray.unregisterGlobalKeyToggle();
-    }
-  }
-
   /**
    * Remove the tray icon.
    */
   public static void removeTray() {
     if(mTray.isTrayUsed()) {
-      mTray.unregisterGlobalKeyToggle();
       mTray.setVisible(false);
       addTrayWindowListener();
 

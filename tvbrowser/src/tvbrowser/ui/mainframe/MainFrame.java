@@ -1725,8 +1725,6 @@ public class MainFrame extends JFrame implements DateListener,DropTargetListener
       if(!Settings.propIsUsingFullscreen.getBoolean()) {
         mRootNode.update();
       }
-      
-      TVBrowser.registerGlobalKeyToggle();
     });
   }
 
