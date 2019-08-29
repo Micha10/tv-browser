@@ -2240,6 +2240,13 @@ public class Settings {
   public static final DateProperty propJreUpdateDateLast = new DateProperty(mProp, "jreUpdateDateLast", null);
   public static final BooleanProperty propJreUpdateEnabled = new BooleanProperty(mProp, "jreUpdateEnabled", true);
   
+  /** 
+   * Sets the availability of the restore server.
+   * <p>
+   * @since 4.1
+   */
+  public static final BooleanProperty propServerRestoreEnabled = new BooleanProperty(mProp, "serverRestoreEnabled", true);
+  
   /**
    * Sets the window position and size for the given window with the values of
    * the given id.

@@ -85,10 +85,7 @@ public final class UdpThread extends Thread {
             MainFrame.getInstance().toFront();
           }
         }
-      } catch (IOException e) {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
-      }
+      } catch (IOException e) {}
     }
     
     if(!mSocket.isClosed()) {

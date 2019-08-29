@@ -990,26 +990,44 @@ public class TVBrowser {
 
 
   private static LockFileResult createLockGlobalToggle() {
-    String[] lines = null;
+    LockFileResult result = new LockFileResult(true, null);
     
-    try {
-      mToggleSocket.set(new UdpThread());
-      lines = new String[1];
-      lines[0] = String.valueOf(mToggleSocket.get().getSocket().getLocalPort());
-    } catch (SocketException e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
+    if(Settings.propServerRestoreEnabled.getBoolean()) {
+      String[] lines = null;
+      
+      try {
+        mToggleSocket.set(new UdpThread());
+        lines = new String[1];
+        lines[0] = String.valueOf(mToggleSocket.get().getSocket().getLocalPort());
+      } catch (SocketException e) {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+      }
+      
+      result = createLockFile(mToggleLockFile,mToggleLock,".toggle", lines);
     }
     
-    return createLockFile(mToggleLockFile,mToggleLock,".toggle", lines);
+    return result;
   }
   
-  public static void deleteLockGlobalToggle() {
+  private static void deleteLockGlobalToggle() {
     if(mToggleSocket.get() != null) {
       mToggleSocket.get().halt();
+      mToggleSocket.set(null);
     }
     
     deleteLockFile(mToggleLockFile.get(),mToggleLock.get(),".toggle");
+  }
+  
+  public static void updateLockGlobalToggle() {
+    if(Settings.propServerRestoreEnabled.getBoolean() && mToggleSocket.get() == null) {
+      if(createLockGlobalToggle().mResult) {
+        mToggleSocket.get().start();
+      }
+    }
+    else if(!Settings.propServerRestoreEnabled.getBoolean() && mToggleSocket.get() != null) {
+      deleteLockGlobalToggle();
+    }
   }
   
   private static String[] readLockFileContent(final File lockFile) { 

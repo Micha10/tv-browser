@@ -74,8 +74,8 @@ public class StartupSettingsTab implements devplugin.SettingsTab {
   private JPanel mSettingsPn;
 
   private JCheckBox mShowStartScreenChB, mMinimizeAfterStartUpChB, mStartFullscreen,
-      mAutostartWithWindows;
-
+      mAutostartWithWindows, mServerForRestore;
+  
   private File mLinkFileFile;
   private LinkFile mLinkFile;
 
@@ -119,8 +119,8 @@ public class StartupSettingsTab implements devplugin.SettingsTab {
    */
   public JPanel createSettingsPanel() {
     FormLayout layout = new FormLayout(
-        "5dlu, pref, 3dlu, pref, fill:3dlu:grow, 3dlu",
-        "pref, 5dlu, pref, 1dlu, pref, 1dlu, pref, 10dlu, pref, 10dlu, pref, 5dlu, pref, pref");
+        "5dlu, default, 3dlu, default, fill:3dlu:grow, 3dlu",
+        "default, 5dlu, default, 1dlu, default, 1dlu, default, 1dlu, default, 10dlu, default, 10dlu, default, 5dlu, default, default");
     mSettingsPn = new JPanel(layout);
     mSettingsPn.setBorder(Borders.DIALOG);
 
@@ -161,6 +161,12 @@ public class StartupSettingsTab implements devplugin.SettingsTab {
         "Show TV-Browser start screen during start up"), Settings.propStartScreenShow
         .getBoolean());
     mSettingsPn.add(mShowStartScreenChB, cc.xy(2, ++y));
+    
+    y++;
+    
+    mServerForRestore = new JCheckBox(mLocalizer.msg("serverForRestore",
+        "Provide server port for restore running TV-Browser"), Settings.propServerRestoreEnabled.getBoolean());
+    mSettingsPn.add(mServerForRestore, cc.xy(2, ++y));
 
     if (System.getProperty("os.name").toLowerCase().startsWith("windows") && !TVBrowser.isTransportable()) {
       layout.insertRow(++y, RowSpec.decode("1dlu"));
@@ -244,6 +250,8 @@ public class StartupSettingsTab implements devplugin.SettingsTab {
         .isSelected());
     Settings.propStartScreenShow.setBoolean(mShowStartScreenChB.isSelected());
     Settings.propIsUsingFullscreen.setBoolean(mStartFullscreen.isSelected());
+    Settings.propServerRestoreEnabled.setBoolean(mServerForRestore.isSelected());
+    TVBrowser.updateLockGlobalToggle();
     
     if(mAutoChannelDownload.isSelected()) {
       Settings.propAutoChannelUpdatePeriod.setInt(((DayPeriod)mAutoChannelDownloadPeriod.getSelectedItem()).mDays);
