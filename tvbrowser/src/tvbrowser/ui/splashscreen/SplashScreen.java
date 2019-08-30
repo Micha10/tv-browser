@@ -217,9 +217,10 @@ public class SplashScreen implements Splash {
       }
     };
     thread.setPriority(Thread.MAX_PRIORITY);
+    
     try {
-		SwingUtilities.invokeAndWait(thread);
-	} catch (InvocationTargetException e) {
-	} catch (InterruptedException e) {}
-  }
+  		SwingUtilities.invokeAndWait(thread);
+  	} catch (InvocationTargetException e) {
+  	} catch (InterruptedException e) {}
+    }
 }

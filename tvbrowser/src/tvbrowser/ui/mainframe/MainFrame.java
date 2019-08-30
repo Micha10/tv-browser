@@ -416,35 +416,22 @@ public class MainFrame extends JFrame implements DateListener,DropTargetListener
         mMenuBar.setVisible(Settings.propIsMenubarVisible.getBoolean());
         mLog.info("Using default menu bar");
       }
-
+      
+      if(Desktop.isDesktopSupported()) {
+        Desktop.getDesktop().setDefaultMenuBar(mMenuBar);
+        Desktop.getDesktop().setAboutHandler(e -> {
+          showAboutBox(); 
+        });
+        Desktop.getDesktop().setPreferencesHandler(p -> {
+          showSettingsDialog();
+        });
+        Desktop.getDesktop().setQuitHandler((QuitEvent e, QuitResponse response) -> {
+          quit();
+        });
+      }
     } else {
       mMenuBar = new DefaultMenuBar(this, mStatusBar.getLabel());
       mMenuBar.setVisible(Settings.propIsMenubarVisible.getBoolean());
-    }
-    
-    if(Desktop.isDesktopSupported()) {
-    	Desktop.getDesktop().setDefaultMenuBar(mMenuBar);
-    	Desktop.getDesktop().setAboutHandler(e -> {
-    		showAboutBox();	
-    	});
-    	Desktop.getDesktop().setPreferencesHandler(p -> {
-    		showSettingsDialog();
-    	});
-    	Desktop.getDesktop().setQuitHandler((QuitEvent e, QuitResponse response) -> {
-    		quit();
-    	});
-    }
-    
-    if(Desktop.isDesktopSupported()) {
-    	Desktop.getDesktop().setAboutHandler(e -> {
-    		showAboutBox();	
-    	});
-    	Desktop.getDesktop().setPreferencesHandler(p -> {
-    		showSettingsDialog();
-    	});
-    	Desktop.getDesktop().setQuitHandler((QuitEvent e, QuitResponse response) -> {
-    		quit();
-    	});
     }
     
     // create content
