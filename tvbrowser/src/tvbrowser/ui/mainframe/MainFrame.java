@@ -31,6 +31,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Cursor;
+import java.awt.Desktop;
 import java.awt.Dialog.ModalityType;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -49,6 +50,8 @@ import java.awt.Window;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
+import java.awt.desktop.QuitEvent;
+import java.awt.desktop.QuitResponse;
 import java.awt.dnd.DropTarget;
 import java.awt.dnd.DropTargetDragEvent;
 import java.awt.dnd.DropTargetDropEvent;
@@ -386,8 +389,9 @@ public class MainFrame extends JFrame implements DateListener,DropTargetListener
     mStatusBar = new StatusBar(mGlobalFindAsYouTypeKeyListener);
     mStatusBar.setOpaque(false);
     mStatusBar.getProgressBar().setOpaque(false);
-
+    
     if (OperatingSystem.isMacOs()) {
+      System.setProperty("apple.laf.useScreenMenuBar", "true");
       /* create the menu bar for MacOS X */
       try {
         Class<?> impl = Class
@@ -416,6 +420,31 @@ public class MainFrame extends JFrame implements DateListener,DropTargetListener
     } else {
       mMenuBar = new DefaultMenuBar(this, mStatusBar.getLabel());
       mMenuBar.setVisible(Settings.propIsMenubarVisible.getBoolean());
+    }
+    
+    if(Desktop.isDesktopSupported()) {
+    	Desktop.getDesktop().setDefaultMenuBar(mMenuBar);
+    	Desktop.getDesktop().setAboutHandler(e -> {
+    		showAboutBox();	
+    	});
+    	Desktop.getDesktop().setPreferencesHandler(p -> {
+    		showSettingsDialog();
+    	});
+    	Desktop.getDesktop().setQuitHandler((QuitEvent e, QuitResponse response) -> {
+    		quit();
+    	});
+    }
+    
+    if(Desktop.isDesktopSupported()) {
+    	Desktop.getDesktop().setAboutHandler(e -> {
+    		showAboutBox();	
+    	});
+    	Desktop.getDesktop().setPreferencesHandler(p -> {
+    		showSettingsDialog();
+    	});
+    	Desktop.getDesktop().setQuitHandler((QuitEvent e, QuitResponse response) -> {
+    		quit();
+    	});
     }
     
     // create content

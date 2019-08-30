@@ -238,15 +238,17 @@ public class UiUtilities {
    * @return the last visible modal child dialog of the specified window.
    */
   public static Window getLastModalChildOf(Window parent) {
-    Window[] children = parent.getOwnedWindows();
-    for (Window child : children) {
-      if (child instanceof Dialog) {
-        Dialog dlg = (Dialog) child;
-        if (dlg.isVisible() && dlg.isModal()) {
-          return getLastModalChildOf(dlg);
-        }
-      }
-    }
+	if(parent != null) {
+	    Window[] children = parent.getOwnedWindows();
+	    for (Window child : children) {
+	      if (child instanceof Dialog) {
+	        Dialog dlg = (Dialog) child;
+	        if (dlg.isVisible() && dlg.isModal()) {
+	          return getLastModalChildOf(dlg);
+	        }
+	      }
+	    }
+	}
 
     // this is the last window
     return parent;

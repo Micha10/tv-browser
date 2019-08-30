@@ -146,7 +146,7 @@ public class TVBrowser {
     }
   }
   
-  private static final String SUN_JAVA_WARNING = "TV-Browser was developed for Sun Java and may not run correctly with your Java implementation.";
+ // private static final String SUN_JAVA_WARNING = "TV-Browser was developed for Sun Java and may not run correctly with your Java implementation.";
 
   private static final Logger mLog
     = Logger.getLogger(TVBrowser.class.getName());
@@ -417,9 +417,9 @@ public class TVBrowser {
     }
 
     // log warning for OpenJDK users
-    if (!isJavaImplementationSupported()) {
+    /*if (!isJavaImplementationSupported()) {
       mainLogger.warning(SUN_JAVA_WARNING);
-    }
+    }*/
         
     /* Set the proxy settings
      * 
@@ -896,7 +896,7 @@ public class TVBrowser {
 		}
 
 	}
-
+/*
   private static boolean isJavaImplementationSupported() {
     if (mIgnoreJVM) {
       return true;
@@ -910,7 +910,7 @@ public class TVBrowser {
       return false;
     }
     return true;
-  }
+  }*/
 
   private static void startPeriodicSaveSettings() {
     // Every 5 minutes we store all the settings so they are stored in case of
@@ -944,9 +944,9 @@ public class TVBrowser {
         mIgnoreJVM = true;
       }
     }
-    if (!isJavaImplementationSupported()) {
+    /*if (!isJavaImplementationSupported()) {
       System.out.println(SUN_JAVA_WARNING);
-    }
+    }*/
     System.out.println("command line options:");
     System.out.println("    -minimized      The main window will be minimized after start up");
     System.out.println("    -nostartscreen  No start screen during start up");

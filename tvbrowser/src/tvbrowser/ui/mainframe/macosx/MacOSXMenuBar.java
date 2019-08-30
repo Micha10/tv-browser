@@ -26,7 +26,14 @@
 
 package tvbrowser.ui.mainframe.macosx;
 
+import java.awt.Desktop;
 import java.awt.Toolkit;
+import java.awt.desktop.AboutEvent;
+import java.awt.desktop.AboutHandler;
+import java.awt.desktop.QuitEvent;
+import java.awt.desktop.QuitHandler;
+import java.awt.desktop.QuitResponse;
+import java.awt.desktop.SystemEventListener;
 import java.awt.event.KeyEvent;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
@@ -52,9 +59,7 @@ public class MacOSXMenuBar extends MenuBar {
 
     Thread toAddMenus = new Thread() {
       public void run() {
-        boolean osxMenuCreated = createTVBrowserMenuItem();
-        
-        if(!osxMenuCreated) {
+        if(!Desktop.isDesktopSupported()) {
           JMenu fileMenu = createMenu("menu.main", "&File", true);
           add(fileMenu);
           
@@ -65,8 +70,13 @@ public class MacOSXMenuBar extends MenuBar {
           fileMenu.addSeparator();
           fileMenu.add(mQuitMI);
         }
+        else if (TVBrowser.restartEnabled()) {
+        	JMenu fileMenu = createMenu("menu.main", "&File", true);
+            add(fileMenu);
+            fileMenu.add(mRestartMI);
+        }
     
-        createCommonMenus(!osxMenuCreated);
+        createCommonMenus(!Desktop.isDesktopSupported());
         
         if(mEditMenu != null) {
           mEditMenu.add(mSettingsMI);
@@ -87,125 +97,5 @@ public class MacOSXMenuBar extends MenuBar {
     };
     
     addAdditionalMenus(toAddMenus);
-  }
-
-  private boolean createTVBrowserMenuItem() {
-    boolean menusCreated = false;
-    
-    try {
-      Class<?> applicationClass = Class.forName("com.apple.eawt.Application");
-      Class<?> applicationListenerClass = Class.forName("com.apple.eawt.ApplicationListener");
-      
-      Method getApplication = applicationClass.getMethod("getApplication", new Class<?>[0]);
-      Method addAboutMenuItem = applicationClass.getMethod("addAboutMenuItem", new Class<?>[0]);
-      Method addPreferencesMenuItem = applicationClass.getMethod("addPreferencesMenuItem", new Class<?>[0]);
-      
-      Method setEnabledAboutMenu = applicationClass.getMethod("setEnabledAboutMenu", new Class<?>[]{boolean.class});
-      Method setEnabledPreferencesMenu = applicationClass.getMethod("setEnabledPreferencesMenu", new Class<?>[]{boolean.class});
-      
-      Method addApplicationListener = applicationClass.getMethod("addApplicationListener", new Class<?>[]{applicationListenerClass});
-      
-      Object app = getApplication.invoke(applicationClass, new Object[0]);
-      
-      addAboutMenuItem.invoke(app, new Object[0]);
-      addPreferencesMenuItem.invoke(app, new Object[0]);
-      
-      setEnabledAboutMenu.invoke(app, new Object[]{true});
-      setEnabledPreferencesMenu.invoke(app, new Object[]{true});
-      
-      Object applicationListener = Proxy.newProxyInstance(app.getClass().getClassLoader(), new Class<?>[] {applicationListenerClass}, new ApplicationListenerHandler(this));
-      
-      addApplicationListener.invoke(app, new Object[] {applicationListener});
-      
-      menusCreated = true;
-    } catch (Exception e) {
-      LOGGER.log(Level.INFO, "OS X specific classes not found.", e);
-    }
-    
-   /* Application app = Application.getApplication();
-    app.addAboutMenuItem();
-    app.addPreferencesMenuItem();
-
-    app.setEnabledAboutMenu(true);
-    app.setEnabledPreferencesMenu(true);
-
-    app.addApplicationListener(new ApplicationListener() {
-      public void handleAbout(ApplicationEvent event) {
-        getMainFrame().showAboutBox();
-        event.setHandled(true);
-      }
-
-      public void handleOpenApplication(ApplicationEvent event) {
-      }
-
-      public void handleOpenFile(ApplicationEvent event) {
-      }
-
-      public void handlePreferences(ApplicationEvent event) {
-        getMainFrame().showSettingsDialog();
-        event.setHandled(true);
-      }
-
-      public void handlePrintFile(ApplicationEvent event) {
-      }
-
-      public void handleQuit(ApplicationEvent event) {
-        getMainFrame().quit();
-      }
-
-      public void handleReOpenApplication(ApplicationEvent event) {
-      }
-
-    });*/
-    
-    return menusCreated;
-  }
-  
-  private static final class ApplicationListenerHandler implements InvocationHandler {
-    private MacOSXMenuBar mMenuBar;
-    
-    public ApplicationListenerHandler(MacOSXMenuBar menuBar) {
-      mMenuBar = menuBar;
-    }
-    
-    private void handleAbout(Object event) {
-      mMenuBar.getMainFrame().showAboutBox();
-      setEventHandled(event);
-    }
-    
-    private void handlePreferences(Object event) {
-      mMenuBar.getMainFrame().showSettingsDialog();
-      setEventHandled(event);
-    }
-    
-    private void handleQuit(Object event) {
-      mMenuBar.getMainFrame().quit();
-    }
-    
-    private void setEventHandled(Object event) {
-      try {
-        Method setHandled = event.getClass().getMethod("setHandled", new Class<?>[] {boolean.class});
-        setHandled.invoke(event, new Object[]{true});
-      } catch (Exception e) {
-        LOGGER.log(Level.SEVERE, "Method setHandled(boolean) for ApplicationEvent could not be called.", e);
-      }
-    }
-
-    @Override
-    public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-      if(method != null && args != null && args.length == 1) {
-        if(method.getName().equals("handleAbout")) {
-          handleAbout(args[0]);
-        }
-        else if(method.getName().equals("handlePreferences")) {
-          handlePreferences(args[0]);
-        }
-        else if(method.getName().equals("handleQuit")) {
-          handleQuit(args[0]);
-        }
-      }
-      
-      return null;
-    }
   }
 }

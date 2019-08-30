@@ -33,14 +33,14 @@ import java.awt.Image;
 import java.awt.RenderingHints;
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 
 import javax.imageio.ImageIO;
-import javax.swing.ImageIcon;
 import javax.swing.JWindow;
 import javax.swing.SwingUtilities;
 
 import tvbrowser.TVBrowser;
-import util.io.IOUtilities;
+import util.misc.OperatingSystem;
 import util.ui.UiUtilities;
 
 public class SplashScreen implements Splash {
@@ -70,19 +70,10 @@ public class SplashScreen implements Splash {
 
   public SplashScreen() {
     super();
-    mSplashScreen = java.awt.SplashScreen.getSplashScreen();
+    mSplashScreen = OperatingSystem.isMacOs() ? null : java.awt.SplashScreen.getSplashScreen();
     mMessage = mLocalizer.ellipsisMsg("loading", "Loading");
     
     if(mSplashScreen == null) {
-      try {
-        byte[] image = IOUtilities.loadFileFromJar("splash.png", SplashScreen.class);
-        
-        if(image != null) {
-          mImage = new ImageIcon(image).getImage();
-        }
-      }catch(IOException ioe) {}
-      
-      if(mImage == null) {
         try {
           final File splash = new File("imgs/splash.png");
           
@@ -90,7 +81,6 @@ public class SplashScreen implements Splash {
             mImage = ImageIO.read(splash);
           }
         }catch(IOException ioe) {}
-      }
       
       if(mImage != null) {
         mSplashWindow = new JWindow() {
@@ -159,7 +149,9 @@ public class SplashScreen implements Splash {
           
           g2d2.dispose();
           
-          mSplashScreen.update();
+          if(mSplashScreen.isVisible()) {
+        	  mSplashScreen.update();
+          }
         }
         else if(mSplashWindow != null){
           mSplashWindow.repaint();
@@ -170,7 +162,7 @@ public class SplashScreen implements Splash {
   }
   
   private int getWidth() {
-    if(mSplashScreen != null) {
+    if(mSplashScreen != null && mSplashScreen.isVisible()) {
       return mSplashScreen.getSize().width;
     }
     else if(mSplashWindow != null) {
@@ -181,7 +173,7 @@ public class SplashScreen implements Splash {
   }
 
   private int getHeight() {
-    if(mSplashScreen != null) {
+    if(mSplashScreen != null && mSplashScreen.isVisible()) {
       return mSplashScreen.getSize().height;
     }
     else if(mSplashWindow != null) {
@@ -224,7 +216,10 @@ public class SplashScreen implements Splash {
         }
       }
     };
-    thread.setPriority(Thread.NORM_PRIORITY);
-    thread.start();
+    thread.setPriority(Thread.MAX_PRIORITY);
+    try {
+		SwingUtilities.invokeAndWait(thread);
+	} catch (InvocationTargetException e) {
+	} catch (InterruptedException e) {}
   }
 }
