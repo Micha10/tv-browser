@@ -52,6 +52,7 @@ import java.util.Iterator;
 import java.util.Locale;
 import java.util.Properties;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -109,7 +110,7 @@ public class TvBrowserDataService extends devplugin.AbstractTvDataService {
   public static final util.ui.Localizer mLocalizer
           = util.ui.Localizer.getLocalizerFor(TvBrowserDataService.class);
 
-  private static final Version VERSION = new Version(3,15,2);
+  private static final Version VERSION = new Version(3,15,3);
 
   protected static final String CHANNEL_GROUPS_FILENAME = "groups.txt";
   private static final String DEFAULT_CHANNEL_GROUPS_URL = "http://defaultdata.tvbrowser.org";
@@ -310,7 +311,7 @@ public class TvBrowserDataService extends devplugin.AbstractTvDataService {
    *
    *
    */
-  public void updateTvData(TvDataUpdateManager updateManager, Channel[] channelArr,
+  public void updateTvData(final TvDataUpdateManager updateManager, Channel[] channelArr,
                            Date startDate, int dateCount, ProgressMonitor monitor) {
     boolean groupsWereAlreadyUpdated = false;
     mHasRightToDownloadIcons = true;
@@ -443,8 +444,10 @@ public class TvBrowserDataService extends devplugin.AbstractTvDataService {
             Iterator<Channel> it=group.getChannels();
             while (it.hasNext()) {
               Channel ch=it.next();
-              addDownloadJob(updateManager, group.getMirror(), date, level, ch,
+              if(!updateManager.cancelDownload()) {
+                addDownloadJob(updateManager, group.getMirror(), date, level, ch,
                       ch.getBaseCountry(), receiveDH, updateDH, remoteSummaryFile, localSummaryFile);
+              }
             }
           }
           date = date.addDays(1);
@@ -452,21 +455,36 @@ public class TvBrowserDataService extends devplugin.AbstractTvDataService {
       }
     }
 
-
-
-
     mProgressMonitor.setMessage(mLocalizer.msg("info.1","Downloading..."));
-
-
+    
     // Initialize the ProgressMonitor
     mTotalDownloadJobCount = mDownloadManager.getDownloadJobCount();
     mProgressMonitor.setMaximum(mTotalDownloadJobCount);
 
+    final AtomicBoolean downloading = new AtomicBoolean(true);
+    
     // Let the download begin
     try {
+      new Thread("CHECK CANCEL DOWNLOAD") {
+        @Override
+        public void run() {
+          while(downloading.get()) {
+            try {
+              sleep(500);
+            } catch (InterruptedException e) {}
+            
+            if(updateManager.cancelDownload()) {
+              mDownloadManager.removeAllDownloadJobs();
+              break;
+            }
+          }
+        };
+      }.start();
+      
       mDownloadManager.runDownload();
     }
     finally {
+      downloading.set(false);
       // Update the programs for which the update succeeded in every case
       mProgressMonitor.setMessage(mLocalizer.msg("info.2","Updating database"));
       Iterator<TvBrowserDataServiceChannelGroup> groupIt1=groups.iterator();
