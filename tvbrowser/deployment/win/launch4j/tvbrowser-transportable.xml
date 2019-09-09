@@ -15,7 +15,7 @@
   <jre>
     <path>java</path>
     <minVersion>11</minVersion>
-    <dontUsePrivateJres>false</dontUsePrivateJres>
+    <jdkPreference>preferJdk</jdkPreference>
     <initialHeapSize>0</initialHeapSize>
     <maxHeapSize>1024</maxHeapSize>
     <opt>--module-path "lib;tvbrowser.jar" -splash:imgs/splash.png -m tvbrowser/tvbrowser.TVBrowser</opt>
