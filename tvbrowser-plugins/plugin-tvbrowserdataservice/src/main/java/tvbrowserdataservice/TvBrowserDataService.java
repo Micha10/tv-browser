@@ -102,7 +102,20 @@ import util.ui.html.HTMLTextHelper;
  * @author Til Schneider, www.murfman.de
  */
 public class TvBrowserDataService extends devplugin.AbstractTvDataService {
-
+  public static final String createURL(String base, String file) {
+    return base + (!base.endsWith("/") ? "/" : "") + file;
+  }
+  
+  public static final ArrayList<Mirror> createListFromMirrorArray(Mirror[] mirrorArr) {
+    final ArrayList<Mirror> mirrorList = new ArrayList<Mirror>();
+    
+    for(Mirror mirror : mirrorArr) {
+      mirrorList.add(mirror);
+    }
+    
+    return mirrorList;
+  }
+  
   private static final Logger mLog
           = Logger.getLogger(TvBrowserDataService.class.getName());
 
@@ -110,7 +123,7 @@ public class TvBrowserDataService extends devplugin.AbstractTvDataService {
   public static final util.ui.Localizer mLocalizer
           = util.ui.Localizer.getLocalizerFor(TvBrowserDataService.class);
 
-  private static final Version VERSION = new Version(3,15,3);
+  private static final Version VERSION = new Version(3,15,4);
 
   protected static final String CHANNEL_GROUPS_FILENAME = "groups.txt";
   private static final String DEFAULT_CHANNEL_GROUPS_URL = "http://defaultdata.tvbrowser.org";
@@ -254,7 +267,7 @@ public class TvBrowserDataService extends devplugin.AbstractTvDataService {
     }
     
     try {
-      String url = mirror.getUrl()+"/"+timeInfo.getName();
+      String url = createURL(mirror.getUrl(),timeInfo.getName());
       IOUtilities.download(new URL(url),timeInfo);
     } catch (Exception e) {
       // ignore, can be that not news_info.gz exists because server uses old data tools
@@ -266,7 +279,7 @@ public class TvBrowserDataService extends devplugin.AbstractTvDataService {
         in = IOUtilities.openSaveGZipInputStream(new FileInputStream(timeInfo));
         DataInputStream dataIn = new DataInputStream(in);
         time = dataIn.readLong();
-      } catch (Exception e) {e.printStackTrace();
+      } catch (Exception e) {
         // Ignore news are not that important
       }
       finally {
@@ -292,7 +305,7 @@ public class TvBrowserDataService extends devplugin.AbstractTvDataService {
     }
     
     try {
-      String url = group.getMirror().getUrl()+"/"+groupNews.getName();
+      String url = createURL(group.getMirror().getUrl(),groupNews.getName());
       IOUtilities.download(new URL(url), groupNews);
     } catch (Exception e) {
       // Ignore news are not that important
@@ -473,10 +486,12 @@ public class TvBrowserDataService extends devplugin.AbstractTvDataService {
               sleep(500);
             } catch (InterruptedException e) {}
             
-            if(updateManager.cancelDownload()) {
-              mDownloadManager.removeAllDownloadJobs();
-              break;
-            }
+            try {
+              if(updateManager.cancelDownload() && mDownloadManager != null) {
+                mDownloadManager.removeAllDownloadJobs();
+                break;
+              }
+            }catch(Exception e) {}
           }
         };
       }.start();

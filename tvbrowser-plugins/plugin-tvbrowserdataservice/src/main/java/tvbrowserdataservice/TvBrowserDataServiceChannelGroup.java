@@ -35,6 +35,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Method;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Locale;
@@ -255,32 +256,37 @@ public class TvBrowserDataServiceChannelGroup extends ChannelGroupImpl {
 
   protected void chooseMirrors() throws TvBrowserException {
     // load the mirror list
-    Mirror[] serverDefindeMirros = getServerDefinedMirrors();
-    Mirror[] mirrorArr = Mirror.loadMirrorList(new File(mDataDir, getId() + "_" + Mirror.MIRROR_LIST_FILE_NAME), mMirrorUrlArr, serverDefindeMirros);
-
-    // Get a random Mirror that is up to date
-    mCurMirror = Mirror.chooseUpToDateMirror(mirrorArr, null, getName(), getId(), TvBrowserDataServiceChannelGroup.class, " Please contact the TV data provider for help.");
-
-    if (mCurMirror != null) {
-      mLog.info("Using mirror " + mCurMirror.getUrl());
-
-      // Update the mirrorlist (for the next time)
-      updateMetaFile(mCurMirror.getUrl(), getId() + "_" + Mirror.MIRROR_LIST_FILE_NAME);
-
-      // Update the channel list
-      // NOTE: We have to load the channel list before the programs, because
-      // we need it for the programs.
-      updateChannelList(mCurMirror, false);
-
-      try {
-        mSummary = loadSummaryFile(mCurMirror);
-      } catch (Exception exc) {
-        mLog.log(Level.WARNING, "Getting summary file from mirror " + mCurMirror.getUrl() + " failed.", exc);
-        mSummary = null;
+    ArrayList<Mirror> mirrorList = TvBrowserDataService.createListFromMirrorArray(Mirror.loadMirrorList(new File(mDataDir, getId() + "_" + Mirror.MIRROR_LIST_FILE_NAME), mMirrorUrlArr, getServerDefinedMirrors()));
+    boolean choosen = false;
+    
+    while(!choosen && !mirrorList.isEmpty()) {
+      // Get a random Mirror that is up to date
+      mCurMirror = Mirror.chooseUpToDateMirror(mirrorList.toArray(new Mirror[0]), null, getName(), getId(), TvBrowserDataServiceChannelGroup.class, " Please contact the TV data provider for help.");
+  
+      if (mCurMirror != null) {
+        mLog.info("Using mirror " + mCurMirror.getUrl());
+  
+        // Update the mirrorlist (for the next time)
+        updateMetaFile(mCurMirror.getUrl(), getId() + "_" + Mirror.MIRROR_LIST_FILE_NAME);
+  
+        // Update the channel list
+        // NOTE: We have to load the channel list before the programs, because
+        // we need it for the programs.
+        updateChannelList(mCurMirror, false);
+  
+        try {
+          mSummary = loadSummaryFile(mCurMirror);
+          choosen = true;
+        } catch (Exception exc) {
+          mirrorList.remove(mCurMirror);
+          mLog.log(Level.WARNING, "Getting summary file from mirror " + mCurMirror.getUrl() + " failed.", exc);
+          mSummary = null;
+        }
       }
-    }
-    else {
-      mLog.info("No up to date mirror available for "+getId());
+      else {
+        mirrorList.clear();
+        mLog.info("No up to date mirror available for "+getId());
+      }
     }
   }
 
