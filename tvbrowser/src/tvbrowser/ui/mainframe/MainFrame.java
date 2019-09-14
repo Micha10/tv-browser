@@ -2577,7 +2577,7 @@ public class MainFrame extends JFrame implements DateListener,DropTargetListener
       else {
         if (TvDataUpdater.getInstance().isDownloading()) {
           TvDataUpdater.getInstance().stopDownload();
-        } else {
+        } else if(UpdateDlg.isToShow()) {
           UpdateDlg dlg = new UpdateDlg(this, true, reason);
           if (numberOfDays > 0) {
             dlg.setNumberOfDays(numberOfDays);

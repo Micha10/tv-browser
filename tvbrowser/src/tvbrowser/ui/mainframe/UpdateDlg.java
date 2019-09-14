@@ -34,6 +34,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
@@ -69,7 +71,13 @@ import util.ui.WindowClosingIf;
  * @author Martin Oberhauser
  */
 public class UpdateDlg extends JDialog implements ActionListener, WindowClosingIf {
-
+  private static long LAST_CLOSED = 0;
+  
+  // Workaround to prevent dialog from appearing more than once shortly
+  public static final boolean isToShow() {
+    return LAST_CLOSED + 500 < System.currentTimeMillis();
+  }
+  
   private static final util.ui.Localizer mLocalizer = util.ui.Localizer
       .getLocalizerFor(UpdateDlg.class);
 
@@ -247,6 +255,13 @@ public class UpdateDlg extends JDialog implements ActionListener, WindowClosingI
 
     contentPane.add(northPanel, BorderLayout.NORTH);
     mUpdateBtn.requestFocusInWindow();
+    
+    addWindowListener(new WindowAdapter() {
+      @Override
+      public void windowClosing(WindowEvent e) {
+        LAST_CLOSED = System.currentTimeMillis();
+      }
+    });
   }
 
   /**
@@ -292,8 +307,7 @@ public class UpdateDlg extends JDialog implements ActionListener, WindowClosingI
   public void actionPerformed(ActionEvent event) {
     Object source = event.getSource();
     if (source == mCancelBtn) {
-      mResult = CANCEL;
-      setVisible(false);
+      close();
     } else if (source == mUpdateBtn) {
       PeriodItem pi = (PeriodItem) mManuelDownloadPeriodSelection.getSelectedItem();
       mResult = pi.getDays();
@@ -345,6 +359,7 @@ public class UpdateDlg extends JDialog implements ActionListener, WindowClosingI
   }
 
   public void close() {
+    LAST_CLOSED = System.currentTimeMillis();
     mResult = CANCEL;
     setVisible(false);
   }
