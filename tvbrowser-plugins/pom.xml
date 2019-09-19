@@ -72,6 +72,7 @@
     <module>plugin-dvbviewerdataservice</module>
     <module>plugin-email</module>
     <module>plugin-feeds</module>
+    <module>plugin-epgdatareset</module>
     <module>plugin-filterfiltercomponent</module>
     <module>plugin-filterinfoicons</module>
     <module>plugin-filtershortcuts</module>
