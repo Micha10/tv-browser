@@ -1041,6 +1041,11 @@ public class PluginManagerImpl implements PluginManager {
       public boolean isScrollToChannelHighlightActivated() {
         return Settings.propScrollToChannnelMarkingActivated.getBoolean();
       }
+
+      @Override
+      public String getDataDirectory() {
+        return Settings.propTVDataDirectory.getString();
+      }
     };
   }
 

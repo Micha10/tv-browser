@@ -195,4 +195,10 @@ public interface TvBrowserSettings {
    * @since 3.4.5
    */
   public Color getScrollColorChannel();
+  
+  /**
+   * @return The data directory of TV-Browser.
+   * @since 4.1
+   */
+  public String getDataDirectory();
 }
