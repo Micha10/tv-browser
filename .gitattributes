@@ -777,6 +777,10 @@ tvbrowser-plugins/plugin-email/src/main/resources/emailplugin/emailplugin_de.pro
 tvbrowser-plugins/plugin-email/src/main/resources/emailplugin/emailplugin_hr.properties -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-email/src/main/resources/emailplugin/emailplugin_it.properties -text
 tvbrowser-plugins/plugin-email/src/main/resources/emailplugin/emailplugin_sv.properties -text
+tvbrowser-plugins/plugin-epgdatareset/pom.xml -text svneol=unset#text/plain
+tvbrowser-plugins/plugin-epgdatareset/src/main/java/epgdatareset/EPGdataReset.java -text svneol=unset#text/plain
+tvbrowser-plugins/plugin-epgdatareset/src/main/resources/epgdatareset/epgdatareset.properties -text svneol=unset#text/plain
+tvbrowser-plugins/plugin-epgdatareset/src/main/resources/epgdatareset/epgdatareset_de.properties -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-feeds/pom.xml -text
 tvbrowser-plugins/plugin-feeds/src/main/java/feedsplugin/FeedsDialog.java -text
 tvbrowser-plugins/plugin-feeds/src/main/java/feedsplugin/FeedsPlugin.java -text
