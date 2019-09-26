@@ -70,7 +70,7 @@ public class ManageFavoritesDialog extends JDialog implements WindowClosingIf{
     try {
       mInstance = this;
       
-      mManagePanel = new ManageFavoritesPanel(favoriteArr, splitPanePosition, showNew, initialSelection,false);
+      mManagePanel = new ManageFavoritesPanel(favoriteArr, splitPanePosition, showNew, initialSelection,false,false);
       
       ((JPanel)getContentPane()).setBorder(Borders.DIALOG);
       ((JPanel)getContentPane()).setLayout(new BorderLayout());
@@ -97,7 +97,7 @@ public class ManageFavoritesDialog extends JDialog implements WindowClosingIf{
           close();
         }
       });
-    }catch(Throwable t) {FavoritesPlugin.mLog.log(Level.SEVERE, "ERROR OPENING MANAGE DIALOG", t);}
+    }catch(Throwable t) {FavoritesPlugin.LOG.log(Level.SEVERE, "ERROR OPENING MANAGE DIALOG", t);}
   }
 
   public static ManageFavoritesDialog getInstance() {

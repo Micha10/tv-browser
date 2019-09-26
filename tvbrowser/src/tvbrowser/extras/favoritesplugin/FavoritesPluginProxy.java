@@ -122,7 +122,7 @@ public class FavoritesPluginProxy extends AbstractInternalPluginProxy implements
   }
 
   public String getButtonActionDescription() {
-    return FavoritesPlugin.mLocalizer.msg("description","Automatically marks your favorite programs and passes them to other plugins.");
+    return FavoritesPlugin.LOCALIZER.msg("description","Automatically marks your favorite programs and passes them to other plugins.");
   }
 
   public SettingsTab getSettingsTab() {
@@ -194,7 +194,7 @@ public class FavoritesPluginProxy extends AbstractInternalPluginProxy implements
   @Override
   public ProgramReceiveTarget[] getProgramReceiveTargets() {
     return new ProgramReceiveTarget[] { new ProgramReceiveTarget(this,
-        FavoritesPlugin.mLocalizer.msg("programTarget", "Create favorite from title"), PROGRAM_TARGET_TITLE_FAVORITE) };
+        FavoritesPlugin.LOCALIZER.msg("programTarget", "Create favorite from title"), PROGRAM_TARGET_TITLE_FAVORITE) };
   }
 
   @Override

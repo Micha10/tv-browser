@@ -35,6 +35,8 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -126,18 +128,21 @@ public class ManageFavoritesPanel extends TabListenerPanel implements ListDropAc
 
   private boolean mShowNew = false;
   private JCheckBox mBlackListChb;
+  private Thread mSplitDividerThread;
+  private long mLastDividerChange;
   
   private FilterableProgramListPanel mProgramListPanel;
   
   private JButton mScrollToPreviousDay, mScrollToNextDay, mScrollToFirstNotExpired;
   
   public ManageFavoritesPanel(Favorite[] favoriteArr,
-      int splitPanePosition, boolean showNew, Favorite initialSelection, boolean border) {
-    init(favoriteArr, splitPanePosition, showNew, initialSelection,border);
+      int splitPanePosition, boolean showNew, Favorite initialSelection, boolean border, boolean isMainPanel) {
+    init(favoriteArr, splitPanePosition, showNew, initialSelection,border,isMainPanel);
   }
   
-  private void init(Favorite[] favoriteArr, int splitPanePosition, boolean showNew, Favorite initialSelection, boolean border) {try {
+  private void init(Favorite[] favoriteArr, int splitPanePosition, boolean showNew, Favorite initialSelection, boolean border, boolean isMainPanel) {try {
     mShowNew = showNew;
+    mLastDividerChange = System.currentTimeMillis();
 
     String msg;
     Icon icon;
@@ -162,7 +167,7 @@ public class ManageFavoritesPanel extends TabListenerPanel implements ListDropAc
     toolbarPn.setBorder(BorderFactory.createEmptyBorder());
     
     if(mShowNew) {
-      JEditorPane info =  UiUtilities.createHtmlHelpTextArea(FavoritesPlugin.mLocalizer.msg("newPrograms.description","After updating TV listings, programs matching your favorites were found.\nSelect a favorite to view the new programs."));
+      JEditorPane info =  UiUtilities.createHtmlHelpTextArea(FavoritesPlugin.LOCALIZER.msg("newPrograms.description","After updating TV listings, programs matching your favorites were found.\nSelect a favorite to view the new programs."));
       
       JPanel northPanel = new JPanel(new BorderLayout(0,5));
       northPanel.add(info, BorderLayout.NORTH);
@@ -407,7 +412,33 @@ public class ManageFavoritesPanel extends TabListenerPanel implements ListDropAc
     mSplitPane.setDividerLocation(splitPanePosition);
     mSplitPane.setContinuousLayout(true);
     mSplitPane.setOpaque(false);
-
+    
+    if(isMainPanel) {
+      mSplitPane.addPropertyChangeListener(JSplitPane.DIVIDER_LOCATION_PROPERTY,new PropertyChangeListener() {
+        @Override
+        public synchronized void propertyChange(PropertyChangeEvent evt) {
+          mLastDividerChange = System.currentTimeMillis();
+          
+          if(mSplitDividerThread == null || !mSplitDividerThread.isAlive()) {
+            mSplitDividerThread = new Thread("FAVORITE SPLIT DIVIDER THREAD") {
+              @Override
+              public void run() {
+                while(System.currentTimeMillis() - mLastDividerChange < 500) {
+                  try {
+                    sleep(500);
+                  } catch (InterruptedException e) {
+                    // ignore
+                  }
+                }
+                FavoritesPlugin.getInstance().store();
+              };
+            };
+            mSplitDividerThread.start();
+          }
+        }
+      });
+    }
+    
     add(mSplitPane, BorderLayout.CENTER);
 
     JScrollPane scrollPane;
@@ -867,7 +898,7 @@ public class ManageFavoritesPanel extends TabListenerPanel implements ListDropAc
   public void newFavorite(FavoriteNode parent) {
     Favorite favorite;
     if (FavoritesPlugin.getInstance().isUsingExpertMode()) {
-      if(FavoritesPlugin.getInstance().showTypeSelection() && JOptionPane.showConfirmDialog(UiUtilities.getLastModalChildOf(MainFrame.getInstance()), FavoritesPlugin.mLocalizer.msg("askType.message", "Create a filter favorite?"), FavoritesPlugin.mLocalizer.msg("askType.title", "Type selection"), JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
+      if(FavoritesPlugin.getInstance().showTypeSelection() && JOptionPane.showConfirmDialog(UiUtilities.getLastModalChildOf(MainFrame.getInstance()), FavoritesPlugin.LOCALIZER.msg("askType.message", "Create a filter favorite?"), FavoritesPlugin.LOCALIZER.msg("askType.title", "Type selection"), JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
         favorite = new FilterFavorite();
       }
       else {
@@ -1007,7 +1038,7 @@ public class ManageFavoritesPanel extends TabListenerPanel implements ListDropAc
       }
 
       if (JOptionPane.showConfirmDialog(this,
-              FavoritesPlugin.mLocalizer.msg("reallyDelete", "Really delete favorite '{0}'?", fav.getName()),
+              FavoritesPlugin.LOCALIZER.msg("reallyDelete", "Really delete favorite '{0}'?", fav.getName()),
               mLocalizer.msg("delete", "Delete selected favorite..."),
               JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
 

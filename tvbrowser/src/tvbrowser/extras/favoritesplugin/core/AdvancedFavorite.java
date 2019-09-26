@@ -453,7 +453,7 @@ public class AdvancedFavorite extends Favorite implements PendingFilterLoader {
           }
         }
         else {
-          FavoritesPlugin.mLog.severe("Error on loading pending filter '" + mPendingFilterName + "' for Favorite: '" + getName() + "'. Filter was not found.");
+          FavoritesPlugin.LOG.severe("Error on loading pending filter '" + mPendingFilterName + "' for Favorite: '" + getName() + "'. Filter was not found.");
         }
       }catch(Exception e) {
         ErrorHandler.handle("Error on loading pending filter '" + mPendingFilterName + "' for Favorite: '" + getName() + "'",e);

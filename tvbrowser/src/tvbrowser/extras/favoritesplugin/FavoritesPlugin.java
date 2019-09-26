@@ -129,7 +129,7 @@ public class FavoritesPlugin {
   public static final String ID_ACTION_MANAGE = "manageFavorites";
   public static final String ID_ACTION_SHOW_NEW = "showNewFavorites";
   
-  public static final Logger mLog = Logger.getLogger(FavoritesPlugin.class.getName());
+  public static final Logger LOG = Logger.getLogger(FavoritesPlugin.class.getName());
   /**
    * Tango category of the icon to be used in this plugin
    */
@@ -141,7 +141,7 @@ public class FavoritesPlugin {
   private static final String ICON_NAME = "emblem-favorite";
 
   /** The localizer for this class. */
-  public static final util.ui.Localizer mLocalizer = util.ui.Localizer
+  public static final util.ui.Localizer LOCALIZER = util.ui.Localizer
           .getLocalizerFor(FavoritesPlugin.class);
 
   private static FavoritesPlugin mInstance;
@@ -158,9 +158,22 @@ public class FavoritesPlugin {
 
   private boolean mHasToUpdate = false;
 
-  private static final String EXPERT_MODE_KEY = "expertMode";
-  private static final String TYPE_SELECTION_KEY = "showTypeSelection";
+  private static final String KEY_EXPERT_MODE = "expertMode";
+  private static final String KEY_TYPE_SELECTION = "showTypeSelection";
+  private static final String KEY_LAST_SELECTED_PROGRAM_FILTER = "lastSelectedProgramFilter";
+  private static final String KEY_SHOW_BLACK_LIST_ENTRIES = "showBlackEntries";
+  private static final String KEY_SHOW_PICTURES = "showPictures";
+  private static final String KEY_SHOW_REPETITIONS = "showRepetitions";
+  private static final String KEY_AUTOSELECT_REMINDER = "autoSelectReminder";
+  private static final String KEY_MARK_PRIORITY = "markPriority";
+  private static final String KEY_TIME_BUTTONS_SCROLL_TO_NEXT_IN_TAB = "timeButtonsScrollToNextTimeInTab";
+  private static final String KEY_REACT_ON_FILTER_CHANGE = "reactOnFilterChange";
+  private static final String KEY_FILTER_START_TYPE = "filterStartType";
+  private static final String KEY_PROVIDE_TAB = "provideTab";
+  private static final String KEY_SHOW_DATE_SEPARATORS = "showDateSeparators";
+  private static final String KEY_SPLIT_PANE_POSITION = "splitpanePosition";
   
+  private static final int VALUE_DEFAULT_SPLIT_PANE_POSITION = 200;
   /**
    * do not save the favorite tree during TV data updates because it might not be consistent
    */
@@ -327,7 +340,7 @@ public class FavoritesPlugin {
    */
   public void waitForFinishingUpdateThreads() {
     if (mThreadPool != null) {
-      mLog.info("Favorites: Wait for update threads to finish");
+      LOG.info("Favorites: Wait for update threads to finish");
       mThreadPool.shutdown();
 
       try {
@@ -336,13 +349,13 @@ public class FavoritesPlugin {
             TimeUnit.SECONDS);
 
         if (success) {
-          mLog.info("Favorites: Update threads were finished");
+          LOG.info("Favorites: Update threads were finished");
         } else {
-          mLog
+          LOG
               .severe("Favorites: Timeout on waiting for update threads to finish was reached");
         }
       } catch (InterruptedException e) {
-        mLog.log(Level.INFO,"Waiting for favorite update finishing was interrupted",e);
+        LOG.log(Level.INFO,"Waiting for favorite update finishing was interrupted",e);
       }
 
       mThreadPool = null;
@@ -533,31 +546,11 @@ public class FavoritesPlugin {
   
   private void addPanel() {
     SwingUtilities.invokeLater(() -> {
-      if(mSettings.getProperty("provideTab", "true").equals("true")) {
+      if(mSettings.getProperty(KEY_PROVIDE_TAB, "true").equals("true")) {
         if(mMangePanel == null) {
-          int splitPanePosition = getIntegerSetting(mSettings, "splitpanePosition",200);
+          int splitPanePosition = getIntegerSetting(mSettings, KEY_SPLIT_PANE_POSITION, VALUE_DEFAULT_SPLIT_PANE_POSITION);
           
-          mMangePanel = new ManageFavoritesPanel(null, splitPanePosition, false, null, true);
-          
-          
-       /*   mMangePanel.addAncestorListener(new AncestorListener() {
-            private boolean mCheck = false;
-            @Override
-            public void ancestorRemoved(AncestorEvent event) {}
-            
-            @Override
-            public void ancestorMoved(AncestorEvent event) {}
-            
-            @Override
-            public void ancestorAdded(AncestorEvent event) {
-              if(mMangePanel != null) {
-                mMangePanel.scrollToFirstNotExpiredIndex(mCheck);
-                
-                mCheck = true;
-              }
-            }
-          });*/
-          
+          mMangePanel = new ManageFavoritesPanel(null, splitPanePosition, false, null, true, true);
           
           mAncestorListener = new AncestorListener() {
             private boolean mCheck = false;
@@ -611,7 +604,7 @@ public class FavoritesPlugin {
       Properties prop = mConfigurationHandler.loadSettings();
       loadSettings(prop);
     }catch(IOException e) {
-      ErrorHandler.handle(mLocalizer.msg("couldNotLoadFavoritesSettings","Could not load settings for favorites"), e);
+      ErrorHandler.handle(LOCALIZER.msg("couldNotLoadFavoritesSettings","Could not load settings for favorites"), e);
     }
 
     try {
@@ -622,7 +615,7 @@ public class FavoritesPlugin {
         }
       });
     }catch(IOException e) {
-      ErrorHandler.handle(mLocalizer.msg("couldNotLoadFavorites","Could not load favorites"), e);
+      ErrorHandler.handle(LOCALIZER.msg("couldNotLoadFavorites","Could not load favorites"), e);
     }
   }
 
@@ -634,17 +627,18 @@ public class FavoritesPlugin {
         }
       });
     } catch (IOException e) {
-      ErrorHandler.handle(mLocalizer.msg("couldNotStoreFavorites","Could not store favorites"), e);
+      ErrorHandler.handle(LOCALIZER.msg("couldNotStoreFavorites","Could not store favorites"), e);
     }
 
     try {
       if(mMangePanel != null) {
-        mSettings.put("lastSelectedProgramFilter", mMangePanel.getSelectedProgramFilterName());
+        mSettings.setProperty(KEY_LAST_SELECTED_PROGRAM_FILTER, mMangePanel.getSelectedProgramFilterName());
+        mSettings.setProperty(KEY_SPLIT_PANE_POSITION, Integer.toString(mMangePanel.getSplitpanePosition()));
       }
       
       mConfigurationHandler.storeSettings(mSettings);
     } catch (IOException e) {
-      ErrorHandler.handle(mLocalizer.msg("couldNotStoreFavoritesSettings","Could not store settings for favorites"), e);
+      ErrorHandler.handle(LOCALIZER.msg("couldNotStoreFavoritesSettings","Could not store settings for favorites"), e);
     }
   }
 
@@ -817,7 +811,7 @@ public class FavoritesPlugin {
       monitor = new NullProgressMonitor();
     }
     monitor.setMaximum(favoriteArr.length);
-    monitor.setMessage(mLocalizer.msg("updatingFavorites","Updating favorites"));
+    monitor.setMessage(LOCALIZER.msg("updatingFavorites","Updating favorites"));
 
     for (int i=0;i<favoriteArr.length; i++) {
       monitor.setValue(i);
@@ -859,8 +853,8 @@ public class FavoritesPlugin {
     }
 
     if(buffer.length() > 0) {
-      buffer.insert(0,mLocalizer.msg("sendError","Error by sending programs to other plugins.\n\nPlease check the favorites that should send\nprograms to the following plugins:\n"));
-      buffer.append(mLocalizer.msg("sendErrorFavorites","\nThe following Favorites are affected by this:\n"));
+      buffer.insert(0,LOCALIZER.msg("sendError","Error by sending programs to other plugins.\n\nPlease check the favorites that should send\nprograms to the following plugins:\n"));
+      buffer.append(LOCALIZER.msg("sendErrorFavorites","\nThe following Favorites are affected by this:\n"));
 
       ScrollableJPanel panel = new ScrollableJPanel();
       panel.setBorder(BorderFactory.createEmptyBorder(0,1,0,1));
@@ -912,7 +906,7 @@ public class FavoritesPlugin {
    * programs on the black list too.
    */
   public boolean isShowingBlackListEntries() {
-    return mSettings.getProperty("showBlackEntries","false").compareTo("true") == 0;
+    return mSettings.getProperty(KEY_SHOW_BLACK_LIST_ENTRIES,"false").compareTo("true") == 0;
   }
 
   /**
@@ -922,7 +916,7 @@ public class FavoritesPlugin {
    * @param value If the programs are to show.
    */
   public void setIsShowingBlackListEntries(boolean value) {
-    mSettings.setProperty("showBlackEntries",String.valueOf(value));
+    mSettings.setProperty(KEY_SHOW_BLACK_LIST_ENTRIES,String.valueOf(value));
   }
 
   private void writeData(ObjectOutputStream out) throws IOException {
@@ -982,7 +976,7 @@ public class FavoritesPlugin {
 
     action.setBigIcon(getIconFromTheme(ICON_CATEGORY, ICON_NAME, 22));
     action.setSmallIcon(getIconFromTheme(ICON_CATEGORY, ICON_NAME, 16));
-    action.setShortDescription(mLocalizer.msg("favoritesManager",
+    action.setShortDescription(LOCALIZER.msg("favoritesManager",
             "Manage favorite programs"));
     action.setText(getName());
     action.putValue(Plugin.ACTION_ID_KEY, ID_ACTION_MANAGE);
@@ -993,9 +987,9 @@ public class FavoritesPlugin {
     });
     showNew.setBigIcon(getIconFromTheme(ICON_CATEGORY, ICON_NAME, 22));
     showNew.setSmallIcon(getIconFromTheme(ICON_CATEGORY, ICON_NAME, 16));
-    showNew.setShortDescription(mLocalizer.msg("showNewDesc",
+    showNew.setShortDescription(LOCALIZER.msg("showNewDesc",
             "Show new programs found at last data update again"));
-    showNew.setText(mLocalizer.msg("showNewTitle",
+    showNew.setText(LOCALIZER.msg("showNewTitle",
         "Show new programs"));
     showNew.putValue(InternalPluginProxyIf.KEYBOARD_ACCELERATOR, KeyStroke.getKeyStroke(KeyEvent.VK_E, Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx()));
     showNew.putValue(Plugin.ACTION_ID_KEY, ID_ACTION_SHOW_NEW);
@@ -1030,16 +1024,14 @@ public class FavoritesPlugin {
   }
 
   private void showManageFavoritesDialog(final boolean showNew, final Favorite[] favoriteArr, final Favorite initialSelection) {
-    int splitPanePosition = getIntegerSetting(mSettings, "splitpanePosition",
-            200);
+    int splitPanePosition = getIntegerSetting(mSettings, KEY_SPLIT_PANE_POSITION, VALUE_DEFAULT_SPLIT_PANE_POSITION);
     ManageFavoritesDialog dlg = new ManageFavoritesDialog(MainFrame.getInstance(), favoriteArr, splitPanePosition, showNew, initialSelection);
 
     Settings.layoutWindow("extras.manageFavoritesDlg",dlg,new Dimension(650,450));
     dlg.setVisible(true);
 
     splitPanePosition = dlg.getSplitpanePosition();
-    mSettings.setProperty("splitpanePosition", Integer
-        .toString(splitPanePosition));
+    mSettings.setProperty(KEY_SPLIT_PANE_POSITION, Integer.toString(splitPanePosition));
 
     if (!showNew) {
       updateRootNode(true);
@@ -1047,27 +1039,27 @@ public class FavoritesPlugin {
   }
 
   public boolean isUsingExpertMode() {
-    return mSettings.getProperty(EXPERT_MODE_KEY,"false").compareTo("true") == 0;
+    return mSettings.getProperty(KEY_EXPERT_MODE,"false").compareTo("true") == 0;
   }
   
   public void setIsUsingExpertMode(boolean value) {
-    mSettings.setProperty(EXPERT_MODE_KEY,String.valueOf(value));
+    mSettings.setProperty(KEY_EXPERT_MODE,String.valueOf(value));
   }
   
   public boolean showTypeSelection() {
-    return mSettings.getProperty(TYPE_SELECTION_KEY,"true").compareTo("true") == 0;
+    return mSettings.getProperty(KEY_TYPE_SELECTION,"true").compareTo("true") == 0;
   }
   
   public void setShowTypeSelection(boolean value) {
-    mSettings.setProperty(TYPE_SELECTION_KEY,String.valueOf(value));
+    mSettings.setProperty(KEY_TYPE_SELECTION,String.valueOf(value));
   }
   
   public boolean isShowingPictures() {
-    return mSettings.getProperty("showPictures","false").compareTo("true") == 0;
+    return mSettings.getProperty(KEY_SHOW_PICTURES,"false").compareTo("true") == 0;
   }
 
   public void setIsShowingPictures(boolean value) {
-    mSettings.setProperty("showPictures",String.valueOf(value));
+    mSettings.setProperty(KEY_SHOW_PICTURES,String.valueOf(value));
   }
 
   public void showCreateFavoriteWizard(Program program) {
@@ -1091,7 +1083,7 @@ public class FavoritesPlugin {
     Window parent = UiUtilities.getLastModalChildOf(MainFrame.getInstance());
     Favorite favorite;
     if (isUsingExpertMode()) {
-      if(showTypeSelection() && JOptionPane.showConfirmDialog(UiUtilities.getLastModalChildOf(MainFrame.getInstance()), mLocalizer.msg("askType.message", "Create a filter favorite?"), mLocalizer.msg("askType.title", "Type selection"), JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
+      if(showTypeSelection() && JOptionPane.showConfirmDialog(UiUtilities.getLastModalChildOf(MainFrame.getInstance()), LOCALIZER.msg("askType.message", "Create a filter favorite?"), LOCALIZER.msg("askType.title", "Type selection"), JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
         favorite = new FilterFavorite();
       }
       else {
@@ -1129,13 +1121,13 @@ public class FavoritesPlugin {
         }
 
       }catch (TvBrowserException exc) {
-        ErrorHandler.handle(mLocalizer.msg("couldNotUpdateFavorites","Could not update favorites."), exc);
+        ErrorHandler.handle(LOCALIZER.msg("couldNotUpdateFavorites","Could not update favorites."), exc);
       }
 
       if (program != null && favorite.getPrograms().length == 0 && !favorite.isRemindAfterDownload()) {
-        Object[] options = {mLocalizer.msg("btn.notifyMe","Notify Me"), mLocalizer.msg("btn.editFavorite","Edit Favorite"), mLocalizer.msg("btn.ignore","Ignore")};
-        int option = JOptionPane.showOptionDialog(parent, mLocalizer.msg("dlg.noMatchingPrograms","Currently no program matches the newly created favorite.\n\nDo you want TV-Browser to notify you when any program matches this favorite?"),
-                  mLocalizer.msg("dlg.title.information","Information"),
+        Object[] options = {LOCALIZER.msg("btn.notifyMe","Notify Me"), LOCALIZER.msg("btn.editFavorite","Edit Favorite"), LOCALIZER.msg("btn.ignore","Ignore")};
+        int option = JOptionPane.showOptionDialog(parent, LOCALIZER.msg("dlg.noMatchingPrograms","Currently no program matches the newly created favorite.\n\nDo you want TV-Browser to notify you when any program matches this favorite?"),
+                  LOCALIZER.msg("dlg.title.information","Information"),
                   JOptionPane.YES_NO_OPTION,
                   JOptionPane.INFORMATION_MESSAGE,
                   null,
@@ -1152,9 +1144,9 @@ public class FavoritesPlugin {
       else if (program != null && !favorite.contains(program)) {
         // only show a warning for non matching favorites if the program is older than today
         if (program.getDate().compareTo(new devplugin.Date()) >= 0) {
-          Object[] options = {mLocalizer.msg("btn.editFavorite","Edit Favorite"), mLocalizer.msg("btn.ignore","Ignore")};
-          if (JOptionPane.showOptionDialog(parent, mLocalizer.msg("dlg.programDoesntMatch","The currently selected program does not belong to the newly created favorite.\n\nDo you want to edit the favorite?"),
-              mLocalizer.msg("dlg.title.warning","Warning"),
+          Object[] options = {LOCALIZER.msg("btn.editFavorite","Edit Favorite"), LOCALIZER.msg("btn.ignore","Ignore")};
+          if (JOptionPane.showOptionDialog(parent, LOCALIZER.msg("dlg.programDoesntMatch","The currently selected program does not belong to the newly created favorite.\n\nDo you want to edit the favorite?"),
+              LOCALIZER.msg("dlg.title.warning","Warning"),
               JOptionPane.YES_NO_OPTION,
               JOptionPane.WARNING_MESSAGE,
               null,
@@ -1211,7 +1203,7 @@ public class FavoritesPlugin {
 
   public void askAndDeleteFavorite(Favorite fav) {
     if (JOptionPane.showConfirmDialog(UiUtilities.getLastModalChildOf(MainFrame.getInstance()),
-              mLocalizer.msg("reallyDelete", "Really delete favorite '{0}'?",fav.getName()),
+              LOCALIZER.msg("reallyDelete", "Really delete favorite '{0}'?",fav.getName()),
               Localizer
         .getLocalization(Localizer.I18N_DELETE),
               JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
@@ -1236,7 +1228,7 @@ public class FavoritesPlugin {
       }
     };
     manageFavorite.putValue(Action.SMALL_ICON, getFavoritesIcon(16));
-    manageFavorite.putValue(Action.NAME, mLocalizer.ellipsisMsg("favoritesManager", "Manage Favorites"));
+    manageFavorite.putValue(Action.NAME, LOCALIZER.ellipsisMsg("favoritesManager", "Manage Favorites"));
 
 
     Action addFavorite = new AbstractAction() {
@@ -1245,7 +1237,7 @@ public class FavoritesPlugin {
       }
     };
     addFavorite.putValue(Action.SMALL_ICON, TVBrowserIcons.newIcon(TVBrowserIcons.SIZE_SMALL));
-    addFavorite.putValue(Action.NAME, mLocalizer.ellipsisMsg("new", "Create new favorite"));
+    addFavorite.putValue(Action.NAME, LOCALIZER.ellipsisMsg("new", "Create new favorite"));
 
     Action openSettings = new AbstractAction() {
       public void actionPerformed(ActionEvent e) {
@@ -1264,7 +1256,7 @@ public class FavoritesPlugin {
 
     PluginTreeNode topicNode = mRootNode.addNode(Localizer.getLocalization(Localizer.I18N_PROGRAMS));
     topicNode.setGroupingByDateEnabled(false);
-    PluginTreeNode dateNode = mRootNode.addNode(mLocalizer.msg("days", "Days"));
+    PluginTreeNode dateNode = mRootNode.addNode(LOCALIZER.msg("days", "Days"));
     dateNode.setGroupingByDateEnabled(true);
 
     ArrayList<Program> allPrograms = new ArrayList<Program>(1000);
@@ -1340,11 +1332,11 @@ public class FavoritesPlugin {
   }
 
   protected boolean isShowingRepetitions() {
-    return mSettings.getProperty("showRepetitions","true").compareTo("true") == 0;
+    return mSettings.getProperty(KEY_SHOW_REPETITIONS,"true").compareTo("true") == 0;
   }
 
   protected void setShowRepetitions(boolean value) {
-    mSettings.setProperty("showRepetitions", String.valueOf(value));
+    mSettings.setProperty(KEY_SHOW_REPETITIONS, String.valueOf(value));
   }
 
   /**
@@ -1353,16 +1345,16 @@ public class FavoritesPlugin {
    * @return If the reminder should be selected.
    */
   public boolean isAutoSelectingReminder() {
-    return mSettings.getProperty("autoSelectReminder","true").compareTo("true") == 0;
+    return mSettings.getProperty(KEY_AUTOSELECT_REMINDER,"true").compareTo("true") == 0;
   }
 
   protected void setAutoSelectingReminder(boolean value) {
-    mSettings.setProperty("autoSelectReminder", String.valueOf(value));
+    mSettings.setProperty(KEY_AUTOSELECT_REMINDER, String.valueOf(value));
   }
 
   protected int getMarkPriority() {
     if(mMarkPriority == - 2 && mSettings != null) {
-      mMarkPriority = Integer.parseInt(mSettings.getProperty("markPriority",String.valueOf(Program.PRIORITY_MARK_MIN)));
+      mMarkPriority = Integer.parseInt(mSettings.getProperty(KEY_MARK_PRIORITY,String.valueOf(Program.PRIORITY_MARK_MIN)));
       return mMarkPriority;
     } else {
       return mMarkPriority;
@@ -1382,7 +1374,7 @@ public class FavoritesPlugin {
       }
     }
 
-    mSettings.setProperty("markPriority",String.valueOf(priority));
+    mSettings.setProperty(KEY_MARK_PRIORITY,String.valueOf(priority));
 
     saveFavorites();
   }
@@ -1392,7 +1384,7 @@ public class FavoritesPlugin {
   }
 
   String getName() {
-    return mLocalizer.msg("manageFavorites","Favorites");
+    return LOCALIZER.msg("manageFavorites","Favorites");
   }
 
   private static class ReceiveTargetItem {
@@ -1504,7 +1496,7 @@ public class FavoritesPlugin {
     public void run() {
       if(newFavoritesFound()) {
         synchronized (mFavorites) {
-          panel = new ManageFavoritesPanel(mFavorites, getIntegerSetting(mSettings, "splitpanePosition",200), true, null, true);
+          panel = new ManageFavoritesPanel(mFavorites, getIntegerSetting(mSettings, KEY_SPLIT_PANE_POSITION, VALUE_DEFAULT_SPLIT_PANE_POSITION), true, null, true, false);
           
           mInfoPanel = new AfterDataUpdateInfoPanel() {
             @Override
@@ -1656,7 +1648,7 @@ public class FavoritesPlugin {
   }
   
   public PluginCenterPanelWrapper getPluginCenterPanelWrapper() {
-    return mSettings.getProperty("provideTab", "true").equals("true") ? mWrapper : null;
+    return provideTab() ? mWrapper : null;
   }
   
   private class FavoritesCenterPanel extends PluginCenterPanel {
@@ -1693,11 +1685,11 @@ public class FavoritesPlugin {
   }
   
   public boolean provideTab() {
-    return mSettings.getProperty("provideTab", "true").equals("true");
+    return mSettings.getProperty(KEY_PROVIDE_TAB, "true").equals("true");
   }
   
   public void setProvideTab(boolean value) {
-    mSettings.put("provideTab", String.valueOf(value));
+    mSettings.setProperty(KEY_PROVIDE_TAB, String.valueOf(value));
     addPanel();
   }
   
@@ -1710,11 +1702,11 @@ public class FavoritesPlugin {
   }
   
   public boolean showDateSeparators() {
-    return mSettings.getProperty("showDateSeparators","true").equals("true");
+    return mSettings.getProperty(KEY_SHOW_DATE_SEPARATORS,"true").equals("true");
   }
   
   public void setShowDateSeparators(boolean show) {
-    mSettings.put("showDateSeparators", String.valueOf(show));
+    mSettings.setProperty(KEY_SHOW_DATE_SEPARATORS, String.valueOf(show));
     
     if(mMangePanel != null) {
       mMangePanel.setShowDateSeparators(show);
@@ -1746,32 +1738,32 @@ public class FavoritesPlugin {
   }
   
   public boolean timeButtonsScrollToNextTimeInTab() {
-    return mSettings.getProperty("timeButtonsScrollToNextTimeInTab", "true").equals("true");
+    return mSettings.getProperty(KEY_TIME_BUTTONS_SCROLL_TO_NEXT_IN_TAB, "true").equals("true");
   }
   
   public void setTimeButtonsScrollToNextTimeInTab(boolean value) {
-    mSettings.setProperty("timeButtonsScrollToNextTimeInTab", String.valueOf(value));
+    mSettings.setProperty(KEY_TIME_BUTTONS_SCROLL_TO_NEXT_IN_TAB, String.valueOf(value));
   }
   
   public boolean reactOnFilterChange() {
-    return mSettings.getProperty("reactOnFilterChange", "true").equals("true");
+    return mSettings.getProperty(KEY_REACT_ON_FILTER_CHANGE, "true").equals("true");
   }
   
   public void setReactOnFilterChange(boolean value) {
-    mSettings.setProperty("reactOnFilterChange", String.valueOf(value));
+    mSettings.setProperty(KEY_REACT_ON_FILTER_CHANGE, String.valueOf(value));
   }
   
   public int getFilterStartType() {
-    return Integer.parseInt(mSettings.getProperty("filterStartType", "0"));
+    return Integer.parseInt(mSettings.getProperty(KEY_FILTER_START_TYPE, "0"));
   }
   
   public void setFilterStartType(int type) {
-    mSettings.setProperty("filterStartType", String.valueOf(type));
+    mSettings.setProperty(KEY_FILTER_START_TYPE, String.valueOf(type));
   }
   
   public ProgramFilter getLastSelectedProgramFilter() {
     ProgramFilter test = FilterManagerImpl.getInstance().getAllFilter();
-    String name = mSettings.getProperty("lastSelectedProgramFilter", test.getName());
+    String name = mSettings.getProperty(KEY_LAST_SELECTED_PROGRAM_FILTER, test.getName());
     
     ProgramFilter[] availableFilter = FilterManagerImpl.getInstance().getAvailableFilters();
     
