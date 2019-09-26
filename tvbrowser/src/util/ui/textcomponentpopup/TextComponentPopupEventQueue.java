@@ -25,10 +25,9 @@ import util.ui.Localizer;
 import util.ui.TVBrowserIcons;
 
 /**
- * This TextComponentPopupEventQueue is based on the Implementation of Santhosh
- * 
- * For Details look here:
- * http://jroller.com/page/santhosh?entry=context_menu_for_textcomponents
+ * This {@link EventQueue} is based on the implementation of Santhosh.
+ * <p>
+ * For details look here: {@link <a href="https://web.archive.org/web/20060504030843/http://jroller.com/page/santhosh?entry=context_menu_for_textcomponents">http://jroller.com/page/santhosh?entry=context_menu_for_textcomponents</a>}
  * 
  * @author Santhosh Kumar T - santhosh@in.fiorano.com
  */
@@ -49,14 +48,11 @@ public class TextComponentPopupEventQueue extends EventQueue {
         }
       }
     } catch (Exception e1) {
-      // TODO Auto-generated catch block
-      // e1.printStackTrace();
     }
     
     try {
       super.dispatchEvent(event);
     }catch(Throwable e) {
-      // e.printStackTrace();
       return;}
 
     // interested only in mouseevents
@@ -89,13 +85,8 @@ public class TextComponentPopupEventQueue extends EventQueue {
     JTextComponent tc = (JTextComponent) comp;
     JPopupMenu menu = new JPopupMenu();
     
-    Point pt = SwingUtilities
-        .convertPoint(me.getComponent(), me.getPoint(), tc);
-    
-//    int pos = tc.viewToModel(pt);
-    
+    Point pt = SwingUtilities.convertPoint(me.getComponent(), me.getPoint(), tc);
     addStandardContextMenu(tc, menu);
-    
     menu.show(tc, pt.x, pt.y);
   }
 
@@ -122,6 +113,7 @@ public class TextComponentPopupEventQueue extends EventQueue {
   }
   
   private static class CopyLinkAction extends AbstractAction {
+    private static final long serialVersionUID = -2488488417295967890L;
     private String mLink;
     
     public CopyLinkAction(String link) {
@@ -138,6 +130,7 @@ public class TextComponentPopupEventQueue extends EventQueue {
   }
 
   private static class CutAction extends AbstractAction {
+    private static final long serialVersionUID = 566170125220848189L;
     JTextComponent comp;
 
     public CutAction(JTextComponent comp) {
@@ -155,6 +148,7 @@ public class TextComponentPopupEventQueue extends EventQueue {
   }
 
   private static class PasteAction extends AbstractAction {
+    private static final long serialVersionUID = 9221100128433030987L;
     JTextComponent comp;
 
     public PasteAction(JTextComponent comp) {
@@ -178,6 +172,7 @@ public class TextComponentPopupEventQueue extends EventQueue {
   }
 
   private static class DeleteAction extends AbstractAction {
+    private static final long serialVersionUID = 9008236494552230397L;
     JTextComponent comp;
 
     public DeleteAction(JTextComponent comp) {
@@ -195,6 +190,7 @@ public class TextComponentPopupEventQueue extends EventQueue {
   }
 
   private static class CopyAction extends AbstractAction {
+    private static final long serialVersionUID = -8850316291381010884L;
     JTextComponent comp;
 
     public CopyAction(JTextComponent comp) {
@@ -212,6 +208,7 @@ public class TextComponentPopupEventQueue extends EventQueue {
   }
 
   private static class SelectAllAction extends AbstractAction {
+    private static final long serialVersionUID = 1542606356598380639L;
     JTextComponent comp;
 
     public SelectAllAction(JTextComponent comp) {
