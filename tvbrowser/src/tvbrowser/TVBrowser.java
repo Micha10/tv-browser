@@ -30,7 +30,9 @@ import java.awt.Dialog.ModalityType;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Frame;
+import java.awt.GraphicsEnvironment;
 import java.awt.Image;
+import java.awt.Insets;
 import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.event.WindowAdapter;
@@ -1212,6 +1214,8 @@ public class TVBrowser {
     final int windowY = Settings.propWindowY.getInt();
 
     final Rectangle2D screen = mainFrame.getGraphicsConfiguration().getBounds();
+    GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds();
+    final Insets insets = Toolkit.getDefaultToolkit().getScreenInsets(mainFrame.getGraphicsConfiguration());
     
     if (Settings.propIsWindowMaximized.getBoolean() || (windowX == -1 && windowY == -1) || windowX + windowWidth < 0 || windowX > (screen.getX() + screen.getWidth() - 30) || windowY + windowHeight < 0 || windowY > (screen.getY() + screen.getHeight() - 30) || windowWidth < 200 || windowHeight < 200) {
       UiUtilities.centerAndShow(mainFrame, false);
@@ -1222,7 +1226,7 @@ public class TVBrowser {
     SwingUtilities.invokeLater(() -> {
       Point p = mainFrame.getLocation();
       
-      if(windowX < 0 || windowY < 0 || windowX > (screen.getX() + screen.getWidth() - 30) || windowY > (screen.getY() + screen.getHeight() - 30)) {
+      if(windowX < insets.left || windowY < insets.top || windowX > (screen.getX() + screen.getWidth() - 30) || windowY > (screen.getY() + screen.getHeight() - 30)) {
     	UiUtilities.centerAndShow(mainFrame, false);
       }
       else if(!Settings.propIsWindowMaximized.getBoolean() && (p.x != windowX || windowY != p.y)) {
