@@ -160,10 +160,10 @@ public class TVBrowser {
   
   public static final ArrayList<Image> ICONS_WINDOW = new ArrayList<Image>(4);
 
-  private static final boolean mIsStable = false;
+  private static final boolean mIsStable = true;
   private static final int mMajorVersion = 4;
-  private static final int mMinorVersion = 9;
-  private static final int mSubMinorVersion = 99;
+  private static final int mMinorVersion = 20;
+  private static final int mSubMinorVersion = 0;
 
   /* If you want to change the version string, add it to the beginning of this array.
      We need the old version strings to import the settings.
@@ -177,12 +177,7 @@ public class TVBrowser {
   */
   /** The string array with the names of the earlier versions. */
   private static final String[] ALL_VERSIONS = new String[] {
-      "4.0.9.98 RC3",
-      "4.0.9.98 RC2",
-		  "4.0.9.97 RC1",
-		  "4.0.9.96 Beta2",
-		  "4.0.9.95 Beta1",
-          "4.0.1.50 SVN",
+		  "4.2", "4.0.9.98 RC3", "4.0.9.98 RC2", "4.0.9.97 RC1", "4.0.9.96 Beta2", "4.0.9.95 Beta1", "4.0.1.50 SVN",
           "4.0.1", "4.0.0.97 RC1", "4.0.0.96 Beta2", "4.0.0.95 Beta1", "4.0.0.50 SVN",
           "4", "3.4.4.98 RC3", "3.4.4.97 RC2", "3.4.4.95 Beta1", "3.4.4.50 SVN",
           "3.4.4", "3.4.3.96 RC1", "3.4.3.95 Beta1", "3.4.3.52 SVN", "3.4.3.51 SVN", "3.4.3.50 SVN",
