@@ -46,7 +46,7 @@ import util.program.LocalPluginProgramFormating;
 public class NotifyOSDPlugin extends Plugin {
   private static final String COMMAND_NOTIFY_SEND = "notify-send";
   private static final boolean IS_STABLE = true;
-  private static final Version mVersion = new Version(2, 75, IS_STABLE);
+  private static final Version mVersion = new Version(2, 76, IS_STABLE);
 
   private static final util.ui.Localizer mLocalizer = util.ui.Localizer.getLocalizerFor(NotifyOSDPlugin.class);
 
@@ -218,27 +218,7 @@ public class NotifyOSDPlugin extends Plugin {
         e.printStackTrace();
       }
             
-      String location = null;
-      
-      try {
-        Method m = executionHandler.getInputStreamReaderThread().getClass().getDeclaredMethod("getOutputString");
-        m.setAccessible(true);
-        location = (String)m.invoke(executionHandler.getInputStreamReaderThread());
-      } catch (NoSuchMethodException e) {
-        location = executionHandler.getInputStreamReaderThread().getOutput();
-      } catch (SecurityException e) {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
-      } catch (IllegalAccessException e) {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
-      } catch (IllegalArgumentException e) {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
-      } catch (InvocationTargetException e) {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
-      }
+      String location = executionHandler.getOutput();
       
       if (location != null) {
         location = location.trim();
