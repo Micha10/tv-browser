@@ -407,6 +407,7 @@ public class TvDataUpdater {
           
           JScrollPane scrollPane = new JScrollPane(centerPanel);
           scrollPane.setBorder(BorderFactory.createEmptyBorder());
+          scrollPane.getViewport().setOpaque(false);
           
           JPanel center = new JPanel(new BorderLayout());
           center.setBorder(Borders.DIALOG);
