@@ -345,6 +345,7 @@ public class MainFrame extends JFrame implements DateListener,DropTargetListener
   
   private MainFrame() {
     super(TVBrowser.MAINWINDOW_TITLE, getGraphicsConfigurationForFrame());
+    
     println("POS 1");
     setContentPane(new BackgroundPanel());
     
@@ -687,30 +688,6 @@ public class MainFrame extends JFrame implements DateListener,DropTargetListener
     
     setJMenuBar(mMenuBar);
     addContextMenuMouseListener(mMenuBar);
-    
-    // set program filter
-    final FilterList filterList = FilterList.getInstance();
-    println("POS 8");
-    ProgramFilter filter = filterList
-        .getFilterByName(Settings.propLastUsedFilter.getString());
-    
-    if (filter == null) {
-      filter = FilterManagerImpl.getInstance().getDefaultFilter();
-    }
-    
-    setProgramFilter(filter);
-    
-    // set channel group filter
-    String channelFilterName = Settings.propLastUsedChannelGroup.getString();
-    if (channelFilterName != null) {
-      ChannelFilter channelFilter;
-      try {
-        channelFilter = ChannelFilter.createChannelFilterForName(channelFilterName);
-        
-        setChannelFilter(channelFilter);
-      } catch (ClassCastException e1) {
-      } catch (TvBrowserException e1) {}
-    }
     
     mTimer = new Timer(10000, e -> {
       handleTimerEvent();
@@ -1449,7 +1426,7 @@ public class MainFrame extends JFrame implements DateListener,DropTargetListener
     return mProgramTableModel;
   }
 
-  public static MainFrame getInstance() {
+  public static synchronized MainFrame getInstance() {
     if (mSingleton == null) {
       mSingleton = new MainFrame();
     }
@@ -1722,7 +1699,32 @@ public class MainFrame extends JFrame implements DateListener,DropTargetListener
     mMenuBar.updateChannelGroupMenu();
     PluginProxyManager.getInstance().addPluginStateListener(this);
     
-    SwingUtilities.invokeLater(() -> {
+    SwingUtilities.invokeLater(() -> {println("POS 7a");
+      // set program filter
+      final FilterList filterList = FilterList.getInstance();
+      println("POS 8");
+      ProgramFilter filter = filterList
+          .getFilterByName(Settings.propLastUsedFilter.getString());
+      println("POS 9a");
+      if (filter == null) {
+        filter = FilterManagerImpl.getInstance().getDefaultFilter();
+      }
+      println("POS 9b");
+      setProgramFilter(filter);
+      println("POS 9c");
+      // set channel group filter
+      String channelFilterName = Settings.propLastUsedChannelGroup.getString();
+      if (channelFilterName != null) {
+        ChannelFilter channelFilter;
+        try {
+          channelFilter = ChannelFilter.createChannelFilterForName(channelFilterName);
+          
+          setChannelFilter(channelFilter);
+        } catch (ClassCastException e1) {
+        } catch (TvBrowserException e1) {}
+      }
+      println("POS 9d");
+      
       mStarting = false;
       mMenuBar.updateChannelItems();
       if(Persona.getInstance().getHeaderImage() != null) {
