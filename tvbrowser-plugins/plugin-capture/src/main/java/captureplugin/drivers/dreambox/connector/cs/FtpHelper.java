@@ -1,26 +1,30 @@
 package captureplugin.drivers.dreambox.connector.cs;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
 import java.util.Map.Entry;
+import java.util.TreeMap;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.swing.JOptionPane;
 
-import sun.net.TelnetInputStream;
-import sun.net.TelnetOutputStream;
-import sun.net.ftp.FtpClient;
+import it.sauronsoftware.ftp4j.FTPClient;
+import it.sauronsoftware.ftp4j.FTPCommunicationListener;
+import it.sauronsoftware.ftp4j.FTPDataTransferListener;
+import it.sauronsoftware.ftp4j.FTPFile;
 
 /**
  * @author fishhead
  * 
  */
-public class FtpHelper extends FtpClient {
+public class FtpHelper implements FTPCommunicationListener {
 
   // Logger
   private static final Logger mLog = Logger
@@ -30,38 +34,40 @@ public class FtpHelper extends FtpClient {
 
   private static final String NAME = "name";
   private static final String SIZE = "size";
-  private static final String[] FTP_COLS = new String[] { "rights", "type",
-      "user", "group", SIZE, "date", "date", "date", NAME };
+  /*private static final String[] FTP_COLS = new String[] { "rights", "type",
+      "user", "group", SIZE, "date", "date", "date", NAME };*/
+  
+  private FTPClient mClient;
+  private StringBuilder mReceived;
+  private StringBuilder mSent;
+  
+  public FtpHelper() {
+    mClient = new FTPClient();
+    mReceived = new StringBuilder();
+    mSent = new StringBuilder();
+  }
 
-  /**
-   * main
-   * 
-   * @param args
-   */
-  public static void main(String[] args) {
-    String server = "dreambox";
-    String user = "root";
-    String password = "";
+/*  public static void main(String[] args) {
     FtpHelper ftpHelper = new FtpHelper();
     System.out.println(ftpHelper.cmd("OPEN", server));
     System.out.println(ftpHelper.cmd("LOGIN", user, password));
-    System.out.println(ftpHelper.cmd("CD", "/hdd/movie/"));
-    System.out.println(ftpHelper.cmd("SYSTEM"));
-    System.out.println(ftpHelper.cmd("LIST", "/hdd/movie/"));
-    try {
-      for (Entry<String, String> entry : ftpHelper.getFileSize("/hdd/movie/")
+    System.out.println(ftpHelper.cmd("CD", "/bodostv/"));
+    
+    System.out.println(ftpHelper.cmd("LIST", "/bodostv/"));
+    /*try {
+      for (Entry<String, String> entry : ftpHelper.getFileSize("/bodostv/")
           .entrySet()) {
         System.out.println(entry.toString());
       }
     } catch (IOException e) {
       e.printStackTrace();
     }
-    String s = ftpHelper.cmd("GET", 
+    /*String s = ftpHelper.cmd("GET", 
         "/hdd/movie/20101225 1439 - Das Erste HD - Rapunzel.ts.meta");
-    String t = s;
-    mLog.info(t);
-    System.out.println(ftpHelper.cmd("CLOSE"));
-  }
+    String t = s;*/
+    //mLog.info(t);
+/*   System.out.println(ftpHelper.cmd("CLOSE"));
+  }*/
 
   /**
    * ftp Commands ausfuehren
@@ -71,20 +77,37 @@ public class FtpHelper extends FtpClient {
    * @return
    */
   String cmd(String... args) {
+    mReceived.setLength(0);
+    mSent.setLength(0);
+    
     String s = null;
     String cmd = args[0];
     try {
       if (cmd.equalsIgnoreCase("OPEN")) {
         // OPEN
-        this.openServer(args[1]);
-        s = getResponseString();
+        try {
+          String[] connect = mClient.connect(args[1]);
+          
+          for(String c : connect) {
+            mReceived.append(c).append("\n");
+          }
+          
+          s = getString(false);
+        }catch(Exception e) {
+          mLog.log(Level.SEVERE, "Could not connect to server: " + args[1], e);
+          s = "Could not connect to server: " + args[1];
+        }
       } else if (cmd.equalsIgnoreCase("CLOSE")) {
-        // CLOSE
-        this.closeServer();
-        s = getResponseString();
+        try {
+          mClient.disconnect(true);
+          s = getString(false);
+        }catch(Exception e) {
+          mLog.log(Level.SEVERE, "Error at disconnection from server", e);
+          s = "Error at disconnecting from server";
+        }
       } else if (cmd.equalsIgnoreCase("SYSTEM")) {
         // SYSTEM
-        s = this.system();
+        s = "NOT SUPPORTED";
       } else if (cmd.equalsIgnoreCase("LOGIN")) {
         // LOGIN
         String user = args[1];
@@ -95,15 +118,30 @@ public class FtpHelper extends FtpClient {
         if (password.length() == 0) {
           password = " ";
         }
-        this.login(user, password);
-        s = getResponseString();
+        
+        try {
+          mClient.login(user, password);
+          s = getString(false);
+        }catch(Exception e) {
+          mLog.log(Level.SEVERE, "Could not login to server", e);
+          s = "Could not login to server";
+        }
       } else if (cmd.equalsIgnoreCase("CD")) {
         // CD
-        this.cd(args[1]);
-        s = this.getResponseString();
+        try {
+          mClient.changeDirectory(args[1]);
+          s = getString(false);
+        }catch(Exception e) {
+          mLog.log(Level.SEVERE, "Could not change directory", e);
+          s = "Could not change directory";
+        }
       } else if (cmd.equalsIgnoreCase("PWD")) {
         // PWD
-        s = this.pwd().trim();
+        try {
+          s = mClient.currentDirectory().trim();
+        }catch(Exception e) {
+          mLog.log(Level.SEVERE, "Could not get current directory from server", e);
+        }
       } else if (cmd.equalsIgnoreCase("LIST")) {
         // LIST
         s = "";
@@ -115,23 +153,69 @@ public class FtpHelper extends FtpClient {
         }
       } else if (cmd.equalsIgnoreCase("GET")) {
         // GET file
-        this.binary();
-        String filename = new String(args[1].getBytes(ENCODING));
-        TelnetInputStream tis = this.get(filename);
-        byte[] buf = new byte[1024];
-        int len = 0;
-        s = "";
-        while ((len = tis.read(buf)) != -1) {
-          s += new String(buf, 0, len, ENCODING);
+        try {
+          mClient.setType(FTPClient.TYPE_BINARY);
+          String filename = new String(args[1].getBytes(ENCODING));
+          
+          try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
+            final AtomicBoolean completed = new AtomicBoolean(false);
+            
+            mClient.download(filename, out, 0, new FTPDataTransferListener() {
+              @Override
+              public void transferred(int arg0) {}
+              
+              @Override
+              public void started() {}
+              
+              @Override
+              public void failed() {}
+              
+              @Override
+              public void completed() {
+                completed.set(true);
+              }
+              
+              @Override
+              public void aborted() {}
+            });
+            
+            if(completed.get()) {
+              s = new String(out.toByteArray(),ENCODING);
+            }
+          }
+        }catch(Exception e) {
+          mLog.log(Level.SEVERE, "Could not download file from server: " + args[1], e);
         }
-        tis.close();
       } else if (cmd.equalsIgnoreCase("PUT")) {
         // PUT file
-        this.binary();
-        String filename = new String(args[1].getBytes(ENCODING));
-        TelnetOutputStream tos = this.put(filename);
-        tos.write(args[2].getBytes(ENCODING));
-        tos.close();
+        mClient.setType(FTPClient.TYPE_BINARY);
+        try {
+          String filename = new String(args[1].getBytes(ENCODING));
+          try(ByteArrayInputStream in = new ByteArrayInputStream(args[2].getBytes(ENCODING))) {
+            final AtomicBoolean complete = new AtomicBoolean(false);
+            
+            mClient.upload(filename, in, 0, 0, new FTPDataTransferListener() {
+              @Override
+              public void transferred(int arg0) {}
+              
+              @Override
+              public void started() {}
+              
+              @Override
+              public void failed() {}
+              
+              @Override
+              public void completed() {
+                complete.set(true);
+              }
+              
+              @Override
+              public void aborted() {}
+            });
+          }
+        }catch(Exception e) {
+          mLog.log(Level.SEVERE, "Could not upload file: " + args[1], e);
+        }
       } else {
         mLog.warning("unkown command : " + cmd);
         for (int i = 1; i < args.length; i++) {
@@ -165,45 +249,32 @@ public class FtpHelper extends FtpClient {
     if (!dir.endsWith("/")) {
       dir += "/";
     }
-
-    // CD
-    cd(dir);
-
-    // LIST
-    TelnetInputStream tis = list();
-    byte[] buf = new byte[4096];
-    int len = 0;
-    String s = "";
-    while ((len = tis.read(buf)) != -1) {
-      s += new String(buf, 0, len, ENCODING);
-    }
-    tis.close();
-
-    // Parse
+    
     List<Map<String, String>> list = new ArrayList<Map<String, String>>();
-    for (String row : s.split("\\n")) {
-      Map<String, String> map = new TreeMap<String, String>();
-      list.add(map);
-
-      int i = 0;
-      for (String col : row.split(" +")) {
-        if (i < FTP_COLS.length) {
-          String key = FTP_COLS[i];
-          if (map.containsKey(key)) {
-            map.put(key, map.get(key) + " " + col);
-          } else {
-            map.put(key, col);
-          }
-        } else {
-          String lastKey = FTP_COLS[FTP_COLS.length - 1];
-          map.put(lastKey, map.get(lastKey) + " " + col);
+    
+    // CD
+    try {
+      mClient.changeDirectory(dir);
+      FTPFile[] names = mClient.list();
+  
+      // Parse
+      for (FTPFile row : names) {
+        Map<String, String> map = new TreeMap<String, String>();
+        list.add(map);
+        
+        map.put(NAME, dir + row.getName());
+        map.put("date", String.valueOf(row.getModifiedDate().getTime()));
+        map.put(SIZE, String.valueOf(row.getSize()));
+        
+        switch(row.getType()) {
+          case FTPFile.TYPE_DIRECTORY:map.put("type", "DIRECTORY"); break;
+          case FTPFile.TYPE_FILE:map.put("type", "FILE"); break;
+          case FTPFile.TYPE_LINK:map.put("type", "LINK"); break;
         }
-        i++;
       }
-      // Absolute Path
-      map.put(NAME, dir + map.get(NAME));
+    }catch(Exception e) {
+      mLog.log(Level.SEVERE, "Could not retrieve files for directory: " + dir, e);
     }
-
     return list;
   }
 
@@ -220,5 +291,25 @@ public class FtpHelper extends FtpClient {
       mapFileSize.put(map.get(NAME), map.get(SIZE));
     }
     return mapFileSize;
+  }
+
+  @Override
+  public void received(String s) {
+    mReceived.append(s).append("\n");
+  }
+
+  @Override
+  public void sent(String s) {
+    mSent.append(s).append("\n");
+  }
+  
+  private String getString(boolean sent) {
+    String result = sent ? mSent.toString() : mReceived.toString();
+    
+    if(result.trim().isEmpty()) {
+      result = null;
+    }
+    
+    return result;
   }
 }

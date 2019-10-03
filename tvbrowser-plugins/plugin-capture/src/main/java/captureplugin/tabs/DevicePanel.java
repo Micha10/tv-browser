@@ -234,13 +234,13 @@ public class DevicePanel extends JPanel {
     /**
      * Configure a selected Device
      */
-    private void configDevice() {
+    private void configDevice() {try {
         DeviceIf device = (DeviceIf) mDeviceList.getSelectedValue();
         
         if (device != null) {
             device.configDevice(UiUtilities.getLastModalChildOf(mOwner));
             mDeviceList.repaint();
-        }
+        }}catch(Throwable t) {t.printStackTrace();}
     }
 
     /**
