@@ -28,7 +28,9 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
@@ -40,9 +42,10 @@ import java.util.GregorianCalendar;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.TimeZone;
 import java.util.TreeMap;
-import java.util.Map.Entry;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -55,8 +58,6 @@ import javax.xml.parsers.SAXParserFactory;
 import org.apache.commons.codec.binary.Base64;
 import org.xml.sax.SAXException;
 
-import util.io.IOUtilities;
-import util.ui.Localizer;
 import captureplugin.CapturePlugin;
 import captureplugin.drivers.dreambox.DreamboxConfig;
 import captureplugin.drivers.dreambox.connector.cs.DreamboxOptionPane;
@@ -68,6 +69,8 @@ import captureplugin.drivers.utils.ProgramTime;
 import devplugin.Channel;
 import devplugin.Date;
 import devplugin.Program;
+import util.io.IOUtilities;
+import util.ui.Localizer;
 
 /**
  * Connector for the Dreambox
@@ -202,8 +205,8 @@ public class DreamboxConnector {
       }
 
       return allChannels;
-    } catch (UnsupportedEncodingException e) {
-      e.printStackTrace();
+    } catch (Exception e) {
+      mLog.log(Level.SEVERE, "Could not load channels for Dreambox: "+mConfig.getDreamboxAddress(), e);
     }
 
     return null;
@@ -539,7 +542,13 @@ public class DreamboxConnector {
 
     ByteArrayOutputStream bytes = new ByteArrayOutputStream();
 
-    IOUtilities.pipeStreams(stream, bytes);
+    try {
+      Method m = IOUtilities.class.getDeclaredMethod("pipeStreams", InputStream.class, OutputStream.class);
+      m.setAccessible(true);
+      m.invoke(null, stream, bytes);      
+    } catch (Exception e) {
+      mLog.log(Level.SEVERE, "Error accessing method IOUtilities.pipeStreams", e);
+    }
 
     String version = bytes.toString();
 
