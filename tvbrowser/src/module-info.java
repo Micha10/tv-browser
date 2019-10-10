@@ -56,6 +56,7 @@ module tvbrowser {
 	exports tvdataservice;
 	exports tvbrowser.core.plugin;
 	opens tvbrowser.ui.mainframe;
+	opens tvbrowser.extras.searchplugin;
 	exports tvbrowser.ui.pluginview;
 	exports tvbrowser.core;
 	exports tvbrowser.core.icontheme;
