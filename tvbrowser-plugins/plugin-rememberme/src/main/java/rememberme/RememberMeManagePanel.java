@@ -306,10 +306,36 @@ public class RememberMeManagePanel extends TabListenerPanel implements PersonaCo
       
       DummyProgram dummy = new DummyProgram((RememberedProgram)mList.getSelectedValue());
       
-      ActionMenu search = SearchPluginProxy.getInstance().getContextMenuActions(dummy);
-      
-      if(search != null) {
-        popupMenu.add(MenuUtil.createMenuItem(search));
+      try {
+        ActionMenu search = SearchPluginProxy.getInstance().getContextMenuActions(dummy);
+        
+        if(search != null) {
+          popupMenu.add(MenuUtil.createMenuItem(search));
+        }
+      }catch(IllegalAccessError t) {
+        final JPopupMenu menu = Plugin.getPluginManager().createPluginContextMenu(dummy, rMe);
+        
+        for(int i = 0; i < menu.getComponentCount(); i++) {
+          if(menu.getComponent(i) instanceof JMenuItem) {try {
+            JMenuItem item = (JMenuItem)menu.getComponent(i);
+            
+            if(item.getText().equals("Wiederholung suchen") ||
+                item.getText().equals("Search repetition") ||
+                item.getText().equals("S\u00F8g efter gentagelser") ||
+                item.getText().equals("Szukaj powt\u00F3rze\u0144") ||
+                item.getText().equals("H\u013Eada\u0165 opakovania") ||
+                item.getText().equals("S\u00F6k efter upprepningar") ||
+                item.getText().equals("Tra\u017Ei reprize") ||
+                item.getText().equals("Hledat repr\u00EDzy") ||
+                item.getText().equals("Cerca occorrenze")
+                ) {
+              popupMenu.add(item);
+              break;
+            }
+            
+          }catch(Throwable t2) {}
+          }
+        }
       }
       
       PluginAccess access = Plugin.getPluginManager().getActivatedPluginForId("java.webplugin.WebPlugin");
