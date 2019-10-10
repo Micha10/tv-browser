@@ -108,18 +108,23 @@ public class DreamboxChannel implements ExternalChannelIf {
             mBouqetName = stream.readUTF();
         }
     }
-
+    
+    @Override
+    public int hashCode() {
+      return (mReference+mName+mBouqetName).hashCode();
+    }
+    
+    @Override
     public boolean equals( Object otherIn ) {
-      if (null == otherIn)
-        return false;
-      if (otherIn.getClass() != this.getClass())
+      if (null == otherIn || !(otherIn instanceof DreamboxChannel))
         return false;
       DreamboxChannel other = (DreamboxChannel) otherIn;
       if (! mReference.equals(other.mReference))
         return false;
       if (! mName.equals(other.mName))
         return false;
-      if (! mBouqetName.equals(other.mBouqetName))
+      if (!mBouqetName.trim().isEmpty() && !other.mBouqetName.trim().isEmpty()
+          && !mBouqetName.equals(other.mBouqetName))
         return false;
       return true;
     }

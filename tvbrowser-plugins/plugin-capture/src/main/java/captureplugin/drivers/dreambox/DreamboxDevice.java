@@ -35,9 +35,6 @@ import java.util.Map;
 
 import javax.swing.JOptionPane;
 
-import util.paramhandler.ParamParser;
-import util.ui.Localizer;
-import util.ui.UiUtilities;
 import captureplugin.drivers.DeviceIf;
 import captureplugin.drivers.DriverIf;
 import captureplugin.drivers.dreambox.connector.DreamboxChannel;
@@ -53,6 +50,9 @@ import captureplugin.drivers.utils.ProgramTimeDialog;
 import captureplugin.utils.ExternalChannelIf;
 import devplugin.Program;
 import devplugin.ProgramReceiveTarget;
+import util.paramhandler.ParamParser;
+import util.ui.Localizer;
+import util.ui.UiUtilities;
 
 /**
  * The Dreambox-Device
@@ -64,7 +64,7 @@ public final class DreamboxDevice implements DeviceIf {
      * Translator
      */
     private static final Localizer mLocalizer = Localizer.getLocalizerFor(DreamboxDevice.class);
-
+    
     /**
      * Driver
      */
@@ -302,6 +302,7 @@ public final class DreamboxDevice implements DeviceIf {
      */
     public Program[] getProgramList() {
         DreamboxConnector con = new DreamboxConnector(mConfig);
+        
         if (mConfig.hasValidAddress()) {
             ProgramTime[] times = con.getRecordings(mConfig);
             mProgramTimeList = new ArrayList<ProgramTime>(Arrays.asList(times));

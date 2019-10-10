@@ -80,9 +80,6 @@ public final class DreamboxConfig implements ConfigIf, Cloneable {
     /** The targets for the program export */
     private ProgramReceiveTarget[] mReceiveTargets = new ProgramReceiveTarget[0];
     
-    /** The version of the box software is at least 1.6 */
-    private boolean mIsOpkg = true;
-
     /** The default recording path */
     private String mDefaultLocation = "";
     /**
@@ -160,7 +157,7 @@ public final class DreamboxConfig implements ConfigIf, Cloneable {
      * @throws IOException io errors
      */
     public void writeData(ObjectOutputStream stream) throws IOException {
-        stream.writeInt(9); // version
+        stream.writeInt(11); // version
         stream.writeUTF(getId());
 
         stream.writeUTF(mDreamboxAddress);
@@ -176,13 +173,13 @@ public final class DreamboxConfig implements ConfigIf, Cloneable {
                 channelList.add(channel);
             }
         }
-
+/*
         stream.writeInt(channelList.size());
 
         for (Channel channel : channelList) {
             channel.writeData(stream);
             stream.writeUTF(mChannels.get(channel).getReference()); // Problemstelle
-        }
+        }*/
 
         stream.writeInt(mBefore);
         stream.writeInt(mAfter);
@@ -204,8 +201,6 @@ public final class DreamboxConfig implements ConfigIf, Cloneable {
         for(ProgramReceiveTarget receiveTarget : mReceiveTargets) {
           receiveTarget.writeData(stream);
         }
-        
-        stream.writeBoolean(mIsOpkg);
         
         stream.writeUTF(mDefaultLocation);
         
@@ -238,19 +233,21 @@ public final class DreamboxConfig implements ConfigIf, Cloneable {
             mDreamboxChannels[i] = new DreamboxChannel(stream);
         }
 
-        count = stream.readInt();
-
-        for (int i = 0; i < count; i++) {
-            Channel ch = Channel.readData(stream, true);
-            DreamboxChannel dch = getDreamboxChannelForRef(stream.readUTF());
-            
-            if(ch != null) {
-              mChannels.put(ch, dch);
-            }
-            
-            if(dch != null) {
-              mDChannels.put(dch, ch);
-            }
+        if(version < 10) {
+          count = stream.readInt();
+  
+          for (int i = 0; i < count; i++) {
+              Channel ch = Channel.readData(stream, true);
+              DreamboxChannel dch = getDreamboxChannelForRef(stream.readUTF());
+              
+              if(ch != null) {
+                mChannels.put(ch, dch);
+              }
+              
+              if(dch != null) {
+                mDChannels.put(dch, ch);
+              }
+          }
         }
 
 
@@ -286,8 +283,9 @@ public final class DreamboxConfig implements ConfigIf, Cloneable {
           }
         }
         
-        if(version > 5) {
-          mIsOpkg = stream.readBoolean();
+        // read obsolete opkg boolean
+        if(version > 5 && version < 11) {
+          stream.readBoolean();
         }
         
         if(version > 6) {
@@ -296,21 +294,40 @@ public final class DreamboxConfig implements ConfigIf, Cloneable {
         
         if(version > 8) {
 	        // new for version 9
-        	mDChannels.clear();
-            count = stream.readInt();
+          count = stream.readInt();
+          
+          if(count > 0) {
+          	mDChannels.clear();
+          	mChannels.clear();
+            
             for (int i = 0; i < count; i++) {
-                Channel ch = Channel.readData(stream, true);
-                DreamboxChannel dch = new DreamboxChannel(stream);
-                
-                if(ch != null) {
-                  mChannels.put(ch, dch);
-                }
-                
-                if(dch != null) {
-                  mDChannels.put(dch, ch);
-                }
+              Channel ch = Channel.readData(stream, true);
+              DreamboxChannel dch = getDreamboxChannelFromStream(stream);
+                            
+              if(ch != null) {
+                mChannels.put(ch, dch);
+              }
+              
+              if(dch != null) {
+                mDChannels.put(dch, ch);
+              }
             }
+          }
         }
+    }
+    
+    private DreamboxChannel getDreamboxChannelFromStream(ObjectInputStream stream) throws IOException {
+      DreamboxChannel result = null;
+      DreamboxChannel dch = new DreamboxChannel(stream);
+      
+      for(DreamboxChannel test : mDreamboxChannels) {
+        if(test.equals(dch)) {
+          result = test;
+          break;
+        }
+      }
+      
+      return result;
     }
 
     /**
@@ -534,22 +551,6 @@ public final class DreamboxConfig implements ConfigIf, Cloneable {
       return mReceiveTargets;
     }
     
-    /**
-     * Gets if the opkg webif is used.
-     * @return <code>true</code> opkg webif is used, <code>false</code> otherwise.
-     */
-//    public boolean isOpkg() {
-//      return mIsOpkg;
-//    }
-    
-    /**
-     * Sets he opkg webif is used.
-     * @param value The new value.
-     */
-    public void setIsOpkg(boolean value) {
-      mIsOpkg = value;
-    }
-
     public String getDefaultLocation() {
         return mDefaultLocation;
     }

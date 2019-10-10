@@ -57,9 +57,6 @@ import javax.swing.table.DefaultTableModel;
 
 import org.apache.commons.lang3.StringUtils;
 
-import util.ui.Localizer;
-import util.ui.UIThreadRunner;
-import util.ui.UiUtilities;
 import captureplugin.drivers.DeviceIf;
 import devplugin.ActionMenu;
 import devplugin.Plugin;
@@ -71,6 +68,9 @@ import devplugin.ProgramReceiveTarget;
 import devplugin.SettingsTab;
 import devplugin.ThemeIcon;
 import devplugin.Version;
+import util.ui.Localizer;
+import util.ui.UIThreadRunner;
+import util.ui.UiUtilities;
 
 /**
  * Plugin to send the TV-Data to an external program
@@ -79,8 +79,8 @@ import devplugin.Version;
  *         adopted by fishhead
  */
 public class CapturePlugin extends devplugin.Plugin {
-  private static final Version mVersion = new Version(3,14,16,false);
-
+  private static final Version mVersion = new Version(3,14,17,false);
+  
     /**
      * Translator
      */
@@ -340,9 +340,9 @@ public class CapturePlugin extends devplugin.Plugin {
 
         for (Object o : mConfig.getDevices()) {
             DeviceIf device = (DeviceIf) o;
-
+            
             Program[] programs = device.getProgramList();
-
+            
             if (programs != null) {
                 for (Program program : programs) {
                     if (!v.contains(program)) {

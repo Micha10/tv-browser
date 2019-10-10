@@ -273,6 +273,7 @@ public class DreamboxConnector {
     if (timers == null) {
       return new ProgramTime[0];
     }
+    
     // fishhead -----------------------
     E2LocationHelper locationHelper = E2LocationHelper.getInstance(mConfig,
         timerHelper.getThread());
@@ -286,9 +287,10 @@ public class DreamboxConnector {
           .get(E2TimerHelper.SERVICEREFERENCE), false);
 
       DreamboxChannel channel = config.getDreamboxChannelForRef(reference);
-
+      
       if (channel != null) {
         Channel tvbchannel = config.getChannel(channel);
+        
         if (tvbchannel != null) {
           Calendar calBeg = E2TimerHelper.getAsCalendar(timer
               .get(E2TimerHelper.TIMEBEGIN));
@@ -304,7 +306,7 @@ public class DreamboxConnector {
           if (endMinutes < beginMinutes) {
             endMinutes += 24 * 60;
           }
-
+          
           Calendar runner = (Calendar) calBeg.clone();
 
           long days = calEnd.get(Calendar.DAY_OF_YEAR)
@@ -329,7 +331,6 @@ public class DreamboxConnector {
                     && progTime <= endMinutes + 15
                     && prog.getTitle().trim().equalsIgnoreCase(
                         timer.get(E2TimerHelper.NAME).trim())) {
-
                   found = true;
                   programs.add(new ProgramTime(prog, calBeg.getTime(), calEnd
                       .getTime()));
