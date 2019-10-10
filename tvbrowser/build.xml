@@ -469,11 +469,13 @@
 		    name="TV-Browser" 
 		    icon="images/additional/tvbrowser.icns"
 		    displayname="TV-Browser" 
+			copyright="2019 TV-Browser"
 		    identifier="tvbrowser.TVBrowser" 
 		    shortversion="${tvbrowser.version}"
 		    applicationCategory="public.app-category.entertainment"
 		    workingDirectory="$APP_ROOT/Contents/Resources"
 		    mainclassname="tvbrowser/tvbrowser.TVBrowser">
+		<arch name="x86_64"/>
 		<!--<classpath dir="${tvbrowser-default.runtime.dir}">
 		    <include name="*.jar"/>
 		</classpath>-->
