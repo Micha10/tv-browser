@@ -50,6 +50,7 @@ tvbrowser-plugins/plugin-calendarexport/target
 tvbrowser-plugins/plugin-capture/.classpath
 tvbrowser-plugins/plugin-capture/.project
 tvbrowser-plugins/plugin-capture/.settings
+tvbrowser-plugins/plugin-capture/src/test
 tvbrowser-plugins/plugin-capture/target
 tvbrowser-plugins/plugin-checker/.classpath
 tvbrowser-plugins/plugin-checker/.escabaseline
