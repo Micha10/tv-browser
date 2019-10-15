@@ -29,6 +29,7 @@ package devplugin;
 import java.util.Iterator;
 
 import javax.swing.ImageIcon;
+import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 
 import tvbrowser.core.tvdataservice.TvDataServiceProxy;
@@ -177,6 +178,18 @@ public interface PluginManager {
    * @return a context menu for the given program.
    */
   public JPopupMenu createPluginContextMenu(Program program, ContextMenuIf caller);
+  
+  /**
+   * Creates a context menu for the given program containing all plugins.
+   *
+   * @param program The program to create the context menu for
+   * @param id The id of the plugin to get the context menu for 
+   * @return a context menu item for the given program for the plugin with the id <code>id</code>
+   * or <code>null</code> if the plugin doesn't exits or has no context menu entry for the given
+   * program.
+   * @since 4.2.1
+   */
+  public JMenuItem getPluginContextMenu(Program program, String id);
   
   /**
    * Returns an example program. You can use it for preview stuff.

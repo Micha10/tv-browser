@@ -41,6 +41,7 @@ import java.util.logging.Logger;
 import javax.swing.Action;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
+import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.swing.UIManager;
 
@@ -1345,5 +1346,10 @@ public class PluginManagerImpl implements PluginManager {
   @Override
   public ProgressMonitorExtended createProgressMonitor() {
     return (ProgressMonitorExtended)MainFrame.getInstance().createProgressMonitor();
+  }
+
+  @Override
+  public JMenuItem getPluginContextMenu(Program program, String id) {
+    return ContextMenuManager.getInstance().getPluginContextMenu(program, id);
   }
 }

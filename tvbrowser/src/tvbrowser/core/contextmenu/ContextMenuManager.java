@@ -480,6 +480,48 @@ public ContextMenuIf[] getAvailableContextMenuIfs(boolean includingDisabledItems
   }
 
   /**
+   * Creates a context menu for the given program containing all plugins.
+   *
+   * @param program The program to create the context menu for
+   * @param id The id of the plugin to get the context menu for 
+   * @return a context menu item for the given program for the plugin with the id <code>id</code>
+   * or <code>null</code> if the plugin doesn't exits or has no context menu entry for the given
+   * program.
+   * @since 4.2.1
+   */
+  public JMenuItem getPluginContextMenu(Program program, String id) {
+    ActionMenu menu = null;
+    
+    InternalPluginProxyIf pluginProxy = InternalPluginProxyList.getInstance().getProxyForId(id);
+    
+    if(pluginProxy != null) {
+      if(pluginProxy instanceof ContextMenuIf) {
+        menu = ((ContextMenuIf) pluginProxy).getContextMenuActions(program);
+      }
+    }
+    else {
+      PluginProxy proxy = PluginProxyManager.getInstance().getActivatedPluginForId(id);
+      
+      if(proxy != null) {
+        menu = proxy.getContextMenuActions(program);
+      }
+      else {
+        TvDataServiceProxy dataProxy = TvDataServiceProxyManager.getInstance().findDataServiceById(id);
+        
+        if(dataProxy != null) {
+          menu = dataProxy.getContextMenuActions(program);
+        }
+      }
+    }
+    
+    if(menu != null) {
+      return MenuUtil.createMenuItem(menu);
+    }
+    
+    return null;
+  }
+  
+  /**
    * Returns a List with all disabled ContextMenuIfs
    * @return disabled ContextMenuIfs
    */
