@@ -220,7 +220,7 @@ public final class DefaultMarkingPrioritySelectionPanel extends JPanel {
    */
   @SuppressWarnings("unchecked")
   public int getSelectedPriority(final int index) {
-    return ((JComboBox<Object>)mPrioritySelection.get(0)).getSelectedIndex() - 1;
+    return ((JComboBox<Object>)mPrioritySelection.get(index)).getSelectedIndex() - 1;
   }
 
   /**

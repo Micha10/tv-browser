@@ -163,7 +163,7 @@ public class TVBrowser {
   private static final boolean mIsStable = false;
   private static final int mMajorVersion = 4;
   private static final int mMinorVersion = 20;
-  private static final int mSubMinorVersion = 50;
+  private static final int mSubMinorVersion = 51;
 
   /* If you want to change the version string, add it to the beginning of this array.
      We need the old version strings to import the settings.
@@ -177,6 +177,7 @@ public class TVBrowser {
   */
   /** The string array with the names of the earlier versions. */
   private static final String[] ALL_VERSIONS = new String[] {
+      "4.2.0.51 SVN",
 		  "4.2.0.50 SVN",
 		  "4.2", "4.0.9.98 RC3", "4.0.9.98 RC2", "4.0.9.97 RC1", "4.0.9.96 Beta2", "4.0.9.95 Beta1", "4.0.1.50 SVN",
           "4.0.1", "4.0.0.97 RC1", "4.0.0.96 Beta2", "4.0.0.95 Beta1", "4.0.0.50 SVN",
@@ -298,8 +299,6 @@ public class TVBrowser {
   private static boolean lookAndFeelInitialized = false;
 
   private static Timer mAutoDownloadWaitingTimer;
-
-  private static boolean mIgnoreJVM = false;
 
   /**
    * restart functionality
@@ -938,14 +937,6 @@ public class TVBrowser {
   }
 
   private static void showUsage(String[] args) {
-    for (String argument : args) {
-      if (StringUtils.containsIgnoreCase(argument, "ignorejvm") || argument.equalsIgnoreCase("-i")) {
-        mIgnoreJVM = true;
-      }
-    }
-    /*if (!isJavaImplementationSupported()) {
-      System.out.println(SUN_JAVA_WARNING);
-    }*/
     System.out.println("command line options:");
     System.out.println("    -minimized      The main window will be minimized after start up");
     System.out.println("    -nostartscreen  No start screen during start up");
