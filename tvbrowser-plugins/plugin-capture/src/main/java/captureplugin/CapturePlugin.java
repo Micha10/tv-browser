@@ -37,8 +37,10 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.RandomAccessFile;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Properties;
-import java.util.Vector;
+import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -79,7 +81,7 @@ import util.ui.UiUtilities;
  *         adopted by fishhead
  */
 public class CapturePlugin extends devplugin.Plugin {
-  private static final Version mVersion = new Version(3,14,17,false);
+  private static final Version mVersion = new Version(3,14,18,false);
   
     /**
      * Translator
@@ -94,7 +96,8 @@ public class CapturePlugin extends devplugin.Plugin {
     /**
      * Current Marked Programs
      */
-    private Vector<Program> mMarkedPrograms = new Vector<Program>();
+    //private Vector<Program> mMarkedPrograms = new Vector<Program>();
+    private HashMap<String, AtomicInteger> mMarkedProgramsCount = new HashMap<String, AtomicInteger>();
 
     /**
      * The Singleton
@@ -308,22 +311,32 @@ public class CapturePlugin extends devplugin.Plugin {
      * Updates the marked Programs.
      */
     protected void updateMarkedPrograms() {
-        Vector<Program> list = getMarkedByDevices();
-
-        for (Program aList : list) {
-
-            if (mMarkedPrograms.contains(aList)) {
-                mMarkedPrograms.remove(aList);
+      final HashMap<String, AtomicInteger> list = getMarkedByDevices();
+      Set<String> keys = list.keySet();
+        
+        for (String id : keys) {
+            if (mMarkedProgramsCount.containsKey(id)) {
+              mMarkedProgramsCount.remove(id);
             }
-
-            aList.mark(this);
+            
+            final Program p = getPluginManager().getProgram(id);
+            
+            if(p != null) {
+              p.mark(this);
+            }
         }
 
-        for (Program mMarkedProgram : mMarkedPrograms) {
-            mMarkedProgram.unmark(this);
+        keys = mMarkedProgramsCount.keySet();
+        
+        for (String key : keys) {
+          final Program p = getPluginManager().getProgram(key);
+          
+          if(p != null) {
+            p.unmark(this);
+          }
         }
 
-        mMarkedPrograms = list;
+        mMarkedProgramsCount = list;
 
         updateTreeNode();
         super.saveMe();
@@ -335,8 +348,8 @@ public class CapturePlugin extends devplugin.Plugin {
      *
      * @return List with all Programs to mark
      */
-    private Vector<Program> getMarkedByDevices() {
-        Vector<Program> v = new Vector<Program>();
+    private HashMap<String, AtomicInteger> getMarkedByDevices() {
+        final HashMap<String, AtomicInteger> result = new HashMap<String, AtomicInteger>();
 
         for (Object o : mConfig.getDevices()) {
             DeviceIf device = (DeviceIf) o;
@@ -345,14 +358,20 @@ public class CapturePlugin extends devplugin.Plugin {
             
             if (programs != null) {
                 for (Program program : programs) {
-                    if (!v.contains(program)) {
-                        v.add(program);
-                    }
+                  AtomicInteger test = result.get(program.getUniqueID());
+                  
+                  if(test == null) {
+                    test = new AtomicInteger(0);
+                  }
+                  
+                  test.incrementAndGet();
+                  
+                  result.put(program.getUniqueID(), test);
                 }
             }
         }
 
-        return v;
+        return result;
     }
 
     public ActionMenu getButtonAction() {
@@ -727,7 +746,9 @@ public class CapturePlugin extends devplugin.Plugin {
     }
 
     public int getMarkPriorityForProgram(Program p) {
-      return mConfig.getMarkPriority();
+      final AtomicInteger value = mMarkedProgramsCount.get(p.getUniqueID());
+      
+      return value == null ? Program.NO_MARK_PRIORITY : (value.get() > 1 ? mConfig.getPriorityMarkingMulti() : mConfig.getMarkPriority());
     }
     
     public String getPluginCategory() {

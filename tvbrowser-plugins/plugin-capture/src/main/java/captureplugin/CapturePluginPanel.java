@@ -37,10 +37,12 @@ import com.jgoodies.forms.factories.Borders;
 import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
 
-import util.ui.DefaultMarkingPrioritySelectionPanel;
-import util.ui.Localizer;
 import captureplugin.tabs.DevicePanel;
 import captureplugin.tabs.ProgramListPanel;
+import devplugin.Plugin;
+import devplugin.Version;
+import util.ui.DefaultMarkingPrioritySelectionPanel;
+import util.ui.Localizer;
 
 /**
  * This is a Panel for changing the Settings in the Plugin
@@ -48,7 +50,7 @@ import captureplugin.tabs.ProgramListPanel;
 public class CapturePluginPanel extends JPanel {
 
     /** Translator */
-    private static final Localizer mLocalizer = Localizer.getLocalizerFor(CapturePluginPanel.class);
+    private static final Localizer LOCALIZER = Localizer.getLocalizerFor(CapturePluginPanel.class);
 
     /** Tab for Programlist */
     protected static final int TAB_PROGRAMLIST = 0;
@@ -78,20 +80,26 @@ public class CapturePluginPanel extends JPanel {
         mTabPane = new JTabbedPane();
 
         ProgramListPanel programListPanel = new ProgramListPanel(owner, data);
-        mTabPane.addTab(mLocalizer.msg("ProgramList", "Programlist"), programListPanel);
-        mTabPane.addTab(mLocalizer.msg("Devices", "Devices"), new DevicePanel(owner, data, programListPanel));
+        mTabPane.addTab(LOCALIZER.msg("ProgramList", "Programlist"), programListPanel);
+        mTabPane.addTab(LOCALIZER.msg("Devices", "Devices"), new DevicePanel(owner, data, programListPanel));
         
-        mMarkingPriorityPanel = DefaultMarkingPrioritySelectionPanel.createPanel(data.getMarkPriority(),false,true);
+        if(Plugin.getPluginManager().getTVBrowserVersion().compareTo(new Version(4,20,50,false)) > 0) {
+          mMarkingPriorityPanel = DefaultMarkingPrioritySelectionPanel.createPanel(new int[] {data.getMarkPriority(),data.getPriorityMarkingMulti()}, new String[] {LOCALIZER.msg("highlight.single", "By one device:"),LOCALIZER.msg("highlight.multiple", "By multiple devices:")}, false, true, true);
+        }
+        else {
+          mMarkingPriorityPanel = DefaultMarkingPrioritySelectionPanel.createPanel(data.getMarkPriority(), false, true);
+        }
+        
         mTabPane.addTab(DefaultMarkingPrioritySelectionPanel.getTitle(), mMarkingPriorityPanel);
 
-        mShowAdditionalCommandsOnTop = new JCheckBox(mLocalizer.msg("showOnTop", "Show additional commands (if any) on top of context menu."), data.showAdditionalCommandsOnTop());
+        mShowAdditionalCommandsOnTop = new JCheckBox(LOCALIZER.msg("showOnTop", "Show additional commands (if any) on top of context menu."), data.showAdditionalCommandsOnTop());
         
         PanelBuilder pb = new PanelBuilder(new FormLayout("default","default"));
         pb.border(Borders.DIALOG);
         
         pb.add(mShowAdditionalCommandsOnTop, CC.xy(1, 1));
         
-        mTabPane.addTab(mLocalizer.msg("Global", "Global Settings"), pb.getPanel());
+        mTabPane.addTab(LOCALIZER.msg("Global", "Global Settings"), pb.getPanel());
         
         this.add(mTabPane, BorderLayout.CENTER);
     }
@@ -118,7 +126,7 @@ public class CapturePluginPanel extends JPanel {
      * Saves the marking settings for the program
      */
     public void saveMarkingSettings() {
-      CapturePlugin.getInstance().getCapturePluginData().setMarkPriority(mMarkingPriorityPanel.getSelectedPriority());
+      CapturePlugin.getInstance().getCapturePluginData().setMarkPriority(mMarkingPriorityPanel.getSelectedPriorities());
       CapturePlugin.getInstance().getCapturePluginData().setShowAdditionalCommandsOnTop(mShowAdditionalCommandsOnTop.isSelected());
     }
 }

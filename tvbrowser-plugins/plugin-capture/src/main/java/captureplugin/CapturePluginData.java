@@ -44,6 +44,7 @@ public final class CapturePluginData implements Cloneable {
     private static final Localizer mLocalizer = Localizer.getLocalizerFor(CapturePluginData.class);
 
     private int mMarkPriority = Program.MIN_MARK_PRIORITY;
+    private int mPriorityMarkingMulti = Program.MAX_MARK_PRIORITY;
     
     private boolean mShowAdditionalCommandsOnTop = false;
     
@@ -84,9 +85,10 @@ public final class CapturePluginData implements Cloneable {
      * @throws IOException problems while writing
      */
     public void writeData(ObjectOutputStream out) throws IOException {
-        out.writeInt(4);
+        out.writeInt(5);
         
         out.writeInt(mMarkPriority);
+        out.writeInt(mPriorityMarkingMulti);
         out.writeBoolean(mShowAdditionalCommandsOnTop);
         out.writeInt(mDevices.size());
         
@@ -118,6 +120,10 @@ public final class CapturePluginData implements Cloneable {
         
         if(version >= 3) {
           mMarkPriority = in.readInt();
+        }
+        
+        if(version >= 5) {
+          mPriorityMarkingMulti = in.readInt();
         }
         
         if(version >= 4) {
@@ -187,14 +193,22 @@ public final class CapturePluginData implements Cloneable {
       return mMarkPriority;
     }
     
+    public int getPriorityMarkingMulti() {
+      return mPriorityMarkingMulti;
+    }
+    
     /**
      * Sets the mark priority used by capture plugin.
      * 
-     * @param priority The new mark priority.
-     * @since 2.12
+     * @param priorities The new mark priorities.
+     * @since 3.14.18
      */
-    public void setMarkPriority(int priority) {
-      mMarkPriority = priority;
+    public void setMarkPriority(int[] priorities) {
+      mMarkPriority = priorities[0];
+      
+      if(priorities.length > 0) {
+        mPriorityMarkingMulti = priorities[1];
+      }
       
       for(DeviceIf device : mDevices) {
         Program[] programs = device.getProgramList();
