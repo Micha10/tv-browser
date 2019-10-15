@@ -66,7 +66,24 @@ import util.ui.menu.MenuUtil;
  * @since 0.2
  */
 public final class ProgramCompat {
+  public static final int STATE_IS_VALID = 0;
+  public static final int STATE_WAS_UPDATED = 1;
+  public static final int STATE_WAS_DELETED = 2;
+  
+  public static final int PRIORITY_MARK_NONE = -1;
+  public static final int PRIORITY_MARK_MIN = 0;
+  public static final int PRIORITY_MARK_MEDIUM_LOWER = 1;
+  public static final int PRIORITY_MARK_MEDIUM = 2;
+  public static final int PRIORITY_MARK_MEDIUM_HIGHER = 3;
+  public static final int PRIORITY_MARK_MAX = 4;
 
+  public static final byte IMPORTANCE_PROGRAM_DEFAULT = -1;
+  public static final byte IMPORTANCE_PROGRAM_MIN = 1;
+  public static final byte IMPORTANCE_PROGRAM_MEDIUM_LOWER = 3;
+  public static final byte IMPORTANCE_PROGRAM_MEDIUM = 5;
+  public static final byte IMPORTANCE_PROGRAM_MEDIUM_HIGHER = 7;
+  public static final byte IMPORTANCE_PROGRAM_MAX = 10;
+  
   private static Localizer LOCALIZER = Localizer.getLocalizerFor(ProgramCompat.class);
   private static final Logger mLog = Logger.getLogger(ProgramCompat.class.getName());
   
