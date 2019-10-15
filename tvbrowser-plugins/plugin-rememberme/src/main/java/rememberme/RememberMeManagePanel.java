@@ -33,6 +33,7 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -70,10 +71,12 @@ import devplugin.Date;
 import devplugin.Marker;
 import devplugin.Plugin;
 import devplugin.PluginAccess;
+import devplugin.PluginManager;
 import devplugin.Program;
 import devplugin.ProgramFieldType;
 import devplugin.ProgramReceiveTarget;
 import devplugin.TabListener;
+import devplugin.Version;
 import tvbrowser.extras.searchplugin.SearchPluginProxy;
 import util.ui.TVBrowserIcons;
 import util.ui.TabListenerPanel;
@@ -307,12 +310,23 @@ public class RememberMeManagePanel extends TabListenerPanel implements PersonaCo
       DummyProgram dummy = new DummyProgram((RememberedProgram)mList.getSelectedValue());
       
       try {
-        ActionMenu search = SearchPluginProxy.getInstance().getContextMenuActions(dummy);
-        
-        if(search != null) {
-          popupMenu.add(MenuUtil.createMenuItem(search));
+        if(Plugin.getPluginManager().getTVBrowserVersion().compareTo(new Version(4,20,50,false)) <= 0) {
+          ActionMenu search = SearchPluginProxy.getInstance().getContextMenuActions(dummy);
+          
+          if(search != null) {
+            popupMenu.add(MenuUtil.createMenuItem(search));
+          }
         }
-      }catch(IllegalAccessError t) {
+        else {
+          PluginManager manager = Plugin.getPluginManager();
+          Method m = manager.getClass().getMethod("getPluginContextMenu",Program.class,String.class);
+          JMenuItem item = (JMenuItem)m.invoke(manager, dummy, "searchplugin.SearchPlugin");
+          
+          if(item != null) {
+            popupMenu.add(item);
+          }
+        }
+      }catch(Throwable t) {
         final JPopupMenu menu = Plugin.getPluginManager().createPluginContextMenu(dummy, rMe);
         
         for(int i = 0; i < menu.getComponentCount(); i++) {
