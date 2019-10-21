@@ -7,6 +7,8 @@ import java.util.LinkedList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.Properties;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
 
 import primarydatamanager.primarydataservice.PrimaryDataService;
 
@@ -19,10 +21,10 @@ public class PDSRunner {
   private File mLogDir, mRawDir;
   private static Properties mProperties;
   
+  private static final int MAX_EXECUTION_MINUTES = 90;
   private static final int CONCURRENT_DOWNLOADS=5;
   
   private static final Logger mLog = Logger.getLogger(PDSRunner.class.getName());
-  
   
   public PDSRunner(File baseDir) {
     Logger.getLogger("sun.awt.X11.timeoutTask.XToolkit").setLevel(Level.INFO);
@@ -81,7 +83,7 @@ public class PDSRunner {
     boolean isFinished;
     do {
       try {
-        Thread.sleep(Long.MAX_VALUE);
+        Thread.sleep(30*60000);
       } catch (InterruptedException exc) {}
       
       synchronized (mPDSList) {
@@ -89,6 +91,7 @@ public class PDSRunner {
       }
     } while (! isFinished);
     
+    System.exit(0);
   }
   
   
@@ -98,29 +101,46 @@ public class PDSRunner {
     mActiveThreadCount++;
 
     boolean isFinished = false;
+    // Get the next job
+    final AtomicReference<PrimaryDataService> pds = new AtomicReference<PrimaryDataService>(null);
+    
     do {
-      // Get the next job
-      PrimaryDataService pds = null;
-      
       synchronized (mPDSList) {
         if (mPDSList.isEmpty()) {
           isFinished = true;
         } else {
-          pds = mPDSList.removeFirst();
+          pds.set(mPDSList.removeFirst());
         }
       }
       
-      if (pds != null) {
-        String dir = mRawDir.getAbsolutePath();
+      if (pds.get() != null) {
+        final String dir = mRawDir.getAbsolutePath();
         File logFile=new File(mLogDir,pds.getClass().getName()+".txt");
         try {
           FileOutputStream out=new FileOutputStream(logFile);
-          PrintStream errOut=new PrintStream(out);
+          final PrintStream errOut=new PrintStream(out);
           if (mProperties != null) {
-            pds.setParameters(mProperties);
+            pds.get().setParameters(mProperties);
           }
-          boolean thereWereErrors = pds.execute(dir, errOut);          
-          if (thereWereErrors) {
+          
+          final AtomicBoolean isRunning = new AtomicBoolean(true);
+          final AtomicBoolean thereWereErrors = new AtomicBoolean(false);
+          final long start = System.currentTimeMillis();
+          
+          new Thread() {
+            @Override
+            public void run() {
+              boolean error = pds.get().execute(dir, errOut);
+              thereWereErrors.set(error);
+              isRunning.set(false);
+            }
+          }.start();
+          
+          while(isRunning.get() && System.currentTimeMillis()-start < (MAX_EXECUTION_MINUTES * 60000)) {
+            Thread.sleep(30000);
+          }
+          
+          if (thereWereErrors.get() || isRunning.get()) {
             mLog.warning("There were errors during the execution of primary "
                 + "data service " + pds.getClass().getName() + ". See log file: "
                 + logFile.getAbsolutePath());

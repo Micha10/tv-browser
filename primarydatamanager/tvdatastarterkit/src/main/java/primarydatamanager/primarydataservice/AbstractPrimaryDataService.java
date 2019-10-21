@@ -123,7 +123,12 @@ abstract public class AbstractPrimaryDataService implements PrimaryDataService {
    * @see #logException(Exception)
    */
   public final void logMessage(String msg) {
-    mErr.println(msg);
+    if(mErr != null) {
+      mErr.println(msg);
+    }
+    else {
+      System.err.println(msg);
+    }
     mThereWhereErrors=true;
   }
   
