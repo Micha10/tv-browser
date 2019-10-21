@@ -90,8 +90,6 @@ public class PDSRunner {
         isFinished = mPDSList.isEmpty() && (mActiveThreadCount == 0);
       }
     } while (! isFinished);
-    
-    System.exit(0);
   }
   
   
@@ -113,7 +111,7 @@ public class PDSRunner {
         }
       }
       
-      if (pds.get() != null) {
+      if (!isFinished && pds.get() != null) {
         final String dir = mRawDir.getAbsolutePath();
         File logFile=new File(mLogDir,pds.getClass().getName()+".txt");
         try {
@@ -153,6 +151,8 @@ public class PDSRunner {
           mLog.log(Level.SEVERE, "Error executing primary data service "+pds.getClass().getName(), exc);
         }
       }
+      
+      pds.set(null);
     } while (! isFinished);
     
     mActiveThreadCount--;
@@ -216,7 +216,7 @@ public class PDSRunner {
     
     
     pdsRunner.runAllPrimaryDataServices();
-    
+    System.exit(0);
   }
   
   
