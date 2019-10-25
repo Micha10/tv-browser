@@ -32,6 +32,7 @@ import java.awt.TrayIcon;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -331,8 +332,10 @@ public class Java6Tray {
     mTrayParent.toFront();
 
     SwingUtilities.invokeLater(() -> {
-      Point p2 = computeDisplayPoint(p.x,p.y,mPopupMenu.getPreferredSize());
-
+      final AffineTransform t = mTrayParent.getGraphicsConfiguration().getDefaultTransform();
+  	  final Dimension d = mPopupMenu.getPreferredSize();
+      final Point p2 = computeDisplayPoint((int)(p.x/t.getScaleX()),(int)(p.y/t.getScaleY()),d);
+      
       mPopupMenu.show(mTrayParent,p2.x - mTrayParent.getLocation().x,p2.y - mTrayParent.getLocation().y);
     });
   }
