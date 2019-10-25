@@ -34,6 +34,7 @@ import java.awt.GraphicsEnvironment;
 import java.awt.Image;
 import java.awt.Insets;
 import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.awt.event.WindowAdapter;
 import java.awt.geom.Rectangle2D;
@@ -1200,11 +1201,15 @@ public class TVBrowser {
     final int windowX = Settings.propWindowX.getInt();
     final int windowY = Settings.propWindowY.getInt();
 
-    final Rectangle2D screen = mainFrame.getGraphicsConfiguration().getBounds();
+    final Rectangle screen = mainFrame.getGraphicsConfiguration().getBounds();
     GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds();
     final Insets insets = Toolkit.getDefaultToolkit().getScreenInsets(mainFrame.getGraphicsConfiguration());
+    screen.x = screen.x + insets.left;
+    screen.y = screen.y + insets.top;
+    screen.width = screen.width - insets.left - insets.right;
+    screen.height = screen.height - insets.top - insets.bottom;
     
-    if (Settings.propIsWindowMaximized.getBoolean() || (windowX == -1 && windowY == -1) || windowX + windowWidth < 0 || windowX > (screen.getX() + screen.getWidth() - 30) || windowY + windowHeight < 0 || windowY > (screen.getY() + screen.getHeight() - 30) || windowWidth < 200 || windowHeight < 200) {
+    if (Settings.propIsWindowMaximized.getBoolean() || (windowX == -1 && windowY == -1) || windowX + windowWidth < screen.getX() || windowX > (screen.getX() + screen.getWidth() - 30) || windowY + windowHeight < screen.getY() || windowY > (screen.getY() + screen.getHeight() - 30) || windowWidth < 200 || windowHeight < 200) {
       UiUtilities.centerAndShow(mainFrame, false);
     } else {
       mainFrame.setLocation(windowX, windowY);
@@ -1213,7 +1218,7 @@ public class TVBrowser {
     SwingUtilities.invokeLater(() -> {
       Point p = mainFrame.getLocation();
       
-      if(windowX < insets.left || windowY < insets.top || windowX > (screen.getX() + screen.getWidth() - 30) || windowY > (screen.getY() + screen.getHeight() - 30)) {
+      if((windowX < screen.getX()) || (windowY < screen.getY()) || windowX > (screen.getX() + screen.getWidth() - 30) || windowY > (screen.getY() + screen.getHeight() - 30)) {
     	UiUtilities.centerAndShow(mainFrame, false);
       }
       else if(!Settings.propIsWindowMaximized.getBoolean() && (p.x != windowX || windowY != p.y)) {
