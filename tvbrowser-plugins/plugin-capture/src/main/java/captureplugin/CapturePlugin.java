@@ -38,6 +38,7 @@ import java.io.ObjectOutputStream;
 import java.io.RandomAccessFile;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Properties;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -81,7 +82,7 @@ import util.ui.UiUtilities;
  *         adopted by fishhead
  */
 public class CapturePlugin extends devplugin.Plugin {
-  private static final Version mVersion = new Version(3,14,18,false);
+  private static final Version mVersion = new Version(3,14,19,false);
   
     /**
      * Translator
@@ -312,34 +313,36 @@ public class CapturePlugin extends devplugin.Plugin {
      */
     protected void updateMarkedPrograms() {
       final HashMap<String, AtomicInteger> list = getMarkedByDevices();
-      Set<String> keys = list.keySet();
+      Set<String> keys = mMarkedProgramsCount.keySet();
         
-        for (String id : keys) {
-            if (mMarkedProgramsCount.containsKey(id)) {
-              mMarkedProgramsCount.remove(id);
-            }
-            
-            final Program p = getPluginManager().getProgram(id);
-            
-            if(p != null) {
-              p.mark(this);
-            }
-        }
-
-        keys = mMarkedProgramsCount.keySet();
-        
-        for (String key : keys) {
-          final Program p = getPluginManager().getProgram(key);
+      for (String id : keys) {
+        if(!list.containsKey(id)) {
+          final Program p = getPluginManager().getProgram(id);
           
           if(p != null) {
             p.unmark(this);
           }
         }
+      }
 
-        mMarkedProgramsCount = list;
+      keys = list.keySet();
+      
+      for (String key : keys) {
+        if(!mMarkedProgramsCount.containsKey(key)) {
+          mMarkedProgramsCount.put(key,list.get(key));
+        }
+        
+        final Program p = getPluginManager().getProgram(key);
+        
+        if(p != null) {
+          p.mark(this);
+        }
+      }
 
-        updateTreeNode();
-        super.saveMe();
+      mMarkedProgramsCount = list;
+
+      updateTreeNode();
+      super.saveMe();
     }
 
     /**
