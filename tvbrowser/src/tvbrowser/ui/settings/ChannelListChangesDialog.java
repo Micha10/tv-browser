@@ -26,7 +26,9 @@ package tvbrowser.ui.settings;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
+import java.awt.Toolkit;
 import java.awt.Window;
+import java.awt.datatransfer.StringSelection;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -45,13 +47,15 @@ import devplugin.Channel;
 import devplugin.SettingsItem;
 import tvbrowser.core.Settings;
 import tvbrowser.core.plugin.PluginManagerImpl;
+import tvbrowser.ui.mainframe.MainFrame;
 import tvbrowser.ui.settings.channel.ChannelJList;
 import util.ui.ChannelListCellRenderer;
 import util.ui.Localizer;
+import util.ui.UiUtilities;
 
 public class ChannelListChangesDialog extends JDialog {
   /** The localizer for this class. */
-  private static final util.ui.Localizer mLocalizer = util.ui.Localizer
+  private static final util.ui.Localizer LOCALIZER = util.ui.Localizer
       .getLocalizerFor(ChannelListChangesDialog.class);
 
   private ArrayList<Channel> mAddedList;
@@ -77,7 +81,7 @@ public class ChannelListChangesDialog extends JDialog {
    * Creates the GUI
    */
   private void createGui(boolean showSettingsLink) {
-    setTitle(mLocalizer.msg("title", "Channel changes"));
+    setTitle(LOCALIZER.msg("title", "Channel changes"));
 
     setLocationRelativeTo(getParent());
 
@@ -85,7 +89,7 @@ public class ChannelListChangesDialog extends JDialog {
     contentPanel.setLayout(new GridLayout(1, 2, 10, 0));
 
     JPanel panelAdded = new JPanel(new BorderLayout());
-    panelAdded.setBorder(BorderFactory.createTitledBorder(mLocalizer.msg("added", "New channels: {0}", mAddedList.size())));
+    panelAdded.setBorder(BorderFactory.createTitledBorder(LOCALIZER.msg("added", "New channels: {0}", mAddedList.size())));
 
     DefaultListModel<Object> listModel = new DefaultListModel<>();
     for (int i = 0; i < mAddedList.size(); i++) {
@@ -97,7 +101,7 @@ public class ChannelListChangesDialog extends JDialog {
     panelAdded.add(new JScrollPane(list), BorderLayout.CENTER);
 
     JPanel panelDeleted = new JPanel(new BorderLayout());
-    panelDeleted.setBorder(BorderFactory.createTitledBorder(mLocalizer.msg("deleted", "Removed channels: {0}", mDeletedList.size())));
+    panelDeleted.setBorder(BorderFactory.createTitledBorder(LOCALIZER.msg("deleted", "Removed channels: {0}", mDeletedList.size())));
 
     listModel = new DefaultListModel<>();
     for (int i = 0; i < mDeletedList.size(); i++) {
@@ -110,8 +114,40 @@ public class ChannelListChangesDialog extends JDialog {
 
     JPanel btnPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
     
+    JButton copyToClipboard = new JButton(LOCALIZER.msg("copyToClipboard", "Copy to clipboard"));
+    copyToClipboard.addActionListener(e -> {
+      StringBuilder b = new StringBuilder();
+      
+      if(!mDeletedList.isEmpty()) {
+        b.append(LOCALIZER.msg("deleted", "Removed channels: {0}", mDeletedList.size())).append("\n-------------------");
+      }
+      
+      for(Channel ch : mDeletedList) {
+        b.append("\n").append(ch.toString()).append(" (").append(ch.getCountriesString()).append(")");
+      }
+      
+      if(!mAddedList.isEmpty()) {
+        if(b.length() > 0) {
+          b.append("\n\n");
+        }
+        
+        b.append(LOCALIZER.msg("added", "New channels: {0}", mAddedList.size())).append("\n---------------");
+        
+        for(Channel ch : mAddedList) {
+          b.append("\n").append(ch.toString()).append(" (").append(ch.getCountriesString()).append(")");
+        }
+      }
+      
+      try {
+        Toolkit.getDefaultToolkit().getSystemClipboard().setContents(new StringSelection(b.toString()), null);
+        JOptionPane.showMessageDialog(UiUtilities.getLastModalChildOf(MainFrame.getInstance()), LOCALIZER.msg("copyMessage", "Channels copied to system clipboard."), LOCALIZER.ellipsisMsg("copyTitle", "Channels copied"), JOptionPane.INFORMATION_MESSAGE);
+      }catch(Exception e1) {}
+    });
+    
+    btnPanel.add(copyToClipboard);
+    
     if(showSettingsLink) {
-      JButton openSettings = new JButton(mLocalizer.msg("openSettings", "Open channel settings"));
+      JButton openSettings = new JButton(LOCALIZER.msg("openSettings", "Open channel settings"));
       openSettings.addActionListener(e -> {
         setVisible(false);
         SwingUtilities.invokeLater(() -> {
@@ -158,7 +194,7 @@ public class ChannelListChangesDialog extends JDialog {
     // show changes
     if (addedList.isEmpty() && deletedList.isEmpty()) {
       if(!showSettingsLink) {
-        JOptionPane.showMessageDialog(owner, mLocalizer.msg("noChanges.message", "There are no changes in the list of available channels."), mLocalizer.msg("noChanges.title", "No changes"), JOptionPane.INFORMATION_MESSAGE);
+        JOptionPane.showMessageDialog(owner, LOCALIZER.msg("noChanges.message", "There are no changes in the list of available channels."), LOCALIZER.msg("noChanges.title", "No changes"), JOptionPane.INFORMATION_MESSAGE);
       }
     }
     else {
