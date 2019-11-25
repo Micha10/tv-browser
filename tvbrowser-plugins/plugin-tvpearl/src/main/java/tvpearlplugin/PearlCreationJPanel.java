@@ -28,6 +28,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -370,8 +371,17 @@ public class PearlCreationJPanel extends JPanel {
           if(value == null) {
             value = "";
           }
+          boolean add = true;
           
-          postValues.add(new BasicNameValuePair(name, value));
+          for(BasicNameValuePair v : postValues) {
+            if(v.getName().equals(name)) {
+              add = false;
+              break;
+            }
+          }
+          if(add) {
+            postValues.add(new BasicNameValuePair(name, value));
+          }
         }
         
         lastPos = m.end();

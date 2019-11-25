@@ -237,7 +237,8 @@ public class TVPGrabber
       final List<TVPProgram> programList, final String originalUrl)
 	{
     final Matcher matcher = PATTERN_CONTENT.matcher(content);
-		while (matcher.find())
+    
+    while (matcher.find())
 		{
 		  final String author = matcher.group(4).trim();
 		  final String link = matcher.group(1).trim();
