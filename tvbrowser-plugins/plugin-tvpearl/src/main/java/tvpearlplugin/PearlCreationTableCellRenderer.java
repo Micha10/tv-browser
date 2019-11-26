@@ -65,7 +65,15 @@ public class PearlCreationTableCellRenderer extends DefaultTableCellRenderer {
         result = mSelection;
       }
       
-      table.setRowHeight(row, mPanel.getPreferredHeight());
+      int actualRowHeight = table.getRowHeight(row);
+
+      // Set table row height to fitted height.
+      // Important to check if this has been done already
+      // to prevent a never-ending loop.
+      if (mPanel.getPreferredHeight() != actualRowHeight) {
+         table.setRowHeight(row, mPanel.getPreferredHeight());
+      }
+      //table.setRowHeight(row, mPanel.getPreferredHeight());
       
       return result;
     }

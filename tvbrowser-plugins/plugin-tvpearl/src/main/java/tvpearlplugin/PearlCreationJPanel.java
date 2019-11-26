@@ -371,17 +371,8 @@ public class PearlCreationJPanel extends JPanel {
           if(value == null) {
             value = "";
           }
-          boolean add = true;
           
-          for(BasicNameValuePair v : postValues) {
-            if(v.getName().equals(name)) {
-              add = false;
-              break;
-            }
-          }
-          if(add) {
-            postValues.add(new BasicNameValuePair(name, value));
-          }
+          postValues.add(new BasicNameValuePair(name, value));
         }
         
         lastPos = m.end();
@@ -394,6 +385,11 @@ public class PearlCreationJPanel extends JPanel {
       
       HttpPost post = new HttpPost("https://hilfe.tvbrowser.org/ucp.php?mode=login&sid=" + SID);
       post.setEntity(entity);
+      
+      // wait a little to prevent forum from rejecting login 
+      try {
+        Thread.sleep((int)(1000 + Math.random()*500));
+      }catch(InterruptedException ie) {}
       
       response = client.execute(post);
       
