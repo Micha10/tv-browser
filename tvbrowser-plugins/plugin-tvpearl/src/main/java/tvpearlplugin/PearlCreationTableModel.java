@@ -27,11 +27,9 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 
-import javax.swing.event.TableModelEvent;
 import javax.swing.table.DefaultTableModel;
 
 import devplugin.Program;
-
 import util.program.AbstractPluginProgramFormating;
 import util.program.ProgramUtilities;
 import util.ui.Localizer;
@@ -93,8 +91,8 @@ public class PearlCreationTableModel extends DefaultTableModel {
       case 1: mTVPearlCreationList.get(row).setComment((String)aValue);break;
       case 2: mTVPearlCreationList.get(row).setFormating((AbstractPluginProgramFormating)aValue);break;
     }
-
-    fireTableChanged(new TableModelEvent(this));
+    
+    fireTableCellUpdated(row, column);
   }
   
   /**

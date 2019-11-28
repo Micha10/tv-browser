@@ -56,7 +56,7 @@ public class TVPearlListCellRenderer extends DefaultListCellRenderer {
     }
   }
 
-  public Component getListCellRendererComponent(final JList list, final Object value, final int index,
+  public Component getListCellRendererComponent(final JList<?> list, final Object value, final int index,
       final boolean isSelected, final boolean cellHasFocus) {
     final JLabel label = (JLabel) super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
 

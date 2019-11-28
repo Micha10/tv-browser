@@ -28,7 +28,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -113,7 +112,6 @@ public class PearlCreationJPanel extends JPanel {
     mTable.getColumnModel().getColumn(2).setMinWidth(200);
     mTable.getColumnModel().getColumn(2).setMaxWidth(200);
     mTable.getColumnModel().getColumn(0).setCellRenderer(renderer);
-    mTable.getColumnModel().getColumn(2).setCellRenderer(renderer);
     
     JScrollPane scroll = new JScrollPane(mTable);
     scroll.getViewport().setBackground(UIManager.getDefaults().getColor("List.background"));
@@ -285,7 +283,7 @@ public class PearlCreationJPanel extends JPanel {
   
   private void updateCommentEditor(String[] values) {
     if(values != null) {
-      final JComboBox comboBox = new JComboBox();
+      final JComboBox<String> comboBox = new JComboBox<String>();
       comboBox.setEditable(true);
       
       for(final String formating : values) {
@@ -304,7 +302,7 @@ public class PearlCreationJPanel extends JPanel {
   
   public synchronized void updateFormatingEditor(AbstractPluginProgramFormating[] values) {
     if(values != null) {
-      final JComboBox comboBox = new JComboBox();
+      final JComboBox<AbstractPluginProgramFormating> comboBox = new JComboBox<AbstractPluginProgramFormating>();
       
       for(final AbstractPluginProgramFormating formating : values) {
         if(comboBox != null && formating != null && formating.toString() != null && formating.getContentValue() != null && formating.getEncodingValue() != null && formating.getName() != null) {

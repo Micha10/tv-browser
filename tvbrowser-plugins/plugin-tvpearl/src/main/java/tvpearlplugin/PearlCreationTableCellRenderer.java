@@ -22,6 +22,7 @@
  */
 package tvpearlplugin;
 
+import java.awt.BorderLayout;
 import java.awt.Component;
 
 import javax.swing.JPanel;
@@ -29,14 +30,10 @@ import javax.swing.JTable;
 import javax.swing.UIManager;
 import javax.swing.table.DefaultTableCellRenderer;
 
-import com.jgoodies.forms.factories.CC;
-import com.jgoodies.forms.layout.FormLayout;
-
 import devplugin.Program;
 import util.settings.PluginPictureSettings;
 import util.settings.ProgramPanelSettings;
 import util.ui.ProgramPanel;
-import util.ui.UiUtilities;
 
 public class PearlCreationTableCellRenderer extends DefaultTableCellRenderer {
   private static final ProgramPanelSettings PANEL_SETTINGS = new ProgramPanelSettings(new PluginPictureSettings(PluginPictureSettings.NO_PICTURE_TYPE), true, true);
@@ -46,7 +43,7 @@ public class PearlCreationTableCellRenderer extends DefaultTableCellRenderer {
   
   public PearlCreationTableCellRenderer() {
     mPanel = new ProgramPanel(PANEL_SETTINGS);
-    mSelection = new JPanel(new FormLayout("0dlu:grow","fill:0dlu:grow"));
+    mSelection = new JPanel(new BorderLayout());
     mSelection.setOpaque(true);
     mSelection.setBackground(UIManager.getColor("Table.selectionBackground"));
   }
@@ -60,20 +57,18 @@ public class PearlCreationTableCellRenderer extends DefaultTableCellRenderer {
       mPanel.setProgram((Program)value);
       
       if(isSelected) {
-        mSelection.removeAll();
-        mSelection.add(mPanel, CC.xy(1, 1));
+        mSelection.add(mPanel, BorderLayout.CENTER);
         result = mSelection;
       }
       
       int actualRowHeight = table.getRowHeight(row);
-
+      
       // Set table row height to fitted height.
       // Important to check if this has been done already
       // to prevent a never-ending loop.
       if (mPanel.getPreferredHeight() != actualRowHeight) {
-         table.setRowHeight(row, mPanel.getPreferredHeight());
+        table.setRowHeight(row, mPanel.getPreferredHeight());
       }
-      //table.setRowHeight(row, mPanel.getPreferredHeight());
       
       return result;
     }
