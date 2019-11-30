@@ -37,7 +37,6 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.awt.event.WindowAdapter;
-import java.awt.geom.Rectangle2D;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -597,12 +596,11 @@ public class TVBrowser {
 
           startPeriodicSaveSettings();
 
+          ChannelList.completeChannelLoading();
+          initializeAutomaticDownload();
         }
       }.start();
       SwingUtilities.invokeLater(() -> {
-        ChannelList.completeChannelLoading();
-        initializeAutomaticDownload();
-        
         if (Launch.isOsWindowsNtBranch()) {
           try {
             RegistryKey desktopSettings = new RegistryKey(
@@ -650,8 +648,14 @@ public class TVBrowser {
 	                  mainFrame.quit();
 	                } else if (!pane.getValue().equals(dontDoIt)) {
 	                  try {
-	                  //  killWait.setData("5000");
-	                  //  desktopSettings.setValue(killWait);
+	                    
+	                    killWait.setData("5000");
+	                    boolean result = desktopSettings.setValue(killWait);
+	                    
+	                    if(!result) {
+	                      throw new Exception("Registry Value could not be set.");
+	                    }
+	                    
 	                    JOptionPane
 	                        .showMessageDialog(
 	                            UiUtilities.getLastModalChildOf(mainFrame),
