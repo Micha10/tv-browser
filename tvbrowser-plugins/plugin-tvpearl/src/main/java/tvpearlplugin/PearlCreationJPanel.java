@@ -22,12 +22,19 @@
  */
 package tvpearlplugin;
 
+import java.awt.Component;
 import java.awt.Dialog.ModalityType;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -41,9 +48,13 @@ import javax.swing.JPasswordField;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.PopupMenuEvent;
+import javax.swing.event.PopupMenuListener;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 
@@ -283,19 +294,107 @@ public class PearlCreationJPanel extends JPanel {
   
   private void updateCommentEditor(String[] values) {
     if(values != null) {
+      final AtomicInteger rowValue = new AtomicInteger(-1);
+      
       final JComboBox<String> comboBox = new JComboBox<String>();
       comboBox.setEditable(true);
+      comboBox.getEditor().getEditorComponent().addFocusListener(new FocusAdapter() {
+        @Override
+        public void focusLost(FocusEvent e) {
+          if(e.getOppositeComponent() != null && !e.getOppositeComponent().equals(mTable)) {
+            mTable.editingStopped(new ChangeEvent(comboBox));
+          }
+        }
+        @Override
+        public void focusGained(FocusEvent e) {
+          comboBox.showPopup();
+        }
+      });
+      comboBox.addPopupMenuListener(new PopupMenuListener() {
+        private int mLastRow = -1;
+        private long mOpened = -1;
+        @Override
+        public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
+          mOpened = System.currentTimeMillis();
+        }
+        
+        @Override
+        public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
+          if(mLastRow != -1 && mLastRow != rowValue.get() && System.currentTimeMillis()-mOpened < 200) {
+            SwingUtilities.invokeLater(new Runnable() {
+              @Override
+              public void run() {
+                comboBox.showPopup();
+              }
+            });
+          }
+          
+          mLastRow = rowValue.get();
+        }
+        
+        @Override
+        public void popupMenuCanceled(PopupMenuEvent e) {}
+      });
+      comboBox.getEditor().getEditorComponent().addKeyListener(new KeyAdapter() {
+        @Override
+        public void keyPressed(KeyEvent e) {
+          comboBox.hidePopup();
+        }
+      });
+      
+      HashSet<String> knownFormatings = new HashSet<String>();
       
       for(final String formating : values) {
         if(comboBox != null && formating != null) {
           try {
             comboBox.addItem(formating);
+            knownFormatings.add(formating);
           }catch(Exception e) {e.printStackTrace();}
         }
       }
       
+      for(int i = 0; i < mTable.getRowCount(); i++) {
+        final String value = (String)mTable.getValueAt(i, 1);
+        
+        if(comboBox != null && value != null) {
+          if(!knownFormatings.contains(value)) {
+            comboBox.addItem(value);
+            knownFormatings.add(value);
+          }
+        }
+      }
+      
       if(comboBox != null) {
-        mTable.getColumnModel().getColumn(1).setCellEditor(new DefaultCellEditor(comboBox));
+        mTable.getColumnModel().getColumn(1).setCellEditor(new DefaultCellEditor(comboBox) {
+          @Override
+          public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row,
+              int column) {
+            rowValue.set(row);
+            return super.getTableCellEditorComponent(table, value, isSelected, row, column);
+          }
+          @Override
+          public boolean stopCellEditing() {
+            if(mTable.isEditing()) {
+              String value = (String)comboBox.getEditor().getItem();
+              boolean found = false;
+              
+              for(int i = 0; i < comboBox.getItemCount(); i++) {
+                if(comboBox.getItemAt(i).equals(value)) {
+                  found = true;
+                  break;
+                }
+              }
+              
+              if(!found) {
+                comboBox.addItem(value);
+                comboBox.setSelectedIndex(comboBox.getItemCount()-1);
+              }
+              fireEditingStopped();
+            }
+            
+            return true;
+          }
+        });
       }
     }
   }

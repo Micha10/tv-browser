@@ -18,7 +18,6 @@
 package tvpearlplugin;
 
 import java.awt.BorderLayout;
-import java.awt.Dimension;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -41,13 +40,6 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SpinnerNumberModel;
 
-import tvbrowser.ui.mainframe.MainFrame;
-import util.ui.MarkPriorityComboBoxRenderer;
-import util.ui.PluginChooserDlg;
-import util.ui.PluginProgramConfigurationPanel;
-import util.ui.ScrollableJPanel;
-import util.ui.UiUtilities;
-
 import com.jgoodies.forms.builder.PanelBuilder;
 import com.jgoodies.forms.factories.Borders;
 import com.jgoodies.forms.factories.CC;
@@ -58,6 +50,12 @@ import compat.BordersCompat;
 import devplugin.ProgramReceiveIf;
 import devplugin.ProgramReceiveTarget;
 import devplugin.SettingsTab;
+import tvbrowser.ui.mainframe.MainFrame;
+import util.ui.MarkPriorityComboBoxRenderer;
+import util.ui.PluginChooserDlg;
+import util.ui.PluginProgramConfigurationPanel;
+import util.ui.ScrollableJPanel;
+import util.ui.UiUtilities;
 
 public final class TVPearlPluginSettingsTab implements SettingsTab
 {
@@ -67,9 +65,9 @@ public final class TVPearlPluginSettingsTab implements SettingsTab
 	private JCheckBox mUpdateAtStart;
 	private JCheckBox mUpdateAfterUpdateFinished;
 	private JCheckBox mUpdateManual;
-	private JComboBox mViewOption;
+	private JComboBox<String> mViewOption;
 	private JCheckBox mMarkPearl;
-	private JComboBox mMarkPriority;
+	private JComboBox<String> mMarkPriority;
 	private JCheckBox mShowInfoModal;
 	private JCheckBox mEnableFilter;
 	private JRadioButton mFilterShowOnly;
@@ -102,7 +100,7 @@ public final class TVPearlPluginSettingsTab implements SettingsTab
 	  mTabbedPane = new JTabbedPane();
 	  
 	  final FormLayout layout = new FormLayout(
-        "5dlu, pref, 3dlu, fill:pref:grow, 5dlu",
+        "5dlu, pref, 3dlu, fill:150dlu:grow, 5dlu",
         "5dlu");
 
 	  final PanelBuilder builder = new PanelBuilder(layout,
@@ -119,7 +117,7 @@ public final class TVPearlPluginSettingsTab implements SettingsTab
         mSettings.getUpdatePearlsAfterDataUpdate());
     mUpdateManual = new JCheckBox(mLocalizer.msg("updateManual",
         "Update manual"), mSettings.getUpdatePearlsManually());
-    mViewOption = new JComboBox(getViewOption());
+    mViewOption = new JComboBox<String>(getViewOption());
     if (mSettings.getShowAllPearls()) {
       mViewOption.setSelectedIndex(0);
     } else if (mSettings.getShowSubscribedChannels()) {
@@ -132,7 +130,7 @@ public final class TVPearlPluginSettingsTab implements SettingsTab
     }
     mMarkPearl = new JCheckBox(mLocalizer.msg("markPearl",
         "Mark pearls within the TV-Browser"), mSettings.getMarkPearls());
-    mMarkPriority = new JComboBox(getPriorities());
+    mMarkPriority = new JComboBox<String>(getPriorities());
     mMarkPriority.setRenderer(new MarkPriorityComboBoxRenderer());
     mMarkPriority.setSelectedIndex(mSettings.getMarkPriority() + 1);
     mShowInfoModal = new JCheckBox(
@@ -247,19 +245,13 @@ public final class TVPearlPluginSettingsTab implements SettingsTab
     
 	builder.nextRow(2);
 
-	final JScrollPane scrollPane = new JScrollPane(builder.getPanel());
-	scrollPane.setBorder(BordersCompat.getDialogBorder());
-	scrollPane.setViewportBorder(null);
-		
-	mTabbedPane.addTab(mLocalizer.msg("tabPearlDisplay", "TV Pearl Display"), scrollPane);
-		
-	JPanel tabPanel = new JPanel(new BorderLayout());
-	tabPanel.setBorder(Borders.createEmptyBorder("5dlu,5dlu,0dlu,5dlu"));
-		
-	tabPanel.add(mTabbedPane, BorderLayout.CENTER);
-		
+	builder.getPanel().setOpaque(true);
+	builder.getPanel().setBorder(Borders.DIALOG_BORDER);
+	
+	mTabbedPane.addTab(mLocalizer.msg("tabPearlDisplay", "TV Pearl Display"), builder.getPanel());
+	
 	PanelBuilder creationPanel = new PanelBuilder(new FormLayout("5dlu,default,3dlu,min:grow",
-		    "5dlu,default,3dlu,default,default,10dlu,default,5dlu,fill:150dlu:grow,10dlu,default,5dlu,default"));
+		    "5dlu,default,3dlu,default,default,10dlu,default,5dlu,fill:150dlu:grow,10dlu,default,5dlu,default"), new ScrollableJPanel());
 		
 	mUserName = new JTextField(mSettings.getForumUserName());
 	mUserPassword = new JPasswordField(mSettings.getForumPassword());
@@ -280,7 +272,6 @@ public final class TVPearlPluginSettingsTab implements SettingsTab
     y++;
     
     creationPanel.add(mFormatingPanel, cc.xyw(2,++y,3));
-    creationPanel.getPanel().setPreferredSize(new Dimension(200, 200));
     
     y += 2;
     
@@ -291,14 +282,16 @@ public final class TVPearlPluginSettingsTab implements SettingsTab
     creationPanel.addLabel(mLocalizer.msg("saveComments", "Save comments:"), cc.xy(2, ++y));
     creationPanel.add(countPanel, cc.xy(4, y));
     
-    final JScrollPane scrollPane2 = new JScrollPane(creationPanel.getPanel());
-    scrollPane2.setBorder(BordersCompat.getDialogBorder());
-    scrollPane2.setViewportBorder(null);
-    scrollPane2.setPreferredSize(new Dimension(200, 200));
-    
-	mTabbedPane.addTab(mLocalizer.msg("tabPearlCreation", "TV Pearl Creation"), scrollPane2);
+    creationPanel.getPanel().setOpaque(true);
+    creationPanel.getPanel().setBorder(BordersCompat.getDialogBorder());
+	mTabbedPane.addTab(mLocalizer.msg("tabPearlCreation", "TV Pearl Creation"), creationPanel.getPanel());
 	mTabbedPane.setSelectedIndex(mSelectedPane);
 	
+	JPanel tabPanel = new JPanel(new BorderLayout());
+    tabPanel.setBorder(Borders.createEmptyBorder("5dlu,5dlu,0dlu,5dlu"));
+        
+    tabPanel.add(mTabbedPane, BorderLayout.CENTER);
+    
 	return tabPanel;
   }
 
