@@ -75,6 +75,14 @@ public class RegistryValue {
 	}
 	
 	/**
+	 * @param data The new data for this Registry value.
+	 * @since 4.2.1
+	 */
+	public void setData(String data) {
+    mValue = data;
+  }
+	
+	/**
 	 * @return <code>true</code> if the type of this Registry value is {@value #TYPE_REG_UNKNOWN},
 	 * <code>false</code> otherwise.
 	 */

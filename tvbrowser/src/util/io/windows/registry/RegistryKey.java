@@ -125,4 +125,47 @@ public class RegistryKey {
 		
 		return result;
 	}
+	
+	/**
+	 * Sets a value in this RegistryKey.
+	 * 
+	 * @param value The registry value to set.
+	 * @return <code>true</code> if the value could be set, <code>false</code> otherwise.
+	 * @since 4.2.1
+	 */
+	public boolean setValue(final RegistryValue value) {
+	  boolean result = false;
+	  
+	  final ArrayList<String> cmdList = new ArrayList<>();
+    cmdList.add(mRegTool.getAbsolutePath());
+    cmdList.add("add");
+    cmdList.add(mKey + "\\" + mPath);
+    cmdList.add("/t");
+    
+    switch(value.getType()) {
+      case RegistryValue.TYPE_REG_SZ:cmdList.add("REG_SZ");break;
+      case RegistryValue.TYPE_REG_BINARY:cmdList.add("REG_BINARY");break;
+      case RegistryValue.TYPE_REG_DWORD:cmdList.add("REG_DWORD");break;
+      case RegistryValue.TYPE_REG_QWORD:cmdList.add("REG_QWORD");break;
+      
+      default: return result;
+    }
+    
+    cmdList.add("/v");
+    cmdList.add(value.getName());
+    cmdList.add("/d");
+    cmdList.add(value.getData());
+    cmdList.add("/f");
+    
+    final ExecutionHandler handler = new ExecutionHandler(cmdList.toArray(new String[0]));
+    try {
+      handler.execute(true);
+      handler.getProcess().waitFor();
+      result = !handler.getOutput().contains("Error:");
+    }catch(Throwable t) {
+      t.printStackTrace();
+    }
+	  
+    return result;
+	}
 }
