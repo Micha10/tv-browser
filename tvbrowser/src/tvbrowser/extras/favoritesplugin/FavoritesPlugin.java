@@ -172,6 +172,8 @@ public class FavoritesPlugin {
   private static final String KEY_PROVIDE_TAB = "provideTab";
   private static final String KEY_SHOW_DATE_SEPARATORS = "showDateSeparators";
   private static final String KEY_SPLIT_PANE_POSITION = "splitpanePosition";
+  private static final String KEY_SPLIT_PANE_POSITION_DIALOG = "splitpanePositionDlg";
+  private static final String KEY_SPLIT_PANE_POSITION_DIALOG_NEW = "splitpanePositionDlgNew";
   
   private static final int VALUE_DEFAULT_SPLIT_PANE_POSITION = 200;
   /**
@@ -1024,14 +1026,16 @@ public class FavoritesPlugin {
   }
 
   private void showManageFavoritesDialog(final boolean showNew, final Favorite[] favoriteArr, final Favorite initialSelection) {
-    int splitPanePosition = getIntegerSetting(mSettings, KEY_SPLIT_PANE_POSITION, VALUE_DEFAULT_SPLIT_PANE_POSITION);
+    final String keySplitPane = showNew ? KEY_SPLIT_PANE_POSITION_DIALOG_NEW : KEY_SPLIT_PANE_POSITION_DIALOG;
+    
+    int splitPanePosition = getIntegerSetting(mSettings, keySplitPane, VALUE_DEFAULT_SPLIT_PANE_POSITION);
     ManageFavoritesDialog dlg = new ManageFavoritesDialog(MainFrame.getInstance(), favoriteArr, splitPanePosition, showNew, initialSelection);
 
     Settings.layoutWindow("extras.manageFavoritesDlg",dlg,new Dimension(650,450));
     dlg.setVisible(true);
 
     splitPanePosition = dlg.getSplitpanePosition();
-    mSettings.setProperty(KEY_SPLIT_PANE_POSITION, Integer.toString(splitPanePosition));
+    mSettings.setProperty(keySplitPane, Integer.toString(splitPanePosition));
 
     if (!showNew) {
       updateRootNode(true);
