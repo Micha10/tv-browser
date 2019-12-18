@@ -414,7 +414,7 @@ public class Settings {
     String oldDirectoryName = System.getProperty("user.home", "")
         + File.separator + ".tvbrowser";
     String newDirectoryName = getUserSettingsDirName();
-
+    
     File settingsFile = new File(newDirectoryName, SETTINGS_FILE);
     File firstSettingsBackupFile = new File(getUserSettingsDirName(), SETTINGS_FILE+ "_backup1");
     File secondSettingsBackupFile = new File(getUserSettingsDirName(), SETTINGS_FILE+ "_backup2");
@@ -611,8 +611,8 @@ public class Settings {
         
         boolean versionTest = !TVBrowser.isTransportable() && Launch.isOsWindowsNtBranch() && testVersion != null && testVersion.compareTo(new Version(3,0,true)) < 0
                                && (temp == null || temp.replace("/","\\").equals(System.getProperty("user.home")+"\\TV-Browser\\tvdata"));
-
-        if((TVBrowser.isTransportable() || versionTest || !oldDir.getParentFile().equals(newDir.getParent()))
+        
+        if((TVBrowser.isTransportable() || versionTest || !oldDir.getParentFile().equals(newDir.getParentFile()))
             && !(new File(getUserDirectoryName(),"tvdata").isDirectory())) {
           try {
             if(temp != null) {
