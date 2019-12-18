@@ -490,6 +490,10 @@ public class Settings {
       if(Launch.isOsWindowsNtBranch()) {
         countValue = 3;
       }
+      else if(Launch.getOs() == Launch.OS_LINUX) {
+        firstDir = System.getProperty("user.home") + File.separator + DEFAULT_USER_DIR;
+        countValue = 2;
+      }
 
       if(OperatingSystem.isWindows()) {
         File test = new File(System.getenv("appdata"),"TV-Browser");
@@ -608,7 +612,7 @@ public class Settings {
         boolean versionTest = !TVBrowser.isTransportable() && Launch.isOsWindowsNtBranch() && testVersion != null && testVersion.compareTo(new Version(3,0,true)) < 0
                                && (temp == null || temp.replace("/","\\").equals(System.getProperty("user.home")+"\\TV-Browser\\tvdata"));
 
-        if((TVBrowser.isTransportable() || versionTest)
+        if((TVBrowser.isTransportable() || versionTest || !oldDir.getParentFile().equals(newDir.getParent()))
             && !(new File(getUserDirectoryName(),"tvdata").isDirectory())) {
           try {
             if(temp != null) {
