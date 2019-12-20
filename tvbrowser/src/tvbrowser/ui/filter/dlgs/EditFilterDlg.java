@@ -38,6 +38,7 @@ import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import javax.swing.BorderFactory;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
@@ -247,77 +248,81 @@ public class EditFilterDlg extends JDialog implements ActionListener, DocumentLi
       public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
         JLabel label = (JLabel) super.getListCellRendererComponent(list,value,index,isSelected,cellHasFocus);
         try {
-        if(value instanceof FilterItem) {
-          FilterItem item = (FilterItem)value;
-          
-          FormLayout layout = new FormLayout("default:grow","default");
-          
-          for(int i = 0; i < item.getLevel(); i++) {
-            layout.insertColumn(1,ColumnSpec.decode("9dlu"));
+          if(label.getBorder() != null && label.getBorder().getClass().getName().contains("GTKPainter$ListTableFocusBorder")) {
+            label.setBorder(BorderFactory.createEmptyBorder(1, 0, 1, 0));
           }
           
-          JPanel panel = new JPanel(layout);
-          panel.setOpaque(isSelected);
-          
-          if(isSelected) {
-            panel.setBackground(list.getSelectionBackground());
-            label.setForeground(list.getSelectionForeground());
-          }
-          else {
-            panel.setBackground(list.getBackground());
-            label.setForeground(list.getForeground());
-          }
-          
-          label.setOpaque(false);
-          
-          if(item.isAndItem() || item.isOrItem() || item.isNotItem()) {
-            label.setFont(label.getFont().deriveFont(Font.BOLD));
-            layout.insertColumn(1,ColumnSpec.decode("3dlu"));
-            panel.add(label,CC.xy(Math.max(1,item.getLevel()+2),1));
-          }
-          else if(item.isOpenBracketItem() || item.isCloseBracketItem()) {
-            label.setFont(label.getFont().deriveFont(Font.BOLD));
-            panel.add(label,CC.xy(Math.max(1, item.getLevel()+1),1));
-          }
-          else {
-            panel.add(label,CC.xy(Math.max(1,item.getLevel()+1),1));
-
-            label.setText(FilterComponentList.getLabelForComponent(item.getComponent(), label.getText()));
-          }
-
-          if(index > 0) {
-            FilterItem test = (FilterItem)list.getModel().getElementAt(index-1);
-            FilterItem test2 = null;
+          if(value instanceof FilterItem) {
+            FilterItem item = (FilterItem)value;
             
-            if(index < list.getModel().getSize() - 2) {
-              test2 = (FilterItem)list.getModel().getElementAt(index+1);
+            FormLayout layout = new FormLayout("default:grow","default");
+            
+            for(int i = 0; i < item.getLevel(); i++) {
+              layout.insertColumn(1,ColumnSpec.decode("9dlu"));
             }
-                        
-            if(test.isCloseBracketItem() && !item.isAndItem() && !item.isOrItem() && !item.isCloseBracketItem()) {
-              label.setForeground(Color.red);
+            
+            JPanel panel = new JPanel(layout);
+            panel.setOpaque(isSelected);
+            
+            if(isSelected) {
+              panel.setBackground(list.getSelectionBackground());
+              label.setForeground(list.getSelectionForeground());
             }
-            else if(item.isNotItem() && ((!test.isAndItem() && !test.isOrItem()) || test.isNotItem()) && (test2 == null || test2.getComponent() == null)) {
-              label.setForeground(Color.red);
+            else {
+              panel.setBackground(list.getBackground());
+              label.setForeground(list.getForeground());
             }
-            else if((item.isAndItem() || item.isOrItem()) && (test.isAndItem() || test.isOrItem() || test.isOpenBracketItem())) {
-              label.setForeground(Color.red);
+            
+            label.setOpaque(false);
+            
+            if(item.isAndItem() || item.isOrItem() || item.isNotItem()) {
+              label.setFont(label.getFont().deriveFont(Font.BOLD));
+              layout.insertColumn(1,ColumnSpec.decode("3dlu"));
+              panel.add(label,CC.xy(Math.max(1,item.getLevel()+2),1));
             }
-            else if(item.getComponent() != null && test2 != null && test2.isNotItem()) {
-              label.setForeground(Color.red);
+            else if(item.isOpenBracketItem() || item.isCloseBracketItem()) {
+              label.setFont(label.getFont().deriveFont(Font.BOLD));
+              panel.add(label,CC.xy(Math.max(1, item.getLevel()+1),1));
             }
-            else if(test2 != null && test2.isOpenBracketItem() && !item.isAndItem() && !item.isOrItem() && !item.isNotItem() && !item.isOpenBracketItem()) {
-              label.setForeground(Color.red);
-            }            
-            else if((index == list.getModel().getSize()-1) && (item.isAndItem() || item.isNotItem() || item.isOrItem() || item.isOpenBracketItem())) {
-              label.setForeground(Color.red);
+            else {
+              panel.add(label,CC.xy(Math.max(1,item.getLevel()+1),1));
+  
+              label.setText(FilterComponentList.getLabelForComponent(item.getComponent(), label.getText()));
             }
-            else if(item.getComponent() != null && test.getComponent() != null) {
-              label.setForeground(Color.red);
+  
+            if(index > 0) {
+              FilterItem test = (FilterItem)list.getModel().getElementAt(index-1);
+              FilterItem test2 = null;
+              
+              if(index < list.getModel().getSize() - 2) {
+                test2 = (FilterItem)list.getModel().getElementAt(index+1);
+              }
+                          
+              if(test.isCloseBracketItem() && !item.isAndItem() && !item.isOrItem() && !item.isCloseBracketItem()) {
+                label.setForeground(Color.red);
+              }
+              else if(item.isNotItem() && ((!test.isAndItem() && !test.isOrItem()) || test.isNotItem()) && (test2 == null || test2.getComponent() == null)) {
+                label.setForeground(Color.red);
+              }
+              else if((item.isAndItem() || item.isOrItem()) && (test.isAndItem() || test.isOrItem() || test.isOpenBracketItem())) {
+                label.setForeground(Color.red);
+              }
+              else if(item.getComponent() != null && test2 != null && test2.isNotItem()) {
+                label.setForeground(Color.red);
+              }
+              else if(test2 != null && test2.isOpenBracketItem() && !item.isAndItem() && !item.isOrItem() && !item.isNotItem() && !item.isOpenBracketItem()) {
+                label.setForeground(Color.red);
+              }            
+              else if((index == list.getModel().getSize()-1) && (item.isAndItem() || item.isNotItem() || item.isOrItem() || item.isOpenBracketItem())) {
+                label.setForeground(Color.red);
+              }
+              else if(item.getComponent() != null && test.getComponent() != null) {
+                label.setForeground(Color.red);
+              }
             }
+  
+            return panel;
           }
-
-          return panel;
-        }
         }catch(Throwable t) {t.printStackTrace();}
         
         return label;
