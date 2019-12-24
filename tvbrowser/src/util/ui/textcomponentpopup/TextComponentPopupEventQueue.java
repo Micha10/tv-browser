@@ -27,7 +27,8 @@ import util.ui.TVBrowserIcons;
 /**
  * This {@link EventQueue} is based on the implementation of Santhosh.
  * <p>
- * For details look here: {@link <a href="https://web.archive.org/web/20060504030843/http://jroller.com/page/santhosh?entry=context_menu_for_textcomponents">http://jroller.com/page/santhosh?entry=context_menu_for_textcomponents</a>}
+ * For details look here: 
+ * https://web.archive.org/web/20060504030843/http://jroller.com/page/santhosh?entry=context_menu_for_textcomponents
  * 
  * @author Santhosh Kumar T - santhosh@in.fiorano.com
  */
