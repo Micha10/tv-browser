@@ -206,8 +206,8 @@ public class Settings {
         prop.setProperty("pluginsdir","${user.home}/Library/Application Support/TV-Browser/plugins");
       }
       else if(OperatingSystem.isLinux()) {
-        prop.setProperty("userdir","${user.home}/.tvbrowser");
-        prop.setProperty("tvdatadir","${user.home}/.tvbrowser/tvdata");
+        prop.setProperty("userdir","${user.home}/.config/tvbrowser");
+        prop.setProperty("tvdatadir","${user.home}/.config/tvbrowser/tvdata");
       }
       else if(OperatingSystem.isWindows()) {
         prop.setProperty("userdir","${user.appdata}/TV-Browser");
