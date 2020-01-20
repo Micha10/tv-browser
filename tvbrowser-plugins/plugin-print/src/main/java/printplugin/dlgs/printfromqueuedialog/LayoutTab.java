@@ -26,46 +26,44 @@
 
 package printplugin.dlgs.printfromqueuedialog;
 
+import com.jgoodies.forms.builder.PanelBuilder;
+import com.jgoodies.forms.factories.Borders;
+import com.jgoodies.forms.factories.CC;
+import com.jgoodies.forms.layout.FormLayout;
+
 import javax.swing.JComboBox;
 import javax.swing.JPanel;
 
-import com.jgoodies.forms.builder.PanelBuilder;
-import com.jgoodies.forms.layout.CellConstraints;
-import com.jgoodies.forms.layout.FormLayout;
+import printplugin.util.Utils;
 
+import util.ui.Localizer;
+
+@SuppressWarnings({"boxing", "nls"})
 public class LayoutTab extends JPanel {
 
-  /** The localizer for this class. */
-  private static final util.ui.Localizer mLocalizer
-       = util.ui.Localizer.getLocalizerFor(LayoutTab.class);
+  private static final long serialVersionUID = 6656351212228826366L;
 
-  private JComboBox mColumnsPerPageCB;
+  /** The localizer for this class. */
+  private static final Localizer mLocalizer = Localizer.getLocalizerFor(LayoutTab.class);
+
+  private JComboBox<Integer> mColumnsPerPageCB;
 
   public LayoutTab() {
-    CellConstraints cc = new CellConstraints();
-    
+
     PanelBuilder pb = new PanelBuilder(new FormLayout("5dlu,pref,2dlu,pref,0dlu:grow",
         "pref,5dlu,pref,10dlu"), this);
-    pb.setDefaultDialogBorder();
-    
-    pb.addSeparator(mLocalizer.msg("columns","Columns"), cc.xyw(1,1,5));
-    pb.addLabel(mLocalizer.msg("columnsPerPage","Columns per page:"), cc.xy(2,3));
-    pb.add(mColumnsPerPageCB = new JComboBox(createIntegerArray(1,4)), cc.xy(4,3));
+    pb.border(Borders.DIALOG);
+
+    pb.addSeparator(mLocalizer.msg("columns", "Columns"), CC.xyw(1, 1, 5));
+    pb.addLabel(mLocalizer.msg("columnsPerPage", "Columns per page:"), CC.xy(2, 3));
+    pb.add(mColumnsPerPageCB = new JComboBox<>(Utils.createIntegerArray(1, 4)), CC.xy(4, 3));
   }
 
   public int getColumnsPerPage() {
-    return ((Integer) mColumnsPerPageCB.getSelectedItem()).intValue();
+    return (Integer) mColumnsPerPageCB.getSelectedItem();
   }
 
   public void setColumnsPerPage(int columns) {
     mColumnsPerPageCB.setSelectedItem(columns);
-  }
-
-  private Integer[] createIntegerArray(int from, int cnt) {
-    Integer[] result = new Integer[cnt];
-    for (int i=0; i<result.length; i++) {
-      result[i] = i + from;
-    }
-    return result;
   }
 }

@@ -41,7 +41,8 @@ public class DefaultPageModel extends AbstractPageModel {
   }
 
 
-	public String getHeader() {
+	@Override
+  public String getHeader() {
 		return mHeader;
 	}
   

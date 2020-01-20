@@ -31,10 +31,9 @@ import java.awt.print.Printable;
 
 public interface PrintJob {
 
-  public int getNumOfPages();
+  int getNumOfPages();
 
-  public Printable getPrintable();
+  Printable getPrintable();
 
-  public PageFormat getPageFormat();
-
+  PageFormat getPageFormat();
 }

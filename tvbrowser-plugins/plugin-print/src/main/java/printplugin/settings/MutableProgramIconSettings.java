@@ -26,9 +26,9 @@
 
 package printplugin.settings;
 
-import java.awt.Font;
-
 import devplugin.ProgramFieldType;
+
+import java.awt.Font;
 
 /**
  * The print settings for a mutable program.
@@ -94,38 +94,47 @@ public class MutableProgramIconSettings implements ProgramIconSettings {
     mPaintPluginMarks = paintPluginMarks;
   }
 
+  @Override
   public Font getTitleFont() {
     return mTitleFont;
   }
 
+  @Override
   public Font getTextFont() {
     return mTextFont;
   }
 
+  @Override
   public Font getTimeFont() {
     return mTimeFont;
   }
 
+  @Override
   public int getTimeFieldWidth() {
     return mTimeFieldWidth;
   }
 
+  @Override
   public ProgramFieldType[] getProgramInfoFields() {
     return mProgramInfoFields;
   }
 
+  @Override
   public String[] getProgramTableIconPlugins() {
     return mProgramTableIconPlugins;
   }
 
+  @Override
   public boolean getPaintExpiredProgramsPale() {
     return mPaintExpiredProgramsPale;
   }
 
+  @Override
   public boolean getPaintProgramOnAir() {
     return mPaintProgramOnAir;
   }
 
+  @Override
   public boolean getPaintPluginMarks() {
     return mPaintPluginMarks;
   }

@@ -28,12 +28,11 @@ package printplugin.printer;
 
 import devplugin.Program;
 
-
 public interface ColumnModel {
-  
-  public Program getProgramAt(int inx);
-  public int getProgramCount();
-  public String getTitle();
-  
-  
+
+  Program getProgramAt(int inx);
+
+  int getProgramCount();
+
+  String getTitle();
 }

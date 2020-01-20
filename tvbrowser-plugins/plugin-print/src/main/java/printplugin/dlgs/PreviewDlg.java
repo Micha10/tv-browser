@@ -26,181 +26,112 @@
 
 package printplugin.dlgs;
 
-import java.awt.BorderLayout;
+import com.jgoodies.forms.builder.ButtonBarBuilder;
+import com.jgoodies.forms.factories.Borders;
+import com.jgoodies.forms.factories.CC;
+import com.jgoodies.forms.layout.FormLayout;
+
 import java.awt.Color;
-import java.awt.Cursor;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Point;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionAdapter;
 import java.awt.print.PageFormat;
 import java.awt.print.Printable;
-import java.awt.print.PrinterException;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.util.Locale;
 import java.util.Properties;
 
 import javax.swing.JButton;
-import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JViewport;
 import javax.swing.SwingConstants;
 
 import printplugin.PrintPlugin;
+import printplugin.dlgs.components.PreviewComponent;
+import printplugin.printer.PrintJob;
+import printplugin.util.Utils;
+
 import util.ui.Localizer;
 import util.ui.TVBrowserIcons;
 import util.ui.UiUtilities;
 import util.ui.WindowClosingIf;
 
-import com.jgoodies.forms.factories.Borders;
-import com.jgoodies.forms.layout.CellConstraints;
-import com.jgoodies.forms.layout.FormLayout;
+@SuppressWarnings("nls")
+public final class PreviewDlg extends JDialog implements ActionListener, PropertyChangeListener, WindowClosingIf {
 
-public class PreviewDlg extends JDialog implements ActionListener, WindowClosingIf {
-  
+  private static final long serialVersionUID = 7038525175772100332L;
+
+  private static final Localizer mLocalizer = Localizer.getLocalizerFor(PreviewDlg.class);
+
   private Printable mPrinter;
   private PageFormat mPageFormat;
-  private PreviewComponent mPreviewComponent;
-  private JButton mPrevBt, mNextBt;
-  private JLabel mSiteLb;
-  
-  private static final util.ui.Localizer mLocalizer
-      = util.ui.Localizer.getLocalizerFor(PreviewDlg.class);
 
-  private Point mMouseDragPoint;
-  private JButton mZoomOut;
+  private JButton mNextBt;
+  private JButton mPrevBt;
   private JButton mZoomIn;
-  
-  public PreviewDlg(Window parent, Printable printer, PageFormat pageFormat,
-      int numberOfPages) {
+  private JButton mZoomOut;
+  private JLabel mSiteLb;
+  private PreviewComponent mPreviewComponent;
+
+  public PreviewDlg(Window parent, PrintJob job) {
     super(parent);
     setModal(true);
-    createGui(printer, pageFormat, numberOfPages);
-  }
-  
-  private void createGui(Printable printer, PageFormat pageFormat, int numberOfPages) {
-    setTitle(mLocalizer.msg("preview","preview"));
-    mPrinter = printer;
-    mPageFormat = pageFormat;
-    
+
+    mPrinter = job.getPrintable();
+    mPageFormat = job.getPageFormat();
+
     UiUtilities.registerForClosing(this);
-    
-    JPanel southPn = new JPanel(new FormLayout("left:10dlu:grow, pref, right:10dlu:grow", "pref"));
-    CellConstraints cc = new CellConstraints();
-    
-    mSiteLb = new JLabel();
-    mSiteLb.setHorizontalAlignment(SwingConstants.CENTER);
-    
-    southPn.add(mPrevBt=new JButton(TVBrowserIcons.left(TVBrowserIcons.SIZE_SMALL)), cc.xy(1,1));
-    mPrevBt.setToolTipText(mLocalizer.msg("previous", "Previous page"));
-    southPn.add(mNextBt=new JButton(TVBrowserIcons.right(TVBrowserIcons.SIZE_SMALL)), cc.xy(3,1));
-    mNextBt.setToolTipText(mLocalizer.msg("next", "Next page"));
-    southPn.add(mSiteLb, cc.xy(2,1));
-    
+    createGui(mPrinter, mPageFormat, job.getNumOfPages());
+    updateDialogState();
+    updateTitle();
+    pack();
+    readAndApplyDialogSettings();
+
+    mZoomIn.setEnabled(!mPreviewComponent.maxZoom());
+    mZoomOut.setEnabled(!mPreviewComponent.minZoom());
+
+    getRootPane().getDefaultButton().requestFocus();
+  }
+
+  private void createGui(Printable printer, PageFormat pageFormat, int numberOfPages) {
+
     mPreviewComponent = new PreviewComponent(mPrinter, mPageFormat, numberOfPages);
-    
-    mPreviewComponent.addMouseListener(new MouseAdapter() {
-      public void mousePressed(MouseEvent evt) {
-        mMouseDragPoint = evt.getPoint();
-      }
-      public void mouseReleased(MouseEvent evt) {
-        mMouseDragPoint = null;
-        setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
-      }
-    });
-    
-    mPreviewComponent.addMouseMotionListener(new MouseMotionAdapter() {
-      public void mouseDragged(MouseEvent evt) {
-        setCursor(new Cursor(Cursor.HAND_CURSOR));
-        if (mMouseDragPoint != null && !evt.isShiftDown()) {
-          int deltaX = mMouseDragPoint.x - evt.getX();
-          int deltaY = mMouseDragPoint.y - evt.getY();
-          scrollBy(deltaX, deltaY);
-        }
-      }
-    });
-    
-    JPanel borderPn = new JPanel(new BorderLayout());
+    mPreviewComponent.addPropertyChangeListener("preferredSize", this);
+
     final JScrollPane scrollPane = new JScrollPane(mPreviewComponent);
     scrollPane.getHorizontalScrollBar().setUnitIncrement(20);
     scrollPane.getVerticalScrollBar().setUnitIncrement(20);
-    borderPn.add(scrollPane);
-    
-    mZoomIn = new JButton(TVBrowserIcons.zoomIn(TVBrowserIcons.SIZE_SMALL));
-    mZoomIn.setToolTipText(mLocalizer.msg("zoomIn", "Zoom in"));
-    mZoomOut = new JButton(TVBrowserIcons.zoomOut(TVBrowserIcons.SIZE_SMALL));
-    mZoomOut.setToolTipText(mLocalizer.msg("zoomOut", "Zoom out"));
-    
-    mZoomIn.addActionListener(new ActionListener() {
-      public void actionPerformed(ActionEvent e) {
-        mPreviewComponent.zoomIn();
-        mZoomIn.setEnabled(!mPreviewComponent.maxZoom());
-        mZoomOut.setEnabled(true);
-      }
-    });
-    
-    mZoomOut.addActionListener(new ActionListener() {
-      public void actionPerformed(ActionEvent e) {
-        mPreviewComponent.zoomOut();
-        mZoomOut.setEnabled(!mPreviewComponent.minZoom());
-        mZoomIn.setEnabled(true);
-      }
-    });
+    scrollPane.getViewport().setBackground(Color.DARK_GRAY);
 
-    JPanel panel = new JPanel(new FormLayout("pref, 3dlu, pref", "pref"));
-    
-    panel.add(mZoomIn, cc.xy(1,1));
-    panel.add(mZoomOut, cc.xy(3,1));
-    
-    JPanel content = (JPanel)getContentPane();
-    content.setBorder(Borders.DLU4_BORDER);
-    content.setLayout(new FormLayout("fill:default:grow", "pref, 3dlu, fill:default:grow, 3dlu, pref, 3dlu, pref"));
-    
-    content.add(panel, cc.xy(1, 1));
-    content.add(borderPn, cc.xy(1,3));
-    content.add(southPn, cc.xy(1,5));
-    
-    JPanel closePanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 0, 0));
-    
-    JButton close = new JButton(Localizer.getLocalization(Localizer.I18N_CLOSE));
-    close.addActionListener(new ActionListener() {
-      public void actionPerformed(ActionEvent e) {
-        close();
-      }
-    });
-    closePanel.add(close);
-    
-    content.add(closePanel, cc.xy(1,7));
-    
-    updateDialogState();
-    
-    pack();
-    
-    Properties prop = PrintPlugin.getInstance().getSettings();
+    final JPanel content = (JPanel) getContentPane();
+    content.setBorder(Borders.DIALOG);
+    content.setLayout(new FormLayout("fill:default:grow", "pref, 5dlu, fill:default:grow, 3dlu, pref, 5dlu, pref"));
+    content.add(createToolBar(), CC.xy(1, 1));
+    content.add(scrollPane, CC.xy(1, 3));
+    if (mPreviewComponent.getNumberOfPages() > 1) {
+      content.add(createPageNavigationBar(), CC.xy(1, 5));
+    }
+    content.add(createButtonBar(), CC.xy(1, 7));
+  }
 
+  private void readAndApplyDialogSettings() {
+    final Properties prop = PrintPlugin.getInstance().getPluginSettings().storeSettings();
     try {
-      if ((prop.getProperty("PreviewDlg.Width") != null) && (prop.getProperty("PreviewDlg.Height") != null)) {
+      if (prop.getProperty("PreviewDlg.Width") != null && prop.getProperty("PreviewDlg.Height") != null) {
         int width = Integer.parseInt(prop.getProperty("PreviewDlg.Width"));
         int height = Integer.parseInt(prop.getProperty("PreviewDlg.Height"));
         setSize(width, height);
       }
-          
-      if ((prop.getProperty("PreviewDlg.X") != null) && (prop.getProperty("PreviewDlg.Y") != null)){
+      if (prop.getProperty("PreviewDlg.X") != null && prop.getProperty("PreviewDlg.Y") != null) {
         int x = Integer.parseInt(prop.getProperty("PreviewDlg.X"));
         int y = Integer.parseInt(prop.getProperty("PreviewDlg.Y"));
         setLocation(x, y);
       } else {
         setLocationRelativeTo(getParent());
       }
-      
       if (prop.getProperty("PreviewDlg.Zoom") != null) {
         double zoom = Double.parseDouble(prop.getProperty("PreviewDlg.Zoom"));
         mPreviewComponent.setZoom(zoom);
@@ -208,173 +139,126 @@ public class PreviewDlg extends JDialog implements ActionListener, WindowClosing
     } catch (Exception e) {
       e.printStackTrace();
     }
-   
-    mZoomIn.setEnabled(!mPreviewComponent.maxZoom());
-    mZoomOut.setEnabled(!mPreviewComponent.minZoom());
-    
+  }
+
+  private JPanel createToolBar() {
+
+    mZoomIn = new JButton(TVBrowserIcons.zoomIn(TVBrowserIcons.SIZE_SMALL));
+    mZoomIn.addActionListener(this);
+    mZoomIn.setActionCommand("zoomIn");
+    mZoomIn.setToolTipText(mLocalizer.msg("zoomIn", "Zoom in"));
+
+    mZoomOut = new JButton(TVBrowserIcons.zoomOut(TVBrowserIcons.SIZE_SMALL));
+    mZoomOut.addActionListener(this);
+    mZoomOut.setActionCommand("zoomOut");
+    mZoomOut.setToolTipText(mLocalizer.msg("zoomOut", "Zoom out"));
+
+    final JPanel panel = new JPanel(new FormLayout("pref, 3dlu, pref", "pref"));
+    panel.add(mZoomOut, CC.xy(1, 1));
+    panel.add(mZoomIn, CC.xy(3, 1));
+    return panel;
+  }
+
+  private JPanel createButtonBar() {
+    final JButton close = new JButton(Localizer.getLocalization(Localizer.I18N_CLOSE));
+    close.addActionListener(this);
+    close.setActionCommand("close");
+    close.setDefaultCapable(true);
+    getRootPane().setDefaultButton(close);
+    return new ButtonBarBuilder().addGlue().addButton(close).build();
+  }
+
+  private JPanel createPageNavigationBar() {
+
+    mPrevBt = new JButton(TVBrowserIcons.left(TVBrowserIcons.SIZE_SMALL));
     mPrevBt.addActionListener(this);
+    mPrevBt.setActionCommand("previous");
+    mPrevBt.setToolTipText(mLocalizer.msg("previous", "Previous page"));
+
+    mSiteLb = new JLabel();
+    mSiteLb.setHorizontalAlignment(SwingConstants.CENTER);
+
+    mNextBt = new JButton(TVBrowserIcons.right(TVBrowserIcons.SIZE_SMALL));
     mNextBt.addActionListener(this);
+    mNextBt.setActionCommand("next");
+    mNextBt.setToolTipText(mLocalizer.msg("next", "Next page"));
+
+    final JPanel southPn = new JPanel(new FormLayout("left:10dlu:grow, pref, right:10dlu:grow", "pref"));
+    southPn.add(mPrevBt, CC.xy(1, 1));
+    southPn.add(mSiteLb, CC.xy(2, 1));
+    southPn.add(mNextBt, CC.xy(3, 1));
+    return southPn;
   }
-  
-  public void scrollBy(int deltaX, int deltaY) {
-    if (mPreviewComponent.getParent() instanceof JViewport) {
-      JViewport viewport = (JViewport) mPreviewComponent.getParent();
-      Point viewPos = viewport.getViewPosition();
 
-      if (deltaX!=0){
-        viewPos.x += deltaX;
-
-        int maxX = mPreviewComponent.getWidth() - viewport.getWidth();
-
-        viewPos.x = Math.min(viewPos.x, maxX);
-        viewPos.x = Math.max(viewPos.x, 0);
-
-        viewport.setViewPosition(viewPos);
-      }
-
-      if (deltaY !=0){
-        viewPos.y += deltaY;
-        int maxY = mPreviewComponent.getHeight() - viewport.getHeight();
-        viewPos.y = Math.min(viewPos.y, maxY);
-        viewPos.y = Math.max(viewPos.y, 0);
-
-        viewport.setViewPosition(viewPos);
-      }
-    }
-  }
-  
+  @SuppressWarnings("boxing")
   private void updateDialogState() {
-    mSiteLb.setText(mLocalizer.msg("pageInfo", "page {0} of {1}",
-        mPreviewComponent.getPageIndex() + 1, mPreviewComponent
-            .getNumberOfPages()));
-    mPrevBt.setEnabled(mPreviewComponent.getPageIndex() > 0);
-    mNextBt.setEnabled(mPreviewComponent.getPageIndex()+1 < mPreviewComponent.getNumberOfPages());
-  }
-  
-  public void actionPerformed(ActionEvent event) {
-    if (event.getSource()==mPrevBt) {
-      mPreviewComponent.previous();
-      updateDialogState();
-    }
-    else if (event.getSource()==mNextBt) {
-      mPreviewComponent.next();
-      updateDialogState();
+    final int numberOfPages = mPreviewComponent.getNumberOfPages();
+    if (numberOfPages > 1) {
+      mSiteLb.setText(mLocalizer.msg("pageInfo", "Page {0} of {1}",
+          mPreviewComponent.getPageIndex() + 1, numberOfPages));
+      mPrevBt.setEnabled(mPreviewComponent.getPageIndex() > 0);
+      mNextBt.setEnabled(mPreviewComponent.getPageIndex() + 1 < numberOfPages);
     }
   }
 
-  public void close() {
-    Properties prop = PrintPlugin.getInstance().getSettings();
-    
-    prop.setProperty("PreviewDlg.X", Integer.toString(this.getLocationOnScreen().x));
-    prop.setProperty("PreviewDlg.Y", Integer.toString(this.getLocationOnScreen().y));
-    prop.setProperty("PreviewDlg.Width", Integer.toString(this.getWidth()));
-    prop.setProperty("PreviewDlg.Height", Integer.toString(this.getHeight()));
-    prop.setProperty("PreviewDlg.Zoom", Double.toString(mPreviewComponent.getZoom()));
-    
-    dispose();
-  }
-  
-  
-}
-
-
-class PreviewComponent extends JComponent {
-  private static final float MAX_ZOOM = 2.5f;
-  private static final float MIN_ZOOM = 0.5f;
-  
-  private Printable mPrintable;
-  private PageFormat mPageFormat;
-  private double mZoom=0.5;
-  private int mPageIndex, mNumberOfPages;
-  
-  public PreviewComponent(Printable printable, PageFormat pageFormat, int numberOfPages) {
-    mPrintable = printable;
-    mPageFormat = pageFormat;
-    mNumberOfPages = numberOfPages;
-    setPreferredSize(new Dimension((int)(pageFormat.getWidth()*mZoom), (int)(pageFormat.getHeight()*mZoom)));
-    mPageIndex = 0;
-  }
-  
-  public double getZoom() {
-    return mZoom;
-  }
-  
-  public void setZoom(double zoom) {
-    mZoom = zoom;
-    setPreferredSize(new Dimension((int)(mPageFormat.getWidth()*mZoom), (int)(mPageFormat.getHeight()*mZoom)));
-    revalidate();
-    repaint();
-  }
-  
-  public boolean minZoom() {
-    return (mZoom <= MIN_ZOOM);
-  }
-
-  public boolean maxZoom() {
-    return (mZoom >= MAX_ZOOM);
-  }
-
-  public void zoomIn() {
-    if (mZoom < MAX_ZOOM) {
-      mZoom += 0.2;
-      setZoom(mZoom);
-    }
-  }
-
-  public void zoomOut() {
-    if (mZoom > MIN_ZOOM) {
-      mZoom -= 0.2;
-      setZoom(mZoom);
-    }
-  }
-
-  public void next() {
-    if (mPageIndex<mNumberOfPages-1) {
-      mPageIndex++;
-      repaint();
-    }
-  }
-  
-  public void previous() {
-    if (mPageIndex>0) {
-      mPageIndex--;
-      repaint();
-    }
-  }
-  
-  public int getPageIndex() {
-    return mPageIndex;
-  }
-  
-  public int getNumberOfPages() {
-    return mNumberOfPages;
-  }
-  
-  public void setPageIndex(int inx) {
-    if (inx!=mPageIndex) {
-      mPageIndex=inx;
-      repaint();
-    }
-  }
-  
-  public void paintComponent(Graphics graphics) {try {
-    super.paintComponent(graphics);
-    Graphics2D g = (Graphics2D)graphics;
-    g.scale(mZoom,mZoom);
-    g.setColor(Color.white);
-    g.fillRect(0,0,(int)mPageFormat.getWidth(), (int)mPageFormat.getHeight());
-    g.setColor(Color.lightGray);
-    g.drawRect((int)mPageFormat.getImageableX(), (int)mPageFormat.getImageableY(), (int)mPageFormat.getImageableWidth(), (int)mPageFormat.getImageableHeight());
-    g.setColor(Color.black);
-    
+  @SuppressWarnings("boxing")
+  private void updateTitle() {
     try {
-      mPrintable.print(g, mPageFormat, mPageIndex);
-    } catch (PrinterException e) {
-      // TODO Auto-generated catch block
+      setTitle(String.format(Locale.getDefault(), "%s (%d x %d mm)",
+          mLocalizer.msg("preview", "Preview"),
+          Math.round(Utils.mm(mPageFormat.getWidth())),
+          Math.round(Utils.mm(mPageFormat.getHeight()))));
+    } catch (Exception e) {
       e.printStackTrace();
     }
-    g.scale(1/mZoom, 1/mZoom);
-  }catch(Throwable t){t.printStackTrace();}
   }
-  
+
+  @SuppressWarnings("incomplete-switch")
+  @Override
+  public void actionPerformed(final ActionEvent event) {
+    switch (event.getActionCommand()) {
+      case "close":
+        close();
+        break;
+      case "next":
+        mPreviewComponent.next();
+        updateDialogState();
+        break;
+      case "previous":
+        mPreviewComponent.previous();
+        updateDialogState();
+        break;
+      case "zoomIn":
+        mPreviewComponent.zoomIn();
+        mZoomIn.setEnabled(!mPreviewComponent.maxZoom());
+        mZoomOut.setEnabled(true);
+        break;
+      case "zoomOut":
+        mPreviewComponent.zoomOut();
+        mZoomOut.setEnabled(!mPreviewComponent.minZoom());
+        mZoomIn.setEnabled(true);
+        break;
+    }
+  }
+
+  @Override
+  public void close() {
+    storeDialogSettings();
+    dispose();
+  }
+
+  private void storeDialogSettings() {
+    final Properties prop = PrintPlugin.getInstance().getPluginSettings().storeSettings();
+    prop.setProperty("PreviewDlg.X", Integer.toString(getLocationOnScreen().x));
+    prop.setProperty("PreviewDlg.Y", Integer.toString(getLocationOnScreen().y));
+    prop.setProperty("PreviewDlg.Width", Integer.toString(getWidth()));
+    prop.setProperty("PreviewDlg.Height", Integer.toString(getHeight()));
+    prop.setProperty("PreviewDlg.Zoom", Double.toString(mPreviewComponent.getZoom()));
+  }
+
+  @Override
+  public void propertyChange(PropertyChangeEvent evt) {
+    mZoomOut.setEnabled(!mPreviewComponent.minZoom());
+    mZoomIn.setEnabled(!mPreviewComponent.maxZoom());
+  }
 }

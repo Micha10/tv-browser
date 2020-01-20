@@ -43,7 +43,8 @@ public class DefaultColumnModel extends AbstractColumnModel {
   }
 
 
-	public String getTitle() {
+	@Override
+  public String getTitle() {
 		return mTitle;
 	}
   

@@ -30,8 +30,9 @@ import java.awt.Graphics;
 
 public interface PositionedIcon {
 
-  public double getX();
-  public double getY();
-  public void paint(Graphics g, int x, int y);
+  double getX();
 
+  double getY();
+
+  void paint(Graphics g, int x, int y);
 }

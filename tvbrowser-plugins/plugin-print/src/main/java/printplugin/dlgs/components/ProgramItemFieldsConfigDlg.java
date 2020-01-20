@@ -26,122 +26,109 @@
 
 package printplugin.dlgs.components;
 
+import com.jgoodies.forms.builder.ButtonBarBuilder;
+import com.jgoodies.forms.factories.Borders;
+
+import devplugin.ProgramFieldType;
+
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.Frame;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
-import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JDialog;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import util.ui.Localizer;
 import util.ui.OrderChooser;
 import util.ui.UiUtilities;
 import util.ui.WindowClosingIf;
-import devplugin.ProgramFieldType;
 
-public class ProgramItemFieldsConfigDlg extends JDialog implements WindowClosingIf{
+@SuppressWarnings("nls")
+public class ProgramItemFieldsConfigDlg extends JDialog implements WindowClosingIf {
 
-  private static final util.ui.Localizer mLocalizer
-      = util.ui.Localizer.getLocalizerFor(ProgramItemFieldsConfigDlg.class);
+  private static final long serialVersionUID = 5596520895252347786L;
 
-  private OrderChooser mOrderChooser;
+  private static final Localizer mLocalizer = Localizer.getLocalizerFor(ProgramItemFieldsConfigDlg.class);
+
+  private OrderChooser<ProgramFieldType> mOrderChooser;
   protected static final int OK = 0;
   private static final int CANCEL = 1;
-  private int mResult;
-  
+  private int mResult = CANCEL;
+
   public ProgramItemFieldsConfigDlg(Frame parent, ProgramFieldType[] fieldTypes) {
-    
-    super(parent, true);
-    setTitle(mLocalizer.msg("configureProgram","Sendungen anpassen"));
-    
+
+    super(parent, mLocalizer.msg("configureProgram", "Configure program data"), true);
+
     UiUtilities.registerForClosing(this);
-    
-    JPanel contentPane = (JPanel)getContentPane();
-    contentPane.setLayout(new BorderLayout());
-    contentPane.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
-    
-    JPanel southPn = new JPanel(new BorderLayout());
-    JPanel btnPn = new JPanel();
-    
-    JButton okBt = new JButton(Localizer.getLocalization(Localizer.I18N_OK));
-    JButton cancelBt = new JButton(Localizer.getLocalization(Localizer.I18N_CANCEL));
-    
-    btnPn.add(okBt);
-    btnPn.add(cancelBt);
-    southPn.add(btnPn,BorderLayout.NORTH);
-    
-    JPanel centerPn = new JPanel(new BorderLayout());
-    centerPn.add(mOrderChooser = new OrderChooser(fieldTypes, getAvailableTypes()), BorderLayout.NORTH);
-    JLabel lb = new JLabel("<html>Bestimmen Sie welche Informationen und in welcher <br>" +
-                                 "Reihenfolge diese Informationen dargestellt werden.<br>" +
-                                 "Beachten Sie, dass je nach verfuegbarem Platz auf dem Papier<br>" +
-                                 "nicht alles dargestellt werden kann.</html>");
-    centerPn.add(lb,BorderLayout.SOUTH);
-    
-    contentPane.add(centerPn,BorderLayout.CENTER);
-    contentPane.add(southPn, BorderLayout.SOUTH);
-    
-    
-    okBt.addActionListener(new ActionListener(){
-      public void actionPerformed(ActionEvent event) {
-        mResult = OK;
-        setVisible(false);
-      }
-      });
-    
-    cancelBt.addActionListener(new ActionListener(){
-      public void actionPerformed(ActionEvent event) {
-        close();
-      }
+
+    final JButton okBt = new JButton(Localizer.getLocalization(Localizer.I18N_OK));
+    okBt.addActionListener(event -> {
+      mResult = OK;
+      setVisible(false);
     });
-    mResult = CANCEL;
-    
-    pack();
+    okBt.setDefaultCapable(true);
+
+    final JButton cancelBt = new JButton(Localizer.getLocalization(Localizer.I18N_CANCEL));
+    cancelBt.addActionListener(event -> close());
+
+    final JPanel contentPane = (JPanel) getContentPane();
+    contentPane.setLayout(new BorderLayout(0, 10));
+    contentPane.setBorder(Borders.DIALOG);
+    contentPane.add(new LineWrapLabel(mLocalizer.msg("configureProgramDesc",
+        "Bestimmen Sie welche Informationen und in welcher " +
+            "Reihenfolge diese Informationen dargestellt werden. " +
+            "Beachten Sie, dass je nach verfügbarem Platz auf dem Papier " +
+            "nicht alles dargestellt werden kann.")),
+        BorderLayout.PAGE_START);
+    contentPane.add(mOrderChooser = new OrderChooser<>(fieldTypes, getAvailableTypes(), true), BorderLayout.CENTER);
+    contentPane.add(new ButtonBarBuilder().addGlue().addButton(okBt, cancelBt).build(), BorderLayout.PAGE_END);
+
+    // pack();
+    final Dimension dimension = getSize();
+    dimension.height = Math.min(330, getGraphicsConfiguration().getBounds().height / 3);
+    dimension.width = Math.max(dimension.width, 437);
+    setMinimumSize(dimension);
+    setSize(dimension);
+    getRootPane().setDefaultButton(okBt);
+    okBt.requestFocus();
   }
-  
+
   public int getResult() {
     return mResult;
   }
-  
+
   public ProgramFieldType[] getProgramItemFieldTypes() {
-    Object[] items = mOrderChooser.getOrder();
-    ProgramFieldType[] result = new ProgramFieldType[items.length];
-    System.arraycopy(items,0,result,0,result.length);
-    return result;
+    return mOrderChooser.getOrderList().toArray(new ProgramFieldType[0]);
   }
-  
- 
-  private ProgramFieldType[] getAvailableTypes() {
-    ArrayList<ProgramFieldType> typeList = new ArrayList<ProgramFieldType>();
-    
+
+  private static ProgramFieldType[] getAvailableTypes() {
+    List<ProgramFieldType> typeList = new ArrayList<>();
+
     Iterator<ProgramFieldType> typeIter = ProgramFieldType.getTypeIterator();
     while (typeIter.hasNext()) {
       ProgramFieldType type = typeIter.next();
-      
-      if ((type.getFormat() != ProgramFieldType.BINARY_FORMAT)
-        && (type != ProgramFieldType.INFO_TYPE)
-        && (type != ProgramFieldType.START_TIME_TYPE)
-        && (type != ProgramFieldType.END_TIME_TYPE)
-        && (type != ProgramFieldType.TITLE_TYPE))
-      {
+
+      if (type.getFormat() != ProgramFieldType.FORMAT_BINARY
+          && type != ProgramFieldType.INFO_TYPE
+          && type != ProgramFieldType.START_TIME_TYPE
+          && type != ProgramFieldType.END_TIME_TYPE
+          && type != ProgramFieldType.TITLE_TYPE) {
         typeList.add(type);
       }
     }
-    
+
     ProgramFieldType[] typeArr = new ProgramFieldType[typeList.size()];
     typeList.toArray(typeArr);
     return typeArr;
   }
 
+  @Override
   public void close() {
     mResult = CANCEL;
     setVisible(false);
   }
-  
 }

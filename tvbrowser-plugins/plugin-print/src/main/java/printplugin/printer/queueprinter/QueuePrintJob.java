@@ -26,43 +26,46 @@
 
 package printplugin.printer.queueprinter;
 
+import devplugin.Program;
+
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.print.PageFormat;
 import java.util.ArrayList;
+import java.util.List;
 
+import printplugin.PrintPlugin;
 import printplugin.printer.AbstractPrintJob;
 import printplugin.printer.ColumnModel;
 import printplugin.printer.Page;
 import printplugin.printer.PageModel;
 import printplugin.settings.QueuePrinterSettings;
-import devplugin.Program;
-
-
 
 public class QueuePrintJob extends AbstractPrintJob {
 
-  private static final Font FOOTER_FONT = new Font("Dialog",Font.ITALIC,6);
+  private static final Font FOOTER_FONT = PrintPlugin.getInstance().getPluginSettings().deriveDefaultFont(Font.PLAIN,
+      6);
 
-  private static final int FOOTER_SPACE=10;
+  private static final int FOOTER_SPACE = 10;
 
   private QueuePrinterSettings mSettings;
-  private String mFooterString;
+  private final String mFooterString;
 
-  public QueuePrintJob(PageModel pageModel, QueuePrinterSettings settings, PageFormat pageFormat) {
-    super(new PageModel[]{pageModel}, pageFormat);
+  public QueuePrintJob(final PageModel pageModel, final QueuePrinterSettings settings, final PageFormat pageFormat) {
+    super(new PageModel[] {pageModel}, pageFormat);
     mSettings = settings;
     mFooterString = pageModel.getFooter();
   }
 
-  protected Page[] createPages(PageModel pageModel) {
-    ArrayList<QueuePage> pages = new ArrayList<QueuePage>();
-    QueuePage currentPage=new QueuePage(mSettings, getPageFormat());
+  @Override
+  protected Page[] createPages(final PageModel pageModel) {
+    final List<QueuePage> pages = new ArrayList<>();
+    QueuePage currentPage = new QueuePage(mSettings, getPageFormat());
     pages.add(currentPage);
-    for (int i=0; i<pageModel.getColumnCount(); i++) {
-      ColumnModel column = pageModel.getColumnAt(i);
-      for (int k=0; k<column.getProgramCount();k++) {
-        Program program = column.getProgramAt(k);
+    for (int i = 0; i < pageModel.getColumnCount(); i++) {
+      final ColumnModel column = pageModel.getColumnAt(i);
+      for (int k = 0; k < column.getProgramCount(); k++) {
+        final Program program = column.getProgramAt(k);
         if (!currentPage.addProgram(program)) {
           currentPage = new QueuePage(mSettings, getPageFormat());
           pages.add(currentPage);
@@ -71,47 +74,47 @@ public class QueuePrintJob extends AbstractPrintJob {
       }
     }
 
-    Page[] pageArr = new Page[pages.size()];
+    final Page[] pageArr = new Page[pages.size()];
     pages.toArray(pageArr);
     return pageArr;
   }
 
-
   class QueuePage implements Page {
 
-    private PageFormat mPageFormat;
-    private ProgramTableIcon mTableIcon;
+    private final PageFormat mPageFormat;
+    private final ProgramTableIcon mTableIcon;
 
-    public QueuePage(QueuePrinterSettings settings, PageFormat pageFormat) {
+    public QueuePage(final QueuePrinterSettings settings, final PageFormat pageFormat) {
       mSettings = settings;
       mPageFormat = pageFormat;
-      int width = (int)pageFormat.getImageableWidth();
-      int height = (int)pageFormat.getImageableHeight()-FOOTER_SPACE;
-      mTableIcon = new ProgramTableIcon(settings.getProgramIconSettings(), settings.getDateFont(), width, height, settings.getColumnsPerPage());
+      final int width = (int) pageFormat.getImageableWidth();
+      final int height = (int) pageFormat.getImageableHeight() - FOOTER_SPACE;
+      mTableIcon = new ProgramTableIcon(settings.getProgramIconSettings(), settings.getDateFont(), width, height,
+          settings.getColumnsPerPage());
     }
 
-
+    @Override
     public PageFormat getPageFormat() {
       return mPageFormat;
     }
 
-    public boolean addProgram(Program prog) {
+    public boolean addProgram(final Program prog) {
       return addProgram(prog, false);
     }
-    
-    public boolean addProgram(Program prog, boolean forceAdding) {
+
+    public boolean addProgram(final Program prog, final boolean forceAdding) {
       return mTableIcon.add(prog, forceAdding);
     }
 
-    public void printPage(Graphics graphics) {
-      int x0 = (int)mPageFormat.getImageableX();
-      int y0 = (int)mPageFormat.getImageableY();
+    @Override
+    public void printPage(final Graphics graphics) {
+      final int x0 = (int) mPageFormat.getImageableX();
+      final int y0 = (int) mPageFormat.getImageableY();
 
       graphics.setFont(FOOTER_FONT);
-      graphics.drawString(mFooterString, x0, y0 + (int)mPageFormat.getImageableHeight()-3);
+      graphics.drawString(mFooterString, x0, y0 + (int) mPageFormat.getImageableHeight() - 3);
 
       mTableIcon.paintIcon(null, graphics, x0, y0);
     }
   }
-
 }

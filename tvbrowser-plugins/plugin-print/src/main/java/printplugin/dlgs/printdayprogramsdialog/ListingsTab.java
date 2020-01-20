@@ -26,6 +26,12 @@
 
 package printplugin.dlgs.printdayprogramsdialog;
 
+import com.jgoodies.forms.factories.Borders;
+
+import devplugin.Channel;
+import devplugin.Date;
+import devplugin.ProgramFilter;
+
 import java.awt.BorderLayout;
 import java.awt.Frame;
 
@@ -37,39 +43,34 @@ import printplugin.dlgs.components.DateRangePanel;
 import printplugin.dlgs.components.FilterSelectionPanel;
 import printplugin.dlgs.components.TimeRangePanel;
 
-import com.jgoodies.forms.factories.Borders;
-
-import devplugin.Channel;
-import devplugin.Date;
-import devplugin.ProgramFilter;
-
-
 public class ListingsTab extends JPanel {
+
+  private static final long serialVersionUID = -9187777360746554234L;
 
   private DateRangePanel mDatePanel;
   private TimeRangePanel mTimePanel;
   private ChannelSelectionPanel mChannelPanel;
   private FilterSelectionPanel mFilterPanel;
 
-    public ListingsTab(Frame parentFrame) {
-      super();
-      setLayout(new BorderLayout());
-      setBorder(Borders.DIALOG_BORDER);
+  public ListingsTab(Frame parentFrame) {
+    super();
+    setLayout(new BorderLayout());
+    setBorder(Borders.DIALOG);
 
-      JPanel content = new JPanel();
-      content.setLayout(new BoxLayout(content, BoxLayout.Y_AXIS));
-      mDatePanel = new DateRangePanel();
-      mTimePanel = new TimeRangePanel();
-      mChannelPanel = new ChannelSelectionPanel(parentFrame, new Channel[]{});
-      mFilterPanel = new FilterSelectionPanel();
+    JPanel content = new JPanel();
+    content.setLayout(new BoxLayout(content, BoxLayout.Y_AXIS));
+    mDatePanel = new DateRangePanel();
+    mTimePanel = new TimeRangePanel();
+    mChannelPanel = new ChannelSelectionPanel(parentFrame, new Channel[] {});
+    mFilterPanel = new FilterSelectionPanel();
 
-      content.add(mDatePanel);
-      content.add(mTimePanel);
-      content.add(mChannelPanel);
-      content.add(mFilterPanel);
+    content.add(mDatePanel);
+    content.add(mTimePanel);
+    content.add(mChannelPanel);
+    content.add(mFilterPanel);
 
-      add(content, BorderLayout.NORTH);
-    }
+    add(content, BorderLayout.PAGE_START);
+  }
 
   public void setChannels(Channel[] channelArr) {
     mChannelPanel.setChannels(channelArr);
@@ -96,7 +97,7 @@ public class ListingsTab extends JPanel {
   }
 
   public void setDateFrom(Date from) {
-   mDatePanel.setFromDate(from);
+    mDatePanel.setFromDate(from);
   }
 
   public Date getDateFrom() {
@@ -106,9 +107,8 @@ public class ListingsTab extends JPanel {
   public void setDayCount(int cnt) {
     mDatePanel.setNumberOfDays(cnt);
   }
-  
+
   public ProgramFilter getSelectedFilter() {
     return mFilterPanel.getSelectedFilter();
   }
-
-  }
+}

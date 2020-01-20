@@ -26,61 +26,67 @@
 
 package printplugin.dlgs.printdayprogramsdialog;
 
+import devplugin.Channel;
+import devplugin.Date;
+import devplugin.Plugin;
+import devplugin.Program;
+import devplugin.ProgramFilter;
+
 import java.awt.Component;
 import java.awt.Frame;
 import java.awt.print.PageFormat;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 import javax.swing.JTabbedPane;
 
 import printplugin.dlgs.DialogContent;
-import printplugin.printer.JobFactory;
+import printplugin.printer.DefaultColumnModel;
+import printplugin.printer.DefaultPageModel;
+import printplugin.printer.PageModel;
 import printplugin.printer.PrintJob;
+import printplugin.printer.dayprogramprinter.DayProgramPrintJob;
 import printplugin.settings.DayProgramPrinterSettings;
 import printplugin.settings.DayProgramScheme;
 import printplugin.settings.Scheme;
-import printplugin.settings.Settings;
-import devplugin.Channel;
-import devplugin.Date;
+import printplugin.util.Utils;
 
+import util.ui.Localizer;
 
-public class PrintDayProgramsDialogContent implements DialogContent {
+@SuppressWarnings("nls")
+public class PrintDayProgramsDialogContent implements DialogContent<DayProgramPrinterSettings> {
 
   /** The localizer for this class. */
-  private static final util.ui.Localizer mLocalizer
-         = util.ui.Localizer.getLocalizerFor(PrintDayProgramsDialogContent.class);
-  private Frame mParentFrame;
+  private static final Localizer mLocalizer = Localizer.getLocalizerFor(PrintDayProgramsDialogContent.class);
 
   private LayoutTab mLayoutTab;
   private ListingsTab mListingsTab;
   private ExtrasTab mExtrasTab;
 
-  public PrintDayProgramsDialogContent(Frame parent) {
-    mParentFrame = parent;
+  @Override
+  public void printingDone() {}
 
-  }
-
-  public void printingDone() {
-
-  }
-
-  public Component getContent() {
-
+  @Override
+  public Component getContent(final Frame parentFrame) {
     JTabbedPane tab = new JTabbedPane();
-
-    mListingsTab = new ListingsTab(mParentFrame);
+    mListingsTab = new ListingsTab(parentFrame);
     mLayoutTab = new LayoutTab();
-    mExtrasTab = new ExtrasTab(mParentFrame);
-    tab.add(mLocalizer.msg("listingsTab", "Daten"), mListingsTab);
-    tab.add(mLocalizer.msg("layoutTab","Layout"), mLayoutTab);
-    tab.add(mLocalizer.msg("miscTab","Extras"), mExtrasTab);
+    mExtrasTab = new ExtrasTab(parentFrame);
+    tab.add(mLocalizer.msg("listingsTab", "Data"), mListingsTab);
+    tab.add(mLocalizer.msg("layoutTab", "Layout"), mLayoutTab);
+    tab.add(mLocalizer.msg("miscTab", "Extras"), mExtrasTab);
+    Utils.setOpaque(tab, false);
     return tab;
   }
 
+  @Override
   public String getDialogTitle() {
-    return mLocalizer.msg("dialogTitle","Tagesprogramme drucken");
+    return mLocalizer.msg("dialogTitle", "Tagesprogramme drucken");
   }
 
-  public Settings getSettings() {
+  @Override
+  public DayProgramPrinterSettings getSettings() {
     return new DayProgramPrinterSettings(mListingsTab.getDateFrom(),
         mListingsTab.getNumberOfDays(),
         mListingsTab.getChannels(),
@@ -89,12 +95,11 @@ public class PrintDayProgramsDialogContent implements DialogContent {
         mLayoutTab.getColumnsPerPage(),
         mLayoutTab.getChannelsPerColumn(),
         mExtrasTab.getProgramIconSettings(),
-        mListingsTab.getSelectedFilter()
-        );
+        mListingsTab.getSelectedFilter());
   }
 
-  public void setSettings(Settings s) {
-    DayProgramPrinterSettings settings = (DayProgramPrinterSettings)s;
+  @Override
+  public void setSettings(DayProgramPrinterSettings settings) {
     Channel[] ch = settings.getChannelList();
     mListingsTab.setChannels(ch);
     int start = settings.getDayStartHour();
@@ -107,15 +112,82 @@ public class PrintDayProgramsDialogContent implements DialogContent {
     mExtrasTab.setProgramIconSettings(settings.getProgramIconSettings());
   }
 
+  /**
+   * We create the print job in two steps:
+   * First we create page models where each page consists of a number of columns.
+   * A page model is not a real page.
+   * Then we have to split each page model in one or more real pages.
+   *
+   * @param format
+   *                 {@link PageFormat}
+   * @return {@link PrintJob}
+   */
+  @Override
+  public PrintJob createPrintJob(final PageFormat format) {
 
-  public PrintJob createPrintJob(PageFormat format) {
-    return JobFactory.createPrintJob((DayProgramPrinterSettings)getSettings(), format);
+    final DayProgramPrinterSettings settings = getSettings();
+
+    final List<PageModel> pageModelList = new ArrayList<>();
+    final int dayCount = settings.getNumberOfDays();
+    final Date startDate = settings.getFromDay();
+    final int dayStartHour = settings.getDayStartHour();
+    final int dayEndHour = settings.getDayEndHour();
+
+    Channel[] channelArr = settings.getChannelList();
+    if (channelArr == null) {
+      channelArr = Plugin.getPluginManager().getSubscribedChannels();
+    }
+    for (int dateInx = 0; dateInx < dayCount; dateInx++) {
+      final Date date = startDate.addDays(dateInx);
+      final DefaultPageModel pageModel = new DefaultPageModel(date.getLongDateString());
+      pageModelList.add(pageModel);
+      for (Channel element : channelArr) {
+        final List<Program> progList = new ArrayList<>();
+        addProgramToList(progList, date, element, dayStartHour, dayEndHour, settings.getProgramFilter());
+        final Program[] progArr = new Program[progList.size()];
+        progList.toArray(progArr);
+
+        if (progArr.length > 0) {
+          pageModel.addColumn(new DefaultColumnModel(element.getName(), progArr));
+        }
+      }
+    }
+
+    final PageModel[] pageModel = new PageModel[pageModelList.size()];
+    pageModelList.toArray(pageModel);
+
+    return new DayProgramPrintJob(pageModel, settings, format);
   }
 
-
-  public Scheme createNewScheme(String schemeName) {
+  @Override
+  public Scheme<DayProgramPrinterSettings> createNewScheme(String schemeName) {
     return new DayProgramScheme(schemeName);
   }
 
+  private static void addProgramToList(final List<Program> progList, Date date, Channel channel, int startHour,
+      int endHour, ProgramFilter filter) {
+    for (int dateOffset = -1; dateOffset <= 1; dateOffset++) {
+      for (Iterator<Program> it = Plugin.getPluginManager().getChannelDayProgram(date.addDays(dateOffset), channel); it
+          .hasNext();) {
+        Program prog = it.next();
+        if (prog.getDate().getNumberOfDaysSince(date) == 0 && prog.getHours() >= startHour && prog.getHours() < endHour
+            && filter.accept(prog)) {
+          progList.add(prog);
+        } else if (prog.getDate().getNumberOfDaysSince(date) == 1 && prog.getHours() >= startHour - 24
+            && prog.getHours() < endHour - 24 && filter.accept(prog)) {
+          progList.add(prog);
+        }
+      }
+    }
+  }
 
+  @Override
+  public Scheme<DayProgramPrinterSettings>[] loadSchemes() {
+    return DayProgramScheme.loadSchemes();
+  }
+
+  @Override
+  public void storeSchemes(final Scheme<DayProgramPrinterSettings>[] schemes) {
+    DayProgramScheme.storeSchemes(schemes);
+  }
 }

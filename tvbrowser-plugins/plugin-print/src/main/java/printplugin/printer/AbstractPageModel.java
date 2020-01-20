@@ -27,32 +27,34 @@
 package printplugin.printer;
 
 import java.util.ArrayList;
+import java.util.List;
 
+import printplugin.util.Utils;
 
 public abstract class AbstractPageModel implements PageModel {
-  
-  private ArrayList<ColumnModel> mColumns;
 
-   public AbstractPageModel() {
-     mColumns = new ArrayList<ColumnModel>();
-   }
-  
-   public void addColumn(ColumnModel col) {
-     mColumns.add(col);
-   }
-  
-   public int getColumnCount() {
-     return mColumns.size();
-   }
+  private List<ColumnModel> mColumns;
 
-  
-   public ColumnModel getColumnAt(int inx) {
-     return mColumns.get(inx);
-   }
+  public AbstractPageModel() {
+    mColumns = new ArrayList<>();
+  }
 
-   public String getFooter() {
-     return "Copyright (c) by TV-Browser - http://www.tvbrowser.org";
-   }
-  
-  
+  public void addColumn(ColumnModel col) {
+    mColumns.add(col);
+  }
+
+  @Override
+  public int getColumnCount() {
+    return mColumns.size();
+  }
+
+  @Override
+  public ColumnModel getColumnAt(int inx) {
+    return mColumns.get(inx);
+  }
+
+  @Override
+  public String getFooter() {
+    return Utils.getCopyrightFooter();
+  }
 }

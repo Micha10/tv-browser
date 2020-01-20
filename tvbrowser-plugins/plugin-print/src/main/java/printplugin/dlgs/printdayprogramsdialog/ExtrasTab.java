@@ -26,9 +26,12 @@
 
 package printplugin.dlgs.printdayprogramsdialog;
 
+import com.jgoodies.forms.builder.PanelBuilder;
+import com.jgoodies.forms.factories.Borders;
+import com.jgoodies.forms.layout.CellConstraints;
+import com.jgoodies.forms.layout.FormLayout;
+
 import java.awt.Frame;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 import javax.swing.JCheckBox;
 import javax.swing.JPanel;
@@ -36,35 +39,32 @@ import javax.swing.JPanel;
 import printplugin.dlgs.components.ProgramPreviewPanel;
 import printplugin.settings.ProgramIconSettings;
 
-import com.jgoodies.forms.builder.PanelBuilder;
-import com.jgoodies.forms.layout.CellConstraints;
-import com.jgoodies.forms.layout.FormLayout;
+import util.ui.Localizer;
 
+@SuppressWarnings("nls")
 public class ExtrasTab extends JPanel {
 
-  /** The localizer for this class. */
-  private static final util.ui.Localizer mLocalizer
-      = util.ui.Localizer.getLocalizerFor(ExtrasTab.class);
+  private static final long serialVersionUID = 5112116936709512284L;
 
+  /** The localizer for this class. */
+  private static final Localizer mLocalizer = Localizer.getLocalizerFor(ExtrasTab.class);
 
   private ProgramPreviewPanel mProgramPreviewPanel;
   private JCheckBox mShowPluginMarkingCb;
 
   public ExtrasTab(Frame dlgParent) {
     CellConstraints cc = new CellConstraints();
-    
+
     PanelBuilder pb = new PanelBuilder(new FormLayout("5dlu,pref:grow",
         "pref,5dlu,pref,3dlu,pref,10dlu"), this);
-    pb.setDefaultDialogBorder();
-    pb.addSeparator(mLocalizer.msg("programItem","Program item"), cc.xyw(1,1,2));
-    pb.add(mProgramPreviewPanel = new ProgramPreviewPanel(dlgParent), cc.xy(2,3));
-    pb.add(mShowPluginMarkingCb = new JCheckBox(mLocalizer.msg("showPluginMarkings","Show plugin markings")), cc.xy(2,5));
+    pb.border(Borders.DIALOG);
+    pb.addSeparator(mLocalizer.msg("programItem", "Program item"), cc.xyw(1, 1, 2));
+    pb.add(mProgramPreviewPanel = new ProgramPreviewPanel(dlgParent), cc.xy(2, 3));
+    pb.add(mShowPluginMarkingCb = new JCheckBox(mLocalizer.msg("showPluginMarkings", "Show plugin markings")),
+        cc.xy(2, 5));
 
-    mShowPluginMarkingCb.addActionListener(new ActionListener(){
-      public void actionPerformed(ActionEvent e) {
-        mProgramPreviewPanel.setShowPluginMarking(mShowPluginMarkingCb.isSelected());
-      }
-    });
+    mShowPluginMarkingCb
+        .addActionListener(e -> mProgramPreviewPanel.setShowPluginMarking(mShowPluginMarkingCb.isSelected()));
   }
 
   public void setProgramIconSettings(ProgramIconSettings programIconSettings) {
@@ -75,5 +75,4 @@ public class ExtrasTab extends JPanel {
   public ProgramIconSettings getProgramIconSettings() {
     return mProgramPreviewPanel.getProgramIconSettings();
   }
-
 }

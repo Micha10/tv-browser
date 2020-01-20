@@ -26,77 +26,95 @@
 
 package printplugin.dlgs.components;
 
-import java.awt.Frame;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
-import javax.swing.ButtonGroup;
-import javax.swing.JButton;
-import javax.swing.JPanel;
-import javax.swing.JRadioButton;
-
 import com.jgoodies.forms.builder.PanelBuilder;
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 
 import devplugin.Channel;
+
+import java.awt.Frame;
+import java.util.Arrays;
+import java.util.Locale;
+import java.util.stream.Collectors;
+
+import javax.swing.ButtonGroup;
+import javax.swing.JButton;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+
 import util.ui.ChannelChooserDlg;
 import util.ui.Localizer;
 import util.ui.UiUtilities;
-
 
 /**
  * Created by: Martin Oberhauser (martin@tvbrowser.org)
  * Date: 06.02.2005
  * Time: 21:11:24
  */
-public class ChannelSelectionPanel extends JPanel {
+@SuppressWarnings("nls")
+public class ChannelSelectionPanel extends JPanel implements ChangeListener {
 
-    private static final util.ui.Localizer mLocalizer
-     = util.ui.Localizer.getLocalizerFor(ChannelSelectionPanel.class);
+  private static final long serialVersionUID = 8211494254284007875L;
 
-  private JRadioButton mAllChannelsRb, mSelectedChannelsRb;
-  private JButton mChangeSelectedChannelsBt;
+  private static final Localizer mLocalizer = Localizer.getLocalizerFor(ChannelSelectionPanel.class);
+
+  private final JRadioButton mAllChannelsRb;
+  private final JRadioButton mSelectedChannelsRb;
+  private final JButton mChangeSelectedChannelsBt;
+
   private Channel[] mChannels;
 
   public ChannelSelectionPanel(final Frame dlgParent, Channel[] channels) {
     mChannels = channels;
-    
+
     CellConstraints cc = new CellConstraints();
-    
+
     PanelBuilder pb = new PanelBuilder(new FormLayout("5dlu,pref:grow,10dlu,pref",
         "pref,5dlu,pref,2dlu,pref,10dlu"), this);
-    pb.addSeparator(Localizer.getLocalization(Localizer.I18N_CHANNELS), cc.xyw(1,1,4));
-    pb.add(mAllChannelsRb=new JRadioButton(mLocalizer.msg("all","All")), cc.xy(2,3));
-    pb.add(mSelectedChannelsRb=new JRadioButton(), cc.xy(2,5));
-    pb.add(mChangeSelectedChannelsBt=new JButton(mLocalizer.ellipsisMsg("change","Change")), cc.xy(4,5));
-    
+    pb.addSeparator(Localizer.getLocalization(Localizer.I18N_CHANNELS), cc.xyw(1, 1, 4));
+    pb.add(mAllChannelsRb = new JRadioButton(mLocalizer.msg("all", "All")), cc.xy(2, 3));
+    pb.add(mSelectedChannelsRb = new JRadioButton(), cc.xy(2, 5));
+    pb.add(mChangeSelectedChannelsBt = new JButton(mLocalizer.ellipsisMsg("change", "Change")), cc.xy(4, 5));
+
     ButtonGroup group = new ButtonGroup();
     group.add(mAllChannelsRb);
     group.add(mSelectedChannelsRb);
 
     updateSelectedChannelsPanel();
 
-    mChangeSelectedChannelsBt.addActionListener(new ActionListener(){
-      public void actionPerformed(ActionEvent event){
-        ChannelChooserDlg dlg = new ChannelChooserDlg(UiUtilities.getLastModalChildOf(dlgParent), mChannels,"<html>" + mLocalizer.msg("infotext.1","Waehlen Sie jene Sender aus, deren Programm ausgedruckt werden soll.")+"</html>");
-        util.ui.UiUtilities.centerAndShow(dlg);
-        mChannels = dlg.getChannels();
-        updateSelectedChannelsPanel();
-      }
+    mChangeSelectedChannelsBt.addActionListener(event -> {
+      ChannelChooserDlg dlg = new ChannelChooserDlg(UiUtilities.getLastModalChildOf(dlgParent), mChannels, null);
+      dlg.setMinimumSize(dlg.getSize());
+      UiUtilities.centerAndShow(dlg);
+      mChannels = dlg.getChannels();
+      updateSelectedChannelsPanel();
     });
 
+    mAllChannelsRb.addChangeListener(this);
+    mSelectedChannelsRb.addChangeListener(this);
     mAllChannelsRb.setSelected(true);
-
   }
 
   private void updateSelectedChannelsPanel() {
-    String radioBtnText = mLocalizer.msg("selectedChannels","Ausgewaehlte");
+    String radioBtnText = mLocalizer.msg("selectedChannels", "Selected");
     if (mChannels != null) {
       radioBtnText += " ("
           + mLocalizer.msg("selectedChannelsCnt", "{0} channels selected",
-              mChannels.length) + ")";
+              String.valueOf(mChannels.length))
+          + ")";
+
+      if (mChannels.length > 0) {
+        final String s = Arrays.stream(mChannels)
+            .map(c -> c.getName())
+            .collect(Collectors.joining(", "));
+        mSelectedChannelsRb.setToolTipText(String.format(Locale.getDefault(), "<html>%s", s));
+      } else {
+        mSelectedChannelsRb.setToolTipText(null);
+      }
     }
+
     mSelectedChannelsRb.setText(radioBtnText);
   }
 
@@ -111,11 +129,18 @@ public class ChannelSelectionPanel extends JPanel {
     mChannels = channels;
     if (mChannels == null) {
       mAllChannelsRb.setSelected(true);
-    }
-    else {
+    } else {
       mSelectedChannelsRb.setSelected(true);
     }
     updateSelectedChannelsPanel();
   }
 
+  @Override
+  public void stateChanged(final ChangeEvent e) {
+    updateState();
+  }
+
+  private void updateState() {
+    mChangeSelectedChannelsBt.setEnabled(mSelectedChannelsRb.isSelected());
+  }
 }

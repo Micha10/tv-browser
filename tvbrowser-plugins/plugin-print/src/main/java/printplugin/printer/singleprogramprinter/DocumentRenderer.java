@@ -14,6 +14,7 @@ import java.awt.print.PageFormat;
 import java.awt.print.Printable;
 import java.awt.print.PrinterJob;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JEditorPane;
 import javax.swing.text.ComponentView;
@@ -25,13 +26,13 @@ import javax.swing.text.View;
  * fonts, color, and small icons, will be rendered to a printed page.
  * DocumentRenderer computes line breaks, paginates, and performs other
  * formatting.
- * 
+ *
  * An HTMLDocument is printed by sending it as an argument to the
  * print(HTMLDocument) method. A PlainDocument is printed the same way. Other
  * types of documents must be sent in a JEditorPane as an argument to the
  * print(JEditorPane) method. Printing Documents in this way will automatically
  * display a print dialog.
- * 
+ *
  * As objects which implement the Printable Interface, instances of the
  * DocumentRenderer class can also be used as the argument in the setPrintable
  * method of the PrinterJob class. Instead of using the print() methods detailed
@@ -42,6 +43,7 @@ import javax.swing.text.View;
  * DocumentRenderer in any PrinterJob.
  */
 public class DocumentRenderer implements Printable {
+
   /** Used to keep track of when the page to print changes. */
   private int mCurrentPage = -1;
 
@@ -79,15 +81,15 @@ public class DocumentRenderer implements Printable {
   /**
    * Stores the Start-Position for each Page
    */
-  private ArrayList<Double> mPageStarts = new ArrayList<Double>();
-  
+  private List<Double> mPageStarts = new ArrayList<>();
 
   /**
    * The constructor initializes the pFormat and PJob variables.
-   * 
-   * @param pageFormat Format of the Page
+   *
+   * @param pageFormat
+   *                     Format of the Page
    */
-  public DocumentRenderer(PageFormat pageFormat) {
+  public DocumentRenderer(final PageFormat pageFormat) {
     mPageFormat = pageFormat;
     mPrintJob = PrinterJob.getPrinterJob();
   }
@@ -108,41 +110,41 @@ public class DocumentRenderer implements Printable {
    * variables match, it means that the page is being rendered for the second or
    * third time. When the currentPage differs from the pageIndex, a new page is
    * being requested.
-   * 
+   *
    * The highlights of the process used print a page are as follows:
-   * 
+   *
    * I. The Graphics object is cast to a Graphics2D object to allow for scaling.
-   * 
+   *
    * II. The JEditorPane is laid out using the width of a printable page. This
    * will handle line breaks. If the JEditorPane cannot be sized at the width of
    * the graphics clip, scaling will be allowed.
-   * 
+   *
    * III. The root view of the JEditorPane is obtained. By examining this root
    * view and all of its children, printView will be able to determine the
    * location of each printable element of the document.
-   * 
+   *
    * IV. If the scaleWidthToFit option is chosen, a scaling ratio is determined,
    * and the graphics2D object is scaled.
-   * 
+   *
    * V. The Graphics2D object is clipped to the size of the printable page.
-   * 
+   *
    * VI. currentPage is checked to see if this is a new page to render. If so,
    * pageStartY and pageEndY are reset.
-   * 
+   *
    * VII. To match the coordinates of the printable clip of graphics2D and the
    * allocation rectangle which will be used to lay out the views, graphics2D is
    * translated to begin at the printable X and Y coordinates of the graphics
    * clip.
-   * 
+   *
    * VIII. An allocation Rectangle is created to represent the layout of the
    * Views.
-   * 
+   *
    * The Printable Interface always prints the area indexed by reference to the
    * Graphics object. For instance, with a standard 8.5 x 11 inch page with 1
    * inch margins the rectangle X = 72, Y = 72, Width = 468, and Height = 648,
    * the area 72, 72, 468, 648 will be painted regardless of which page is
    * actually being printed.
-   * 
+   *
    * To align the allocation Rectangle with the graphics2D object two things are
    * done. The first step is to translate the X and Y coordinates of the
    * graphics2D object to begin at the X and Y coordinates of the printable
@@ -152,13 +154,15 @@ public class DocumentRenderer implements Printable {
    * started at minus the page end of the prior page. This moves the part which
    * has already been rendered to before the printable clip of the graphics2D
    * object.
-   * 
+   *
    * X. The printView method is called to paint the page. Its return value will
    * indicate if a page has been rendered.
-   * 
+   *
    * Although public, print should not ordinarily be called by programs other
    * than PrinterJob.
    */
+  @Override
+  @SuppressWarnings("boxing")
   public int print(Graphics graphics, PageFormat pageFormat, int pageIndex) {
     double scale = 1.0;
     Graphics2D graphics2D;
@@ -173,7 +177,7 @@ public class DocumentRenderer implements Printable {
     // III
     rootView = mJEditorPane.getUI().getRootView(mJEditorPane);
     // IV
-    if ((mScaleWidthToFit) && (mJEditorPane.getMinimumSize().getWidth() > pageFormat.getImageableWidth())) {
+    if (mScaleWidthToFit && mJEditorPane.getMinimumSize().getWidth() > pageFormat.getImageableWidth()) {
       scale = pageFormat.getImageableWidth() / mJEditorPane.getMinimumSize().getWidth();
       graphics2D.scale(scale, scale);
     }
@@ -182,7 +186,7 @@ public class DocumentRenderer implements Printable {
     int y = (int) (pageFormat.getImageableY() / scale);
     int width = (int) (pageFormat.getImageableWidth() / scale);
     int height = (int) (pageFormat.getImageableHeight() / scale);
-    
+
     Rectangle bounds = graphics2D.getClipBounds();
 
     int cx = x;
@@ -198,34 +202,34 @@ public class DocumentRenderer implements Printable {
       if (cx < bounds.x) {
         cx = bounds.x;
       }
-      
-      if (height+cy > bounds.y + bounds.height) {
-        cheight = (bounds.y + bounds.height) - cy;
-      }
-      
-      if (cy + cheight > y+height) {
-        cheight = (y+height)-cy;
+
+      if (height + cy > bounds.y + bounds.height) {
+        cheight = bounds.y + bounds.height - cy;
       }
 
-      if (width+cx > bounds.x + bounds.width) {
-        cwidth = (bounds.x + bounds.width) - cx;
+      if (cy + cheight > y + height) {
+        cheight = y + height - cy;
       }
-      
-      if (cx + cwidth > y+width) {
-        cwidth = (x+width)-cx;
+
+      if (width + cx > bounds.x + bounds.width) {
+        cwidth = bounds.x + bounds.width - cx;
+      }
+
+      if (cx + cwidth > y + width) {
+        cwidth = x + width - cx;
       }
     }
-    
+
     graphics2D.setClip(cx, cy, cwidth, cheight);
-    
+
     // VI
     if (pageIndex != mCurrentPage) {
       mCurrentPage = pageIndex;
-      
-      if (pageIndex > mPageStarts.size()-1) {
+
+      if (pageIndex > mPageStarts.size() - 1) {
         double lastSize = 0;
         if (mPageStarts.size() > 0) {
-          lastSize = (mPageStarts.get(mPageStarts.size()-1)).doubleValue();
+          lastSize = mPageStarts.get(mPageStarts.size() - 1);
         }
         if (pageIndex > 0) {
           mPageStartY = lastSize + height;
@@ -236,21 +240,21 @@ public class DocumentRenderer implements Printable {
       } else {
         mPageStartY = mPageStarts.get(pageIndex);
       }
-      
+
       mPageEndY = height;
     }
     // VII
     graphics2D.translate(x, y);
     // VIII
-    
-    Rectangle allocation = new Rectangle(0, (int) -mPageStartY, (int) (mJEditorPane.getMinimumSize().getWidth()),
-        (int) (mJEditorPane.getPreferredSize().getHeight()));
+
+    Rectangle allocation = new Rectangle(0, (int) -mPageStartY, (int) mJEditorPane.getMinimumSize().getWidth(),
+        (int) mJEditorPane.getPreferredSize().getHeight());
     // X
     if (printView(graphics2D, allocation, rootView)) {
       graphics2D.setClip(bounds);
       // Add Position of next Page
-      if (pageIndex >= mPageStarts.size()-1) {
-        mPageStarts.add(Double.valueOf(mPageStartY+mPageEndY));
+      if (pageIndex >= mPageStarts.size() - 1) {
+        mPageStarts.add(mPageStartY + mPageEndY);
       }
       return Printable.PAGE_EXISTS;
     } else {
@@ -269,18 +273,18 @@ public class DocumentRenderer implements Printable {
    * children. If the view is a leaf view, that is a view without children which
    * represents an actual piece of text to be painted, printView attempts to
    * render the view to the Graphics2D object.
-   * 
+   *
    * I. When any view starts after the beginning of the current printable page,
    * this means that there are pages to print and the method sets pageExists to
    * true.
-   * 
+   *
    * II. When a leaf view is taller than the printable area of a page, it
    * cannot, of course, be broken down to fit a single page. Such a View will be
    * printed whenever it intersects with the Graphics2D clip.
-   * 
+   *
    * III. If a leaf view intersects the printable area of the graphics clip and
    * fits vertically within the printable area, it will be rendered.
-   * 
+   *
    * IV. If a leaf view does not exceed the printable area of a page but does
    * not fit vertically within the Graphics2D clip of the current page, the
    * method records that this page should end at the start of the view. This
@@ -307,7 +311,7 @@ public class DocumentRenderer implements Printable {
       if (allocation.getBounds().getMaxY() >= clipRectangle.getY()) {
         pageExists = true;
         // II
-        if ((allocation.getBounds().getHeight() > clipRectangle.getHeight()) && (allocation.intersects(clipRectangle))) {
+        if (allocation.getBounds().getHeight() > clipRectangle.getHeight() && allocation.intersects(clipRectangle)) {
           view.paint(graphics2D, allocation);
         } else {
           // III
@@ -352,6 +356,9 @@ public class DocumentRenderer implements Printable {
 
   /**
    * Method to set the JEditorPane that will be printed
+   *
+   * @param jedPane
+   *                  {@link JEditorPane} to print
    */
   public void setEditorPane(JEditorPane jedPane) {
     mJEditorPane = jedPane;
@@ -359,6 +366,9 @@ public class DocumentRenderer implements Printable {
 
   /**
    * Method to set the current choice of the width scaling option.
+   *
+   * @param scaleWidth
+   *                     scale width
    */
   public void setScaleWidthToFit(boolean scaleWidth) {
     mScaleWidthToFit = scaleWidth;
@@ -366,28 +376,31 @@ public class DocumentRenderer implements Printable {
 
   /**
    * Method to get the current choice the width scaling option.
+   *
+   * @return scale width
    */
   public boolean getScaleWidthToFit() {
     return mScaleWidthToFit;
   }
-  
+
   /**
    * Calculates the Number of Pages
+   *
    * @return Number of Pages
    */
   public int getPageCount() {
-     int count = 0;
-     
-     int width = (int) (mPageFormat.getImageableWidth());
-     int height = (int) (mPageFormat.getImageableHeight());
+    int count = 0;
 
-     BufferedImage bufferedImage = new BufferedImage (width, height, BufferedImage.TYPE_4BYTE_ABGR_PRE );
-     Graphics2D g2d = ( bufferedImage.createGraphics() );
-     
-     while (print(g2d, mPageFormat, count) == PAGE_EXISTS) {
-       count++;
-     }
-    
-     return count;
+    int width = (int) mPageFormat.getImageableWidth();
+    int height = (int) mPageFormat.getImageableHeight();
+
+    BufferedImage bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_4BYTE_ABGR_PRE);
+    Graphics2D g2d = bufferedImage.createGraphics();
+
+    while (print(g2d, mPageFormat, count) == PAGE_EXISTS) {
+      count++;
+    }
+
+    return count;
   }
 }

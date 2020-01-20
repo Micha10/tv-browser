@@ -27,9 +27,9 @@
 
 package printplugin.printer;
 
-import java.util.ArrayList;
-
 import devplugin.Program;
+
+import java.util.ArrayList;
 
 
 public abstract class AbstractColumnModel implements ColumnModel {
@@ -38,7 +38,7 @@ public abstract class AbstractColumnModel implements ColumnModel {
 
 
   public AbstractColumnModel(Program[] progs) {
-    mPrograms = new ArrayList<Program>();
+    mPrograms = new ArrayList<>();
     setPrograms(progs);
   }
 
@@ -52,6 +52,7 @@ public abstract class AbstractColumnModel implements ColumnModel {
     }
   }
 
+  @Override
   public Program getProgramAt(int inx) {
     if (inx>=0 && inx<mPrograms.size()) {
       return mPrograms.get(inx);
@@ -64,6 +65,7 @@ public abstract class AbstractColumnModel implements ColumnModel {
   }
 
 
+  @Override
   public int getProgramCount() {
     return mPrograms.size();
   }

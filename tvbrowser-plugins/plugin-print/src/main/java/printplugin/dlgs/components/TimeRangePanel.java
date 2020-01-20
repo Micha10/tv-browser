@@ -26,6 +26,9 @@
 
 package printplugin.dlgs.components;
 
+import com.jgoodies.forms.builder.PanelBuilder;
+import com.jgoodies.forms.layout.CellConstraints;
+import com.jgoodies.forms.layout.FormLayout;
 
 import java.awt.Component;
 
@@ -35,27 +38,30 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 
-import com.jgoodies.forms.builder.PanelBuilder;
-import com.jgoodies.forms.layout.CellConstraints;
-import com.jgoodies.forms.layout.FormLayout;
+import printplugin.util.Utils;
 
+import util.ui.Localizer;
+
+@SuppressWarnings({"boxing", "nls"})
 public class TimeRangePanel extends JPanel {
 
-    private static final util.ui.Localizer mLocalizer
-      = util.ui.Localizer.getLocalizerFor(TimeRangePanel.class);
+  private static final long serialVersionUID = 2937608743469208025L;
 
-  private JComboBox mDayStartCb, mDayEndCb;
+  private static final Localizer mLocalizer = Localizer.getLocalizerFor(TimeRangePanel.class);
+
+  private JComboBox<Integer> mDayEndCb;
+  private JComboBox<Integer> mDayStartCb;
 
   public TimeRangePanel() {
     CellConstraints cc = new CellConstraints();
 
     PanelBuilder pb = new PanelBuilder(new FormLayout("5dlu,pref,10dlu,pref:grow",
         "pref,5dlu,pref,2dlu,pref,10dlu"), this);
-    pb.addSeparator(mLocalizer.msg("dayBoundaries","Day boundaries"), cc.xyw(1,1,4));
-    pb.addLabel(mLocalizer.msg("startOfDay","Start of day")+":", cc.xy(2,3));
-    pb.add(mDayStartCb=new JComboBox(createIntegerArray(0,23,1)), cc.xy(4,3));
-    pb.addLabel(mLocalizer.msg("endOfDay","End of day")+":", cc.xy(2,5));
-    pb.add(mDayEndCb=new JComboBox(createIntegerArray(12,36,1)), cc.xy(4,5));
+    pb.addSeparator(mLocalizer.msg("dayBoundaries", "Day boundaries"), cc.xyw(1, 1, 4));
+    pb.addLabel(mLocalizer.msg("startOfDay", "Start of day") + ":", cc.xy(2, 3));
+    pb.add(mDayStartCb = new JComboBox<>(Utils.createIntegerArray(0, 23, 1)), cc.xy(4, 3));
+    pb.addLabel(mLocalizer.msg("endOfDay", "End of day") + ":", cc.xy(2, 5));
+    pb.add(mDayEndCb = new JComboBox<>(Utils.createIntegerArray(12, 36, 1)), cc.xy(4, 5));
 
     mDayStartCb.setRenderer(new TimeListCellRenderer());
     mDayEndCb.setRenderer(new TimeListCellRenderer());
@@ -64,57 +70,38 @@ public class TimeRangePanel extends JPanel {
     mDayEndCb.setSelectedItem(Integer.valueOf(26));
   }
 
-
-   private Integer[] createIntegerArray(int from, int to, int step) {
-    Integer[] result = new Integer[(to-from)/step+1];
-    int cur=from;
-    for (int i=0;i<result.length;i++) {
-      result[i] = cur;
-      cur+=step;
-    }
-    return result;
-  }
-
   public void setRange(int from, int to) {
     mDayStartCb.setSelectedItem(from);
     mDayEndCb.setSelectedItem(to);
   }
 
   public int getFromTime() {
-    return ((Integer)mDayStartCb.getSelectedItem()).intValue();
+    return (Integer) mDayStartCb.getSelectedItem();
   }
 
   public int getToTime() {
-    return ((Integer)mDayEndCb.getSelectedItem()).intValue();
+    return (Integer) mDayEndCb.getSelectedItem();
   }
-
 
   private static class TimeListCellRenderer extends DefaultListCellRenderer {
 
-    public TimeListCellRenderer() {
+    private static final long serialVersionUID = -7167571293439305573L;
 
-    }
-
-
-    public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+    @Override
+    public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected,
+        boolean cellHasFocus) {
 
       JLabel label = (JLabel) super.getListCellRendererComponent(list, value,
-                  index, isSelected, cellHasFocus);
-
+          index, isSelected, cellHasFocus);
       if (value instanceof Integer) {
-        int val = ((Integer)value).intValue();
-        if (val<24) {
-          label.setText(val+":00");
-        }
-        else {
-          label.setText((val-24)+":00 ("+ mLocalizer.msg("nextDay","next day")+")");
+        int val = (Integer) value;
+        if (val < 24) {
+          label.setText(val + ":00");
+        } else {
+          label.setText(val - 24 + ":00 (" + mLocalizer.msg("nextDay", "next day") + ")");
         }
       }
-
       return label;
     }
-
   }
-
-
 }

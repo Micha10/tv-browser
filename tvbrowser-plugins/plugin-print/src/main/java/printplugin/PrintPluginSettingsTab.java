@@ -24,42 +24,49 @@
 
 package printplugin;
 
-import javax.swing.Icon;
-import javax.swing.JPanel;
-
-import util.ui.DefaultMarkingPrioritySelectionPanel;
-
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 
 import devplugin.SettingsTab;
 
+import javax.swing.Icon;
+import javax.swing.JPanel;
+
+import util.ui.DefaultMarkingPrioritySelectionPanel;
+
 /**
  * The settings tab for the print plugin.
- * 
+ *
  * @author René Mach
-
  */
+@SuppressWarnings("nls")
 public class PrintPluginSettingsTab implements SettingsTab {
+
   private DefaultMarkingPrioritySelectionPanel mMarkingsPanel;
-  
+
+  @Override
   public JPanel createSettingsPanel() {
-    JPanel panel = new JPanel(new FormLayout("default:grow","5dlu,fill:default:grow"));
-    panel.add(mMarkingsPanel = DefaultMarkingPrioritySelectionPanel.createPanel(PrintPlugin.getInstance().getMarkPriorityForProgram(null),false,false), new CellConstraints().xy(1,2));
-    
+    JPanel panel = new JPanel(new FormLayout("default:grow", "5dlu,fill:default:grow"));
+    panel.add(
+        mMarkingsPanel = DefaultMarkingPrioritySelectionPanel
+            .createPanel(PrintPlugin.getInstance().getMarkPriorityForProgram(null), false, false),
+        new CellConstraints().xy(1, 2));
+
     return panel;
   }
 
+  @Override
   public Icon getIcon() {
     return null;
   }
 
+  @Override
   public String getTitle() {
     return null;
   }
 
+  @Override
   public void saveSettings() {
     PrintPlugin.getInstance().setMarkPriority(mMarkingsPanel.getSelectedPriority());
   }
-
 }

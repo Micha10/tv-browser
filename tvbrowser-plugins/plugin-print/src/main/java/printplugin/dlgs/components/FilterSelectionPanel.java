@@ -18,44 +18,47 @@
  */
 package printplugin.dlgs.components;
 
-import javax.swing.JComboBox;
-import javax.swing.JPanel;
-
-import util.ui.Localizer;
-
 import com.jgoodies.forms.builder.PanelBuilder;
-import com.jgoodies.forms.layout.CellConstraints;
+import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
 
 import devplugin.Plugin;
 import devplugin.ProgramFilter;
 
+import javax.swing.JComboBox;
+import javax.swing.JPanel;
+
+import util.ui.Localizer;
+
 /**
  * A panel with the settings of the
  * program filter for the printing.
- * 
+ *
  * @author René Mach
  * @since 2.5
  */
+@SuppressWarnings("nls")
 public class FilterSelectionPanel extends JPanel {
+
+  private static final long serialVersionUID = 7206178753809968986L;
+
   private static final Localizer mLocalizer = Localizer.getLocalizerFor(FilterSelectionPanel.class);
-  private JComboBox mFilterSelection;
-  
+
+  private JComboBox<ProgramFilter> mFilterSelection;
+
   public FilterSelectionPanel() {
-    CellConstraints cc = new CellConstraints();
-    
-    PanelBuilder pb = new PanelBuilder(new FormLayout("5dlu,pref,10dlu,30dlu:grow",
+    final PanelBuilder pb = new PanelBuilder(new FormLayout("5dlu,pref,10dlu,30dlu:grow",
         "pref,5dlu,pref,2dlu,pref,10dlu"), this);
-    pb.addSeparator(mLocalizer.msg("filters","Filters"), cc.xyw(1,1,4));
-    pb.addLabel(mLocalizer.msg("toUseFilter","To use program filter:"), cc.xy(2,3));
-    
-    mFilterSelection = new JComboBox(Plugin.getPluginManager().getFilterManager().getAvailableFilters());
+    pb.addSeparator(mLocalizer.msg("filters", "Filters"), CC.xyw(1, 1, 4));
+    pb.addLabel(mLocalizer.msg("toUseFilter", "Program filter to use:"), CC.xy(2, 3));
+
+    mFilterSelection = new JComboBox<>(Plugin.getPluginManager().getFilterManager().getAvailableFilters());
     mFilterSelection.setSelectedItem(Plugin.getPluginManager().getFilterManager().getCurrentFilter());
 
-    pb.add(mFilterSelection, cc.xy(4,3));
+    pb.add(mFilterSelection, CC.xy(4, 3));
   }
-  
+
   public ProgramFilter getSelectedFilter() {
-    return (ProgramFilter)mFilterSelection.getSelectedItem();
+    return (ProgramFilter) mFilterSelection.getSelectedItem();
   }
 }

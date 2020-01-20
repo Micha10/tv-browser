@@ -26,14 +26,21 @@
 
 package printplugin.dlgs.components;
 
+import com.jgoodies.forms.builder.ButtonStackBuilder;
+
+import devplugin.Date;
+import devplugin.Plugin;
+import devplugin.Program;
+import devplugin.ProgramFieldType;
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Frame;
-import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 
 import javax.swing.Icon;
 import javax.swing.JButton;
@@ -44,18 +51,18 @@ import javax.swing.JScrollPane;
 import printplugin.printer.ProgramIcon;
 import printplugin.settings.MutableProgramIconSettings;
 import printplugin.settings.ProgramIconSettings;
+
+import util.ui.Localizer;
 import util.ui.TimeFormatter;
-import devplugin.Date;
-import devplugin.Plugin;
-import devplugin.ProgramFieldType;
+import util.ui.UiUtilities;
 
-
+@SuppressWarnings("nls")
 public class ProgramPreviewPanel extends JPanel {
 
-  /** The localizer for this class. */
-  private static final util.ui.Localizer mLocalizer
-         = util.ui.Localizer.getLocalizerFor(ProgramPreviewPanel.class);
+  private static final long serialVersionUID = 8953071252035184547L;
 
+  /** The localizer for this class. */
+  private static final Localizer mLocalizer = Localizer.getLocalizerFor(ProgramPreviewPanel.class);
 
   private MutableProgramIconSettings mProgramIconSettings;
   private JLabel mProgramIconLabel;
@@ -64,87 +71,92 @@ public class ProgramPreviewPanel extends JPanel {
   private JPanel mIconPanel;
 
   public ProgramPreviewPanel(final Frame dlgParent, ProgramIconSettings programIconSettings, Font dateFont) {
-    super();
+
+    setLayout(new BorderLayout(3, 3));
+
     mDateFont = dateFont;
     if (programIconSettings != null) {
       setProgramIconSettings(programIconSettings);
     }
-    setLayout(new BorderLayout(3,3));
 
-    JButton fontsButton = new JButton(mLocalizer.msg("fonts", "Fonts.."));
-    JButton fieldsButton = new JButton(mLocalizer.msg("fields", "Fields.."));
+    JButton fontsButton = new JButton(mLocalizer.msg("fonts", "Fonts\u2026"));
+    JButton fieldsButton = new JButton(mLocalizer.msg("fields", "Fields\u2026"));
 
     mDateLabel = new JLabel(new Date().getLongDateString());
-    mProgramIconLabel = new JLabel(createDemoProgramPanel());
+    mDateLabel.setForeground(Color.BLACK);
+    mProgramIconLabel = new JLabel(createDemoProgramPanel(mProgramIconSettings));
 
-    mIconPanel = new JPanel(new BorderLayout());
-    mIconPanel.setBackground(Color.white);
-    
+    mIconPanel = new JPanel(new BorderLayout()) {
+
+      private static final long serialVersionUID = -2983369556171749885L;
+
+      @Override
+      protected void paintChildren(Graphics g) {
+        Graphics2D g2d = (Graphics2D) g;
+        Color c = g2d.getColor();
+        g2d.setColor(Color.WHITE);
+        g2d.fillRect(1, 1, getWidth() - 1, getHeight() - 1);
+        g2d.setColor(c);
+        g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+        super.paintChildren(g);
+      }
+    };
+
     if (mDateFont != null) {
-      mIconPanel.add(mDateLabel, BorderLayout.NORTH);
+      mIconPanel.add(mDateLabel, BorderLayout.PAGE_START);
     }
     mIconPanel.add(mProgramIconLabel, BorderLayout.CENTER);
 
-    JPanel eastPn = new JPanel(new BorderLayout());
-    JPanel buttonPn = new JPanel(new GridLayout(-1, 1,3,3));
-    eastPn.add(buttonPn, BorderLayout.NORTH);
-    buttonPn.add(fontsButton);
-    buttonPn.add(fieldsButton);
-
     JScrollPane scrollPane = new JScrollPane(mIconPanel);
-    scrollPane.setPreferredSize(new Dimension(0,90));
+    scrollPane.setPreferredSize(new Dimension(0, 90));
     add(scrollPane, BorderLayout.CENTER);
-    add(eastPn, BorderLayout.EAST);
+    add(new ButtonStackBuilder().addButton(fontsButton, fieldsButton).build(), BorderLayout.LINE_END);
 
-
-    fontsButton.addActionListener(new ActionListener() {
-      public void actionPerformed(ActionEvent e) {
-        if (mProgramIconSettings == null) {
-          return;
-        }
-        FontsDialog dlg = new FontsDialog(dlgParent, mProgramIconSettings.getTitleFont(), mProgramIconSettings.getTextFont(), mDateFont);
-        util.ui.UiUtilities.centerAndShow(dlg);
-        if (dlg.getResult() == FontsDialog.OK) {
-          Font titleFont = dlg.getTitleFont();
-          Font descFont = dlg.getDescriptionFont();
-          mDateFont = dlg.getDateFont();
-          mProgramIconSettings.setTextFont(descFont);
-          mProgramIconSettings.setTimeFont(titleFont);
-          mProgramIconSettings.setTitleFont(titleFont);
-          updatePreviewPanel();
-        }
+    fontsButton.addActionListener(e -> {
+      if (mProgramIconSettings == null) {
+        return;
+      }
+      FontsDialog dlg = new FontsDialog(dlgParent, mProgramIconSettings.getTitleFont(),
+          mProgramIconSettings.getTextFont(), mDateFont);
+      UiUtilities.centerAndShow(dlg);
+      if (dlg.getResult() == FontsDialog.OK) {
+        Font titleFont = dlg.getTitleFont();
+        Font descFont = dlg.getDescriptionFont();
+        mDateFont = dlg.getDateFont();
+        mProgramIconSettings.setTextFont(descFont);
+        mProgramIconSettings.setTimeFont(titleFont);
+        mProgramIconSettings.setTitleFont(titleFont);
+        updatePreviewPanel();
       }
     });
 
-    fieldsButton.addActionListener(new ActionListener(){
-      public void actionPerformed(ActionEvent event){
-        if (mProgramIconSettings == null) {
-          return;
-        }
-        ProgramItemFieldsConfigDlg dlg = new ProgramItemFieldsConfigDlg(dlgParent, mProgramIconSettings.getProgramInfoFields());
-        util.ui.UiUtilities.centerAndShow(dlg);
+    fieldsButton.addActionListener(event -> {
+      if (mProgramIconSettings == null) {
+        return;
+      }
+      ProgramItemFieldsConfigDlg dlg = new ProgramItemFieldsConfigDlg(dlgParent,
+          mProgramIconSettings.getProgramInfoFields());
+      UiUtilities.centerAndShow(dlg);
 
-        if (dlg.getResult()==ProgramItemFieldsConfigDlg.OK) {
-          ProgramFieldType[] fieldTypes = dlg.getProgramItemFieldTypes();
-          mProgramIconSettings.setProgramInfoFields(fieldTypes);
-          updatePreviewPanel();
-        }
+      if (dlg.getResult() == ProgramItemFieldsConfigDlg.OK) {
+        ProgramFieldType[] fieldTypes = dlg.getProgramItemFieldTypes();
+        mProgramIconSettings.setProgramInfoFields(fieldTypes);
+        updatePreviewPanel();
       }
     });
 
     updatePreviewPanel();
   }
 
-
   public ProgramPreviewPanel(Frame dlgParent) {
     this(dlgParent, null, null);
   }
 
   public void updatePreviewPanel() {
-    mProgramIconLabel.setIcon(createDemoProgramPanel());
+    mProgramIconLabel.setIcon(createDemoProgramPanel(mProgramIconSettings));
     mDateLabel.setFont(mDateFont);
     if (mDateFont != null) {
-      mIconPanel.add(mDateLabel, BorderLayout.NORTH);
+      mIconPanel.add(mDateLabel, BorderLayout.PAGE_START);
     }
   }
 
@@ -174,18 +186,14 @@ public class ProgramPreviewPanel extends JPanel {
     return mDateFont;
   }
 
-  private Icon createDemoProgramPanel() {
-    devplugin.Program prog = Plugin.getPluginManager().getExampleProgram();
-    if (mProgramIconSettings != null) {
-      TimeFormatter format = new TimeFormatter();
-      mProgramIconSettings.setTimeFieldWidth(util.ui.UiUtilities.getStringWidth(mProgramIconSettings.getTimeFont(),format.formatTime(23, 59))+4);
+  private static Icon createDemoProgramPanel(final MutableProgramIconSettings programIconSettings) {
+    final Program prog = Plugin.getPluginManager().getExampleProgram();
+    if (programIconSettings != null) {
+      programIconSettings.setTimeFieldWidth(
+          UiUtilities.getStringWidth(programIconSettings.getTimeFont(), new TimeFormatter().formatTime(23, 59)) + 4);
     }
-    ProgramIcon ico = new ProgramIcon(prog, mProgramIconSettings, 200, false);
+    final ProgramIcon ico = new ProgramIcon(prog, programIconSettings, 200, false);
     ico.setMaximumHeight(Integer.MAX_VALUE);
     return ico;
-
   }
-
 }
-
-

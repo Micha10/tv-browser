@@ -26,55 +26,55 @@
 
 package printplugin.settings;
 
-import java.awt.Font;
-
 import devplugin.ProgramFieldType;
+
+import java.awt.Font;
 
 /**
  * The interface for the program painting settings.
  */
 public interface ProgramIconSettings {
-  
+
   /**
    * Gets the Font for the program title.
-   * 
+   *
    * @return The Font for the program title.
    */
-  public Font getTitleFont();
-  
+  Font getTitleFont();
+
   /**
    * Gets the Font for the program text.
-   * 
+   *
    * @return The Font for the program text.
    */
-  public Font getTextFont();
-  
+  Font getTextFont();
+
   /**
    * Gets the Font for the time text.
-   * 
+   *
    * @return The Font for the time text.
    */
-  public Font getTimeFont();
-  
+  Font getTimeFont();
+
   /**
    * Gets the width of the time field.
-   * 
+   *
    * @return The width of the time field.
    */
-  public int getTimeFieldWidth();
-  
+  int getTimeFieldWidth();
+
   /**
    * Gets the program field types to paint.
-   * 
+   *
    * @return The program field types to paint.
    */
-  public ProgramFieldType[] getProgramInfoFields();
-  
-  public String[] getProgramTableIconPlugins();
-  
-  public boolean getPaintExpiredProgramsPale();
-  
-  public boolean getPaintProgramOnAir();
-  public boolean getPaintPluginMarks();
-  
+  ProgramFieldType[] getProgramInfoFields();
+
+  String[] getProgramTableIconPlugins();
+
+  boolean getPaintExpiredProgramsPale();
+
+  boolean getPaintProgramOnAir();
+
+  boolean getPaintPluginMarks();
 }

@@ -26,33 +26,32 @@
 
 package printplugin.dlgs.components;
 
-import java.awt.FlowLayout;
+import com.jgoodies.forms.builder.ButtonBarBuilder;
+import com.jgoodies.forms.builder.PanelBuilder;
+import com.jgoodies.forms.factories.Borders;
+import com.jgoodies.forms.factories.CC;
+import com.jgoodies.forms.layout.FormLayout;
+import com.jgoodies.forms.layout.RowSpec;
+
+import java.awt.BorderLayout;
 import java.awt.Font;
 import java.awt.Frame;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 
-import util.ui.FontChooserPanel;
 import util.ui.Localizer;
 import util.ui.UiUtilities;
 import util.ui.WindowClosingIf;
 
-import com.jgoodies.forms.builder.PanelBuilder;
-import com.jgoodies.forms.factories.Borders;
-import com.jgoodies.forms.layout.CellConstraints;
-import com.jgoodies.forms.layout.FormLayout;
-import com.jgoodies.forms.layout.RowSpec;
-
+@SuppressWarnings("nls")
 public class FontsDialog extends JDialog implements WindowClosingIf {
 
-  /** The localizer for this class. */
-  private static final util.ui.Localizer mLocalizer
-         = util.ui.Localizer.getLocalizerFor(FontsDialog.class);
+  private static final long serialVersionUID = 1108301325894399327L;
 
+  /** The localizer for this class. */
+  private static final Localizer mLocalizer = Localizer.getLocalizerFor(FontsDialog.class);
 
   private static final int CANCEL = 0;
   protected static final int OK = 1;
@@ -60,67 +59,69 @@ public class FontsDialog extends JDialog implements WindowClosingIf {
   private FontChooserPanel mTitleFontPanel;
   private FontChooserPanel mDescriptionFontPanel;
   private FontChooserPanel mDateFontPanel;
-  private int mResult;
+  private int mResult = CANCEL;
 
   public FontsDialog(Frame parent, Font titleFont, Font descriptionFont, Font dateFont) {
     super(parent, true);
-    setTitle(mLocalizer.msg("dialog.title","Fonts"));
-    JPanel content = (JPanel)getContentPane();
-    
+    setTitle(mLocalizer.msg("dialog.title", "Fonts"));
+
     UiUtilities.registerForClosing(this);
 
-    CellConstraints cc = new CellConstraints();
-    FormLayout layout = new FormLayout("5dlu,pref:grow",
-        "pref,5dlu,pref,2dlu,pref,5dlu,pref");
-    PanelBuilder pb = new PanelBuilder(layout, content);
-    pb.setBorder(Borders.DLU4_BORDER);
-    
-    pb.addSeparator(mLocalizer.msg("fonts","Fonts"), cc.xyw(1,1,2));
-    
-    mTitleFontPanel=new FontChooserPanel(mLocalizer.msg("title","Title"), titleFont);
-    mDescriptionFontPanel=new FontChooserPanel(mLocalizer.msg("description","Description"), descriptionFont);
+    final JPanel content = (JPanel) getContentPane();
+    content.setBorder(Borders.DIALOG);
+    content.setLayout(new BorderLayout());
+    content.add(createForm(titleFont, descriptionFont, dateFont), BorderLayout.PAGE_START);
+    content.add(createButtonBar(), BorderLayout.PAGE_END);
+    pack();
+    setMinimumSize(getSize());
+    getRootPane().getDefaultButton().requestFocus();
+  }
+
+  /**
+   * @param titleFont
+   * @param descriptionFont
+   * @param dateFont
+   * @return
+   */
+  private JPanel createForm(Font titleFont, Font descriptionFont, Font dateFont) {
+
+    mTitleFontPanel = new FontChooserPanel(mLocalizer.msg("title", "Title"), titleFont, true);
+    mDescriptionFontPanel = new FontChooserPanel(mLocalizer.msg("description", "Description"), descriptionFont, true);
+
+    final FormLayout layout = new FormLayout("pref:grow", "pref,5dlu,pref,10dlu");
+    final JPanel form = new JPanel();
+    final PanelBuilder pb = new PanelBuilder(layout, form);
+    pb.add(mTitleFontPanel, CC.xy(1, 1));
+    pb.add(mDescriptionFontPanel, CC.xy(1, 3));
     if (dateFont != null) {
-      mDateFontPanel = new FontChooserPanel(mLocalizer.msg("date","Date"), dateFont);
+      mDateFontPanel = new FontChooserPanel(mLocalizer.msg("date", "Date"), dateFont, true);
+      layout.insertRow(4, RowSpec.decode("5dlu"));
+      layout.insertRow(5, RowSpec.decode("pref"));
+      form.add(mDateFontPanel, CC.xy(1, 5));
     }
-    
-    int y = 3;
-    
-    pb.add(mTitleFontPanel, cc.xy(2,y++));
-    pb.add(mDescriptionFontPanel, cc.xy(2,++y));
-    
-    if(dateFont != null) {
-      layout.insertRow(++y, RowSpec.decode("2dlu"));
-      layout.insertRow(++y, RowSpec.decode("pref"));
-      
-      content.add(mDateFontPanel, cc.xy(2,y));
-    }
-    y++;
-    
-    JPanel btnPn = new JPanel(new FlowLayout());
+    return form;
+  }
+
+  /**
+   * @return
+   */
+  private JPanel createButtonBar() {
 
     JButton okBt = new JButton(Localizer.getLocalization(Localizer.I18N_OK));
+    okBt.addActionListener(e -> {
+      mResult = OK;
+      setVisible(false);
+    });
+    okBt.setActionCommand("ok");
+    okBt.setDefaultCapable(true);
+
     JButton cancelBt = new JButton(Localizer.getLocalization(Localizer.I18N_CANCEL));
+    cancelBt.addActionListener(e -> close());
+    cancelBt.setActionCommand("cancel");
 
-    btnPn.add(okBt);
-    btnPn.add(cancelBt);
+    getRootPane().setDefaultButton(okBt);
 
-    okBt.addActionListener(new ActionListener(){
-      public void actionPerformed(ActionEvent e) {
-        mResult = OK;
-        setVisible(false);
-      }
-    });
-
-    cancelBt.addActionListener(new ActionListener(){
-      public void actionPerformed(ActionEvent e) {
-        close();
-      }
-    });
-    
-    content.add(btnPn, cc.xyw(1,++y,2));
-
-    mResult = CANCEL;
-    pack();
+    return new ButtonBarBuilder().addGlue().addButton(okBt, cancelBt).build();
   }
 
   public int getResult() {
@@ -142,10 +143,9 @@ public class FontsDialog extends JDialog implements WindowClosingIf {
     return null;
   }
 
+  @Override
   public void close() {
     mResult = CANCEL;
     setVisible(false);
   }
-
 }
-

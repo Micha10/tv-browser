@@ -26,47 +26,40 @@
 
 package printplugin.dlgs.components;
 
+import com.jgoodies.forms.builder.PanelBuilder;
+import com.jgoodies.forms.factories.CC;
+import com.jgoodies.forms.layout.FormLayout;
+
+import devplugin.Date;
+
 import javax.swing.JComboBox;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
 
-import com.jgoodies.forms.builder.PanelBuilder;
-import com.jgoodies.forms.layout.CellConstraints;
-import com.jgoodies.forms.layout.FormLayout;
+import printplugin.util.Utils;
 
-import devplugin.Date;
+import util.ui.Localizer;
 
+@SuppressWarnings({"boxing", "nls"})
 public class DateRangePanel extends JPanel {
 
-  private static final util.ui.Localizer mLocalizer
-      = util.ui.Localizer.getLocalizerFor(DateRangePanel.class);
+  private static final long serialVersionUID = 286497444395791988L;
 
-  private JComboBox mDateCb;
-  private JSpinner mDayCountSpinner;
+  private static final Localizer mLocalizer = Localizer.getLocalizerFor(DateRangePanel.class);
+
+  private final JComboBox<Date> mDateCb;
+  private final JSpinner mDayCountSpinner;
 
   public DateRangePanel() {
-    CellConstraints cc = new CellConstraints();
-    
-    PanelBuilder pb = new PanelBuilder(new FormLayout("5dlu,pref,2dlu,pref,2dlu,pref,2dlu,pref,2dlu,pref:grow",
+    final PanelBuilder pb = new PanelBuilder(new FormLayout("5dlu,pref,2dlu,pref,2dlu,pref,2dlu,pref,2dlu,pref:grow",
         "pref,5dlu,pref,10dlu"), this);
-    pb.addSeparator(mLocalizer.msg("period","Period"), cc.xyw(1,1,10));
-    pb.addLabel(mLocalizer.msg("from","Von"), cc.xy(2,3));
-    pb.add(mDateCb = new JComboBox(createDateObjects(21)), cc.xy(4,3));
-    pb.addLabel(mLocalizer.msg("TVlistingsFor", "Program for"), cc.xy(6,3));
-    pb.add(mDayCountSpinner = new JSpinner(new SpinnerNumberModel(5,1,28,1)), cc.xy(8,3));
-    pb.addLabel(mLocalizer.msg("days","Days"), cc.xy(10,3));
-  }
-
-  private Date[] createDateObjects(int days) {
-    Date[] result = new Date[days];
-    Date today = Date.getCurrentDate();
-    
-    for (int i=0;i<result.length;i++) {
-      result[i]=today.addDays(i);
-    }
-    
-    return result;
+    pb.addSeparator(mLocalizer.msg("period", "Period"), CC.xyw(1, 1, 10));
+    pb.addLabel(mLocalizer.msg("from", "From"), CC.xy(2, 3));
+    pb.add(mDateCb = new JComboBox<>(Utils.createDateObjects(21)), CC.xy(4, 3));
+    pb.addLabel(mLocalizer.msg("TVlistingsFor", "Program for"), CC.xy(6, 3));
+    pb.add(mDayCountSpinner = new JSpinner(new SpinnerNumberModel(5, 1, 28, 1)), CC.xy(8, 3));
+    pb.addLabel(mLocalizer.msg("days", "Days"), CC.xy(10, 3));
   }
 
   public void setFromDate(Date date) {
@@ -80,11 +73,10 @@ public class DateRangePanel extends JPanel {
   }
 
   public Date getFromDate() {
-    return (Date)mDateCb.getSelectedItem();
+    return (Date) mDateCb.getSelectedItem();
   }
 
   public int getNumberOfDays() {
-    return ((Integer)mDayCountSpinner.getValue()).intValue();
+    return (Integer) mDayCountSpinner.getValue();
   }
-
 }

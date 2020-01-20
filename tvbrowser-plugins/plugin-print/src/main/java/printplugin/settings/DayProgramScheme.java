@@ -26,27 +26,39 @@
 
 package printplugin.settings;
 
+import devplugin.Channel;
+import devplugin.Date;
+import devplugin.Plugin;
+import devplugin.ProgramFieldType;
+
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
+import java.util.List;
 
-import printplugin.util.IO;
-import devplugin.Channel;
-import devplugin.Date;
-import devplugin.Plugin;
+import printplugin.PrintPlugin;
 
-public class DayProgramScheme extends Scheme {
+import util.exc.ErrorHandler;
+import util.io.stream.StreamUtilities;
 
+@SuppressWarnings("nls")
+public class DayProgramScheme extends Scheme<DayProgramPrinterSettings> {
+
+  private static final String SCHEME_FILE = "printplugin.dayprog.schemes";
 
   public DayProgramScheme(String name) {
     super(name);
   }
 
+  @Override
   public void store(ObjectOutputStream out) throws IOException {
-    out.writeInt(1);  // version
+    out.writeInt(1); // version
     Date today = new Date();
-    DayProgramPrinterSettings settings = (DayProgramPrinterSettings)getSettings();
+    DayProgramPrinterSettings settings = getSettings();
     int day = settings.getFromDay().getNumberOfDaysSince(today);
     out.writeInt(day);
     out.writeInt(settings.getNumberOfDays());
@@ -55,12 +67,12 @@ public class DayProgramScheme extends Scheme {
     out.writeInt(settings.getDayEndHour());
     out.writeInt(settings.getColumnCount());
     out.writeInt(settings.getChannelsPerColumn());
-    IO.writeProgramIconSettings(settings.getProgramIconSettings(), out);
-
+    writeProgramIconSettings(settings.getProgramIconSettings(), out);
   }
 
+  @Override
   public void read(ObjectInputStream in) throws IOException, ClassNotFoundException {
-    in.readInt();  // version
+    in.readInt(); // version
     int day = in.readInt();
     Date fromDay = new Date().addDays(day);
     int numberOfDays = in.readInt();
@@ -69,18 +81,17 @@ public class DayProgramScheme extends Scheme {
     int dayEndHour = in.readInt();
     int colCount = in.readInt();
     int channelsPerColumn = in.readInt();
-    ProgramIconSettings programItemSettings = IO.readProgramIconSettings(in);
-
-    DayProgramPrinterSettings settings = new DayProgramPrinterSettings(fromDay, numberOfDays, channelArr, dayStartHour, dayEndHour, colCount, channelsPerColumn, programItemSettings, Plugin.getPluginManager().getFilterManager().getCurrentFilter());
+    ProgramIconSettings programItemSettings = readProgramIconSettings(in);
+    DayProgramPrinterSettings settings = new DayProgramPrinterSettings(fromDay, numberOfDays, channelArr, dayStartHour,
+        dayEndHour, colCount, channelsPerColumn, programItemSettings,
+        Plugin.getPluginManager().getFilterManager().getCurrentFilter());
     setSettings(settings);
   }
 
-
-  private void writeChannels(ObjectOutputStream out, Channel[] channels) throws IOException {
+  private static void writeChannels(ObjectOutputStream out, Channel[] channels) throws IOException {
     if (channels == null) {
       out.writeInt(-1);
-    }
-    else {
+    } else {
       out.writeInt(channels.length);
       for (Channel channel : channels) {
         out.writeObject(channel.getId());
@@ -88,16 +99,15 @@ public class DayProgramScheme extends Scheme {
     }
   }
 
-  private Channel[] readChannels(ObjectInputStream in) throws IOException, ClassNotFoundException {
+  private static Channel[] readChannels(ObjectInputStream in) throws IOException, ClassNotFoundException {
     int cnt = in.readInt();
     if (cnt < 0) {
       return null;
     }
     Channel[] subscribedChannels = Plugin.getPluginManager().getSubscribedChannels();
-
-    ArrayList<Channel> list = new ArrayList<Channel>();
-    for (int i=0; i<cnt; i++) {
-      String channelId = (String)in.readObject();
+    List<Channel> list = new ArrayList<>();
+    for (int i = 0; i < cnt; i++) {
+      String channelId = (String) in.readObject();
       for (Channel subscribedChannel : subscribedChannels) {
         if (channelId.equals(subscribedChannel.getId())) {
           list.add(subscribedChannel);
@@ -110,13 +120,71 @@ public class DayProgramScheme extends Scheme {
     return result;
   }
 
-   /*
-  public void setSettings(DayProgramPrinterSettingsOLD settings) {
-    mSettings = settings;
+  public static Scheme<DayProgramPrinterSettings>[] loadSchemes() {
+    String home = Plugin.getPluginManager().getTvBrowserSettings().getTvBrowserUserHome();
+    File schemeFile = new File(home, SCHEME_FILE);
+    try (ObjectInputStream in = new ObjectInputStream(
+        new BufferedInputStream(new FileInputStream(schemeFile), 0x4000))) {
+      return readSchemesFromStream(in);
+    } catch (Exception e) {
+      return getDefaultScheme();
+    }
   }
 
-  public DayProgramPrinterSettingsOLD getSettings() {
-    return mSettings;
-  }   */
+  /**
+   * @return
+   */
+  private static Scheme<DayProgramPrinterSettings>[] getDefaultScheme() {
+    DayProgramScheme scheme = new DayProgramScheme(PrintPlugin.mLocalizer.msg("defaultScheme", "DefaultScheme"));
+    PrintPlugin.getInstance();
+    scheme.setSettings(new DayProgramPrinterSettings(
+        new Date(),
+        3,
+        null,
+        6,
+        24 + 3,
+        5,
+        2,
+        PrinterProgramIconSettings.create(
+            new ProgramFieldType[] {
+                ProgramFieldType.EPISODE_TYPE,
+                ProgramFieldType.ORIGIN_TYPE,
+                ProgramFieldType.PRODUCTION_YEAR_TYPE,
+                ProgramFieldType.SHORT_DESCRIPTION_TYPE
+            }, false),
+        Plugin.getPluginManager().getFilterManager().getCurrentFilter()));
+    return new DayProgramScheme[] {scheme};
+  }
 
+  public static Scheme<DayProgramPrinterSettings>[] readSchemesFromStream(ObjectInputStream in)
+      throws IOException, ClassNotFoundException {
+    in.readInt(); // read version
+    int cnt = in.readInt();
+    Scheme<DayProgramPrinterSettings>[] schemes = new DayProgramScheme[cnt];
+    for (int i = 0; i < cnt; i++) {
+      String name = (String) in.readObject();
+      schemes[i] = new DayProgramScheme(name);
+      schemes[i].read(in);
+    }
+    return schemes;
+  }
+
+  public static void storeSchemes(final Scheme<DayProgramPrinterSettings>[] schemes) {
+    String home = Plugin.getPluginManager().getTvBrowserSettings().getTvBrowserUserHome();
+    File schemeFile = new File(home, SCHEME_FILE);
+    try {
+      StreamUtilities.objectOutputStream(schemeFile,
+          out -> {
+            out.writeInt(1); // version
+            out.writeInt(schemes.length);
+            for (Scheme<DayProgramPrinterSettings> scheme : schemes) {
+              out.writeObject(scheme.getName());
+              scheme.store(out);
+            }
+            out.close();
+          });
+    } catch (IOException e) {
+      ErrorHandler.handle("Could not store settings.", e);
+    }
+  }
 }

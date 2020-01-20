@@ -20,8 +20,8 @@
       <plugin>
         <artifactId>maven-compiler-plugin</artifactId>
         <configuration>
-          <source>1.6</source>
-          <target>1.6</target>
+          <source>1.8</source>
+          <target>1.8</target>
           <encoding>UTF-8</encoding>
         </configuration>
       </plugin>
@@ -47,12 +47,12 @@
       </plugin>
     </plugins>
   </build>
-  <dependencies>
+  <!-- <dependencies>
     <dependency>
   		<groupId>org.tvbrowser</groupId>
   		<artifactId>TvBrowserCompat</artifactId>
-  		<version>0.2</version>
+  		<version>0.5</version>
   		<scope>compile</scope>
   	</dependency>
-  </dependencies>
+  </dependencies>-->
 </project>

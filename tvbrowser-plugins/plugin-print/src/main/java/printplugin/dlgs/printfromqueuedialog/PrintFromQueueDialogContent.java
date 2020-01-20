@@ -26,42 +26,47 @@
 
 package printplugin.dlgs.printfromqueuedialog;
 
+import devplugin.PluginTreeNode;
+import devplugin.Program;
+
 import java.awt.Component;
 import java.awt.Frame;
 import java.awt.print.PageFormat;
+import java.awt.print.Printable;
+import java.util.Arrays;
 
 import javax.swing.JTabbedPane;
 
 import printplugin.PrintPlugin;
 import printplugin.dlgs.DialogContent;
-import printplugin.printer.JobFactory;
+import printplugin.printer.DefaultColumnModel;
+import printplugin.printer.DefaultPageModel;
 import printplugin.printer.PrintJob;
+import printplugin.printer.queueprinter.QueuePrintJob;
 import printplugin.settings.QueuePrinterSettings;
 import printplugin.settings.QueueScheme;
 import printplugin.settings.Scheme;
-import printplugin.settings.Settings;
-import devplugin.PluginTreeNode;
-import devplugin.Program;
+import printplugin.util.Utils;
 
+import util.program.ProgramUtilities;
+import util.ui.Localizer;
 
-public class PrintFromQueueDialogContent implements DialogContent {
+@SuppressWarnings("nls")
+public class PrintFromQueueDialogContent implements DialogContent<QueuePrinterSettings> {
 
   /** The localizer for this class. */
-  private static final util.ui.Localizer mLocalizer
-         = util.ui.Localizer.getLocalizerFor(PrintFromQueueDialogContent.class);
+  private static final Localizer mLocalizer = Localizer.getLocalizerFor(PrintFromQueueDialogContent.class);
 
   private GeneralTab mGeneralTab;
   private LayoutTab mLayoutTab;
   private ExtrasTab mExtrasTab;
   private PluginTreeNode mRootNode;
 
-  private Frame mParentFrame;
-
-  public PrintFromQueueDialogContent(PluginTreeNode rootNode, Frame parentFrame) {
+  public PrintFromQueueDialogContent(PluginTreeNode rootNode) {
     mRootNode = rootNode;
-    mParentFrame = parentFrame;
   }
 
+  @Override
   public void printingDone() {
     if (mGeneralTab.emptyQueueAfterPrinting()) {
       Program[] progs = mRootNode.getPrograms();
@@ -73,39 +78,90 @@ public class PrintFromQueueDialogContent implements DialogContent {
     }
   }
 
-  public Component getContent() {
+  @Override
+  public Component getContent(final Frame parentFrame) {
     JTabbedPane tab = new JTabbedPane();
     mGeneralTab = new GeneralTab(mRootNode);
     mLayoutTab = new LayoutTab();
-    mExtrasTab = new ExtrasTab(mParentFrame);
-    tab.add(mLocalizer.msg("listingsTab", "Daten"), mGeneralTab);
-    tab.add(mLocalizer.msg("layoutTab","Layout"), mLayoutTab);
-    tab.add(mLocalizer.msg("miscTab","Extras"), mExtrasTab);
+    mExtrasTab = new ExtrasTab(parentFrame);
+    tab.add(mLocalizer.msg("listingsTab", "Data"), mGeneralTab);
+    tab.add(mLocalizer.msg("layoutTab", "Layout"), mLayoutTab);
+    tab.add(mLocalizer.msg("miscTab", "Extras"), mExtrasTab);
+    Utils.setOpaque(tab, false);
     return tab;
-
   }
 
+  @Override
   public String getDialogTitle() {
-    return mLocalizer.msg("dialogTitle","Print from queue");
+    return mLocalizer.msg("dialogTitle", "Print from queue");
   }
 
-  public Settings getSettings() {
-    return new QueuePrinterSettings(mGeneralTab.emptyQueueAfterPrinting(), mLayoutTab.getColumnsPerPage(), mExtrasTab.getProgramIconSettings(), mExtrasTab.getDateFont());
+  @Override
+  public QueuePrinterSettings getSettings() {
+    return new QueuePrinterSettings(mGeneralTab.emptyQueueAfterPrinting(), mLayoutTab.getColumnsPerPage(),
+        mExtrasTab.getProgramIconSettings(), mExtrasTab.getDateFont());
   }
 
-  public void setSettings(Settings s) {
-    QueuePrinterSettings settings = (QueuePrinterSettings)s;
+  @Override
+  public void setSettings(QueuePrinterSettings settings) {
     mGeneralTab.setEmptyQueueAfterPrinting(settings.emptyQueueAfterPrinting());
     mLayoutTab.setColumnsPerPage(settings.getColumnsPerPage());
     mExtrasTab.setProgramIconSettings(settings.getProgramIconSettings());
     mExtrasTab.setDateFont(settings.getDateFont());
   }
 
+  @Override
   public PrintJob createPrintJob(PageFormat format) {
-    return JobFactory.createPrintJob((QueuePrinterSettings)getSettings(), format, mRootNode.getPrograms());
+
+    final Program[] programs = mRootNode.getPrograms();
+
+    if (programs.length == 0) {
+      return createEmptyJob(format);
+    }
+    Arrays.sort(programs, ProgramUtilities.getProgramComparator());
+
+    DefaultPageModel pageModel = new DefaultPageModel();
+    DefaultColumnModel colModel = new DefaultColumnModel("Column");
+    pageModel.addColumn(colModel);
+    for (Program program : programs) {
+      colModel.addProgram(program);
+    }
+
+    return new QueuePrintJob(pageModel, getSettings(), format);
   }
 
-  public Scheme createNewScheme(String schemeName) {
+  @Override
+  public Scheme<QueuePrinterSettings> createNewScheme(String schemeName) {
     return new QueueScheme(schemeName);
+  }
+
+  private static PrintJob createEmptyJob(final PageFormat format) {
+    return new PrintJob() {
+
+      @Override
+      public Printable getPrintable() {
+        return (graphics, pageFormat, pageIndex) -> Printable.NO_SUCH_PAGE;
+      }
+
+      @Override
+      public int getNumOfPages() {
+        return 0;
+      }
+
+      @Override
+      public PageFormat getPageFormat() {
+        return format;
+      }
+    };
+  }
+
+  @Override
+  public void storeSchemes(final Scheme<QueuePrinterSettings>[] schemes) {
+    QueueScheme.storeSchemes(schemes);
+  }
+
+  @Override
+  public Scheme<QueuePrinterSettings>[] loadSchemes() {
+    return QueueScheme.loadSchemes();
   }
 }

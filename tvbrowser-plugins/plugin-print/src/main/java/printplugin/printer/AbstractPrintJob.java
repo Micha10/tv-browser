@@ -28,17 +28,22 @@ package printplugin.printer;
 
 import java.awt.Color;
 import java.awt.Font;
-import java.awt.Graphics;
 import java.awt.print.PageFormat;
 import java.awt.print.Printable;
 import java.util.ArrayList;
+import java.util.List;
 
+import printplugin.PrintPlugin;
 import printplugin.dlgs.PreviewDlg;
 
- 
+import util.ui.Localizer;
+import util.ui.UiUtilities;
+
+@SuppressWarnings("nls")
 public abstract class AbstractPrintJob implements PrintJob {
 
-  private static final Font FOOTER_FONT = new Font("Dialog",Font.ITALIC,6);
+  private static final Font FOOTER_FONT = PrintPlugin.getInstance().getPluginSettings().deriveDefaultFont(Font.PLAIN,
+      6);
 
   private Page[] mPages;
   private PageModel[] mPageModelArr;
@@ -49,12 +54,13 @@ public abstract class AbstractPrintJob implements PrintJob {
     mPageFormat = pageFormat;
   }
 
+  @Override
   public PageFormat getPageFormat() {
     return mPageFormat;
   }
 
   private void prepare() {
-    ArrayList<Page> pages = new ArrayList<Page>();
+    List<Page> pages = new ArrayList<>();
     for (PageModel element : mPageModelArr) {
       Page[] p = createPages(element);
       for (Page element2 : p) {
@@ -63,11 +69,11 @@ public abstract class AbstractPrintJob implements PrintJob {
     }
     mPages = new Page[pages.size()];
     pages.toArray(mPages);
-
   }
 
   protected abstract Page[] createPages(PageModel pageModel);
 
+  @Override
   public int getNumOfPages() {
     if (mPages == null) {
       prepare();
@@ -75,30 +81,28 @@ public abstract class AbstractPrintJob implements PrintJob {
     return mPages.length;
   }
 
+  @SuppressWarnings("boxing")
+  @Override
   public Printable getPrintable() {
-    return new Printable() {
-      public int print(Graphics graphics, PageFormat f, int pageIndex)  {
-        if (mPages == null) {
-          prepare();
-        }
-        if (pageIndex>=mPages.length) {
-          return NO_SUCH_PAGE;
-        }
-        mPages[pageIndex].printPage(graphics);
-
-
-
-        String pageInfo = util.ui.Localizer.getLocalizerFor(PreviewDlg.class)
-            .msg("pageInfo", "page {0} of {1}", (pageIndex + 1), mPages.length);
-        int w = util.ui.UiUtilities.getStringWidth(FOOTER_FONT, pageInfo);
-        graphics.setFont(FOOTER_FONT);
-        graphics.setColor(Color.black);
-        PageFormat pageFormat = mPages[pageIndex].getPageFormat();
-        graphics.drawString(pageInfo, (int)pageFormat.getImageableX() + (int)pageFormat.getImageableWidth()- w-5, (int)pageFormat.getImageableY() + (int)pageFormat.getImageableHeight()-3);
-
-        return PAGE_EXISTS;
+    return (graphics, f, pageIndex) -> {
+      if (mPages == null) {
+        prepare();
       }
-    };
+      if (pageIndex >= mPages.length) {
+        return Printable.NO_SUCH_PAGE;
+      }
+      mPages[pageIndex].printPage(graphics);
 
+      String pageInfo = Localizer.getLocalizerFor(PreviewDlg.class)
+          .msg("pageInfo", "Page {0} of {1}", pageIndex + 1, mPages.length);
+      int w = UiUtilities.getStringWidth(FOOTER_FONT, pageInfo);
+      graphics.setFont(FOOTER_FONT);
+      graphics.setColor(Color.black);
+      PageFormat pageFormat = mPages[pageIndex].getPageFormat();
+      graphics.drawString(pageInfo, (int) pageFormat.getImageableX() + (int) pageFormat.getImageableWidth() - w - 5,
+          (int) pageFormat.getImageableY() + (int) pageFormat.getImageableHeight() - 3);
+
+      return Printable.PAGE_EXISTS;
+    };
   }
 }

@@ -26,50 +26,115 @@
 
 package printplugin.settings;
 
+import devplugin.Plugin;
+import devplugin.ProgramFieldType;
+
 import java.awt.Font;
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
-import printplugin.util.IO;
+import printplugin.PrintPlugin;
 
+import util.exc.ErrorHandler;
+import util.io.stream.StreamUtilities;
 
-public class QueueScheme extends Scheme {
+@SuppressWarnings("nls")
+public class QueueScheme extends Scheme<QueuePrinterSettings> {
+
+  private static final String SCHEME_FILE = "printplugin.queue.schemes";
 
   public QueueScheme(String name) {
     super(name);
   }
 
+  @Override
   public void store(ObjectOutputStream out) throws IOException {
-    QueuePrinterSettings settings = (QueuePrinterSettings)getSettings();
-
+    QueuePrinterSettings settings = getSettings();
     boolean emptyQueuAfterPrinting = settings.emptyQueueAfterPrinting();
     int columnsPerPage = settings.getColumnsPerPage();
-    
-    out.writeInt(1);  // Version
+    out.writeInt(1); // version
     out.writeBoolean(emptyQueuAfterPrinting);
     out.writeInt(columnsPerPage);
-    IO.writeProgramIconSettings(settings.getProgramIconSettings(), out);
-    IO.writeFont(settings.getDateFont(), out);
+    writeProgramIconSettings(settings.getProgramIconSettings(), out);
+    writeFont(settings.getDateFont(), out);
   }
 
-
-
-
+  @Override
   public void read(ObjectInputStream in) throws IOException, ClassNotFoundException {
-    in.readInt();  // version
-
+    in.readInt(); // version
     boolean emptyQueueAfterPrinting = in.readBoolean();
     int columnsPerPage = in.readInt();
-    ProgramIconSettings programIconSettings = IO.readProgramIconSettings(in);
-    Font dateFont = IO.readFont(in);
-    QueuePrinterSettings settings = new QueuePrinterSettings(emptyQueueAfterPrinting, columnsPerPage, programIconSettings, dateFont);
+    ProgramIconSettings programIconSettings = readProgramIconSettings(in);
+    Font dateFont = readFont(in);
+    QueuePrinterSettings settings = new QueuePrinterSettings(emptyQueueAfterPrinting, columnsPerPage,
+        programIconSettings, dateFont);
     setSettings(settings);
   }
 
+  public static Scheme<QueuePrinterSettings>[] loadSchemes() {
+    String home = Plugin.getPluginManager().getTvBrowserSettings().getTvBrowserUserHome();
+    File schemeFile = new File(home, SCHEME_FILE);
+    try (ObjectInputStream in = new ObjectInputStream(
+        new BufferedInputStream(new FileInputStream(schemeFile), 0x4000))) {
+      return readSchemesFromStream(in);
+    } catch (Exception e) {
+      return getDefaultScheme();
+    }
+  }
 
+  /**
+   * @return
+   */
+  private static Scheme<QueuePrinterSettings>[] getDefaultScheme() {
+    QueueScheme scheme = new QueueScheme(PrintPlugin.mLocalizer.msg("defaultScheme", "DefaultScheme"));
+    scheme.setSettings(new QueuePrinterSettings(
+        true,
+        1,
+        PrinterProgramIconSettings.create(
+            new ProgramFieldType[] {
+                ProgramFieldType.EPISODE_TYPE,
+                ProgramFieldType.ORIGIN_TYPE,
+                ProgramFieldType.PRODUCTION_YEAR_TYPE,
+                ProgramFieldType.SHORT_DESCRIPTION_TYPE
+            }, false),
+        PrintPlugin.getInstance().getPluginSettings().deriveDefaultFont(Font.BOLD, 12)));
 
+    return new QueueScheme[] {scheme};
+  }
 
+  private static Scheme<QueuePrinterSettings>[] readSchemesFromStream(ObjectInputStream in)
+      throws IOException, ClassNotFoundException {
+    in.readInt();  // read version
+    int cnt = in.readInt();
+    Scheme<QueuePrinterSettings>[] schemes = new QueueScheme[cnt];
+    for (int i = 0; i < cnt; i++) {
+      String name = (String) in.readObject();
+      schemes[i] = new QueueScheme(name);
+      schemes[i].read(in);
+    }
+    return schemes;
+  }
 
-
+  public static void storeSchemes(final Scheme<QueuePrinterSettings>[] schemes) {
+    String home = Plugin.getPluginManager().getTvBrowserSettings().getTvBrowserUserHome();
+    File schemeFile = new File(home, SCHEME_FILE);
+    try {
+      StreamUtilities.objectOutputStream(schemeFile,
+          out -> {
+            out.writeInt(1); // version
+            out.writeInt(schemes.length);
+            for (Scheme<QueuePrinterSettings> scheme : schemes) {
+              out.writeObject(scheme.getName());
+              scheme.store(out);
+            }
+            out.close();
+          });
+    } catch (IOException e) {
+      ErrorHandler.handle("Could not store settings.", e);
+    }
+  }
 }

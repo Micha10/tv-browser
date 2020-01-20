@@ -26,10 +26,11 @@
 
 package printplugin.printer;
 
+import devplugin.Program;
+
 import java.awt.Graphics;
 
 import printplugin.settings.ProgramIconSettings;
-import devplugin.Program;
 
 
 
@@ -55,7 +56,9 @@ public class ProgramItem implements PositionedIcon {
       mx=x;
       my=y;
     }
+    @Override
     public double getX() { return mx; }
+    @Override
     public double getY() { return my; }
     public int getHeight() {
       return mIcon.getIconHeight();
@@ -65,6 +68,7 @@ public class ProgramItem implements PositionedIcon {
     }
     
     public Program getProgram() { return mProgram; }
+    @Override
     public void paint(Graphics g, int x, int y) {
       mIcon.paintIcon(null, g, x, y);
     }

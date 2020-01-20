@@ -26,6 +26,14 @@
 
 package printplugin.printer;
 
+import devplugin.Channel;
+import devplugin.Marker;
+import devplugin.Plugin;
+import devplugin.PluginAccess;
+import devplugin.PluginManager;
+import devplugin.Program;
+import devplugin.ProgramFieldType;
+
 import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Component;
@@ -45,30 +53,20 @@ import javax.swing.JLabel;
 import printplugin.PrintPlugin;
 import printplugin.settings.PrinterProgramIconSettings;
 import printplugin.settings.ProgramIconSettings;
+
 import util.io.IOUtilities;
 import util.ui.Localizer;
 import util.ui.MultipleFieldReader;
 import util.ui.TextAreaIcon;
 import util.ui.UiUtilities;
-import devplugin.Channel;
-import devplugin.Marker;
-import devplugin.Plugin;
-import devplugin.PluginAccess;
-import devplugin.PluginManager;
-import devplugin.Program;
-import devplugin.ProgramFieldType;
 
-
+@SuppressWarnings("nls")
 public class ProgramIcon implements Icon {
 
-
-  private static final Logger mLog
-    = Logger.getLogger(ProgramIcon.class.getName());
-
+  private static final Logger mLog = Logger.getLogger(ProgramIcon.class.getName());
 
   private static final Composite NORMAL_COMPOSITE = AlphaComposite.SrcOver;
-   private static final Composite PALE_COMPOSITE
-     = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.5F);
+  private static final Composite PALE_COMPOSITE = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.5F);
 
   private ProgramIconSettings mSettings;
 
@@ -93,48 +91,46 @@ public class ProgramIcon implements Icon {
 
   private static final ProgramIconSettings DEFAULT_PROGRAM_ICON_SETTINGS = PrinterProgramIconSettings.create();
 
-
-
   public ProgramIcon(Program prog) {
     this(prog, null, 100, false);
   }
 
-  public ProgramIcon(Program prog, ProgramIconSettings settings, int width, boolean showChannelName, boolean showEndTime) {
+  public ProgramIcon(Program prog, ProgramIconSettings settings, int width, boolean showChannelName,
+      boolean showEndTime) {
 
     if (settings == null) {
       mSettings = DEFAULT_PROGRAM_ICON_SETTINGS;
-    }
-    else {
+    } else {
       mSettings = settings;
     }
     mWidth = width;
 
-    int titleWidth = width- mSettings.getTimeFieldWidth() - 5;
+    int titleWidth = width - mSettings.getTimeFieldWidth() - 5;
     if (showChannelName) {
       mChannelIcon = new ChannelIcon(prog.getChannel(), mSettings.getTitleFont());
-      titleWidth-=mChannelIcon.getIconWidth();
+      titleWidth -= mChannelIcon.getIconWidth();
     }
 
     mTitleIcon = new TextAreaIcon(null, mSettings.getTitleFont(), titleWidth);
     int timefieldWidth = mSettings.getTimeFieldWidth();
-    mDescriptionIcon = new TextAreaIcon(null,mSettings.getTextFont(), width - timefieldWidth - 5 + timefieldWidth/2);
+    mDescriptionIcon = new TextAreaIcon(null, mSettings.getTextFont(), width - timefieldWidth - 5 + timefieldWidth / 2);
     mDescriptionIcon.setMaximumLineCount(3);
 
     if (showEndTime) {
-      mEndTimeIcon = new TextAreaIcon(createTimeString(prog.getMinutes()+prog.getHours()*60+prog.getLength()), mSettings.getTextFont().deriveFont(Font.ITALIC), mDescriptionIcon.getIconWidth());
+      mEndTimeIcon = new TextAreaIcon(createTimeString(prog.getMinutes() + prog.getHours() * 60 + prog.getLength()),
+          mSettings.getTextFont().deriveFont(Font.PLAIN), mDescriptionIcon.getIconWidth());
     }
-
 
     setProgram(prog, -1);
   }
 
-  private String createTimeString(int minutes) {
-    int time = minutes%(60*24);
-    int h = time/60;
-    int m = time%60;
+  private static String createTimeString(int minutes) {
+    int time = minutes % (60 * 24);
+    int h = time / 60;
+    int m = time % 60;
     String hString = Integer.toString(h);
-    String mString = (m<10?"0":"")+m;
-    return Localizer.getLocalizerFor(ProgramIcon.class).msg("timeString","",hString,mString);
+    String mString = (m < 10 ? "0" : "") + m;
+    return Localizer.getLocalizerFor(ProgramIcon.class).msg("timeString", "", hString, mString);
   }
 
   public ProgramIcon(Program prog, ProgramIconSettings settings, int width, boolean showChannelName) {
@@ -146,7 +142,7 @@ public class ProgramIcon implements Icon {
   }
 
   private Icon[] getPluginIcons(Program program) {
-    ArrayList<Icon> list = new ArrayList<Icon>();
+    ArrayList<Icon> list = new ArrayList<>();
 
     String[] iconPluginArr = mSettings.getProgramTableIconPlugins();
     for (String element : iconPluginArr) {
@@ -172,7 +168,7 @@ public class ProgramIcon implements Icon {
     Program oldProgram = mProgram;
     mProgram = program;
 
-    boolean programChanged = (oldProgram != program);
+    boolean programChanged = oldProgram != program;
     if (programChanged) {
       // Get the start time
       mProgramTimeAsString = program.getTimeString();
@@ -183,50 +179,48 @@ public class ProgramIcon implements Icon {
       // Set the new title
       mTitleIcon.setText(program.getTitle());
     }
-    
-    int additionalHeight = Plugin.getPluginManager().getTvBrowserSettings().isUsingExtraSpaceForMarkIcons() && program.getMarkerArr().length > 0 ? 16 : 0;
+
+    int additionalHeight = Plugin.getPluginManager().getTvBrowserSettings().isUsingExtraSpaceForMarkIcons()
+        && program.getMarkerArr().length > 0 ? 16 : 0;
 
     // Calculate the maximum description lines
     int titleHeight = mTitleIcon.getIconHeight();
-    int maxDescLines = 0; //3;
+    int maxDescLines = 0; // 3;
     if (maxHeight != -1) {
       maxDescLines = (maxHeight - titleHeight - additionalHeight) / mSettings.getTextFont().getSize();
     }
 
-    if (programChanged || (maxDescLines != mDescriptionIcon.getMaximumLineCount())) {
+    if (programChanged || maxDescLines != mDescriptionIcon.getMaximumLineCount()) {
       // (Re)set the description text
       mDescriptionIcon.setMaximumLineCount(maxDescLines);
       if (maxDescLines > 0) {
         ProgramFieldType[] infoFieldArr = mSettings.getProgramInfoFields();
-        Reader infoReader = new MultipleFieldReader(program, infoFieldArr);
-        try {
+        try (Reader infoReader = new MultipleFieldReader(program, infoFieldArr)) {
           mDescriptionIcon.setText(infoReader);
-        }
-        catch (IOException exc) {
+        } catch (IOException exc) {
           mLog.log(Level.WARNING, "Reading program info failed for " + program, exc);
         }
       }
       // Calculate the height
-      mHeight = mTitleIcon.getIconHeight() +  mDescriptionIcon.getIconHeight() + additionalHeight;
-      
-      if (mEndTimeIcon!=null) {
-        mHeight+=mEndTimeIcon.getIconHeight();
-      }
+      mHeight = mTitleIcon.getIconHeight() + mDescriptionIcon.getIconHeight() + additionalHeight;
 
+      if (mEndTimeIcon != null) {
+        mHeight += mEndTimeIcon.getIconHeight();
+      }
     }
   }
 
-
+  @Override
   public int getIconHeight() {
     return mHeight;
   }
 
-
+  @Override
   public int getIconWidth() {
     return mWidth;
   }
 
-
+  @Override
   public void paintIcon(Component component, Graphics g, int posX, int posY) {
 
     g.translate(posX, posY);
@@ -234,8 +228,8 @@ public class ProgramIcon implements Icon {
     int width = getIconWidth();
     int height = mHeight;
     Graphics2D grp = (Graphics2D) g;
-    
-    if(component == null) {
+
+    if (component == null) {
       component = new JLabel();
     }
 
@@ -248,9 +242,9 @@ public class ProgramIcon implements Icon {
       if (minutesAfterMidnight < startTime) {
         // The next day has begun -> we have to add 24 * 60 minutes
         // Example: Start time was 23:50 = 1430 minutes after midnight
-        //          now it is       0:03 = 3 minutes after midnight
-        //          elapsedMinutes = (24 * 60) + 3 - 1430 = 13 minutes
-        elapsedMinutes = (24 * 60) + minutesAfterMidnight - startTime;
+        // now it is 0:03 = 3 minutes after midnight
+        // elapsedMinutes = (24 * 60) + 3 - 1430 = 13 minutes
+        elapsedMinutes = 24 * 60 + minutesAfterMidnight - startTime;
       } else {
         elapsedMinutes = minutesAfterMidnight - startTime;
       }
@@ -260,117 +254,114 @@ public class ProgramIcon implements Icon {
       }
 
       grp.setColor(Plugin.getPluginManager().getTvBrowserSettings().getProgramPanelOnAirDarkColor());
-          grp.fillRect(1, 1, width - 2, progressY - 1);
-          grp.setColor(Plugin.getPluginManager().getTvBrowserSettings().getProgramPanelOnAirLightColor());
-          grp.fillRect(1, progressY, width - 2, height - progressY - 1);
-          grp.draw3DRect(0, 0, width - 1, height - 1, true);
-        }
+      grp.fillRect(1, 1, width - 2, progressY - 1);
+      grp.setColor(Plugin.getPluginManager().getTvBrowserSettings().getProgramPanelOnAirLightColor());
+      grp.fillRect(1, progressY, width - 2, height - progressY - 1);
+      grp.draw3DRect(0, 0, width - 1, height - 1, true);
+    }
 
-        // If there are plugins that have marked the program -> paint the background
-        Marker[] markedByPluginArr = getMarkedByPlugins(mProgram);
-        if (mSettings.getPaintPluginMarks() && markedByPluginArr.length != 0) {
-          Color c = Plugin.getPluginManager().getTvBrowserSettings().getColorForMarkingPriority(mProgram.getMarkPriority());
-          
-          if(c != null && mProgram.getMarkPriority() > Program.NO_MARK_PRIORITY) {
-            grp.setColor(c);
-            
-            if(Plugin.getPluginManager().getTvBrowserSettings().isMarkingBorderPainted()) {
-              grp.fill3DRect(0, 0, width, height+2, true);
-            }
-            else {
-              grp.fillRect(0,0,width,height+2);
-            }
-          }
-        }
+    // If there are plugins that have marked the program -> paint the background
+    Marker[] markedByPluginArr = getMarkedByPlugins(mProgram);
+    if (mSettings.getPaintPluginMarks() && markedByPluginArr.length != 0) {
+      Color c = Plugin.getPluginManager().getTvBrowserSettings().getColorForMarkingPriority(mProgram.getMarkPriority());
 
+      if (c != null && mProgram.getMarkPriority() > Program.PRIORITY_MARK_NONE) {
+        grp.setColor(c);
 
-        // Draw all the text
-        if (mSettings.getPaintExpiredProgramsPale() && mProgram.isExpired()) {
-          grp.setColor(Color.gray);
-          component.setForeground(Color.gray);
+        if (Plugin.getPluginManager().getTvBrowserSettings().isMarkingBorderPainted()) {
+          grp.fill3DRect(0, 0, width, height + 2, true);
         } else {
-          grp.setColor(Color.black);
-          component.setForeground(Color.black);
-
-         // grp.setColor(Plugin.getPluginManager().getTvBrowserSettings().getProgramTableForegroundColor());
+          grp.fillRect(0, 0, width, height + 2);
         }
-        grp.setFont(mSettings.getTimeFont());
+      }
+    }
 
-        int timeStringY = mSettings.getTimeFont().getSize();
-        grp.drawString(mProgramTimeAsString, 1, timeStringY);
+    // Draw all the text
+    if (mSettings.getPaintExpiredProgramsPale() && mProgram.isExpired()) {
+      grp.setColor(Color.gray);
+      component.setForeground(Color.gray);
+    } else {
+      grp.setColor(Color.black);
+      component.setForeground(Color.black);
 
-//    if (mEndTimeIcon != null) {
-//        mEndTimeIcon.paintIcon(component, grp, mSettings.getTimeFieldWidth()+mTitleIcon.getIconWidth()-mEndTimeIcon.getIconWidth(), 0);
-//    }
+      // grp.setColor(Plugin.getPluginManager().getTvBrowserSettings().getProgramTableForegroundColor());
+    }
+    grp.setFont(mSettings.getTimeFont());
 
-        mTitleIcon.paintIcon(component, grp, mSettings.getTimeFieldWidth(), 0);
-        mDescriptionIcon.paintIcon(component, grp, mSettings.getTimeFieldWidth()/2, mTitleIcon.getIconHeight());
+    int timeStringY = mSettings.getTimeFont().getSize();
+    grp.drawString(mProgramTimeAsString, 1, timeStringY);
 
-        if (mEndTimeIcon != null) {
-          mEndTimeIcon.paintIcon(component, grp, mSettings.getTimeFieldWidth()/2, mTitleIcon.getIconHeight()+mDescriptionIcon.getIconHeight());
-        }
+    // if (mEndTimeIcon != null) {
+    // mEndTimeIcon.paintIcon(component, grp,
+    // mSettings.getTimeFieldWidth()+mTitleIcon.getIconWidth()-mEndTimeIcon.getIconWidth(),
+    // 0);
+    // }
 
-        if (mChannelIcon != null) {
-          mChannelIcon.paintIcon(component, grp, getIconWidth()-mChannelIcon.getIconWidth(), 0);
-        }
+    mTitleIcon.paintIcon(component, grp, mSettings.getTimeFieldWidth(), 0);
+    mDescriptionIcon.paintIcon(component, grp, mSettings.getTimeFieldWidth() / 2, mTitleIcon.getIconHeight());
 
+    if (mEndTimeIcon != null) {
+      mEndTimeIcon.paintIcon(component, grp, mSettings.getTimeFieldWidth() / 2,
+          mTitleIcon.getIconHeight() + mDescriptionIcon.getIconHeight());
+    }
 
-        // Paint the icons pale if the program is expired
-        if (mSettings.getPaintExpiredProgramsPale() && mProgram.isExpired()) {
-          grp.setComposite(PALE_COMPOSITE);
-        }
+    if (mChannelIcon != null) {
+      mChannelIcon.paintIcon(component, grp, getIconWidth() - mChannelIcon.getIconWidth(), 0);
+    }
 
-        // paint the icons of the plugins that have marked the program
-        int x = width - 1;
-        int y = mTitleIcon.getIconHeight() + mDescriptionIcon.getIconHeight() + 18;
-        y = Math.min(y, height - 1);
+    // Paint the icons pale if the program is expired
+    if (mSettings.getPaintExpiredProgramsPale() && mProgram.isExpired()) {
+      grp.setComposite(PALE_COMPOSITE);
+    }
 
-        if (mSettings.getPaintPluginMarks()) {
-          for (Marker element : markedByPluginArr) {
-            Icon[] icons = element.getMarkIcons(mProgram);
-            if (icons != null) {
-              for(Icon icon : icons) {
-                x -= icon.getIconWidth();
-                icon.paintIcon(component, grp, x, y - icon.getIconHeight());
-              }
-            }
+    // paint the icons of the plugins that have marked the program
+    int x = width - 1;
+    int y = mTitleIcon.getIconHeight() + mDescriptionIcon.getIconHeight() + 18;
+    y = Math.min(y, height - 1);
+
+    if (mSettings.getPaintPluginMarks()) {
+      for (Marker element : markedByPluginArr) {
+        Icon[] icons = element.getMarkIcons(mProgram);
+        if (icons != null) {
+          for (Icon icon : icons) {
+            x -= icon.getIconWidth();
+            icon.paintIcon(component, grp, x, y - icon.getIconHeight());
           }
         }
+      }
+    }
 
-        // Paint the icons on the left side
-        if (mIconArr != null) {
-          x = 2;
-          y = mSettings.getTimeFont().getSize() + 3;
-          for (Icon element : mIconArr) {
-            int iconHeight = element.getIconHeight();
-            if ((y + iconHeight) < mHeight) {
-              element.paintIcon(component, grp, x, y);
-              y += iconHeight + 2;
-            }
-          }
+    // Paint the icons on the left side
+    if (mIconArr != null) {
+      x = 2;
+      y = mSettings.getTimeFont().getSize() + 3;
+      for (Icon element : mIconArr) {
+        int iconHeight = element.getIconHeight();
+        if (y + iconHeight < mHeight) {
+          element.paintIcon(component, grp, x, y);
+          y += iconHeight + 2;
         }
+      }
+    }
 
-        // Reset the old composite
-        if (mSettings.getPaintExpiredProgramsPale() && mProgram.isExpired()) {
-          grp.setComposite(NORMAL_COMPOSITE);
-        }
+    // Reset the old composite
+    if (mSettings.getPaintExpiredProgramsPale() && mProgram.isExpired()) {
+      grp.setComposite(NORMAL_COMPOSITE);
+    }
 
     g.translate(-posX, -posY);
-
   }
 
-
-  private Marker[] getMarkedByPlugins(Program prog) {
+  private static Marker[] getMarkedByPlugins(Program prog) {
     Marker[] access = prog.getMarkerArr();
-    ArrayList<Marker> list = new ArrayList<Marker>();
-    for (int i=0; i<access.length; i++) {
-      if (!access[i].getId().equals(PrintPlugin.getInstance().getId())) {
-        list.add(access[i]);
+    ArrayList<Marker> list = new ArrayList<>();
+    for (Marker acces : access) {
+      if (!acces.getId().equals(PrintPlugin.getInstance().getId())) {
+        list.add(acces);
       }
     }
     return list.toArray(new Marker[list.size()]);
   }
-
 
   private static class ChannelIcon implements Icon {
 
@@ -386,18 +377,19 @@ public class ProgramIcon implements Icon {
       mHeight = mFont.getSize();
     }
 
+    @Override
     public int getIconHeight() {
       return mHeight;
     }
 
+    @Override
     public int getIconWidth() {
       return mWidth;
     }
 
+    @Override
     public void paintIcon(Component c, Graphics g, int x, int y) {
-      g.drawString(mChannel.getName(), x, y+mFont.getSize());
+      g.drawString(mChannel.getName(), x, y + mFont.getSize());
     }
   }
-
-
 }

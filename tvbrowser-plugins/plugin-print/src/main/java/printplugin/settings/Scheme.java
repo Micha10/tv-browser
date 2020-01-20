@@ -26,16 +26,25 @@
 
 package printplugin.settings;
 
+import devplugin.ProgramFieldType;
+
+import java.awt.Font;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
-public abstract class Scheme {
+/**
+ * Represents a template that holds layout and printer settings.
+ * 
+ * @param <S>
+ *              associated {@link Settings} type
+ */
+public abstract class Scheme<S extends Settings> {
 
   private String mName;
-  private Settings mSettings;
+  private S mSettings;
 
-  protected Scheme(String name) {
+  protected Scheme(final String name) {
     setName(name);
   }
 
@@ -43,22 +52,76 @@ public abstract class Scheme {
     return mName;
   }
 
-  public void setName(String name) {
+  public void setName(final String name) {
     mName = name;
   }
 
-  abstract void store(ObjectOutputStream out) throws IOException;
-  abstract void read(ObjectInputStream in) throws IOException, ClassNotFoundException;
+  abstract void store(final ObjectOutputStream out) throws IOException;
 
+  abstract void read(final ObjectInputStream in) throws IOException, ClassNotFoundException;
+
+  @Override
   public String toString() {
     return mName;
   }
 
-  public void setSettings(Settings settings) {
+  public void setSettings(final S settings) {
     mSettings = settings;
   }
 
-  public Settings getSettings() {
+  public S getSettings() {
     return mSettings;
+  }
+
+  protected static ProgramIconSettings readProgramIconSettings(final ObjectInputStream in)
+      throws IOException, ClassNotFoundException {
+    int version = in.readInt(); // version
+    Font textFont = readFont(in);
+    Font titleFont = readFont(in);
+    boolean showPluginMarks = false;
+    if (version > 1) {
+      showPluginMarks = in.readBoolean();
+    }
+    int fieldCnt = in.readInt();
+    ProgramFieldType[] fields = new ProgramFieldType[fieldCnt];
+    for (int i = 0; i < fields.length; i++) {
+      fields[i] = ProgramFieldType.getTypeForId(in.readInt());
+    }
+
+    MutableProgramIconSettings result = new MutableProgramIconSettings(PrinterProgramIconSettings.create());
+    result.setProgramInfoFields(fields);
+    result.setTextFont(textFont);
+    result.setTimeFont(titleFont);
+    result.setTitleFont(titleFont);
+    result.setPaintPluginMarks(showPluginMarks);
+    return result;
+  }
+
+  protected static void writeProgramIconSettings(ProgramIconSettings settings, ObjectOutputStream out)
+      throws IOException {
+    out.writeInt(2); // version
+    writeFont(settings.getTextFont(), out);
+    writeFont(settings.getTitleFont(), out);
+    out.writeBoolean(settings.getPaintPluginMarks());
+
+    ProgramFieldType[] fields = settings.getProgramInfoFields();
+    out.writeInt(fields.length);
+    for (ProgramFieldType field : fields) {
+      out.writeInt(field.getTypeId());
+    }
+  }
+
+  protected static Font readFont(ObjectInputStream in) throws IOException, ClassNotFoundException {
+    String name = (String) in.readObject();
+    int size = in.readInt();
+    int style = in.readInt();
+
+    return new Font(name, style, size);
+  }
+
+  protected static void writeFont(Font f, ObjectOutputStream out) throws IOException {
+    out.writeObject(f.getName());
+    out.writeInt(f.getSize());
+    out.writeInt(f.getStyle());
   }
 }

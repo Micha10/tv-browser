@@ -26,17 +26,17 @@
 
 package printplugin.printer;
 
-
-
 /**
  * The PageModel consists of one or more columns. A PageModel does not map real
  * pages.
  */
 public interface PageModel {
-  
-  public int getColumnCount();
-  public ColumnModel getColumnAt(int inx);
-  public String getHeader();
-  public String getFooter();
-  
+
+  int getColumnCount();
+
+  ColumnModel getColumnAt(int inx);
+
+  String getHeader();
+
+  String getFooter();
 }

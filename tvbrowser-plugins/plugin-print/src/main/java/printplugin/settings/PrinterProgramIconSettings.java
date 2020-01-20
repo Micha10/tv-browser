@@ -26,98 +26,101 @@
 
 package printplugin.settings;
 
+import devplugin.ProgramFieldType;
+
 import java.awt.Font;
 
 import javax.swing.JPanel;
 
+import printplugin.PrintPlugin;
+
 import util.ui.TimeFormatter;
 
-import devplugin.ProgramFieldType;
-
-
+@SuppressWarnings("nls")
 public class PrinterProgramIconSettings implements ProgramIconSettings {
-  
-  private static final Font PROGRAMTITLEFONT=new Font("Dialog",Font.BOLD,12);
-  private static final Font PROGRAMTEXTFONT=new Font("Dialog",Font.PLAIN,10);
-  private static final Font PROGRAMTIMEFONT=new Font("Dialog",Font.BOLD,12);
-  
+
+  private static final Font PROGRAMTITLEFONT = PrintPlugin.getInstance().getPluginSettings()
+      .deriveDefaultFont(Font.BOLD, 12);
+  private static final Font PROGRAMTEXTFONT = PrintPlugin.getInstance().getPluginSettings()
+      .deriveDefaultFont(Font.PLAIN, 10);
+  private static final Font PROGRAMTIMEFONT = PrintPlugin.getInstance().getPluginSettings().deriveDefaultFont(Font.BOLD,
+      12);
+
   private ProgramFieldType[] mProgramInfoFields;
   private boolean mShowPluginMark;
   private int mTimeFileWidth = -1;
-  
+
   protected PrinterProgramIconSettings() {
-    mProgramInfoFields = new ProgramFieldType[]{
-      ProgramFieldType.SHORT_DESCRIPTION_TYPE,
-      ProgramFieldType.ACTOR_LIST_TYPE,
-      ProgramFieldType.DESCRIPTION_TYPE
+    mProgramInfoFields = new ProgramFieldType[] {
+        ProgramFieldType.SHORT_DESCRIPTION_TYPE,
+        ProgramFieldType.ACTOR_LIST_TYPE,
+        ProgramFieldType.DESCRIPTION_TYPE
     };
-    
-    mShowPluginMark=false;
+
+    mShowPluginMark = false;
   }
-  
+
   public static ProgramIconSettings create(ProgramFieldType[] programInfoFields, boolean showPluginMark) {
     PrinterProgramIconSettings settings = new PrinterProgramIconSettings();
     settings.mProgramInfoFields = programInfoFields;
     settings.mShowPluginMark = showPluginMark;
     return settings;
-    
+
   }
-  
+
   public static ProgramIconSettings create() {
     return new PrinterProgramIconSettings();
   }
-	
-	public Font getTitleFont() {
-		return PROGRAMTITLEFONT;
-	}
 
-	
-	public Font getTextFont() {
-		return PROGRAMTEXTFONT;
-	}
-
-	
-	public Font getTimeFont() {
-		return PROGRAMTIMEFONT;
-	}
-
-	
-	public int getTimeFieldWidth() {
-	    if(mTimeFileWidth == -1) {
-	      TimeFormatter time = new TimeFormatter();
-	      
-	      JPanel temp = new JPanel();
-	      mTimeFileWidth = temp.getFontMetrics(temp.getFont()).stringWidth(time.formatTime(23, 59))+4;
-	    }
-	    
-		return mTimeFileWidth;
-	}
-
-
-
-
-
-  
-	public ProgramFieldType[] getProgramInfoFields() {
-    return mProgramInfoFields;
-	}
-
-  public String[] getProgramTableIconPlugins() {
-    return new String[]{"java.programinfo.ProgramInfo"};
+  @Override
+  public Font getTitleFont() {
+    return PROGRAMTITLEFONT;
   }
-	
-	public boolean getPaintExpiredProgramsPale() {
-		return false;
-	}
 
-	
-	public boolean getPaintProgramOnAir() {
-		return false;
-	}
+  @Override
+  public Font getTextFont() {
+    return PROGRAMTEXTFONT;
+  }
 
-	
-	public boolean getPaintPluginMarks() {
-		return mShowPluginMark;
-	}
-  
+  @Override
+  public Font getTimeFont() {
+    return PROGRAMTIMEFONT;
+  }
+
+  @Override
+  public int getTimeFieldWidth() {
+    if (mTimeFileWidth == -1) {
+      TimeFormatter time = new TimeFormatter();
+
+      JPanel temp = new JPanel();
+      mTimeFileWidth = temp.getFontMetrics(temp.getFont()).stringWidth(time.formatTime(23, 59)) + 4;
+    }
+
+    return mTimeFileWidth;
+  }
+
+  @Override
+  public ProgramFieldType[] getProgramInfoFields() {
+    return mProgramInfoFields;
+  }
+
+  @Override
+  public String[] getProgramTableIconPlugins() {
+    return new String[] {"java.programinfo.ProgramInfo"};
+  }
+
+  @Override
+  public boolean getPaintExpiredProgramsPale() {
+    return false;
+  }
+
+  @Override
+  public boolean getPaintProgramOnAir() {
+    return false;
+  }
+
+  @Override
+  public boolean getPaintPluginMarks() {
+    return mShowPluginMark;
+  }
 }

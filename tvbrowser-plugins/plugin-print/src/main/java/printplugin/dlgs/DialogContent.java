@@ -27,6 +27,7 @@
 package printplugin.dlgs;
 
 import java.awt.Component;
+import java.awt.Frame;
 import java.awt.print.PageFormat;
 
 import printplugin.printer.PrintJob;
@@ -37,22 +38,27 @@ import printplugin.settings.Settings;
  * Created by: Martin Oberhauser (martin@tvbrowser.org)
  * Date: 24.04.2005
  * Time: 21:47:27
+ *
+ * @param <S>
+ *              Content specific {@link Settings}
  */
+public interface DialogContent<S extends Settings> {
 
-public interface DialogContent {
+  Component getContent(final Frame parentFrame);
 
-  public Component getContent();
+  String getDialogTitle();
 
-  public String getDialogTitle();
+  S getSettings();
 
-  public Settings getSettings();
-  
-  public void setSettings(Settings settings);
+  void setSettings(final S settings);
 
-  public PrintJob createPrintJob(PageFormat format);
+  PrintJob createPrintJob(final PageFormat format);
 
-  public Scheme createNewScheme(String schemeName);
+  Scheme<S> createNewScheme(final String schemeName);
 
-  public void printingDone();
+  void printingDone();
 
+  void storeSchemes(final Scheme<S>[] schemes);
+
+  Scheme<S>[] loadSchemes();
 }
