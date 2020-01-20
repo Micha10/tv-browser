@@ -229,6 +229,7 @@ tvb-compat/src/main/java/compat/PersonaCompat.java -text svneol=unset#text/plain
 tvb-compat/src/main/java/compat/PersonaCompatListener.java -text svneol=unset#text/plain
 tvb-compat/src/main/java/compat/PluginCompat.java -text svneol=unset#text/plain
 tvb-compat/src/main/java/compat/ProgramCompat.java -text svneol=unset#text/plain
+tvb-compat/src/main/java/compat/ProgramFieldTypeCompat.java -text svneol=unset#text/plain
 tvb-compat/src/main/java/compat/ProgramListCompat.java -text svneol=unset#text/plain
 tvb-compat/src/main/java/compat/StringUtils.java -text svneol=unset#text/plain
 tvb-compat/src/main/java/compat/TvBrowserSettingsCompat.java -text svneol=unset#text/plain
