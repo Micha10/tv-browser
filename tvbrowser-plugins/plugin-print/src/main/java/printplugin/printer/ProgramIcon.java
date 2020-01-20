@@ -26,14 +26,6 @@
 
 package printplugin.printer;
 
-import devplugin.Channel;
-import devplugin.Marker;
-import devplugin.Plugin;
-import devplugin.PluginAccess;
-import devplugin.PluginManager;
-import devplugin.Program;
-import devplugin.ProgramFieldType;
-
 import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Component;
@@ -50,10 +42,16 @@ import java.util.logging.Logger;
 import javax.swing.Icon;
 import javax.swing.JLabel;
 
+import devplugin.Channel;
+import devplugin.Marker;
+import devplugin.Plugin;
+import devplugin.PluginAccess;
+import devplugin.PluginManager;
+import devplugin.Program;
+import devplugin.ProgramFieldType;
 import printplugin.PrintPlugin;
 import printplugin.settings.PrinterProgramIconSettings;
 import printplugin.settings.ProgramIconSettings;
-
 import util.io.IOUtilities;
 import util.ui.Localizer;
 import util.ui.MultipleFieldReader;
@@ -264,8 +262,9 @@ public class ProgramIcon implements Icon {
     Marker[] markedByPluginArr = getMarkedByPlugins(mProgram);
     if (mSettings.getPaintPluginMarks() && markedByPluginArr.length != 0) {
       Color c = Plugin.getPluginManager().getTvBrowserSettings().getColorForMarkingPriority(mProgram.getMarkPriority());
-
-      if (c != null && mProgram.getMarkPriority() > Program.PRIORITY_MARK_NONE) {
+      
+      // c != null && mProgram.getMarkPriority() > Program.PRIORITY_MARK_NONE
+      if (c != null && mProgram.getMarkPriority() > -1) {
         grp.setColor(c);
 
         if (Plugin.getPluginManager().getTvBrowserSettings().isMarkingBorderPainted()) {

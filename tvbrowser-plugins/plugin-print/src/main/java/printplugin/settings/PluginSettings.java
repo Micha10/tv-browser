@@ -1,7 +1,5 @@
 package printplugin.settings;
 
-import devplugin.Program;
-
 import java.awt.Font;
 import java.awt.print.PageFormat;
 import java.awt.print.Paper;
@@ -13,7 +11,6 @@ import javax.print.PrintService;
 
 import printplugin.PrintPlugin;
 import printplugin.PrintPluginSettingsTab;
-
 import util.settings.PropertyBasedSettings;
 
 /**
@@ -61,7 +58,8 @@ public final class PluginSettings extends PropertyBasedSettings {
   }
 
   public int getMarkPriority() {
-    return get(MARK_PRIORITY, Program.PRIORITY_MARK_MIN);
+    // get(MARK_PRIORITY, ProgramCompat.PRIORITY_MARK_MIN)
+    return get(MARK_PRIORITY, 0);
   }
 
   public void setPageFormatType(final PageFormatType pageFormatType) {

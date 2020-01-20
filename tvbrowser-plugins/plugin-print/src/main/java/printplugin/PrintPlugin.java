@@ -26,17 +26,6 @@
 
 package printplugin;
 
-import devplugin.ActionMenu;
-import devplugin.ContextMenuSeparatorAction;
-import devplugin.Plugin;
-import devplugin.PluginInfo;
-import devplugin.PluginTreeNode;
-import devplugin.Program;
-import devplugin.ProgramReceiveTarget;
-import devplugin.SettingsTab;
-import devplugin.ThemeIcon;
-import devplugin.Version;
-
 import java.awt.event.ActionEvent;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -49,6 +38,16 @@ import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.ImageIcon;
 
+import devplugin.ActionMenu;
+import devplugin.ContextMenuSeparatorAction;
+import devplugin.Plugin;
+import devplugin.PluginInfo;
+import devplugin.PluginTreeNode;
+import devplugin.Program;
+import devplugin.ProgramReceiveTarget;
+import devplugin.SettingsTab;
+import devplugin.ThemeIcon;
+import devplugin.Version;
 import printplugin.dlgs.DialogContent;
 import printplugin.dlgs.MainPrintDialog;
 import printplugin.dlgs.SettingsDialog;
@@ -60,7 +59,6 @@ import printplugin.settings.ProgramInfoPrintSettings;
 import printplugin.settings.Settings;
 import printplugin.util.Utils;
 import printplugin.util.Utils.FontInfo;
-
 import util.ui.Localizer;
 import util.ui.UiUtilities;
 
@@ -337,8 +335,9 @@ public final class PrintPlugin extends Plugin {
   @Override
   public int getMarkPriorityForProgram(final Program p) {
     if (mMarkPriority == -2 && mSettings != null) {
+      //mSettings.getProperty("markPriority", String.valueOf(ProgramCompat.PRIORITY_MARK_MIN))
       mMarkPriority = Integer
-          .parseInt(mSettings.getProperty("markPriority", String.valueOf(Program.PRIORITY_MARK_MIN)));
+          .parseInt(mSettings.getProperty("markPriority", String.valueOf(0)));
       return mMarkPriority;
     } else {
       return mMarkPriority;
