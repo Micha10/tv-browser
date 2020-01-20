@@ -15,19 +15,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
- *
- * CVS information:
- *  $RCSfile$
- *   $Source$
- *     $Date: 2010-01-17 19:17:30 +0100 (So, 17 Jan 2010) $
- *   $Author: troggan $
- * $Revision: 6338 $
  */
 
 package printplugin.dlgs.components;
 
 import com.jgoodies.forms.builder.PanelBuilder;
-import com.jgoodies.forms.layout.CellConstraints;
+import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
 
 import devplugin.Channel;
@@ -49,9 +42,12 @@ import util.ui.Localizer;
 import util.ui.UiUtilities;
 
 /**
- * Created by: Martin Oberhauser (martin@tvbrowser.org)
- * Date: 06.02.2005
- * Time: 21:11:24
+ * {@link JPanel} that let the user choose between all and
+ * selected channels using the {@link ChannelChooserDlg}.
+ *
+ * @author Martin Oberhauser (martin@tvbrowser.org)
+ * @author troggan (2010-01-17 19:17:30 +0100)
+ * @since 06.02.2005 21:11:24
  */
 @SuppressWarnings("nls")
 public class ChannelSelectionPanel extends JPanel implements ChangeListener {
@@ -66,26 +62,24 @@ public class ChannelSelectionPanel extends JPanel implements ChangeListener {
 
   private Channel[] mChannels;
 
-  public ChannelSelectionPanel(final Frame dlgParent, Channel[] channels) {
+  public ChannelSelectionPanel(final Frame dlgParent, final Channel[] channels) {
     mChannels = channels;
 
-    CellConstraints cc = new CellConstraints();
-
-    PanelBuilder pb = new PanelBuilder(new FormLayout("5dlu,pref:grow,10dlu,pref",
+    final PanelBuilder pb = new PanelBuilder(new FormLayout("5dlu,pref:grow,10dlu,pref",
         "pref,5dlu,pref,2dlu,pref,10dlu"), this);
-    pb.addSeparator(Localizer.getLocalization(Localizer.I18N_CHANNELS), cc.xyw(1, 1, 4));
-    pb.add(mAllChannelsRb = new JRadioButton(mLocalizer.msg("all", "All")), cc.xy(2, 3));
-    pb.add(mSelectedChannelsRb = new JRadioButton(), cc.xy(2, 5));
-    pb.add(mChangeSelectedChannelsBt = new JButton(mLocalizer.ellipsisMsg("change", "Change")), cc.xy(4, 5));
+    pb.addSeparator(Localizer.getLocalization(Localizer.I18N_CHANNELS), CC.xyw(1, 1, 4));
+    pb.add(mAllChannelsRb = new JRadioButton(mLocalizer.msg("all", "All")), CC.xy(2, 3));
+    pb.add(mSelectedChannelsRb = new JRadioButton(), CC.xy(2, 5));
+    pb.add(mChangeSelectedChannelsBt = new JButton(mLocalizer.ellipsisMsg("change", "Change")), CC.xy(4, 5));
 
-    ButtonGroup group = new ButtonGroup();
+    final ButtonGroup group = new ButtonGroup();
     group.add(mAllChannelsRb);
     group.add(mSelectedChannelsRb);
 
     updateSelectedChannelsPanel();
 
     mChangeSelectedChannelsBt.addActionListener(event -> {
-      ChannelChooserDlg dlg = new ChannelChooserDlg(UiUtilities.getLastModalChildOf(dlgParent), mChannels, null);
+      final ChannelChooserDlg dlg = new ChannelChooserDlg(UiUtilities.getLastModalChildOf(dlgParent), mChannels, null);
       dlg.setMinimumSize(dlg.getSize());
       UiUtilities.centerAndShow(dlg);
       mChannels = dlg.getChannels();
@@ -125,7 +119,7 @@ public class ChannelSelectionPanel extends JPanel implements ChangeListener {
     return mChannels;
   }
 
-  public void setChannels(Channel[] channels) {
+  public void setChannels(final Channel[] channels) {
     mChannels = channels;
     if (mChannels == null) {
       mAllChannelsRb.setSelected(true);

@@ -1,3 +1,23 @@
+/*
+ * TV-Browser
+ * Copyright (C) 04-2003 Martin Oberhauser (martin@tvbrowser.org)
+ * Copyright (c) 2020 Thorsten Giesekce (tvbrowser@giesecke.org)
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ */
+
 package printplugin.dlgs.components;
 
 import java.awt.Color;
@@ -21,9 +41,15 @@ import javax.swing.JComponent;
 
 /**
  * A {@link JComponent} that displays a preview of a given {@link Printable}
- * object.
- * The component supports scrolling, zooming and selecting a specific page of
- * the printable instance.
+ * object. The component supports scrolling, zooming, and the selection of
+ * specific pages of the printable object.
+ *
+ * Mouse wheel support, page centering, text antialias, and dynamic crop mark
+ * support is available since version 3.0.2.5 beta (r9077 2020-01-20).
+ *
+ * @author bananeweizen
+ * @author tgiesecke
+ * @since 2010-06-28 19:33:48
  */
 public class PreviewComponent extends JComponent {
 
@@ -131,6 +157,9 @@ public class PreviewComponent extends JComponent {
     addMouseWheelListener(mMouseAdapter);
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public Dimension getMinimumSize() {
     return new Dimension(
@@ -138,6 +167,11 @@ public class PreviewComponent extends JComponent {
         (int) (mInitialSize.height * MIN_ZOOM));
   }
 
+  /**
+   * Validates the zoom boundaries, and computes and applies
+   * the preferred size of the component (multiplies the
+   * initial size with the current zoom factor).
+   */
   public void updateSize() {
     if (mZoom < MIN_ZOOM) {
       mZoom = MIN_ZOOM;
@@ -154,7 +188,12 @@ public class PreviewComponent extends JComponent {
   /**
    * Centers the component relative to a given point or its center point with
    * inside the visible rectangle.
+   *
    * The zoom level is taken into account.
+   *
+   * @param point
+   *                the reference point for centering the component relatively
+   *                (e. g. zoom in)
    */
   private void centerRelativeToMouse(final Point2D point) {
     final Rectangle visibleRect = getVisibleRect();
@@ -170,6 +209,15 @@ public class PreviewComponent extends JComponent {
     scrollRectToVisible(visibleRect);
   }
 
+  /**
+   * Sets the zoom factor to the given value in a defined range. If the value is
+   * outside the range, the value is corrected to the minimum or maximum zoom
+   * level.
+   *
+   * @param zoom
+   *               the zoom factor (negative values zoom out, positive values zoom
+   *               in)
+   */
   public void setZoom(final double zoom) {
     mZoom = zoom;
     updateSize();
@@ -177,22 +225,51 @@ public class PreviewComponent extends JComponent {
     repaint(getVisibleRect());
   }
 
+  /**
+   * Returns the initial size of the component.
+   *
+   * @return initial size of the component
+   */
   public Dimension getInitialSize() {
     return mInitialSize;
   }
 
+  /**
+   * Returns the current zoom factor.
+   *
+   * @return current zoom factor
+   */
   public double getZoom() {
     return mZoom;
   }
 
+  /**
+   * Returns <code>true</code> if the current zoom factor is
+   * below the minimum zoom factor.
+   *
+   * @return <code>true</code> if the current zoom factor is
+   *           below the minimum zoom factor
+   */
   public boolean minZoom() {
     return mZoom <= MIN_ZOOM;
   }
 
+  /**
+   * Returns <code>true</code> if the current zoom factor is
+   * above the maximum zoom factor.
+   *
+   * @return <code>true</code> if the current zoom factor is
+   *           above the maximum zoom factor
+   */
   public boolean maxZoom() {
     return mZoom >= MAX_ZOOM;
   }
 
+  /**
+   * Zooms in programmatically with a fixed step width.
+   *
+   * @see PreviewComponent#setZoom(double)
+   */
   public void zoomIn() {
     if (mZoom < MAX_ZOOM) {
       mZoom += ZOOM_STEP;
@@ -200,6 +277,11 @@ public class PreviewComponent extends JComponent {
     }
   }
 
+  /**
+   * Zooms out programmatically with a fixed step width.
+   *
+   * @see PreviewComponent#setZoom(double)
+   */
   public void zoomOut() {
     if (mZoom > MIN_ZOOM) {
       mZoom -= ZOOM_STEP;
@@ -207,6 +289,12 @@ public class PreviewComponent extends JComponent {
     }
   }
 
+  /**
+   * Selects the next page index of the given printable object
+   * and repaints the visible part of the component.
+   *
+   * Will do nothing if the index does not exist.
+   */
   public void next() {
     if (mPageIndex < mNumberOfPages - 1) {
       mPageIndex++;
@@ -214,6 +302,12 @@ public class PreviewComponent extends JComponent {
     }
   }
 
+  /**
+   * Selects the previous page index of the given printable object
+   * and repaints the visible part of the component.
+   *
+   * Will do nothing if the index does not exist.
+   */
   public void previous() {
     if (mPageIndex > 0) {
       mPageIndex--;
@@ -221,10 +315,20 @@ public class PreviewComponent extends JComponent {
     }
   }
 
+  /**
+   * Returns the page count of the given printable object.
+   *
+   * @return page count of the printable object
+   */
   public int getNumberOfPages() {
     return mNumberOfPages;
   }
 
+  /**
+   * Returns the current selected index of the printable object.
+   *
+   * @return selected index of the printable object
+   */
   public int getPageIndex() {
     return mPageIndex;
   }
@@ -245,6 +349,9 @@ public class PreviewComponent extends JComponent {
     }
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public void paintComponent(final Graphics graphics) {
     try {
@@ -311,6 +418,10 @@ public class PreviewComponent extends JComponent {
     }
   }
 
+  /**
+   * Draws crop marks in the boundaries of the imageable area for the given page
+   * format.
+   */
   private static void drawCropMarks(final Graphics2D graphics2d, final PageFormat pageFormat) {
     final double imageableWidth = pageFormat.getImageableWidth();
     final double imageableHeight = pageFormat.getImageableHeight();

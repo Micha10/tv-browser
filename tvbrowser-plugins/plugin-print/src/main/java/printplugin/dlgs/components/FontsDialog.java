@@ -15,13 +15,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
- *
- * CVS information:
- *  $RCSfile$
- *   $Source$
- *     $Date: 2009-04-25 09:58:28 +0200 (Sa, 25 Apr 2009) $
- *   $Author: Bananeweizen $
- * $Revision: 5670 $
  */
 
 package printplugin.dlgs.components;
@@ -45,6 +38,13 @@ import util.ui.Localizer;
 import util.ui.UiUtilities;
 import util.ui.WindowClosingIf;
 
+/**
+ * A {@link JDialog} that let the user select fonts for different parts of
+ * the program text to print: title, description, and dates (optional).
+ *
+ * @author Bananeweizen
+ * @since 2009-04-25 09:58:28 +0200
+ */
 @SuppressWarnings("nls")
 public class FontsDialog extends JDialog implements WindowClosingIf {
 
@@ -61,7 +61,21 @@ public class FontsDialog extends JDialog implements WindowClosingIf {
   private FontChooserPanel mDateFontPanel;
   private int mResult = CANCEL;
 
-  public FontsDialog(Frame parent, Font titleFont, Font descriptionFont, Font dateFont) {
+  /**
+   * Creates a new dialog instance with the given parameters.
+   *
+   * @param parent
+   *                          the parent {@link Frame} of this dialog
+   * @param titleFont
+   *                          the initial font that is used for program titles
+   * @param descriptionFont
+   *                          the initial font that is used for program content
+   *                          (description)
+   * @param dateFont
+   *                          the initial font that is used to display dates
+   *                          (optional)
+   */
+  public FontsDialog(final Frame parent, final Font titleFont, final Font descriptionFont, final Font dateFont) {
     super(parent, true);
     setTitle(mLocalizer.msg("dialog.title", "Fonts"));
 
@@ -77,13 +91,7 @@ public class FontsDialog extends JDialog implements WindowClosingIf {
     getRootPane().getDefaultButton().requestFocus();
   }
 
-  /**
-   * @param titleFont
-   * @param descriptionFont
-   * @param dateFont
-   * @return
-   */
-  private JPanel createForm(Font titleFont, Font descriptionFont, Font dateFont) {
+  private JPanel createForm(final Font titleFont, final Font descriptionFont, final Font dateFont) {
 
     mTitleFontPanel = new FontChooserPanel(mLocalizer.msg("title", "Title"), titleFont, true);
     mDescriptionFontPanel = new FontChooserPanel(mLocalizer.msg("description", "Description"), descriptionFont, true);
@@ -102,12 +110,9 @@ public class FontsDialog extends JDialog implements WindowClosingIf {
     return form;
   }
 
-  /**
-   * @return
-   */
   private JPanel createButtonBar() {
 
-    JButton okBt = new JButton(Localizer.getLocalization(Localizer.I18N_OK));
+    final JButton okBt = new JButton(Localizer.getLocalization(Localizer.I18N_OK));
     okBt.addActionListener(e -> {
       mResult = OK;
       setVisible(false);
@@ -115,7 +120,7 @@ public class FontsDialog extends JDialog implements WindowClosingIf {
     okBt.setActionCommand("ok");
     okBt.setDefaultCapable(true);
 
-    JButton cancelBt = new JButton(Localizer.getLocalization(Localizer.I18N_CANCEL));
+    final JButton cancelBt = new JButton(Localizer.getLocalization(Localizer.I18N_CANCEL));
     cancelBt.addActionListener(e -> close());
     cancelBt.setActionCommand("cancel");
 

@@ -15,13 +15,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
- *
- * CVS information:
- *  $RCSfile$
- *   $Source$
- *     $Date: 2006-03-06 17:29:38 +0100 (Mo, 06 Mrz 2006) $
- *   $Author: troggan $
- * $Revision: 1944 $
  */
 
 package printplugin.dlgs.components;
@@ -56,6 +49,17 @@ import util.ui.Localizer;
 import util.ui.TimeFormatter;
 import util.ui.UiUtilities;
 
+/**
+ * {@link JPanel} that displays a (dummy) program entry to show
+ * the selected fonts.
+ *
+ * Lets the user choose {@link ProgramFieldType} entries and fonts.
+ *
+ * @author troggan
+ * @see FontsDialog
+ * @see ProgramItemFieldsConfigDlg
+ * @since 2006-03-06 17:29:38 +0100
+ */
 @SuppressWarnings("nls")
 public class ProgramPreviewPanel extends JPanel {
 
@@ -64,13 +68,38 @@ public class ProgramPreviewPanel extends JPanel {
   /** The localizer for this class. */
   private static final Localizer mLocalizer = Localizer.getLocalizerFor(ProgramPreviewPanel.class);
 
-  private MutableProgramIconSettings mProgramIconSettings;
-  private JLabel mProgramIconLabel;
-  private Font mDateFont;
-  private JLabel mDateLabel;
-  private JPanel mIconPanel;
+  private final JLabel mProgramIconLabel;
+  private final JLabel mDateLabel;
+  private final JPanel mIconPanel;
 
-  public ProgramPreviewPanel(final Frame dlgParent, ProgramIconSettings programIconSettings, Font dateFont) {
+  private Font mDateFont;
+  private MutableProgramIconSettings mProgramIconSettings;
+
+  /**
+   * Creates a new instance for the given parent frame.
+   * Uses default values.
+   *
+   * @param dlgParent
+   *                    the parent frame of the dialog
+   */
+  public ProgramPreviewPanel(final Frame dlgParent) {
+    this(dlgParent, null, null);
+  }
+
+  /**
+   * Creates a new instance with the given parameters.
+   *
+   * @param dlgParent
+   *                              the parent frame of the dialog
+   * @param programIconSettings
+   *                              settings containing the selected program field
+   *                              type entries and fonts (can be null)
+   * @param dateFont
+   *                              an optional font that is used to display dates
+   *                              (can be null)
+   */
+  public ProgramPreviewPanel(final Frame dlgParent, final ProgramIconSettings programIconSettings,
+      final Font dateFont) {
 
     setLayout(new BorderLayout(3, 3));
 
@@ -79,8 +108,8 @@ public class ProgramPreviewPanel extends JPanel {
       setProgramIconSettings(programIconSettings);
     }
 
-    JButton fontsButton = new JButton(mLocalizer.msg("fonts", "Fonts\u2026"));
-    JButton fieldsButton = new JButton(mLocalizer.msg("fields", "Fields\u2026"));
+    final JButton fontsButton = new JButton(mLocalizer.msg("fonts", "Fonts\u2026"));
+    final JButton fieldsButton = new JButton(mLocalizer.msg("fields", "Fields\u2026"));
 
     mDateLabel = new JLabel(new Date().getLongDateString());
     mDateLabel.setForeground(Color.BLACK);
@@ -91,9 +120,9 @@ public class ProgramPreviewPanel extends JPanel {
       private static final long serialVersionUID = -2983369556171749885L;
 
       @Override
-      protected void paintChildren(Graphics g) {
-        Graphics2D g2d = (Graphics2D) g;
-        Color c = g2d.getColor();
+      protected void paintChildren(final Graphics g) {
+        final Graphics2D g2d = (Graphics2D) g;
+        final Color c = g2d.getColor();
         g2d.setColor(Color.WHITE);
         g2d.fillRect(1, 1, getWidth() - 1, getHeight() - 1);
         g2d.setColor(c);
@@ -107,7 +136,7 @@ public class ProgramPreviewPanel extends JPanel {
     }
     mIconPanel.add(mProgramIconLabel, BorderLayout.CENTER);
 
-    JScrollPane scrollPane = new JScrollPane(mIconPanel);
+    final JScrollPane scrollPane = new JScrollPane(mIconPanel);
     scrollPane.setPreferredSize(new Dimension(0, 90));
     add(scrollPane, BorderLayout.CENTER);
     add(new ButtonStackBuilder().addButton(fontsButton, fieldsButton).build(), BorderLayout.LINE_END);
@@ -116,12 +145,12 @@ public class ProgramPreviewPanel extends JPanel {
       if (mProgramIconSettings == null) {
         return;
       }
-      FontsDialog dlg = new FontsDialog(dlgParent, mProgramIconSettings.getTitleFont(),
+      final FontsDialog dlg = new FontsDialog(dlgParent, mProgramIconSettings.getTitleFont(),
           mProgramIconSettings.getTextFont(), mDateFont);
       UiUtilities.centerAndShow(dlg);
       if (dlg.getResult() == FontsDialog.OK) {
-        Font titleFont = dlg.getTitleFont();
-        Font descFont = dlg.getDescriptionFont();
+        final Font titleFont = dlg.getTitleFont();
+        final Font descFont = dlg.getDescriptionFont();
         mDateFont = dlg.getDateFont();
         mProgramIconSettings.setTextFont(descFont);
         mProgramIconSettings.setTimeFont(titleFont);
@@ -134,13 +163,11 @@ public class ProgramPreviewPanel extends JPanel {
       if (mProgramIconSettings == null) {
         return;
       }
-      ProgramItemFieldsConfigDlg dlg = new ProgramItemFieldsConfigDlg(dlgParent,
+      final ProgramItemFieldsConfigDlg dlg = new ProgramItemFieldsConfigDlg(dlgParent,
           mProgramIconSettings.getProgramInfoFields());
       UiUtilities.centerAndShow(dlg);
-
       if (dlg.getResult() == ProgramItemFieldsConfigDlg.OK) {
-        ProgramFieldType[] fieldTypes = dlg.getProgramItemFieldTypes();
-        mProgramIconSettings.setProgramInfoFields(fieldTypes);
+        mProgramIconSettings.setProgramInfoFields(dlg.getProgramItemFieldTypes());
         updatePreviewPanel();
       }
     });
@@ -148,10 +175,9 @@ public class ProgramPreviewPanel extends JPanel {
     updatePreviewPanel();
   }
 
-  public ProgramPreviewPanel(Frame dlgParent) {
-    this(dlgParent, null, null);
-  }
-
+  /**
+   * Updates the panel after changes where made by the user.
+   */
   public void updatePreviewPanel() {
     mProgramIconLabel.setIcon(createDemoProgramPanel(mProgramIconSettings));
     mDateLabel.setFont(mDateFont);
@@ -160,17 +186,17 @@ public class ProgramPreviewPanel extends JPanel {
     }
   }
 
-  public void setProgramIconSettings(ProgramIconSettings settings) {
+  public void setProgramIconSettings(final ProgramIconSettings settings) {
     mProgramIconSettings = new MutableProgramIconSettings(settings);
     updatePreviewPanel();
   }
 
-  public void setDateFont(Font f) {
+  public void setDateFont(final Font f) {
     mDateFont = f;
     updatePreviewPanel();
   }
 
-  public void setShowPluginMarking(boolean show) {
+  public void setShowPluginMarking(final boolean show) {
     mProgramIconSettings.setPaintPluginMarks(show);
   }
 

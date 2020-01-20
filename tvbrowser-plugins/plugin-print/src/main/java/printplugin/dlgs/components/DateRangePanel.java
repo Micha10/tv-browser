@@ -15,13 +15,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
- *
- * CVS information:
- *  $RCSfile$
- *   $Source$
- *     $Date: 2010-06-28 19:33:48 +0200 (Mo, 28 Jun 2010) $
- *   $Author: bananeweizen $
- * $Revision: 6662 $
  */
 
 package printplugin.dlgs.components;
@@ -41,6 +34,13 @@ import printplugin.util.Utils;
 
 import util.ui.Localizer;
 
+/**
+ * {@link JPanel} that let the user a date range which is defined by
+ * a start date and an amount of days (start date + n days).
+ *
+ * @author bananeweizen
+ * @since 2010-06-28 19:33:48 +0200
+ */
 @SuppressWarnings({"boxing", "nls"})
 public class DateRangePanel extends JPanel {
 
@@ -62,13 +62,13 @@ public class DateRangePanel extends JPanel {
     pb.addLabel(mLocalizer.msg("days", "Days"), CC.xy(10, 3));
   }
 
-  public void setFromDate(Date date) {
+  public void setFromDate(final Date date) {
     if (date != null) {
       mDateCb.setSelectedItem(date);
     }
   }
 
-  public void setNumberOfDays(int days) {
+  public void setNumberOfDays(final int days) {
     mDayCountSpinner.setValue(days);
   }
 

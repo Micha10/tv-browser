@@ -15,13 +15,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
- *
- * CVS information:
- *  $RCSfile$
- *   $Source$
- *     $Date: 2010-06-28 19:33:48 +0200 (Mo, 28 Jun 2010) $
- *   $Author: bananeweizen $
- * $Revision: 6662 $
  */
 
 package printplugin.dlgs.components;
@@ -47,6 +40,13 @@ import util.ui.OrderChooser;
 import util.ui.UiUtilities;
 import util.ui.WindowClosingIf;
 
+/**
+ * {@link JDialog} that lets the user choose from a list of
+ * {@link ProgramFieldType} items to display while printing.
+ *
+ * @author bananeweizen
+ * @since 2010-06-28 19:33:48 +0200
+ */
 @SuppressWarnings("nls")
 public class ProgramItemFieldsConfigDlg extends JDialog implements WindowClosingIf {
 
@@ -54,11 +54,22 @@ public class ProgramItemFieldsConfigDlg extends JDialog implements WindowClosing
 
   private static final Localizer mLocalizer = Localizer.getLocalizerFor(ProgramItemFieldsConfigDlg.class);
 
-  private OrderChooser<ProgramFieldType> mOrderChooser;
   protected static final int OK = 0;
   private static final int CANCEL = 1;
+
+  private final OrderChooser<ProgramFieldType> mOrderChooser;
+
   private int mResult = CANCEL;
 
+  /**
+   * Creates a new instance of the dialog using the given parent frame and field
+   * types.
+   *
+   * @param parent
+   *                     the parent frame
+   * @param fieldTypes
+   *                     the {@link ProgramFieldType} array for initialization
+   */
   public ProgramItemFieldsConfigDlg(Frame parent, ProgramFieldType[] fieldTypes) {
 
     super(parent, mLocalizer.msg("configureProgram", "Configure program data"), true);
@@ -87,7 +98,6 @@ public class ProgramItemFieldsConfigDlg extends JDialog implements WindowClosing
     contentPane.add(mOrderChooser = new OrderChooser<>(fieldTypes, getAvailableTypes(), true), BorderLayout.CENTER);
     contentPane.add(new ButtonBarBuilder().addGlue().addButton(okBt, cancelBt).build(), BorderLayout.PAGE_END);
 
-    // pack();
     final Dimension dimension = getSize();
     dimension.height = Math.min(330, getGraphicsConfiguration().getBounds().height / 3);
     dimension.width = Math.max(dimension.width, 437);
@@ -97,18 +107,28 @@ public class ProgramItemFieldsConfigDlg extends JDialog implements WindowClosing
     okBt.requestFocus();
   }
 
+  /**
+   * Returns the result (OK or Cancel).
+   *
+   * @return the result (OK or Cancel)
+   */
   public int getResult() {
     return mResult;
   }
 
+  /**
+   * Returns the selected {@link ProgramFieldType} entries as an array.
+   *
+   * @return the selected {@link ProgramFieldType} entries as an array
+   */
   public ProgramFieldType[] getProgramItemFieldTypes() {
     return mOrderChooser.getOrderList().toArray(new ProgramFieldType[0]);
   }
 
   private static ProgramFieldType[] getAvailableTypes() {
-    List<ProgramFieldType> typeList = new ArrayList<>();
+    final List<ProgramFieldType> typeList = new ArrayList<>();
 
-    Iterator<ProgramFieldType> typeIter = ProgramFieldType.getTypeIterator();
+    final Iterator<ProgramFieldType> typeIter = ProgramFieldType.getTypeIterator();
     while (typeIter.hasNext()) {
       ProgramFieldType type = typeIter.next();
 
@@ -121,11 +141,14 @@ public class ProgramItemFieldsConfigDlg extends JDialog implements WindowClosing
       }
     }
 
-    ProgramFieldType[] typeArr = new ProgramFieldType[typeList.size()];
+    final ProgramFieldType[] typeArr = new ProgramFieldType[typeList.size()];
     typeList.toArray(typeArr);
     return typeArr;
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public void close() {
     mResult = CANCEL;

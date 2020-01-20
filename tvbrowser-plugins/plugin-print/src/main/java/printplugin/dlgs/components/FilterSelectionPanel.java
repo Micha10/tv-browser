@@ -16,6 +16,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
+
 package printplugin.dlgs.components;
 
 import com.jgoodies.forms.builder.PanelBuilder;
@@ -31,8 +32,8 @@ import javax.swing.JPanel;
 import util.ui.Localizer;
 
 /**
- * A panel with the settings of the
- * program filter for the printing.
+ * A {@link JPanel} that let the user choose from a list of
+ * {@link ProgramFilter} entries to filter program data.
  *
  * @author René Mach
  * @since 2.5
@@ -44,7 +45,7 @@ public class FilterSelectionPanel extends JPanel {
 
   private static final Localizer mLocalizer = Localizer.getLocalizerFor(FilterSelectionPanel.class);
 
-  private JComboBox<ProgramFilter> mFilterSelection;
+  private final JComboBox<ProgramFilter> mFilterSelection;
 
   public FilterSelectionPanel() {
     final PanelBuilder pb = new PanelBuilder(new FormLayout("5dlu,pref,10dlu,30dlu:grow",

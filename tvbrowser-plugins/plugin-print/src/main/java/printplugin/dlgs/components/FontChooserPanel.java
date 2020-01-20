@@ -1,3 +1,23 @@
+/*
+ * TV-Browser
+ * Copyright (C) 04-2003 Martin Oberhauser (martin@tvbrowser.org)
+ * Copyright (c) 2020 Thorsten Giesecke (tvbrowser@giesecke.org)
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ */
+
 package printplugin.dlgs.components;
 
 import java.awt.Component;
@@ -21,8 +41,12 @@ import printplugin.util.Utils;
 /**
  * An enhanced {@link util.ui.FontChooserPanel} that displays the available
  * fonts using their glyphs.
+ *
  * Non-printable fonts (i.e. symbol fonts) are visualized strike-through with
- * the default font.
+ * the UI's default font.
+ *
+ * @author tgiesecke
+ * @since 3.0.2.5 beta
  */
 public final class FontChooserPanel extends util.ui.FontChooserPanel {
 
@@ -37,10 +61,34 @@ public final class FontChooserPanel extends util.ui.FontChooserPanel {
 
   private boolean mDisplayFonts = true;
 
+  /**
+   * Creates a new instance with the given title and initial font.
+   * The chooser has no style selector.
+   *
+   * @param title
+   *                       the title label of the font chooser
+   * @param selectedFont
+   *                       the initial selected font
+   */
   public FontChooserPanel(final String title, final Font selectedFont) {
     this(title, selectedFont, false);
   }
 
+  /**
+   * Creates a new instance with the given title and initial font.
+   *
+   * If set, a style selector will be displayed to choose between
+   * plain, bold, italic, and bold-italic variants of the selected
+   * font.
+   *
+   * @param title
+   *                       the title label of the font chooser
+   * @param selectedFont
+   *                       the initial selected font
+   * @param showStyle
+   *                       if <code>true</code>, a style selector will be
+   *                       displayed
+   */
   public FontChooserPanel(final String title, final Font selectedFont, final boolean showStyle) {
     super(title, null, showStyle);
     modifyFontComboBox();
@@ -114,10 +162,24 @@ public final class FontChooserPanel extends util.ui.FontChooserPanel {
     return font;
   }
 
+  /**
+   * Returns <code>true</code> if the fonts are displayed in the {@link JComboBox}
+   * (WYSIWYG).
+   *
+   * @return <code>true</code> if the fonts are previewed in the combo box
+   */
   public boolean isDisplayFonts() {
     return mDisplayFonts;
   }
 
+  /**
+   * If set to <code>true</code> the fonts are displayed in the {@link JComboBox}
+   * (WYSIWYG).
+   *
+   * @param displayFonts
+   *                       <code>true</code> if the fonts should be previewed in
+   *                       the combo box
+   */
   public void setDisplayFonts(final boolean displayFonts) {
     mDisplayFonts = displayFonts;
   }
