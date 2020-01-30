@@ -15,16 +15,17 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
- *
- * CVS information:
- *  $RCSfile$
- *   $Source$
- *     $Date: 2010-06-28 19:33:48 +0200 (Mo, 28 Jun 2010) $
- *   $Author: bananeweizen $
- * $Revision: 6662 $
  */
 
 package printplugin.printer;
+
+import devplugin.Channel;
+import devplugin.Marker;
+import devplugin.Plugin;
+import devplugin.PluginAccess;
+import devplugin.PluginManager;
+import devplugin.Program;
+import devplugin.ProgramFieldType;
 
 import java.awt.AlphaComposite;
 import java.awt.Color;
@@ -42,16 +43,10 @@ import java.util.logging.Logger;
 import javax.swing.Icon;
 import javax.swing.JLabel;
 
-import devplugin.Channel;
-import devplugin.Marker;
-import devplugin.Plugin;
-import devplugin.PluginAccess;
-import devplugin.PluginManager;
-import devplugin.Program;
-import devplugin.ProgramFieldType;
 import printplugin.PrintPlugin;
 import printplugin.settings.PrinterProgramIconSettings;
 import printplugin.settings.ProgramIconSettings;
+
 import util.io.IOUtilities;
 import util.ui.Localizer;
 import util.ui.MultipleFieldReader;
@@ -262,7 +257,7 @@ public class ProgramIcon implements Icon {
     Marker[] markedByPluginArr = getMarkedByPlugins(mProgram);
     if (mSettings.getPaintPluginMarks() && markedByPluginArr.length != 0) {
       Color c = Plugin.getPluginManager().getTvBrowserSettings().getColorForMarkingPriority(mProgram.getMarkPriority());
-      
+
       // c != null && mProgram.getMarkPriority() > Program.PRIORITY_MARK_NONE
       if (c != null && mProgram.getMarkPriority() > -1) {
         grp.setColor(c);

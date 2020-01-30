@@ -15,13 +15,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
- *
- * CVS information:
- *  $RCSfile$
- *   $Source$
- *     $Date: 2006-10-18 16:47:20 +0200 (Mi, 18 Okt 2006) $
- *   $Author: ds10 $
- * $Revision: 2755 $
  */
 
 package printplugin.dlgs.printdayprogramsdialog;

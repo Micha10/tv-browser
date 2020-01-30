@@ -15,13 +15,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
- *
- * CVS information:
- *  $RCSfile$
- *   $Source$
- *     $Date: 2010-06-28 19:33:48 +0200 (Mo, 28 Jun 2010) $
- *   $Author: bananeweizen $
- * $Revision: 6662 $
  */
 
 package printplugin.dlgs;
@@ -35,6 +28,7 @@ import java.awt.Color;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 import java.awt.print.PageFormat;
 import java.awt.print.Printable;
 import java.beans.PropertyChangeEvent;
@@ -42,16 +36,23 @@ import java.beans.PropertyChangeListener;
 import java.util.Locale;
 import java.util.Properties;
 
+import javax.swing.Action;
+import javax.swing.ActionMap;
+import javax.swing.InputMap;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
+import javax.swing.KeyStroke;
 import javax.swing.SwingConstants;
 
 import printplugin.PrintPlugin;
 import printplugin.dlgs.components.PreviewComponent;
 import printplugin.printer.PrintJob;
+import printplugin.util.BaseAction;
 import printplugin.util.Utils;
 
 import util.ui.Localizer;
@@ -64,19 +65,27 @@ public final class PreviewDlg extends JDialog implements ActionListener, Propert
 
   private static final long serialVersionUID = 7038525175772100332L;
 
+  private static final String PREVIEW_DLG_ZOOM = "PreviewDlg.Zoom";
+  private static final String PREVIEW_DLG_Y = "PreviewDlg.Y";
+  private static final String PREVIEW_DLG_X = "PreviewDlg.X";
+  private static final String PREVIEW_DLG_HEIGHT = "PreviewDlg.Height";
+  private static final String PREVIEW_DLG_WIDTH = "PreviewDlg.Width";
+
   private static final Localizer mLocalizer = Localizer.getLocalizerFor(PreviewDlg.class);
 
   private Printable mPrinter;
   private PageFormat mPageFormat;
 
-  private JButton mNextBt;
-  private JButton mPrevBt;
-  private JButton mZoomIn;
-  private JButton mZoomOut;
   private JLabel mSiteLb;
   private PreviewComponent mPreviewComponent;
 
-  public PreviewDlg(Window parent, PrintJob job) {
+  private Action mCloseAction;
+  private Action mNextAction;
+  private Action mPreviousAction;
+  private Action mZoomInAction;
+  private Action mZoomOutAction;
+
+  public PreviewDlg(final Window parent, final PrintJob job) {
     super(parent);
     setModal(true);
 
@@ -84,56 +93,70 @@ public final class PreviewDlg extends JDialog implements ActionListener, Propert
     mPageFormat = job.getPageFormat();
 
     UiUtilities.registerForClosing(this);
-    createGui(mPrinter, mPageFormat, job.getNumOfPages());
+    createActions();
+    createGui(job.getNumOfPages());
     updateDialogState();
     updateTitle();
     pack();
     readAndApplyDialogSettings();
 
-    mZoomIn.setEnabled(!mPreviewComponent.maxZoom());
-    mZoomOut.setEnabled(!mPreviewComponent.minZoom());
+    mZoomInAction.setEnabled(!mPreviewComponent.maxZoom());
+    mZoomOutAction.setEnabled(!mPreviewComponent.minZoom());
 
     getRootPane().getDefaultButton().requestFocus();
   }
 
-  private void createGui(Printable printer, PageFormat pageFormat, int numberOfPages) {
+  private void createGui(final int numberOfPages) {
 
     mPreviewComponent = new PreviewComponent(mPrinter, mPageFormat, numberOfPages);
     mPreviewComponent.addPropertyChangeListener("preferredSize", this);
-
-    final JScrollPane scrollPane = new JScrollPane(mPreviewComponent);
-    scrollPane.getHorizontalScrollBar().setUnitIncrement(20);
-    scrollPane.getVerticalScrollBar().setUnitIncrement(20);
-    scrollPane.getViewport().setBackground(Color.DARK_GRAY);
 
     final JPanel content = (JPanel) getContentPane();
     content.setBorder(Borders.DIALOG);
     content.setLayout(new FormLayout("fill:default:grow", "pref, 5dlu, fill:default:grow, 3dlu, pref, 5dlu, pref"));
     content.add(createToolBar(), CC.xy(1, 1));
-    content.add(scrollPane, CC.xy(1, 3));
-    if (mPreviewComponent.getNumberOfPages() > 1) {
+    content.add(createScrollPane(), CC.xy(1, 3));
+    if (numberOfPages > 1) {
       content.add(createPageNavigationBar(), CC.xy(1, 5));
     }
     content.add(createButtonBar(), CC.xy(1, 7));
   }
 
+  private JScrollPane createScrollPane() {
+    final JScrollPane scrollPane = new JScrollPane(mPreviewComponent);
+    scrollPane.getHorizontalScrollBar().setUnitIncrement(20);
+    scrollPane.getVerticalScrollBar().setUnitIncrement(20);
+    scrollPane.getViewport().setBackground(Color.DARK_GRAY);
+
+    JScrollBar horizontal = scrollPane.getHorizontalScrollBar();
+    InputMap horizontalMap = horizontal.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+    horizontalMap.put(KeyStroke.getKeyStroke("RIGHT"), "positiveUnitIncrement");
+    horizontalMap.put(KeyStroke.getKeyStroke("LEFT"), "negativeUnitIncrement");
+
+    JScrollBar vertical = scrollPane.getVerticalScrollBar();
+    InputMap verticalMap = vertical.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+    verticalMap.put(KeyStroke.getKeyStroke("DOWN"), "positiveUnitIncrement");
+    verticalMap.put(KeyStroke.getKeyStroke("UP"), "negativeUnitIncrement");
+    return scrollPane;
+  }
+
   private void readAndApplyDialogSettings() {
     final Properties prop = PrintPlugin.getInstance().getPluginSettings().storeSettings();
     try {
-      if (prop.getProperty("PreviewDlg.Width") != null && prop.getProperty("PreviewDlg.Height") != null) {
-        int width = Integer.parseInt(prop.getProperty("PreviewDlg.Width"));
-        int height = Integer.parseInt(prop.getProperty("PreviewDlg.Height"));
+      if (prop.getProperty(PREVIEW_DLG_WIDTH) != null && prop.getProperty(PREVIEW_DLG_HEIGHT) != null) {
+        final int width = Integer.parseInt(prop.getProperty(PREVIEW_DLG_WIDTH));
+        final int height = Integer.parseInt(prop.getProperty(PREVIEW_DLG_HEIGHT));
         setSize(width, height);
       }
-      if (prop.getProperty("PreviewDlg.X") != null && prop.getProperty("PreviewDlg.Y") != null) {
-        int x = Integer.parseInt(prop.getProperty("PreviewDlg.X"));
-        int y = Integer.parseInt(prop.getProperty("PreviewDlg.Y"));
+      if (prop.getProperty(PREVIEW_DLG_X) != null && prop.getProperty(PREVIEW_DLG_Y) != null) {
+        final int x = Integer.parseInt(prop.getProperty(PREVIEW_DLG_X));
+        final int y = Integer.parseInt(prop.getProperty(PREVIEW_DLG_Y));
         setLocation(x, y);
       } else {
         setLocationRelativeTo(getParent());
       }
-      if (prop.getProperty("PreviewDlg.Zoom") != null) {
-        double zoom = Double.parseDouble(prop.getProperty("PreviewDlg.Zoom"));
+      if (prop.getProperty(PREVIEW_DLG_ZOOM) != null) {
+        final double zoom = Double.parseDouble(prop.getProperty(PREVIEW_DLG_ZOOM));
         mPreviewComponent.setZoom(zoom);
       }
     } catch (Exception e) {
@@ -142,27 +165,14 @@ public final class PreviewDlg extends JDialog implements ActionListener, Propert
   }
 
   private JPanel createToolBar() {
-
-    mZoomIn = new JButton(TVBrowserIcons.zoomIn(TVBrowserIcons.SIZE_SMALL));
-    mZoomIn.addActionListener(this);
-    mZoomIn.setActionCommand("zoomIn");
-    mZoomIn.setToolTipText(mLocalizer.msg("zoomIn", "Zoom in"));
-
-    mZoomOut = new JButton(TVBrowserIcons.zoomOut(TVBrowserIcons.SIZE_SMALL));
-    mZoomOut.addActionListener(this);
-    mZoomOut.setActionCommand("zoomOut");
-    mZoomOut.setToolTipText(mLocalizer.msg("zoomOut", "Zoom out"));
-
     final JPanel panel = new JPanel(new FormLayout("pref, 3dlu, pref", "pref"));
-    panel.add(mZoomOut, CC.xy(1, 1));
-    panel.add(mZoomIn, CC.xy(3, 1));
+    panel.add(new JButton(mZoomOutAction), CC.xy(1, 1));
+    panel.add(new JButton(mZoomInAction), CC.xy(3, 1));
     return panel;
   }
 
   private JPanel createButtonBar() {
-    final JButton close = new JButton(Localizer.getLocalization(Localizer.I18N_CLOSE));
-    close.addActionListener(this);
-    close.setActionCommand("close");
+    final JButton close = new JButton(mCloseAction);
     close.setDefaultCapable(true);
     getRootPane().setDefaultButton(close);
     return new ButtonBarBuilder().addGlue().addButton(close).build();
@@ -170,23 +180,13 @@ public final class PreviewDlg extends JDialog implements ActionListener, Propert
 
   private JPanel createPageNavigationBar() {
 
-    mPrevBt = new JButton(TVBrowserIcons.left(TVBrowserIcons.SIZE_SMALL));
-    mPrevBt.addActionListener(this);
-    mPrevBt.setActionCommand("previous");
-    mPrevBt.setToolTipText(mLocalizer.msg("previous", "Previous page"));
-
     mSiteLb = new JLabel();
     mSiteLb.setHorizontalAlignment(SwingConstants.CENTER);
 
-    mNextBt = new JButton(TVBrowserIcons.right(TVBrowserIcons.SIZE_SMALL));
-    mNextBt.addActionListener(this);
-    mNextBt.setActionCommand("next");
-    mNextBt.setToolTipText(mLocalizer.msg("next", "Next page"));
-
     final JPanel southPn = new JPanel(new FormLayout("left:10dlu:grow, pref, right:10dlu:grow", "pref"));
-    southPn.add(mPrevBt, CC.xy(1, 1));
+    southPn.add(new JButton(mPreviousAction), CC.xy(1, 1));
     southPn.add(mSiteLb, CC.xy(2, 1));
-    southPn.add(mNextBt, CC.xy(3, 1));
+    southPn.add(new JButton(mNextAction), CC.xy(3, 1));
     return southPn;
   }
 
@@ -196,8 +196,8 @@ public final class PreviewDlg extends JDialog implements ActionListener, Propert
     if (numberOfPages > 1) {
       mSiteLb.setText(mLocalizer.msg("pageInfo", "Page {0} of {1}",
           mPreviewComponent.getPageIndex() + 1, numberOfPages));
-      mPrevBt.setEnabled(mPreviewComponent.getPageIndex() > 0);
-      mNextBt.setEnabled(mPreviewComponent.getPageIndex() + 1 < numberOfPages);
+      mPreviousAction.setEnabled(mPreviewComponent.getPageIndex() > 0);
+      mNextAction.setEnabled(mPreviewComponent.getPageIndex() + 1 < numberOfPages);
     }
   }
 
@@ -217,26 +217,44 @@ public final class PreviewDlg extends JDialog implements ActionListener, Propert
   @Override
   public void actionPerformed(final ActionEvent event) {
     switch (event.getActionCommand()) {
-      case "close":
+      case BaseAction.CLOSE:
         close();
         break;
-      case "next":
-        mPreviewComponent.next();
+      case "end":
+        mPreviewComponent.setPageIndex(mPreviewComponent.getNumberOfPages() - 1);
+        updateDialogState();
+        break;
+      case "home":
+        mPreviewComponent.setPageIndex(0);
         updateDialogState();
         break;
       case "previous":
         mPreviewComponent.previous();
         updateDialogState();
         break;
+      case "next":
+        mPreviewComponent.next();
+        updateDialogState();
+        break;
+      case "zoom100":
+        mPreviewComponent.setZoom(1D);
+        propertyChange(null);
+        break;
       case "zoomIn":
         mPreviewComponent.zoomIn();
-        mZoomIn.setEnabled(!mPreviewComponent.maxZoom());
-        mZoomOut.setEnabled(true);
+        propertyChange(null);
+        break;
+      case "zoomMax":
+        mPreviewComponent.setZoom(PreviewComponent.MAX_ZOOM);
+        propertyChange(null);
+        break;
+      case "zoomMin":
+        mPreviewComponent.setZoom(PreviewComponent.MIN_ZOOM);
+        propertyChange(null);
         break;
       case "zoomOut":
         mPreviewComponent.zoomOut();
-        mZoomOut.setEnabled(!mPreviewComponent.minZoom());
-        mZoomIn.setEnabled(true);
+        propertyChange(null);
         break;
     }
   }
@@ -249,16 +267,77 @@ public final class PreviewDlg extends JDialog implements ActionListener, Propert
 
   private void storeDialogSettings() {
     final Properties prop = PrintPlugin.getInstance().getPluginSettings().storeSettings();
-    prop.setProperty("PreviewDlg.X", Integer.toString(getLocationOnScreen().x));
-    prop.setProperty("PreviewDlg.Y", Integer.toString(getLocationOnScreen().y));
-    prop.setProperty("PreviewDlg.Width", Integer.toString(getWidth()));
-    prop.setProperty("PreviewDlg.Height", Integer.toString(getHeight()));
-    prop.setProperty("PreviewDlg.Zoom", Double.toString(mPreviewComponent.getZoom()));
+    prop.setProperty(PREVIEW_DLG_X, Integer.toString(getLocationOnScreen().x));
+    prop.setProperty(PREVIEW_DLG_Y, Integer.toString(getLocationOnScreen().y));
+    prop.setProperty(PREVIEW_DLG_WIDTH, Integer.toString(getWidth()));
+    prop.setProperty(PREVIEW_DLG_HEIGHT, Integer.toString(getHeight()));
+    prop.setProperty(PREVIEW_DLG_ZOOM, Double.toString(mPreviewComponent.getZoom()));
   }
 
   @Override
   public void propertyChange(PropertyChangeEvent evt) {
-    mZoomOut.setEnabled(!mPreviewComponent.minZoom());
-    mZoomIn.setEnabled(!mPreviewComponent.maxZoom());
+    mZoomInAction.setEnabled(!mPreviewComponent.maxZoom());
+    mZoomOutAction.setEnabled(!mPreviewComponent.minZoom());
+  }
+
+  private void createActions() {
+
+    final ActionMap actionMap = getRootPane().getActionMap();
+    final InputMap inputMap = getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+
+    mZoomOutAction = BaseAction.builder("zoomOut", this)
+        .actionMap(actionMap)
+        .bindKeys(inputMap, 0, KeyEvent.VK_MINUS, KeyEvent.VK_SUBTRACT)
+        .icon(TVBrowserIcons.zoomOut(TVBrowserIcons.SIZE_SMALL))
+        .tooltip(mLocalizer.msg("zoomOut", "Zoom out"))
+        .build();
+
+    mZoomInAction = BaseAction.builder("zoomIn", this)
+        .actionMap(actionMap)
+        .bindKeys(inputMap, 0, KeyEvent.VK_PLUS, KeyEvent.VK_ADD)
+        .icon(TVBrowserIcons.zoomIn(TVBrowserIcons.SIZE_SMALL))
+        .tooltip(mLocalizer.msg("zoomIn", "Zoom in"))
+        .build();
+
+    mPreviousAction = BaseAction.builder("previous", this)
+        .actionMap(actionMap)
+        .bindKeys(inputMap, 0, KeyEvent.VK_PAGE_UP)
+        .icon(TVBrowserIcons.left(TVBrowserIcons.SIZE_SMALL))
+        .tooltip(mLocalizer.msg("previous", "Previous page"))
+        .build();
+
+    mNextAction = BaseAction.builder("next", this)
+        .actionMap(actionMap)
+        .bindKeys(inputMap, 0, KeyEvent.VK_PAGE_DOWN)
+        .icon(TVBrowserIcons.right(TVBrowserIcons.SIZE_SMALL))
+        .tooltip(mLocalizer.msg("next", "Next page"))
+        .build();
+
+    mCloseAction = BaseAction.close(this).build();
+
+    BaseAction.builder("end", this)
+        .actionMap(actionMap)
+        .bindKeys(inputMap, 0, KeyEvent.VK_END)
+        .build();
+
+    BaseAction.builder("home", this)
+        .actionMap(actionMap)
+        .bindKeys(inputMap, 0, KeyEvent.VK_HOME)
+        .build();
+
+    BaseAction.builder("zoom100", this)
+        .actionMap(actionMap)
+        .bindKeys(inputMap, 0, KeyEvent.VK_1, KeyEvent.VK_NUMPAD1)
+        .build();
+
+    BaseAction.builder("zoomMax", this)
+        .actionMap(actionMap)
+        .bindKeys(inputMap, KeyEvent.SHIFT_DOWN_MASK, KeyEvent.VK_PLUS, KeyEvent.VK_ADD)
+        .build();
+
+    BaseAction.builder("zoomMin", this)
+        .actionMap(actionMap)
+        .bindKeys(inputMap, KeyEvent.SHIFT_DOWN_MASK, KeyEvent.VK_MINUS, KeyEvent.VK_SUBTRACT)
+        .build();
   }
 }

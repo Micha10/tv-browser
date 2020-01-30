@@ -15,23 +15,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
- *
- * CVS information:
- *  $RCSfile$
- *   $Source$
- *     $Date: 2005-05-22 16:29:39 +0200 (So, 22 Mai 2005) $
- *   $Author: darras $
- * $Revision: 1228 $
  */
 
 package printplugin.printer;
-
 
 public class DefaultPageModel extends AbstractPageModel {
 
   private String mHeader;
 
-  public DefaultPageModel(String header) {
+  public DefaultPageModel(final String header) {
     super();
     mHeader = header;
   }
@@ -40,10 +32,8 @@ public class DefaultPageModel extends AbstractPageModel {
     this(null);
   }
 
-
-	@Override
+  @Override
   public String getHeader() {
-		return mHeader;
-	}
-  
+    return mHeader;
+  }
 }

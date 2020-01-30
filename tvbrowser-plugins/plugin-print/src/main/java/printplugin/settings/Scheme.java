@@ -15,13 +15,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
- *
- * CVS information:
- *  $RCSfile$
- *   $Source$
- *     $Date: 2006-03-06 17:29:38 +0100 (Mo, 06 Mrz 2006) $
- *   $Author: troggan $
- * $Revision: 1944 $
  */
 
 package printplugin.settings;
@@ -35,7 +28,7 @@ import java.io.ObjectOutputStream;
 
 /**
  * Represents a template that holds layout and printer settings.
- * 
+ *
  * @param <S>
  *              associated {@link Settings} type
  */
@@ -88,7 +81,7 @@ public abstract class Scheme<S extends Settings> {
       fields[i] = ProgramFieldType.getTypeForId(in.readInt());
     }
 
-    MutableProgramIconSettings result = new MutableProgramIconSettings(PrinterProgramIconSettings.create());
+    final MutableProgramIconSettings result = new MutableProgramIconSettings(PrinterProgramIconSettings.create());
     result.setProgramInfoFields(fields);
     result.setTextFont(textFont);
     result.setTimeFont(titleFont);
@@ -104,7 +97,7 @@ public abstract class Scheme<S extends Settings> {
     writeFont(settings.getTitleFont(), out);
     out.writeBoolean(settings.getPaintPluginMarks());
 
-    ProgramFieldType[] fields = settings.getProgramInfoFields();
+    final ProgramFieldType[] fields = settings.getProgramInfoFields();
     out.writeInt(fields.length);
     for (ProgramFieldType field : fields) {
       out.writeInt(field.getTypeId());

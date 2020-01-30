@@ -1197,7 +1197,6 @@ tvbrowser-plugins/plugin-personatimeswitcher/src/main/java/personatimeswitcher/P
 tvbrowser-plugins/plugin-personatimeswitcher/src/main/resources/personatimeswitcher/personatimeswitcher.properties -text
 tvbrowser-plugins/plugin-personatimeswitcher/src/main/resources/personatimeswitcher/personatimeswitcher_de.properties -text
 tvbrowser-plugins/plugin-print/pom.xml -text
-tvbrowser-plugins/plugin-print/src/main/java/printplugin/EmptyQueueAction.java -text
 tvbrowser-plugins/plugin-print/src/main/java/printplugin/PrintPlugin.java -text
 tvbrowser-plugins/plugin-print/src/main/java/printplugin/PrintPluginSettingsTab.java -text
 tvbrowser-plugins/plugin-print/src/main/java/printplugin/dlgs/DialogContent.java -text
@@ -1222,6 +1221,7 @@ tvbrowser-plugins/plugin-print/src/main/java/printplugin/dlgs/printfromqueuedial
 tvbrowser-plugins/plugin-print/src/main/java/printplugin/dlgs/printfromqueuedialog/GeneralTab.java -text
 tvbrowser-plugins/plugin-print/src/main/java/printplugin/dlgs/printfromqueuedialog/LayoutTab.java -text
 tvbrowser-plugins/plugin-print/src/main/java/printplugin/dlgs/printfromqueuedialog/PrintFromQueueDialogContent.java -text
+tvbrowser-plugins/plugin-print/src/main/java/printplugin/dlgs/printfromqueuedialog/ProgramListCellRenderer.java -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-print/src/main/java/printplugin/dlgs/programinfoprintdialog/PrintProgramInfoDialogContent.java -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-print/src/main/java/printplugin/printer/AbstractColumnModel.java -text
 tvbrowser-plugins/plugin-print/src/main/java/printplugin/printer/AbstractPageModel.java -text
@@ -1253,9 +1253,9 @@ tvbrowser-plugins/plugin-print/src/main/java/printplugin/settings/QueuePrinterSe
 tvbrowser-plugins/plugin-print/src/main/java/printplugin/settings/QueueScheme.java -text
 tvbrowser-plugins/plugin-print/src/main/java/printplugin/settings/Scheme.java -text
 tvbrowser-plugins/plugin-print/src/main/java/printplugin/settings/Settings.java -text
+tvbrowser-plugins/plugin-print/src/main/java/printplugin/util/BaseAction.java -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-print/src/main/java/printplugin/util/Utils.java -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-print/src/main/resources/printplugin/ChangeLog.htm -text svneol=unset#text/plain
-tvbrowser-plugins/plugin-print/src/main/resources/printplugin/ChangeLog.txt -text
 tvbrowser-plugins/plugin-print/src/main/resources/printplugin/dlgs/components/components.properties -text
 tvbrowser-plugins/plugin-print/src/main/resources/printplugin/dlgs/components/components_da.properties -text
 tvbrowser-plugins/plugin-print/src/main/resources/printplugin/dlgs/components/components_de.properties -text
@@ -1298,10 +1298,11 @@ tvbrowser-plugins/plugin-print/src/main/resources/printplugin/printer/printer_sv
 tvbrowser-plugins/plugin-print/src/main/resources/printplugin/printplugin.properties -text
 tvbrowser-plugins/plugin-print/src/main/resources/printplugin/printplugin_da.properties -text
 tvbrowser-plugins/plugin-print/src/main/resources/printplugin/printplugin_de.properties -text
+tvbrowser-plugins/plugin-print/src/main/resources/printplugin/printplugin_el.properties -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-print/src/main/resources/printplugin/printplugin_hr.properties -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-print/src/main/resources/printplugin/printplugin_it.properties -text
+tvbrowser-plugins/plugin-print/src/main/resources/printplugin/printplugin_sk.properties -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-print/src/main/resources/printplugin/printplugin_sv.properties -text
-tvbrowser-plugins/plugin-print/src/main/resources/printplugin/todos.txt -text
 tvbrowser-plugins/plugin-programlist/pom.xml -text
 tvbrowser-plugins/plugin-programlist/src/main/java/programlistplugin/ProgramListPanel.java -text
 tvbrowser-plugins/plugin-programlist/src/main/java/programlistplugin/ProgramListPlugin.java -text

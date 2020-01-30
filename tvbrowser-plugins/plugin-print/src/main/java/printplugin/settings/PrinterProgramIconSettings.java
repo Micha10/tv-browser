@@ -15,13 +15,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
- *
- * CVS information:
- *  $RCSfile$
- *   $Source$
- *     $Date: 2007-09-22 13:52:03 +0200 (Sa, 22 Sep 2007) $
- *   $Author: ds10 $
- * $Revision: 3912 $
  */
 
 package printplugin.settings;
@@ -65,7 +58,6 @@ public class PrinterProgramIconSettings implements ProgramIconSettings {
     settings.mProgramInfoFields = programInfoFields;
     settings.mShowPluginMark = showPluginMark;
     return settings;
-
   }
 
   public static ProgramIconSettings create() {

@@ -34,6 +34,8 @@ import java.awt.Frame;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.Icon;
 import javax.swing.JButton;
@@ -44,6 +46,7 @@ import javax.swing.JScrollPane;
 import printplugin.printer.ProgramIcon;
 import printplugin.settings.MutableProgramIconSettings;
 import printplugin.settings.ProgramIconSettings;
+import printplugin.util.BaseAction;
 
 import util.ui.Localizer;
 import util.ui.TimeFormatter;
@@ -61,13 +64,14 @@ import util.ui.UiUtilities;
  * @since 2006-03-06 17:29:38 +0100
  */
 @SuppressWarnings("nls")
-public class ProgramPreviewPanel extends JPanel {
+public class ProgramPreviewPanel extends JPanel implements ActionListener {
 
   private static final long serialVersionUID = 8953071252035184547L;
 
   /** The localizer for this class. */
   private static final Localizer mLocalizer = Localizer.getLocalizerFor(ProgramPreviewPanel.class);
 
+  private final Frame mParent;
   private final JLabel mProgramIconLabel;
   private final JLabel mDateLabel;
   private final JPanel mIconPanel;
@@ -101,15 +105,14 @@ public class ProgramPreviewPanel extends JPanel {
   public ProgramPreviewPanel(final Frame dlgParent, final ProgramIconSettings programIconSettings,
       final Font dateFont) {
 
+    mDateFont = dateFont;
+    mParent = dlgParent;
+
     setLayout(new BorderLayout(3, 3));
 
-    mDateFont = dateFont;
     if (programIconSettings != null) {
       setProgramIconSettings(programIconSettings);
     }
-
-    final JButton fontsButton = new JButton(mLocalizer.msg("fonts", "Fonts\u2026"));
-    final JButton fieldsButton = new JButton(mLocalizer.msg("fields", "Fields\u2026"));
 
     mDateLabel = new JLabel(new Date().getLongDateString());
     mDateLabel.setForeground(Color.BLACK);
@@ -136,41 +139,15 @@ public class ProgramPreviewPanel extends JPanel {
     }
     mIconPanel.add(mProgramIconLabel, BorderLayout.CENTER);
 
+    final JButton fontsButton = new JButton(
+        BaseAction.builder("fonts", this).text(mLocalizer.msg("fonts", "Fonts\u2026")).build());
+    final JButton fieldsButton = new JButton(
+        BaseAction.builder("fields", this).text(mLocalizer.msg("fields", "Fields\u2026")).build());
+
     final JScrollPane scrollPane = new JScrollPane(mIconPanel);
     scrollPane.setPreferredSize(new Dimension(0, 90));
     add(scrollPane, BorderLayout.CENTER);
     add(new ButtonStackBuilder().addButton(fontsButton, fieldsButton).build(), BorderLayout.LINE_END);
-
-    fontsButton.addActionListener(e -> {
-      if (mProgramIconSettings == null) {
-        return;
-      }
-      final FontsDialog dlg = new FontsDialog(dlgParent, mProgramIconSettings.getTitleFont(),
-          mProgramIconSettings.getTextFont(), mDateFont);
-      UiUtilities.centerAndShow(dlg);
-      if (dlg.getResult() == FontsDialog.OK) {
-        final Font titleFont = dlg.getTitleFont();
-        final Font descFont = dlg.getDescriptionFont();
-        mDateFont = dlg.getDateFont();
-        mProgramIconSettings.setTextFont(descFont);
-        mProgramIconSettings.setTimeFont(titleFont);
-        mProgramIconSettings.setTitleFont(titleFont);
-        updatePreviewPanel();
-      }
-    });
-
-    fieldsButton.addActionListener(event -> {
-      if (mProgramIconSettings == null) {
-        return;
-      }
-      final ProgramItemFieldsConfigDlg dlg = new ProgramItemFieldsConfigDlg(dlgParent,
-          mProgramIconSettings.getProgramInfoFields());
-      UiUtilities.centerAndShow(dlg);
-      if (dlg.getResult() == ProgramItemFieldsConfigDlg.OK) {
-        mProgramIconSettings.setProgramInfoFields(dlg.getProgramItemFieldTypes());
-        updatePreviewPanel();
-      }
-    });
 
     updatePreviewPanel();
   }
@@ -221,5 +198,41 @@ public class ProgramPreviewPanel extends JPanel {
     final ProgramIcon ico = new ProgramIcon(prog, programIconSettings, 200, false);
     ico.setMaximumHeight(Integer.MAX_VALUE);
     return ico;
+  }
+
+  @SuppressWarnings("incomplete-switch")
+  @Override
+  public void actionPerformed(final ActionEvent e) {
+    switch (e.getActionCommand()) {
+      case "fields":
+        if (mProgramIconSettings == null) {
+          return;
+        }
+        final ProgramItemFieldsConfigDlg programItemFieldsConfigDialog = new ProgramItemFieldsConfigDlg(mParent,
+            mProgramIconSettings.getProgramInfoFields());
+        UiUtilities.centerAndShow(programItemFieldsConfigDialog);
+        if (programItemFieldsConfigDialog.getResult() == ProgramItemFieldsConfigDlg.OK) {
+          mProgramIconSettings.setProgramInfoFields(programItemFieldsConfigDialog.getProgramItemFieldTypes());
+          updatePreviewPanel();
+        }
+        break;
+      case "fonts":
+        if (mProgramIconSettings == null) {
+          return;
+        }
+        final FontsDialog fontsDialog = new FontsDialog(mParent, mProgramIconSettings.getTitleFont(),
+            mProgramIconSettings.getTextFont(), mDateFont);
+        UiUtilities.centerAndShow(fontsDialog);
+        if (fontsDialog.getResult() == FontsDialog.OK) {
+          final Font titleFont = fontsDialog.getTitleFont();
+          final Font descFont = fontsDialog.getDescriptionFont();
+          mDateFont = fontsDialog.getDateFont();
+          mProgramIconSettings.setTextFont(descFont);
+          mProgramIconSettings.setTimeFont(titleFont);
+          mProgramIconSettings.setTitleFont(titleFont);
+          updatePreviewPanel();
+        }
+        break;
+    }
   }
 }

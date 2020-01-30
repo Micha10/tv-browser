@@ -7,59 +7,84 @@
 <body>
 <h1>TV-Browser Print Plugin: Release Notes</h1>
 
-<h2>Version 3.0.2.4 beta</h2>
-<p>Date: 2019-12-31 (requires TV-Browser 4.x, Java 1.8+)</p>
+<h2>Planned (TODO's)</h2>
 <ul>
-<li>UI: Simplified main dialog (replaced radio by normal buttons, option to start settings)</li>
-<li>UI: Removed opacity from some controls</li>
-<li>TODO UI: Integrated the contents of the Extras tab into the Layout tab</li>
-<li>TODO UI: Added information about paper size, orientation and margins to the Layout tab</li>
+<li>TODO UI: Add information about paper size, orientation and margins to the Layout tab</li>
+<li>TODO UI: Integrate the contents of the Extras tab into the Layout tab</li>
 <li>TODO Settings: Option to select a default print margin (minimum margin of the printer, 10 mm, 20 mm (default), 1 inch)</li>
 <li>TODO Settings: Option to select a default printer (fallback to the default system printer if not available)</li>
 <li>TODO Settings: Option to select a default font (fallback to the default UI font "Dialog" if not available)</li>
 <li>TODO Settings: UI settings for the Print Preview (antialiased text, show margins as crop marks)</li>
 <li>TODO Settings: UI settings for visual font selection (WYSIWYG)</li>
-<li>Print Preview: Centered page in preview window</li>
-<li>Print Preview: Mousewheel support (zoom gestures on selected alternate touch input devices)</li>
-<li>Print Preview: Exchanged zoom-in and zoom-out button (leading button zooms out, trailing button zooms in)</li>
-<li>Print Preview: Dark gray background for better contrast</li>
-<li>Print Preview: Antialias of text (TODO: can be disabled via plugin settings)</li>
-<li>Print Preview: Page margins are displayed as crop marks if the pointer enters the preview's viewport (can be disabled via plugin settings)</li>
-<li>Print Preview: Page navigation buttons only visible if page count > 1</li>
-<li>Code: Upgraded dependencies to TV-Browser 4.x (Core) and TvBrowserCompat 0.5</li>
-<li>Code: Replaced deprecated API calls</li>
-<li>TODO: Integrated former program info print dialog into standard settings dialog (as dialog content)</li>
-<li>Code: Extracted print preview (component)</li>
-<li>TODO: Schema management (panel) as separate classes</li>
-<li>Code: Overriden FontChooserPanel to support previewing the font
-<li>TODO: Integrated JobFactory methods into dedicated print jobs (inherited from AbstractPrintJob)</li>
-<li>TODO: Added print job compatibility for program info renderer</li>
-<li>TODO: Added PrinterJob helper class to print via print service, pageable, and DocPrintJob (option to pre-select a printer and get an extended print status)
-<li>Code: Source level upgrade to Java 1.8 (generics + lamda expressions to reduce boilerplate-code)</li>
-<li>Code: Clean code and minor fixes</li>
-<li>Code: PropertyChangeSupport in some components and classes for a later integration of the preview into the print dialog (i. e. live preview of setting changes, WYSIWYG)
+<li>TODO Schema management (panel) as separate class</li>
+<li>TODO Added PrinterJob helper class to print via print service, pageable, and DocPrintJob (option to pre-select a printer and get an extended print status)
+<li>TODO PropertyChangeSupport in some components and classes for a later integration of the preview into the print dialog (i. e. live preview of setting changes, WYSIWYG)
+<li>TODO PropertyChangeSupport in some components and classes for a later integration of the preview into the print dialog (i. e. live preview of setting changes, WYSIWYG)
+<li>TODO UI: Enhanced print monitoring (progress, error, status)</li>
+<li>TODO UI: Direct print option to print the program info using the last used settings</li>
+<li>TODO Settings: storing margin, paper and printer with the current template</li>
+<li>TODO Settings: storing last selected template (currently the default template is preselected)</li>
+
 </ul>
 
-<h2>Version 3.0.2.2</h2>
+<h2>Version 3.0.2.6 beta</h2>
+<p>Date: 2020-01-30 (requires TV-Browser 4.0 [3.4.4.50], Java 1.8+)</p>
 <ul>
-<li>Program infoprintsupport</li>
+<li>Print Preview: Keyboard support</li>
+<li>UI: Queue Print Dialog: queue data presented by a navigable list / ProgramListCellRenderer (multiple selection, keyboard support)</li>
+<li>UI: Template/Schema management dialogs (Localization fixes due SDK 11 changes by Oracle)</li>
+<li>UI: JOptionPane's (Localization fixes due SDK 11 changes by Oracle)</li>
+<li>UI: Minor layout and navigation optimization in ChannelSelectionPanel and MainPrintDialog</li>
+<li>Code: Removal of old CVS header information (obsolete)</li>
+<li>Code: BaseAction builder to reduce boilerplate code
+<li>Code: Additional helper methods in Utils
+<li>Code: Added JavaDoc, Clean Code
+<li>Settings: Preparation for additional plugin settings (tabbed pane)</li>
 </ul>
+
+<h2>Version 3.0.2.5 beta</h2>
+<p>Date: 2020-01-20 (requires TV-Browser 4.0.1, Java 1.8+)</p>
+<ul>
+<li>UI: Integrated former program info print dialog into standard settings dialog (as dialog content)</li>
+<li>UI: Program info print dialog supports templates (schema settings version 3)</li>
+<li>UI: Simplified main dialog (replaced radio by normal buttons, option to start settings)</li>
+<li>UI: Removed opacity from some controls</li>
+<li>Print Preview: Centered page in preview window</li>
+<li>Print Preview: Mouse-wheel support (zoom gestures on selected alternate touch input devices)</li>
+<li>Print Preview: Exchanged zoom-in and zoom-out button (leading button zooms out, trailing button zooms in)</li>
+<li>Print Preview: Dark gray background for better contrast</li>
+<li>Print Preview: Antialias of text</li>
+<li>Print Preview: Page margins are displayed as crop marks if the pointer enters the preview's viewport</li>
+<li>Print Preview: Page navigation buttons only visible if page count > 1</li>
+<li>Code: Added print job compatibility for program info renderer</li>
+<li>Code: Integrated JobFactory methods into dedicated dialog content classes
+<li>Code: Upgraded dependencies to TV-Browser 4.x (Core) and TvBrowserCompat 0.5</li>
+<li>Code: Replaced deprecated API calls</li>
+<li>Code: Extracted print preview (component)</li>
+<li>Code: Overridden FontChooserPanel to support previewing the font
+<li>Code: Source level upgrade to Java 1.8 (Generics + Lamda expressions to reduce boilerplate-code)</li>
+<li>Code: Clean code and minor fixes</li>
+<li>Fonts: Uses Google Roboto Condensed (Apache 2 license) as default font for printing (changeable by user)</li>
+<li>Print: Footer and header changes (fixed vertical center in day program header, updated Copyright note in footer)</li>
+</ul>
+
+<hr>
 
 <h2>Version 3.x</h2>
 <ul>
-<li>Program infoprintsupport</li>
+<li>Program info print support</li>
 </ul>
 
 <h2>Version 2.1</h2>
 <ul>
-<li>Show pluginmarkings</li>
+<li>Show plugin markings</li>
 </ul>
 
 <h2>Version 2.0</h2>
 <p>(requires TV-Browser 2.0)</p>
 <ul>
 <li>Redesign</li>
-<li>Remembersettings</li>
+<li>Remember settings</li>
 <li>Printer queue</li>
 </ul>
 
@@ -81,9 +106,9 @@
 
 <h2>Version 0.2</h2>
 <ul>
-<li>Gifsgeaendert (aus dem Java Look andFeel Graphics Repository geholt).</li>
+<li>Gifs geaendert (aus dem Java Look and Feel Graphics Repository geholt).</li>
 <li>Einlesen der Drucker in loadSettings ausgelagert (Dialog wird schneller geoeffnet).</li>
-<li>Asynchrones Druckenueber eigenen Thread (bring nicht wirklich was).</li>
+<li>Asynchrones Drucken ueber eigenen Thread (bring nicht wirklich was).</li>
 <li>Querdruck (Landscape) eingebaut.</li>
 <li>Anpassungen an TV-Browser 0.9.6.</li>
 <li>Diverse Fehlerabfragen eingebaut.</li>

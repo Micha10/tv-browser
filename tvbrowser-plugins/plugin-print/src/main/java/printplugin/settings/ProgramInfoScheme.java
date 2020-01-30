@@ -35,7 +35,7 @@ public class ProgramInfoScheme extends Scheme<ProgramInfoPrintSettings> {
     setSettings(settings);
   }
 
-  public static Scheme<ProgramInfoPrintSettings>[] loadSchemes() {
+  public static Scheme<? extends Settings>[] loadSchemes() {
     final String home = Plugin.getPluginManager().getTvBrowserSettings().getTvBrowserUserHome();
     final File schemeFile = new File(home, SCHEME_FILE);
     try (ObjectInputStream in = new ObjectInputStream(
@@ -46,13 +46,10 @@ public class ProgramInfoScheme extends Scheme<ProgramInfoPrintSettings> {
     }
   }
 
-  /**
-   * @return
-   */
-  private static Scheme<ProgramInfoPrintSettings>[] getDefaultScheme() {
+  private static Scheme<? extends Settings>[] getDefaultScheme() {
 
     final ProgramInfoScheme scheme = new ProgramInfoScheme(
-        PrintPlugin.mLocalizer.msg("defaultScheme", "DefaultScheme"));
+        PrintPlugin.mLocalizer.msg("defaultScheme", "Default Scheme"));
     final ProgramInfoPrintSettings oldProgramInfoPrintSettings = PrintPlugin.getInstance()
         .getOldProgramInfoPrintSettings();
     if (oldProgramInfoPrintSettings != null) {
@@ -63,7 +60,7 @@ public class ProgramInfoScheme extends Scheme<ProgramInfoPrintSettings> {
     return new ProgramInfoScheme[] {scheme};
   }
 
-  private static Scheme<ProgramInfoPrintSettings>[] readSchemesFromStream(final ObjectInputStream in)
+  private static Scheme<? extends Settings>[] readSchemesFromStream(final ObjectInputStream in)
       throws IOException, ClassNotFoundException {
     in.readInt(); // read version
     final int cnt = in.readInt();
@@ -76,7 +73,7 @@ public class ProgramInfoScheme extends Scheme<ProgramInfoPrintSettings> {
     return schemes;
   }
 
-  public static void storeSchemes(final Scheme<ProgramInfoPrintSettings>[] schemes) {
+  public static <S extends Settings> void storeSchemes(final Scheme<S>[] schemes) {
     final String home = Plugin.getPluginManager().getTvBrowserSettings().getTvBrowserUserHome();
     final File schemeFile = new File(home, SCHEME_FILE);
     try {
@@ -84,14 +81,14 @@ public class ProgramInfoScheme extends Scheme<ProgramInfoPrintSettings> {
           out -> {
             out.writeInt(1); // write version
             out.writeInt(schemes.length);
-            for (Scheme<ProgramInfoPrintSettings> scheme : schemes) {
+            for (final Scheme<S> scheme : schemes) {
               out.writeObject(scheme.getName());
               scheme.store(out);
             }
             out.close();
           });
     } catch (IOException e) {
-      ErrorHandler.handle("Could not store settings.", e);
+      ErrorHandler.handle("Could not store program info scheme settings.", e);
     }
   }
 }

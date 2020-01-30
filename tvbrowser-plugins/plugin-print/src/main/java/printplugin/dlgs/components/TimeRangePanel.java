@@ -15,19 +15,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
- *
- * CVS information:
- *  $RCSfile$
- *   $Source$
- *     $Date: 2010-06-28 19:33:48 +0200 (Mo, 28 Jun 2010) $
- *   $Author: bananeweizen $
- * $Revision: 6662 $
  */
 
 package printplugin.dlgs.components;
 
 import com.jgoodies.forms.builder.PanelBuilder;
-import com.jgoodies.forms.layout.CellConstraints;
+import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
 
 import java.awt.Component;
@@ -42,6 +35,13 @@ import printplugin.util.Utils;
 
 import util.ui.Localizer;
 
+/**
+ * A {@link JPanel} that let the user define a time range.
+ * The end date can overlap the day boundary (i. e. 23:00 - 6:00)
+ *
+ * @author Bananeweizen
+ * @since 2010-06-28 19:33:48 +0200
+ */
 @SuppressWarnings({"boxing", "nls"})
 public class TimeRangePanel extends JPanel {
 
@@ -49,19 +49,21 @@ public class TimeRangePanel extends JPanel {
 
   private static final Localizer mLocalizer = Localizer.getLocalizerFor(TimeRangePanel.class);
 
-  private JComboBox<Integer> mDayEndCb;
-  private JComboBox<Integer> mDayStartCb;
+  private final JComboBox<Integer> mDayEndCb;
+  private final JComboBox<Integer> mDayStartCb;
 
+  /**
+   * Creates a new instance with default values.
+   */
   public TimeRangePanel() {
-    CellConstraints cc = new CellConstraints();
 
-    PanelBuilder pb = new PanelBuilder(new FormLayout("5dlu,pref,10dlu,pref:grow",
+    final PanelBuilder pb = new PanelBuilder(new FormLayout("5dlu,pref,10dlu,pref:grow",
         "pref,5dlu,pref,2dlu,pref,10dlu"), this);
-    pb.addSeparator(mLocalizer.msg("dayBoundaries", "Day boundaries"), cc.xyw(1, 1, 4));
-    pb.addLabel(mLocalizer.msg("startOfDay", "Start of day") + ":", cc.xy(2, 3));
-    pb.add(mDayStartCb = new JComboBox<>(Utils.createIntegerArray(0, 23, 1)), cc.xy(4, 3));
-    pb.addLabel(mLocalizer.msg("endOfDay", "End of day") + ":", cc.xy(2, 5));
-    pb.add(mDayEndCb = new JComboBox<>(Utils.createIntegerArray(12, 36, 1)), cc.xy(4, 5));
+    pb.addSeparator(mLocalizer.msg("dayBoundaries", "Day boundaries"), CC.xyw(1, 1, 4));
+    pb.addLabel(mLocalizer.msg("startOfDay", "Start of day") + ":", CC.xy(2, 3));
+    pb.add(mDayStartCb = new JComboBox<>(Utils.createIntegerArray(0, 23, 1)), CC.xy(4, 3));
+    pb.addLabel(mLocalizer.msg("endOfDay", "End of day") + ":", CC.xy(2, 5));
+    pb.add(mDayEndCb = new JComboBox<>(Utils.createIntegerArray(12, 36, 1)), CC.xy(4, 5));
 
     mDayStartCb.setRenderer(new TimeListCellRenderer());
     mDayEndCb.setRenderer(new TimeListCellRenderer());
@@ -70,7 +72,7 @@ public class TimeRangePanel extends JPanel {
     mDayEndCb.setSelectedItem(Integer.valueOf(26));
   }
 
-  public void setRange(int from, int to) {
+  public void setRange(final int from, final int to) {
     mDayStartCb.setSelectedItem(from);
     mDayEndCb.setSelectedItem(to);
   }
@@ -88,10 +90,11 @@ public class TimeRangePanel extends JPanel {
     private static final long serialVersionUID = -7167571293439305573L;
 
     @Override
-    public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected,
+    public Component getListCellRendererComponent(final JList<?> list, final Object value, final int index,
+        final boolean isSelected,
         boolean cellHasFocus) {
 
-      JLabel label = (JLabel) super.getListCellRendererComponent(list, value,
+      final JLabel label = (JLabel) super.getListCellRendererComponent(list, value,
           index, isSelected, cellHasFocus);
       if (value instanceof Integer) {
         int val = (Integer) value;

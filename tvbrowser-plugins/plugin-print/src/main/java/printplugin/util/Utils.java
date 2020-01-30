@@ -8,7 +8,9 @@ import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.FontFormatException;
+import java.awt.Frame;
 import java.awt.GraphicsEnvironment;
+import java.awt.Insets;
 import java.awt.Toolkit;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -24,10 +26,14 @@ import java.util.stream.Stream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
+import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComponent;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
+
+import util.ui.Localizer;
 
 @SuppressWarnings("nls")
 public final class Utils {
@@ -398,5 +404,61 @@ public final class Utils {
     final ProgramFieldType[] typeArr = new ProgramFieldType[typeList.size()];
     typeList.toArray(typeArr);
     return typeArr;
+  }
+
+  public static void adjustButtonMargin(final JButton button, final int minMargin) {
+    if (button == null) {
+      return;
+    }
+
+    Insets insets = button.getMargin();
+    if (insets == null) {
+      insets = new Insets(minMargin, minMargin, minMargin, minMargin);
+    } else {
+      insets.bottom = insets.bottom < minMargin ? insets.bottom + minMargin -
+          insets.bottom : insets.bottom;
+      insets.left = insets.left < minMargin ? insets.left + minMargin - insets.left
+          : insets.left;
+      insets.right = insets.right < minMargin ? insets.right + minMargin -
+          insets.right : insets.right;
+      insets.top = insets.top < minMargin ? insets.top + minMargin - insets.top : insets.top;
+    }
+    button.setMargin(insets);
+  }
+
+  /**
+   * Shows a {@link JOptionPane} based input dialog with localized option buttons.
+   * <p>
+   * Starting with Java version 11 the Oracle SDK does not support localization
+   * for UI elements (Swing) anymore except Chinese and English; this is a
+   * replacement.
+   *
+   * @param parent
+   *                       the parent frame
+   * @param title
+   *                       the dialog's title
+   * @param message
+   *                       the dialog's message
+   * @param initialValue
+   *                       the initial value
+   * @return the entered data, or <code>null</code>
+   * @see JOptionPane#showInputDialog(Component, Object, String, int,
+   *        javax.swing.Icon, Object[], Object)
+   * @see JOptionPane#UNINITIALIZED_VALUE
+   */
+  public static Object showInputDialog(final Frame parent, final String title, final String message,
+      final Object initialValue) {
+    final JOptionPane optionPane = new JOptionPane(
+        message,
+        JOptionPane.PLAIN_MESSAGE,
+        JOptionPane.OK_CANCEL_OPTION,
+        null,
+        new String[] {Localizer.getLocalization(Localizer.I18N_OK), Localizer.getLocalization(Localizer.I18N_CANCEL)},
+        null);
+    optionPane.setWantsInput(true);
+    optionPane.setInitialSelectionValue(initialValue);
+    optionPane.selectInitialValue();
+    optionPane.createDialog(parent, title).setVisible(true);
+    return optionPane.getInputValue() == JOptionPane.UNINITIALIZED_VALUE ? null : optionPane.getInputValue();
   }
 }

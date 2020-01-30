@@ -15,19 +15,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
- *
- * CVS information:
- *  $RCSfile$
- *   $Source$
- *     $Date: 2006-03-06 17:29:38 +0100 (Mo, 06 Mrz 2006) $
- *   $Author: troggan $
- * $Revision: 1944 $
  */
 
 package printplugin.settings;
 
 import java.awt.Font;
-
 
 public class QueuePrinterSettings implements Settings {
 
@@ -36,7 +28,8 @@ public class QueuePrinterSettings implements Settings {
   private ProgramIconSettings mProgramIconSettings;
   private Font mDateFont;
 
-  public QueuePrinterSettings(boolean emptyQueueAfterPrinting, int columnsPerPage, ProgramIconSettings programIconSettings, Font dateFont) {
+  public QueuePrinterSettings(boolean emptyQueueAfterPrinting, int columnsPerPage,
+      ProgramIconSettings programIconSettings, Font dateFont) {
     mEmptyQueueAfterPrinting = emptyQueueAfterPrinting;
     mColumnsPerPage = columnsPerPage;
     mProgramIconSettings = programIconSettings;

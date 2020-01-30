@@ -15,13 +15,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
- *
- * CVS information:
- *  $RCSfile$
- *   $Source$
- *     $Date: 2010-06-28 19:33:48 +0200 (Mo, 28 Jun 2010) $
- *   $Author: bananeweizen $
- * $Revision: 6662 $
  */
 
 package printplugin.dlgs.printfromqueuedialog;
@@ -81,7 +74,7 @@ public class PrintFromQueueDialogContent implements DialogContent<QueuePrinterSe
   @Override
   public Component getContent(final Frame parentFrame) {
     JTabbedPane tab = new JTabbedPane();
-    mGeneralTab = new GeneralTab(mRootNode);
+    mGeneralTab = new GeneralTab(parentFrame, getDialogTitle(), mRootNode);
     mLayoutTab = new LayoutTab();
     mExtrasTab = new ExtrasTab(parentFrame);
     tab.add(mLocalizer.msg("listingsTab", "Data"), mGeneralTab);

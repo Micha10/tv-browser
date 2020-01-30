@@ -26,6 +26,8 @@ import com.jgoodies.forms.layout.FormLayout;
 import devplugin.Channel;
 
 import java.awt.Frame;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.Arrays;
 import java.util.Locale;
 import java.util.stream.Collectors;
@@ -36,6 +38,8 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+
+import printplugin.util.BaseAction;
 
 import util.ui.ChannelChooserDlg;
 import util.ui.Localizer;
@@ -50,12 +54,13 @@ import util.ui.UiUtilities;
  * @since 06.02.2005 21:11:24
  */
 @SuppressWarnings("nls")
-public class ChannelSelectionPanel extends JPanel implements ChangeListener {
+public class ChannelSelectionPanel extends JPanel implements ActionListener, ChangeListener {
 
   private static final long serialVersionUID = 8211494254284007875L;
 
   private static final Localizer mLocalizer = Localizer.getLocalizerFor(ChannelSelectionPanel.class);
 
+  private final Frame mParent;
   private final JRadioButton mAllChannelsRb;
   private final JRadioButton mSelectedChannelsRb;
   private final JButton mChangeSelectedChannelsBt;
@@ -63,28 +68,24 @@ public class ChannelSelectionPanel extends JPanel implements ChangeListener {
   private Channel[] mChannels;
 
   public ChannelSelectionPanel(final Frame dlgParent, final Channel[] channels) {
+
     mChannels = channels;
+    mParent = dlgParent;
+
+    mChangeSelectedChannelsBt = new JButton(BaseAction.select(this).build());
 
     final PanelBuilder pb = new PanelBuilder(new FormLayout("5dlu,pref:grow,10dlu,pref",
         "pref,5dlu,pref,2dlu,pref,10dlu"), this);
     pb.addSeparator(Localizer.getLocalization(Localizer.I18N_CHANNELS), CC.xyw(1, 1, 4));
     pb.add(mAllChannelsRb = new JRadioButton(mLocalizer.msg("all", "All")), CC.xy(2, 3));
     pb.add(mSelectedChannelsRb = new JRadioButton(), CC.xy(2, 5));
-    pb.add(mChangeSelectedChannelsBt = new JButton(mLocalizer.ellipsisMsg("change", "Change")), CC.xy(4, 5));
+    pb.add(mChangeSelectedChannelsBt, CC.xy(4, 5));
 
     final ButtonGroup group = new ButtonGroup();
     group.add(mAllChannelsRb);
     group.add(mSelectedChannelsRb);
 
     updateSelectedChannelsPanel();
-
-    mChangeSelectedChannelsBt.addActionListener(event -> {
-      final ChannelChooserDlg dlg = new ChannelChooserDlg(UiUtilities.getLastModalChildOf(dlgParent), mChannels, null);
-      dlg.setMinimumSize(dlg.getSize());
-      UiUtilities.centerAndShow(dlg);
-      mChannels = dlg.getChannels();
-      updateSelectedChannelsPanel();
-    });
 
     mAllChannelsRb.addChangeListener(this);
     mSelectedChannelsRb.addChangeListener(this);
@@ -103,13 +104,15 @@ public class ChannelSelectionPanel extends JPanel implements ChangeListener {
         final String s = Arrays.stream(mChannels)
             .map(c -> c.getName())
             .collect(Collectors.joining(", "));
-        mSelectedChannelsRb.setToolTipText(String.format(Locale.getDefault(), "<html>%s", s));
+        mSelectedChannelsRb.setToolTipText(
+            String.format(Locale.getDefault(), "<html><body><p style=\"width:360px;\">%s</p></body></html>", s));
       } else {
         mSelectedChannelsRb.setToolTipText(null);
       }
     }
 
     mSelectedChannelsRb.setText(radioBtnText);
+    mChangeSelectedChannelsBt.setEnabled(mSelectedChannelsRb.isSelected());
   }
 
   public Channel[] getChannels() {
@@ -131,10 +134,24 @@ public class ChannelSelectionPanel extends JPanel implements ChangeListener {
 
   @Override
   public void stateChanged(final ChangeEvent e) {
-    updateState();
+    if (mSelectedChannelsRb.isSelected()) {
+      mChannels = mChannels == null ? new Channel[0] : mChannels;
+      updateSelectedChannelsPanel();
+    }
   }
 
-  private void updateState() {
-    mChangeSelectedChannelsBt.setEnabled(mSelectedChannelsRb.isSelected());
+  @SuppressWarnings("incomplete-switch")
+  @Override
+  public void actionPerformed(final ActionEvent e) {
+    switch (e.getActionCommand()) {
+      case BaseAction.SELECT:
+        final ChannelChooserDlg dlg = new ChannelChooserDlg(UiUtilities.getLastModalChildOf(mParent), mChannels,
+            null);
+        dlg.setMinimumSize(dlg.getSize());
+        UiUtilities.centerAndShow(dlg);
+        mChannels = dlg.getChannels();
+        updateSelectedChannelsPanel();
+        break;
+    }
   }
 }

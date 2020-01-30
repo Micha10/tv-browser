@@ -15,13 +15,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
- *
- * CVS information:
- *  $RCSfile$
- *   $Source$
- *     $Date: 2005-04-10 18:17:45 +0200 (So, 10 Apr 2005) $
- *   $Author: darras $
- * $Revision: 1127 $
  */
 
 package printplugin.printer;
@@ -30,7 +23,7 @@ import devplugin.Program;
 
 public interface ColumnModel {
 
-  Program getProgramAt(int inx);
+  Program getProgramAt(final int index);
 
   int getProgramCount();
 

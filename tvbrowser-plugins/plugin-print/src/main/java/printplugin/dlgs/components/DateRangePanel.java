@@ -35,8 +35,7 @@ import printplugin.util.Utils;
 import util.ui.Localizer;
 
 /**
- * {@link JPanel} that let the user a date range which is defined by
- * a start date and an amount of days (start date + n days).
+ * {@link JPanel} that let the user define a date range (start date + n days).
  *
  * @author bananeweizen
  * @since 2010-06-28 19:33:48 +0200

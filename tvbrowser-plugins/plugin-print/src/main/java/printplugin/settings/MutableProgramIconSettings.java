@@ -15,13 +15,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
- *
- * CVS information:
- *  $RCSfile$
- *   $Source$
- *     $Date: 2007-09-21 21:48:38 +0200 (Fr, 21 Sep 2007) $
- *   $Author: ds10 $
- * $Revision: 3905 $
  */
 
 package printplugin.settings;
@@ -43,8 +36,9 @@ public class MutableProgramIconSettings implements ProgramIconSettings {
 
   /**
    * Creates an instance of this class with the given settings.
-   * 
-   * @param settings The settings for this class.
+   *
+   * @param settings
+   *                   The settings for this class.
    */
   public MutableProgramIconSettings(ProgramIconSettings settings) {
     mTitleFont = settings.getTitleFont();
@@ -57,7 +51,7 @@ public class MutableProgramIconSettings implements ProgramIconSettings {
     mPaintProgramOnAir = settings.getPaintProgramOnAir();
     mPaintPluginMarks = settings.getPaintPluginMarks();
   }
-  
+
   public void setTitleFont(Font titleFont) {
     mTitleFont = titleFont;
   }
@@ -138,5 +132,4 @@ public class MutableProgramIconSettings implements ProgramIconSettings {
   public boolean getPaintPluginMarks() {
     return mPaintPluginMarks;
   }
-
 }

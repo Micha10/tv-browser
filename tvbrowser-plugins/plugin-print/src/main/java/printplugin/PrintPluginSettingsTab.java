@@ -15,24 +15,30 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
- *
- * CVS information:
- *     $Date: 2011-03-26 21:21:11 +0100 (Sa, 26 Mrz 2011) $
- *   $Author: bananeweizen $
- * $Revision: 6974 $
  */
 
 package printplugin;
 
-import com.jgoodies.forms.layout.CellConstraints;
-import com.jgoodies.forms.layout.FormLayout;
-
 import devplugin.SettingsTab;
 
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Font;
+
+import javax.swing.BorderFactory;
 import javax.swing.Icon;
+import javax.swing.JEditorPane;
 import javax.swing.JPanel;
+import javax.swing.JTabbedPane;
+import javax.swing.UIManager;
+
+import org.apache.commons.lang3.StringUtils;
+
+import printplugin.util.Utils;
 
 import util.ui.DefaultMarkingPrioritySelectionPanel;
+import util.ui.Localizer;
+import util.ui.UiUtilities;
 
 /**
  * The settings tab for the print plugin.
@@ -42,16 +48,27 @@ import util.ui.DefaultMarkingPrioritySelectionPanel;
 @SuppressWarnings("nls")
 public class PrintPluginSettingsTab implements SettingsTab {
 
+  /** The localizer for this class. */
+  public static final Localizer mLocalizer = Localizer.getLocalizerFor(PrintPluginSettingsTab.class);
+
+  private final PrintPlugin mPrintPlugin;
+
   private DefaultMarkingPrioritySelectionPanel mMarkingsPanel;
+
+  public PrintPluginSettingsTab(final PrintPlugin printPlugin) {
+    mPrintPlugin = printPlugin;
+  }
 
   @Override
   public JPanel createSettingsPanel() {
-    JPanel panel = new JPanel(new FormLayout("default:grow", "5dlu,fill:default:grow"));
-    panel.add(
-        mMarkingsPanel = DefaultMarkingPrioritySelectionPanel
-            .createPanel(PrintPlugin.getInstance().getMarkPriorityForProgram(null), false, false),
-        new CellConstraints().xy(1, 2));
 
+    final JTabbedPane tabbedPane = new JTabbedPane();
+    tabbedPane.addTab(mLocalizer.msg("markings", "Markings"), mMarkingsPanel = createMarkingsTab());
+    Utils.setOpaque(tabbedPane, false);
+
+    final JPanel panel = new JPanel(new BorderLayout(10, 10));
+    panel.setBorder(BorderFactory.createEmptyBorder(10, 5, 0, 0));
+    panel.add(tabbedPane, BorderLayout.CENTER);
     return panel;
   }
 
@@ -67,6 +84,35 @@ public class PrintPluginSettingsTab implements SettingsTab {
 
   @Override
   public void saveSettings() {
-    PrintPlugin.getInstance().setMarkPriority(mMarkingsPanel.getSelectedPriority());
+    mPrintPlugin.setMarkPriority(mMarkingsPanel.getSelectedPriority());
+  }
+
+  private static DefaultMarkingPrioritySelectionPanel createMarkingsTab() {
+
+    final Font font = UIManager.getFont("Label.font");
+    final Color foreground = UIManager.getColor("Label.foreground");
+
+    String text = Localizer.getLocalizerFor(DefaultMarkingPrioritySelectionPanel.class).msg("help",
+        "The selected higlighting color is only shown if the program is higlighted by this plugin only "
+            + "or if the other higlightings have a lower or the same priority. The higlighting colors of "
+            + "the priorities can be changed in the <a href=\"#link\">higlighting settings</a>.");
+    if (text.indexOf("<html>") >= 0) {
+      text = StringUtils.substringBetween(text, "<html>", "</html>");
+    }
+
+    text = "<html><div style=\"color:" + UiUtilities.getHTMLColorCode(foreground)
+        + ";font-family:" + font.getName() + "; font-size:" + font.getSize() + ";\">" + text + "</div></html>";
+
+    final DefaultMarkingPrioritySelectionPanel defaultMarkingPrioritySelectionPanel = DefaultMarkingPrioritySelectionPanel
+        .createPanel(PrintPlugin.getInstance().getMarkPriorityForProgram(null), false, true);
+
+    final JEditorPane editorPane = Utils.findFirst(JEditorPane.class, defaultMarkingPrioritySelectionPanel);
+    editorPane.setBackground(null);
+    editorPane.setFont(font);
+    editorPane.setForeground(foreground);
+    editorPane.setOpaque(false);
+    editorPane.setText(text);
+
+    return defaultMarkingPrioritySelectionPanel;
   }
 }

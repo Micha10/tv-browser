@@ -19,38 +19,39 @@
 
 package printplugin.dlgs.components;
 
+import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.RenderingHints;
-import java.awt.font.FontRenderContext;
-import java.awt.font.LineBreakMeasurer;
-import java.awt.font.TextLayout;
-import java.text.AttributedCharacterIterator;
-import java.text.AttributedString;
+import java.awt.Font;
+import java.awt.Rectangle;
 
-import javax.swing.JPanel;
+import javax.swing.JTextArea;
 import javax.swing.LookAndFeel;
 import javax.swing.UIDefaults;
 import javax.swing.UIManager;
+import javax.swing.plaf.UIResource;
+import javax.swing.text.DefaultCaret;
 
 /**
- * A simple label to display unformatted text. It uses the font and
+ * A simple label to display line wrapped text. It uses the font and
  * foreground color of the {@link UIDefaults} for the current
- * {@link LookAndFeel}. Antialiasing is applied.
- *
- * The {@link JPanel} based component uses a {@link LineBreakMeasurer}
- * to wrap text to fit into the width of the parent container.
+ * {@link LookAndFeel}.
  *
  * @author tgiesecke
- * @since 3.0.2.5 beta
+ * @see JTextArea
+ * @since 3.0.2.6 beta
  */
 @SuppressWarnings("nls")
-public class LineWrapLabel extends JPanel {
+public class LineWrapLabel extends JTextArea {
 
   private static final long serialVersionUID = -5181467312906987989L;
 
-  private final AttributedString mAttributedString;
+  /**
+   * Creates a new instance.
+   */
+  public LineWrapLabel() {
+    super();
+    init();
+  }
 
   /**
    * Creates a new instance with the given text.
@@ -59,65 +60,39 @@ public class LineWrapLabel extends JPanel {
    *               the text to display
    */
   public LineWrapLabel(final String text) {
-    super();
-    setFont(UIManager.getLookAndFeelDefaults().getFont("Label.font"));
-    setForeground(UIManager.getLookAndFeelDefaults().getColor("Label.foreground"));
-    mAttributedString = new AttributedString(text);
+    super(text);
+    init();
   }
 
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public void paintComponent(final Graphics g) {
+  private void init() {
+    setBackground(null);
+    setCaret(new DefaultCaret() {
 
-    super.paintComponent(g);
+      private static final long serialVersionUID = -8708022951336324026L;
 
-    final Graphics2D g2d = (Graphics2D) g;
-    g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-
-    final AttributedCharacterIterator attributedCharacterIterator = mAttributedString.getIterator();
-    final int beginIndex = attributedCharacterIterator.getBeginIndex();
-    final int endIndex = attributedCharacterIterator.getEndIndex();
-    final LineBreakMeasurer lineMeasurer = new LineBreakMeasurer(attributedCharacterIterator,
-        g2d.getFontRenderContext());
-    final float breakWidth = getSize().width;
-
-    float drawPosY = 0;
-    lineMeasurer.setPosition(beginIndex);
-    while (lineMeasurer.getPosition() < endIndex) {
-      final TextLayout layout = lineMeasurer.nextLayout(breakWidth);
-      final float drawPosX = layout.isLeftToRight() ? 0 : breakWidth - layout.getAdvance();
-      drawPosY += layout.getAscent();
-      layout.draw(g2d, drawPosX, drawPosY);
-      drawPosY += layout.getDescent() + layout.getLeading();
+      @Override
+      protected void adjustVisibility(final Rectangle rectangle) {}
+    });
+    setEditable(false);
+    setFocusable(false);
+    final Font font = getFont();
+    if (font == null || font instanceof UIResource) {
+      setFont(UIManager.getFont("Label.font"));
     }
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public Dimension getPreferredSize() {
-    float x = 0f;
-    float y = 0f;
-    final AttributedCharacterIterator attributedCharacterIterator = mAttributedString.getIterator();
-    final int beginIndex = attributedCharacterIterator.getBeginIndex();
-    final int endIndex = attributedCharacterIterator.getEndIndex();
-    final LineBreakMeasurer lineMeasurer = new LineBreakMeasurer(attributedCharacterIterator,
-        new FontRenderContext(getFont().getTransform(), true, true));
-    lineMeasurer.setPosition(beginIndex);
-    while (lineMeasurer.getPosition() < endIndex) {
-      final TextLayout layout = lineMeasurer.nextLayout(getWidth());
-      x = Math.max(x, layout.getVisibleAdvance());
-      y += layout.getAscent() + layout.getDescent() + layout.getLeading();
+    final Color foregroundColor = getForeground();
+    if (foregroundColor == null || foregroundColor instanceof UIResource) {
+      setForeground(UIManager.getColor("Label.foreground"));
     }
-    return new Dimension((int) x, (int) y);
+    setLineWrap(true);
+    setOpaque(false);
+    setRequestFocusEnabled(false);
+    setWrapStyleWord(true);
   }
 
   @Override
-  public Dimension getMaximumSize() {
-    return getPreferredSize();
+  public void updateUI() {
+    super.updateUI();
+    LookAndFeel.installBorder(this, "Label.border");
   }
 
   @Override

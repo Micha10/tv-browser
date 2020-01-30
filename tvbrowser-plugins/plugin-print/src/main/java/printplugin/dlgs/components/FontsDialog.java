@@ -29,10 +29,14 @@ import com.jgoodies.forms.layout.RowSpec;
 import java.awt.BorderLayout;
 import java.awt.Font;
 import java.awt.Frame;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
+
+import printplugin.util.BaseAction;
 
 import util.ui.Localizer;
 import util.ui.UiUtilities;
@@ -46,7 +50,7 @@ import util.ui.WindowClosingIf;
  * @since 2009-04-25 09:58:28 +0200
  */
 @SuppressWarnings("nls")
-public class FontsDialog extends JDialog implements WindowClosingIf {
+public class FontsDialog extends JDialog implements ActionListener, WindowClosingIf {
 
   private static final long serialVersionUID = 1108301325894399327L;
 
@@ -111,21 +115,9 @@ public class FontsDialog extends JDialog implements WindowClosingIf {
   }
 
   private JPanel createButtonBar() {
-
-    final JButton okBt = new JButton(Localizer.getLocalization(Localizer.I18N_OK));
-    okBt.addActionListener(e -> {
-      mResult = OK;
-      setVisible(false);
-    });
-    okBt.setActionCommand("ok");
-    okBt.setDefaultCapable(true);
-
-    final JButton cancelBt = new JButton(Localizer.getLocalization(Localizer.I18N_CANCEL));
-    cancelBt.addActionListener(e -> close());
-    cancelBt.setActionCommand("cancel");
-
+    final JButton okBt = new JButton(BaseAction.ok(this).build());
+    final JButton cancelBt = new JButton(BaseAction.cancel(this).build());
     getRootPane().setDefaultButton(okBt);
-
     return new ButtonBarBuilder().addGlue().addButton(okBt, cancelBt).build();
   }
 
@@ -152,5 +144,19 @@ public class FontsDialog extends JDialog implements WindowClosingIf {
   public void close() {
     mResult = CANCEL;
     setVisible(false);
+  }
+
+  @SuppressWarnings("incomplete-switch")
+  @Override
+  public void actionPerformed(final ActionEvent e) {
+    switch (e.getActionCommand()) {
+      case BaseAction.CANCEL:
+        close();
+        break;
+      case BaseAction.OK:
+        mResult = OK;
+        setVisible(false);
+        break;
+    }
   }
 }

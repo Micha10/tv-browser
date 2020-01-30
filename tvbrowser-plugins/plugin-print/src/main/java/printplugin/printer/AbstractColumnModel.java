@@ -15,27 +15,18 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
- *
- * CVS information:
- *  $RCSfile$
- *   $Source$
- *     $Date: 2010-06-28 19:33:48 +0200 (Mo, 28 Jun 2010) $
- *   $Author: bananeweizen $
- * $Revision: 6662 $
  */
-
 
 package printplugin.printer;
 
 import devplugin.Program;
 
 import java.util.ArrayList;
-
+import java.util.List;
 
 public abstract class AbstractColumnModel implements ColumnModel {
-  
-  private ArrayList<Program> mPrograms;
 
+  private List<Program> mPrograms;
 
   public AbstractColumnModel(Program[] progs) {
     mPrograms = new ArrayList<>();
@@ -43,7 +34,7 @@ public abstract class AbstractColumnModel implements ColumnModel {
   }
 
   public AbstractColumnModel() {
-    this(new Program[]{});
+    this(new Program[] {});
   }
 
   public void setPrograms(Program[] progs) {
@@ -54,7 +45,7 @@ public abstract class AbstractColumnModel implements ColumnModel {
 
   @Override
   public Program getProgramAt(int inx) {
-    if (inx>=0 && inx<mPrograms.size()) {
+    if (inx >= 0 && inx < mPrograms.size()) {
       return mPrograms.get(inx);
     }
     return null;
@@ -64,11 +55,8 @@ public abstract class AbstractColumnModel implements ColumnModel {
     mPrograms.add(prog);
   }
 
-
   @Override
   public int getProgramCount() {
     return mPrograms.size();
   }
-
-  
 }

@@ -15,13 +15,6 @@
 * You should have received a copy of the GNU General Public License
 * along with this program; if not, write to the Free Software
 * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-*
-* CVS information:
-*  $RCSfile$
-*   $Source$
-*     $Date: 2009-04-17 09:05:19 +0200 (Fr, 17 Apr 2009) $
-*   $Author: bananeweizen $
-* $Revision: 5652 $
 */
 
 package printplugin.dlgs.printfromqueuedialog;
@@ -31,128 +24,182 @@ import com.jgoodies.forms.factories.Borders;
 import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
 
-import devplugin.Channel;
-import devplugin.Date;
 import devplugin.PluginTreeNode;
 import devplugin.Program;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.Font;
+import java.awt.Frame;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
-import javax.swing.BoxLayout;
-import javax.swing.Icon;
+import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
-import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.SwingConstants;
 
-import printplugin.EmptyQueueAction;
 import printplugin.PrintPlugin;
+import printplugin.util.BaseAction;
 
 import util.program.ProgramUtilities;
 import util.ui.Localizer;
 import util.ui.TVBrowserIcons;
-import util.ui.UiUtilities;
 
 @SuppressWarnings("nls")
-public class GeneralTab extends JPanel {
+public class GeneralTab extends JPanel implements ActionListener {
 
   private static final long serialVersionUID = -2247976798179949758L;
 
   private static final Localizer mLocalizer = Localizer.getLocalizerFor(GeneralTab.class);
 
-  private JCheckBox mEmptyQueueCb;
-  private PluginTreeNode mRootNode;
-  private JButton mEmptyQueueBt;
-  private JPanel mProgramListPanel;
+  private final DefaultListModel<Program> mListModel;
+  private final JButton mEmptyQueueBt;
+  private final JCheckBox mEmptyQueueCb;
+  private final JList<Program> mList;
+  private final JButton mRemoveSelected;
 
-  public GeneralTab(PluginTreeNode rootNode) {
+  private final Frame mParentFrame;
+  private final PluginTreeNode mRootNode;
+  private final String mTitle;
+
+  public GeneralTab(final Frame parent, final String title, final PluginTreeNode rootNode) {
+
+    mParentFrame = parent;
+    mTitle = title;
     mRootNode = rootNode;
+    mListModel = new DefaultListModel<>();
 
-    final PanelBuilder pb = new PanelBuilder(new FormLayout("pref:grow",
+    final List<Program> programs = new ArrayList<>(Arrays.asList(mRootNode.getPrograms()));
+    Collections.sort(programs, ProgramUtilities.getProgramComparator());
+    mListModel.addAll(programs);
+    mList = initList();
+
+    mRemoveSelected = new JButton(BaseAction
+        .builder("removeFromQueue", this)
+        .enabled(!mListModel.isEmpty() && mList.getSelectedIndices().length > 0)
+        .text(mLocalizer.msg("removeFromQueue", "Remove selected"))
+        .build());
+    mEmptyQueueBt = new JButton(BaseAction
+        .builder("clearQueue", this)
+        .enabled(!mListModel.isEmpty())
+        .icon(TVBrowserIcons.delete(TVBrowserIcons.SIZE_SMALL))
+        .text(mLocalizer.msg("clearQueue", "Clear printer queue"))
+        .build());
+    mEmptyQueueCb = new JCheckBox(mLocalizer.msg("emptyQueue", "Empty queue after printing"));
+
+    final PanelBuilder pb = new PanelBuilder(new FormLayout("pref:grow,5dlu,pref:grow",
         "fill:default:grow,5dlu,pref,10dlu,pref"), this);
+    pb.add(new JScrollPane(mList), CC.xyw(1, 1, 3));
+    pb.add(mRemoveSelected, CC.xy(1, 3));
+    pb.add(mEmptyQueueBt, CC.xy(3, 3));
+    pb.add(mEmptyQueueCb, CC.xyw(1, 5, 3));
     pb.border(Borders.DIALOG);
-
-    JScrollPane scrollPane = new JScrollPane(mProgramListPanel = createProgramListPanel());
-    scrollPane.getVerticalScrollBar().setUnitIncrement(30);
-    scrollPane.getVerticalScrollBar().setBlockIncrement(80);
-
-    pb.add(scrollPane, CC.xy(1, 1));
-    pb.add(mEmptyQueueBt = new JButton(new EmptyQueueAction()), CC.xy(1, 3));
-    pb.add(mEmptyQueueCb = new JCheckBox(mLocalizer.msg("emptyQueue", "Empty queue after pringing")), CC.xy(1, 5));
-
-    mEmptyQueueBt.addActionListener(e -> {
-      mProgramListPanel.removeAll();
-      mProgramListPanel.invalidate();
-      mProgramListPanel.repaint();
-    });
   }
 
-  private JPanel createProgramListPanel() {
+  @SuppressWarnings({"unchecked", "rawtypes"})
+  private JList<Program> initList() {
+    final JList<Program> list = new JList(mListModel) {
 
-    final JPanel content = new JPanel();
-    content.setLayout(new BoxLayout(content, BoxLayout.Y_AXIS));
+      private static final long serialVersionUID = 3607552994305420657L;
 
-    Program[] progs = mRootNode.getPrograms();
-
-    Arrays.sort(progs, ProgramUtilities.getProgramComparator());
-    Date curDate = null;
-
-    final Font defaultFont = getFont();
-    final Font dateFont = defaultFont.deriveFont(Font.BOLD, defaultFont.getSize2D() + 1f);
-    final Font channelFont = defaultFont.deriveFont(Font.PLAIN, defaultFont.getSize2D() - 1f);
-
-    for (Program prog : progs) {
-      if (!prog.getDate().equals(curDate)) {
-        curDate = prog.getDate();
-        JPanel datePanel = new JPanel(new BorderLayout());
-        JLabel dateLb = new JLabel(curDate.getLongDateString());
-        dateLb.setFont(dateFont);
-        datePanel.add(dateLb, BorderLayout.LINE_START);
-        content.add(datePanel);
+      @Override
+      public boolean getScrollableTracksViewportWidth() {
+        return true;
       }
-      addProgramPanel(channelFont, content, prog);
-    }
+    };
+    list.setFixedCellHeight(24);
+    list.setFixedCellHeight(-1);
+    list.addComponentListener(new ComponentAdapter() {
 
-    return content;
-  }
+      @Override
+      public void componentResized(final ComponentEvent e) {
+        // cache invalidation by temporarily setting fixed height
+        list.setFixedCellHeight(24);
+        list.setFixedCellHeight(-1);
+      }
+    });
+    list.addKeyListener(new KeyAdapter() {
 
-  private void addProgramPanel(final Font channelFont, final JPanel content, final Program program) {
-    final JPanel progPn = new JPanel(new BorderLayout());
-
-    Icon icon = TVBrowserIcons.delete(TVBrowserIcons.SIZE_SMALL);
-    JButton removeBtn = UiUtilities.createToolBarButton(mLocalizer.msg("removeFromQueue", "Remove from queue"), icon);
-    removeBtn.addActionListener(event -> {
-      program.unmark(PrintPlugin.getInstance());
-      mRootNode.removeProgram(program);
-      mRootNode.update();
-      content.remove(progPn);
-      content.repaint();
+      @Override
+      public void keyTyped(final KeyEvent e) {
+        switch (e.getKeyChar()) {
+          case KeyEvent.VK_BACK_SPACE:
+          case KeyEvent.VK_DELETE:
+            if (!mList.getSelectedValuesList().isEmpty()) {
+              removeSelected();
+            }
+            break;
+          default:
+            break;
+        }
+      }
     });
 
-    progPn.add(removeBtn, BorderLayout.LINE_START);
-
-    JPanel pn1 = new JPanel(new BorderLayout());
-    progPn.add(pn1, BorderLayout.CENTER);
-    Channel ch = program.getChannel();
-    JLabel channelLb;
-    channelLb = new JLabel(ch.getName());
-    channelLb.setFont(channelFont);
-    channelLb.setHorizontalAlignment(SwingConstants.RIGHT);
-    channelLb.setPreferredSize(new Dimension(60, 10));
-    pn1.add(channelLb, BorderLayout.LINE_END);
-
-    JLabel progLb = new JLabel("<html><b>" + program.getTimeString() + ":</b> " + program.getTitle());
-    pn1.add(progLb, BorderLayout.CENTER);
-    content.add(progPn);
+    list.addListSelectionListener(e -> update());
+    list.setCellRenderer(new ProgramListCellRenderer());
+    return list;
   }
 
-  public void setEmptyQueueAfterPrinting(boolean b) {
-    mEmptyQueueCb.setSelected(b);
+  private void update() {
+    mEmptyQueueBt.setEnabled(!mListModel.isEmpty());
+    mRemoveSelected.setEnabled(!mListModel.isEmpty() && mList.getSelectedIndices().length > 0);
+  }
+
+  private void clearQueue() {
+    if (JOptionPane.showOptionDialog(
+        mParentFrame,
+        mLocalizer.msg("clearQueue", "Clear printer queue").concat("?"),
+        mTitle,
+        JOptionPane.YES_NO_OPTION,
+        JOptionPane.QUESTION_MESSAGE,
+        null,
+        new String[] {Localizer.getLocalization(Localizer.I18N_OK), Localizer.getLocalization(Localizer.I18N_CANCEL)},
+        null) == JOptionPane.YES_OPTION) {
+      PluginTreeNode root = PrintPlugin.getInstance().getRootNode();
+      root.removeAllChildren();
+      root.update();
+      mListModel.clear();
+      update();
+    }
+  }
+
+  private void removeSelected() {
+    final PrintPlugin printPlugin = PrintPlugin.getInstance();
+    final List<Program> selectedValuesList = mList.getSelectedValuesList();
+    for (final Program program : selectedValuesList) {
+      mListModel.removeElement(program);
+      program.unmark(printPlugin);
+      mRootNode.removeProgram(program);
+    }
+    mRootNode.update();
+    update();
+  }
+
+  @Override
+  public void actionPerformed(final ActionEvent e) {
+    switch (e.getActionCommand()) {
+      case "clearQueue":
+        clearQueue();
+        break;
+      case "removeFromQueue":
+        removeSelected();
+        break;
+      default:
+        break;
+    }
+  }
+
+  public void setEmptyQueueAfterPrinting(final boolean selected) {
+    mEmptyQueueCb.setSelected(selected);
   }
 
   public boolean emptyQueueAfterPrinting() {

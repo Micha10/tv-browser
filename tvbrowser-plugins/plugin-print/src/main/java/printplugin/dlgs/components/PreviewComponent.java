@@ -57,10 +57,10 @@ public class PreviewComponent extends JComponent {
 
   private static final double CROP_MARK_LENGTH = 14.17322835; // 0,5cm (2,54 cm = 72 dpi)
 
-  private static final double MAX_ZOOM = 6D;
-  private static final double MIN_ZOOM = .5D;
-  private static final double DEFAULT_ZOOM = .7D;
-  private static final double ZOOM_STEP = .1D;
+  public static final double MAX_ZOOM = 6D;
+  public static final double MIN_ZOOM = .5D;
+  public static final double DEFAULT_ZOOM = .7D;
+  public static final double ZOOM_STEP = .1D;
 
   private final Dimension mInitialSize;
   private final Printable mPrintable;

@@ -12,12 +12,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
- * CVS information:
- * $RCSfile$
- * $Source$
- * $Date: 2009-04-25 09:58:28 +0200 (Sa, 25 Apr 2009) $
- * $Author: Bananeweizen $
- * $Revision: 5670 $
  */
 
 package printplugin.dlgs;
@@ -45,8 +39,11 @@ import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 
 import printplugin.PrintPlugin;
+import printplugin.util.BaseAction;
+import printplugin.util.Utils;
 
 import util.ui.Localizer;
+import util.ui.TVBrowserIcons;
 import util.ui.UiUtilities;
 import util.ui.WindowClosingIf;
 
@@ -54,6 +51,14 @@ import util.ui.WindowClosingIf;
 public final class MainPrintDialog extends JDialog implements ActionListener, FocusListener, WindowClosingIf {
 
   private static final long serialVersionUID = -7546626861023253017L;
+
+  private static final String FULL_DAY_PROGRAMS = "fullDayPrograms";
+  private static final String PRINT_FROM_QUEUE = "printFromQueue";
+
+  public static final int PRINT_CLOSE = 0;
+  public static final int PRINT_DAYPROGRAMS = 1;
+  public static final int PRINT_QUEUE = 2;
+  public static final int PRINT_SETTINGS = 3;
 
   /** The localizer for this class. */
   private static final Localizer mLocalizer = Localizer.getLocalizerFor(MainPrintDialog.class);
@@ -63,20 +68,10 @@ public final class MainPrintDialog extends JDialog implements ActionListener, Fo
 
   protected int mResult = PRINT_CLOSE;
 
-  public static final int PRINT_CLOSE = 0;
-  public static final int PRINT_DAYPROGRAMS = 1;
-  public static final int PRINT_QUEUE = 2;
-  public static final int PRINT_SETTINGS = 3;
-
   public MainPrintDialog(final Frame parent) {
     super(parent, mLocalizer.msg("title", "Print"), true);
 
     mContent = (JPanel) getContentPane();
-
-    mCloseButton = new JButton(Localizer.getLocalization(Localizer.I18N_CANCEL));
-    mCloseButton.addActionListener(this);
-    mCloseButton.setActionCommand("close");
-    mCloseButton.setDefaultCapable(true);
 
     UiUtilities.registerForClosing(this);
 
@@ -85,28 +80,35 @@ public final class MainPrintDialog extends JDialog implements ActionListener, Fo
 
     final JLabel label = new JLabel(mLocalizer.msg("whatDoYouWantToPrint", "What do you want to print?"));
 
-    final JButton printDayProgramsButton = new JButton(mLocalizer.msg("fullDayPrograms", "Full TV listings"),
-        PrintPlugin.getInstance().createImageIcon("devices", "printer", 22));
-    printDayProgramsButton.addActionListener(this);
-    printDayProgramsButton.setActionCommand("dayPrograms");
+    final JButton printDayProgramsButton = new JButton(BaseAction
+        .builder(FULL_DAY_PROGRAMS, this)
+        .icon(PrintPlugin.getInstance().createImageIcon("devices", "printer", TVBrowserIcons.SIZE_SMALL))
+        .largeIcon(PrintPlugin.getInstance().createImageIcon("devices", "printer", TVBrowserIcons.SIZE_LARGE))
+        .text(mLocalizer.msg(FULL_DAY_PROGRAMS, "Full TV listings"))
+        .build());
     printDayProgramsButton.setBackground(printDayProgramsButton.getBackground().brighter());
     printDayProgramsButton.setFont(font);
     printDayProgramsButton.setHorizontalAlignment(SwingConstants.LEADING);
     printDayProgramsButton.setIconTextGap(10);
+    Utils.adjustButtonMargin(printDayProgramsButton, 10);
 
-    final JButton printQueueButton = new JButton(mLocalizer.msg("printFromQueue", "Print from printer queue"),
-        PrintPlugin.getInstance().createImageIcon("devices", "printer", 22));
-    printQueueButton.addActionListener(this);
-    printQueueButton.setActionCommand("queue");
+    final JButton printQueueButton = new JButton(BaseAction
+        .builder(PRINT_FROM_QUEUE, this)
+        .icon(PrintPlugin.getInstance().createImageIcon("devices", "printer", TVBrowserIcons.SIZE_SMALL))
+        .largeIcon(PrintPlugin.getInstance().createImageIcon("devices", "printer", TVBrowserIcons.SIZE_LARGE))
+        .text(mLocalizer.msg(PRINT_FROM_QUEUE, "Print from printer queue"))
+        .build());
     printQueueButton.setBackground(printQueueButton.getBackground().brighter());
-    printQueueButton.setEnabled(PrintPlugin.getInstance().canPrintQueue());
     printQueueButton.setFont(font);
     printQueueButton.setHorizontalAlignment(SwingConstants.LEADING);
     printQueueButton.setIconTextGap(10);
+    Utils.adjustButtonMargin(printQueueButton, 10);
 
-    final JButton settingsButton = new JButton(
-        PrintPlugin.getInstance().createImageIcon("categories", "preferences-system", 16));
-    settingsButton.addActionListener(this);
+    final JButton settingsButton = new JButton(BaseAction.settings(this).largeIcon(null).text(null).build());
+    settingsButton.setBorderPainted(false);
+    settingsButton.setIconTextGap(0);
+    settingsButton.setMargin(UiUtilities.ZERO_INSETS);
+    settingsButton.setRolloverEnabled(true);
     settingsButton.addFocusListener(this);
     settingsButton.addMouseListener(new MouseAdapter() {
 
@@ -124,13 +126,9 @@ public final class MainPrintDialog extends JDialog implements ActionListener, Fo
         }
       }
     });
-    settingsButton.setActionCommand("settings");
-    settingsButton.setBorderPainted(false);
-    settingsButton.setIconTextGap(0);
-    settingsButton.setRolloverEnabled(true);
-    settingsButton.setToolTipText(Localizer.getLocalization(Localizer.I18N_SETTINGS));
+    Utils.adjustButtonMargin(settingsButton, 1);
 
-    mCloseButton.setText(Localizer.getLocalization(Localizer.I18N_CLOSE));
+    mCloseButton = new JButton(BaseAction.close(this).build());
 
     final JPanel bottomPanel = new ButtonBarBuilder()
         .addFixed(settingsButton)
@@ -145,7 +143,7 @@ public final class MainPrintDialog extends JDialog implements ActionListener, Fo
     gbc.anchor = GridBagConstraints.CENTER;
     gbc.fill = GridBagConstraints.HORIZONTAL;
     gbc.gridx = 0;
-    gbc.insets = new Insets(10, 10, 5, 10);
+    gbc.insets = new Insets(10, 10, 0, 10);
 
     mContent.setBackground(mContent.getBackground().brighter());
     mContent.setLayout(new GridBagLayout());
@@ -160,8 +158,14 @@ public final class MainPrintDialog extends JDialog implements ActionListener, Fo
     mContent.add(bottomPanel, gbc);
 
     pack();
-    getRootPane().setDefaultButton(mCloseButton);
-    mCloseButton.requestFocus();
+    if (PrintPlugin.getInstance().canPrintQueue()) {
+      getRootPane().setDefaultButton(mCloseButton);
+      mCloseButton.requestFocus();
+    } else {
+      printQueueButton.setEnabled(false);
+      getRootPane().setDefaultButton(printDayProgramsButton);
+      printDayProgramsButton.requestFocus();
+    }
 
     setResizable(false);
     setLocationRelativeTo(parent);
@@ -171,16 +175,16 @@ public final class MainPrintDialog extends JDialog implements ActionListener, Fo
   @Override
   public void actionPerformed(final ActionEvent e) {
     switch (e.getActionCommand()) {
-      case "dayPrograms":
+      case FULL_DAY_PROGRAMS:
         mResult = PRINT_DAYPROGRAMS;
         break;
-      case "queue":
+      case PRINT_FROM_QUEUE:
         mResult = PRINT_QUEUE;
         break;
-      case "settings":
+      case BaseAction.SETTINGS:
         mResult = PRINT_SETTINGS;
         break;
-      case "close":
+      case BaseAction.CLOSE:
         mResult = PRINT_CLOSE;
         break;
     }

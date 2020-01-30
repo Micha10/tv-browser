@@ -27,6 +27,8 @@ import devplugin.ProgramFieldType;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Frame;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -34,6 +36,8 @@ import java.util.List;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
+
+import printplugin.util.BaseAction;
 
 import util.ui.Localizer;
 import util.ui.OrderChooser;
@@ -48,7 +52,7 @@ import util.ui.WindowClosingIf;
  * @since 2010-06-28 19:33:48 +0200
  */
 @SuppressWarnings("nls")
-public class ProgramItemFieldsConfigDlg extends JDialog implements WindowClosingIf {
+public class ProgramItemFieldsConfigDlg extends JDialog implements ActionListener, WindowClosingIf {
 
   private static final long serialVersionUID = 5596520895252347786L;
 
@@ -76,15 +80,8 @@ public class ProgramItemFieldsConfigDlg extends JDialog implements WindowClosing
 
     UiUtilities.registerForClosing(this);
 
-    final JButton okBt = new JButton(Localizer.getLocalization(Localizer.I18N_OK));
-    okBt.addActionListener(event -> {
-      mResult = OK;
-      setVisible(false);
-    });
-    okBt.setDefaultCapable(true);
-
-    final JButton cancelBt = new JButton(Localizer.getLocalization(Localizer.I18N_CANCEL));
-    cancelBt.addActionListener(event -> close());
+    final JButton okBt = new JButton(BaseAction.ok(this).build());
+    final JButton cancelBt = new JButton(BaseAction.cancel(this).build());
 
     final JPanel contentPane = (JPanel) getContentPane();
     contentPane.setLayout(new BorderLayout(0, 10));
@@ -153,5 +150,19 @@ public class ProgramItemFieldsConfigDlg extends JDialog implements WindowClosing
   public void close() {
     mResult = CANCEL;
     setVisible(false);
+  }
+
+  @SuppressWarnings("incomplete-switch")
+  @Override
+  public void actionPerformed(final ActionEvent e) {
+    switch (e.getActionCommand()) {
+      case BaseAction.CANCEL:
+        close();
+        break;
+      case BaseAction.OK:
+        mResult = OK;
+        setVisible(false);
+        break;
+    }
   }
 }

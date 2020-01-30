@@ -15,13 +15,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
- *
- * CVS information:
- *  $RCSfile$
- *   $Source$
- *     $Date: 2008-02-26 21:43:52 +0100 (Di, 26 Feb 2008) $
- *   $Author: bananeweizen $
- * $Revision: 4315 $
  */
 
 package printplugin.printer.queueprinter;
