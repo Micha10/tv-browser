@@ -53,6 +53,7 @@ import printplugin.util.BaseAction;
 import printplugin.util.Utils;
 import printplugin.util.Utils.FontInfo;
 
+import util.exc.ErrorHandler;
 import util.ui.Localizer;
 import util.ui.TVBrowserIcons;
 import util.ui.UiUtilities;
@@ -67,7 +68,7 @@ import util.ui.UiUtilities;
 @SuppressWarnings("nls")
 public final class PrintPlugin extends Plugin {
 
-  private static final Version mVersion = new Version(3, 02, 6, false);
+  private static final Version mVersion = new Version(3, 02, 7, false);
 
   /** The localizer for this class. */
   @SuppressWarnings("hiding")
@@ -370,18 +371,24 @@ public final class PrintPlugin extends Plugin {
       final MainPrintDialog mainDialog = new MainPrintDialog(getParentFrame());
       // layoutWindow("mainDlg", mainDialog, mainDialog.getSize());
       mainDialog.setVisible(true);
-      switch (mainDialog.getResult()) {
-        case MainPrintDialog.PRINT_DAYPROGRAMS:
-          showPrintDialog(new PrintDayProgramsDialogContent());
-          break;
-        case MainPrintDialog.PRINT_QUEUE:
-          showPrintDialog(new PrintFromQueueDialogContent(getRootNode()));
-          break;
-        case MainPrintDialog.PRINT_SETTINGS:
-          Plugin.getPluginManager().showSettings(this);
-          break;
-        default:
-          break;
+
+      try {
+        switch (mainDialog.getResult()) {
+          case MainPrintDialog.PRINT_DAYPROGRAMS:
+            showPrintDialog(new PrintDayProgramsDialogContent());
+            break;
+          case MainPrintDialog.PRINT_QUEUE:
+            showPrintDialog(new PrintFromQueueDialogContent(getRootNode()));
+            break;
+          case MainPrintDialog.PRINT_SETTINGS:
+            Plugin.getPluginManager().showSettings(this);
+            break;
+          default:
+            break;
+        }
+      } catch (Exception e) {
+        ErrorHandler.handle("MainDialog#getResult " + mainDialog.getResult(), e);
+        throw e;
       }
     }
   }

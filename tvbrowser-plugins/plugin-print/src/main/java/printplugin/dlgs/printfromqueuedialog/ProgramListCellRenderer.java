@@ -33,6 +33,8 @@ final class ProgramListCellRenderer extends DefaultListCellRenderer {
   private final JCheckBox mCheckBox;
   private final JPanel mPanel;
 
+  private int mMaxHeight;
+
   public ProgramListCellRenderer() {
     mIcon = new JLabel();
     mIcon.setOpaque(false);
@@ -74,9 +76,14 @@ final class ProgramListCellRenderer extends DefaultListCellRenderer {
       mPanel.setBorder(new CompoundBorder(component.getBorder(), new EmptyBorder(0, 8, 0, 8)));
       mPanel.setToolTipText(getToolTipText(program));
 
+      mMaxHeight = Math.max(mMaxHeight, mPanel.getHeight());
       return mPanel;
     }
     return component;
+  }
+
+  public int getMaxHeight() {
+    return mMaxHeight;
   }
 
   @SuppressWarnings("boxing")

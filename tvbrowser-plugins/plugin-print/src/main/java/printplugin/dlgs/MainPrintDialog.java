@@ -171,7 +171,6 @@ public final class MainPrintDialog extends JDialog implements ActionListener, Fo
     setLocationRelativeTo(parent);
   }
 
-  @SuppressWarnings("incomplete-switch")
   @Override
   public void actionPerformed(final ActionEvent e) {
     switch (e.getActionCommand()) {
@@ -186,6 +185,8 @@ public final class MainPrintDialog extends JDialog implements ActionListener, Fo
         break;
       case BaseAction.CLOSE:
         mResult = PRINT_CLOSE;
+        break;
+      default:
         break;
     }
     close();

@@ -34,9 +34,7 @@ import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 import javax.swing.DefaultListModel;
@@ -50,6 +48,8 @@ import javax.swing.JScrollPane;
 import printplugin.PrintPlugin;
 import printplugin.util.BaseAction;
 
+import util.exc.ErrorHandler;
+import util.misc.OperatingSystem;
 import util.program.ProgramUtilities;
 import util.ui.Localizer;
 import util.ui.TVBrowserIcons;
@@ -61,53 +61,64 @@ public class GeneralTab extends JPanel implements ActionListener {
 
   private static final Localizer mLocalizer = Localizer.getLocalizerFor(GeneralTab.class);
 
-  private final DefaultListModel<Program> mListModel;
   private final JButton mEmptyQueueBt;
   private final JCheckBox mEmptyQueueCb;
   private final JList<Program> mList;
   private final JButton mRemoveSelected;
 
+  private final DefaultListModel<Program> mListModel;
   private final Frame mParentFrame;
   private final PluginTreeNode mRootNode;
   private final String mTitle;
 
+  private ProgramListCellRenderer mProgramListCellRenderer;
+
   public GeneralTab(final Frame parent, final String title, final PluginTreeNode rootNode) {
 
-    mParentFrame = parent;
-    mTitle = title;
-    mRootNode = rootNode;
-    mListModel = new DefaultListModel<>();
+    try {
+      mParentFrame = parent;
+      mTitle = title;
+      mRootNode = rootNode;
 
-    final List<Program> programs = new ArrayList<>(Arrays.asList(mRootNode.getPrograms()));
-    Collections.sort(programs, ProgramUtilities.getProgramComparator());
-    mListModel.addAll(programs);
-    mList = initList();
+      final Program[] programs = mRootNode.getPrograms();
+      Arrays.sort(programs, ProgramUtilities.getProgramComparator());
 
-    mRemoveSelected = new JButton(BaseAction
-        .builder("removeFromQueue", this)
-        .enabled(!mListModel.isEmpty() && mList.getSelectedIndices().length > 0)
-        .text(mLocalizer.msg("removeFromQueue", "Remove selected"))
-        .build());
-    mEmptyQueueBt = new JButton(BaseAction
-        .builder("clearQueue", this)
-        .enabled(!mListModel.isEmpty())
-        .icon(TVBrowserIcons.delete(TVBrowserIcons.SIZE_SMALL))
-        .text(mLocalizer.msg("clearQueue", "Clear printer queue"))
-        .build());
-    mEmptyQueueCb = new JCheckBox(mLocalizer.msg("emptyQueue", "Empty queue after printing"));
+      mList = initList(programs);
+      mListModel = new DefaultListModel<>();
+      for (final Program program : programs) {
+        mListModel.addElement(program);
+      }
+      mList.setModel(mListModel);
 
-    final PanelBuilder pb = new PanelBuilder(new FormLayout("pref:grow,5dlu,pref:grow",
-        "fill:default:grow,5dlu,pref,10dlu,pref"), this);
-    pb.add(new JScrollPane(mList), CC.xyw(1, 1, 3));
-    pb.add(mRemoveSelected, CC.xy(1, 3));
-    pb.add(mEmptyQueueBt, CC.xy(3, 3));
-    pb.add(mEmptyQueueCb, CC.xyw(1, 5, 3));
-    pb.border(Borders.DIALOG);
+      mRemoveSelected = new JButton(BaseAction
+          .builder("removeFromQueue", this)
+          .enabled(!mListModel.isEmpty() && mList.getSelectedIndices().length > 0)
+          .text(mLocalizer.msg("removeFromQueue", "Remove selected"))
+          .build());
+      mEmptyQueueBt = new JButton(BaseAction
+          .builder("clearQueue", this)
+          .enabled(!mListModel.isEmpty())
+          .icon(TVBrowserIcons.delete(TVBrowserIcons.SIZE_SMALL))
+          .text(mLocalizer.msg("clearQueue", "Clear printer queue"))
+          .build());
+      mEmptyQueueCb = new JCheckBox(mLocalizer.msg("emptyQueue", "Empty queue after printing"));
+
+      final PanelBuilder pb = new PanelBuilder(new FormLayout("pref:grow,5dlu,pref:grow",
+          "fill:default:grow,5dlu,pref,10dlu,pref"), this);
+      pb.add(new JScrollPane(mList), CC.xyw(1, 1, 3));
+      pb.add(mRemoveSelected, CC.xy(1, 3));
+      pb.add(mEmptyQueueBt, CC.xy(3, 3));
+      pb.add(mEmptyQueueCb, CC.xyw(1, 5, 3));
+      pb.border(Borders.DIALOG);
+    } catch (Exception e) {
+      ErrorHandler.handle("GeneralTab", e);
+      throw e;
+    }
   }
 
   @SuppressWarnings({"unchecked", "rawtypes"})
-  private JList<Program> initList() {
-    final JList<Program> list = new JList(mListModel) {
+  private JList<Program> initList(final Program[] programs) {
+    final JList<Program> list = new JList() {
 
       private static final long serialVersionUID = 3607552994305420657L;
 
@@ -116,15 +127,22 @@ public class GeneralTab extends JPanel implements ActionListener {
         return true;
       }
     };
-    list.setFixedCellHeight(24);
-    list.setFixedCellHeight(-1);
+
+    list.setFixedCellHeight(72);
+    if (!OperatingSystem.isMacOs()) {
+      list.setFixedCellHeight(-1);
+    }
     list.addComponentListener(new ComponentAdapter() {
 
       @Override
       public void componentResized(final ComponentEvent e) {
         // cache invalidation by temporarily setting fixed height
-        list.setFixedCellHeight(24);
-        list.setFixedCellHeight(-1);
+        if (mProgramListCellRenderer != null) {
+          list.setFixedCellHeight(mProgramListCellRenderer.getMaxHeight());
+        }
+        if (!OperatingSystem.isMacOs()) {
+          list.setFixedCellHeight(-1);
+        }
       }
     });
     list.addKeyListener(new KeyAdapter() {
@@ -145,7 +163,9 @@ public class GeneralTab extends JPanel implements ActionListener {
     });
 
     list.addListSelectionListener(e -> update());
-    list.setCellRenderer(new ProgramListCellRenderer());
+    mProgramListCellRenderer = new ProgramListCellRenderer();
+    list.setCellRenderer(mProgramListCellRenderer);
+
     return list;
   }
 
