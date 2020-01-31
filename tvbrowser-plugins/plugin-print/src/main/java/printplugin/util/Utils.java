@@ -17,6 +17,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Serializable;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Iterator;
@@ -33,6 +35,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 
+import util.misc.OperatingSystem;
 import util.ui.Localizer;
 
 @SuppressWarnings("nls")
@@ -460,5 +463,68 @@ public final class Utils {
     optionPane.selectInitialValue();
     optionPane.createDialog(parent, title).setVisible(true);
     return optionPane.getInputValue() == JOptionPane.UNINITIALIZED_VALUE ? null : optionPane.getInputValue();
+  }
+
+  /**
+   * Checks if the given text can be displayed with the given font. That is
+   * <code>true</code> if the font contains glyphs to print all characters
+   * of the string.
+   *
+   * @param str
+   *               the text to check for non-printable characters
+   * @param font
+   *               the font that shall be used
+   * @return <code>true</code> if the given string can be displayed with the given
+   *           font
+   * @see Font#canDisplayUpTo(String)
+   */
+  public static boolean isDisplayable(final String str, Font font) {
+    boolean isDisplayable;
+    if (OperatingSystem.isMacOs()) {
+      try {
+        isDisplayable = macCanDisplayUpTo(font, str) != -1;
+      } catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException
+          | InvocationTargetException e) {
+        isDisplayable = font.canDisplayUpTo(str) != -1;
+      }
+    } else {
+      isDisplayable = font.canDisplayUpTo(str) != -1;
+    }
+    return isDisplayable;
+  }
+
+  /**
+   * Fix based on
+   * https://stackoverflow.com/questions/17008081/font-candisplay-always-returns-true-on-mac/56065355#56065355
+   * 
+   * @see #isDisplayable(String, Font)
+   */
+  @SuppressWarnings("boxing")
+  private static int macCanDisplayUpTo(Font font, String str) throws NoSuchMethodException, SecurityException,
+      IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+    Method getFontMethod = Font.class.getDeclaredMethod("getFont2D");
+    getFontMethod.setAccessible(true);
+    Object font2d = getFontMethod.invoke(font);
+    Method getMapperMethod = font2d.getClass().getDeclaredMethod("getMapper");
+    getMapperMethod.setAccessible(true);
+    Object mapper = getMapperMethod.invoke(font2d);
+    Method charToGlyphMethod = mapper.getClass().getDeclaredMethod("charToGlyph", char.class);
+
+    int len = str.length();
+    int i = 0;
+    while (i < len) {
+      char c = str.charAt(i);
+      int glyph = (int) charToGlyphMethod.invoke(mapper, c);
+      if (glyph >= 0) {
+        i++;
+        continue;
+      }
+      if (!Character.isHighSurrogate(c)
+          || (int) charToGlyphMethod.invoke(mapper, str.codePointAt(i)) < 0) {
+        return i;
+      }
+      i += 2;
+    }
+    return -1;
   }
 }

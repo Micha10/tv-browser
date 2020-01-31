@@ -27,6 +27,7 @@ import com.jgoodies.forms.layout.FormLayout;
 import devplugin.PluginTreeNode;
 import devplugin.Program;
 
+import java.awt.Font;
 import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -44,6 +45,7 @@ import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.UIManager;
 
 import printplugin.PrintPlugin;
 import printplugin.util.BaseAction;
@@ -124,23 +126,21 @@ public class GeneralTab extends JPanel implements ActionListener {
 
       @Override
       public boolean getScrollableTracksViewportWidth() {
-        return true;
+        return OperatingSystem.isMacOs() ? super.getScrollableTracksViewportWidth() : true;
       }
     };
-
-    list.setFixedCellHeight(72);
-    if (!OperatingSystem.isMacOs()) {
-      list.setFixedCellHeight(-1);
+    Font font = UIManager.getFont("List.font");
+    if (font == null) {
+      font = UIManager.getFont("Label.font");
     }
+    list.setFixedCellHeight(font.getSize() * 3);
     list.addComponentListener(new ComponentAdapter() {
 
       @Override
       public void componentResized(final ComponentEvent e) {
         // cache invalidation by temporarily setting fixed height
-        if (mProgramListCellRenderer != null) {
-          list.setFixedCellHeight(mProgramListCellRenderer.getMaxHeight());
-        }
         if (!OperatingSystem.isMacOs()) {
+          list.setFixedCellHeight(mProgramListCellRenderer.getMaxHeight());
           list.setFixedCellHeight(-1);
         }
       }

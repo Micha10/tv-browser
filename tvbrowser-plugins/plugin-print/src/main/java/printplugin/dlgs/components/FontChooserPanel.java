@@ -153,7 +153,7 @@ public final class FontChooserPanel extends util.ui.FontChooserPanel {
   private static Font decodeFont(final Component component, final String fontName) {
     Font font = Font.decode(
         String.format(Locale.US, "%s-PLAIN-%d", fontName, component.getFont().getSize()));
-    if (font.canDisplayUpTo(fontName) != -1) {
+    if (Utils.isDisplayable(fontName, font)) {
       final Font componentFont = component.getFont();
       final Map attributes = componentFont.getAttributes();
       attributes.put(TextAttribute.STRIKETHROUGH, TextAttribute.STRIKETHROUGH_ON);

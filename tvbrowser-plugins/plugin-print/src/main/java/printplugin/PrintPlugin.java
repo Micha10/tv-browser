@@ -68,7 +68,7 @@ import util.ui.UiUtilities;
 @SuppressWarnings("nls")
 public final class PrintPlugin extends Plugin {
 
-  private static final Version mVersion = new Version(3, 02, 7, false);
+  private static final Version mVersion = new Version(3, 02, 8, false);
 
   /** The localizer for this class. */
   @SuppressWarnings("hiding")
