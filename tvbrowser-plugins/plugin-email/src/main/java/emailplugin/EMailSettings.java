@@ -18,9 +18,9 @@ package emailplugin;
 
 import java.util.Properties;
 
-import util.settings.PropertyBasedSettings;
+import org.apache.commons.lang3.StringUtils;
 
-import com.l2fprod.util.StringUtils;
+import util.settings.PropertyBasedSettings;
 
 /**
  * @author bananeweizen
