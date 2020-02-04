@@ -61,11 +61,11 @@ import org.apache.commons.codec.binary.Base64;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
-import util.ui.Localizer;
 import captureplugin.drivers.dreambox.DreamboxConfig;
 import captureplugin.drivers.dreambox.connector.DreamboxConnector;
 import captureplugin.drivers.dreambox.connector.DreamboxStateHandler;
 import captureplugin.drivers.utils.TimeDateSpinner;
+import util.ui.Localizer;
 
 /**
  * Timer-Liste anzeigen
@@ -152,6 +152,20 @@ public class DreamboxTimerListPanel extends JPanelRefreshAbstract implements
       return s;
     }
 
+    private int getIntValueFor(final String value) {
+      int result = value.toLowerCase().equals("true") ? 1 : 0;
+      
+      if(result == 0 && !value.toLowerCase().equals("false")) {
+        try {
+          result = Integer.parseInt(value);
+        }catch(NumberFormatException nfe) {
+          //ignore
+        }
+      }
+      
+      return result;
+    }
+    
     /**
      * 
      */
@@ -159,15 +173,15 @@ public class DreamboxTimerListPanel extends JPanelRefreshAbstract implements
     @Override
     public Component getTableCellRendererComponent(JTable table, Object value,
         boolean isSelected, boolean hasFocus, int row, int column) {
-
+try {
       // Timerwerte ermitteln
       Map<String, String> timer = (Map<String, String>) table.getModel()
           .getValueAt(table.convertRowIndexToModel(row), COL_TIMER);
       String description = timer.get(E2TimerHelper.DESCRIPTION);
-      int repeated = Integer.parseInt(timer.get(E2TimerHelper.REPEATED));
+      int repeated = getIntValueFor(timer.get(E2TimerHelper.REPEATED));
       boolean disabled = timer.get(E2TimerHelper.DISABLED).equals("1");
-      int justplay = Integer.parseInt(timer.get(E2TimerHelper.JUSTPLAY));
-      int afterEvent = Integer.parseInt(timer.get(E2TimerHelper.AFTEREVENT));
+      int justplay = getIntValueFor(timer.get(E2TimerHelper.JUSTPLAY));
+      int afterEvent = getIntValueFor(timer.get(E2TimerHelper.AFTEREVENT));
       String location = timer.get(E2TimerHelper.LOCATION);
       Calendar timeBeg = E2TimerHelper.getAsCalendar(timer
           .get(E2TimerHelper.TIMEBEGIN));
@@ -243,7 +257,7 @@ public class DreamboxTimerListPanel extends JPanelRefreshAbstract implements
 
       // adjustment
       setHorizontalTextPosition(JLabel.LEFT);
-
+}catch(Throwable t) {mLog.log(Level.SEVERE,"Error painting cell renderer",t);}
       return this;
     }
 
@@ -347,9 +361,11 @@ public class DreamboxTimerListPanel extends JPanelRefreshAbstract implements
   public DreamboxTimerListPanel(DreamboxConnector connector,
       E2TimerHelper timerHelper) {
     super();
+
     mLog.setLevel(Level.INFO);    
     this.mConnector = connector;
     this.mTimerHelper = timerHelper;
+try {
     this.setPreferredSize(new Dimension(800, 600));
     this.add(new JLabel(mLocalizer.msg("panel", "Reading Timers ...")));
     // Edit
@@ -384,6 +400,7 @@ public class DreamboxTimerListPanel extends JPanelRefreshAbstract implements
     menuItemClean.setIcon(new ImageIcon(getClass().getResource(
         "images/cleanup.gif")));
     mPopupMenu.insert(menuItemClean, 4);
+}catch(Throwable t) {mLog.log(Level.SEVERE, "Error creating layout", t);}
   }
 
   /**

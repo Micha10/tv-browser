@@ -24,7 +24,6 @@
  */
 package captureplugin.drivers.dreambox;
 
-import java.awt.Dimension;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -35,6 +34,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.TimeZone;
 
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
@@ -56,12 +56,11 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.table.TableCellEditor;
 
-import util.ui.EnhancedPanelBuilder;
-import util.ui.Localizer;
-import util.ui.ProgramReceiveTargetSelectionPanel;
-import util.ui.TVBrowserIcons;
-import util.ui.UiUtilities;
-import util.ui.WindowClosingIf;
+import com.jgoodies.forms.builder.ButtonBarBuilder;
+import com.jgoodies.forms.factories.Borders;
+import com.jgoodies.forms.layout.CellConstraints;
+import com.jgoodies.forms.layout.FormLayout;
+
 import captureplugin.CapturePlugin;
 import captureplugin.drivers.dreambox.connector.DreamboxChannel;
 import captureplugin.drivers.dreambox.connector.DreamboxConnector;
@@ -70,15 +69,15 @@ import captureplugin.utils.ConfigTableModel;
 import captureplugin.utils.ExternalChannelIf;
 import captureplugin.utils.ExternalChannelTableCellEditor;
 import captureplugin.utils.ExternalChannelTableCellRenderer;
-
-import com.jgoodies.forms.builder.ButtonBarBuilder;
-import com.jgoodies.forms.builder.ButtonBarBuilder2;
-import com.jgoodies.forms.factories.Borders;
-import com.jgoodies.forms.layout.CellConstraints;
-import com.jgoodies.forms.layout.FormLayout;
-
 import devplugin.Channel;
 import devplugin.Plugin;
+import util.ui.EnhancedPanelBuilder;
+import util.ui.Localizer;
+import util.ui.ProgramReceiveTargetSelectionPanel;
+import util.ui.ScrollableJPanel;
+import util.ui.TVBrowserIcons;
+import util.ui.UiUtilities;
+import util.ui.WindowClosingIf;
 
 /**
  * The configuration dialog for the dreambox
@@ -148,7 +147,7 @@ public class DreamboxConfigDialog extends JDialog implements WindowClosingIf {
         UiUtilities.registerForClosing(this);
 
         EnhancedPanelBuilder basicPanel = new EnhancedPanelBuilder("2dlu, default, 3dlu, fill:min:grow, 3dlu, default, 3dlu, default");
-        basicPanel.setBorder(Borders.DLU4_BORDER);
+        basicPanel.getPanel().setBorder(Borders.DIALOG);
 
         CellConstraints cc = new CellConstraints();
 
@@ -178,11 +177,12 @@ public class DreamboxConfigDialog extends JDialog implements WindowClosingIf {
         JButton help = new JButton(CapturePlugin.getInstance().createImageIcon("apps", "help-browser", 16));
         help.setToolTipText(Localizer.getLocalization(Localizer.I18N_HELP));
         help.setOpaque(false);
-        help.setBorder(Borders.EMPTY_BORDER);
+        help.setBorder(Borders.DIALOG);
         basicPanel.add(help, cc.xy(8, basicPanel.getRow()));
+        help.setVisible(false);
 
 ////////////////////////
-        ButtonBarBuilder2 refresh = new ButtonBarBuilder2();
+        ButtonBarBuilder refresh = new ButtonBarBuilder();
 
         refresh.addGlue();
 
@@ -277,8 +277,8 @@ public class DreamboxConfigDialog extends JDialog implements WindowClosingIf {
 //        basicPanel.addRow("default");
 //        basicPanel.add(builder.getPanel(), cc.xyw(2,basicPanel.getRow(), basicPanel.getColumnCount() - 1));
 
-        EnhancedPanelBuilder extendedPanel = new EnhancedPanelBuilder("2dlu, default, 3dlu, fill:default:grow, 3dlu, default, 5dlu");
-        extendedPanel.setBorder(Borders.DLU4_BORDER);
+        EnhancedPanelBuilder extendedPanel = new EnhancedPanelBuilder("2dlu, default, 3dlu, fill:default:grow, 3dlu, default, 5dlu", new ScrollableJPanel());
+        extendedPanel.getPanel().setBorder(Borders.DIALOG);
 
         extendedPanel.addParagraph(mLocalizer.msg("misc", "Miscellaneous"));
 
@@ -365,7 +365,7 @@ public class DreamboxConfigDialog extends JDialog implements WindowClosingIf {
         extendedPanel.add(new JLabel(mLocalizer.msg("defaultlocation", "DefaultLocation :")), cc.xy(2, extendedPanel.getRow()));
         extendedPanel.add(mDefaultLocation, cc.xy(4, extendedPanel.getRow()));
         
-        ButtonBarBuilder2 builder = new ButtonBarBuilder2();
+        ButtonBarBuilder builder = new ButtonBarBuilder();
 
         JButton ok = new JButton(Localizer.getLocalization(Localizer.I18N_OK));
         ok.addActionListener(new ActionListener() {
@@ -384,12 +384,18 @@ public class DreamboxConfigDialog extends JDialog implements WindowClosingIf {
 
         builder.addGlue();
         builder.addButton(new JButton[]{ok, cancel});
+        basicPanel.getPanel().setOpaque(false);
 
         getRootPane().setDefaultButton(ok);
-
+        
+        final JScrollPane scroll = new JScrollPane(extendedPanel.getPanel());
+        scroll.getViewport().setOpaque(false);
+        scroll.setOpaque(false);
+        scroll.setViewportBorder(BorderFactory.createEmptyBorder());
+        
         JTabbedPane tabs = new JTabbedPane();
         tabs.add(mLocalizer.msg("basicTitle", "Basic settings"), basicPanel.getPanel());
-        tabs.add(mLocalizer.msg("extendedTitle", "Extended settings"), extendedPanel.getPanel());
+        tabs.add(mLocalizer.msg("extendedTitle", "Extended settings"), scroll);
         tabs.addChangeListener(new ChangeListener() {
             String currentDefaultLocation = mConfig.getDefaultLocation();
             JTabbedPane tabs = null;
@@ -424,7 +430,7 @@ public class DreamboxConfigDialog extends JDialog implements WindowClosingIf {
         }.init(tabs, basicPanel.getPanel(), extendedPanel.getPanel()));
 
         JPanel content = (JPanel) getContentPane();
-        content.setBorder(Borders.DLU4_BORDER);
+        content.setBorder(Borders.DIALOG);
         content.setLayout(new FormLayout("fill:default:grow", "fill:275dlu:grow, 3dlu, default"));
         content.add(tabs, cc.xy(1,1));
         content.add(builder.getPanel(), cc.xy(1,3));

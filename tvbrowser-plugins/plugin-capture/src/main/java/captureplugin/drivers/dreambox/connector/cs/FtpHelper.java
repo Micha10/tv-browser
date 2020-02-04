@@ -13,8 +13,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.swing.JOptionPane;
-
 import it.sauronsoftware.ftp4j.FTPClient;
 import it.sauronsoftware.ftp4j.FTPCommunicationListener;
 import it.sauronsoftware.ftp4j.FTPDataTransferListener;
@@ -86,7 +84,14 @@ public class FtpHelper implements FTPCommunicationListener {
       if (cmd.equalsIgnoreCase("OPEN")) {
         // OPEN
         try {
-          String[] connect = mClient.connect(args[1]);
+          String address = args[1];
+          int index = address.indexOf(":");
+          
+          if(index != -1) {
+            address = args[1].substring(0,index);
+          }
+          
+          String[] connect = mClient.connect(address);
           
           for(String c : connect) {
             mReceived.append(c).append("\n");
@@ -99,7 +104,10 @@ public class FtpHelper implements FTPCommunicationListener {
         }
       } else if (cmd.equalsIgnoreCase("CLOSE")) {
         try {
-          mClient.disconnect(true);
+          if(mClient.isConnected()) {
+            mClient.disconnect(true);            
+          }
+          
           s = getString(false);
         }catch(Exception e) {
           mLog.log(Level.SEVERE, "Error at disconnection from server", e);
@@ -222,9 +230,6 @@ public class FtpHelper implements FTPCommunicationListener {
           mLog.warning(String.format("parameter %4d : %s", i, args[i]));
         }
       }
-    } catch (sun.net.ftp.FtpLoginException e) {
-      JOptionPane.showMessageDialog(null, e.getLocalizedMessage(),
-          "FTP-Error: " + cmd, JOptionPane.ERROR_MESSAGE);
     } catch (FileNotFoundException e) {
       s = null;
     } catch (IOException e) {
