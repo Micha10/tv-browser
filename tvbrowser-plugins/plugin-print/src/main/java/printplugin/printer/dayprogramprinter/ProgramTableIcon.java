@@ -36,11 +36,11 @@ import printplugin.printer.ProgramItem;
 import printplugin.settings.ProgramIconSettings;
 
 /**
- * ProgramTableIcon is a printable version of the programmtable.
+ * ProgramTableIcon is a printable version of the program table.
  */
 public class ProgramTableIcon implements Icon {
 
-  private static final Font COL_HEADER_FONT = PrintPlugin.getInstance().getPluginSettings().deriveDefaultFont(Font.BOLD,
+  private static final Font COL_HEADER_FONT = PrintPlugin.settings().deriveDefaultFont(Font.BOLD,
       18);
   private static final int COLUMN_WIDTH = 180;
   private static final int HEADER_SPACE = 22;

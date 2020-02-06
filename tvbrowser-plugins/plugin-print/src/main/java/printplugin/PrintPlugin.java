@@ -68,7 +68,7 @@ import util.ui.UiUtilities;
 @SuppressWarnings("nls")
 public final class PrintPlugin extends Plugin {
 
-  private static final Version mVersion = new Version(3, 02, 8, false);
+  private static final Version mVersion = new Version(3, 02, 9, false);
 
   /** The localizer for this class. */
   @SuppressWarnings("hiding")
@@ -88,7 +88,7 @@ public final class PrintPlugin extends Plugin {
   /**
    * Creates a new instance of this plugin.
    *
-   * @see #getInstance()
+   * @see #instance()
    */
   public PrintPlugin() {
     mInstance = this;
@@ -97,12 +97,21 @@ public final class PrintPlugin extends Plugin {
   }
 
   /**
-   * Returns an unique instance (singleton) of this plugin.
+   * Returns the unique instance (singleton) of this plugin.
    *
    * @return unique instance of this plugin
    */
-  public static PrintPlugin getInstance() {
+  public static PrintPlugin instance() {
     return mInstance;
+  }
+
+  /**
+   * Returns the {@link PluginSettings} instance of this plugin.
+   *
+   * @return the settings of this plugin
+   */
+  public static PluginSettings settings() {
+    return mInstance.mPluginSettings;
   }
 
   @Override
@@ -246,30 +255,6 @@ public final class PrintPlugin extends Plugin {
   @Override
   public Properties storeSettings() {
     return mSettings;
-  }
-
-  /**
-   * Returns the settings of this plugin.
-   *
-   * @return the plugin's settings
-   * @see #getPluginSettings()
-   * @see Properties
-   */
-  public Properties getSettings() {
-    return mSettings;
-  }
-
-  /**
-   * Returns the {@link PluginSettings}.
-   *
-   * @return the plugin's settings
-   * @see #getSettings()
-   */
-  public PluginSettings getPluginSettings() {
-    if (mPluginSettings == null) {
-      mPluginSettings = new PluginSettings(mSettings);
-    }
-    return mPluginSettings;
   }
 
   /**

@@ -120,8 +120,8 @@ public abstract class BaseAction extends AbstractAction {
 
   public static Builder settings(final ActionListener actionListener) {
     return new Builder(SETTINGS, actionListener)
-        .icon(PrintPlugin.getInstance().createImageIcon("categories", "preferences-system", 16))
-        .largeIcon(PrintPlugin.getInstance().createImageIcon("categories", "preferences-system", 22))
+        .icon(PrintPlugin.instance().createImageIcon("categories", "preferences-system", 16))
+        .largeIcon(PrintPlugin.instance().createImageIcon("categories", "preferences-system", 22))
         .text(Localizer.getLocalization(Localizer.I18N_SETTINGS))
         .tooltip(Localizer.getLocalization(Localizer.I18N_SETTINGS));
   }

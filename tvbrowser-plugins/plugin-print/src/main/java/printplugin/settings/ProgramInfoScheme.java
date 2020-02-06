@@ -50,7 +50,7 @@ public class ProgramInfoScheme extends Scheme<ProgramInfoPrintSettings> {
 
     final ProgramInfoScheme scheme = new ProgramInfoScheme(
         PrintPlugin.mLocalizer.msg("defaultScheme", "Default Scheme"));
-    final ProgramInfoPrintSettings oldProgramInfoPrintSettings = PrintPlugin.getInstance()
+    final ProgramInfoPrintSettings oldProgramInfoPrintSettings = PrintPlugin.instance()
         .getOldProgramInfoPrintSettings();
     if (oldProgramInfoPrintSettings != null) {
       scheme.setSettings(oldProgramInfoPrintSettings);

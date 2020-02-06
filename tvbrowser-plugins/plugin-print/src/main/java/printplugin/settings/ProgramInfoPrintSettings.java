@@ -43,7 +43,7 @@ public class ProgramInfoPrintSettings implements Settings {
   private boolean mPrintPluginIcons;
 
   public ProgramInfoPrintSettings() {
-    mFont = PrintPlugin.getInstance().getPluginSettings().deriveDefaultFont(Font.PLAIN, 12);
+    mFont = PrintPlugin.settings().deriveDefaultFont(Font.PLAIN, 12);
     mPrintImage = true;
     mPrintPluginIcons = true;
     mAllFields = mFieldTypes = ProgramTextCreator.getDefaultOrder();

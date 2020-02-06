@@ -35,6 +35,7 @@ import javax.swing.DefaultListCellRenderer;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.UIManager;
 
 import printplugin.util.Utils;
 
@@ -180,7 +181,13 @@ public final class FontChooserPanel extends util.ui.FontChooserPanel {
    *                       <code>true</code> if the fonts should be previewed in
    *                       the combo box
    */
+  @SuppressWarnings("nls")
   public void setDisplayFonts(final boolean displayFonts) {
     mDisplayFonts = displayFonts;
+    if (!displayFonts) {
+      final JComboBox<?> comboBox = Utils.findFirst(JComboBox.class, this);
+      comboBox.setFont(UIManager.getDefaults().getFont("Label.font"));
+      comboBox.repaint();
+    }
   }
 }

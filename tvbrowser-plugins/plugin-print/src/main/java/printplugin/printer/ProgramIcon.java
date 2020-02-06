@@ -350,7 +350,7 @@ public class ProgramIcon implements Icon {
     Marker[] access = prog.getMarkerArr();
     ArrayList<Marker> list = new ArrayList<>();
     for (Marker acces : access) {
-      if (!acces.getId().equals(PrintPlugin.getInstance().getId())) {
+      if (!acces.getId().equals(PrintPlugin.instance().getId())) {
         list.add(acces);
       }
     }

@@ -32,8 +32,10 @@ import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.print.PageFormat;
+import java.awt.print.PrinterException;
 import java.awt.print.PrinterJob;
 
+import javax.print.PrintService;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -46,6 +48,7 @@ import javax.swing.SwingUtilities;
 import printplugin.PrintPlugin;
 import printplugin.printer.PrintJob;
 import printplugin.settings.PageFormatType;
+import printplugin.settings.PluginSettings;
 import printplugin.settings.Scheme;
 import printplugin.settings.Settings;
 import printplugin.util.BaseAction;
@@ -70,39 +73,62 @@ public final class SettingsDialog<S extends Settings> extends JDialog implements
   private final PrinterJob mPrinterJob;
   private final Scheme<S>[] mSchemes;
 
-  private final boolean mShowPrinterActionButtonsAsToolbar;
-
   private DefaultComboBoxModel<Scheme<S>> mSchemeCBModel;
   private JComboBox<Scheme<S>> mSchemeCB;
   private PageFormat mPageFormat;
   private ProgressMonitorExtended mProgressMonitorExtended;
 
+  private PageFormatType mPageFormatType;
+  private PluginSettings mSettings;
+  private PrintService mSystemPrintService;
+  // private PrintService mPrintService;
+
+  private String mToolbarPosition;
+
   public SettingsDialog(final Frame parent, final DialogContent<S> content) {
 
     super(parent, content.getDialogTitle(), true);
+
     UiUtilities.registerForClosing(this);
 
+    mSettings = PrintPlugin.settings();
     mDialogContent = content;
     mParentFrame = parent;
     mPrinterJob = PrinterJob.getPrinterJob();
-    mPageFormat = mPrinterJob.validatePage(mPrinterJob.defaultPage());
-    mPageFormat = PageFormatType.NORMAL.getPageFormat(mPrinterJob, mPageFormat.getPaper(),
-        mPageFormat.getOrientation());
+    mSystemPrintService = mPrinterJob.getPrintService();
+    mToolbarPosition = mSettings.toolbarPosition();
+
+    final String printServiceName = mSettings.getPrintServiceName(null);
+    final PrintService[] printServices = PrinterJob.lookupPrintServices();
+    if (printServiceName != null && printServices != null) {
+      for (final PrintService printService : printServices) {
+        if (printService.getName().equals(printServiceName)
+            && !printService.getName().equals(mSystemPrintService.getName())) {
+          try {
+            mPrinterJob.setPrintService(printService);
+            // mPrintService = printService;
+          } catch (PrinterException e) {
+          }
+          break;
+        }
+      }
+    }
+
+    mPageFormatType = mSettings.getPageFormatType();
+    mPageFormat = mPageFormatType.getPageFormat(mPrinterJob, mSettings);
 
     mSchemes = content.loadSchemes();
-    mShowPrinterActionButtonsAsToolbar = false;
 
     final JPanel contentPane = (JPanel) getContentPane();
     contentPane.setBorder(Borders.DIALOG);
     contentPane.setLayout(new BorderLayout(10, 10));
-    contentPane.add(createPrinterActionPanel(),
-        mShowPrinterActionButtonsAsToolbar ? BorderLayout.PAGE_START : BorderLayout.LINE_END);
+    contentPane.add(createPrinterActionPanel(), mToolbarPosition);
     contentPane.add(createButtonBar(), BorderLayout.PAGE_END);
     contentPane.add(content.getContent(mParentFrame), BorderLayout.CENTER);
 
     content.setSettings(mSchemes[0].getSettings());
 
-    PrintPlugin.getInstance().layoutWindow("settingsDlg", this, new Dimension(450, 400));
+    PrintPlugin.instance().layoutWindow("settingsDlg", this, new Dimension(450, 400));
     getRootPane().getDefaultButton().requestFocus();
   }
 
@@ -122,24 +148,24 @@ public final class SettingsDialog<S extends Settings> extends JDialog implements
 
     final JButton printerSetupBtn = new JButton(BaseAction
         .builder("printer", this)
-        .icon(PrintPlugin.getInstance().createImageIcon("devices", "printer", TVBrowserIcons.SIZE_SMALL))
+        .icon(PrintPlugin.instance().createImageIcon("devices", "printer", TVBrowserIcons.SIZE_SMALL))
         .text(mLocalizer.ellipsisMsg("printer", "Printer"))
         .build());
 
     final JButton pageBtn = new JButton(BaseAction
         .builder("page", this)
-        .icon(PrintPlugin.getInstance().createImageIcon("actions", "document-properties", TVBrowserIcons.SIZE_SMALL))
+        .icon(PrintPlugin.instance().createImageIcon("actions", "document-properties", TVBrowserIcons.SIZE_SMALL))
         .text(mLocalizer.ellipsisMsg("page", "Page"))
         .build());
 
     final JButton previewBtn = new JButton(BaseAction
         .builder("preview", this)
-        .icon(PrintPlugin.getInstance().createImageIcon("actions", "document-print-preview", TVBrowserIcons.SIZE_SMALL))
+        .icon(PrintPlugin.instance().createImageIcon("actions", "document-print-preview", TVBrowserIcons.SIZE_SMALL))
         .text(mLocalizer.ellipsisMsg("preview", "Preview"))
         .build());
 
     final JPanel panel;
-    if (mShowPrinterActionButtonsAsToolbar) {
+    if (BorderLayout.PAGE_START.equals(mToolbarPosition)) {
       panel = new ButtonBarBuilder().addButton(printerSetupBtn, pageBtn, previewBtn).build();
     } else {
       printerSetupBtn.setHorizontalAlignment(SwingConstants.LEADING);
@@ -181,7 +207,7 @@ public final class SettingsDialog<S extends Settings> extends JDialog implements
 
     final JButton mSaveSchemeBtn = new JButton(BaseAction
         .builder("saveScheme", this)
-        .icon(PrintPlugin.getInstance().createImageIcon("actions", "document-save", TVBrowserIcons.SIZE_SMALL))
+        .icon(PrintPlugin.instance().createImageIcon("actions", "document-save", TVBrowserIcons.SIZE_SMALL))
         .tooltip(mLocalizer.msg("saveScheme", "Save scheme"))
         .build());
     mSaveSchemeBtn.setMargin(UiUtilities.ZERO_INSETS);
@@ -340,7 +366,7 @@ public final class SettingsDialog<S extends Settings> extends JDialog implements
       return;
     }
     final PreviewDlg dlg = new PreviewDlg(mParentFrame, job);
-    PrintPlugin.getInstance().layoutWindow("previewDlg", dlg);
+    PrintPlugin.instance().layoutWindow("previewDlg", dlg);
     dlg.setVisible(true);
   }
 

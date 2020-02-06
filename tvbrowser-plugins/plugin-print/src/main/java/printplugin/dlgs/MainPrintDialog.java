@@ -82,8 +82,8 @@ public final class MainPrintDialog extends JDialog implements ActionListener, Fo
 
     final JButton printDayProgramsButton = new JButton(BaseAction
         .builder(FULL_DAY_PROGRAMS, this)
-        .icon(PrintPlugin.getInstance().createImageIcon("devices", "printer", TVBrowserIcons.SIZE_SMALL))
-        .largeIcon(PrintPlugin.getInstance().createImageIcon("devices", "printer", TVBrowserIcons.SIZE_LARGE))
+        .icon(PrintPlugin.instance().createImageIcon("devices", "printer", TVBrowserIcons.SIZE_SMALL))
+        .largeIcon(PrintPlugin.instance().createImageIcon("devices", "printer", TVBrowserIcons.SIZE_LARGE))
         .text(mLocalizer.msg(FULL_DAY_PROGRAMS, "Full TV listings"))
         .build());
     printDayProgramsButton.setBackground(printDayProgramsButton.getBackground().brighter());
@@ -94,8 +94,8 @@ public final class MainPrintDialog extends JDialog implements ActionListener, Fo
 
     final JButton printQueueButton = new JButton(BaseAction
         .builder(PRINT_FROM_QUEUE, this)
-        .icon(PrintPlugin.getInstance().createImageIcon("devices", "printer", TVBrowserIcons.SIZE_SMALL))
-        .largeIcon(PrintPlugin.getInstance().createImageIcon("devices", "printer", TVBrowserIcons.SIZE_LARGE))
+        .icon(PrintPlugin.instance().createImageIcon("devices", "printer", TVBrowserIcons.SIZE_SMALL))
+        .largeIcon(PrintPlugin.instance().createImageIcon("devices", "printer", TVBrowserIcons.SIZE_LARGE))
         .text(mLocalizer.msg(PRINT_FROM_QUEUE, "Print from printer queue"))
         .build());
     printQueueButton.setBackground(printQueueButton.getBackground().brighter());
@@ -158,7 +158,7 @@ public final class MainPrintDialog extends JDialog implements ActionListener, Fo
     mContent.add(bottomPanel, gbc);
 
     pack();
-    if (PrintPlugin.getInstance().canPrintQueue()) {
+    if (PrintPlugin.instance().canPrintQueue()) {
       getRootPane().setDefaultButton(mCloseButton);
       mCloseButton.requestFocus();
     } else {

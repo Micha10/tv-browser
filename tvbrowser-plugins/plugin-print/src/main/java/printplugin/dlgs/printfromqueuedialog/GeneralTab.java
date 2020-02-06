@@ -184,7 +184,7 @@ public class GeneralTab extends JPanel implements ActionListener {
         null,
         new String[] {Localizer.getLocalization(Localizer.I18N_OK), Localizer.getLocalization(Localizer.I18N_CANCEL)},
         null) == JOptionPane.YES_OPTION) {
-      PluginTreeNode root = PrintPlugin.getInstance().getRootNode();
+      PluginTreeNode root = PrintPlugin.instance().getRootNode();
       root.removeAllChildren();
       root.update();
       mListModel.clear();
@@ -193,7 +193,7 @@ public class GeneralTab extends JPanel implements ActionListener {
   }
 
   private void removeSelected() {
-    final PrintPlugin printPlugin = PrintPlugin.getInstance();
+    final PrintPlugin printPlugin = PrintPlugin.instance();
     final List<Program> selectedValuesList = mList.getSelectedValuesList();
     for (final Program program : selectedValuesList) {
       mListModel.removeElement(program);

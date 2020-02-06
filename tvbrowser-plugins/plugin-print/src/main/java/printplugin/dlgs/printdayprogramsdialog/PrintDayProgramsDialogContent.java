@@ -34,7 +34,9 @@ import java.util.List;
 
 import javax.swing.JTabbedPane;
 
+import printplugin.PrintPlugin;
 import printplugin.dlgs.DialogContent;
+import printplugin.dlgs.printfromqueuedialog.ExtrasTab;
 import printplugin.printer.DefaultColumnModel;
 import printplugin.printer.DefaultPageModel;
 import printplugin.printer.PageModel;
@@ -53,8 +55,8 @@ public class PrintDayProgramsDialogContent implements DialogContent<DayProgramPr
   /** The localizer for this class. */
   private static final Localizer mLocalizer = Localizer.getLocalizerFor(PrintDayProgramsDialogContent.class);
 
-  private LayoutTab mLayoutTab;
   private ListingsTab mListingsTab;
+  private LayoutTab mLayoutTab;
   private ExtrasTab mExtrasTab;
 
   @Override
@@ -62,13 +64,20 @@ public class PrintDayProgramsDialogContent implements DialogContent<DayProgramPr
 
   @Override
   public Component getContent(final Frame parentFrame) {
-    JTabbedPane tab = new JTabbedPane();
+    final boolean integrateExtras = PrintPlugin.settings().integrateExtras();
+    final JTabbedPane tab = new JTabbedPane();
     mListingsTab = new ListingsTab(parentFrame);
-    mLayoutTab = new LayoutTab();
-    mExtrasTab = new ExtrasTab(parentFrame);
+    mLayoutTab = new LayoutTab(parentFrame, integrateExtras);
+    if (integrateExtras) {
+      mExtrasTab = mLayoutTab.extrasTab();
+    } else {
+      mExtrasTab = new ExtrasTab(parentFrame, true);
+    }
     tab.add(mLocalizer.msg("listingsTab", "Data"), mListingsTab);
     tab.add(mLocalizer.msg("layoutTab", "Layout"), mLayoutTab);
-    tab.add(mLocalizer.msg("miscTab", "Extras"), mExtrasTab);
+    if (!integrateExtras) {
+      tab.add(mLocalizer.msg("miscTab", "Extras"), mExtrasTab);
+    }
     Utils.setOpaque(tab, false);
     return tab;
   }
@@ -92,13 +101,13 @@ public class PrintDayProgramsDialogContent implements DialogContent<DayProgramPr
   }
 
   @Override
-  public void setSettings(DayProgramPrinterSettings settings) {
-    Channel[] ch = settings.getChannelList();
+  public void setSettings(final DayProgramPrinterSettings settings) {
+    final int start = settings.getDayStartHour();
+    final int end = settings.getDayEndHour();
+    final Date from = settings.getFromDay();
+    final Channel[] ch = settings.getChannelList();
     mListingsTab.setChannels(ch);
-    int start = settings.getDayStartHour();
-    int end = settings.getDayEndHour();
     mListingsTab.setTimeRange(start, end);
-    Date from = settings.getFromDay();
     mListingsTab.setDateFrom(from);
     mListingsTab.setDayCount(settings.getNumberOfDays());
     mLayoutTab.setColumnLayout(settings.getColumnCount(), settings.getChannelsPerColumn());
@@ -119,7 +128,6 @@ public class PrintDayProgramsDialogContent implements DialogContent<DayProgramPr
   public PrintJob createPrintJob(final PageFormat format) {
 
     final DayProgramPrinterSettings settings = getSettings();
-
     final List<PageModel> pageModelList = new ArrayList<>();
     final int dayCount = settings.getNumberOfDays();
     final Date startDate = settings.getFromDay();
@@ -148,17 +156,17 @@ public class PrintDayProgramsDialogContent implements DialogContent<DayProgramPr
 
     final PageModel[] pageModel = new PageModel[pageModelList.size()];
     pageModelList.toArray(pageModel);
-
     return new DayProgramPrintJob(pageModel, settings, format);
   }
 
   @Override
-  public Scheme<DayProgramPrinterSettings> createNewScheme(String schemeName) {
+  public Scheme<DayProgramPrinterSettings> createNewScheme(final String schemeName) {
     return new DayProgramScheme(schemeName);
   }
 
-  private static void addProgramToList(final List<Program> progList, Date date, Channel channel, int startHour,
-      int endHour, ProgramFilter filter) {
+  private static void addProgramToList(final List<Program> progList, final Date date, final Channel channel,
+      final int startHour,
+      final int endHour, final ProgramFilter filter) {
     for (int dateOffset = -1; dateOffset <= 1; dateOffset++) {
       for (Iterator<Program> it = Plugin.getPluginManager().getChannelDayProgram(date.addDays(dateOffset), channel); it
           .hasNext();) {

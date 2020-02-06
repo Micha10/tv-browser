@@ -21,6 +21,7 @@ package printplugin.printer;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.Graphics;
 import java.awt.print.PageFormat;
 import java.awt.print.Printable;
 import java.util.ArrayList;
@@ -35,7 +36,7 @@ import util.ui.UiUtilities;
 @SuppressWarnings("nls")
 public abstract class AbstractPrintJob implements PrintJob {
 
-  private static final Font FOOTER_FONT = PrintPlugin.getInstance().getPluginSettings().deriveDefaultFont(Font.PLAIN,
+  private static final Font FOOTER_FONT = PrintPlugin.settings().deriveDefaultFont(Font.PLAIN,
       6);
 
   private Page[] mPages;
@@ -74,7 +75,6 @@ public abstract class AbstractPrintJob implements PrintJob {
     return mPages.length;
   }
 
-  @SuppressWarnings("boxing")
   @Override
   public Printable getPrintable() {
     return (graphics, f, pageIndex) -> {
@@ -85,17 +85,22 @@ public abstract class AbstractPrintJob implements PrintJob {
         return Printable.NO_SUCH_PAGE;
       }
       mPages[pageIndex].printPage(graphics);
-
-      String pageInfo = Localizer.getLocalizerFor(PreviewDlg.class)
-          .msg("pageInfo", "Page {0} of {1}", pageIndex + 1, mPages.length);
-      int w = UiUtilities.getStringWidth(FOOTER_FONT, pageInfo);
-      graphics.setFont(FOOTER_FONT);
-      graphics.setColor(Color.black);
-      PageFormat pageFormat = mPages[pageIndex].getPageFormat();
-      graphics.drawString(pageInfo, (int) pageFormat.getImageableX() + (int) pageFormat.getImageableWidth() - w - 5,
-          (int) pageFormat.getImageableY() + (int) pageFormat.getImageableHeight() - 3);
-
+      if (PrintPlugin.settings().printPageNumbers()) {
+        printPageNumber(graphics, pageIndex);
+      }
       return Printable.PAGE_EXISTS;
     };
+  }
+
+  @SuppressWarnings("boxing")
+  private void printPageNumber(Graphics graphics, int pageIndex) {
+    final String pageInfo = Localizer.getLocalizerFor(PreviewDlg.class)
+        .msg("pageInfo", "Page {0} of {1}", pageIndex + 1, mPages.length);
+    final int w = UiUtilities.getStringWidth(FOOTER_FONT, pageInfo);
+    graphics.setFont(FOOTER_FONT);
+    graphics.setColor(Color.black);
+    PageFormat pageFormat = mPages[pageIndex].getPageFormat();
+    graphics.drawString(pageInfo, (int) pageFormat.getImageableX() + (int) pageFormat.getImageableWidth() - w - 5,
+        (int) pageFormat.getImageableY() + (int) pageFormat.getImageableHeight() - 3);
   }
 }

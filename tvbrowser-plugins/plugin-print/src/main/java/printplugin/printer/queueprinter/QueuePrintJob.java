@@ -36,7 +36,7 @@ import printplugin.settings.QueuePrinterSettings;
 
 public class QueuePrintJob extends AbstractPrintJob {
 
-  private static final Font FOOTER_FONT = PrintPlugin.getInstance().getPluginSettings().deriveDefaultFont(Font.PLAIN,
+  private static final Font FOOTER_FONT = PrintPlugin.settings().deriveDefaultFont(Font.PLAIN,
       6);
 
   private static final int FOOTER_SPACE = 10;

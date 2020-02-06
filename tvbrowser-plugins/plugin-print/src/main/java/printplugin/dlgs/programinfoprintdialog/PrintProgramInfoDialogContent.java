@@ -98,7 +98,7 @@ public class PrintProgramInfoDialogContent implements DialogContent<ProgramInfoP
       }
     }
 
-    final Font defaultFont = PrintPlugin.getInstance().getPluginSettings().getDefaultFont();
+    final Font defaultFont = PrintPlugin.settings().getDefaultFont();
 
     mFieldChooser = new OrderChooser<>(
         ProgramTextCreator.getDefaultOrder(),

@@ -3,6 +3,7 @@ package printplugin.util;
 import devplugin.Date;
 import devplugin.ProgramFieldType;
 
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
@@ -19,6 +20,7 @@ import java.io.InputStreamReader;
 import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Iterator;
@@ -28,15 +30,29 @@ import java.util.stream.Stream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComponent;
+import javax.swing.JEditorPane;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
+import javax.swing.UIManager;
+import javax.swing.text.AbstractDocument;
+import javax.swing.text.AttributeSet;
+import javax.swing.text.Element;
+import javax.swing.text.StyleConstants;
+import javax.swing.text.View;
+import javax.swing.text.ViewFactory;
+import javax.swing.text.html.HTML;
+import javax.swing.text.html.HTMLEditorKit;
+import javax.swing.text.html.StyleSheet;
 
 import util.misc.OperatingSystem;
 import util.ui.Localizer;
+import util.ui.UiUtilities;
 
 @SuppressWarnings("nls")
 public final class Utils {
@@ -84,6 +100,24 @@ public final class Utils {
         if (type.isInstance(component)) {
           result = (T) component;
           break;
+        }
+      }
+    }
+    return result;
+  }
+
+  @SuppressWarnings("unchecked")
+  public static <T extends Component> List<T> findAll(final Class<T> type, final Component root) {
+    final List<T> result = new ArrayList<>();
+    if (type.isInstance(root)) {
+      result.add((T) root);
+    }
+    if (root instanceof Container) {
+      for (Component component : ((Container) root).getComponents()) {
+        if (component instanceof Container) {
+          result.addAll(findAll(type, component));
+        } else {
+          result.add((T) component);
         }
       }
     }
@@ -350,10 +384,9 @@ public final class Utils {
    *
    * @param resource
    *                   the resource path to read from
-   * @return an {@link InputStream} of the given resource
-   * @see #getResources(String)
+   * @return {@link InputStream} of the given resource
    */
-  private static InputStream getResourceAsStream(final String resource) {
+  public static InputStream getResourceAsStream(final String resource) {
     final InputStream in = Thread.currentThread().getContextClassLoader().getResourceAsStream(resource);
     return in == null ? Utils.class.getResourceAsStream(resource) : in;
   }
@@ -496,7 +529,7 @@ public final class Utils {
   /**
    * Fix based on
    * https://stackoverflow.com/questions/17008081/font-candisplay-always-returns-true-on-mac/56065355#56065355
-   * 
+   *
    * @see #isDisplayable(String, Font)
    */
   @SuppressWarnings("boxing")
@@ -526,5 +559,123 @@ public final class Utils {
       i += 2;
     }
     return -1;
+  }
+
+  /*
+   * Reads the textual contents of a given {@link InputStream} into a string.
+   *
+   * @param inputStream
+   * stream to read from
+   *
+   * @return a string representation of the stream
+   *
+   * @throws IOException
+   * on errors during reading
+   *
+   * public static String readAll(final InputStream inputStream) throws
+   * IOException {
+   * final ByteArrayOutputStream result = new ByteArrayOutputStream();
+   * final byte[] buffer = new byte[8192];
+   * int length;
+   * while ((length = inputStream.read(buffer)) != -1) {
+   * result.write(buffer, 0, length);
+   * }
+   * return result.toString(StandardCharsets.UTF_8.name());
+   * }
+   *
+   * public static String readStringFromResource(final String filename) {
+   * String s = null;
+   * try (final InputStream in = getResourceAsStream(filename)) {
+   * s = readAll(in);
+   * } catch (Exception e) {
+   * e.printStackTrace();
+   * }
+   * return s;
+   * }
+   */
+
+  /**
+   * Creates a translucent non-editable {@link JEditorPane} pane with a given
+   * margin and loads the contents of
+   * the provided {@link URL}.
+   *
+   * @param url
+   *                 HTML content to load into the editor pane
+   * @param margin
+   *                 the margin around the HTML body
+   * @return an editor pane inside a {@link JScrollPane}
+   *
+   */
+  public static JScrollPane getHtmlPane(final URL url, final int margin) {
+
+    final Color foreground = UIManager.getColor("Label.foreground");
+    final Font font = UIManager.getFont("Label.font");
+
+    final HTMLEditorKit kit = new PreWrapHTMLEditorKit();
+    final StyleSheet styleSheet = kit.getStyleSheet();
+    styleSheet.addRule("body {"
+        + "margin: " + margin + "px"
+        + "; color:" + UiUtilities.getHTMLColorCode(foreground)
+        + "; font-family:" + font.getName()
+        + "; font-size:" + font.getSize()
+        + ";}");
+
+    final JEditorPane pane = new JEditorPane();
+    pane.putClientProperty(JEditorPane.HONOR_DISPLAY_PROPERTIES, Boolean.TRUE);
+    pane.setBackground(null);
+    pane.setBorder(BorderFactory.createEmptyBorder());
+    pane.setContentType("text/html;charset=UTF-8");
+    pane.setDocument(kit.createDefaultDocument());
+    pane.setEditable(false);
+    pane.setEditorKit(kit);
+    pane.setFocusable(false);
+    pane.setFont(font);
+    pane.setForeground(foreground);
+    pane.setOpaque(false);
+    try {
+      pane.setPage(url);
+    } catch (IOException e) {
+      pane.setContentType("text/plain");
+      pane.setText(
+          Localizer.getLocalization(Localizer.I18N_ERROR) + ": " + url + " (" + e.getLocalizedMessage() + ")");
+      e.printStackTrace();
+    }
+
+    final JScrollPane scrollPane = new JScrollPane(pane, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+        JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+    scrollPane.setBorder(BorderFactory.createEmptyBorder());
+    scrollPane.setOpaque(false);
+    scrollPane.getViewport().setBorder(null);
+    scrollPane.getViewport().setOpaque(false);
+
+    return scrollPane;
+  }
+
+  // Based on https://stackoverflow.com/a/3813605
+  public static class PreWrapHTMLEditorKit extends HTMLEditorKit {
+
+    private static final long serialVersionUID = 6075779031846652680L;
+
+    final ViewFactory viewFactory = new HTMLFactory() {
+
+      @Override
+      public View create(final Element elem) {
+        final AttributeSet attrs = elem.getAttributes();
+        final Object elementName = attrs.getAttribute(AbstractDocument.ElementNameAttribute);
+        final Object o = elementName != null ? null : attrs.getAttribute(StyleConstants.NameAttribute);
+        if (o instanceof HTML.Tag) {
+          final HTML.Tag kind = (HTML.Tag) o;
+          if (kind == HTML.Tag.IMPLIED) {
+            return new javax.swing.text.html.ParagraphView(elem);
+          }
+        }
+        return super.create(elem);
+      }
+    };
+
+    @Override
+    public ViewFactory getViewFactory() {
+      return viewFactory;
+    }
   }
 }

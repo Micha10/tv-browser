@@ -30,6 +30,7 @@ import java.awt.Frame;
 import javax.swing.JCheckBox;
 import javax.swing.JPanel;
 
+import printplugin.PrintPlugin;
 import printplugin.dlgs.components.ProgramPreviewPanel;
 import printplugin.settings.ProgramIconSettings;
 
@@ -43,16 +44,17 @@ public class ExtrasTab extends JPanel {
   /** The localizer for this class. */
   private static final Localizer mLocalizer = Localizer.getLocalizerFor(ExtrasTab.class);
 
+  private JCheckBox mShowPluginMarkingCb;
   private ProgramPreviewPanel mProgramPreviewPanel;
 
-  private JCheckBox mShowPluginMarkingCb;
-
-  public ExtrasTab(final Frame dlgParent) {
+  public ExtrasTab(final Frame dlgParent, final boolean border) {
     CellConstraints cc = new CellConstraints();
 
     PanelBuilder pb = new PanelBuilder(new FormLayout("5dlu,pref:grow",
         "pref,5dlu,pref,3dlu,pref,10dlu"), this);
-    pb.border(Borders.DIALOG);
+    if (border) {
+      pb.border(Borders.DIALOG);
+    }
     pb.addSeparator(mLocalizer.msg("programItem", "Program item"), cc.xyw(1, 1, 2));
     pb.add(mProgramPreviewPanel = new ProgramPreviewPanel(dlgParent), cc.xy(2, 3));
     pb.add(mShowPluginMarkingCb = new JCheckBox(mLocalizer.msg("showPluginMarkings", "Show plugin markings")),
@@ -60,6 +62,7 @@ public class ExtrasTab extends JPanel {
 
     mShowPluginMarkingCb
         .addActionListener(e -> mProgramPreviewPanel.setShowPluginMarking(mShowPluginMarkingCb.isSelected()));
+    mProgramPreviewPanel.setAntialias(PrintPlugin.settings().isAntialias());
   }
 
   public void setProgramIconSettings(ProgramIconSettings programIconSettings) {

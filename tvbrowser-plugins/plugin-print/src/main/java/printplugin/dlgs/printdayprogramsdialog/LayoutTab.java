@@ -21,13 +21,17 @@ package printplugin.dlgs.printdayprogramsdialog;
 
 import com.jgoodies.forms.builder.PanelBuilder;
 import com.jgoodies.forms.factories.Borders;
-import com.jgoodies.forms.layout.CellConstraints;
+import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
+import com.jgoodies.forms.layout.RowSpec;
+
+import java.awt.Frame;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
 import javax.swing.JPanel;
 
+import printplugin.dlgs.printfromqueuedialog.ExtrasTab;
 import printplugin.util.Utils;
 
 import util.ui.Localizer;
@@ -40,35 +44,44 @@ public class LayoutTab extends JPanel {
   /** The localizer for this class. */
   private static final Localizer mLocalizer = Localizer.getLocalizerFor(LayoutTab.class);
 
-  private JComboBox<Integer> mChannelsPerPageCB;
-  private JComboBox<LayoutOption> mLayoutCB;
-  private DefaultComboBoxModel<LayoutOption> mLayoutCBModel;
+  private final DefaultComboBoxModel<LayoutOption> mLayoutCBModel;
+  private final JComboBox<Integer> mChannelsPerPageCB;
+  private final JComboBox<LayoutOption> mLayoutCB;
 
-  public LayoutTab() {
-    CellConstraints cc = new CellConstraints();
+  private ExtrasTab mExtrasTab;
+
+  public LayoutTab(final Frame parent, final boolean includeExtras) {
+
     mLayoutCBModel = new DefaultComboBoxModel<>();
 
-    PanelBuilder pb = new PanelBuilder(new FormLayout("5dlu,pref,10dlu,pref:grow",
+    final PanelBuilder pb = new PanelBuilder(new FormLayout("5dlu,pref,10dlu,pref:grow",
         "pref,5dlu,pref,2dlu,pref,10dlu"), this);
     pb.border(Borders.DIALOG);
 
-    pb.addSeparator(mLocalizer.msg("channelsAndColumns", "Channels and columns"), cc.xyw(1, 1, 4));
-    pb.addLabel(mLocalizer.msg("channelsPerPage", "Channels per page") + ":", cc.xy(2, 3));
-    pb.add(mChannelsPerPageCB = new JComboBox<>(Utils.createIntegerArray(2, 22)), cc.xy(4, 3));
-    pb.addLabel(mLocalizer.msg("columnsPerPage", "columns") + ":", cc.xy(2, 5));
-    pb.add(mLayoutCB = new JComboBox<>(mLayoutCBModel), cc.xy(4, 5));
+    pb.addSeparator(mLocalizer.msg("channelsAndColumns", "Channels and columns"), CC.xyw(1, 1, 4));
+    pb.addLabel(mLocalizer.msg("channelsPerPage", "Channels per page") + ":", CC.xy(2, 3));
+    pb.add(mChannelsPerPageCB = new JComboBox<>(Utils.createIntegerArray(2, 22)), CC.xy(4, 3));
+    pb.addLabel(mLocalizer.msg("columnsPerPage", "columns") + ":", CC.xy(2, 5));
+    pb.add(mLayoutCB = new JComboBox<>(mLayoutCBModel), CC.xy(4, 5));
+
+    if (includeExtras) {
+      mExtrasTab = new ExtrasTab(parent, false);
+      pb.getLayout().appendRow(RowSpec.decode("pref"));
+      pb.getLayout().appendRow(RowSpec.decode("10dlu"));
+      pb.add(mExtrasTab, CC.xyw(1, 7, 4));
+    }
 
     mChannelsPerPageCB.addItemListener(e -> {
-      int val = (Integer) mChannelsPerPageCB.getSelectedItem();
+      final int val = (Integer) mChannelsPerPageCB.getSelectedItem();
       updateLayoutCombobox(val);
     });
   }
 
-  public void setColumnLayout(int columnsPerPage, int channelsPerColumn) {
-    int channelsPerPage = columnsPerPage * channelsPerColumn;
+  public void setColumnLayout(final int columnsPerPage, final int channelsPerColumn) {
+    final int channelsPerPage = columnsPerPage * channelsPerColumn;
     mChannelsPerPageCB.setSelectedItem(channelsPerPage);
     for (int i = 0; i < mLayoutCBModel.getSize(); i++) {
-      LayoutOption option = mLayoutCBModel.getElementAt(i);
+      final LayoutOption option = mLayoutCBModel.getElementAt(i);
       if (channelsPerColumn == option.getChannelsPerColumn()) {
         mLayoutCB.setSelectedItem(option);
         break;
@@ -77,28 +90,31 @@ public class LayoutTab extends JPanel {
   }
 
   public int getColumnsPerPage() {
-    LayoutOption option = (LayoutOption) mLayoutCB.getSelectedItem();
+    final LayoutOption option = (LayoutOption) mLayoutCB.getSelectedItem();
     return option.getChannelsPerPage() / option.getChannelsPerColumn();
   }
 
   public int getChannelsPerColumn() {
-    LayoutOption option = (LayoutOption) mLayoutCB.getSelectedItem();
+    final LayoutOption option = (LayoutOption) mLayoutCB.getSelectedItem();
     return option.getChannelsPerColumn();
   }
 
-  private void updateLayoutCombobox(int val) {
+  private void updateLayoutCombobox(final int val) {
     mLayoutCBModel.removeAllElements();
-    int[] primes = Utils.getPrimes(val);
-    for (int prime : primes) {
+    for (int prime : Utils.getPrimes(val)) {
       mLayoutCBModel.addElement(new LayoutOption(val, prime));
     }
   }
 
+  public ExtrasTab extrasTab() {
+    return mExtrasTab;
+  }
+
   private static class LayoutOption {
 
-    private int mChannelsPerPage, mChannelsPerColumn;
+    private final int mChannelsPerPage, mChannelsPerColumn;
 
-    public LayoutOption(int channelsPerPage, int channelsPerColumn) {
+    public LayoutOption(final int channelsPerPage, final int channelsPerColumn) {
       mChannelsPerPage = channelsPerPage;
       mChannelsPerColumn = channelsPerColumn;
     }
@@ -113,8 +129,8 @@ public class LayoutTab extends JPanel {
 
     @Override
     public String toString() {
-      int columns = mChannelsPerPage / mChannelsPerColumn;
-      String s = mLocalizer.msg("layoutString",
+      final int columns = mChannelsPerPage / mChannelsPerColumn;
+      final String s = mLocalizer.msg("layoutString",
           "{0} ({1} channels per column))", columns, mChannelsPerColumn);
       return s;
     }

@@ -32,11 +32,11 @@ import util.ui.TimeFormatter;
 @SuppressWarnings("nls")
 public class PrinterProgramIconSettings implements ProgramIconSettings {
 
-  private static final Font PROGRAMTITLEFONT = PrintPlugin.getInstance().getPluginSettings()
+  private static final Font PROGRAMTITLEFONT = PrintPlugin.settings()
       .deriveDefaultFont(Font.BOLD, 12);
-  private static final Font PROGRAMTEXTFONT = PrintPlugin.getInstance().getPluginSettings()
+  private static final Font PROGRAMTEXTFONT = PrintPlugin.settings()
       .deriveDefaultFont(Font.PLAIN, 10);
-  private static final Font PROGRAMTIMEFONT = PrintPlugin.getInstance().getPluginSettings().deriveDefaultFont(Font.BOLD,
+  private static final Font PROGRAMTIMEFONT = PrintPlugin.settings().deriveDefaultFont(Font.BOLD,
       12);
 
   private ProgramFieldType[] mProgramInfoFields;

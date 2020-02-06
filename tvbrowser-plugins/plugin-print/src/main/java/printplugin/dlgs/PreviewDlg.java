@@ -85,10 +85,13 @@ public final class PreviewDlg extends JDialog implements ActionListener, Propert
   private Action mZoomInAction;
   private Action mZoomOutAction;
 
+  private boolean mAntialias;
+
   public PreviewDlg(final Window parent, final PrintJob job) {
     super(parent);
     setModal(true);
 
+    mAntialias = PrintPlugin.settings().isAntialias();
     mPrinter = job.getPrintable();
     mPageFormat = job.getPageFormat();
 
@@ -110,6 +113,7 @@ public final class PreviewDlg extends JDialog implements ActionListener, Propert
 
     mPreviewComponent = new PreviewComponent(mPrinter, mPageFormat, numberOfPages);
     mPreviewComponent.addPropertyChangeListener("preferredSize", this);
+    mPreviewComponent.setAntialias(mAntialias);
 
     final JPanel content = (JPanel) getContentPane();
     content.setBorder(Borders.DIALOG);
@@ -141,7 +145,7 @@ public final class PreviewDlg extends JDialog implements ActionListener, Propert
   }
 
   private void readAndApplyDialogSettings() {
-    final Properties prop = PrintPlugin.getInstance().getPluginSettings().storeSettings();
+    final Properties prop = PrintPlugin.settings().storeSettings();
     try {
       if (prop.getProperty(PREVIEW_DLG_WIDTH) != null && prop.getProperty(PREVIEW_DLG_HEIGHT) != null) {
         final int width = Integer.parseInt(prop.getProperty(PREVIEW_DLG_WIDTH));
@@ -165,10 +169,14 @@ public final class PreviewDlg extends JDialog implements ActionListener, Propert
   }
 
   private JPanel createToolBar() {
-    final JPanel panel = new JPanel(new FormLayout("pref, 3dlu, pref", "pref"));
-    panel.add(new JButton(mZoomOutAction), CC.xy(1, 1));
-    panel.add(new JButton(mZoomInAction), CC.xy(3, 1));
-    return panel;
+    return new ButtonBarBuilder()
+        .addButton(new JButton(mZoomOutAction))
+        .addRelatedGap()
+        .addButton(new JButton(mZoomInAction))
+        .addUnrelatedGap()
+        .addGlue()
+        // .addButton(new JButton(mFullscreenAction))
+        .build();
   }
 
   private JPanel createButtonBar() {
@@ -183,11 +191,15 @@ public final class PreviewDlg extends JDialog implements ActionListener, Propert
     mSiteLb = new JLabel();
     mSiteLb.setHorizontalAlignment(SwingConstants.CENTER);
 
-    final JPanel southPn = new JPanel(new FormLayout("left:10dlu:grow, pref, right:10dlu:grow", "pref"));
-    southPn.add(new JButton(mPreviousAction), CC.xy(1, 1));
-    southPn.add(mSiteLb, CC.xy(2, 1));
-    southPn.add(new JButton(mNextAction), CC.xy(3, 1));
-    return southPn;
+    return new ButtonBarBuilder()
+        .addButton(new JButton(mPreviousAction))
+        .addUnrelatedGap()
+        .addGlue()
+        .addFixed(mSiteLb)
+        .addGlue()
+        .addUnrelatedGap()
+        .addButton(new JButton(mNextAction))
+        .build();
   }
 
   @SuppressWarnings("boxing")
@@ -213,7 +225,6 @@ public final class PreviewDlg extends JDialog implements ActionListener, Propert
     }
   }
 
-  @SuppressWarnings("incomplete-switch")
   @Override
   public void actionPerformed(final ActionEvent event) {
     switch (event.getActionCommand()) {
@@ -256,6 +267,8 @@ public final class PreviewDlg extends JDialog implements ActionListener, Propert
         mPreviewComponent.zoomOut();
         propertyChange(null);
         break;
+      default:
+        break;
     }
   }
 
@@ -266,7 +279,7 @@ public final class PreviewDlg extends JDialog implements ActionListener, Propert
   }
 
   private void storeDialogSettings() {
-    final Properties prop = PrintPlugin.getInstance().getPluginSettings().storeSettings();
+    final Properties prop = PrintPlugin.settings().storeSettings();
     prop.setProperty(PREVIEW_DLG_X, Integer.toString(getLocationOnScreen().x));
     prop.setProperty(PREVIEW_DLG_Y, Integer.toString(getLocationOnScreen().y));
     prop.setProperty(PREVIEW_DLG_WIDTH, Integer.toString(getWidth()));

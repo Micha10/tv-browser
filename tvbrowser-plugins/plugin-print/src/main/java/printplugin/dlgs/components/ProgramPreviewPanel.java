@@ -79,6 +79,8 @@ public class ProgramPreviewPanel extends JPanel implements ActionListener {
   private Font mDateFont;
   private MutableProgramIconSettings mProgramIconSettings;
 
+  private boolean mAntialias = true;
+
   /**
    * Creates a new instance for the given parent frame.
    * Uses default values.
@@ -129,7 +131,8 @@ public class ProgramPreviewPanel extends JPanel implements ActionListener {
         g2d.setColor(Color.WHITE);
         g2d.fillRect(1, 1, getWidth() - 1, getHeight() - 1);
         g2d.setColor(c);
-        g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+        g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,
+            mAntialias ? RenderingHints.VALUE_TEXT_ANTIALIAS_ON : RenderingHints.VALUE_TEXT_ANTIALIAS_OFF);
         super.paintChildren(g);
       }
     };
@@ -233,6 +236,17 @@ public class ProgramPreviewPanel extends JPanel implements ActionListener {
           updatePreviewPanel();
         }
         break;
+    }
+  }
+
+  public boolean isAntialias() {
+    return mAntialias;
+  }
+
+  public void setAntialias(final boolean antialias) {
+    mAntialias = antialias;
+    if (mIconPanel != null) {
+      mIconPanel.repaint();
     }
   }
 }

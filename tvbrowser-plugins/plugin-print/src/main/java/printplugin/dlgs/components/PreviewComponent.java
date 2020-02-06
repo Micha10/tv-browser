@@ -39,6 +39,9 @@ import java.awt.print.PrinterException;
 
 import javax.swing.JComponent;
 
+import printplugin.PrintPlugin;
+import printplugin.settings.PluginSettings;
+
 /**
  * A {@link JComponent} that displays a preview of a given {@link Printable}
  * object. The component supports scrolling, zooming, and the selection of
@@ -67,6 +70,7 @@ public class PreviewComponent extends JComponent {
   private final PageFormat mPageFormat;
   private final int mNumberOfPages;
 
+  private int mShowPrintMargins;
   private int mPageIndex;
 
   private double mZoom = DEFAULT_ZOOM;
@@ -147,6 +151,7 @@ public class PreviewComponent extends JComponent {
     mPageFormat = pageFormat;
     mPrintable = printable;
     mNumberOfPages = numberOfPages;
+    mShowPrintMargins = PrintPlugin.settings().showImageableArea();
 
     setAutoscrolls(true);
     updateSize();
@@ -374,7 +379,8 @@ public class PreviewComponent extends JComponent {
       g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,
           mAntialias ? RenderingHints.VALUE_TEXT_ANTIALIAS_ON : RenderingHints.VALUE_TEXT_ANTIALIAS_DEFAULT);
 
-      if (mMouseOver) {
+      if (mShowPrintMargins == PluginSettings.SHOW_IMAGEABLE_AREA_ALWAYS
+          || mShowPrintMargins == PluginSettings.SHOW_IMAGEABLE_AREA_ON_MOUSE_OVER && mMouseOver) {
         g.setColor(Color.lightGray);
         drawCropMarks(g, mPageFormat);
         // g.setColor(Color.magenta.brighter());
@@ -437,5 +443,14 @@ public class PreviewComponent extends JComponent {
     graphics2d
         .draw(new Line2D.Double(imageableWidth, imageableHeight, imageableWidth - CROP_MARK_LENGTH, imageableHeight));
     graphics2d.translate(-pageFormat.getImageableX(), -pageFormat.getImageableY());
+  }
+
+  public void setAntialias(final boolean antialias) {
+    mAntialias = antialias;
+    repaint();
+  }
+
+  public boolean isAntialias() {
+    return mAntialias;
   }
 }

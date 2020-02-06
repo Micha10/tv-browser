@@ -1,5 +1,6 @@
 package printplugin.settings;
 
+import java.awt.BorderLayout;
 import java.awt.Font;
 import java.awt.print.PageFormat;
 import java.awt.print.Paper;
@@ -28,7 +29,7 @@ public final class PluginSettings extends PropertyBasedSettings {
   public static final String ROBOTO_CONDENSED = "Roboto Condensed";
 
   private static final String ANTIALIAS = "antialias";
-  private static final String DEFAULT_FONT = "defaultFont";
+  private static final String DEFAULT_FONT_NAME = "defaultFont";
   private static final String DEFAULT_PRINTER = "defaultPrinter";
   private static final String DISPLAY_FONT = "displayFont";
   private static final String MARK_PRIORITY = "markPriority";
@@ -36,11 +37,14 @@ public final class PluginSettings extends PropertyBasedSettings {
   private static final String PAGE_ORIENTATION = "pageOrientation";
   private static final String PROGRAM_INFO_DIRECT_PRINTING_MENU_ITEM = "programInfoDirectPrinting";
 
-  public static final String PREVIEW_DLG_ZOOM = "PreviewDlg.Zoom";
-  public static final String PREVIEW_DLG_HEIGHT = "PreviewDlg.Height";
-  public static final String PREVIEW_DLG_WIDTH = "PreviewDlg.Width";
-  public static final String PREVIEW_DLG_Y = "PreviewDlg.Y";
-  public static final String PREVIEW_DLG_X = "PreviewDlg.X";
+  private static final String PRINT_PAGE_NUMBERS = "printPageNumbers";
+  private static final String TOOLBAR_POSITION = "toolbarPosition";
+  private static final String SHOW_IMAGEABLE_AREA = "showImageableArea";
+  private static final String INTEGRATE_EXTRAS_TAB = "integrateExtras";
+
+  public static final int SHOW_IMAGEABLE_AREA_ON_MOUSE_OVER = 0;
+  public static final int SHOW_IMAGEABLE_AREA_ALWAYS = 1;
+  public static final int SHOW_IMAGEABLE_AREA_NEVER = 2;
 
   public PluginSettings(final Properties properties) {
     super(properties);
@@ -68,11 +72,17 @@ public final class PluginSettings extends PropertyBasedSettings {
   }
 
   public PageFormat getPageFormat(final PrinterJob printerJob) {
-    return PageFormatType.valueOf(get(PAGE_FORMAT_TYPE, PageFormatType.NORMAL.name())).getPageFormat(printerJob, this);
+    return getPageFormatType().getPageFormat(printerJob, this);
   }
 
   public PageFormatType getPageFormatType() {
-    return PageFormatType.valueOf(get(PAGE_FORMAT_TYPE, PageFormatType.NORMAL.name()));
+    PageFormatType result;
+    try {
+      result = PageFormatType.valueOf(get(PAGE_FORMAT_TYPE, PageFormatType.NORMAL.name()));
+    } catch (Exception e) {
+      result = PageFormatType.NORMAL;
+    }
+    return result;
   }
 
   /**
@@ -100,23 +110,24 @@ public final class PluginSettings extends PropertyBasedSettings {
   }
 
   public void setDefaultFontName(final String fontName) {
-    set(DEFAULT_FONT, fontName);
+    set(DEFAULT_FONT_NAME, fontName);
   }
 
   public String getDefaultFontName() {
-    return get(DEFAULT_FONT, ROBOTO_CONDENSED);
+    return get(DEFAULT_FONT_NAME, ROBOTO_CONDENSED);
   }
 
   /**
-   * Returns the default font (defaults to Roboto Condensed and falls back to
-   * Dialog) with style {@link Font#PLAIN} and a font size of 12.
+   * Returns the default font (defaults to Roboto Condensed if available and falls
+   * back to
+   * Dialog - the system default font) with style {@link Font#PLAIN} and a font
+   * size of 12.
    * <p>
    * Use {@link Font#deriveFont(int, float)} to apply a style and size.
    *
    * @return a {@link Font} instance of the default font
    */
   public Font getDefaultFont() {
-    System.err.println(String.format(Locale.getDefault(), "Print default font: %s", getDefaultFontName()));
     return Font.decode(String.format(Locale.getDefault(), "%s", getDefaultFontName()));
   }
 
@@ -146,9 +157,41 @@ public final class PluginSettings extends PropertyBasedSettings {
     return get(DISPLAY_FONT, true);
   }
 
+  /**
+   * Returns the stored print service name, or the system's default print service
+   * name as fallback. If neither a print service name was stored, nor the system
+   * has a default printer, <code>null</code> is returned.
+   *
+   * @return the stored print service name, the system's default print service
+   *           name, or <code>null</code>
+   * @see PrinterJob#getPrinterJob()
+   * @see PrinterJob#getPrintService()
+   */
   public String getPrintServiceName() {
-    final PrintService printService = PrinterJob.getPrinterJob().getPrintService();
-    return get(DEFAULT_PRINTER, printService == null ? null : String.valueOf(printService));
+    return getPrintServiceName(PrinterJob.getPrinterJob());
+  }
+
+  /**
+   * Returns the stored print service name, or the print service name of the given
+   * {@link PrinterJob}. If neither a print service name was stored, nor the
+   * printer job has a valid associated print service, <code>null</code> is
+   * returned.
+   *
+   * @param printerJob
+   *                     the printer job that is used as fallback to get a print
+   *                     service name (can be <code>null</code>)
+   * @return the stored print service name, the print service name of the printer
+   *           job, or <code>null</code>
+   * @see PrinterJob#getPrintService()
+   */
+  public String getPrintServiceName(final PrinterJob printerJob) {
+    PrintService printService;
+    try {
+      printService = printerJob.getPrintService();
+    } catch (Exception e) {
+      printService = null;
+    }
+    return get(DEFAULT_PRINTER, printService == null ? null : printService.getName());
   }
 
   public void setPrintServiceName(final String printServiceName) {
@@ -161,5 +204,50 @@ public final class PluginSettings extends PropertyBasedSettings {
 
   public void setProgramInfoDirectPrintingMenuItem(final boolean programInfoDirectPrintingMenuItem) {
     set(PROGRAM_INFO_DIRECT_PRINTING_MENU_ITEM, programInfoDirectPrintingMenuItem);
+  }
+
+  public void printPageNumbers(final boolean printPageNumbers) {
+    set(PRINT_PAGE_NUMBERS, printPageNumbers);
+  }
+
+  public boolean printPageNumbers() {
+    return get(PRINT_PAGE_NUMBERS, true);
+  }
+
+  public void toolbarPosition(final String pos) {
+    switch (pos) {
+      case BorderLayout.PAGE_START:
+      case BorderLayout.LINE_START:
+      case BorderLayout.LINE_END:
+        set(TOOLBAR_POSITION, pos);
+        break;
+      default:
+        set(TOOLBAR_POSITION, BorderLayout.LINE_END);
+        break;
+    }
+  }
+
+  public String toolbarPosition() {
+    return get(TOOLBAR_POSITION, BorderLayout.LINE_END);
+  }
+
+  public void showImageableArea(final int showImageableArea) {
+    set(SHOW_IMAGEABLE_AREA,
+        showImageableArea >= SHOW_IMAGEABLE_AREA_ON_MOUSE_OVER && showImageableArea <= SHOW_IMAGEABLE_AREA_NEVER
+            ? showImageableArea
+            : SHOW_IMAGEABLE_AREA_ON_MOUSE_OVER);
+
+  }
+
+  public int showImageableArea() {
+    return get(SHOW_IMAGEABLE_AREA, SHOW_IMAGEABLE_AREA_ON_MOUSE_OVER);
+  }
+
+  public void integrateExtras(final boolean integrateExtras) {
+    set(INTEGRATE_EXTRAS_TAB, integrateExtras);
+  }
+
+  public boolean integrateExtras() {
+    return get(INTEGRATE_EXTRAS_TAB, false);
   }
 }

@@ -9,10 +9,10 @@ import java.awt.print.PrinterJob;
 public enum PageFormatType {
 
   CUSTOM(-1),
-  MINIMAL(0),
+  DEFAULT(-2),
+  MINIMUM(0),
   NARROW(1),
-  NORMAL(2),
-  SYSTEM(-2);
+  NORMAL(2);
 
   private final int mType;
 

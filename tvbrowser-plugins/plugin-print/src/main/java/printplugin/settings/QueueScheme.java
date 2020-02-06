@@ -91,7 +91,7 @@ public class QueueScheme extends Scheme<QueuePrinterSettings> {
                 ProgramFieldType.PRODUCTION_YEAR_TYPE,
                 ProgramFieldType.SHORT_DESCRIPTION_TYPE
             }, false),
-        PrintPlugin.getInstance().getPluginSettings().deriveDefaultFont(Font.BOLD, 12)));
+        PrintPlugin.settings().deriveDefaultFont(Font.BOLD, 12)));
 
     return new QueueScheme[] {scheme};
   }

@@ -126,7 +126,7 @@ public class DayProgramScheme extends Scheme<DayProgramPrinterSettings> {
 
   private static Scheme<DayProgramPrinterSettings>[] getDefaultScheme() {
     DayProgramScheme scheme = new DayProgramScheme(PrintPlugin.mLocalizer.msg("defaultScheme", "DefaultScheme"));
-    PrintPlugin.getInstance();
+    PrintPlugin.instance();
     scheme.setSettings(new DayProgramPrinterSettings(
         new Date(),
         3,

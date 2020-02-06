@@ -1296,6 +1296,7 @@ tvbrowser-plugins/plugin-print/src/main/resources/printplugin/printer/printer_hr
 tvbrowser-plugins/plugin-print/src/main/resources/printplugin/printer/printer_it.properties -text
 tvbrowser-plugins/plugin-print/src/main/resources/printplugin/printer/printer_sv.properties -text
 tvbrowser-plugins/plugin-print/src/main/resources/printplugin/printplugin.properties -text
+tvbrowser-plugins/plugin-print/src/main/resources/printplugin/printplugin_cs.properties -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-print/src/main/resources/printplugin/printplugin_da.properties -text
 tvbrowser-plugins/plugin-print/src/main/resources/printplugin/printplugin_de.properties -text
 tvbrowser-plugins/plugin-print/src/main/resources/printplugin/printplugin_el.properties -text svneol=unset#text/plain

@@ -64,7 +64,7 @@ public class PrintFromQueueDialogContent implements DialogContent<QueuePrinterSe
     if (mGeneralTab.emptyQueueAfterPrinting()) {
       Program[] progs = mRootNode.getPrograms();
       for (Program prog : progs) {
-        prog.unmark(PrintPlugin.getInstance());
+        prog.unmark(PrintPlugin.instance());
       }
       mRootNode.removeAllChildren();
       mRootNode.update();
@@ -73,13 +73,20 @@ public class PrintFromQueueDialogContent implements DialogContent<QueuePrinterSe
 
   @Override
   public Component getContent(final Frame parentFrame) {
-    JTabbedPane tab = new JTabbedPane();
+    final boolean integrateExtras = PrintPlugin.settings().integrateExtras();
+    final JTabbedPane tab = new JTabbedPane();
     mGeneralTab = new GeneralTab(parentFrame, getDialogTitle(), mRootNode);
-    mLayoutTab = new LayoutTab();
-    mExtrasTab = new ExtrasTab(parentFrame);
+    mLayoutTab = new LayoutTab(parentFrame, integrateExtras);
+    if (integrateExtras) {
+      mExtrasTab = mLayoutTab.extrasTab();
+    } else {
+      mExtrasTab = new ExtrasTab(parentFrame, true);
+    }
     tab.add(mLocalizer.msg("listingsTab", "Data"), mGeneralTab);
     tab.add(mLocalizer.msg("layoutTab", "Layout"), mLayoutTab);
-    tab.add(mLocalizer.msg("miscTab", "Extras"), mExtrasTab);
+    if (!integrateExtras) {
+      tab.add(mLocalizer.msg("miscTab", "Extras"), mExtrasTab);
+    }
     Utils.setOpaque(tab, false);
     return tab;
   }

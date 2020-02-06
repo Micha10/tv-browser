@@ -21,7 +21,7 @@ package printplugin.dlgs.printdayprogramsdialog;
 
 import com.jgoodies.forms.builder.PanelBuilder;
 import com.jgoodies.forms.factories.Borders;
-import com.jgoodies.forms.layout.CellConstraints;
+import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
 
 import java.awt.Frame;
@@ -29,6 +29,7 @@ import java.awt.Frame;
 import javax.swing.JCheckBox;
 import javax.swing.JPanel;
 
+import printplugin.PrintPlugin;
 import printplugin.dlgs.components.ProgramPreviewPanel;
 import printplugin.settings.ProgramIconSettings;
 
@@ -42,22 +43,24 @@ public class ExtrasTab extends JPanel {
   /** The localizer for this class. */
   private static final Localizer mLocalizer = Localizer.getLocalizerFor(ExtrasTab.class);
 
-  private ProgramPreviewPanel mProgramPreviewPanel;
-  private JCheckBox mShowPluginMarkingCb;
+  private final JCheckBox mShowPluginMarkingCb;
+  private final ProgramPreviewPanel mProgramPreviewPanel;
 
-  public ExtrasTab(Frame dlgParent) {
-    CellConstraints cc = new CellConstraints();
+  public ExtrasTab(final Frame dlgParent, final boolean border) {
 
-    PanelBuilder pb = new PanelBuilder(new FormLayout("5dlu,pref:grow",
+    final PanelBuilder pb = new PanelBuilder(new FormLayout("5dlu,pref:grow",
         "pref,5dlu,pref,3dlu,pref,10dlu"), this);
-    pb.border(Borders.DIALOG);
-    pb.addSeparator(mLocalizer.msg("programItem", "Program item"), cc.xyw(1, 1, 2));
-    pb.add(mProgramPreviewPanel = new ProgramPreviewPanel(dlgParent), cc.xy(2, 3));
+    if (border) {
+      pb.border(Borders.DIALOG);
+    }
+    pb.addSeparator(mLocalizer.msg("programItem", "Program item"), CC.xyw(1, 1, 2));
+    pb.add(mProgramPreviewPanel = new ProgramPreviewPanel(dlgParent), CC.xy(2, 3));
     pb.add(mShowPluginMarkingCb = new JCheckBox(mLocalizer.msg("showPluginMarkings", "Show plugin markings")),
-        cc.xy(2, 5));
+        CC.xy(2, 5));
 
     mShowPluginMarkingCb
         .addActionListener(e -> mProgramPreviewPanel.setShowPluginMarking(mShowPluginMarkingCb.isSelected()));
+    mProgramPreviewPanel.setAntialias(PrintPlugin.settings().isAntialias());
   }
 
   public void setProgramIconSettings(ProgramIconSettings programIconSettings) {

@@ -23,6 +23,9 @@ import com.jgoodies.forms.builder.PanelBuilder;
 import com.jgoodies.forms.factories.Borders;
 import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
+import com.jgoodies.forms.layout.RowSpec;
+
+import java.awt.Frame;
 
 import javax.swing.JComboBox;
 import javax.swing.JPanel;
@@ -40,8 +43,9 @@ public class LayoutTab extends JPanel {
   private static final Localizer mLocalizer = Localizer.getLocalizerFor(LayoutTab.class);
 
   private JComboBox<Integer> mColumnsPerPageCB;
+  private ExtrasTab mExtrasTab;
 
-  public LayoutTab() {
+  public LayoutTab(final Frame parent, final boolean includeExtras) {
 
     PanelBuilder pb = new PanelBuilder(new FormLayout("5dlu,pref,2dlu,pref,0dlu:grow",
         "pref,5dlu,pref,10dlu"), this);
@@ -50,6 +54,13 @@ public class LayoutTab extends JPanel {
     pb.addSeparator(mLocalizer.msg("columns", "Columns"), CC.xyw(1, 1, 5));
     pb.addLabel(mLocalizer.msg("columnsPerPage", "Columns per page:"), CC.xy(2, 3));
     pb.add(mColumnsPerPageCB = new JComboBox<>(Utils.createIntegerArray(1, 4)), CC.xy(4, 3));
+
+    if (includeExtras) {
+      mExtrasTab = new ExtrasTab(parent, false);
+      pb.getLayout().appendRow(RowSpec.decode("pref"));
+      pb.getLayout().appendRow(RowSpec.decode("10dlu"));
+      pb.add(mExtrasTab, CC.xyw(1, 5, 5));
+    }
   }
 
   public int getColumnsPerPage() {
@@ -58,5 +69,9 @@ public class LayoutTab extends JPanel {
 
   public void setColumnsPerPage(int columns) {
     mColumnsPerPageCB.setSelectedItem(columns);
+  }
+
+  public ExtrasTab extrasTab() {
+    return mExtrasTab;
   }
 }

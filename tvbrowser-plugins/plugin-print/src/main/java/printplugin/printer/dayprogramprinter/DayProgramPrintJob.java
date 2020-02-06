@@ -37,9 +37,9 @@ import printplugin.settings.ProgramIconSettings;
  */
 public class DayProgramPrintJob extends AbstractPrintJob {
 
-  private static final Font HEADER_FONT = PrintPlugin.getInstance().getPluginSettings().deriveDefaultFont(Font.BOLD,
+  private static final Font HEADER_FONT = PrintPlugin.settings().deriveDefaultFont(Font.BOLD,
       22);
-  private static final Font FOOTER_FONT = PrintPlugin.getInstance().getPluginSettings().deriveDefaultFont(Font.PLAIN,
+  private static final Font FOOTER_FONT = PrintPlugin.settings().deriveDefaultFont(Font.PLAIN,
       6);
 
   private DayProgramPrinterSettings mSettings;
