@@ -393,28 +393,18 @@ public class DreamboxConfigDialog extends JDialog implements WindowClosingIf {
         scroll.setOpaque(false);
         scroll.setViewportBorder(BorderFactory.createEmptyBorder());
         
-        JTabbedPane tabs = new JTabbedPane();
+        final JTabbedPane tabs = new JTabbedPane();
         tabs.add(mLocalizer.msg("basicTitle", "Basic settings"), basicPanel.getPanel());
         tabs.add(mLocalizer.msg("extendedTitle", "Extended settings"), scroll);
+        
         tabs.addChangeListener(new ChangeListener() {
             String currentDefaultLocation = mConfig.getDefaultLocation();
-            JTabbedPane tabs = null;
-            JPanel basicJPanel = null;
-            JPanel extendedJPanel = null;
-            
-            private ChangeListener init(JTabbedPane tabs, JPanel basicJPanel, JPanel extendedJPanel) {
-                this.tabs = tabs;
-                this.basicJPanel = basicJPanel;
-                this.extendedJPanel = extendedJPanel;
-                return this;
-            }
-            
+           
             public void stateChanged(ChangeEvent e) {
-                if (tabs.getSelectedIndex() == tabs.indexOfComponent(basicJPanel)) {
+                if (tabs.getSelectedIndex() == 0) {
                     currentDefaultLocation = (String) mDefaultLocation.getSelectedItem();
-                } else if (tabs.getSelectedIndex() == tabs.indexOfComponent(extendedJPanel)) {
+                } else if (tabs.getSelectedIndex() == 1) {
                     mDefaultLocation.removeAllItems();
-
                     List<String> locations = E2LocationHelper.getInstance(mConfig, null).getLocations(mDreamboxAddress.getText());
                     
                     Iterator<String> it = locations.iterator();
@@ -427,7 +417,7 @@ public class DreamboxConfigDialog extends JDialog implements WindowClosingIf {
                     }
                 }
             }
-        }.init(tabs, basicPanel.getPanel(), extendedPanel.getPanel()));
+        });
 
         JPanel content = (JPanel) getContentPane();
         content.setBorder(Borders.DIALOG);
