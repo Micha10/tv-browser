@@ -164,7 +164,7 @@ public class JREUpdater {
 	}
 	
 	public static void handlePossibleUpdate() {
-		if(!Settings.propJreUpdate.getString().equals(Settings.propJreUpdate.getDefault())) {
+		if(hasTvBrowserJRE() && !Settings.propJreUpdate.getString().equals(Settings.propJreUpdate.getDefault())) {
 			if(JOptionPane.showOptionDialog(UiUtilities.getLastModalChildOf(MainFrame.getInstance()), LOCALIZER.msg("info.message", "A New TV-Browser JRE is available for installation.\n\nIt's important to install JRE updates as soon as possible\nto prevent possible security risks.\n\nDo you want to install it now?"), LOCALIZER.msg("info.header", "New TV-Browser JRE available"), JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE, null, new String[] {LOCALIZER.msg("info.install","Install JRE now"),Localizer.getLocalization(Localizer.I18N_CANCEL)}, null) == JOptionPane.YES_OPTION) {
 				Settings.propJreUpdate.setString(Settings.propJreUpdate.getString()+";install");
 				MainFrame.getInstance().quit();
@@ -184,7 +184,7 @@ public class JREUpdater {
 	}
 	
 	public static void doUpdateIfAvailable() {
-		if(Settings.propJreUpdate.getString().endsWith(";install")) {
+		if(hasTvBrowserJRE() && Settings.propJreUpdate.getString().endsWith(";install")) {
 			String file = Settings.propJreUpdate.getString().substring(0, Settings.propJreUpdate.getString().lastIndexOf(";"));
 			Settings.propJreUpdate.resetToDefault();
 			try {
