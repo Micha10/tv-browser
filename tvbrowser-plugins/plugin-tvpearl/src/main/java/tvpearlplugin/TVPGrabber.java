@@ -51,7 +51,7 @@ public class TVPGrabber
    * regular expression to grab the content of a TV pearl
    */
   private static final Pattern PATTERN_CONTENT = Pattern
-      .compile("<p class=\"author\">.*?<a.*?href=\"([^&|#]*).*?#p(([0-9])*?)\".*?>.*?<a href=\"./memberlist.php?[^\"]*\"[^>]*>(.*?)</a></strong> &raquo; </span>(.*?)</p>[\\r\\n\\t ]*?<div class=\"content\">([\\w\\W]*?)</div>", Pattern.DOTALL);
+      .compile("<p class=\"author\">.*?<a.*?href=\"([^&|#]*).*?#p(([0-9])*?)\".*?>.*?<a href=\"./memberlist.php?[^\"]*\"[^>]*>(.*?)</a></strong> &raquo; </span><time.*?>(.*?)</time>[\\r\\n\\t ]*</p>[\\r\\n\\t ]*?<div class=\"content\">([\\w\\W]*?)</div>", Pattern.DOTALL);
   
   /**
    * getter for content pattern
@@ -240,11 +240,12 @@ public class TVPGrabber
     
     while (matcher.find())
 		{
+      
 		  final String author = matcher.group(4).trim();
 		  final String link = matcher.group(1).trim();
 		  
 		  final String contentUrl = extentUrl(link+"#p"+link.substring(link.indexOf("=")+1), originalUrl);
-			final Date createDate = parseDate(matcher.group(5).trim());
+		  final Date createDate = parseDate(matcher.group(5).trim());
 			String itemContent = matcher.group(6);
 			itemContent = itemContent.replace("\n", "").replaceAll("<br>", "\n").replaceAll("<.*?>", "");
 	        
