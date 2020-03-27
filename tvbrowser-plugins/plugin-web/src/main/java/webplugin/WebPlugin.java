@@ -66,7 +66,7 @@ import util.ui.UiUtilities;
  * A User can configure his favorite Search-Engines and search for the given Movie
  */
 public class WebPlugin extends Plugin {
-  private static final Version VERSION = new Version(3,17);
+  private static final Version VERSION = new Version(3,18);
 
   private static final Logger LOGGER = java.util.logging.Logger
   .getLogger(WebPlugin.class.getName());
@@ -94,9 +94,8 @@ public class WebPlugin extends Plugin {
           "http://akas.imdb.com/find?q={urlencode(" + WEBSEARCH_ALL + ", \"UTF-8\")}&s=tt", 
           "http://akas.imdb.com/find?q={urlencode(" + WEBSEARCH_ALL + ", \"UTF-8\")}&s=nm", 
           null, false, true),
-      new WebAddress("Zelluloid", "http://zelluloid.de/suche/index.php3?qstring={urlencode(" + WEBSEARCH_ALL + ", \"ISO-8859-1\")}", null, false, true),
+      new WebAddress("DuckDuckGo", "https://duckduckgo.com/html?q={urlencode(" + WEBSEARCH_ALL + ", \"UTF-8\")}", null, false, true),
       new WebAddress("Google", "http://www.google.com/search?q=%22{urlencode(" + WEBSEARCH_ALL + ", \"UTF-8\")}%22", null, false, true),
-      new WebAddress("Altavista", "http://de.altavista.com/web/results?q=%22{urlencode(" + WEBSEARCH_ALL + ", \"UTF-8\")}%22", null, false, true),
       new WebAddress("Yahoo", "http://search.yahoo.com/search?p={urlencode(" + WEBSEARCH_ALL + ", \"ISO-8859-1\")}", null, false, true),
       new WebAddress("Wikipedia (DE)", "http://de.wikipedia.org/wiki/Spezial:Search?search={urlencode(" + WEBSEARCH_ALL + ", \"ISO-8859-1\")}", null, false, Locale.getDefault().equals(Locale.GERMAN)),
       new WebAddress("Wikipedia (EN)", "http://en.wikipedia.org/wiki/Special:Search?search={urlencode(" + WEBSEARCH_ALL + ", \"ISO-8859-1\")}", null, false, Locale.getDefault().equals(Locale.ENGLISH)),
