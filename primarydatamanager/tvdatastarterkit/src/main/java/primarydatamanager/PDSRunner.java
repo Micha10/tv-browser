@@ -113,7 +113,7 @@ public class PDSRunner {
       
       if (!isFinished && pds.get() != null) {
         final String dir = mRawDir.getAbsolutePath();
-        File logFile=new File(mLogDir,pds.getClass().getName()+".txt");
+        File logFile=new File(mLogDir,pds.get().getClass().getName()+".txt");
         try {
           FileOutputStream out=new FileOutputStream(logFile);
           final PrintStream errOut=new PrintStream(out);
@@ -140,15 +140,15 @@ public class PDSRunner {
           
           if (thereWereErrors.get() || isRunning.get()) {
             mLog.warning("There were errors during the execution of primary "
-                + "data service " + pds.getClass().getName() + ". See log file: "
+                + "data service " + pds.get().getClass().getName() +" still running: "+ isRunning.get() + ". See log file: "
                 + logFile.getAbsolutePath());
           }else{
-            mLog.fine(pds.getClass().getName()+ " terminated normally");
+            mLog.fine(pds.get().getClass().getName()+ " terminated normally");
             logFile.delete();
           }
           errOut.close();
         }catch(Exception exc) {
-          mLog.log(Level.SEVERE, "Error executing primary data service "+pds.getClass().getName(), exc);
+          mLog.log(Level.SEVERE, "Error executing primary data service "+pds.get().getClass().getName(), exc);
         }
       }
       
