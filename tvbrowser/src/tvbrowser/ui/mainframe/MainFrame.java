@@ -1287,7 +1287,7 @@ public class MainFrame extends JFrame implements DateListener,DropTargetListener
 
     addKeyboardActionForMenu(mMenuBar.mPluginsMenu);
     
-    this.setRootPane(rootPane);
+    //this.setRootPane(rootPane);
   }
   
   private void addKeyboardActionForMenu(JMenu menu) {
