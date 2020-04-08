@@ -3,23 +3,24 @@ package primarydatamanager;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.PrintStream;
-import java.util.LinkedList;
+import java.util.Properties;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.Properties;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicReference;
 
 import primarydatamanager.primarydataservice.PrimaryDataService;
 
 
 public class PDSRunner {
   
-  private LinkedList<PrimaryDataService> mPDSList;
-  private int mActiveThreadCount;
-  private Thread mWaitingThread;
+  private CopyOnWriteArrayList<PrimaryDataService> mPDSList;
+  private AtomicInteger mActiveThreadCount = new AtomicInteger(0);
   private File mLogDir, mRawDir;
   private static Properties mProperties;
+  private Thread mWaitingThread;
   
   private static final int MAX_EXECUTION_MINUTES = 90;
   private static final int CONCURRENT_DOWNLOADS=5;
@@ -28,7 +29,7 @@ public class PDSRunner {
   
   public PDSRunner(File baseDir) {
     Logger.getLogger("sun.awt.X11.timeoutTask.XToolkit").setLevel(Level.INFO);
-    mPDSList=new LinkedList<PrimaryDataService>();
+    mPDSList=new CopyOnWriteArrayList<PrimaryDataService>();
     mRawDir=new File(baseDir,"raw");
     mLogDir=new File(baseDir,"pdslog");
     mProperties=new Properties();
@@ -62,8 +63,7 @@ public class PDSRunner {
      
      
     
-    mActiveThreadCount =0;
-    mWaitingThread = Thread.currentThread();
+    mActiveThreadCount.set(0);
     
     //  Set the max. connections
     if (CONCURRENT_DOWNLOADS > 5) {
@@ -71,7 +71,7 @@ public class PDSRunner {
     }
     
     for (int i=0;i<CONCURRENT_DOWNLOADS;i++) {
-      Thread downloadThread = new Thread() {
+      Thread downloadThread = new Thread("PDS runner Thread") {
         public void run() {
           PDSThreadRun();
         }
@@ -80,23 +80,46 @@ public class PDSRunner {
     }
     
     //  Wait until all jobs are processed
-    boolean isFinished;
-    do {
-      try {
-        Thread.sleep(30*60000);
-      } catch (InterruptedException exc) {}
-      
-      synchronized (mPDSList) {
-        isFinished = mPDSList.isEmpty() && (mActiveThreadCount == 0);
-      }
-    } while (! isFinished);
+    final AtomicBoolean isFinished = new AtomicBoolean(false);
+    final AtomicBoolean isLocked = new AtomicBoolean(false);
+    final long start = System.currentTimeMillis();
+    final long waitTime = (mPDSList.size()+1) * MAX_EXECUTION_MINUTES * 60000l;
+    
+    mWaitingThread = new Thread("Waiting for PDS running to finish") {
+      public void run() {
+        do {
+          try {
+            Thread.sleep(30*60000);
+          } catch (InterruptedException exc) {}
+          
+          synchronized (mPDSList) {
+            isFinished.set((mPDSList.isEmpty() && mActiveThreadCount.get() <= 0));
+          }
+          
+          if(System.currentTimeMillis()-start > waitTime) {
+            isLocked.set(true);
+          }
+        } while (! isFinished.get() && !isLocked.get());
+      };
+    };
+    mWaitingThread.start();
+    try {
+      mWaitingThread.join();
+    } catch (InterruptedException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+    
+    if(isLocked.get()) {
+      System.exit(1);
+    }
   }
   
   
 
 
   private void PDSThreadRun() {
-    mActiveThreadCount++;
+    mActiveThreadCount.incrementAndGet();
 
     boolean isFinished = false;
     // Get the next job
@@ -107,7 +130,7 @@ public class PDSRunner {
         if (mPDSList.isEmpty()) {
           isFinished = true;
         } else {
-          pds.set(mPDSList.removeFirst());
+          pds.set(mPDSList.remove(0));
         }
       }
       
@@ -125,16 +148,17 @@ public class PDSRunner {
           final AtomicBoolean thereWereErrors = new AtomicBoolean(false);
           final long start = System.currentTimeMillis();
           
-          new Thread() {
+          final Thread execute = new Thread("Execute PDS Thread, wait for errors") {
             @Override
             public void run() {
               boolean error = pds.get().execute(dir, errOut);
               thereWereErrors.set(error);
               isRunning.set(false);
             }
-          }.start();
+          };
+          execute.start();
           
-          while(isRunning.get() && System.currentTimeMillis()-start < (MAX_EXECUTION_MINUTES * 60000)) {
+          while(execute.isAlive() && isRunning.get() && System.currentTimeMillis()-start < (MAX_EXECUTION_MINUTES * 60000l)) {
             Thread.sleep(30000);
           }
           
@@ -155,9 +179,7 @@ public class PDSRunner {
       pds.set(null);
     } while (! isFinished);
     
-    mActiveThreadCount--;
-
-    mWaitingThread.interrupt();
+    mActiveThreadCount.decrementAndGet();
   }
 
   
