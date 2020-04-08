@@ -180,6 +180,7 @@ public class PDSRunner {
     } while (! isFinished);
     
     mActiveThreadCount.decrementAndGet();
+    mWaitingThread.interrupt();
   }
 
   
