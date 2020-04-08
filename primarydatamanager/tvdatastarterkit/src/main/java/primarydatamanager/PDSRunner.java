@@ -116,9 +116,6 @@ public class PDSRunner {
     }
   }
   
-  
-
-
   private void PDSThreadRun() {
     mActiveThreadCount.incrementAndGet();
 
