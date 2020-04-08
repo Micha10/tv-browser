@@ -70,21 +70,11 @@ public class PDSRunner {
       System.setProperty("http.maxConnections", Integer.toString(CONCURRENT_DOWNLOADS));
     }
     
-    for (int i=0;i<CONCURRENT_DOWNLOADS;i++) {
-      Thread downloadThread = new Thread("PDS runner Thread") {
-        public void run() {
-          PDSThreadRun();
-        }
-      };
-      downloadThread.start();
-    }
-    
-    //  Wait until all jobs are processed
     final AtomicBoolean isFinished = new AtomicBoolean(false);
     final AtomicBoolean isLocked = new AtomicBoolean(false);
     final long start = System.currentTimeMillis();
     final long waitTime = (mPDSList.size()+1) * MAX_EXECUTION_MINUTES * 60000l;
-    
+
     mWaitingThread = new Thread("Waiting for PDS running to finish") {
       public void run() {
         do {
@@ -102,6 +92,17 @@ public class PDSRunner {
         } while (! isFinished.get() && !isLocked.get());
       };
     };
+    
+    for (int i=0;i<CONCURRENT_DOWNLOADS;i++) {
+      Thread downloadThread = new Thread("PDS runner Thread") {
+        public void run() {
+          PDSThreadRun();
+        }
+      };
+      downloadThread.start();
+    }
+    
+    //  Wait until all jobs are processed    
     mWaitingThread.start();
     try {
       mWaitingThread.join();
