@@ -31,7 +31,6 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 
 import devplugin.Plugin;
-import devplugin.Program;
 import simplemarkerplugin.MarkList;
 import simplemarkerplugin.SimpleMarkerPlugin;
 
@@ -58,15 +57,12 @@ public class MarkerPriorityRenderer extends DefaultTableCellRenderer {
     Color color = c.getBackground();
 
     int priority = ((MarkList)value).getMarkPriority();
-
-    switch(priority) {
-      case Program.MIN_MARK_PRIORITY: mLabel.setText(SimpleMarkerPlugin.getLocalizer().msg("settings.min","Minimum"));break;
-      case Program.LOWER_MEDIUM_MARK_PRIORITY: mLabel.setText(SimpleMarkerPlugin.getLocalizer().msg("settings.lowerMedium","Lower medium"));break;
-      case Program.MEDIUM_MARK_PRIORITY: mLabel.setText(SimpleMarkerPlugin.getLocalizer().msg("settings.medium","Medium"));break;
-      case Program.HIGHER_MEDIUM_MARK_PRIORITY: mLabel.setText(SimpleMarkerPlugin.getLocalizer().msg("settings.higherMedium","Higher Medium"));break;
-      case Program.MAX_MARK_PRIORITY: mLabel.setText(SimpleMarkerPlugin.getLocalizer().msg("settings.max","Maximum"));break;
-
-      default: mLabel.setText(SimpleMarkerPlugin.getLocalizer().msg("settings.noPriority","None"));break;
+    
+    if(priority == -1) {
+      mLabel.setText(SimpleMarkerPlugin.getLocalizer().msg("settings.noPriority","None"));
+    }
+    else {
+      mLabel.setText((priority+1)+". " +SimpleMarkerPlugin.getLocalizer().msg("settings.highlightingPriority","Color/priority"));
     }
     
     Color testColor = Plugin.getPluginManager().getTvBrowserSettings().getColorForMarkingPriority(priority);

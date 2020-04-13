@@ -23,6 +23,7 @@ package simplemarkerplugin.table;
 
 import java.awt.Component;
 import java.awt.event.MouseEvent;
+import java.lang.reflect.Method;
 import java.util.EventObject;
 
 import javax.swing.AbstractCellEditor;
@@ -30,6 +31,7 @@ import javax.swing.JComboBox;
 import javax.swing.JTable;
 import javax.swing.table.TableCellEditor;
 
+import devplugin.Program;
 import simplemarkerplugin.MarkList;
 import simplemarkerplugin.SimpleMarkerPlugin;
 import util.ui.MarkPriorityComboBoxRenderer;
@@ -43,23 +45,33 @@ public class MarkListPriorityCellEditor extends AbstractCellEditor implements
     TableCellEditor {
 
   private static final long serialVersionUID = 1L;
-
-  private final String[] prioValues = {
-      SimpleMarkerPlugin.getLocalizer().msg("settings.noPriority","None"),
-      SimpleMarkerPlugin.getLocalizer().msg("settings.min","Minimum"),
-      SimpleMarkerPlugin.getLocalizer().msg("settings.lowerMedium","Lower Medium"),
-      SimpleMarkerPlugin.getLocalizer().msg("settings.medium","Medium"),
-      SimpleMarkerPlugin.getLocalizer().msg("settings.higherMedium","Higher Medium"),
-      SimpleMarkerPlugin.getLocalizer().msg("settings.max","Maximum")};
-
-  private JComboBox mComboBox;
+  private JComboBox<String> mComboBox;
   private MarkList mItem;
 
   /**
    * Creates an instance of this class.
    */
   public MarkListPriorityCellEditor() {
-    mComboBox = new JComboBox(prioValues);
+    mComboBox = new JComboBox<String>();
+    
+    int maxPriority = Program.MAX_MARK_PRIORITY;
+    
+    try {
+      Method m = Program.class.getMethod("getHighlightingPriorityMaximum");
+      m.setAccessible(true);
+      maxPriority = (Integer)m.invoke(null);
+    }catch(Exception e) {
+      // ignore
+    }
+    
+    mComboBox.addItem(SimpleMarkerPlugin.getLocalizer().msg("settings.noPriority","None"));
+    
+    final String text = SimpleMarkerPlugin.getLocalizer().msg("settings.highlightingPriority","Color/priority");
+    
+    for(int i = 0; i <= maxPriority; i++) {
+      mComboBox.addItem((i+1)+". "+text);
+    }
+    
     mComboBox.setRenderer(new MarkPriorityComboBoxRenderer());
   }
 
