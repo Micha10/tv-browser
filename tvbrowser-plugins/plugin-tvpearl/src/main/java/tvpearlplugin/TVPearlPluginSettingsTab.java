@@ -43,7 +43,6 @@ import javax.swing.SpinnerNumberModel;
 import com.jgoodies.forms.builder.PanelBuilder;
 import com.jgoodies.forms.factories.Borders;
 import com.jgoodies.forms.factories.CC;
-import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 
 import compat.BordersCompat;
@@ -51,7 +50,7 @@ import devplugin.ProgramReceiveIf;
 import devplugin.ProgramReceiveTarget;
 import devplugin.SettingsTab;
 import tvbrowser.ui.mainframe.MainFrame;
-import util.ui.MarkPriorityComboBoxRenderer;
+import util.ui.DefaultMarkingPrioritySelectionPanel;
 import util.ui.PluginChooserDlg;
 import util.ui.PluginProgramConfigurationPanel;
 import util.ui.ScrollableJPanel;
@@ -67,7 +66,7 @@ public final class TVPearlPluginSettingsTab implements SettingsTab
 	private JCheckBox mUpdateManual;
 	private JComboBox<String> mViewOption;
 	private JCheckBox mMarkPearl;
-	private JComboBox<String> mMarkPriority;
+	private DefaultMarkingPrioritySelectionPanel mHighlighting;
 	private JCheckBox mShowInfoModal;
 	private JCheckBox mEnableFilter;
 	private JRadioButton mFilterShowOnly;
@@ -105,10 +104,6 @@ public final class TVPearlPluginSettingsTab implements SettingsTab
 
 	  final PanelBuilder builder = new PanelBuilder(layout,
         new ScrollableJPanel());
-		// builder.setDefaultDialogBorder();
-		//builder.setBorder(null);
-
-		final CellConstraints cc = new CellConstraints();
 
 		mUpdateAtStart = new JCheckBox(mLocalizer.msg("updateAtStart",
         "Update after TV-Browser start"), mSettings.getUpdatePearlsAfterStart());
@@ -130,9 +125,7 @@ public final class TVPearlPluginSettingsTab implements SettingsTab
     }
     mMarkPearl = new JCheckBox(mLocalizer.msg("markPearl",
         "Mark pearls within the TV-Browser"), mSettings.getMarkPearls());
-    mMarkPriority = new JComboBox<String>(getPriorities());
-    mMarkPriority.setRenderer(new MarkPriorityComboBoxRenderer());
-    mMarkPriority.setSelectedIndex(mSettings.getMarkPriority() + 1);
+    mHighlighting = DefaultMarkingPrioritySelectionPanel.createPanel(mSettings.getMarkPriority(), mLocalizer.msg("markPriority", "Mark priority"), false, false, false);
     mShowInfoModal = new JCheckBox(
         mLocalizer.msg("modal", "modal Info dialog"), mSettings
             .getShowInfoModal());
@@ -172,8 +165,8 @@ public final class TVPearlPluginSettingsTab implements SettingsTab
 
 		final JPanel pluginPanel = new JPanel(new FormLayout(
         "fill:pref:grow, 3dlu, pref", "default"));
-		pluginPanel.add(mPluginLabel, cc.xy(1, 1));
-		pluginPanel.add(choose, cc.xy(3, 1));
+		pluginPanel.add(mPluginLabel, CC.xy(1, 1));
+		pluginPanel.add(choose, CC.xy(3, 1));
 
 		mEnableFilter = new JCheckBox(mLocalizer.msg("enableFilter",
         "enable filter"), mSettings.getFilterEnabled());
@@ -198,50 +191,50 @@ public final class TVPearlPluginSettingsTab implements SettingsTab
 
 		builder.appendRow("default");
 		builder.setRow(2);
-		builder.addLabel(mLocalizer.msg("view", "View"), cc.xy(2, builder.getRow()));
-		builder.add(mViewOption, cc.xy(4, builder.getRow()));
+		builder.addLabel(mLocalizer.msg("view", "View"), CC.xy(2, builder.getRow()));
+		builder.add(mViewOption, CC.xy(4, builder.getRow()));
 		
 		newLine(builder);
-		builder.add(mShowInfoModal, cc.xyw(2, builder.getRow(), 3));
+		builder.add(mShowInfoModal, CC.xyw(2, builder.getRow(), 3));
 
     addSeparator(builder,mLocalizer.msg("programTable", "Program table"));
 		
     newLine(builder);
-		builder.add(mMarkPearl, cc.xyw(2, builder.getRow(), 3));
+		builder.add(mMarkPearl, CC.xyw(2, builder.getRow(), 3));
 
     newLine(builder);
-		builder.addLabel(mLocalizer.msg("markPriority", "Mark priority"), cc.xy(2, builder.getRow()));
-		builder.add(mMarkPriority, cc.xy(4, builder.getRow()));
+		//builder.addLabel(mLocalizer.msg("markPriority", "Mark priority"), cc.xy(2, builder.getRow()));
+		builder.add(mHighlighting, CC.xyw(2, builder.getRow(), 3));
 
     addSeparator(builder,mLocalizer.msg("sendToPlugin", "Send reminded program to"));
 
     newLine(builder);
-		builder.add(pluginPanel, cc.xyw(2, builder.getRow(), 3));
+		builder.add(pluginPanel, CC.xyw(2, builder.getRow(), 3));
 
     addSeparator(builder,mLocalizer.msg("updateOption", "Update options"));
 
     newLine(builder);
-		builder.add(mUpdateAtStart, cc.xyw(2, builder.getRow(), 3));
+		builder.add(mUpdateAtStart, CC.xyw(2, builder.getRow(), 3));
 
     newLine(builder);
-		builder.add(mUpdateAfterUpdateFinished, cc.xyw(2, builder.getRow(), 3));
+		builder.add(mUpdateAfterUpdateFinished, CC.xyw(2, builder.getRow(), 3));
 
     newLine(builder);
-		builder.add(mUpdateManual, cc.xyw(2, builder.getRow(), 3));
+		builder.add(mUpdateManual, CC.xyw(2, builder.getRow(), 3));
 
     addSeparator(builder,mLocalizer.msg("filter", "Filter"));
 
     newLine(builder);
-		builder.add(mEnableFilter, cc.xyw(2, builder.getRow(), 3));
+		builder.add(mEnableFilter, CC.xyw(2, builder.getRow(), 3));
 
     newLine(builder);
-		builder.add(mFilterShowOnly, cc.xyw(2, builder.getRow(), 3));
+		builder.add(mFilterShowOnly, CC.xyw(2, builder.getRow(), 3));
 		
     newLine(builder);
-		builder.add(mFilterShowNot, cc.xyw(2, builder.getRow(), 3));
+		builder.add(mFilterShowNot, CC.xyw(2, builder.getRow(), 3));
     
     newLine(builder);
-    builder.add(scrollComposer, cc.xyw(2, builder.getRow(), 3));
+    builder.add(scrollComposer, CC.xyw(2, builder.getRow(), 3));
     
 	builder.nextRow(2);
 
@@ -271,16 +264,16 @@ public final class TVPearlPluginSettingsTab implements SettingsTab
     
     y++;
     
-    creationPanel.add(mFormatingPanel, cc.xyw(2,++y,3));
+    creationPanel.add(mFormatingPanel, CC.xyw(2,++y,3));
     
     y += 2;
     
     JPanel countPanel = new JPanel(new FormLayout("default","default"));
-    countPanel.add(mCommentCount, cc.xy(1, 1));
+    countPanel.add(mCommentCount, CC.xy(1, 1));
     
-    creationPanel.addSeparator(mLocalizer.msg("commentSeparator","Comments"), cc.xyw(1, y++, 4));
-    creationPanel.addLabel(mLocalizer.msg("saveComments", "Save comments:"), cc.xy(2, ++y));
-    creationPanel.add(countPanel, cc.xy(4, y));
+    creationPanel.addSeparator(mLocalizer.msg("commentSeparator","Comments"), CC.xyw(1, y++, 4));
+    creationPanel.addLabel(mLocalizer.msg("saveComments", "Save comments:"), CC.xy(2, ++y));
+    creationPanel.add(countPanel, CC.xy(4, y));
     
     creationPanel.getPanel().setOpaque(true);
     creationPanel.getPanel().setBorder(BordersCompat.getDialogBorder());
@@ -338,7 +331,7 @@ public final class TVPearlPluginSettingsTab implements SettingsTab
       mSettings.setShowFoundPearls();
     }
     mSettings.setMarkPearls(mMarkPearl.isSelected());
-    mSettings.setMarkPriority(mMarkPriority.getSelectedIndex() - 1);
+    mSettings.setMarkPriority(mHighlighting.getSelectedPriority());
     mSettings.setShowInfoModal(mShowInfoModal.isSelected());
     mSettings.setFilterEnabled(mEnableFilter.isSelected());
     if (mFilterShowOnly.isSelected()) {
@@ -380,20 +373,6 @@ public final class TVPearlPluginSettingsTab implements SettingsTab
 		result.add(mLocalizer.msg("viewChannel",
         "View pearls from subscribed channels"));
 		result.add(mLocalizer.msg("viewProgram", "View only pearls that where found within the local program data"));
-
-		return result;
-	}
-
-	private Vector<String> getPriorities()
-	{
-	  final Vector<String> result = new Vector<String>();
-
-		result.add(mLocalizer.msg("noPriority", "None"));
-		result.add(mLocalizer.msg("min", "Minimum"));
-		result.add(mLocalizer.msg("lowerMedium", "Lower Medium"));
-		result.add(mLocalizer.msg("medium", "Medium"));
-		result.add(mLocalizer.msg("higherMedium", "Higher Medium"));
-		result.add(mLocalizer.msg("max", "Maximum"));
 
 		return result;
 	}
