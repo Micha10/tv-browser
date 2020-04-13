@@ -29,6 +29,8 @@ import java.util.Iterator;
 
 import javax.swing.event.ChangeListener;
 
+import tvbrowser.core.Settings;
+
 /**
  * This interface provides a view of the program object in the host-application.
  *
@@ -194,16 +196,25 @@ public interface Program {
   @Deprecated public static final int WAS_DELETED_STATE = STATE_WAS_DELETED;
 
   public static final int PRIORITY_MARK_NONE = -1;
-  /** @deprecated since 4.2.2 use {@link TvBrowserSettings#getHighlightingPriorityMaximum()} instead */
+  /** @deprecated since 4.2.2 use {@link #getHighlightingPriorityMaximum()} instead */
   public static final int PRIORITY_MARK_MIN = 0;
-  /** @deprecated since 4.2.2 use {@link TvBrowserSettings#getHighlightingPriorityMaximum()} instead */
+  /** @deprecated since 4.2.2 use {@link #getHighlightingPriorityMaximum()} instead */
   public static final int PRIORITY_MARK_MEDIUM_LOWER = 1;
-  /** @deprecated since 4.2.2 use {@link TvBrowserSettings#getHighlightingPriorityMaximum()} instead */
+  /** @deprecated since 4.2.2 use {@link #getHighlightingPriorityMaximum()} instead */
   public static final int PRIORITY_MARK_MEDIUM = 2;
-  /** @deprecated since 4.2.2 use {@link TvBrowserSettings#getHighlightingPriorityMaximum()} instead */
+  /** @deprecated since 4.2.2 use {@link #getHighlightingPriorityMaximum()} instead */
   public static final int PRIORITY_MARK_MEDIUM_HIGHER = 3;
-  /** @deprecated since 4.2.2 use {@link TvBrowserSettings#getHighlightingPriorityMaximum()} instead */
+  /** @deprecated since 4.2.2 use {@link #getHighlightingPriorityMaximum()} instead */
   public static final int PRIORITY_MARK_MAX = 4;
+  
+  /**
+   * @return The current maximum highlighting priority
+   *   NOTE: This might change is both directions.
+   * @since 4.2.2
+   */
+  public static int getHighlightingPriorityMaximum() {
+    return Settings.getHighlightingPriorityMaximum();
+  }
   
   /** @deprecated since 3.4.5 use {@link #PRIORITY_MARK_NONE} instead */
   @Deprecated public static final int NO_MARK_PRIORITY = PRIORITY_MARK_NONE;

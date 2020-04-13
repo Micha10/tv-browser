@@ -1051,11 +1051,6 @@ public class PluginManagerImpl implements PluginManager {
       public String getDataDirectory() {
         return Settings.propTVDataDirectory.getString();
       }
-
-      @Override
-      public int getHighlightingPriorityMaximum() {
-        return Settings.getHighlightingPriorityMaximum();
-      }
     };
   }
 
