@@ -953,16 +953,20 @@ public class PluginManagerImpl implements PluginManager {
       }
       
       public Color getColorForMarkingPriority(int priority) {
-        switch(priority) {
-          case Program.PRIORITY_MARK_NONE: return new Color(255,255,255,0);
-          case Program.PRIORITY_MARK_MIN: return Settings.propProgramPanelMarkedMinPriorityColor.getColor();
-          case Program.PRIORITY_MARK_MEDIUM_LOWER: return Settings.propProgramPanelMarkedLowerMediumPriorityColor.getColor();
-          case Program.PRIORITY_MARK_MEDIUM: return Settings.propProgramPanelMarkedMediumPriorityColor.getColor();
-          case Program.PRIORITY_MARK_MEDIUM_HIGHER: return Settings.propProgramPanelMarkedHigherMediumPriorityColor.getColor();
-          case Program.PRIORITY_MARK_MAX: return Settings.propProgramPanelMarkedMaxPriorityColor.getColor();
+        Color result = null;
+        
+        if(priority > Settings.getHighlightingPriorityMaximum()) {
+          priority = Settings.getHighlightingPriorityMaximum();
         }
         
-        return null;
+        if(priority == Program.PRIORITY_MARK_NONE) {
+          result = new Color(255,255,255,0);
+        }
+        else if(priority > Program.PRIORITY_MARK_NONE) {
+          result = Settings.getHighlightingColorForPriority(priority);
+        }
+        
+        return result;
       }
       
       public int getProgramTableEndOfDay() {
@@ -1046,6 +1050,11 @@ public class PluginManagerImpl implements PluginManager {
       @Override
       public String getDataDirectory() {
         return Settings.propTVDataDirectory.getString();
+      }
+
+      @Override
+      public int getHighlightingPriorityMaximum() {
+        return Settings.getHighlightingPriorityMaximum();
       }
     };
   }

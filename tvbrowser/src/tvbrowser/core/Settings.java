@@ -858,6 +858,27 @@ public class Settings {
     if(propColumnWidth.getInt() < MIN_COLUMN_WIDTH) {
       propColumnWidth.setInt(MIN_COLUMN_WIDTH);
     }
+    
+    updateColors();
+  }
+  
+  private static Color[] mHighlightingColors;
+  
+  public static void updateColors() {
+    int[] colors = propProgramPanelHighlightingColors.getIntArray();
+    mHighlightingColors = new Color[colors.length];
+    
+    for(int i = 0; i < colors.length; i++) {
+      mHighlightingColors[i] = new Color(colors[i],true);
+    }
+  }
+  
+  public static int getHighlightingPriorityMaximum() {
+    return mHighlightingColors.length-1;
+  }
+  
+  public static Color getHighlightingColorForPriority(final int priority) throws IndexOutOfBoundsException {
+    return mHighlightingColors[priority];
   }
   
   public static void updateContextMenuSettings() {
@@ -1008,6 +1029,8 @@ public class Settings {
   }
 
   public static void handleChangedSettings() {
+    updateColors();
+    
     Property[] propArr;
     
     MainFrame mainFrame = MainFrame.getInstance();
@@ -1015,11 +1038,9 @@ public class Settings {
     propArr = new Property[] { propProgramTableOnAirProgramsShowingBorder,
         propProgramPanelUsesExtraSpaceForMarkIcons,
         propProgramPanelWithMarkingsShowingBoder, propProgramPanelUsedDefaultMarkPriority,
-        propProgramPanelMarkedLowerMediumPriorityColor, propProgramPanelMarkedMinPriorityColor,
-        propProgramPanelMarkedMediumPriorityColor, propProgramPanelMarkedMaxPriorityColor,
         propProgramTableColorOnAirLight, propProgramTableColorOnAirDark, propProgramPanelForegroundColor,
         propProgramTableBackgroundSingleColor, propProgramPanelAllowTransparency, propAlwaysShowTabBarForCenterPanel,
-        propProgramPanelShowOriginialTitles};
+        propProgramPanelShowOriginialTitles, propProgramPanelHighlightingColors};
 
     mainFrame.updateCenterPanels();
     
@@ -1709,22 +1730,40 @@ public class Settings {
   /** Used default mark priority for markings of plugins. */
   public static final IntProperty propProgramPanelUsedDefaultMarkPriority = new IntProperty(
       mProp, "programpanel.defaultMarkPriority", 0);
-  /** Color for Programs marked with MIN_PRIORITY */
+  
+  /** Array with in representations of the highlighting colors for Programs 
+   * @since 4.2.2 */
+  public static final IntArrayProperty propProgramPanelHighlightingColors = new IntArrayProperty(
+      mProp, "programpanel.HighlightingColors", new int[] {
+          new Color(140, 255, 0, 60).getRGB(),
+          new Color(0, 255, 255, 50).getRGB(),
+          new Color(255, 255, 0, 60).getRGB(),
+          new Color(255, 180, 0, 110).getRGB(),
+          new Color(255, 0, 0, 30).getRGB()
+      });
+  
+  /** Color for Programs marked with MIN_PRIORITY 
+   * @deprecated since 4.2.2 */
   public static final ColorProperty propProgramPanelMarkedMinPriorityColor = new ColorProperty(
       mProp, "programpanel.ColorMarked", new Color(140, 255, 0, 60));
-  /** Color for Programs marked with LOWER_MEDIUM_PRIORITY */
+  /** Color for Programs marked with LOWER_MEDIUM_PRIORITY 
+   * @deprecated since 4.2.2 */
   public static final ColorProperty propProgramPanelMarkedLowerMediumPriorityColor = new ColorProperty(
       mProp, "programpanel.ColorMarkedLowerMedium", new Color(0, 255, 255, 50));
-  /** Color for Programs marked with MEDIUM_PRIORITY */
+  /** Color for Programs marked with MEDIUM_PRIORITY
+   * @deprecated since 4.2.2 */
   public static final ColorProperty propProgramPanelMarkedMediumPriorityColor = new ColorProperty(
       mProp, "programpanel.ColorMarkedMedium", new Color(255, 255, 0, 60));
-  /** Color for Programs marked with HIGHER_MEDIUM_PRIORITY */
+  /** Color for Programs marked with HIGHER_MEDIUM_PRIORITY
+   * @deprecated since 4.2.2 */
   public static final ColorProperty propProgramPanelMarkedHigherMediumPriorityColor = new ColorProperty(
       mProp, "programpanel.ColorMarkedHigherMedium", new Color(255, 180, 0, 110));
-  /** Color for Programs marked with MAX_PRIORITY */
+  /** Color for Programs marked with MAX_PRIORITY
+    * @deprecated since 4.2.2 */
   public static final ColorProperty propProgramPanelMarkedMaxPriorityColor = new ColorProperty(
       mProp, "programpanel.ColorMarkedMax", new Color(255, 0, 0, 30));
   /** Color of the foreground of a program panel */
+  
   public static final ColorProperty propProgramPanelForegroundColor = new ColorProperty(
       mProp, "programpanel.ColorForeground", Color.black);
   /** If plugins are allowed to set the transparency of a program */

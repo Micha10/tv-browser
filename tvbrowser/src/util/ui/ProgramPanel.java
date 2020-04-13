@@ -887,7 +887,7 @@ private static Font getDynamicFontSize(Font font, int offset) {
       Color c = Plugin.getPluginManager().getTvBrowserSettings().getColorForMarkingPriority(mProgram.getMarkPriority());
 
       if(c == null) {
-        c = Settings.propProgramPanelMarkedMinPriorityColor.getColor();
+        c = Settings.getHighlightingColorForPriority(0);
       }
 
       int alphaValue = (int)(c.getAlpha()*mProgramImportance/10.);

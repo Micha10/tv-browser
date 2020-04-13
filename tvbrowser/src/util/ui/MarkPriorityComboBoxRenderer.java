@@ -64,7 +64,7 @@ public class MarkPriorityComboBoxRenderer extends CustomComboBoxRenderer {
         colorIndex = list.getSelectedIndex();
       }
       
-      if(list.getModel().getSize() == 6) {
+      if(list.getModel().getSize() >= 6) {
         colorIndex--;
       }
       

@@ -194,10 +194,15 @@ public interface Program {
   @Deprecated public static final int WAS_DELETED_STATE = STATE_WAS_DELETED;
 
   public static final int PRIORITY_MARK_NONE = -1;
+  /** @deprecated since 4.2.2 use {@link TvBrowserSettings#getHighlightingPriorityMaximum()} instead */
   public static final int PRIORITY_MARK_MIN = 0;
+  /** @deprecated since 4.2.2 use {@link TvBrowserSettings#getHighlightingPriorityMaximum()} instead */
   public static final int PRIORITY_MARK_MEDIUM_LOWER = 1;
+  /** @deprecated since 4.2.2 use {@link TvBrowserSettings#getHighlightingPriorityMaximum()} instead */
   public static final int PRIORITY_MARK_MEDIUM = 2;
+  /** @deprecated since 4.2.2 use {@link TvBrowserSettings#getHighlightingPriorityMaximum()} instead */
   public static final int PRIORITY_MARK_MEDIUM_HIGHER = 3;
+  /** @deprecated since 4.2.2 use {@link TvBrowserSettings#getHighlightingPriorityMaximum()} instead */
   public static final int PRIORITY_MARK_MAX = 4;
   
   /** @deprecated since 3.4.5 use {@link #PRIORITY_MARK_NONE} instead */

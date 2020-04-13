@@ -27,6 +27,7 @@ import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 
 import devplugin.SettingsItem;
+import tvbrowser.core.Settings;
 import tvbrowser.ui.settings.MarkingsSettingsTab;
 import tvbrowser.ui.settings.SettingsDialog;
 
@@ -135,7 +136,7 @@ public final class DefaultMarkingPrioritySelectionPanel extends JPanel {
       final JComboBox<Object> box = new JComboBox<>(getMarkingColorNames(true));
       
       mPrioritySelection.add(box);
-      box.setSelectedIndex(priority[i] + 1);
+      box.setSelectedIndex(Math.min(priority[i],Settings.getHighlightingPriorityMaximum()) + 1);
       box.setRenderer(new MarkPriorityComboBoxRenderer(box.getRenderer()));
       /*
       mPrioritySelection[i] = new JComboBox(getMarkingColorNames(true));
@@ -252,12 +253,19 @@ public final class DefaultMarkingPrioritySelectionPanel extends JPanel {
    * @since 2.7
    */
   public static String[] getMarkingColorNames(final boolean withNoMarkPriority) {
+    final String[] colors = new String[Settings.getHighlightingPriorityMaximum() + (withNoMarkPriority ? 2 : 1)];
+    int offset = withNoMarkPriority ? 0 : 1;
+    int i = 0;
+    
     if (withNoMarkPriority) {
-      return new String[] {MarkingsSettingsTab.mLocalizer.msg("color.noPriority", "Don't highlight"), MarkingsSettingsTab.mLocalizer.msg("color.minPriority", "1. Color (minimum priority)"), MarkingsSettingsTab.mLocalizer.msg("color.lowerMediumPriority", "2. Color (lower medium priority)"), MarkingsSettingsTab.mLocalizer.msg("color.mediumPriority", "3. Color (Medium priority)"), MarkingsSettingsTab.mLocalizer.msg("color.higherMediumPriority", "4. Color (higher medium priority)"), MarkingsSettingsTab.mLocalizer.msg("color.maxPriority", "5. Color (maximum priority)")};
+      colors[i++] = MarkingsSettingsTab.mLocalizer.msg("color.noPriority", "Don't highlight");
     }
-    else {
-      return new String[] {MarkingsSettingsTab.mLocalizer.msg("color.minPriority", "1. Color (minimum priority)"), MarkingsSettingsTab.mLocalizer.msg("color.lowerMediumPriority", "2. Color (lower medium priority)"), MarkingsSettingsTab.mLocalizer.msg("color.mediumPriority", "3. Color (Medium priority)"), MarkingsSettingsTab.mLocalizer.msg("color.higherMediumPriority", "4. Color (higher medium priority)"), MarkingsSettingsTab.mLocalizer.msg("color.maxPriority", "5. Color (maximum priority)")};
+    
+    for(;i < colors.length; i++) {
+      colors[i] = (i+offset) +". "+ MarkingsSettingsTab.mLocalizer.msg("color.colorPriority","Color/priority");
     }
+    
+    return colors;
   }
 
   /**

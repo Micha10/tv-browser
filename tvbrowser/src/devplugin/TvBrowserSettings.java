@@ -201,4 +201,11 @@ public interface TvBrowserSettings {
    * @since 4.1
    */
   public String getDataDirectory();
+  
+  /**
+   * @return The current maximum highlighting priority
+   *   NOTE: This might change is both directions.
+   * @since 4.2.2
+   */
+  public int getHighlightingPriorityMaximum();
 }
