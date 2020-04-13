@@ -209,7 +209,7 @@ public interface Program {
   
   /**
    * @return The current maximum highlighting priority
-   *   NOTE: This might change is both directions.
+   *   NOTE: This might change in both directions.
    * @since 4.2.2
    */
   public static int getHighlightingPriorityMaximum() {
