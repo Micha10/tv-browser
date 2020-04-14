@@ -23,13 +23,13 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.HashSet;
-import java.util.Iterator;
+import java.util.Hashtable;
+import java.util.Set;
+
+import javax.swing.SwingUtilities;
 
 import compat.PluginCompat;
 import compat.ProgramCompat;
-import util.ui.Localizer;
-import util.ui.TVBrowserIcons;
-
 import devplugin.Plugin;
 import devplugin.PluginInfo;
 import devplugin.PluginsProgramFilter;
@@ -37,6 +37,8 @@ import devplugin.Program;
 import devplugin.ProgramReceiveTarget;
 import devplugin.ThemeIcon;
 import devplugin.Version;
+import util.ui.Localizer;
+import util.ui.TVBrowserIcons;
 
 /**
  * A plugin that receives programs to color them with the received priority.
@@ -44,14 +46,11 @@ import devplugin.Version;
  * @author René Mach
  */
 public class ColorMe extends Plugin {
-  private static final Version VERSION = new Version(0,12,0,true);
+  private static final Version VERSION = new Version(0,13,0,true);
   private static final Localizer LOCALIZER = Localizer.getLocalizerFor(ColorMe.class);
   
-  private HashSet<Program> mLowestPrograms;
-  private HashSet<Program> mLowerMediumPrograms;
-  private HashSet<Program> mMediumPrograms;
-  private HashSet<Program> mHigherMediumPrograms;
-  private HashSet<Program> mHighestPrograms;
+  private Hashtable<Integer, HashSet<Program>> mPrograms;
+  private Hashtable<String, HashSet<Integer>> mPriorites;
   
   private ProgramReceiveTarget[] mReceiveTargets;
   private PluginsProgramFilter[] mAvailableFilter;
@@ -59,38 +58,35 @@ public class ColorMe extends Plugin {
   private ThemeIcon mIcon;
   
   public ColorMe() {
-    mLowestPrograms = new HashSet<Program>();
-    mLowerMediumPrograms = new HashSet<Program>();
-    mMediumPrograms = new HashSet<Program>();
-    mHigherMediumPrograms = new HashSet<Program>();
-    mHighestPrograms = new HashSet<Program>();
+    mPrograms = new Hashtable<Integer, HashSet<Program>>(5);
+    mPriorites = new Hashtable<String, HashSet<Integer>>(0);
     
-    mReceiveTargets = new ProgramReceiveTarget[10];
-    mAvailableFilter = new PluginsProgramFilter[5];
+    mReceiveTargets = new ProgramReceiveTarget[0];
+    mAvailableFilter = new PluginsProgramFilter[0];
     
     mIcon = new ThemeIcon("apps", "colorme", TVBrowserIcons.SIZE_SMALL);
+  }
+  
+  @Override
+  public void onActivation() {
+    SwingUtilities.invokeLater(new Runnable() {
+      @Override
+      public void run() {
+        updateReceiveTargets(getHighlightingPriorityMaximum(),true);
+      }
+    });
+  }
+  
+  private int getHighlightingPriorityMaximum() {
+    int priorityMax = Program.MAX_MARK_PRIORITY;
     
-    for(int i = 0; i < 5; i++) {
-      String priority = getValueForPriority(i);
-      
-      mReceiveTargets[i] = new ProgramReceiveTarget(this, LOCALIZER.msg("add", "Add: Priority") + " - " + priority, String.valueOf(i+1));
-      mReceiveTargets[i+5] = new ProgramReceiveTarget(this, LOCALIZER.msg("remove", "Remove: Priority:") + " - " + priority, String.valueOf(-(i+1)));
-      
-      final HashSet<Program> toFilter = getSetForPriority(i);
-      final String subName = LOCALIZER.msg("filter", "Priority") + " - " + priority;
-      
-      mAvailableFilter[i] = new PluginsProgramFilter(this) {
-        @Override
-        public boolean accept(Program program) {
-          return toFilter.contains(program);
-        }
-        
-        @Override
-        public String getSubName() {
-          return subName;
-        }
-      };
+    try {
+      priorityMax = (Integer)Program.class.getMethod("getHighlightingPriorityMaximum").invoke(null);
+    }catch(Exception e) {
+      // ignore
     }
+    
+    return priorityMax;
   }
   
   public static Version getVersion() {
@@ -106,36 +102,77 @@ public class ColorMe extends Plugin {
   public ThemeIcon getMarkIconFromTheme() {
     return mIcon;
   }
-    
-  private HashSet<Program> getSetForPriority(int priority) {
-    switch (priority) {
-      case Program.MIN_MARK_PRIORITY: return mLowestPrograms;
-      case Program.LOWER_MEDIUM_MARK_PRIORITY: return mLowerMediumPrograms;
-      case Program.MEDIUM_MARK_PRIORITY: return mMediumPrograms;
-      case Program.HIGHER_MEDIUM_MARK_PRIORITY: return mHigherMediumPrograms;
-      case Program.MAX_MARK_PRIORITY: return mHighestPrograms;
-    }
-    
-    return null;
-  }
   
-  private String getValueForPriority(int priority) {
-    switch(priority) {
-      case Program.MIN_MARK_PRIORITY: return LOCALIZER.msg("priorities.minimum","Minimum");
-      case Program.LOWER_MEDIUM_MARK_PRIORITY: return LOCALIZER.msg("priorities.lowerMedium","Lower medium");
-      case Program.MEDIUM_MARK_PRIORITY: return LOCALIZER.msg("priorities.medium","Medium");
-      case Program.HIGHER_MEDIUM_MARK_PRIORITY: return LOCALIZER.msg("priorities.higherMedium","Hiher medium");
-      case Program.MAX_MARK_PRIORITY: return LOCALIZER.msg("priorities.maximum","Maximum");
-    }
-    
-    return LOCALIZER.msg("priorities.unknown","Unknown");
-  }
-    
   @Override
   public boolean canReceiveProgramsWithTarget() {
     return true;
   }
+  
+  private void updateReceiveTargets(int priorityMax, boolean initial) {
+    priorityMax++;
+    final ProgramReceiveTarget[] newTargets = new ProgramReceiveTarget[priorityMax*2];
+    final PluginsProgramFilter[] newFilters = new PluginsProgramFilter[priorityMax];
     
+    for(int i = 0; i < priorityMax; i++) {
+      if(i < mReceiveTargets.length/2) {
+        newTargets[i] = mReceiveTargets[i];
+        newFilters[i] = mAvailableFilter[i];
+      }
+      else {
+        newTargets[i] = new ProgramReceiveTarget(this, LOCALIZER.msg("add", "Add: Priority") + " - " + (i+1), String.valueOf(i+1));
+        
+        final int priority = i;
+        final String subName = LOCALIZER.msg("filter", "Priority") + " - " + (i+1);
+        
+        newFilters[i] = new PluginsProgramFilter(this) {
+          @Override
+          public boolean accept(Program program) {
+            final HashSet<Program> programs = mPrograms.get(priority);
+            
+            return programs != null && programs.contains(program);
+          }
+          
+          @Override
+          public String getSubName() {
+            return subName;
+          }
+        };
+        
+        if(!initial) {
+          getPluginManager().getFilterManager().addFilter(newFilters[i]);
+        }
+      }
+    }
+    
+    for(int i = priorityMax; i < mAvailableFilter.length; i++) {
+      mToDelete = mAvailableFilter[i];
+      getPluginManager().getFilterManager().deleteFilter(mToDelete);
+      mToDelete = null;
+    }
+    
+    int count = mReceiveTargets.length/2;
+    
+    for(int i = priorityMax; i < newTargets.length; i++) {
+      if(count < mReceiveTargets.length) {
+        newTargets[i] = mReceiveTargets[count++];
+      }
+      else {
+        newTargets[i] = new ProgramReceiveTarget(this, LOCALIZER.msg("remove", "Remove: Priority:") + " - " + (i-priorityMax+1), String.valueOf(-((i-priorityMax)+1)));
+      }
+    }
+    
+    mReceiveTargets = newTargets;
+    mAvailableFilter = newFilters;
+    
+  }
+  
+  private PluginsProgramFilter mToDelete = null;
+  
+  @Override
+  public boolean isAllowedToDeleteProgramFilter(PluginsProgramFilter programFilter) {
+    return mToDelete != null && programFilter.equals(mToDelete);
+  }
+  
   @Override
   public ProgramReceiveTarget[] getProgramReceiveTargets() {
     return mReceiveTargets;
@@ -143,46 +180,85 @@ public class ColorMe extends Plugin {
   
   @Override
   public int getMarkPriorityForProgram(Program p) {
-    if(mHighestPrograms.contains(p)) {
-      return Program.MAX_MARK_PRIORITY;
-    }
-    else if(mHigherMediumPrograms.contains(p)) {
-      return Program.HIGHER_MEDIUM_MARK_PRIORITY;
-    }
-    else if(mMediumPrograms.contains(p)) {
-      return Program.MEDIUM_MARK_PRIORITY;
-    }
-    else if(mLowerMediumPrograms.contains(p)) {
-      return Program.LOWER_MEDIUM_MARK_PRIORITY;
-    }
-    else if(mLowestPrograms.contains(p)) {
-      return Program.MIN_MARK_PRIORITY;
+    final HashSet<Integer> priorities = mPriorites.get(p.getUniqueID());
+    
+    int found = Program.NO_MARK_PRIORITY;
+    
+    if(priorities != null) {
+      for(Integer priority : priorities) {
+        if(priority > found) {
+          found = priority;
+        }
+      }
     }
     
-    return Program.NO_MARK_PRIORITY;
+    return found;
   }
   
-  private boolean programIsDoubleMarked(HashSet<Program> remove, Program p) {
-    return (!remove.equals(mLowestPrograms) && mLowestPrograms.contains(p)) || (!remove.equals(mLowerMediumPrograms) && mLowerMediumPrograms.contains(p)) ||
-        (!remove.equals(mMediumPrograms) && mMediumPrograms.contains(p)) || (!remove.equals(mHigherMediumPrograms) && mHigherMediumPrograms.contains(p)) ||
-        (!remove.equals(mHighestPrograms) && mHighestPrograms.contains(p));
+  private void addProgramToSet(final Program p, final int priority) {
+    HashSet<Program> set = mPrograms.get(priority);
+    
+    if(set == null) {
+      set = new HashSet<Program>();
+      mPrograms.put(priority, set);
+    }
+    
+    set.add(p);
+    
+    HashSet<Integer> priorities = mPriorites.get(p.getUniqueID());
+    
+    if(priorities == null) {
+      priorities = new HashSet<Integer>();
+      mPriorites.put(p.getUniqueID(), priorities);
+    }
+    
+    priorities.add(priority);
+    
+    if(priorities.size() < 2) {
+      p.mark(ColorMe.this);
+    }
+    else {
+      p.validateMarking();
+    }
+  }
+  
+  private void removeProgramFromSet(final Program p, final int priority) {
+    final HashSet<Program> set = mPrograms.get(priority);
+    
+    if(set != null) {
+      set.remove(p);
+    }
+    
+    final HashSet<Integer> priorities = mPriorites.get(p.getUniqueID());
+    
+    if(priorities != null) {
+      if(priorities.remove(priority)) {
+        if(priorities.size() < 1) {
+          p.unmark(this);
+        }
+        else {
+          p.validateMarking();
+        }
+      }
+    }
   }
   
   @Override
   public boolean receivePrograms(final Program[] programArr, ProgramReceiveTarget receiveTarget) {
     boolean returnValue = false;
     
-    HashSet<Program> toUse = null;
+   // HashSet<Program> toUse = null;
     boolean add = false;
+    int priority = Program.NO_MARK_PRIORITY;
     
     if(receiveTarget.getReceiveIfId().equals(getId())) {
       int id = Integer.parseInt(receiveTarget.getTargetId());
       
       add = id>=0;
-      toUse = getSetForPriority(Math.abs(id)-1);
+      priority = Math.abs(id)-1;
     }
     
-    if(toUse != null) {
+    if(priority != Program.NO_MARK_PRIORITY) {
       Cursor old = getParentFrame().getCursor();
       
       getParentFrame().setCursor(new Cursor(Cursor.WAIT_CURSOR));
@@ -190,24 +266,26 @@ public class ColorMe extends Plugin {
       for(Program p : programArr) {
         if(p != null) {
           if(add) {
-            if(toUse.add(p)) {
-              if(!programIsDoubleMarked(toUse,p)) {
+            addProgramToSet(p, priority);
+        /*    if(toUse.add(p)) {
+              if(!programIsDoubleMarked(p)) {
                 p.mark(ColorMe.this);
               }
               else {
                 p.validateMarking();
               }
-            }
+            }*/
           }
           else {
-            if(toUse.remove(p)) {
-              if(!programIsDoubleMarked(toUse,p)) {
+            removeProgramFromSet(p, priority);
+           /* if(toUse.remove(p)) {
+              if(!programIsDoubleMarked(p)) {
                 p.unmark(ColorMe.this);
               }
               else {
                 p.validateMarking();
               }
-            }
+            }*/
           }
         }
       }
@@ -224,15 +302,26 @@ public class ColorMe extends Plugin {
   
   @Override
   public void readData(ObjectInputStream in) throws IOException, ClassNotFoundException {
-    in.readInt(); // read version
-    readSet(in, mLowestPrograms);
-    readSet(in, mLowerMediumPrograms);
-    readSet(in, mMediumPrograms);
-    readSet(in, mHigherMediumPrograms);
-    readSet(in, mHighestPrograms);
+    int version = in.readInt(); // read version
+    
+    if(version == 1) {
+      for(int priority = 0; priority < 5; priority++) {
+        readSet(in, priority);
+      }
+    }
+    else if(version >= 2) {
+      final int n = in.readInt();
+      
+      for(int i = 0; i < n; i++) {
+        int priority = in.readInt();
+        readSet(in, priority);
+      }
+    }
   }
   
-  private void readSet(ObjectInputStream in, HashSet<Program> set) throws IOException {
+  private void readSet(ObjectInputStream in, final int priority) throws IOException {
+    final HashSet<Program> set = new HashSet<Program>();
+    
     int size = in.readInt();
     //TODO defer loading of programs to after
     for(int i = 0; i < size; i++) {
@@ -244,26 +333,41 @@ public class ColorMe extends Plugin {
         for(Program p : progs) {
           set.add(p);
           p.mark(ColorMe.this);
+          
+          HashSet<Integer> prio = mPriorites.get(p.getUniqueID());
+          
+          if(prio == null) {
+            prio = new HashSet<Integer>();
+            mPriorites.put(p.getUniqueID(), prio);
+          }
+          
+          if(!prio.contains(priority)) {
+            prio.add(priority);
+          }
         }
       }
     }
+    
+    mPrograms.put(priority, set);
   }
   
   @Override
   public void writeData(ObjectOutputStream out) throws IOException {
-    out.writeInt(1); // version;
-    writeSet(out, mLowestPrograms);
-    writeSet(out, mLowerMediumPrograms);
-    writeSet(out, mMediumPrograms);
-    writeSet(out, mHigherMediumPrograms);
-    writeSet(out, mHighestPrograms);
-  }
-  
-  private void writeSet(ObjectOutputStream out, HashSet<Program> set) throws IOException {
-    out.writeInt(set.size());
+    out.writeInt(2); // version;
     
-    for(Iterator<Program> it = set.iterator(); it.hasNext();) {
-      out.writeUTF(it.next().getUniqueID());
+    out.writeInt(mPrograms.size());
+    
+    final Set<Integer> keys = mPrograms.keySet();
+    
+    for(Integer key : keys) {
+      final HashSet<Program> programs = mPrograms.get(key);
+      out.writeInt(key);
+      
+      out.writeInt(programs.size());
+      
+      for(Program p : programs) {
+        out.writeUTF(p.getUniqueID());
+      }
     }
   }
     
@@ -278,5 +382,13 @@ public class ColorMe extends Plugin {
   
   public String getPluginCategory() {
     return PluginCompat.CATEGORY_OTHER;
+  }
+  
+  public void handleTvBrowserSettingsChanged() {
+    int priorityMax = getHighlightingPriorityMaximum();
+    
+    if(mReceiveTargets.length != (priorityMax+1)*2) {
+      updateReceiveTargets(priorityMax,false);
+    }
   }
 }
