@@ -94,7 +94,7 @@ import util.ui.WindowClosingIf;
  * @author René Mach
  */
 public class SimpleMarkerPlugin extends Plugin {
-  private static final Version mVersion = new Version(3,28,0,true);
+  private static final Version mVersion = new Version(3,28,1,true);
 
   /** The localizer for this class. */
   private static final util.ui.Localizer mLocalizer = util.ui.Localizer.getLocalizerFor(SimpleMarkerPlugin.class);
@@ -707,8 +707,30 @@ public class SimpleMarkerPlugin extends Plugin {
     }
   }
 
-  protected void resetManageDialog() {
+  private Thread mWaitForSaving;
+  private long mLastResetManageDialog = 0;
+  
+  protected synchronized void resetManageDialog() {
+    mLastResetManageDialog = System.currentTimeMillis();
+    
     mManageDialog = null;
+    
+    if(mWaitForSaving == null || !mWaitForSaving.isAlive()) {
+      mWaitForSaving = new Thread("Waiting for saving") {
+        @Override
+        public void run() {
+          while(System.currentTimeMillis()-mLastResetManageDialog < 500) {
+            try {
+              sleep(250);
+            } catch (InterruptedException e) {
+              // ignore
+            }
+          }
+          saveMe();
+        }
+      };
+      mWaitForSaving.start();
+    }
   }
 
   @SuppressWarnings("unchecked")

@@ -29,6 +29,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Hashtable;
@@ -220,6 +222,13 @@ public class ManagePanel extends TabListenerPanel implements PersonaCompatListen
       if (pos >= 0) {
         mSplitPane.setDividerLocation(pos);
       }
+      
+      mSplitPane.addPropertyChangeListener(JSplitPane.DIVIDER_LOCATION_PROPERTY, new PropertyChangeListener() {
+          @Override
+          public void propertyChange(PropertyChangeEvent pce) {
+            saveSettings();
+          }
+      });
     }
     else {
       JPanel innerPanel = new JPanel(new FormLayout("fill:default:grow","fill:default:grow"));

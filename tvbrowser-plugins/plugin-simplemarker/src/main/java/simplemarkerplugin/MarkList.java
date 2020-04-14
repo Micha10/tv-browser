@@ -28,6 +28,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
@@ -50,7 +51,6 @@ import devplugin.PluginTreeNode;
 import devplugin.Program;
 import devplugin.ProgramItem;
 import devplugin.ProgramReceiveTarget;
-import devplugin.Version;
 import util.io.IOUtilities;
 import util.program.ProgramUtilities;
 import util.ui.Localizer;
@@ -744,7 +744,19 @@ public class MarkList extends Vector<Program> {
    * @return The mark priority of this list.
    */
   public int getMarkPriority() {
-    return mMarkPriority;
+    int result = mMarkPriority;
+    
+    try {
+      Method m = Program.class.getMethod("getHighlightingPriorityMaximum");
+      m.setAccessible(true);
+      int max = (Integer)m.invoke(null);
+      
+      result = Math.min(result, max);
+    }catch(Exception e) {
+      // ignore
+    }
+    
+    return result;
   }
 
   /**
