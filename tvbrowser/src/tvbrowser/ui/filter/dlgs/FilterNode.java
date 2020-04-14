@@ -361,8 +361,13 @@ public class FilterNode extends DefaultMutableTreeNode {
   }
   
   public boolean isDeletingAllowed() {
+    return isDeletingAllowed(false);
+  }
+  
+  public boolean isDeletingAllowed(boolean pluginCausedDeleting) {
     return !(userObject instanceof ShowAllFilter || userObject instanceof PluginFilter ||
-        userObject instanceof PluginsProgramFilter || userObject instanceof InfoBitFilter || 
+        (!pluginCausedDeleting && userObject instanceof PluginsProgramFilter) || 
+        userObject instanceof InfoBitFilter || 
         userObject instanceof SingleChannelFilter ||
         getChildCount() > 0);
   }
@@ -379,7 +384,7 @@ public class FilterNode extends DefaultMutableTreeNode {
         returnValue = returnValue || ((FilterNode)getChildAt(i)).testAndSetToPluginsProgramFilter(filter);
       }
     }
-    if(userObject instanceof String && toString().equals(filter.getName())) {
+    if(filter != null && userObject instanceof String && toString().equals(filter.getName())) {
       userObject = filter;
       
       return true;

@@ -125,7 +125,7 @@ public class FilterManagerImpl implements FilterManager {
         setCurrentFilter(FilterList.getInstance().getDefaultFilter());
       }
       
-      FilterList.getInstance().remove(filter);
+      FilterList.getInstance().remove(filter, true);
       FilterList.getInstance().store();
       MainFrame.getInstance().updateFilterMenu();
       

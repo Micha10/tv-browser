@@ -713,7 +713,7 @@ public class PluginProxyManager {
           FilterManagerImpl.getInstance().setCurrentFilter(FilterManagerImpl.getInstance().getDefaultFilter());
         }
 
-        FilterList.getInstance().remove(filter);
+        FilterList.getInstance().remove(filter,true);
       }
 
       FilterList.getInstance().store();

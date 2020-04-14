@@ -322,8 +322,8 @@ public class FilterList {
     }
   }
 
-  public void remove(ProgramFilter filter) {
-    mFilterTreeModel.deleteFilter(filter);
+  public void remove(ProgramFilter filter, boolean pluginCaused) {
+    mFilterTreeModel.deleteFilter(filter, pluginCaused);
     store();
   }
 

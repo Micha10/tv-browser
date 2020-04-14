@@ -586,7 +586,7 @@ public class EditFavoriteDialog extends JDialog implements WindowClosingIf {
     }
     
     if(!mFavorite.isProvidingFilter() && found != null) {
-      FilterList.getInstance().getFilterTreeModel().deleteFilter(found);
+      FilterList.getInstance().getFilterTreeModel().deleteFilter(found,false);
     }
     else if(found == null && mFavorite.isProvidingFilter()) {
       FilterList.getInstance().getFilterTreeModel().addFilter(test);

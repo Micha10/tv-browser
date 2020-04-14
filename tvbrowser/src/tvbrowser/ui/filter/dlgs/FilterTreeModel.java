@@ -130,11 +130,11 @@ public class FilterTreeModel extends DefaultTreeModel {
     return super.isLeaf(nodeObject);
   }
   
-  public void deleteFilter(ProgramFilter filter) {
-    deleteFilter((FilterNode)getRoot(), filter);
+  public void deleteFilter(ProgramFilter filter, boolean pluginCaused) {
+    deleteFilter((FilterNode)getRoot(), filter, pluginCaused);
   }
 
-  private void deleteFilter(FilterNode node, ProgramFilter filter) {
+  private void deleteFilter(FilterNode node, ProgramFilter filter, boolean pluginCaused) {
     if(node.isDirectoryNode()) {
       Enumeration<TreeNode> e = node.children();
 
@@ -143,9 +143,9 @@ public class FilterTreeModel extends DefaultTreeModel {
 
         if(child instanceof FilterNode) {
 	        if(((FilterNode)child).isDirectoryNode()) {
-	          deleteFilter((FilterNode)child, filter);
+	          deleteFilter((FilterNode)child, filter, pluginCaused);
 	        } else if(((FilterNode)child).containsFilter() || ((FilterNode)child).containsSeparator()) {
-	          if(((FilterNode)child).contains(filter) && ((FilterNode)child).isDeletingAllowed()) {
+	          if(((FilterNode)child).contains(filter) && ((FilterNode)child).isDeletingAllowed(pluginCaused)) {
 	            node.remove((FilterNode)child);
 	            fireFilterRemoved(filter);
 	          }
