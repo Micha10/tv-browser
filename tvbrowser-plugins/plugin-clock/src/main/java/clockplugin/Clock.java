@@ -38,10 +38,11 @@ public class Clock extends JDialog implements Runnable, MouseListener, MouseMoti
   private JLabel mTime;
   private SimpleDateFormat mTimeFormat;
   private Point mDraggingPoint;
+  private Point mLocation;
   private Properties mProperties;
   private boolean mShowForever, mStop, mDontStop;
   private JPanel mTimePanel;
-
+  
   /**
    * The default construktor of the class.
    * 
@@ -184,7 +185,9 @@ public class Clock extends JDialog implements Runnable, MouseListener, MouseMoti
     } else {
       this.setLocation(xPos, yPos);
     }
-
+    
+    mLocation = getLocation();
+    
     if (ClockPlugin.getInstance().getSuperFrame() != null) {
       this.setVisible(true);
     }
@@ -241,7 +244,7 @@ public class Clock extends JDialog implements Runnable, MouseListener, MouseMoti
   }
 
   public void mousePressed(MouseEvent e) {
-    mDraggingPoint = e.getPoint();
+    mDraggingPoint = e.getLocationOnScreen();
     mDontStop = true;
   }
 
@@ -272,18 +275,24 @@ public class Clock extends JDialog implements Runnable, MouseListener, MouseMoti
     }
   }
 
-  public void mouseDragged(MouseEvent e) {
+  public synchronized void mouseDragged(MouseEvent e) {
     if (mDraggingPoint != null && !e.isShiftDown()) {
-      int xP = e.getX();
-      int yP = e.getY();
+      
+      int xP = e.getXOnScreen();
+      int yP = e.getYOnScreen();
       int x = mDraggingPoint.x - xP;
       int y = mDraggingPoint.y - yP;
+      mDraggingPoint.setLocation(xP,yP);
       
       if(x != 0 || y != 0) {
-        setLocation(getX() - x,getY() - y);
+        int xPos = mLocation.x - x;
+        int yPos = mLocation.y - y;
         
-        mProperties.setProperty("xPos",getX() + "");
-        mProperties.setProperty("yPos",getY() + "");
+        setLocation(xPos,yPos);
+        mLocation.setLocation(xPos, yPos);
+        
+        mProperties.setProperty("xPos",xPos + "");
+        mProperties.setProperty("yPos",yPos + "");
         mProperties.setProperty("xWidth",getWidth() + "");
         mProperties.setProperty("yHeight",getHeight() + "");
       }

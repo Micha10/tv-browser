@@ -17,14 +17,13 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.util.Calendar;
 import java.util.Properties;
+import java.util.concurrent.atomic.AtomicReference;
 
 import javax.swing.Action;
 import javax.swing.Icon;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 import javax.swing.UIManager;
-
-import util.ui.TimeFormatter;
 
 import devplugin.ActionMenu;
 import devplugin.ButtonAction;
@@ -33,6 +32,7 @@ import devplugin.PluginInfo;
 import devplugin.SettingsTab;
 import devplugin.TvBrowserSettings;
 import devplugin.Version;
+import util.ui.TimeFormatter;
 
 /**
  * Clock Plugin for TV-Browser. License: GPL
@@ -47,7 +47,7 @@ public class ClockPlugin extends Plugin {
   private int mShowTime;
   private boolean mMoveOnScreen, mShowForever, mUsePersonaColors, mTransparentBackground;
   private TitleBarClock mTitleBarClock;
-  private Point mLocation;
+  private AtomicReference<Point> mLocation;
   private Dimension mParentSize;
   private String mCurrentTime;
   private boolean mSupportsBigToolbarIcons;
@@ -55,7 +55,7 @@ public class ClockPlugin extends Plugin {
   private Timer mButtonUpdateTimer;
   private ClockIcon mTimeIcon;
 
-  private static final Version mVersion = new Version(1, 81, 9, true);
+  private static final Version mVersion = new Version(1, 81, 10, true);
 
   /** The localizer for this class. */
   public static final util.ui.Localizer mLocalizer = util.ui.Localizer.getLocalizerFor(ClockPlugin.class);
@@ -371,7 +371,13 @@ public class ClockPlugin extends Plugin {
   public void setMoveOnScreen(boolean value) {
     mProperties.setProperty("moveOnScreen", value + "");
     mMoveOnScreen = value;
-    mLocation = getParentFrame().getLocation();
+    
+    if(mLocation == null) {
+      mLocation = new AtomicReference<Point>(getParentFrame().getLocation());
+    }
+    else {
+      mLocation.set(getParentFrame().getLocation());
+    }
   }
 
   /**
@@ -527,11 +533,18 @@ public class ClockPlugin extends Plugin {
       toggleOnOffClock();
     }
 
-    mLocation = getParentFrame().getLocation();
+    if(mLocation == null) {
+      mLocation = new AtomicReference<Point>(getParentFrame().getLocation());
+    }
+    else {
+      mLocation.set(getParentFrame().getLocation());
+    }
+    
     mParentSize = getParentFrame().getSize();
 
     getParentFrame().addComponentListener(new ComponentAdapter() {
       boolean mWasVisible = false;
+      private Point mClockLocation;
 
       public void componentHidden(ComponentEvent e) {
         if(mClock != null && mClock.getThread().isAlive()) {
@@ -547,8 +560,16 @@ public class ClockPlugin extends Plugin {
 
           if(diff != 0) {
             if (mClock != null && mClock.getThread().isAlive()) {
-              mClock.setLocation(mClock.getLocation().x + diff, mClock
-                  .getLocation().y);
+              if(mClockLocation == null) {
+                mClockLocation = mClock.getLocation();
+              }
+              
+              int xPos = mClockLocation.x + diff;
+              int yPos = mClockLocation.y;
+              
+              mClockLocation.setLocation(xPos, yPos);
+              
+              mClock.setLocation(xPos,yPos);
               mProperties.setProperty("xPos", mClock.getX() + "");
             }
             else {
@@ -572,19 +593,28 @@ public class ClockPlugin extends Plugin {
 
       public void componentMoved(ComponentEvent e) {
         if (mMoveOnScreen && !getParentFrame().isUndecorated()) {
+          Point f = mLocation.get();
           Point p = getParentFrame().getLocation();
-
-          if (!p.equals(mLocation) && mLocation != null) {
-            int x = mLocation.x - p.x;
-            int y = mLocation.y - p.y;
-            mLocation = p;
-
+          
+          if (!p.equals(f) && f != null) {
+            
+            int x = f.x - p.x;
+            int y = f.y - p.y;
+            mLocation.set(p);
+            
             if (mClock != null && mClock.getThread().isAlive()) {
-              mClock.setLocation(mClock.getLocation().x - x, mClock
-                  .getLocation().y
-                  - y);
-              mProperties.setProperty("xPos", mClock.getX() + "");
-              mProperties.setProperty("yPos", mClock.getY() + "");
+              if(mClockLocation == null) {
+                mClockLocation = mClock.getLocation();
+              }
+              
+              final int xPos = mClockLocation.x - x;
+              final int yPos =  mClockLocation.y - y;
+              
+              mClockLocation.setLocation(xPos, yPos);
+              mClock.setLocation(xPos, yPos);      
+              
+              mProperties.setProperty("xPos", xPos + "");
+              mProperties.setProperty("yPos", yPos + "");
             } else {
               try {
                 int xalt = Integer.parseInt(mProperties.getProperty("xPos"));
@@ -597,7 +627,7 @@ public class ClockPlugin extends Plugin {
           }
         }
       }
-
+      
       public void componentShown(ComponentEvent e) {
         if (!getShowForever()) {
           if(mClock != null && mClock.getThread().isAlive()) {
