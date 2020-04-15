@@ -44,6 +44,7 @@ import com.jgoodies.forms.builder.PanelBuilder;
 import com.jgoodies.forms.factories.Borders;
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
+import com.jgoodies.forms.layout.Sizes;
 
 import devplugin.Version;
 import tvbrowser.TVBrowser;
@@ -85,7 +86,7 @@ public class TvBrowserVersionChangeDlg extends JDialog implements WindowClosingI
     CellConstraints cc = new CellConstraints();
     PanelBuilder pb = new PanelBuilder(
         new FormLayout("default:grow,default,default:grow",
-            "default,180dlu,default"),
+            "default,fill:default,default"),
         (JPanel)getContentPane());
     JLabel l = pb.addLabel(mLocalizer.msg("header","TV-Browser was updated from {0} to {1}!",oldTvBrowserVersion,TVBrowser.VERSION), cc.xy(2,1));
     l.setForeground(new Color(200,0,0));
@@ -99,7 +100,7 @@ public class TvBrowserVersionChangeDlg extends JDialog implements WindowClosingI
           }
         },UIManager.getColor("EditorPane.background"));
     
-    pane.setPreferredSize(new Dimension(400,330));
+    pane.setPreferredSize(new Dimension(400,Sizes.dialogUnitXAsPixel(160, pane)));
     
     pane.setBackground(UIManager.getColor("EditorPane.background"));
     pane.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createMatteBorder(0,0,1,0,Color.darkGray),Borders.createEmptyBorder("0dlu,10dlu,0dlu,10dlu")));

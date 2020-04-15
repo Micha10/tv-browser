@@ -37,17 +37,22 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.swing.ButtonGroup;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.JRadioButton;
 import javax.swing.UIManager;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -933,13 +938,15 @@ public class Settings {
     File oldDir = null;
     File testFile = null;
     String[] allVersions = TVBrowser.getAllVersionStrings();
+    
+    final ArrayList<File> directories = new ArrayList<File>();
+    
     for (int i = (includeCurrent ? 0 : 1); i < allVersions.length; i++) {
-      testFile = new File(directory + File.separator +
-          allVersions[i], SETTINGS_FILE);
+      testFile = new File(directory + File.separator + allVersions[i], SETTINGS_FILE);
 
       if(testFile.isFile()) {
-        oldDir = new File(directory, allVersions[i]);
-        break;
+        oldDir = testFile;
+        directories.add(oldDir);
       }
     }
 
@@ -954,6 +961,61 @@ public class Settings {
         if(testFile.isFile()) {
           oldDir = new File(oldDirectoryName);
         }
+      }
+    }
+    else if(!directories.isEmpty()) {
+      Collections.sort(directories, new Comparator<File>() {
+        @Override
+        public int compare(File o1, File o2) {
+          int result = 0;
+          
+          if(o1.lastModified() > o2.lastModified()) {
+            result = -1;
+          }
+          else if(o1.lastModified() < o2.lastModified()) {
+            result = 1;
+          }
+          
+          return result;
+        }
+      });
+      
+      long threeMonthsBefore = System.currentTimeMillis() - 3 * 30 * 24 * 60 * 60000l;
+      
+      for(int i = directories.size()-1; i >= 1; i--) {
+        if(directories.get(i).lastModified() < threeMonthsBefore) {
+          directories.remove(i);
+        }
+      }
+      
+      if(directories.size() > 1) {
+        Localizer localizer = Localizer.getLocalizerFor(Settings.class);
+        final ButtonGroup bg = new ButtonGroup();
+        final JRadioButton[] versions = new JRadioButton[directories.size()];
+        final DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.MEDIUM);
+        final Object[] message = new Object[versions.length+1];
+        message[0] = localizer.msg("selectImportDirectoryMessage", "Settings were found of different recently used versions of TV-Browser.\nPlease select the version to import the settings from.\n(If you are unsure, just accept the preselection with OK.)\n\n"); 
+        
+        for(int i = 0; i < versions.length; i++) {
+          final File dir = directories.get(i);
+          versions[i] = new JRadioButton(localizer.msg("selectImportDirectoryInfo", "{0} (last used: {1})",dir.getParentFile().getName(),dateFormat.format(new java.util.Date(dir.lastModified()))));
+          bg.add(versions[i]);
+          message[i+1] = versions[i];
+        }
+        
+        versions[0].setSelected(true);
+        
+        JOptionPane.showMessageDialog(null, message, localizer.msg("selectImportDirectoryTitle", "TV-Browser - Select settings to import"), JOptionPane.QUESTION_MESSAGE);
+        
+        for(int i = 0; i < versions.length; i++) {
+          if(versions[i].isSelected()) {
+            oldDir = directories.get(i).getParentFile();
+            break;
+          }
+        }
+      }
+      else if(!directories.isEmpty()) {
+        oldDir = directories.get(0).getParentFile();
       }
     }
     
