@@ -959,7 +959,7 @@ public class TVBrowser {
   	  final long cutoff = System.currentTimeMillis() - 6 * 30 * 24 * 60 * 60000l;
   	  final ArrayList<File> oldDirs = new ArrayList<File>();
   	  
-  	  for(int i = ALL_VERSIONS.length-1; i >= 0; i--) {
+  	  for(int i = ALL_VERSIONS.length-1; i > 0; i--) {
   	    File test = new File(settingsDir + File.separator + ALL_VERSIONS[i] + File.separator + "settings.prop");
   	    
   	    if(test.isFile() && test.lastModified() < cutoff) {
