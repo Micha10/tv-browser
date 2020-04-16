@@ -23,6 +23,7 @@
 package tvbrowser.ui;
 
 import java.awt.Component;
+import java.util.ArrayList;
 
 import javax.swing.JCheckBox;
 import javax.swing.JOptionPane;
@@ -45,7 +46,61 @@ public class DontShowAgainOptionBox {
    * Creates an option dialog with JOptionPane.
    * <p>
    * @param messageBoxId The id for this message box.
-   * @param parent The praent component of this dialog.
+   * @param parent The parent component of this dialog.
+   * @param message The message to show the user. Can be an array if more than one component should be shown.
+   * @param title The title of the option dialog.
+   * @param messageType The message type of the option dialog, value are {#javax.swing.JOptionPane.ERROR_MESSAGE}, {#javax.swing.JOptionPane.INFORMATION_MESSAGE}, {#javax.swing.JOptionPane.WARNING_MESSAGE}.
+   * @param optionType The option type of the option dialog, values are {@link JOptionPane#YES_OPTION}, {@link JOptionPane#YES_NO_OPTION}, {@link JOptionPane#YES_NO_CANCEL_OPTION}, {@link JOptionPane#OK_OPTION},
+   *                   {@link JOptionPane#OK_CANCEL_OPTION}, {@link JOptionPane#DEFAULT_OPTION}.
+   * @param options The options to show on the option buttons.
+   * @param initialValue The option initially selected.
+   * @param dontShowAgainLabel The label for the check box or, <code>null</code> for the default label.
+   * @return The result of the option dialog, values are the possible values for optionType.
+   * @since 4.2.2
+   */
+  public static int showOptionDialog(String messageBoxId, Component parent,
+      Object message, String title, int messageType, int optionType, Object[] options,
+      Object initialValue, String dontShowAgainLabel) {
+
+    if (Settings.propHiddenMessageBoxes.containsItem(messageBoxId)) {
+      return JOptionPane.YES_OPTION;
+    }
+    
+    final JCheckBox askAgain = new JCheckBox(dontShowAgainLabel == null ? mLocalizer.msg("dontShowAgain", "Don't show this message again") : dontShowAgainLabel);
+    final ArrayList<Object> shownObjects = new ArrayList<>();
+
+    if(message.getClass().isArray()) {
+      final Object[] arr = (Object[])message;
+      
+      for(Object o : arr) {
+        shownObjects.add(o);
+      }
+    }
+    else {
+      shownObjects.add(message);
+    }
+    
+    // have some space between message and checkbox
+    if (!(shownObjects.get(shownObjects.size()-1) instanceof String) || !((String)shownObjects.get(shownObjects.size()-1)).endsWith("\n\n")) {
+      shownObjects.add("\n");
+    }
+    
+    shownObjects.add(askAgain);
+    
+    int result = JOptionPane.showOptionDialog(parent, shownObjects.toArray(), title, optionType, messageType, null, options, initialValue);
+
+    if (askAgain.isSelected()) {
+      Settings.propHiddenMessageBoxes.addItem(messageBoxId);
+    }
+
+    return result;
+  }
+
+  /**
+   * Creates an option dialog with JOptionPane.
+   * <p>
+   * @param messageBoxId The id for this message box.
+   * @param parent The parent component of this dialog.
    * @param message The message to show the user.
    * @param title The title of the option dialog.
    * @param messageType The message type of the option dialog, value are {#javax.swing.JOptionPane.ERROR_MESSAGE}, {#javax.swing.JOptionPane.INFORMATION_MESSAGE}, {#javax.swing.JOptionPane.WARNING_MESSAGE}.
@@ -59,29 +114,9 @@ public class DontShowAgainOptionBox {
   public static int showOptionDialog(String messageBoxId, Component parent,
       String message, String title, int messageType, int optionType, Object[] options,
       Object initialValue, String dontShowAgainLabel) {
-
-    if (Settings.propHiddenMessageBoxes.containsItem(messageBoxId)) {
-      return JOptionPane.YES_OPTION;
-    }
-    // have some space between message and checkbox
-    if (!message.endsWith("\n\n")) {
-      message = message.concat("\n\n");
-    }
-
-    JCheckBox askAgain = new JCheckBox(dontShowAgainLabel == null ? mLocalizer.msg("dontShowAgain", "Don't show this message again") : dontShowAgainLabel);
-    Object[] shownObjects = new Object[2];
-    shownObjects[0] = message;
-    shownObjects[1] = askAgain;
-
-    int result = JOptionPane.showOptionDialog(parent, shownObjects, title, optionType, messageType, null, options, initialValue);
-
-    if (askAgain.isSelected()) {
-      Settings.propHiddenMessageBoxes.addItem(messageBoxId);
-    }
-
-    return result;
+    return showOptionDialog(messageBoxId, parent, (Object)message, title, messageType, optionType, options, initialValue, dontShowAgainLabel);
   }
-
+  
   /**
    * Creates an option dialog with JOptionPane.
    * <p>
@@ -127,5 +162,14 @@ public class DontShowAgainOptionBox {
       String message) {
     return showOptionDialog(messageBoxId, parentComponent, message, UIManager
         .getString("OptionPane.messageDialogTitle"));
+  }
+  
+  /**
+   * @param messageBoxId The id of the message box to check if it is currently hidden.
+   * @return <code>true</code> if the message box with the given id is currently hidden, <code>false</code> otherwise.
+   * @since 4.2.2
+   */
+  public static boolean isHiddenMessageBox(final String messageBoxId) {
+    return Settings.propHiddenMessageBoxes.containsItem(messageBoxId);
   }
 }

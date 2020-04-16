@@ -26,6 +26,7 @@
 package tvbrowser;
 
 import java.awt.Color;
+import java.awt.Container;
 import java.awt.Dialog.ModalityType;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -36,6 +37,8 @@ import java.awt.Insets;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Toolkit;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.event.WindowAdapter;
 import java.io.BufferedReader;
 import java.io.File;
@@ -59,9 +62,12 @@ import java.nio.channels.FileLock;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.logging.Formatter;
 import java.util.logging.Handler;
@@ -70,10 +76,15 @@ import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 import java.util.zip.GZIPInputStream;
 
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.LookAndFeel;
 import javax.swing.SwingUtilities;
@@ -83,6 +94,8 @@ import javax.swing.UIManager.LookAndFeelInfo;
 
 import org.apache.commons.lang3.StringUtils;
 
+import com.jgoodies.forms.factories.CC;
+import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.looks.LookUtils;
 
 import devplugin.Date;
@@ -106,6 +119,7 @@ import tvbrowser.extras.common.InternalPluginProxyList;
 import tvbrowser.extras.programinfo.ProgramInfo;
 import tvbrowser.extras.reminderplugin.ReminderPlugin;
 import tvbrowser.extras.searchplugin.SearchPlugin;
+import tvbrowser.ui.DontShowAgainOptionBox;
 import tvbrowser.ui.configassistant.TvBrowserPictureSettingsUpdateDialog;
 import tvbrowser.ui.mainframe.MainFrame;
 import tvbrowser.ui.mainframe.SoftwareUpdater;
@@ -128,6 +142,7 @@ import util.io.windows.registry.RegistryValue;
 import util.misc.OperatingSystem;
 import util.ui.ImageUtilities;
 import util.ui.Localizer;
+import util.ui.ScrollableJPanel;
 import util.ui.UIThreadRunner;
 import util.ui.UiUtilities;
 import util.ui.textcomponentpopup.TextComponentPopupEventQueue;
@@ -433,6 +448,10 @@ public class TVBrowser {
     if(Settings.propTVBrowserVersion.getVersion() != null && VERSION.compareTo(Settings.propTVBrowserVersion.getVersion()) > 0) {
       updateLookAndFeel();
       updatePluginsOnVersionChange();
+    }
+    else if(Settings.propTVBrowserVersion.getVersion() != null && (Settings.propDateOldSettingsCheckedLast.getDate() == null || Settings.propDateOldSettingsCheckedLast.getDate().addDays(180).compareTo(Date.getCurrentDate()) < 0)) {
+      updateLookAndFeel();
+      seachForOldVersionFiles();
     }
 
     String timezone = Settings.propTimezone.getString();
@@ -931,6 +950,162 @@ public class TVBrowser {
     }
     return true;
   }*/
+	
+	private static void seachForOldVersionFiles() {
+	  final String messageId = "TVBrowser#DeleteOldVersionFiles";
+	  
+	  if(!DontShowAgainOptionBox.isHiddenMessageBox(messageId)) {
+  	  final File settingsDir = new File(Settings.getUserSettingsDirName()).getParentFile();
+  	  final long cutoff = System.currentTimeMillis() - 6 * 30 * 24 * 60 * 60000l;
+  	  final ArrayList<File> oldDirs = new ArrayList<File>();
+  	  
+  	  for(int i = ALL_VERSIONS.length-1; i >= 0; i--) {
+  	    File test = new File(settingsDir + File.separator + ALL_VERSIONS[i] + File.separator + "settings.prop");
+  	    
+  	    if(test.isFile() && test.lastModified() < cutoff) {
+  	      oldDirs.add(test);
+  	    }
+  	  }
+  	  
+  	  if(!oldDirs.isEmpty()) {
+    	  Collections.sort(oldDirs, new Comparator<File>() {
+          @Override
+          public int compare(File o1, File o2) {
+            int result = 0;
+            
+            if(o1.lastModified() > o2.lastModified()) {
+              result = -1;
+            }
+            else if(o1.lastModified() < o2.lastModified()) {
+              result = 1;
+            }
+            
+            return result;
+          }
+        });
+    	  
+    	  try {
+          UIThreadRunner.invokeAndWait(() -> {
+            final JButton selectAll = new JButton(mLocalizer.msg("deleteOldSettingsSelectAll", "Select all"));
+            selectAll.setEnabled(true);
+            final JButton clearSelection = new JButton(mLocalizer.msg("deleteOldSettingsClearSelection", "Clear selection"));
+            clearSelection.setEnabled(false);
+            final JButton delete = new JButton(mLocalizer.msg("deleteOldSettingsDelete", "Delete selected settings"));
+            delete.setEnabled(false);
+            delete.addActionListener(e -> {
+              Container container = delete.getParent();
+            
+              do {
+                container = container.getParent();
+              }while(container != null && !(container instanceof JOptionPane));
+              
+              if(container != null && container instanceof JOptionPane) {
+                JOptionPane p = (JOptionPane)container;
+                p.setValue(delete);
+              }
+            });
+            final DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.MEDIUM);
+            Localizer settingsLocalizer = Localizer.getLocalizerFor(Settings.class);
+            final ScrollableJPanel boxPanel = new ScrollableJPanel();
+            boxPanel.setLayout(new BoxLayout(boxPanel, BoxLayout.Y_AXIS));
+            final AtomicInteger count = new AtomicInteger(0);
+            
+            final ItemListener listener = e -> {
+              if(e.getStateChange() == ItemEvent.SELECTED) {
+                count.incrementAndGet();
+              }
+              else if(e.getStateChange() == ItemEvent.DESELECTED) {
+                count.decrementAndGet();
+              }
+              
+              delete.setEnabled(count.get() > 0);
+              selectAll.setEnabled(count.get() != oldDirs.size());
+              clearSelection.setEnabled(delete.isEnabled());
+            };
+            
+            final JCheckBox[] selection = new JCheckBox[oldDirs.size()];
+            
+            for(int i = 0; i < selection.length; i++) {
+              final File dir = oldDirs.get(i);
+              selection[i] = new JCheckBox(settingsLocalizer.msg("selectImportDirectoryInfo", "{0} (last used: {1})",dir.getParentFile().getName(),dateFormat.format(new java.util.Date(dir.lastModified()))));
+              selection[i].addItemListener(listener);
+              boxPanel.add(selection[i]);
+            }
+            
+            final JScrollPane scroll = new JScrollPane(boxPanel);
+            scroll.setBorder(null);
+            scroll.setViewportBorder(null);
+            scroll.getViewport().setOpaque(false);
+            
+            selectAll.addActionListener(e -> {
+              for(JCheckBox box : selection) {
+                box.setSelected(true);
+              }
+            });
+            clearSelection.addActionListener(e -> {
+              for(JCheckBox box : selection) {
+                box.setSelected(false);
+              }
+            });
+            
+            final JPanel buttons = new JPanel(new FormLayout("default,60dlu,default","default"));
+            buttons.add(clearSelection, CC.xy(1, 1));
+            buttons.add(selectAll, CC.xy(3, 1));
+            
+            
+            final ArrayList<Object> message = new ArrayList<>();
+            message.add(mLocalizer.msg("deleteOldSettingsMessage", "TV-Browser has found settings of old versions of TV-Browser\nthat were not used for at least half a year.\n\nYou can select the versions of TV-Browser you no longer use,\nfor which the old setttings should be deleted now.\n\n"));
+            message.add(scroll);
+            message.add(buttons);
+            
+            final Object[] options = {
+                delete,
+                Localizer.getLocalization(Localizer.I18N_CANCEL)
+            };
+            
+            int option = DontShowAgainOptionBox.showOptionDialog(messageId, null, message.toArray(), mLocalizer.msg("deleteOldSettingsTitle", "TV-Browser: Delete old versions settings files"), JOptionPane.QUESTION_MESSAGE, JOptionPane.YES_NO_OPTION, options, options[1], null);
+            
+            if(JOptionPane.YES_OPTION == option) {
+              for(int i = 0; i < selection.length; i++) {
+                if(selection[i].isSelected()) {
+                  eraseDirectory(oldDirs.get(i).getParentFile());
+                }
+              }
+            }
+          });
+        } catch (InvocationTargetException e) {
+          // TODO Auto-generated catch block
+          e.printStackTrace();
+        } catch (InterruptedException e) {
+          // TODO Auto-generated catch block
+          e.printStackTrace();
+        }
+  	  }
+  	  
+  	  Settings.propDateOldSettingsCheckedLast.setDate(Date.getCurrentDate());
+	  }
+	}
+	
+	private static void eraseDirectory(final File directory) {
+	  if(directory.isDirectory()) {
+	    final File[] files = directory.listFiles();
+	    
+	    if(files != null) {
+	      for(File file : files) {
+	        if(file.isFile() && !file.delete()) {
+	          file.deleteOnExit();
+	        }
+	        else if(file.isDirectory()) {
+	          eraseDirectory(file);
+	        }
+	      }
+	    }
+	    
+	    if(!directory.delete()) {
+	      directory.deleteOnExit();
+	    }
+	  }
+	}
 
   private static void startPeriodicSaveSettings() {
     // Every 5 minutes we store all the settings so they are stored in case of

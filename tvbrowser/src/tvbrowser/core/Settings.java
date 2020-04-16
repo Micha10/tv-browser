@@ -2345,6 +2345,12 @@ public class Settings {
   public static final DateProperty propJreUpdateDateLast = new DateProperty(mProp, "jreUpdateDateLast", null);
   public static final BooleanProperty propJreUpdateEnabled = new BooleanProperty(mProp, "jreUpdateEnabled", true);
   
+  /**
+   * Date when TV-Browser has searched for settings of old versions of TV-Browser last.
+   * @since 4.2.2
+   */
+  public static final DateProperty propDateOldSettingsCheckedLast = new DateProperty(mProp, "dateOldSettingsCheckedLast", null);
+  
   /** 
    * Sets the availability of the restore server.
    * <p>
