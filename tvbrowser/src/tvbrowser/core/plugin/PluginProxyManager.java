@@ -41,6 +41,7 @@ import javax.swing.JMenu;
 import javax.swing.JPopupMenu;
 import javax.swing.SwingUtilities;
 
+import devplugin.ActionMenu;
 import devplugin.ChannelDayProgram;
 import devplugin.ContextMenuIf;
 import devplugin.Date;
@@ -1084,10 +1085,22 @@ public class PluginProxyManager {
    * @param menuIf The ContextMenuIf that wants to create the ContextMenu
    * @return a context menu for the given program.
    */
-
   public static JPopupMenu createPluginContextMenu(Program program, ContextMenuIf menuIf) {
+    return createPluginContextMenu(program, menuIf, null);
+  }
+    
+  /**
+   * Creates a context menu for the given program containing all plugins.
+   *
+   * @param program The program to create the context menu for
+   * @param menuIf The ContextMenuIf that wants to create the ContextMenu
+   * @param callerMenu The menu to shown for the ContextMenuIf in the created menu
+   * @return a context menu for the given program.
+   * @since 4.2.2
+   */
+  public static JPopupMenu createPluginContextMenu(Program program, ContextMenuIf menuIf, ActionMenu callerMenu) {
     JPopupMenu menu = new JPopupMenu();
-    JMenu menus = ContextMenuManager.getInstance().createContextMenuItems(menuIf, program);
+    JMenu menus = ContextMenuManager.getInstance().createContextMenuItems(menuIf, program, callerMenu);
 
     Component[] comps = menus.getMenuComponents();
     for (Component component : comps) {

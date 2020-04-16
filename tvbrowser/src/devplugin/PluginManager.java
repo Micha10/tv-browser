@@ -174,10 +174,22 @@ public interface PluginManager {
    * Creates a context menu for the given program containing all plugins.
    *
    * @param program The program to create the context menu for
-   * @param caller The calling plugin.
+   * @param caller The calling plugin or <code>null</code> to get all context menus of all plugins.
    * @return a context menu for the given program.
    */
   public JPopupMenu createPluginContextMenu(Program program, ContextMenuIf caller);
+  
+  /**
+   * Creates a context menu for the given program containing all plugins.
+   *
+   * @param program The program to create the context menu for
+   * @param caller The calling plugin.
+   * @param callerMenu The menu that should be shown for the calling plugin or <code>null</code>
+   *        if no menu should be shown for the calling plugin.
+   * @return a context menu for the given program.
+   * @since 4.2.2
+   */
+  public JPopupMenu createPluginContextMenu(Program program, ContextMenuIf caller, ActionMenu callerMenu);
   
   /**
    * Creates a context menu for the given program containing all plugins.

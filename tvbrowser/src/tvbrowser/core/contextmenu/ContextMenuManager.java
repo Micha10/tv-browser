@@ -349,7 +349,6 @@ public ContextMenuIf[] getAvailableContextMenuIfs(boolean includingDisabledItems
     return menuIf;
   }
 
-
   /**
    * Creates the context menu items.
    * 
@@ -358,6 +357,19 @@ public ContextMenuIf[] getAvailableContextMenuIfs(boolean includingDisabledItems
    * @return The menu items of the context menu.
    */
   public JMenu createContextMenuItems(ContextMenuIf callerIf, Program program) {
+    return createContextMenuItems(callerIf, program, null);
+  }
+
+  /**
+   * Creates the context menu items.
+   * 
+   * @param callerIf The caller Context menu interface.
+   * @param program The program to show the context menu for.
+   * @param callerMenu The menu to show for the callerIf.
+   * @return The menu items of the context menu.
+   * @since 4.2.2
+   */
+  public JMenu createContextMenuItems(ContextMenuIf callerIf, Program program, ActionMenu callerMenu) {
     try {
     ContextMenuIf[] menuIfArr = getInstance().getAvailableContextMenuIfs(false, true);
     HashMap<ContextMenuIf, HashSet<Integer>> disabledSubMenus = getDisabledSubMenuMap();
@@ -372,7 +384,7 @@ public ContextMenuIf[] getAvailableContextMenuIfs(boolean includingDisabledItems
       if ((callerIf != null) && (callerIf.getId().equals(menuIf.getId()))) {
         equalsPlugin = true;
       }
-
+      
       if (menuIf instanceof SeparatorMenuItem) {
         if (rootMenu.getMenuComponentCount() > 0) {
           rootMenu.addSeparator();
@@ -397,8 +409,8 @@ public ContextMenuIf[] getAvailableContextMenuIfs(boolean includingDisabledItems
           });
           rootMenu.add(item);
         }
-      } else if (!equalsPlugin) {
-        ActionMenu actionMenu = menuIf.getContextMenuActions(program);
+      } else {
+        ActionMenu actionMenu = !equalsPlugin ? menuIf.getContextMenuActions(program) : callerMenu;
         
         if (actionMenu != null) {
           if(actionMenu.showOnlySubMenus()) {

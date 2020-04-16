@@ -615,8 +615,12 @@ public class PluginManagerImpl implements PluginManager {
    * @return a context menu for the given program.
    */
   public JPopupMenu createPluginContextMenu(Program program, ContextMenuIf caller) {
-
-    return PluginProxyManager.createPluginContextMenu(program, caller);
+    return createPluginContextMenu(program, caller, null);
+  }
+  
+  @Override
+  public JPopupMenu createPluginContextMenu(Program program, ContextMenuIf caller, ActionMenu callerMenu) {
+    return PluginProxyManager.createPluginContextMenu(program, caller, callerMenu);
   }
 
   /**
