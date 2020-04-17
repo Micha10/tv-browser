@@ -618,7 +618,7 @@ public class ReminderListPanel extends TabListenerPanel implements PersonaListen
     final Program p = (Program) mTable.getModel().getValueAt(row, 0);
 
     if(p != null && !p.equals(PluginManagerImpl.getInstance().getExampleProgram())) {
-      JPopupMenu menu = PluginManagerImpl.getInstance().createPluginContextMenu(p, ReminderPluginProxy.getInstance());
+      JPopupMenu menu = PluginManagerImpl.getInstance().createPluginContextMenu(p, ReminderPluginProxy.getInstance(), ReminderPlugin.getInstance().getDeleteMenu(p));
       UiUtilities.registerForClosing(menu);
       menu.show(mTable, point.x - 15, point.y - 15);
     }

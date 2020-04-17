@@ -742,7 +742,8 @@ public class ReminderPlugin {
               "appointment", 16), new ActionMenu[] {
               new ActionMenu(Integer.MIN_VALUE, dontRemind),
               new ActionMenu(Integer.MIN_VALUE+1, getName(), IconLoader.getInstance().getIconFromTheme("apps",
-              "appointment", 16), actions.toArray(new ActionMenu[actions.size()]))
+              "appointment", 16), actions.toArray(new ActionMenu[actions.size()])),
+              getDeleteMenu(program)
           }, true);
         }
         else {
@@ -761,6 +762,56 @@ public class ReminderPlugin {
     }
     
     return result;
+  }
+  
+  ActionMenu getDeleteMenu(final Program p) {
+    final ContextMenuAction removeAll = new ContextMenuAction(LOCALIZER.msg("contextMenu.deleteMenu.all", "Delete all reminders"), TVBrowserIcons.delete(TVBrowserIcons.SIZE_SMALL));
+    removeAll.setActionListener(e -> {
+      if(JOptionPane.YES_OPTION == JOptionPane.showConfirmDialog(UiUtilities.getLastModalChildOf(MainFrame.getInstance()), LOCALIZER.msg("question.deleteAll", "Do you really want to delete all reminders?"), LOCALIZER.msg("question.title", "Delete reminders?"), JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE)) {
+        final ReminderListItem[] items = mReminderList.getReminderItems();
+        
+        for(ReminderListItem item : items) {
+          mReminderList.removeWithoutChecking(item.getProgram());
+        }
+        
+        updateRootNode(true);
+      }
+    });
+    final ContextMenuAction removeForChannel = new ContextMenuAction(LOCALIZER.msg("contextMenu.deleteMenu.forChannel","Delete all reminders from channel '{0}'", p.getChannel().getName()), TVBrowserIcons.delete(TVBrowserIcons.SIZE_SMALL));
+    removeForChannel.setActionListener(e -> {
+      if(JOptionPane.YES_OPTION == JOptionPane.showConfirmDialog(UiUtilities.getLastModalChildOf(MainFrame.getInstance()), LOCALIZER.msg("question.deleteAllChannel", "Do you really want to delete all reminders on channel '{0}'?", p.getChannel().getName()), LOCALIZER.msg("question.title", "Delete reminders?"), JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE)) {
+        final ReminderListItem[] items = mReminderList.getReminderItems();
+        
+        for(ReminderListItem item : items) {
+          if(item.getProgram().getChannel().equals(p.getChannel())) {
+            mReminderList.removeWithoutChecking(item.getProgram());
+          }
+        }
+        
+        updateRootNode(true);
+      }
+    });
+    final ContextMenuAction removeForTitle = new ContextMenuAction(LOCALIZER.msg("contextMenu.deleteMenu.forTitle", "Delete all reminders with title '{0}'", p.getTitle()), TVBrowserIcons.delete(TVBrowserIcons.SIZE_SMALL));
+    removeForTitle.setActionListener(e -> {
+      if(JOptionPane.YES_OPTION == JOptionPane.showConfirmDialog(UiUtilities.getLastModalChildOf(MainFrame.getInstance()), LOCALIZER.msg("question.deleteAllTitle", "Do you really want to delete all reminders with title\\n'{0}'?", p.getTitle()), LOCALIZER.msg("question.title", "Delete reminders?"), JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE)) {
+        final ReminderListItem[] items = mReminderList.getReminderItems();
+        
+        for(ReminderListItem item : items) {
+          if(item.getProgram().getTitle().equals(p.getTitle())) {
+            mReminderList.removeWithoutChecking(item.getProgram());
+          }
+        }
+        
+        updateRootNode(true);
+      }
+    });
+    
+    return new ActionMenu(ActionMenu.ID_ACTION_NONE, LOCALIZER.msg("contextMenu.deleteMenu", "Delete reminders"), IconLoader.getInstance().getIconFromTheme("apps",
+        "appointment", 16), new ActionMenu[] {
+            new ActionMenu(Integer.MIN_VALUE+100, removeAll),
+            new ActionMenu(Integer.MIN_VALUE+101, removeForChannel),
+            new ActionMenu(Integer.MIN_VALUE+102, removeForTitle),
+        }, true);
   }
 
   /**
