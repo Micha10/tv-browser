@@ -408,7 +408,7 @@ public class WebSettingsTab implements SettingsTab,  ListDropAction {
    * New was pressed
    */
   private void newPressed() {
-    WebAddress newadr = new WebAddress("", null, null, true, true);
+    WebAddress newadr = new WebAddress("", null, null, true, true, webPlugin.getNextMenuId());
 
     Window parent = UiUtilities.getLastModalChildOf(mParent);
     WebAddressEditDialog editor = new WebAddressEditDialog(parent, newadr);

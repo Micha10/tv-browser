@@ -42,6 +42,7 @@ import javax.swing.Action;
 import javax.swing.Icon;
 import javax.swing.JFrame;
 
+import compat.MenuCompat;
 import compat.PluginCompat;
 import devplugin.ActionMenu;
 import devplugin.Channel;
@@ -66,7 +67,7 @@ import util.ui.UiUtilities;
  * A User can configure his favorite Search-Engines and search for the given Movie
  */
 public class WebPlugin extends Plugin {
-  private static final Version VERSION = new Version(3,18);
+  private static final Version VERSION = new Version(3,19);
 
   private static final Logger LOGGER = java.util.logging.Logger
   .getLogger(WebPlugin.class.getName());
@@ -75,6 +76,8 @@ public class WebPlugin extends Plugin {
   private static final String PROGRAM_SITE = "programSite";
   private static final String SITE_VOD = "vodSite";
 
+  private int mLastKnownId = 0;
+  
 /** Localizer */
   private static final Localizer LOCALIZER = Localizer
       .getLocalizerFor(WebPlugin.class);
@@ -82,35 +85,42 @@ public class WebPlugin extends Plugin {
   /** parameter to be replaced by all searchable strings */
   private static final String WEBSEARCH_ALL = "anytext";
 
+  private static int ID_DEFAULT_NEXT = Integer.MIN_VALUE;
+  
   /** Default-Addresses */
   final static WebAddress[] DEFAULT_ADRESSES = {
       new WebAddress("OFDb",
           "http://www.ofdb.de/view.php?page=suchergebnis&Kat=All&SText={urlencode(" + WEBSEARCH_ALL + ", \"UTF-8\")}",
           "http://www.ofdb.de/view.php?page=suchergebnis&Kat=Titel&SText={urlencode(" + WEBSEARCH_ALL + ", \"UTF-8\")}",
           "http://www.ofdb.de/view.php?page=suchergebnis&Kat=Person&SText={urlencode(" + WEBSEARCH_ALL + ", \"UTF-8\")}",
-          null, false, true),
+          null, false, true, ID_DEFAULT_NEXT++),
       new WebAddress("IMDb", 
-          "http://akas.imdb.com/find?q={urlencode(" + WEBSEARCH_ALL + ", \"UTF-8\")}", 
-          "http://akas.imdb.com/find?q={urlencode(" + WEBSEARCH_ALL + ", \"UTF-8\")}&s=tt", 
-          "http://akas.imdb.com/find?q={urlencode(" + WEBSEARCH_ALL + ", \"UTF-8\")}&s=nm", 
-          null, false, true),
-      new WebAddress("DuckDuckGo", "https://duckduckgo.com/html?q={urlencode(" + WEBSEARCH_ALL + ", \"UTF-8\")}", null, false, true),
-      new WebAddress("Google", "http://www.google.com/search?q=%22{urlencode(" + WEBSEARCH_ALL + ", \"UTF-8\")}%22", null, false, true),
-      new WebAddress("Yahoo", "http://search.yahoo.com/search?p={urlencode(" + WEBSEARCH_ALL + ", \"ISO-8859-1\")}", null, false, true),
-      new WebAddress("Wikipedia (DE)", "http://de.wikipedia.org/wiki/Spezial:Search?search={urlencode(" + WEBSEARCH_ALL + ", \"ISO-8859-1\")}", null, false, Locale.getDefault().equals(Locale.GERMAN)),
-      new WebAddress("Wikipedia (EN)", "http://en.wikipedia.org/wiki/Special:Search?search={urlencode(" + WEBSEARCH_ALL + ", \"ISO-8859-1\")}", null, false, Locale.getDefault().equals(Locale.ENGLISH)),
+          "http://imdb.com/find?q={urlencode(" + WEBSEARCH_ALL + ", \"UTF-8\")}", 
+          "http://imdb.com/find?q={urlencode(" + WEBSEARCH_ALL + ", \"UTF-8\")}&s=tt", 
+          "http://imdb.com/find?q={urlencode(" + WEBSEARCH_ALL + ", \"UTF-8\")}&s=nm", 
+          null, false, true, ID_DEFAULT_NEXT++),
+      new WebAddress("DuckDuckGo", "https://duckduckgo.com/html?q={urlencode(" + WEBSEARCH_ALL + ", \"UTF-8\")}", null, false, true, ID_DEFAULT_NEXT++),
+      new WebAddress("Google", "http://www.google.com/search?q=%22{urlencode(" + WEBSEARCH_ALL + ", \"UTF-8\")}%22", null, false, true, ID_DEFAULT_NEXT++),
+      new WebAddress("Yahoo", "http://search.yahoo.com/search?p={urlencode(" + WEBSEARCH_ALL + ", \"ISO-8859-1\")}", null, false, true, ID_DEFAULT_NEXT++),
+      new WebAddress("Wikipedia (DE)",
+          "http://de.wikipedia.org/wiki/Spezial:Search?search={urlencode(" + WEBSEARCH_ALL + ", \"ISO-8859-1\")}",
+          null, false, Locale.getDefault().equals(Locale.GERMAN), ID_DEFAULT_NEXT++),
+      new WebAddress("Wikipedia (EN)",
+          "http://en.wikipedia.org/wiki/Special:Search?search={urlencode(" + WEBSEARCH_ALL + ", \"ISO-8859-1\")}",
+          null, false, Locale.getDefault().equals(Locale.ENGLISH), ID_DEFAULT_NEXT++),
       new WebAddress("moviepilot", 
           "http://www.moviepilot.de/suche?q={urlencode(" + WEBSEARCH_ALL + ", \"UTF-8\")}", 
           "http://www.moviepilot.de/suche?q={urlencode(" + WEBSEARCH_ALL + ", \"UTF-8\")}&type=movie", 
           "http://www.moviepilot.de/suche?q={urlencode(" + WEBSEARCH_ALL + ", \"UTF-8\")}&type=person",          
-          null, false, true),
+          null, false, true, ID_DEFAULT_NEXT++),
       new WebAddress("omdb", 
           "http://www.omdb.org/search?search%5Btext%5D={urlencode(" + WEBSEARCH_ALL + ", \"UTF-8\")}", 
           "http://www.omdb.org/search/movies?search%5Btext%5D={urlencode(" + WEBSEARCH_ALL + ", \"UTF-8\")}", 
-          "http://www.omdb.org/search/people?search%5Btext%5D={urlencode(" + WEBSEARCH_ALL + ", \"UTF-8\")}", null, false, true),
-      new WebAddress(LOCALIZER.msg("programPage", "Open website of program"),PROGRAM_SITE,null,false,true),
-      new WebAddress(LOCALIZER.msg("vodPage", "Open VOD link"),SITE_VOD,null,false,true),
-      new WebAddress(LOCALIZER.msg("channelPageGeneral", "Open website of channel"),CHANNEL_SITE,null,false,true),
+          "http://www.omdb.org/search/people?search%5Btext%5D={urlencode(" + WEBSEARCH_ALL + ", \"UTF-8\")}",
+          null, false, true, ID_DEFAULT_NEXT++),
+      new WebAddress(LOCALIZER.msg("programPage", "Open website of program"),PROGRAM_SITE,null,false,true, ID_DEFAULT_NEXT++),
+      new WebAddress(LOCALIZER.msg("vodPage", "Open VOD link"),SITE_VOD,null,false,true, ID_DEFAULT_NEXT++),
+      new WebAddress(LOCALIZER.msg("channelPageGeneral", "Open website of channel"),CHANNEL_SITE,null,false,true, ID_DEFAULT_NEXT++),
   };
 
   /** The WebAddresses */
@@ -209,13 +219,17 @@ public class WebPlugin extends Plugin {
     if (version >= 2) {
       mShowDetails = in.readBoolean();
     }
+    
+    if(version >= 3) {
+      mLastKnownId = in.readInt();
+    }
   }
 
   /**
    * Saves the Data
    */
   public void writeData(final ObjectOutputStream out) throws IOException {
-    out.writeInt(2);
+    out.writeInt(3);
     if (mAddresses == null) {
       createDefaultSettings();
     }
@@ -227,6 +241,7 @@ public class WebPlugin extends Plugin {
     }
 
     out.writeBoolean(mShowDetails);
+    out.writeInt(mLastKnownId);
   }
 
   /**
@@ -245,11 +260,7 @@ public class WebPlugin extends Plugin {
    */
   private void createDefaultSettings() {
     mAddresses = new ArrayList<WebAddress>();
-    final WebAddress test = new WebAddress("Test",
-        "http://akas.imdb.com/Tsearch?title={urlencode(title, \"UTF-8\")}",
-        null, true, false);
     mAddresses.addAll(Arrays.asList(DEFAULT_ADRESSES));
-    mAddresses.add(test);
   }
 
   /**
@@ -260,14 +271,15 @@ public class WebPlugin extends Plugin {
       createDefaultSettings();
     }
     Action mainAction = getMainContextMenuAction();
-    if (program == getPluginManager().getExampleProgram()) {
+    final boolean isExampleProgram = program.equals(getPluginManager().getExampleProgram());
+  /*  if (program == getPluginManager().getExampleProgram()) {
     	return new ActionMenu(mainAction);
-    }
+    }*/
 
     final String programPage = LOCALIZER.msg("programPage", "Open page of program");
-    final ArrayList<Object> actionList = new ArrayList<Object>();
+    final ArrayList<ActionMenu> actionList = new ArrayList<ActionMenu>();
     listActors = null;
-
+    
     for (int i = 0; i < mAddresses.size(); i++) {
      try {
     	  WebAddress address = mAddresses.get(i);
@@ -276,7 +288,7 @@ public class WebPlugin extends Plugin {
         if (address.getUrl().equals(PROGRAM_SITE)) {
           final String url = program.getTextField(ProgramFieldType.URL_TYPE);
           if (url != null && url.length() > 0) {
-            address = new WebAddress(programPage,url,null,false,address.isActive());
+            address = new WebAddress(programPage,url,null,false,address.isActive(),MenuCompat.ID_ACTION_NONE);
             actionName = address.getName();
           }
           else {
@@ -287,8 +299,8 @@ public class WebPlugin extends Plugin {
         if (address != null && address.getUrl().equals(CHANNEL_SITE)) {
         	final Channel channel = program.getChannel();
           address = new WebAddress(LOCALIZER.msg("channelPage",
-              "Open page of {0}", channel.getName()), channel.getWebpage(),
-              null, false, address.isActive());
+              "Open page of {0}", channel.getName()), isExampleProgram ? "DUMMY" : channel.getWebpage(),
+              null, false, address.isActive(), mAddresses.get(i).getMenuId());
         	actionName = address.getName();
 /*
         	// automatically add separator if it is the last menu item (as it is by default)
@@ -303,10 +315,14 @@ public class WebPlugin extends Plugin {
             Field mediathekLink = ProgramFieldType.class.getDeclaredField("VOD_LINK");
             String link = program.getTextField((ProgramFieldType)mediathekLink.get(null));
             
+            if(link == null && isExampleProgram) {
+              link = "DUMMY";
+            }
+            
             if(link != null) {
               address = new WebAddress(LOCALIZER.msg("vodPage",
                   "Open VOD link"), link,
-                  null, false, address.isActive());
+                  null, false, address.isActive(), mAddresses.get(i).getMenuId());
               actionName = address.getName();
             }
             else {
@@ -323,18 +339,25 @@ public class WebPlugin extends Plugin {
             findSearchItems(program);
           }
           if (address.getUrl().contains(WEBSEARCH_ALL) && (listActors.size() + listDirectors.size() + listScripts.size() > 0) && mShowDetails) {
-            final ArrayList<Object> categoryList = new ArrayList<Object>();
+            final ArrayList<ActionMenu> categoryList = new ArrayList<ActionMenu>();
             // title
-            final WebAddress adrTitle = new WebAddress(address.getName(), address.getUrl(WebAddress.MOVIE_SEARCH).replace(WEBSEARCH_ALL, "\"" + program.getTitle() + "\""), null, false, true);
+            final WebAddress adrTitle = new WebAddress(address.getName(), address.getUrl(WebAddress.MOVIE_SEARCH).replace(WEBSEARCH_ALL, "\"" + program.getTitle() + "\""), null, false, true, mAddresses.get(i).getMenuId());
             categoryList.add(createSearchAction(program, adrTitle, program.getTitle()));
+            
+            if(isExampleProgram) {
+              Action a = categoryList.get(categoryList.size()-1).getAction();
+              a.putValue(Action.NAME, LOCALIZER.msg("SearchOn", "Search on ")+" "+mAddresses.get(i).getName());
+              a.putValue(Action.SMALL_ICON, address.getIcon());
+            }
+            
             String orgTitle = program.getTextField(ProgramFieldType.ORIGINAL_TITLE_TYPE);
             if (orgTitle != null && !orgTitle.equals(program.getTitle())) {
-              final WebAddress adrOrgTitle = new WebAddress(address.getName(), address.getUrl(WebAddress.MOVIE_SEARCH).replace(WEBSEARCH_ALL, "\"" + orgTitle + "\""), null, false, true);
-              AbstractAction orgTitleAction = createSearchAction(program, adrOrgTitle, "("+orgTitle+")");
-              orgTitleAction.putValue(Plugin.DISABLED_ON_TASK_MENU, true);
+              final WebAddress adrOrgTitle = new WebAddress(address.getName(), address.getUrl(WebAddress.MOVIE_SEARCH).replace(WEBSEARCH_ALL, "\"" + orgTitle + "\""), null, false, true, MenuCompat.ID_ACTION_NONE);
+              ActionMenu orgTitleAction = createSearchAction(program, adrOrgTitle, "("+orgTitle+")");
+              orgTitleAction.getAction().putValue(Plugin.DISABLED_ON_TASK_MENU, true);
               categoryList.add(orgTitleAction);
             }
-            categoryList.add(ContextMenuSeparatorAction.getDisabledOnTaskMenuInstance());
+            categoryList.add(new ActionMenu(ContextMenuSeparatorAction.getDisabledOnTaskMenuInstance()));
             createSubMenu(program, address, categoryList, LOCALIZER.msg("actor", "Actor"), listActors, WebAddress.PERSON_SEARCH);
             createSubMenu(program, address, categoryList, LOCALIZER.msg("director","Director"), listDirectors, WebAddress.PERSON_SEARCH);
             createSubMenu(program, address, categoryList, LOCALIZER.msg("script","Script"), listScripts, WebAddress.PERSON_SEARCH);
@@ -342,18 +365,24 @@ public class WebPlugin extends Plugin {
               categoryList.remove(1);
             }
 
-            final ActionMenu searchMenu = new ActionMenu(actionName, address.getIcon(), categoryList.toArray());
+            final ActionMenu searchMenu = MenuCompat.createActionMenu(MenuCompat.ID_ACTION_NONE, actionName, address.getIcon(), categoryList.toArray(new ActionMenu[0]));
             actionList.add(searchMenu);
           }
           else if (address.getName().equals(programPage) && address.getUrl().contains("\n")) {
             final String[] urls = address.getUrl().split("\n+");
             
-            final AbstractAction[] subActions = new AbstractAction[urls.length];
+            final ActionMenu[] subActions = new ActionMenu[urls.length];
             
             for(int j = 0; j < urls.length; j++) {
-              final WebAddress link = new WebAddress(urls[j], urls[j], null, false, true);
+              final WebAddress link = new WebAddress(urls[j], urls[j], null, false, true, j == 0 ? mAddresses.get(i).getMenuId() : MenuCompat.ID_ACTION_NONE);
               
               subActions[j] = createSearchAction(program, link, link.getName());
+              
+              if(isExampleProgram) {
+                Action a = subActions[j].getAction();
+                a.putValue(Action.NAME, LOCALIZER.msg("SearchOn", "Search on ") + " " + mAddresses.get(i).getName());
+                a.putValue(Action.SMALL_ICON, address.getIcon());
+              }
             }
             
             final ActionMenu searchMenu = new ActionMenu(actionName, address.getIcon(), subActions);
@@ -361,10 +390,15 @@ public class WebPlugin extends Plugin {
           }
           // create only a single menu item for this search
           else {
-            final WebAddress adrTitle = new WebAddress(address.getName(), address.getUrl(WebAddress.MOVIE_SEARCH).replace(WEBSEARCH_ALL, "\"" + program.getTitle() + "\""), null, false, true);
-            final AbstractAction action = createSearchAction(program, adrTitle,
+            final WebAddress adrTitle = new WebAddress(address.getName(), address.getUrl(WebAddress.MOVIE_SEARCH).replace(WEBSEARCH_ALL, "\"" + program.getTitle() + "\""), null, address.isUserEntry(), true, mAddresses.get(i).getMenuId());
+            final ActionMenu action = createSearchAction(program, adrTitle,
                 actionName);
-            action.putValue(Action.SMALL_ICON, address.getIcon());
+            action.getAction().putValue(Action.SMALL_ICON, address.getIcon());
+            
+            if(isExampleProgram && adrTitle.isUserEntry()) {
+              action.getAction().putValue(Action.NAME, LOCALIZER.msg("SearchOn", "Search on ") + " " + mAddresses.get(i).getName());
+            }
+            
             actionList.add(action);
           }
         }
@@ -397,14 +431,14 @@ public class WebPlugin extends Plugin {
 	}
 
   private void createSubMenu(final Program program, final WebAddress address,
-      final ArrayList<Object> categoryList, final String label,
+      final ArrayList<ActionMenu> categoryList, final String label,
       final ArrayList<String> subItems, final int searchType) {
     if (subItems.size() > 0) {
-      AbstractAction[] subActions = new AbstractAction[subItems.size()];
+      ActionMenu[] subActions = new ActionMenu[subItems.size()];
       for (int index = 0; index < subActions.length; index++) {
-        final WebAddress modifiedAddress = new WebAddress(address.getName(), address.getUrl(searchType).replace(WEBSEARCH_ALL, "\"" + subItems.get(index) + "\""), null, false, true);
+        final WebAddress modifiedAddress = new WebAddress(address.getName(), address.getUrl(searchType).replace(WEBSEARCH_ALL, "\"" + subItems.get(index) + "\""), null, false, true, program.equals(getPluginManager().getExampleProgram()) ? MenuCompat.ID_ACTION_NONE : address.getMenuId());
         subActions[index] = createSearchAction(program, modifiedAddress, subItems.get(index));
-        subActions[index].putValue(Plugin.DISABLED_ON_TASK_MENU, true);
+        subActions[index].getAction().putValue(Plugin.DISABLED_ON_TASK_MENU, true);
       }
       if (subItems.size() > 1) {
         final ContextMenuAction menuAction = new ContextMenuAction(label);
@@ -413,13 +447,13 @@ public class WebPlugin extends Plugin {
         categoryList.add(menu);
       }
       else {
-        subActions[0].putValue(Action.NAME, subActions[0].getValue(Action.NAME) + " (" + label +")");
+        subActions[0].getAction().putValue(Action.NAME, subActions[0].getAction().getValue(Action.NAME) + " (" + label +")");
         categoryList.add(subActions[0]);
       }
     }
   }
 
-  private AbstractAction createSearchAction(final Program program,
+  private ActionMenu createSearchAction(final Program program,
       final WebAddress address, final String actionName) {
     final WebAddress adr = address;
     final AbstractAction action = new AbstractAction() {
@@ -429,7 +463,8 @@ public class WebPlugin extends Plugin {
       }
     };
     action.putValue(Action.NAME, actionName);
-    return action;
+    
+    return MenuCompat.createActionMenu(address.getMenuId(), action);
   }
 
   private void findSearchItems(final Program program) {
@@ -545,7 +580,7 @@ public class WebPlugin extends Plugin {
 
   protected void openUrl(final Program program, WebAddress address, final String search) {
     if(address.getUrl().contains(WEBSEARCH_ALL)) {
-      address = new WebAddress(address.getName(), address.getUrl(WebAddress.MOVIE_SEARCH).replace(WEBSEARCH_ALL, "\"" + program.getTitle() + "\""), null, false, true);
+      address = new WebAddress(address.getName(), address.getUrl(WebAddress.MOVIE_SEARCH).replace(WEBSEARCH_ALL, "\"" + program.getTitle() + "\""), null, false, true, MenuCompat.ID_ACTION_NONE);
     }
     
     openUrl(program, address);
@@ -561,7 +596,7 @@ public class WebPlugin extends Plugin {
       final ParamParser parser = new ParamParser();
       
       final String result = parser.analyse(address.getUrl(), program);
-      System.out.println(result);
+      
       if (parser.hasErrors()) {
         final String errorString = parser.getErrorString();
         LOGGER.warning("URL parse error " + errorString+ " in " + address.getUrl());
@@ -610,5 +645,22 @@ public class WebPlugin extends Plugin {
   
   public String getPluginCategory() {
     return PluginCompat.CATEGORY_REMOTE_CONTROL_SOFTWARE;
+  }
+  
+  int getNextMenuId() {
+    return mLastKnownId++;
+  }
+  
+  int getMenuIdForDefault(final String name) {
+    int result = MenuCompat.ID_ACTION_NONE;
+    
+    for(WebAddress a : DEFAULT_ADRESSES) {
+      if(name.equals(a.getName())) {
+        result = a.getMenuId();
+        break;
+      }
+    }
+    
+    return result;
   }
 }

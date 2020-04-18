@@ -34,8 +34,8 @@ import javax.swing.Icon;
 import javax.swing.ImageIcon;
 
 import compat.StringUtils;
-import util.ui.ImageUtilities;
 import devplugin.Plugin;
+import util.ui.ImageUtilities;
 
 /**
  * a web address
@@ -72,6 +72,8 @@ public final class WebAddress implements Cloneable {
   public static final int MOVIE_SEARCH   = 2;
   public static final int PERSON_SEARCH  = 3;
 
+  private int mMenuId;
+  
   /**
    * Create the Address
    *
@@ -86,15 +88,16 @@ public final class WebAddress implements Cloneable {
    * @param active
    *          Is this Entry active?
    */
-  public WebAddress(String name, String url, String iconFile, boolean userEntry, boolean active) {
+  public WebAddress(String name, String url, String iconFile, boolean userEntry, boolean active, int menuId) {
     mName = name;
     mIconFileName = iconFile;
     mUrl = url;
     mUserEntry = userEntry;
     mActive = active;
+    mMenuId = menuId;
   }
   
-  public WebAddress(String name, String url, String movieSearchUrl, String personSearchUrl, String iconFile, boolean userEntry, boolean active) {
+  public WebAddress(String name, String url, String movieSearchUrl, String personSearchUrl, String iconFile, boolean userEntry, boolean active, int menuId) {
     mName = name;
     mIconFileName = iconFile;
     mUrl = url;
@@ -102,6 +105,7 @@ public final class WebAddress implements Cloneable {
     mPersonSearchUrl = personSearchUrl;
     mUserEntry = userEntry;
     mActive = active;
+    mMenuId = menuId;
   }
 
   /**
@@ -109,7 +113,7 @@ public final class WebAddress implements Cloneable {
    *
    * @param address Copy Settings from this WebAddress
    */
-  public WebAddress(WebAddress address) {
+  public WebAddress(WebAddress address, int menuId) {
     mName = address.getName();
     mIconFileName = address.getIconFile();
     mUrl = address.getUrl();
@@ -117,6 +121,15 @@ public final class WebAddress implements Cloneable {
     mPersonSearchUrl = address.getUrl(PERSON_SEARCH);
     mUserEntry = address.isUserEntry();
     mActive = address.isActive();
+    mMenuId = menuId;
+  }
+  
+  public int getMenuId() {
+    return mMenuId;
+  }
+  
+  public void setMenuId(int menuId) {
+    mMenuId = menuId;
   }
 
   /**
@@ -181,24 +194,30 @@ public final class WebAddress implements Cloneable {
       return mIcon;
     }
 
+    if(mIconFileName != null) {
+      try {
+        StringBuilder filePath = new StringBuilder(Plugin.getPluginManager()
+            .getTvBrowserSettings().getTvBrowserUserHome());
+        filePath.append(File.separator).append("WebFavIcons").append(File.separator).append(mIconFileName);
+  
+        final File icon = new File(filePath.toString());
+        
+        if(icon.isFile()) {
+          mIcon = new ImageIcon(ImageUtilities.createImageAsynchronous(icon.getAbsolutePath()));
+          if ((mIcon != null) && (mIcon.getIconWidth() > 0)) {
+            return mIcon;
+          }
+        }
+      } catch (Exception e) {
+      }
+    }
+    
     if (DEFAULT_ICON == null) {
       DEFAULT_ICON = WebPlugin.getInstance().createImageIcon("actions", "web-search", 16);
     }
 
     if (StringUtils.isEmpty(mIconFileName)) { return DEFAULT_ICON; }
-
-    try {
-      StringBuilder filePath = new StringBuilder(Plugin.getPluginManager()
-          .getTvBrowserSettings().getTvBrowserUserHome());
-      filePath.append(File.separator).append("WebFavIcons").append(File.separator).append(mIconFileName);
-
-      mIcon = new ImageIcon(ImageUtilities.createImageAsynchronous(filePath.toString()));
-      if ((mIcon != null) && (mIcon.getIconWidth() > 0)) {
-        return mIcon;
-      }
-    } catch (Exception e) {
-    }
-
+    
     mIcon = null;
     return DEFAULT_ICON;
   }
@@ -229,7 +248,7 @@ public final class WebAddress implements Cloneable {
   }
 
   public Object clone() {
-    return new WebAddress(this);
+    return new WebAddress(this,mMenuId);
   }
 
   public void readData(ObjectInputStream in) throws IOException, ClassNotFoundException {
@@ -256,15 +275,26 @@ public final class WebAddress implements Cloneable {
     }
     mUserEntry = in.readBoolean();
     mActive = in.readBoolean();
+    
+    if(version >= 4) {
+      mMenuId = in.readInt();
+    }
+    else if(mUserEntry) {
+      mMenuId = WebPlugin.getInstance().getNextMenuId();
+    }
+    else {
+      mMenuId = WebPlugin.getInstance().getMenuIdForDefault(mName);
+    }
   }
 
   public void writeData(ObjectOutputStream out) throws IOException {
-    out.writeInt(3);
+    out.writeInt(4);
 
     out.writeObject(mName);
     out.writeObject(mIconFileName);
     out.writeObject(mUrl);
     out.writeBoolean(mUserEntry);
     out.writeBoolean(mActive);
+    out.writeInt(mMenuId);
   }
 }
