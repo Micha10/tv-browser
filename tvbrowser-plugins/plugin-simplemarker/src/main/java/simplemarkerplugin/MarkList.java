@@ -412,7 +412,11 @@ public class MarkList extends Vector<Program> {
       result = addElementInternal(p);
       
       if(result) {
-        p.mark(SimpleMarkerPlugin.getInstance());
+        try {
+          p.mark(SimpleMarkerPlugin.getInstance());
+        }catch(Exception e) {
+          // ignore for now
+        }
         p.validateMarking();
       }
     }
