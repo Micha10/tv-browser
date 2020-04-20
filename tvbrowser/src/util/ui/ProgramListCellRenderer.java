@@ -81,12 +81,16 @@ public class ProgramListCellRenderer extends DefaultListCellRenderer {
           AbstractListModel<?> model = (AbstractListModel<?>) mList.getModel();
           ListDataListener[] listeners = model.getListDataListeners();
           int itemIndex = -1;
-          for (int i = 0; i < model.getSize(); i++) {
-            if (model.getElementAt(i) == program) {
-              itemIndex = i;
-              break;
+          
+          synchronized (model) {
+            for (int i = 0; i < model.getSize(); i++) {
+              if (model.getSize() < i && model.getElementAt(i) == program) {
+                itemIndex = i;
+                break;
+              }
             }
           }
+          
           if (itemIndex >= 0) {
             for (ListDataListener listener : listeners) {
               listener.contentsChanged(new ListDataEvent(program, ListDataEvent.CONTENTS_CHANGED, itemIndex, itemIndex));
