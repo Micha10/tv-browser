@@ -49,18 +49,19 @@ public class GolemUpdater {
 
   private boolean updateRunning = false;
 
-  private HashMap<String, String> channelMap;
+  private final HashMap<String, String> channelMap;
 
+  @SuppressWarnings("SpellCheckingInspection")
   private GolemUpdater() {
     instance = this;
-    channelMap = new HashMap<String, String>();
+    channelMap = new HashMap<>();
     channelMap.put("RTL II", "RTL2");
     channelMap.put("RTL 2", "RTL2");
     channelMap.put("Dradio Kultur", "Deutschlandradio Kultur");
     channelMap.put("DLF", "Deutschlandfunk");
     channelMap.put("Pro7", "ProSieben");
     channelMap.put("RBB", "RBB Berlin");
-    channelMap.put("Eins Festival", "einsfestival");
+    //channelMap.put("Eins Festival", "einsfestival");
     channelMap.put("SuperRTL", "Super RTL");
     channelMap.put("Tele5", "Tele 5");
     channelMap.put("NDR", "NDR Niedersachsen");
@@ -113,7 +114,7 @@ public class GolemUpdater {
 
           if (ch != null) {
             Iterator<Program> iterator = GolemPlugin.getPluginManager().getChannelDayProgram(date, ch);
-            ArrayList<Program> programs = new ArrayList<Program>();
+            ArrayList<Program> programs = new ArrayList<>();
             if (null != iterator) {
               boolean found = false;
               while (iterator.hasNext() && !found) {
@@ -125,14 +126,10 @@ public class GolemUpdater {
                 }
               }
               if (!found) {
-                Collections.sort(programs, new Comparator<Program>() {
-
-                  @Override
-                  public int compare(Program first, Program second) {
-                    int firstDelta = Math.abs(first.getStartTime() - startTime);
-                    int secondDelta = Math.abs(second.getStartTime() - startTime);
-                    return firstDelta - secondDelta;
-                  }
+                Collections.sort(programs, (Comparator<Program>) (first, second) -> {
+                  int firstDelta = Math.abs(first.getStartTime() - startTime);
+                  int secondDelta = Math.abs(second.getStartTime() - startTime);
+                  return firstDelta - secondDelta;
                 });
                 for (Program program : programs) {
                   if (program.getTitle().equalsIgnoreCase(summary)) {

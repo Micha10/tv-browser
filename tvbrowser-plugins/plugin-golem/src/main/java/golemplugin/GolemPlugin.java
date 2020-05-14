@@ -72,7 +72,7 @@ public class GolemPlugin extends devplugin.Plugin {
         GolemPlugin.class,
         mLocalizer.msg("name", "Golem.de watches"),
         mLocalizer.msg("desc",
-            "Golem.de watches marks shows that are highlighted by Golem.de"),
+            "Golem.de watches marks programs that are recommended by Golem.de. Discontinued since 7 October 2012."),
         "Bodo Tasche", "GPL");
   }
 
@@ -154,13 +154,9 @@ public class GolemPlugin extends devplugin.Plugin {
     if (rootNode == null) {
       rootNode = new PluginTreeNode(false, this);
 
-      final AtomicReference<ActionMenu> update = new AtomicReference<ActionMenu>(new ActionMenu(new AbstractAction(mLocalizer.msg("update", "Update now")) {
+      final AtomicReference<ActionMenu> update = new AtomicReference<>(new ActionMenu(new AbstractAction(mLocalizer.msg("update", "Update now")) {
         public void actionPerformed(final ActionEvent e) {
-          SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-              GolemUpdater.getInstance().update();
-            }
-          });
+          SwingUtilities.invokeLater(() -> GolemUpdater.getInstance().update());
         }
       }));
       rootNode.addActionMenu(update.get());

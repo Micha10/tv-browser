@@ -30,8 +30,6 @@ import devplugin.ProgramReceiveIf;
 import devplugin.ProgramReceiveTarget;
 import devplugin.SettingsTab;
 import java.awt.Window;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import javax.swing.Icon;
 import javax.swing.JButton;
@@ -39,8 +37,7 @@ import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
+
 import tvbrowser.ui.mainframe.MainFrame;
 import util.ui.DefaultMarkingPrioritySelectionPanel;
 import util.ui.Localizer;
@@ -67,13 +64,9 @@ public class GolemSettingsTab implements SettingsTab {
     layout.appendRow(RowSpec.decode("pref"));
     layout.appendRow(RowSpec.decode("3dlu"));
 
-    markPrograms = new JCheckBox(mLocalizer.msg("markItems", "Mark programs that are mentioned by Golem.de"));
+    markPrograms = new JCheckBox(mLocalizer.msg("markItems", "Mark programs that are recommended by Golem.de"));
     markPrograms.setSelected(GolemPlugin.getInstance().getSettings().isMarkEnabled());
-    markPrograms.addChangeListener(new ChangeListener() {
-      public void stateChanged(ChangeEvent e) {
-        markPriority.setEnabled(markPrograms.isSelected());
-      }
-    });
+    markPrograms.addChangeListener(e -> markPriority.setEnabled(markPrograms.isSelected()));
     panel.add(markPrograms, cc.xyw(2, line, 4));
 
     line += 2;
@@ -92,23 +85,21 @@ public class GolemSettingsTab implements SettingsTab {
     clientPluginTargets = GolemPlugin.getInstance().getSettings().getReceiveTargets();
 
     final JButton choose = new JButton(mLocalizer.msg("selectPlugins", "Choose Plugins"));
-    choose.addActionListener(new ActionListener() {
-      public void actionPerformed(final ActionEvent e) {
-        try {
-          final Window w = UiUtilities.getLastModalChildOf(MainFrame.getInstance());
-          PluginChooserDlg chooser = null;
-          chooser = new PluginChooserDlg(w, clientPluginTargets, null, GolemPlugin.getInstance());
-          chooser.setVisible(true);
+    choose.addActionListener(e -> {
+      try {
+        final Window w = UiUtilities.getLastModalChildOf(MainFrame.getInstance());
+        PluginChooserDlg chooser;
+        chooser = new PluginChooserDlg(w, clientPluginTargets, null, GolemPlugin.getInstance());
+        chooser.setVisible(true);
 
-          if (chooser.getReceiveTargets() != null) {
-            clientPluginTargets = chooser.getReceiveTargets();
-          }
+        if (chooser.getReceiveTargets() != null) {
+          clientPluginTargets = chooser.getReceiveTargets();
+        }
 
-          handlePluginSelection();
-        }
-        catch (Exception ee) {
-          ee.printStackTrace();
-        }
+        handlePluginSelection();
+      }
+      catch (Exception ee) {
+        ee.printStackTrace();
       }
     });
 
@@ -125,15 +116,7 @@ public class GolemSettingsTab implements SettingsTab {
     line += 2;
 
     JButton button = new JButton(mLocalizer.msg("update", "Update now"));
-    button.addActionListener(new ActionListener() {
-      public void actionPerformed(ActionEvent e) {
-        SwingUtilities.invokeLater(new Runnable() {
-          public void run() {
-            GolemUpdater.getInstance().update();
-          }
-        });
-      }
-    });
+    button.addActionListener(e -> SwingUtilities.invokeLater(() -> GolemUpdater.getInstance().update()));
 
     panel.add(button, cc.xy(2, line));
 
@@ -141,7 +124,7 @@ public class GolemSettingsTab implements SettingsTab {
   }
 
   private void handlePluginSelection() {
-    final ArrayList<ProgramReceiveIf> plugins = new ArrayList<ProgramReceiveIf>();
+    final ArrayList<ProgramReceiveIf> plugins = new ArrayList<>();
 
     if (clientPluginTargets != null) {
       for (ProgramReceiveTarget target : clientPluginTargets) {
@@ -151,13 +134,13 @@ public class GolemSettingsTab implements SettingsTab {
       }
 
       final ProgramReceiveIf[] mClientPlugins = plugins
-          .toArray(new ProgramReceiveIf[plugins.size()]);
+          .toArray(new ProgramReceiveIf[0]);
 
       if (mClientPlugins.length > 0) {
         pluginLabel.setText(mClientPlugins[0].toString());
         pluginLabel.setEnabled(true);
       } else {
-        pluginLabel.setText(mLocalizer.msg("noPlugins", "No Plugins choosen"));
+        pluginLabel.setText(mLocalizer.msg("noPlugins", "No Plugins chosen"));
         pluginLabel.setEnabled(false);
       }
 

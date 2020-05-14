@@ -24,8 +24,6 @@
 package golemplugin;
 
 import java.awt.Window;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.Collection;
 
 import javax.swing.JButton;
@@ -79,7 +77,7 @@ public class GolemDialog extends JDialog implements WindowClosingIf {
 
     final Collection<Program> plist = GolemPlugin.getInstance().getSettings().getProgramList();
 
-    ProgramList list = new ProgramList(plist.toArray(new Program[plist.size()]));
+    ProgramList list = new ProgramList(plist.toArray(new Program[0]));
     list.addMouseListeners(GolemPlugin.getInstance());
 
     int line = 1;
@@ -91,21 +89,15 @@ public class GolemDialog extends JDialog implements WindowClosingIf {
 
     JButton sendBtn = new JButton(TVBrowserIcons.copy(TVBrowserIcons.SIZE_SMALL));
     sendBtn.setToolTipText(mLocalizer.msg("send", "Send to other Plugins"));
-    sendBtn.addActionListener(new ActionListener() {
-      public void actionPerformed(ActionEvent e) {
-        if (plist.size() > 0) {
-          SendToPluginDialog sendDialog = new SendToPluginDialog(GolemPlugin.getInstance(), (Window)GolemDialog.this, plist.toArray(new Program[plist.size()]));
-          sendDialog.setVisible(true);
-        }
+    sendBtn.addActionListener(e -> {
+      if (plist.size() > 0) {
+        SendToPluginDialog sendDialog = new SendToPluginDialog(GolemPlugin.getInstance(), (Window)GolemDialog.this, plist.toArray(new Program[0]));
+        sendDialog.setVisible(true);
       }
     });
 
     JButton ok = new JButton(Localizer.getLocalization(Localizer.I18N_OK));
-    ok.addActionListener(new ActionListener(){
-      public void actionPerformed(ActionEvent e) {
-        close();
-      }
-    });
+    ok.addActionListener(e -> close());
     getRootPane().setDefaultButton(ok);
 
     builderButton.addFixed(sendBtn);
