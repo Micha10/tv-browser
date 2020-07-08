@@ -94,7 +94,7 @@ import util.ui.WindowClosingIf;
  * @author René Mach
  */
 public class SimpleMarkerPlugin extends Plugin {
-  private static final Version mVersion = new Version(3,28,2,true);
+  private static final Version mVersion = new Version(3,28,3,true);
 
   /** The localizer for this class. */
   private static final util.ui.Localizer mLocalizer = util.ui.Localizer.getLocalizerFor(SimpleMarkerPlugin.class);
@@ -300,12 +300,20 @@ public class SimpleMarkerPlugin extends Plugin {
   public boolean canReceiveProgramsWithTarget() {
     return true;
   }
+  
+  public int getSupportedProgramRecieveType() {
+    return 1;
+  }
 
   public ProgramReceiveTarget[] getProgramReceiveTargets() {
     return mMarkListVector.getReceiveTargets();
   }
-
+  
   public boolean receivePrograms(Program[] programs, ProgramReceiveTarget target) {
+    return receivePrograms(0, programs, target);
+  }
+  
+  public boolean receivePrograms(int type, Program[] programs, ProgramReceiveTarget target) {
     MarkList targetList = mMarkListVector.getMarkListForTarget(target);
 
     if(targetList == null) {
@@ -315,7 +323,16 @@ public class SimpleMarkerPlugin extends Plugin {
     boolean added = false;
     
     for (Program p : programs) {
-      added = targetList.addProgram(p) || added;
+      if(type == 0 || type == 1) {
+        added = targetList.addProgram(p) || added;
+      }
+      else if(type == 2) {
+        if(targetList.contains(p)) {
+          p.unmark(this);
+          targetList.remove(p);
+          added = true;
+        }
+      }
     }
     
     if(added) {

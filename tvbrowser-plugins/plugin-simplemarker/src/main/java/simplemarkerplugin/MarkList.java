@@ -400,7 +400,7 @@ public class MarkList extends Vector<Program> {
    * @param p The program to add.
    */
   boolean addProgram(Program p) {
-	boolean result = false;
+    boolean result = false;
 	
     if(p != null) {
       if (mReceiveTargets != null) {
@@ -536,11 +536,11 @@ public class MarkList extends Vector<Program> {
             root.add(programRoot);
             root.add(dateRoot);
           }
-  
-          if (update) {
-            root.update();
-          }
         }
+      }
+      
+      if (update) {
+        root.update();
       }
     }
   }
@@ -594,6 +594,7 @@ public class MarkList extends Vector<Program> {
     mProgram.clear();
     for (int i = 0; i < size(); i++) {
       Program p = elementAt(i);
+      
       if (p == null) {
         continue;
       }
@@ -709,7 +710,6 @@ public class MarkList extends Vector<Program> {
 	
     if(p != null) {
       if (isEmpty()) {
-        result = true;
         super.addElement(p);
         result = true;
       } else {
