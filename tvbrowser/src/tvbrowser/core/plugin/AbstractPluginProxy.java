@@ -38,6 +38,7 @@ import devplugin.Channel;
 import devplugin.ChannelDayProgram;
 import devplugin.ContextMenuIf;
 import devplugin.ImportanceValue;
+import devplugin.Plugin;
 import devplugin.PluginCommunication;
 import devplugin.PluginInfo;
 import devplugin.PluginManager;
@@ -734,7 +735,31 @@ public abstract class AbstractPluginProxy implements PluginProxy, ContextMenuIf 
       return false;
     }
   }
+  
+  /**
+   * Gets the type of the receive action supported by this plugin.
+   * 
+   * @return The type of the supported program receive actions.
+   * @since 4.2.2
+   */
+  public final int getSupportedProgramRecieveType() {
+    try {
+      return doGetSupportedProgramRecieveType();
+    }catch (Throwable t) {
+      handlePluginException(t);
+      return Plugin.TYPE_PROGRAM_RECEIVE_NONE;
+    }
+  }
 
+  /**
+   * Really gets the type of the supported program receive actions.
+   *
+   * @return The type of the supported program receive actions.
+   * @see #receivePrograms(int,Program[],ProgramReceiveTarget)
+   * @since 4.2.2
+   */
+  protected abstract int doGetSupportedProgramRecieveType();
+  
   /**
    * Really gets whether the plugin supports receiving programs from other
    * plugins with target.
@@ -750,13 +775,13 @@ public abstract class AbstractPluginProxy implements PluginProxy, ContextMenuIf 
    *
    * @param programArr The programs passed from the other plugin.
    * @param receiveTarget The target of the programs.
-   * @see #canReceiveProgramsWithTarget()
-   * @since 2.5
+   * @see #getSupportedProgramRecieveType()
+   * @since 4.2.2
    */
-  public final boolean receivePrograms(Program[] programArr, ProgramReceiveTarget receiveTarget) {
+  public final boolean receivePrograms(int type, Program[] programArr, ProgramReceiveTarget receiveTarget) {
     try {
       assertActivatedState();
-      return doReceivePrograms(programArr,receiveTarget);
+      return doReceivePrograms(type,programArr,receiveTarget);
     } catch (Throwable exc) {
       handlePluginException(exc);
     }
@@ -766,30 +791,32 @@ public abstract class AbstractPluginProxy implements PluginProxy, ContextMenuIf 
 
   /**
    * Really receives a list of programs from another plugin with target.
-   *
+   * 
+   * @param type The type set by the sending plugin.
    * @param programArr The programs passed from the other plugin with target.
    * @param receiveTarget The target of the programs.
    * @see #canReceiveProgramsWithTarget()
    * @return <code>true</code> If the received programs were successfully processed.
-   * @since 2.5
+   * @since 4.2.2
    */
-  protected abstract boolean doReceivePrograms(Program[] programArr, ProgramReceiveTarget receiveTarget);
+  protected abstract boolean doReceivePrograms(int type, Program[] programArr, ProgramReceiveTarget receiveTarget);
 
   /**
    * Receives a list of Strings from another plugin with a target.
    *
+   * @param type The type set by the sending plugin.
    * @param values The value array passed from the other plugin.
    * @param receiveTarget The receive target of the programs.
    * @return <code>true</code> if the value array was handled correct,
    * <code>false</code> otherwise.
    *
-   * @see #canReceiveProgramsWithTarget()
-   * @since 2.7
+   * @see #getSupportedProgramRecieveType()
+   * @since 4.2.2
    */
-  public final boolean receiveValues(String[] values, ProgramReceiveTarget receiveTarget) {
+  public final boolean receiveValues(int type, String[] values, ProgramReceiveTarget receiveTarget) {
     try {
       assertActivatedState();
-      return doReceiveValues(values,receiveTarget);
+      return doReceiveValues(type,values,receiveTarget);
     } catch (Throwable exc) {
       handlePluginException(exc);
     }
@@ -800,15 +827,16 @@ public abstract class AbstractPluginProxy implements PluginProxy, ContextMenuIf 
   /**
    * Really receives a list of Strings from another plugin with a target.
    *
+   * @param type The type set by the sending plugin.
    * @param values The value array passed from the other plugin.
    * @param receiveTarget The receive target of the programs.
    * @return <code>true</code> if the value array was handled correct,
    * <code>false</code> otherwise.
    *
-   * @see #canReceiveProgramsWithTarget()
-   * @since 2.7
+   * @see #getSupportedProgramRecieveType()
+   * @since 4.2.2
    */
-  protected abstract boolean doReceiveValues(String[] values, ProgramReceiveTarget receiveTarget);
+  protected abstract boolean doReceiveValues(int type, String[] values, ProgramReceiveTarget receiveTarget);
 
   /**
    * Returns an array of receive target or <code>null</code> if there is no target

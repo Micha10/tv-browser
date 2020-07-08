@@ -159,7 +159,7 @@ public abstract class AbstractContextMenu implements ContextMenu {
     for (InternalPluginProxyIf internalProxy : InternalPluginProxyList.getInstance().getAvailableProxys()) {
       if (internalProxy instanceof ProgramReceiveIf) {
         final ProgramReceiveIf receiveProxy = (ProgramReceiveIf) internalProxy;
-        if(receiveProxy.canReceiveProgramsWithTarget() && o != internalProxy) {
+        if(receiveProxy.getSupportedProgramRecieveType() != Plugin.TYPE_PROGRAM_RECEIVE_NONE && o != internalProxy) {
           final ProgramReceiveTarget target = receiveProxy.getProgramReceiveTargets()[0];
           JMenuItem item = new JMenuItem(target.getTargetName());
           item.setFont(MenuUtil.CONTEXT_MENU_PLAINFONT);
@@ -168,7 +168,13 @@ public abstract class AbstractContextMenu implements ContextMenu {
           item.addActionListener(e -> {
             Program[] programs = collectProgramsFromNode(node);
             if ((programs != null) &&(programs.length > 0)) {
-              receiveProxy.receivePrograms(programs, target);
+              int type = ProgramReceiveIf.TYPE_SENDING_UNDIFINED;
+              
+              if(receiveProxy.getSupportedProgramRecieveType() == Plugin.TYPE_PROGRAM_RECEIVE_ADD_REMOVE) {
+                type = ProgramReceiveIf.getTypeForSendingAction(null);
+              }
+              
+              target.receivePrograms(type, programs);
             }
           });
         }
@@ -177,26 +183,12 @@ public abstract class AbstractContextMenu implements ContextMenu {
 
     PluginProxy[] plugins = PluginProxyManager.getInstance().getActivatedPlugins();
     for (final PluginProxy plugin : plugins) {
-     if ((plugin.canReceiveProgramsWithTarget())
+     if ((plugin.getSupportedProgramRecieveType() != Plugin.TYPE_PROGRAM_RECEIVE_NONE)
           && plugin.getProgramReceiveTargets() != null
           && plugin.getProgramReceiveTargets().length > 0) {
         if ((currentPlugin == null) || (!currentPlugin.getId().equals(plugin.getId()))) {
           ProgramReceiveTarget[] targets = plugin.getProgramReceiveTargets();
-          if (!plugin.canReceiveProgramsWithTarget()) {
-            JMenuItem item = new JMenuItem(plugin.getInfo().getName());
-            item.setFont(MenuUtil.CONTEXT_MENU_PLAINFONT);
-
-            Icon icon = plugin.getPluginIcon();
-
-            item.setIcon(icon != null ? icon : null);
-            menu.add(item);
-            item.addActionListener(e -> {
-              Program[] programs = collectProgramsFromNode(node);
-              if ((programs != null) && (programs.length > 0)) {
-                plugin.receivePrograms(programs, ProgramReceiveTarget.createDefaultTargetForProgramReceiveIfId(plugin.getId()));
-              }
-            });
-          } else if (targets.length == 1 && (!(o instanceof ProgramReceiveTarget) || !o.equals(targets[0]))) {
+          if (targets.length == 1 && (!(o instanceof ProgramReceiveTarget) || !o.equals(targets[0]))) {
             JMenuItem item = new JMenuItem(targets[0].toString());
             item.setFont(MenuUtil.CONTEXT_MENU_PLAINFONT);
 
@@ -210,7 +202,13 @@ public abstract class AbstractContextMenu implements ContextMenu {
             item.addActionListener(e -> {
               Program[] programs = collectProgramsFromNode(node);
               if ((programs != null) && (programs.length > 0)) {
-                plugin.receivePrograms(programs, target);
+                int type = ProgramReceiveIf.TYPE_SENDING_UNDIFINED;
+                
+                if(plugin.getSupportedProgramRecieveType() == Plugin.TYPE_PROGRAM_RECEIVE_ADD_REMOVE) {
+                  type = ProgramReceiveIf.getTypeForSendingAction(null);
+                }
+                
+                target.receivePrograms(type, programs);
               }
             });
           } else if (targets.length >= 1) {
@@ -231,7 +229,13 @@ public abstract class AbstractContextMenu implements ContextMenu {
                 item.addActionListener(e -> {
                   Program[] programs = collectProgramsFromNode(node);
                   if ((programs != null) && (programs.length > 0)) {
-                    plugin.receivePrograms(programs, target);
+                    int type = ProgramReceiveIf.TYPE_SENDING_UNDIFINED;
+                    
+                    if(plugin.getSupportedProgramRecieveType() == Plugin.TYPE_PROGRAM_RECEIVE_ADD_REMOVE) {
+                      type = ProgramReceiveIf.getTypeForSendingAction(null);
+                    }
+                    
+                    target.receivePrograms(type, programs);
                   }
                 });
               }

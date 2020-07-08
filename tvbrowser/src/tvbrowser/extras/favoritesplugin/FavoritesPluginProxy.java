@@ -179,14 +179,9 @@ public class FavoritesPluginProxy extends AbstractInternalPluginProxy implements
   private static FavoritesPlugin getFavoritesInstance() {
     return FavoritesPlugin.getInstance();
   }
-
+  
   @Override
-  public boolean canReceiveProgramsWithTarget() {
-    return true;
-  }
-
-  @Override
-  public boolean receivePrograms(Program[] programArr, ProgramReceiveTarget receiveTarget) {
+  public boolean receivePrograms(int type, Program[] programArr, ProgramReceiveTarget receiveTarget) {
     getFavoritesInstance().addTitleFavorites(programArr);
     return true;
   }
@@ -215,5 +210,10 @@ public class FavoritesPluginProxy extends AbstractInternalPluginProxy implements
   @Override
   public void handleTvBrowserStartFinished() {
     FavoritesPlugin.getInstance().handleTvBrowserStartFinished();
+  }
+
+  @Override
+  public int getSupportedProgramRecieveType() {
+    return Plugin.TYPE_PROGRAM_RECEIVE_DEFAULT;
   }
 }

@@ -151,8 +151,7 @@ public class ReminderTimerListener {
     }
 
     // send to receiving plugins
-    ProgramReceiveTarget[] targets = ReminderPlugin.getInstance()
-        .getClientPluginsTargets();
+    ProgramReceiveTarget[] targets = ReminderPlugin.getInstance().getClientPluginsTargets();
 
     ArrayList<Program> programs = new ArrayList<Program>();
     for (ReminderListItem reminder : reminders) {
@@ -160,11 +159,7 @@ public class ReminderTimerListener {
     }
 
     for (ProgramReceiveTarget target : targets) {
-      ProgramReceiveIf plugin = target.getReceifeIfForIdOfTarget();
-      if (plugin != null && plugin.canReceiveProgramsWithTarget()) {
-        plugin.receivePrograms(programs.toArray(new Program[programs.size()]),
-            target);
-      }
+      target.getReceifeIfForIdOfTarget().receivePrograms(ProgramReceiveIf.TYPE_SENDING_UNDIFINED, programs.toArray(new Program[programs.size()]),target);
     }
 
     SwingUtilities.invokeLater(() -> new Thread("Update reminder tree") {

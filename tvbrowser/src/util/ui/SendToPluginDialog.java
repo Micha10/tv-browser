@@ -10,15 +10,18 @@ import java.awt.event.ItemEvent;
 import java.util.Arrays;
 import java.util.Comparator;
 
+import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 
 import com.jgoodies.forms.builder.ButtonBarBuilder;
 import com.jgoodies.forms.builder.PanelBuilder;
 import com.jgoodies.forms.factories.Borders;
-import com.jgoodies.forms.layout.CellConstraints;
+import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.Sizes;
 
@@ -36,7 +39,7 @@ import tvbrowser.core.Settings;
 public class SendToPluginDialog extends JDialog implements WindowClosingIf {
 
   /** Translator */
-  private static final Localizer mLocalizer = Localizer.getLocalizerFor(SendToPluginDialog.class);
+  private static final Localizer LOCALIZER = Localizer.getLocalizerFor(SendToPluginDialog.class);
 
   /**
    * Programs to send
@@ -51,6 +54,11 @@ public class SendToPluginDialog extends JDialog implements WindowClosingIf {
 
   private ProgramReceiveIf mCaller;
   private ProgramReceiveTarget mCallerTarget;
+  
+  private JRadioButton mTypeAdd;
+  private JRadioButton mTypeRemove;
+  
+  private int mSendType;
 
   /**
    * Create the Dialog
@@ -84,6 +92,7 @@ public class SendToPluginDialog extends JDialog implements WindowClosingIf {
       ProgramReceiveTarget callerTarget, Window owner, Program[] prg) {
     super(owner);
     setModalityType(ModalityType.DOCUMENT_MODAL);
+    
     mPrograms = prg;
     mCaller = caller;
     mCallerTarget = callerTarget;
@@ -94,13 +103,37 @@ public class SendToPluginDialog extends JDialog implements WindowClosingIf {
    * Creates the Dialog
    */
   private void createDialog(Window parent) {
-    setTitle(mLocalizer.msg("title", "Send to other Plugin"));
-
-    CellConstraints cc = new CellConstraints();
-    PanelBuilder pb = new PanelBuilder(new FormLayout("5dlu,0dlu:grow,5dlu","pref,5dlu,pref,5dlu,pref,5dlu,pref,fill:10dlu:grow,pref"));
+    setTitle(LOCALIZER.msg("title", "Send to other Plugin"));
+    
+    PanelBuilder pb = new PanelBuilder(new FormLayout("5dlu,0dlu:grow,5dlu",
+        "default,5dlu,default,5dlu,default,5dlu,default,default,fill:10dlu:grow,default"));
     pb.border(Borders.DIALOG);
     
-    pb.addSeparator(mLocalizer.msg("sendTo", "Send {0} programs to", mPrograms.length), cc.xyw(1,1,3));
+    pb.addSeparator(LOCALIZER.msg("sendTo", "Send {0} programs to", mPrograms.length), CC.xyw(1,1,3));
+    
+    mSendType = ProgramReceiveIf.TYPE_SENDING_UNDIFINED;
+    mTypeAdd = new JRadioButton(LOCALIZER.msg("add", "Add"),true);
+    mTypeAdd.addItemListener(e -> {
+          if(e.getStateChange() == ItemEvent.SELECTED) {
+            mSendType = ProgramReceiveIf.TYPE_SENDING_ADDED;
+          }
+        });
+    mTypeRemove = new JRadioButton(LOCALIZER.msg("remove", "Remove"));
+    mTypeRemove.addItemListener(e -> {
+          if(e.getStateChange() == ItemEvent.SELECTED) {
+            mSendType = ProgramReceiveIf.TYPE_SENDING_REMOVED;
+          }
+        });
+    ButtonGroup bg = new ButtonGroup();
+    bg.add(mTypeAdd);
+    bg.add(mTypeRemove);
+    
+    PanelBuilder sending = new PanelBuilder(new FormLayout("5dlu,0dlu:grow,5dlu","5dlu,default,5dlu,default,default"));
+    sending.addSeparator(LOCALIZER.msg("type", "Type of sending"),CC.xyw(1, 2, 3));
+    sending.add(mTypeAdd, CC.xy(2, 4));
+    sending.add(mTypeRemove, CC.xy(2, 5));
+    
+    final JPanel sendingPanel = sending.getPanel();
     
     // get the installed plugins
     ProgramReceiveIf[] installedPluginArr = Plugin.getPluginManager().getReceiveIfs(mCaller,mCallerTarget);
@@ -108,24 +141,29 @@ public class SendToPluginDialog extends JDialog implements WindowClosingIf {
     Arrays.sort(installedPluginArr, new ObjectComparator());
     
     mPluginList = new JComboBox<>(installedPluginArr);
-    pb.add(mPluginList, cc.xy(2, 3));
+    pb.add(mPluginList, CC.xy(2, 3));
 
-    pb.addSeparator(mLocalizer.msg("target","Target:"), cc.xyw(1,5,3));
+    pb.addSeparator(LOCALIZER.msg("target","Target:"), CC.xyw(1,5,3));
     
-    mTargetList = new JComboBox<>(installedPluginArr[0]
-        .getProgramReceiveTargets());
-    pb.add(mTargetList, cc.xy(2, 7));
+    mTargetList = new JComboBox<>(installedPluginArr[0].getProgramReceiveTargets());
+    pb.add(mTargetList, CC.xy(2, 7));
+    pb.add(sendingPanel, CC.xyw(1, 8, 3));
     
-    mTargetList.setEnabled(installedPluginArr[0].canReceiveProgramsWithTarget()
+    sendingPanel.setVisible(installedPluginArr[0].getSupportedProgramRecieveType() == Plugin.TYPE_PROGRAM_RECEIVE_ADD_REMOVE);
+    
+    mTargetList.setEnabled(installedPluginArr[0].getSupportedProgramRecieveType() != Plugin.TYPE_PROGRAM_RECEIVE_NONE
         && mTargetList.getItemCount() > 1);
     
     mPluginList.addItemListener(e -> {
       if(e.getStateChange() == ItemEvent.SELECTED) {
+        mSendType = ProgramReceiveIf.TYPE_SENDING_UNDIFINED;
         ProgramReceiveTarget[] targets = ((ProgramReceiveIf)e.getItem()).getProgramReceiveTargets();
         
         mTargetList.removeAllItems();
         
-        if(((ProgramReceiveIf)e.getItem()).canReceiveProgramsWithTarget()) {
+        int supportedType = ((ProgramReceiveIf)e.getItem()).getSupportedProgramRecieveType();
+        
+        if(supportedType != Plugin.TYPE_PROGRAM_RECEIVE_NONE) {
           for(ProgramReceiveTarget target : targets) {
             if(!target.equals(mCallerTarget)) {
               mTargetList.addItem(target);
@@ -133,6 +171,12 @@ public class SendToPluginDialog extends JDialog implements WindowClosingIf {
           }
           
           mTargetList.setEnabled(targets.length > 1);
+          sendingPanel.setVisible(supportedType == Plugin.TYPE_PROGRAM_RECEIVE_ADD_REMOVE);
+          
+          if(sendingPanel.isVisible()) {
+            mTypeAdd.setSelected(true);
+            mSendType = ProgramReceiveIf.TYPE_SENDING_ADDED;
+          }
         }
         else if(targets != null && targets.length > 0) {
           mTargetList.addItem(targets[0]);
@@ -161,7 +205,7 @@ public class SendToPluginDialog extends JDialog implements WindowClosingIf {
       }
     }
     
-    JButton sendButton = new JButton(mLocalizer.msg("send", "Send"));
+    JButton sendButton = new JButton(LOCALIZER.msg("send", "Send"));
 
     sendButton.addActionListener(evt -> {
       send();
@@ -178,7 +222,7 @@ public class SendToPluginDialog extends JDialog implements WindowClosingIf {
     buttonBuilder.addGlue();
     buttonBuilder.addButton(new JButton[] {sendButton, cancelButton});
     
-    pb.add(buttonBuilder.getPanel(), cc.xyw(1,9,3));
+    pb.add(buttonBuilder.getPanel(), CC.xyw(1,10,3));
     
     setLayout(new BorderLayout());
     add(pb.getPanel(), BorderLayout.CENTER);
@@ -194,20 +238,19 @@ public class SendToPluginDialog extends JDialog implements WindowClosingIf {
    * Sends the Data to the selected Plugin
    */
   protected void send() {
-
     int result = JOptionPane.YES_OPTION;
     ProgramReceiveIf plug = (ProgramReceiveIf) mPluginList.getSelectedItem();
 
     if (mPrograms.length > 5) {
-      result = JOptionPane.showConfirmDialog(this, mLocalizer.msg("AskBeforeSend",
+      result = JOptionPane.showConfirmDialog(this, LOCALIZER.msg("AskBeforeSend",
           "Are you really sure to send {0} programs\nto \"{1}\"?",
           mPrograms.length, plug.toString()),
-          mLocalizer.msg("Attention", "Attention"), JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+          LOCALIZER.msg("Attention", "Attention"), JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
     }
 
     if (result == JOptionPane.YES_OPTION) {
       ProgramReceiveTarget target = (ProgramReceiveTarget)mTargetList.getSelectedItem();
-      plug.receivePrograms(mPrograms, target);
+      plug.receivePrograms(mSendType, mPrograms, target);
       Settings.propLastUsedReceivePlugin.setString(plug.getId());
       Settings.propLastUsedReceiveTarget.setString(target.getTargetId());
     }

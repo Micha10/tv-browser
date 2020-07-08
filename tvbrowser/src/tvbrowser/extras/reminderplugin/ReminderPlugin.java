@@ -1198,7 +1198,7 @@ public class ReminderPlugin {
     ArrayList<ProgramReceiveTarget> list = new ArrayList<ProgramReceiveTarget>();
     for (ProgramReceiveTarget target : mClientPluginTargets) {
       ProgramReceiveIf plugin = target.getReceifeIfForIdOfTarget();
-      if (plugin != null && plugin.canReceiveProgramsWithTarget()) {
+      if (plugin != null && plugin.getSupportedProgramRecieveType() != Plugin.TYPE_PROGRAM_RECEIVE_NONE) {
         list.add(target);
       }
     }

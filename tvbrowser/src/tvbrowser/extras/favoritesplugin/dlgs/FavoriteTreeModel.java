@@ -44,6 +44,17 @@ import javax.swing.tree.TreePath;
 
 import org.apache.commons.lang3.StringUtils;
 
+import devplugin.Channel;
+import devplugin.ContextMenuIf;
+import devplugin.Date;
+import devplugin.NodeFormatter;
+import devplugin.Plugin;
+import devplugin.PluginTreeNode;
+import devplugin.Program;
+import devplugin.ProgramFieldType;
+import devplugin.ProgramItem;
+import devplugin.ProgramReceiveIf;
+import devplugin.ProgramReceiveTarget;
 import tvbrowser.extras.common.ReminderConfiguration;
 import tvbrowser.extras.favoritesplugin.FavoritesPlugin;
 import tvbrowser.extras.favoritesplugin.FavoritesPluginProxy;
@@ -53,15 +64,6 @@ import tvbrowser.ui.mainframe.MainFrame;
 import util.ui.Localizer;
 import util.ui.TVBrowserIcons;
 import util.ui.UiUtilities;
-import devplugin.Channel;
-import devplugin.ContextMenuIf;
-import devplugin.Date;
-import devplugin.NodeFormatter;
-import devplugin.PluginTreeNode;
-import devplugin.Program;
-import devplugin.ProgramFieldType;
-import devplugin.ProgramItem;
-import devplugin.ProgramReceiveTarget;
 
 /**
  * The model for the favorite tree.
@@ -220,24 +222,119 @@ public class FavoriteTreeModel extends DefaultTreeModel {
   }
   
   /**
+   * @param deleted The deleted program
+   * @param targets The targets to find the to sending program for
+   * @return An map with a list of programs to send for each receive target
+   */
+  public HashMap<String,ArrayList<Program>> findProgramsToSendForRemove(Program[] deleted, ProgramReceiveTarget[] targets, Favorite caller) {
+    final HashMap<String,ArrayList<Program>> toSend = new HashMap<String,ArrayList<Program>>();
+    final HashMap<String,ArrayList<Favorite>> favoriteMap = new HashMap<String, ArrayList<Favorite>>();
+    
+    for(ProgramReceiveTarget target : targets) {
+      if(target.getReceifeIfForIdOfTarget().getSupportedProgramRecieveType() == Plugin.TYPE_PROGRAM_RECEIVE_ADD_REMOVE
+          && (target.getUsedSendingType() == ProgramReceiveIf.TYPE_SENDING_REMOVED || target.getUsedSendingType() == ProgramReceiveIf.TYPE_SENDING_ADDED + ProgramReceiveIf.TYPE_SENDING_REMOVED)) {
+        Favorite[] favs = getFavoritesContainingReceiveTarget(target);
+        
+        if(favs != null) {
+          final ArrayList<Favorite> list = new ArrayList<Favorite>();
+          for(Favorite f : favs) {
+            if(caller == null || !f.equals(caller)) {
+              list.add(f);
+            }
+          }
+          
+          if(!list.isEmpty()) {
+            favoriteMap.put(FavoritesPlugin.getKeyForReceiveTarget(target, false), list);
+          }
+        }
+      }
+    }
+    
+    for (Program program : deleted) {
+      if(caller == null || !isContainedByOtherFavorites(caller, program)) {
+        program.unmark(FavoritesPluginProxy.getInstance());
+      }
+      
+      for(ProgramReceiveTarget target : targets) {
+        final String key = FavoritesPlugin.getKeyForReceiveTarget(target, false);
+        
+        if(!favoriteMap.isEmpty()) {
+          final ArrayList<Favorite> favs = favoriteMap.get(key);
+          
+          if(favs != null) {
+            boolean found = false;
+            
+            for(Favorite f : favs) {
+              if(f.contains(program)) {
+                found = true;
+                break;
+              }
+            }
+            
+            if(!found) {
+              addProgramToMap(toSend,key,program);
+            }
+          }
+          else {
+            addProgramToMap(toSend,key,program);
+          }
+        }
+        else {
+          addProgramToMap(toSend,key,program);
+        }
+      }
+    }
+    
+    return toSend;
+  }
+  
+  private static void addProgramToMap(final HashMap<String,ArrayList<Program>> toSend, final String key, final Program program) {
+    ArrayList<Program> programsList = toSend.get(key);
+    
+    if(programsList == null) {
+      programsList = new ArrayList<Program>();
+      toSend.put(key, programsList);
+    }
+    
+    programsList.add(program);
+  }
+  
+  /**
    * Deletes a favorite.
    *
    * @param favorite The favorite to delete.
    * @param updateRootNode If the root node should be updated.
    */
   public void deleteFavorite(Favorite favorite, boolean updateRootNode) {
+    deleteFavorite((FavoriteNode) getRoot(), favorite);
+    
     Program[] delFavPrograms = favorite.getPrograms();
-    for (Program program : delFavPrograms) {
-      program.unmark(FavoritesPluginProxy.getInstance());
+    
+    ProgramReceiveTarget[] targets = favorite.getForwardPlugins();
+    ArrayList<ProgramReceiveTarget> supported = new ArrayList<ProgramReceiveTarget>();
+    
+    for(ProgramReceiveTarget target : targets) {
+      if(target.getReceifeIfForIdOfTarget().getSupportedProgramRecieveType() == Plugin.TYPE_PROGRAM_RECEIVE_ADD_REMOVE
+          && (target.getUsedSendingType() == ProgramReceiveIf.TYPE_SENDING_REMOVED || target.getUsedSendingType() == ProgramReceiveIf.TYPE_SENDING_ADDED + ProgramReceiveIf.TYPE_SENDING_REMOVED)) {
+        supported.add(target);
+      }
     }
     
-    deleteFavorite((FavoriteNode) getRoot(), favorite);
-
+    final HashMap<String,ArrayList<Program>> toSend = findProgramsToSendForRemove(delFavPrograms, supported.toArray(new ProgramReceiveTarget[0]), favorite);
+    
     String[] reminderServices = favorite.getReminderConfiguration().getReminderServices();
 
     for (String reminderService : reminderServices) {
       if (ReminderConfiguration.REMINDER_DEFAULT.equals(reminderService)) {
-        ReminderPlugin.getInstance().removePrograms(favorite.getPrograms());
+        ReminderPlugin.getInstance().removePrograms(delFavPrograms);
+      }
+    }
+    
+    for(ProgramReceiveTarget target : supported) {
+      final ArrayList<Program> programs = toSend.get(FavoritesPlugin.getKeyForReceiveTarget(target, false));
+      
+      if(programs != null && !programs.isEmpty()) {
+        target.receivePrograms(ProgramReceiveIf.TYPE_SENDING_REMOVED, programs.toArray(new Program[0]));
       }
     }
 

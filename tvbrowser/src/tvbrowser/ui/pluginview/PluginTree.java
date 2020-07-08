@@ -73,6 +73,7 @@ import devplugin.ActionMenu;
 import devplugin.Plugin;
 import devplugin.Program;
 import devplugin.ProgramItem;
+import devplugin.ProgramReceiveIf;
 import devplugin.ProgramReceiveTarget;
 import tvbrowser.core.plugin.PluginProxy;
 import tvbrowser.core.plugin.PluginProxyManager;
@@ -367,7 +368,7 @@ public class PluginTree extends JTree implements DragGestureListener,
                   for (PluginProxy pluginAccess : pluginAccessArray) {
                     if (pluginAccess.getRootNode() != null) {
                       if (pluginAccess.getRootNode().getMutableTreeNode().equals(target)) {
-                        if (pluginAccess.canReceiveProgramsWithTarget()) {
+                        if (pluginAccess.getSupportedProgramRecieveType() != Plugin.TYPE_PROGRAM_RECEIVE_NONE) {
                           e.acceptDrag(e.getDropAction());
                           reject = false;
                           temp = pluginAccess;
@@ -620,10 +621,16 @@ public class PluginTree extends JTree implements DragGestureListener,
                     for (PluginProxy pluginAccess : pa) {
                       if (pluginAccess.getRootNode() != null) {
                         if (pluginAccess.getRootNode().getMutableTreeNode().equals(target)) {
-                          if (pluginAccess.canReceiveProgramsWithTarget()
+                          if (pluginAccess.getSupportedProgramRecieveType() != Plugin.TYPE_PROGRAM_RECEIVE_NONE
                               && pluginAccess.getProgramReceiveTargets() != null
                               && pluginAccess.getProgramReceiveTargets().length > 0) {
-                            pluginAccess.receivePrograms(p,pluginAccess.getProgramReceiveTargets()[0]);
+                            int type = ProgramReceiveIf.TYPE_SENDING_UNDIFINED;
+                            
+                            if(pluginAccess.getSupportedProgramRecieveType() == Plugin.TYPE_PROGRAM_RECEIVE_ADD_REMOVE) {
+                              type = ProgramReceiveIf.getTypeForSendingAction(PluginTree.this);
+                            }
+                            
+                            pluginAccess.receivePrograms(type,p,pluginAccess.getProgramReceiveTargets()[0]);
                           } else {
                             break;
                           }
@@ -633,7 +640,14 @@ public class PluginTree extends JTree implements DragGestureListener,
                   }
                   else {
                     ProgramReceiveTarget receiveTarget = target.getProgramReceiveTarget();
-                    receiveTarget.getReceifeIfForIdOfTarget().receivePrograms(p,receiveTarget);
+                    
+                    int type = ProgramReceiveIf.TYPE_SENDING_UNDIFINED;
+                    
+                    if(receiveTarget.getReceifeIfForIdOfTarget().getSupportedProgramRecieveType() == Plugin.TYPE_PROGRAM_RECEIVE_ADD_REMOVE) {
+                      type = ProgramReceiveIf.getTypeForSendingAction(PluginTree.this);
+                    }
+                    
+                    receiveTarget.receivePrograms(type,p);
                   }
                 }
               }

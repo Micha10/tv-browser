@@ -222,7 +222,7 @@ public class BeanShellPluginProxy extends AbstractPluginProxy {
     }
 
     @Override
-    protected boolean doReceivePrograms(Program[] programArr, ProgramReceiveTarget receiveTarget) {
+    protected boolean doReceivePrograms(int type, Program[] programArr, ProgramReceiveTarget receiveTarget) {
       // TODO Automatisch erstellter Methoden-Stub
       return false;
     }
@@ -276,7 +276,7 @@ public class BeanShellPluginProxy extends AbstractPluginProxy {
     }
 
     @Override
-    protected boolean doReceiveValues(String[] values,
+    protected boolean doReceiveValues(int type, String[] values,
         ProgramReceiveTarget receiveTarget) {
       // TODO Auto-generated method stub
       return false;
@@ -346,5 +346,23 @@ public class BeanShellPluginProxy extends AbstractPluginProxy {
         Program p, String uniqueId) {
       // TODO Auto-generated method stub
       return null;
+    }
+
+    @Override
+    public boolean receivePrograms(Program[] programArr, ProgramReceiveTarget receiveTarget) {
+      // TODO Auto-generated method stub
+      return false;
+    }
+
+    @Override
+    public boolean receiveValues(String[] values, ProgramReceiveTarget receiveTarget) {
+      // TODO Auto-generated method stub
+      return false;
+    }
+
+    @Override
+    protected int doGetSupportedProgramRecieveType() {
+      // TODO Auto-generated method stub
+      return Plugin.TYPE_PROGRAM_RECEIVE_NONE;
     }
  }

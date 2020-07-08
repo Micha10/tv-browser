@@ -54,8 +54,8 @@ import util.ui.Localizer;
  * MyPlugin overrides the methods used for identifying it as a receiveable
  * plugin:<br>
  * <br>
- * <code>public boolean canReceiveProgramsWithTarget() {<br>
-  &nbsp;&nbsp;return true;<br>
+ * <code>public int getSupportedProgramRecieveType() {<br>
+  &nbsp;&nbsp;return Plugin.TYPE_PROGRAM_RECEIVE_DEFAULT;<br>
   }<br>
   <br>
   public boolean receivePrograms(Program[] programArr, ProgramReceiveTarget receiveTarget) {<br>
@@ -89,11 +89,19 @@ import util.ui.Localizer;
  * @since 2.5
  */
 public final class ProgramReceiveTarget implements Comparable<ProgramReceiveTarget> {
+  /**
+   * Constant used to flag targets without a specified sending type.
+   * @since 4.2.2
+   */
+  public static final int TYPE_SENDING_USED_NONE = -1;
+  
   private static final Localizer mLocalizer = Localizer.getLocalizerFor(ProgramReceiveTarget.class);
 
   private String mReceiveIfId;
   private String mTargetId;
   private String mTargetName;
+  
+  private int mUsedSendType;
 
   /**
    * Creates the default target for a ProgramReceiveIf.
@@ -127,6 +135,7 @@ public final class ProgramReceiveTarget implements Comparable<ProgramReceiveTarg
     mReceiveIfId = receiveIfId;
     mTargetName = name;
     mTargetId = targetId;
+    mUsedSendType = TYPE_SENDING_USED_NONE;
   }
 
   /**
@@ -138,9 +147,7 @@ public final class ProgramReceiveTarget implements Comparable<ProgramReceiveTarg
    * @param targetId The unique id of the target.
    */
   public ProgramReceiveTarget(ProgramReceiveIf receiveIf, String name, String targetId) {
-    mReceiveIfId = receiveIf.getId();
-    mTargetName = name;
-    mTargetId = targetId;
+    this(receiveIf.getId(), name, targetId);
   }
 
   /**
@@ -152,10 +159,14 @@ public final class ProgramReceiveTarget implements Comparable<ProgramReceiveTarg
    * @throws ClassNotFoundException Thrown if a class could not be found.
    */
   public ProgramReceiveTarget(ObjectInputStream in) throws IOException, ClassNotFoundException {
-    in.readInt(); // version
+    int version = in.readInt(); // version
     mReceiveIfId = in.readUTF();
     mTargetId = in.readUTF();
     mTargetName = in.readUTF();
+    
+    if(version >= 2) {
+      mUsedSendType = in.readInt();
+    }
   }
 
   /**
@@ -165,10 +176,11 @@ public final class ProgramReceiveTarget implements Comparable<ProgramReceiveTarg
    * @throws IOException Thrown if an IO operation went wrong.
    */
   public void writeData(ObjectOutputStream out) throws IOException {
-    out.writeInt(1); //version
+    out.writeInt(2); //version
     out.writeUTF(mReceiveIfId);
     out.writeUTF(mTargetId);
     out.writeUTF(mTargetName);
+    out.writeInt(mUsedSendType);
   }
 
   /**
@@ -264,11 +276,69 @@ public final class ProgramReceiveTarget implements Comparable<ProgramReceiveTarg
    *
    * @param programs programs to send
    * @since 3.0
+   * @deprecated since 4.2.2 use {@link #receivePrograms(int, Program[])} instead.
    */
   public void receivePrograms(Program[] programs) {
+    receivePrograms(ProgramReceiveIf.TYPE_SENDING_UNDIFINED, programs);
+  }
+  
+  /**
+   * Send the programs to the receive target
+   *
+   * @param type The type of the send programs.
+   * @param programs programs to send
+   * @since 4.2.2
+   */
+  public boolean receivePrograms(int type, Program[] programs) {
+    boolean result = false;
+    
     ProgramReceiveIf plugin = getReceifeIfForIdOfTarget();
-    if (plugin != null && plugin.canReceiveProgramsWithTarget()) {
-      plugin.receivePrograms(programs, this);
+    if (plugin != null && plugin.getSupportedProgramRecieveType() != Plugin.TYPE_PROGRAM_RECEIVE_NONE) {
+      result = plugin.receivePrograms(type, programs, this);
     }
+    
+    return result;
+  }
+  
+
+  /**
+   * Send the programs to the receive target
+   *
+   * @param type The type of the send programs.
+   * @param values values to send
+   * @since 4.2.2
+   */
+  public boolean receiveValues(int type, String[] values) {
+    boolean result = false;
+    
+    ProgramReceiveIf plugin = getReceifeIfForIdOfTarget();
+    if (plugin != null && plugin.getSupportedProgramRecieveType() != Plugin.TYPE_PROGRAM_RECEIVE_NONE) {
+      result = plugin.receiveValues(type, values, this);
+    }
+    
+    return result;
+  }
+  
+  /**
+   * Gets the sending type.
+   * @return The sending type 
+   * @since 4.2.2
+   * @see {@link ProgramReceiveIf#TYPE_SENDING_UNDIFINED}, {@link ProgramReceiveIf#TYPE_SENDING_ADDED}, {@link ProgramReceiveIf#TYPE_SENDING_REMOVED}
+   */
+  public int getUsedSendingType() {
+    return mUsedSendType;
+  }
+  
+  /**
+   * Sets the sending type.
+   * NOTE: If this target should support adding and removing of programs, set the
+   * type to {@link ProgramReceiveIf#TYPE_SENDING_ADDED} + {@link ProgramReceiveIf#TYPE_SENDING_REMOVED}
+   * 
+   * @param usedSendType
+   * @since 4.2.2
+   * @see {@link ProgramReceiveIf#TYPE_SENDING_UNDIFINED}, {@link ProgramReceiveIf#TYPE_SENDING_ADDED}, {@link ProgramReceiveIf#TYPE_SENDING_REMOVED}
+   */
+  public void setUsedSendType(int usedSendType) {
+    mUsedSendType = usedSendType;
   }
 }

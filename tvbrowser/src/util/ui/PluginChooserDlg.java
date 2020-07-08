@@ -26,9 +26,9 @@
 
 package util.ui;
 
-import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Window;
+import java.awt.event.ItemEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
@@ -36,17 +36,23 @@ import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 
+import javax.swing.BoxLayout;
+import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 import javax.swing.JSplitPane;
 import javax.swing.ListSelectionModel;
 import javax.swing.WindowConstants;
 
 import com.jgoodies.forms.builder.ButtonBarBuilder;
 import com.jgoodies.forms.factories.Borders;
+import com.jgoodies.forms.factories.CC;
+import com.jgoodies.forms.factories.DefaultComponentFactory;
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.RowSpec;
@@ -63,6 +69,10 @@ import util.ui.customizableitems.SelectableItemList;
  * can choose from all Plugins that are able to receive Programs.
  */
 public class PluginChooserDlg extends JDialog implements WindowClosingIf {
+  public static final int TYPE_RECEIVE_DEFAULT = 0;
+  public static final int TYPE_RECEIVE_ADD_REMOVE = 1;
+  public static final int TYPE_RECEIVE_ADD_BOTH = 2;
+  public static final int TYPE_RECEIVE_ALL = 3;
 
   private ProgramReceiveIf[] mResultPluginArr;
   private Hashtable<ProgramReceiveIf,ArrayList<ProgramReceiveTarget>> mReceiveTargetTable;
@@ -70,7 +80,7 @@ public class PluginChooserDlg extends JDialog implements WindowClosingIf {
   private ProgramReceiveTarget[] mCurrentTargets;
   private boolean mOkWasPressed;
 
-  private static final util.ui.Localizer mLocalizer
+  private static final util.ui.Localizer LOCALIZER
      = util.ui.Localizer.getLocalizerFor(PluginChooserDlg.class);
 
   /**
@@ -86,10 +96,27 @@ public class PluginChooserDlg extends JDialog implements WindowClosingIf {
    */
   public PluginChooserDlg(Window parent, ProgramReceiveIf[] pluginArr,
       String description, ProgramReceiveIf caller) {
-    super(parent);
-    setModalityType(ModalityType.DOCUMENT_MODAL);
-    init(pluginArr, description, caller, null, null, parent);
+    this(TYPE_RECEIVE_DEFAULT, parent, pluginArr, description, caller);
   }
+  
+  /**
+   * 
+  * @param type The of selection of send type
+  * @param parent The parent window.
+  * @param pluginArr
+  *          The initially selected ProgramReceiveIfs.
+  * @param description
+  *          A description text below the ProgramReceiveIf list.
+  * @param caller
+  *          The caller ProgramReceiveIf.
+  * @since 4.2.2
+  */
+ public PluginChooserDlg(int type, Window parent, ProgramReceiveIf[] pluginArr,
+     String description, ProgramReceiveIf caller) {
+   super(parent);
+   setModalityType(ModalityType.DOCUMENT_MODAL);
+   init(type, pluginArr, description, caller, null, null, parent);
+ }
 
   /**
    *
@@ -120,17 +147,31 @@ public class PluginChooserDlg extends JDialog implements WindowClosingIf {
    *          Targets that cannot be selected/deselected
    * @since 3.0
    */
-  public PluginChooserDlg(Window parent, ProgramReceiveTarget[] pluginArr,
-      String description, ProgramReceiveIf caller,
-      ProgramReceiveTarget[] disabledTargets) {
-    super(parent);
-    setModalityType(ModalityType.DOCUMENT_MODAL);
-
-    Hashtable<ProgramReceiveIf, ArrayList<ProgramReceiveTarget>> table = createReceiveTable(pluginArr);
-
-    init(table.keySet().toArray(new ProgramReceiveIf[table.keySet().size()]),
-        description, caller, table, disabledTargets, parent);
+  public PluginChooserDlg(Window parent, ProgramReceiveTarget[] pluginArr,String description, ProgramReceiveIf caller, ProgramReceiveTarget[] disabledTargets) {
+    this(TYPE_RECEIVE_DEFAULT, parent, pluginArr, description, caller, disabledTargets);
   }
+  
+  /**
+  * @param type The of selection of send type
+  * @param parent The parent window
+  * @param pluginArr
+  *          The initially selected ProgramReceiveIfs.
+  * @param description
+  *          A description text below the ProgramReceiveIf list.
+  * @param caller
+  *          The caller ProgramReceiveIf.
+  * @param disabledTargets
+  *          Targets that cannot be selected/deselected
+  * @since 4.2.2
+  */
+ public PluginChooserDlg(int type, Window parent, ProgramReceiveTarget[] pluginArr,String description, ProgramReceiveIf caller, ProgramReceiveTarget[] disabledTargets) {
+   super(parent);
+   setModalityType(ModalityType.DOCUMENT_MODAL);
+
+   Hashtable<ProgramReceiveIf, ArrayList<ProgramReceiveTarget>> table = createReceiveTable(pluginArr);
+
+   init(type, table.keySet().toArray(new ProgramReceiveIf[table.keySet().size()]),description, caller, table, disabledTargets, parent);
+ }
 
   private Hashtable<ProgramReceiveIf,ArrayList<ProgramReceiveTarget>> createReceiveTable(ProgramReceiveTarget[] targets) {
     Hashtable<ProgramReceiveIf,ArrayList<ProgramReceiveTarget>> table = new Hashtable<ProgramReceiveIf,ArrayList<ProgramReceiveTarget>>();
@@ -156,9 +197,9 @@ public class PluginChooserDlg extends JDialog implements WindowClosingIf {
     return table;
   }
 
-  private void init(ProgramReceiveIf[] pluginArr, String description, ProgramReceiveIf caller, Hashtable<ProgramReceiveIf,ArrayList<ProgramReceiveTarget>> targetTable, final ProgramReceiveTarget[] disabledReceiveTargets, Window parent) {
+  private void init(int type, ProgramReceiveIf[] pluginArr, String description, ProgramReceiveIf caller, Hashtable<ProgramReceiveIf,ArrayList<ProgramReceiveTarget>> targetTable, final ProgramReceiveTarget[] disabledReceiveTargets, Window parent) {
     mOkWasPressed = false;
-    setTitle(mLocalizer.msg("title","Choose Plugins"));
+    setTitle(LOCALIZER.msg("title","Choose Plugins"));
     UiUtilities.registerForClosing(this);
 
     if (pluginArr == null) {
@@ -213,8 +254,75 @@ public class PluginChooserDlg extends JDialog implements WindowClosingIf {
 
       splitPane.setLeftComponent(mPluginItemList);
 
+      final FormLayout typeLayout = new FormLayout("5dlu,default:grow","5dlu,default,5dlu,default,default");
+      final JPanel typePanel = new JPanel(typeLayout);
+      
+      final AtomicReference<ProgramReceiveTarget> currentTarget = new AtomicReference<ProgramReceiveTarget>(); 
+      final JRadioButton add; 
+      final JRadioButton remove;
+      final JRadioButton addRemove;
+      
+      if(type != TYPE_RECEIVE_DEFAULT) {
+        ButtonGroup bg = new ButtonGroup();
+        
+        typePanel.add(DefaultComponentFactory.getInstance().createSeparator(LOCALIZER.msg("type", "Type of sending")), CC.xyw(1, 2, 2));
+        add = new JRadioButton(LOCALIZER.msg("add", "Added"));
+        add.addItemListener(e -> {
+          if(currentTarget.get() != null && e.getStateChange() == ItemEvent.SELECTED) {
+            currentTarget.get().setUsedSendType(ProgramReceiveIf.TYPE_SENDING_ADDED);
+          }
+        });
+        bg.add(add);
+        typePanel.add(add, CC.xy(2, 4));
+        
+        if(type != TYPE_RECEIVE_ADD_BOTH) {
+          remove = new JRadioButton(LOCALIZER.msg("remove", "Removed"));
+          remove.addItemListener(e -> {
+            if(currentTarget.get() != null && e.getStateChange() == ItemEvent.SELECTED) {
+              currentTarget.get().setUsedSendType(ProgramReceiveIf.TYPE_SENDING_REMOVED);
+            }
+          });
+          bg.add(remove);
+          typePanel.add(remove, CC.xy(2, 5));
+        }
+        else {
+          remove = null;
+        }
+        
+        if(type == TYPE_RECEIVE_ALL || type == TYPE_RECEIVE_ADD_BOTH) {
+          int row = 4;
+          
+          if(type == TYPE_RECEIVE_ADD_BOTH) {
+            row = 5;
+          }
+          else {
+            typeLayout.insertRow(row, RowSpec.decode("default"));
+          }
+          
+          addRemove = new JRadioButton(LOCALIZER.msg("both", "Added and removed"));
+          addRemove.addItemListener(e -> {
+            if(currentTarget.get() != null && e.getStateChange() == ItemEvent.SELECTED) {
+              currentTarget.get().setUsedSendType(ProgramReceiveIf.TYPE_SENDING_ADDED + ProgramReceiveIf.TYPE_SENDING_REMOVED);
+            }
+          });
+          bg.add(addRemove);
+          addRemove.setSelected(true);
+          typePanel.add(addRemove, CC.xy(2, row));
+        }
+        else {
+          addRemove = null;
+          add.setSelected(true);
+        }
+      }
+      else {
+        add = null;
+        remove = null;
+        addRemove = null;
+      }
+      
       final JPanel targetPanel = new JPanel();
-      targetPanel.setLayout(new BorderLayout());
+      
+      targetPanel.setLayout(new BoxLayout(targetPanel, BoxLayout.Y_AXIS));
 
       // JScrollPane targetScrollPane = new JScrollPane(mTargetPanel);
       // targetScrollPane.getVerticalScrollBar().setUnitIncrement(10);
@@ -233,24 +341,92 @@ public class PluginChooserDlg extends JDialog implements WindowClosingIf {
             
             if (mCurrentTargets != null) {
               Arrays.sort(mCurrentTargets);
-              ArrayList<ProgramReceiveTarget> targets = mReceiveTargetTable
-                  .get(plugin);
+              ArrayList<ProgramReceiveTarget> targets = mReceiveTargetTable.get(plugin);
+              
               if (targets == null || !pluginItem.isSelected()) {
                 targets = new ArrayList<ProgramReceiveTarget>();
               }
               if (pluginItem.isSelected() && targets.isEmpty()) {
                 targets.add(mCurrentTargets[0]);
               }
+              
+              for(ProgramReceiveTarget t : targets) {
+                for(int i = mCurrentTargets.length-1; i >= 0; i--) {
+                  if(t.equals(mCurrentTargets[i])) {
+                    mCurrentTargets[i] = t;
+                  }
+                }
+              }
+              
               mReceiveTargetTable.put(plugin, targets);
               final SelectableItemList<ProgramReceiveTarget> targetList = new SelectableItemList<>(
                   targets.toArray(new ProgramReceiveTarget[targets.size()]), mCurrentTargets, disabledReceiveTargets);
-              targetPanel.add(targetList, BorderLayout.CENTER);
+              targetPanel.add(targetList);
+              
+              if(typePanel != null) {
+                targetPanel.remove(typePanel);
+              }
+              
               targetList
                   .addListSelectionListener(listEvent -> {
                     if (!listEvent.getValueIsAdjusting()) {
+                      currentTarget.set(null);
+                      
+                      if(typePanel != null) {
+                        targetPanel.remove(typePanel);
+                      }
+                      
                       SelectableItem<ProgramReceiveIf> currPluginItem = mPluginItemList.getSelectedValue();
                       ProgramReceiveIf currPlugin = (ProgramReceiveIf) currPluginItem
                           .getItem();
+                      
+                      SelectableItem<ProgramReceiveTarget> current = targetList.getSelectedValue();
+                      
+                      if(current != null && typePanel != null) {
+                        currentTarget.set(current.getItem());
+                        
+                        if(type != TYPE_RECEIVE_DEFAULT && currPlugin.getSupportedProgramRecieveType() == Plugin.TYPE_PROGRAM_RECEIVE_ADD_REMOVE) {
+                          int currentType = current.getItem().getUsedSendingType();
+                           
+                          if(currentType != ProgramReceiveTarget.TYPE_SENDING_USED_NONE) {
+                            switch(currentType) {
+                              case ProgramReceiveIf.TYPE_SENDING_UNDIFINED:
+                              case ProgramReceiveIf.TYPE_SENDING_ADDED:
+                                if(add != null) {
+                                  add.setSelected(true);
+                                }
+                                break;
+                              case ProgramReceiveIf.TYPE_SENDING_REMOVED:
+                                if(remove != null) {
+                                  remove.setSelected(true);
+                                }
+                                break;
+                              case ProgramReceiveIf.TYPE_SENDING_ADDED+ProgramReceiveIf.TYPE_SENDING_REMOVED:
+                                if(addRemove != null) {
+                                  addRemove.setSelected(true);
+                                }
+                                else if(add != null) {
+                                  add.setSelected(true);
+                                }
+                                break;
+                            }
+                          }
+                          else if(addRemove != null) {
+                            addRemove.setSelected(true);
+                          }
+                          else if(add != null) {
+                            add.setSelected(true);
+                          }
+                          
+                          targetPanel.add(typePanel);
+                          targetPanel.revalidate();
+                          targetPanel.repaint();
+                        }
+                      }
+                      else {
+                        currentTarget.set(null);
+                      }
+                      
                       List<ProgramReceiveTarget> sel = targetList.getSelectionList();
                       ArrayList<ProgramReceiveTarget> selTargets = new ArrayList<ProgramReceiveTarget>(
                           sel.size());

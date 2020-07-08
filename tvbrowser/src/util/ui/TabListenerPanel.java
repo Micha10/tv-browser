@@ -56,6 +56,7 @@ public class TabListenerPanel extends JPanel implements TabListener {
               && ((JList<?>) mDefaultFocusOwner).getSelectedIndex() == -1) {
             ((JList<?>)mDefaultFocusOwner).setSelectedIndex(0);
             ((JList<?>)mDefaultFocusOwner).ensureIndexIsVisible(0);
+            ((JList<?>)mDefaultFocusOwner).clearSelection();
           }
         });
       }
@@ -68,6 +69,7 @@ public class TabListenerPanel extends JPanel implements TabListener {
             && ((JList<?>) mFocusOwner).getSelectedIndex() == -1) {
           ((JList<?>)mFocusOwner).setSelectedIndex(0);
           ((JList<?>)mFocusOwner).ensureIndexIsVisible(0);
+          ((JList<?>)mFocusOwner).clearSelection();;
         }
       });
     }

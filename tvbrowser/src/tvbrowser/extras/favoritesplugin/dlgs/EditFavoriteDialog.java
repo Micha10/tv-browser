@@ -444,7 +444,7 @@ public class EditFavoriteDialog extends JDialog implements WindowClosingIf {
     mPassProgramsLb = new JLabel(getForwardPluginsLabelString(mPassProgramPlugins));
     mChangePassProgramsBtn = new JButton(mLocalizer.msg("change", "Change"));
     mChangePassProgramsBtn.addActionListener(e -> {
-      PluginChooserDlg dlg = new PluginChooserDlg((Window)EditFavoriteDialog.this, mPassProgramPlugins, null, ReminderPluginProxy.getInstance(), FavoritesPlugin.getInstance().getClientPluginTargetIds());
+      PluginChooserDlg dlg = new PluginChooserDlg(PluginChooserDlg.TYPE_RECEIVE_ADD_BOTH,(Window)EditFavoriteDialog.this, mPassProgramPlugins, null, ReminderPluginProxy.getInstance(), FavoritesPlugin.getInstance().getClientPluginTargetIds());
       UiUtilities.centerAndShow(dlg);
       ProgramReceiveTarget[] pluginArr = dlg.getReceiveTargets();
       if (pluginArr != null) {
@@ -555,7 +555,7 @@ public class EditFavoriteDialog extends JDialog implements WindowClosingIf {
     }
 
     for (ProgramReceiveTarget target : mPassProgramPlugins) {
-      target.getReceifeIfForIdOfTarget().receivePrograms(mFavorite.getPrograms(),target);
+      target.getReceifeIfForIdOfTarget().receivePrograms(ProgramReceiveIf.TYPE_SENDING_ADDED,mFavorite.getPrograms(),target);
     }
     
     if (mUseReminderCb.isSelected() && !wasReminderEnabled) {

@@ -35,6 +35,7 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.Set;
 
 import devplugin.Channel;
 import devplugin.Date;
@@ -42,6 +43,7 @@ import devplugin.Plugin;
 import devplugin.Program;
 import devplugin.ProgramFieldType;
 import devplugin.ProgramFilter;
+import devplugin.ProgramReceiveIf;
 import devplugin.ProgramReceiveTarget;
 import devplugin.ProgramSearcher;
 import tvbrowser.core.plugin.PluginManagerImpl;
@@ -504,7 +506,7 @@ public abstract class Favorite {
 
   }
 
-
+/*
   /**
    * Search in a list of Programs to find new Items
    *
@@ -514,7 +516,7 @@ public abstract class Favorite {
    * @param sendToPlugins send data to otheer plugins
    * @throws util.exc.TvBrowserException Problems during search
    * @since 2.7
-   */
+   *
   public void searchNewPrograms(Program[] added, Program[] removed, boolean dataUpdate, boolean sendToPlugins) throws TvBrowserException {
     SearchFormSettings searchForm = mSearchFormSettings;
 
@@ -537,7 +539,7 @@ public abstract class Favorite {
 
     updatePrograms(currentList.toArray(new Program[currentList.size()]), dataUpdate, sendToPlugins);
   }
-
+*/
 
   /**
    * Performs a new search, and refreshes the program marks
@@ -601,7 +603,7 @@ public abstract class Favorite {
 
     ArrayList<Program> resultList = new ArrayList<Program>();
     ArrayList<Program> newPrograms = new ArrayList<Program>();
-
+    
     int inx1 = 0;
     int inx2 = 0;
     while (inx1 < p1.length && inx2 < newProgList.length) {
@@ -644,7 +646,25 @@ public abstract class Favorite {
     if (inx1 < p1.length) {
       // remove (p1[inx1]..p1[p1.length-1])
       for (int i=inx1; i<p1.length; i++) {
+        System.out.println("r2 " + p1[i]);
         unmarkProgram(p1[i]);
+      }
+    }
+    
+    ArrayList<Program> removedPrograms = new ArrayList<Program>();
+    
+    for(Program old : mPrograms) {
+      boolean found = false;
+      
+      for(Program p : newProgList) {
+        if(old.getUniqueID().contentEquals(p.getUniqueID())) {
+          found = true;
+          break;
+        }
+      }
+      
+      if(!found) {
+        removedPrograms.add(old);
       }
     }
 
@@ -660,17 +680,57 @@ public abstract class Favorite {
       }
     }
 
-    ProgramReceiveTarget[] pluginArr = getForwardPlugins();
-
+    ProgramReceiveTarget[] programReceiveTargets = getForwardPlugins();
+    
     if(mNewPrograms.size() > 0 && send && !noNewProgramsUpdate) {
       if(!dataUpdate) {
-        for (ProgramReceiveTarget receiveTarget : pluginArr) {
+        for (ProgramReceiveTarget receiveTarget : programReceiveTargets) {
           if (receiveTarget != null && receiveTarget.getReceifeIfForIdOfTarget() != null) {
-            receiveTarget.getReceifeIfForIdOfTarget().receivePrograms(mNewPrograms.toArray(new Program[mNewPrograms.size()]), receiveTarget);
+            int type = receiveTarget.getUsedSendingType();
+            
+            if(type == ProgramReceiveTarget.TYPE_SENDING_USED_NONE) {
+              type = ProgramReceiveIf.TYPE_SENDING_UNDIFINED;
+            }
+            else if(type == (ProgramReceiveIf.TYPE_SENDING_ADDED+ProgramReceiveIf.TYPE_SENDING_REMOVED)) {
+              type = ProgramReceiveIf.TYPE_SENDING_ADDED;
+            }
+            
+            if(type != ProgramReceiveIf.TYPE_SENDING_REMOVED) {
+              receiveTarget.receivePrograms(type, mNewPrograms.toArray(new Program[0]));
+            }
           }
         }
       } else {
-        FavoritesPlugin.getInstance().addProgramsForSending(pluginArr, mNewPrograms.toArray(new Program[mNewPrograms.size()]));
+        FavoritesPlugin.getInstance().addProgramsForSending(programReceiveTargets, mNewPrograms.toArray(new Program[mNewPrograms.size()]));
+      }
+    }
+    
+    if(!removedPrograms.isEmpty()) {
+      Program[] deleted = removedPrograms.toArray(new Program[0]);
+      
+      ArrayList<ProgramReceiveTarget> supported = new ArrayList<ProgramReceiveTarget>();
+      
+      for (ProgramReceiveTarget receiveTarget : programReceiveTargets) {
+        if (receiveTarget != null && receiveTarget.getReceifeIfForIdOfTarget() != null) {
+          ProgramReceiveIf receiveIf = receiveTarget.getReceifeIfForIdOfTarget();
+          int type = receiveTarget.getUsedSendingType();
+          
+          if(receiveIf.getSupportedProgramRecieveType() == Plugin.TYPE_PROGRAM_RECEIVE_ADD_REMOVE &&
+              (type == (ProgramReceiveIf.TYPE_SENDING_ADDED+ProgramReceiveIf.TYPE_SENDING_REMOVED) ||
+               type == (ProgramReceiveIf.TYPE_SENDING_REMOVED))) {
+            supported.add(receiveTarget);
+          }
+        }
+      }
+      
+      final HashMap<String,ArrayList<Program>> toSend = FavoriteTreeModel.getInstance().findProgramsToSendForRemove(deleted, programReceiveTargets, this);
+      
+      for (ProgramReceiveTarget receiveTarget : supported) {
+        final ArrayList<Program> programs = toSend.get(FavoritesPlugin.getKeyForReceiveTarget(receiveTarget, false));
+        
+        if(programs != null && !programs.isEmpty()) {
+          receiveTarget.receivePrograms(ProgramReceiveIf.TYPE_SENDING_REMOVED, programs.toArray(new Program[0]));
+        }
       }
     }
 
@@ -957,7 +1017,7 @@ public abstract class Favorite {
 
           if (newFound) {
             ProgramReceiveTarget[] pluginArr = getForwardPlugins();
-            FavoritesPlugin.getInstance().addProgramsForSending(pluginArr, mNewPrograms.toArray(new Program[mNewPrograms.size()]));
+            FavoritesPlugin.getInstance().addProgramsForSending(pluginArr, mNewPrograms.toArray(new Program[0]));
           }
         }
       }
@@ -1037,9 +1097,13 @@ public abstract class Favorite {
    * Clears the list of removed programs
    * @since 2.7
    */
-  public void clearRemovedPrograms() {
+  public Set<String> clearRemovedPrograms() {
+    final Set<String> result = mRemovedPrograms.keySet();
+    
     mRemovedPrograms = new HashMap<String,ReminderInfo>(0);
     mRemovedBlacklistPrograms = new ArrayList<Program>(0);
+    
+    return result;
   }
 
   private String getProgramKeyFor(Program p) {

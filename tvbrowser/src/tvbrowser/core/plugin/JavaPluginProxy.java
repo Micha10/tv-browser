@@ -41,20 +41,6 @@ import javax.swing.Action;
 import javax.swing.Icon;
 import javax.swing.JOptionPane;
 
-import tvbrowser.TVBrowser;
-import tvbrowser.core.PluginLoader;
-import tvbrowser.core.Settings;
-import tvbrowser.core.filters.GenericFilterMap;
-import tvbrowser.core.filters.UserFilter;
-import tvbrowser.ui.mainframe.MainFrame;
-import tvdataservice.MutableChannelDayProgram;
-import util.exc.TvBrowserException;
-import util.io.IOUtilities;
-import util.io.stream.ObjectOutputStreamProcessor;
-import util.io.stream.StreamUtilities;
-import util.ui.Localizer;
-import util.ui.TVBrowserIcons;
-import util.ui.UiUtilities;
 import devplugin.ActionMenu;
 import devplugin.AfterDataUpdateInfoPanel;
 import devplugin.Channel;
@@ -72,9 +58,24 @@ import devplugin.PluginsProgramFilter;
 import devplugin.Program;
 import devplugin.ProgramInfo;
 import devplugin.ProgramRatingIf;
+import devplugin.ProgramReceiveIf;
 import devplugin.ProgramReceiveTarget;
 import devplugin.SettingsTab;
 import devplugin.ToolTipIcon;
+import tvbrowser.TVBrowser;
+import tvbrowser.core.PluginLoader;
+import tvbrowser.core.Settings;
+import tvbrowser.core.filters.GenericFilterMap;
+import tvbrowser.core.filters.UserFilter;
+import tvbrowser.ui.mainframe.MainFrame;
+import tvdataservice.MutableChannelDayProgram;
+import util.exc.TvBrowserException;
+import util.io.IOUtilities;
+import util.io.stream.ObjectOutputStreamProcessor;
+import util.io.stream.StreamUtilities;
+import util.ui.Localizer;
+import util.ui.TVBrowserIcons;
+import util.ui.UiUtilities;
 
 /**
  * A plugin proxy for Java plugins.
@@ -564,19 +565,22 @@ public class JavaPluginProxy extends AbstractPluginProxy {
    * @see #receivePrograms(Program[],ProgramReceiveTarget)
    * @since 2.5
    */
-  protected boolean doCanReceiveProgramsWithTarget() {
+ /* protected boolean doCanReceiveProgramsWithTarget() {
     return mPlugin.canReceiveProgramsWithTarget();
-  }
+  }*/
+  
+  
 
   /**
    * Really receives a list of programs from another plugin with target.
    *
+   * @param type The type of the sending action.
    * @param programArr The programs passed from the other plugin with target.
    * @param receiveTarget The target of the programs.
    * @see #canReceiveProgramsWithTarget()
    * @since 2.5
    */
-  protected boolean doReceivePrograms(Program[] programArr, ProgramReceiveTarget receiveTarget) {
+  protected boolean doReceivePrograms(int type, Program[] programArr, ProgramReceiveTarget receiveTarget) {
     if(programArr != null && accessControl()) {
       ArrayList<Program> accessPrograms = new ArrayList<Program>();
       
@@ -589,7 +593,7 @@ public class JavaPluginProxy extends AbstractPluginProxy {
       programArr = accessPrograms.toArray(new Program[accessPrograms.size()]);
     }
     
-    boolean value = mPlugin.receivePrograms(programArr, receiveTarget);
+    boolean value = mPlugin.receivePrograms(type, programArr, receiveTarget);
 
     if(!value) {
       JOptionPane.showMessageDialog(UiUtilities.getLastModalChildOf(MainFrame.getInstance()),mLocalizer.msg("error.noTarget","The programs for the target \"{0}\" couldn't be processed by \"{1}\".",receiveTarget,mPlugin.getInfo().getName()),Localizer.getLocalization(Localizer.I18N_ERROR),JOptionPane.ERROR_MESSAGE);
@@ -705,10 +709,8 @@ public class JavaPluginProxy extends AbstractPluginProxy {
   }
 
   @Override
-  protected boolean doReceiveValues(String[] values,
-      ProgramReceiveTarget receiveTarget) {
-
-    return mPlugin.receiveValues(values,receiveTarget);
+  protected boolean doReceiveValues(int type, String[] values, ProgramReceiveTarget receiveTarget) {
+    return mPlugin.receiveValues(type, values,receiveTarget);
   }
 
   @Override
@@ -807,5 +809,27 @@ public class JavaPluginProxy extends AbstractPluginProxy {
   @Override
   public ProgramInfo[] doGetAddtionalProgramInfoForProgram(Program p, String uniqueId) {
     return mPlugin.getAddtionalProgramInfoForProgram(p, uniqueId);
+  }
+
+  @Override
+  public boolean receivePrograms(Program[] programArr, ProgramReceiveTarget receiveTarget) {
+    // TODO Auto-generated method stub
+    return receivePrograms(ProgramReceiveIf.TYPE_SENDING_UNDIFINED, programArr, receiveTarget);
+  }
+
+  @Override
+  public boolean receiveValues(String[] values, ProgramReceiveTarget receiveTarget) {
+    // TODO Auto-generated method stub
+    return receiveValues(ProgramReceiveIf.TYPE_SENDING_UNDIFINED, values, receiveTarget);
+  }
+
+  @Override
+  protected int doGetSupportedProgramRecieveType() {
+    return mPlugin.getSupportedProgramRecieveType();
+  }
+
+  @Override
+  protected boolean doCanReceiveProgramsWithTarget() {
+    return mPlugin.canReceiveProgramsWithTarget();
   }
 }
