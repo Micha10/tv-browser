@@ -268,8 +268,9 @@ public class PluginChooserDlg extends JDialog implements WindowClosingIf {
         typePanel.add(DefaultComponentFactory.getInstance().createSeparator(LOCALIZER.msg("type", "Type of sending")), CC.xyw(1, 2, 2));
         add = new JRadioButton(LOCALIZER.msg("add", "Added"));
         add.addItemListener(e -> {
+          System.out.println("ADDED");
           if(currentTarget.get() != null && e.getStateChange() == ItemEvent.SELECTED) {
-            currentTarget.get().setUsedSendType(ProgramReceiveIf.TYPE_SENDING_ADDED);
+            currentTarget.get().setEventType(ProgramReceiveTarget.TYPE_EVENT_ADDED);
           }
         });
         bg.add(add);
@@ -279,7 +280,7 @@ public class PluginChooserDlg extends JDialog implements WindowClosingIf {
           remove = new JRadioButton(LOCALIZER.msg("remove", "Removed"));
           remove.addItemListener(e -> {
             if(currentTarget.get() != null && e.getStateChange() == ItemEvent.SELECTED) {
-              currentTarget.get().setUsedSendType(ProgramReceiveIf.TYPE_SENDING_REMOVED);
+              currentTarget.get().setEventType(ProgramReceiveTarget.TYPE_EVENT_REMOVED);
             }
           });
           bg.add(remove);
@@ -302,7 +303,7 @@ public class PluginChooserDlg extends JDialog implements WindowClosingIf {
           addRemove = new JRadioButton(LOCALIZER.msg("both", "Added and removed"));
           addRemove.addItemListener(e -> {
             if(currentTarget.get() != null && e.getStateChange() == ItemEvent.SELECTED) {
-              currentTarget.get().setUsedSendType(ProgramReceiveIf.TYPE_SENDING_ADDED + ProgramReceiveIf.TYPE_SENDING_REMOVED);
+              currentTarget.get().setEventType(ProgramReceiveTarget.TYPE_EVENT_ADDED + ProgramReceiveTarget.TYPE_EVENT_REMOVED);
             }
           });
           bg.add(addRemove);
@@ -353,7 +354,9 @@ public class PluginChooserDlg extends JDialog implements WindowClosingIf {
               for(ProgramReceiveTarget t : targets) {
                 for(int i = mCurrentTargets.length-1; i >= 0; i--) {
                   if(t.equals(mCurrentTargets[i])) {
-                    mCurrentTargets[i] = t;
+                    if(t.getEventType() <= mCurrentTargets[i].getSupportedEventType()) {
+                      mCurrentTargets[i].setEventType(t.getEventType());
+                    }
                   }
                 }
               }
@@ -374,6 +377,8 @@ public class PluginChooserDlg extends JDialog implements WindowClosingIf {
                       
                       if(typePanel != null) {
                         targetPanel.remove(typePanel);
+                        targetPanel.revalidate();
+                        targetPanel.repaint();
                       }
                       
                       SelectableItem<ProgramReceiveIf> currPluginItem = mPluginItemList.getSelectedValue();
@@ -384,38 +389,32 @@ public class PluginChooserDlg extends JDialog implements WindowClosingIf {
                       
                       if(current != null && typePanel != null) {
                         currentTarget.set(current.getItem());
+                        int supportedType = current.getItem().getSupportedEventType();
                         
-                        if(type != TYPE_RECEIVE_DEFAULT && currPlugin.getSupportedProgramRecieveType() == Plugin.TYPE_PROGRAM_RECEIVE_ADD_REMOVE) {
-                          int currentType = current.getItem().getUsedSendingType();
-                           
-                          if(currentType != ProgramReceiveTarget.TYPE_SENDING_USED_NONE) {
-                            switch(currentType) {
-                              case ProgramReceiveIf.TYPE_SENDING_UNDIFINED:
-                              case ProgramReceiveIf.TYPE_SENDING_ADDED:
-                                if(add != null) {
-                                  add.setSelected(true);
-                                }
-                                break;
-                              case ProgramReceiveIf.TYPE_SENDING_REMOVED:
-                                if(remove != null) {
-                                  remove.setSelected(true);
-                                }
-                                break;
-                              case ProgramReceiveIf.TYPE_SENDING_ADDED+ProgramReceiveIf.TYPE_SENDING_REMOVED:
-                                if(addRemove != null) {
-                                  addRemove.setSelected(true);
-                                }
-                                else if(add != null) {
-                                  add.setSelected(true);
-                                }
-                                break;
-                            }
-                          }
-                          else if(addRemove != null) {
-                            addRemove.setSelected(true);
-                          }
-                          else if(add != null) {
-                            add.setSelected(true);
+                        if(type != TYPE_RECEIVE_DEFAULT && currPlugin.canReceiveProgramsWithTarget()
+                            && supportedType == ProgramReceiveTarget.TYPE_EVENT_ADDED + ProgramReceiveTarget.TYPE_EVENT_REMOVED) {
+                          int currentType = current.getItem().getEventType();
+                          
+                          switch(currentType) {
+                            case ProgramReceiveTarget.TYPE_EVENT_UNDIFINED:
+                            case ProgramReceiveTarget.TYPE_EVENT_ADDED:
+                              if(add != null) {
+                                add.setSelected(true);
+                              }
+                              break;
+                            case ProgramReceiveTarget.TYPE_EVENT_REMOVED:
+                              if(remove != null) {
+                                remove.setSelected(true);
+                              }
+                              break;
+                            case ProgramReceiveTarget.TYPE_EVENT_ADDED+ProgramReceiveTarget.TYPE_EVENT_REMOVED:
+                              if(addRemove != null) {
+                                addRemove.setSelected(true);
+                              }
+                              else if(add != null) {
+                                add.setSelected(true);
+                              }
+                              break;
                           }
                           
                           targetPanel.add(typePanel);

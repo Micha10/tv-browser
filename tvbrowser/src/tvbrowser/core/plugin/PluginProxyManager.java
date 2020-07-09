@@ -1313,11 +1313,12 @@ public class PluginProxyManager {
         mThreadPool.execute(() -> {
           while(true) {
             ThreadPoolMethod poolMethod = null;
-            int count;
+            
             synchronized (mPoolMethods) {
-              count = mPoolMethods.size();
-              if (count > 0) {
-                poolMethod = mPoolMethods.remove(0);
+              if (!mPoolMethods.isEmpty()) {
+                try {
+                  poolMethod = mPoolMethods.remove(0);
+                }catch(ArrayIndexOutOfBoundsException aioobe) {}
               }
             }
             if (poolMethod != null) {

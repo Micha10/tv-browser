@@ -48,12 +48,10 @@ import devplugin.Channel;
 import devplugin.ContextMenuIf;
 import devplugin.Date;
 import devplugin.NodeFormatter;
-import devplugin.Plugin;
 import devplugin.PluginTreeNode;
 import devplugin.Program;
 import devplugin.ProgramFieldType;
 import devplugin.ProgramItem;
-import devplugin.ProgramReceiveIf;
 import devplugin.ProgramReceiveTarget;
 import tvbrowser.extras.common.ReminderConfiguration;
 import tvbrowser.extras.favoritesplugin.FavoritesPlugin;
@@ -231,8 +229,7 @@ public class FavoriteTreeModel extends DefaultTreeModel {
     final HashMap<String,ArrayList<Favorite>> favoriteMap = new HashMap<String, ArrayList<Favorite>>();
     
     for(ProgramReceiveTarget target : targets) {
-      if(target.getReceifeIfForIdOfTarget().getSupportedProgramRecieveType() == Plugin.TYPE_PROGRAM_RECEIVE_ADD_REMOVE
-          && (target.getUsedSendingType() == ProgramReceiveIf.TYPE_SENDING_REMOVED || target.getUsedSendingType() == ProgramReceiveIf.TYPE_SENDING_ADDED + ProgramReceiveIf.TYPE_SENDING_REMOVED)) {
+      if(target.getEventType() == ProgramReceiveTarget.TYPE_EVENT_REMOVED || target.getEventType() == ProgramReceiveTarget.TYPE_EVENT_ADDED + ProgramReceiveTarget.TYPE_EVENT_REMOVED) {
         Favorite[] favs = getFavoritesContainingReceiveTarget(target);
         
         if(favs != null) {
@@ -314,8 +311,8 @@ public class FavoriteTreeModel extends DefaultTreeModel {
     ArrayList<ProgramReceiveTarget> supported = new ArrayList<ProgramReceiveTarget>();
     
     for(ProgramReceiveTarget target : targets) {
-      if(target.getReceifeIfForIdOfTarget().getSupportedProgramRecieveType() == Plugin.TYPE_PROGRAM_RECEIVE_ADD_REMOVE
-          && (target.getUsedSendingType() == ProgramReceiveIf.TYPE_SENDING_REMOVED || target.getUsedSendingType() == ProgramReceiveIf.TYPE_SENDING_ADDED + ProgramReceiveIf.TYPE_SENDING_REMOVED)) {
+      if(target.getEventType() == ProgramReceiveTarget.TYPE_EVENT_REMOVED
+          || target.getEventType() == ProgramReceiveTarget.TYPE_EVENT_REMOVED + ProgramReceiveTarget.TYPE_EVENT_ADDED) {
         supported.add(target);
       }
     }
@@ -334,7 +331,7 @@ public class FavoriteTreeModel extends DefaultTreeModel {
       final ArrayList<Program> programs = toSend.get(FavoritesPlugin.getKeyForReceiveTarget(target, false));
       
       if(programs != null && !programs.isEmpty()) {
-        target.receivePrograms(ProgramReceiveIf.TYPE_SENDING_REMOVED, programs.toArray(new Program[0]));
+        target.receivePrograms(ProgramReceiveTarget.TYPE_EVENT_REMOVED, programs.toArray(new Program[0]));
       }
     }
 

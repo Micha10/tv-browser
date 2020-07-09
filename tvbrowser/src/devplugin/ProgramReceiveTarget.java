@@ -18,12 +18,17 @@
  */
 package devplugin;
 
+import java.awt.Component;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
+import javax.swing.JOptionPane;
+
+import tvbrowser.ui.mainframe.MainFrame;
 import util.misc.HashCodeUtilities;
 import util.ui.Localizer;
+import util.ui.UiUtilities;
 
 /**
  * Is a target for receiving of program from other plugins. <br>
@@ -54,11 +59,11 @@ import util.ui.Localizer;
  * MyPlugin overrides the methods used for identifying it as a receiveable
  * plugin:<br>
  * <br>
- * <code>public int getSupportedProgramRecieveType() {<br>
-  &nbsp;&nbsp;return Plugin.TYPE_PROGRAM_RECEIVE_DEFAULT;<br>
+ * <code>public boolean canReceiveProgramsWithTarget() {<br>
+  &nbsp;&nbsp;return true;<br>
   }<br>
   <br>
-  public boolean receivePrograms(Program[] programArr, ProgramReceiveTarget receiveTarget) {<br>
+  public boolean receivePrograms(int eventType, Program[] programArr, ProgramReceiveTarget receiveTarget) {<br>
   &nbsp;&nbsp;ProgramReceiveTarget[] targets = getSupportedTargets();<br>
     <br>
   &nbsp;&nbsp;if(targets[0].equals(receiveTarget)<br>
@@ -89,19 +94,36 @@ import util.ui.Localizer;
  * @since 2.5
  */
 public final class ProgramReceiveTarget implements Comparable<ProgramReceiveTarget> {
+  private static final Localizer LOCALIZER = Localizer.getLocalizerFor(ProgramReceiveTarget.class);
+  
   /**
-   * Constant used to flag targets without a specified sending type.
+   * Type for sending programs to plugins with
+   * no information about the handling of the send
+   * programs.
    * @since 4.2.2
    */
-  public static final int TYPE_SENDING_USED_NONE = -1;
+  public static final int TYPE_EVENT_UNDIFINED = 0;
   
-  private static final Localizer mLocalizer = Localizer.getLocalizerFor(ProgramReceiveTarget.class);
-
+  /**
+   * Type used to signalize the receiving plugin
+   * that the programs were added by the sender.
+   * @since 4.2.2
+   */
+  public static final int TYPE_EVENT_ADDED = 1;
+  
+  /**
+   * Type used to signalize the receiving plugin
+   * that the programs were removed by the sender.
+   * @since 4.2.2
+   */
+  public static final int TYPE_EVENT_REMOVED = 2;
+  
   private String mReceiveIfId;
   private String mTargetId;
   private String mTargetName;
-  
-  private int mUsedSendType;
+
+  private int mSupportedEventType;
+  private int mUsedEventType;
 
   /**
    * Creates the default target for a ProgramReceiveIf.
@@ -110,7 +132,7 @@ public final class ProgramReceiveTarget implements Comparable<ProgramReceiveTarg
    * @return The default target for ProgramReceiveIf.
    */
   public static ProgramReceiveTarget[] createDefaultTargetArrayForProgramReceiveIf(ProgramReceiveIf receiveIf) {
-    return new ProgramReceiveTarget[] {new ProgramReceiveTarget(receiveIf, mLocalizer.msg("defaultTarget","Default target"), "NULL")};
+    return new ProgramReceiveTarget[] {new ProgramReceiveTarget(receiveIf, LOCALIZER.msg("defaultTarget","Default target"), "NULL")};
   }
 
   /**
@@ -121,21 +143,24 @@ public final class ProgramReceiveTarget implements Comparable<ProgramReceiveTarg
    * @return The default target for the id of the ProgramReceiveIf.
    */
   public static ProgramReceiveTarget createDefaultTargetForProgramReceiveIfId(String receiveIfId) {
-    return new ProgramReceiveTarget(receiveIfId, mLocalizer.msg("defaultTarget","Default target"), "NULL");
+    return new ProgramReceiveTarget(TYPE_EVENT_UNDIFINED, receiveIfId, LOCALIZER.msg("defaultTarget","Default target"), "NULL");
   }
+  
   /**
    * Creates an instance of the ProgramReceiveTarget.
    * Use this to create a target from the plugin for the other plugins to read.
    *
+   * @param eventTypeSupported The event type supported by this target.
    * @param receiveIfId The ProgramReceiveIf id (your Plugin) to create for.
    * @param name The name of the target.
    * @param targetId The unique id of the target.
    */
-  private ProgramReceiveTarget(String receiveIfId, String name, String targetId) {
+  private ProgramReceiveTarget(int eventTypeSupported, String receiveIfId, String name, String targetId) {
+    mSupportedEventType = eventTypeSupported;
     mReceiveIfId = receiveIfId;
     mTargetName = name;
     mTargetId = targetId;
-    mUsedSendType = TYPE_SENDING_USED_NONE;
+    mUsedEventType = TYPE_EVENT_UNDIFINED;
   }
 
   /**
@@ -147,7 +172,22 @@ public final class ProgramReceiveTarget implements Comparable<ProgramReceiveTarg
    * @param targetId The unique id of the target.
    */
   public ProgramReceiveTarget(ProgramReceiveIf receiveIf, String name, String targetId) {
-    this(receiveIf.getId(), name, targetId);
+    this(TYPE_EVENT_UNDIFINED, receiveIf.getId(), name, targetId);
+  }
+  
+  /**
+   * Creates an instance of the ProgramReceiveTarget.
+   * Use this to create a target from the plugin for the other plugins to read.
+   * NOTE: If a target should support {@link #TYPE_EVENT_ADDED} and {@link #TYPE_EVENT_REMOVED}
+   * the eventTypeSupported has to be set to {@link #TYPE_EVENT_ADDED} + {@link #TYPE_EVENT_REMOVED}
+   * 
+   * @param eventTypeSupported The event type supported by this target.
+   * @param receiveIf The ProgramReceiveIf (your Plugin) to create for.
+   * @param name The name of the target.
+   * @param targetId The unique id of the target.
+   */
+  public ProgramReceiveTarget(int eventTypeSupported, ProgramReceiveIf receiveIf, String name, String targetId) {
+    this(eventTypeSupported, receiveIf.getId(), name, targetId);
   }
 
   /**
@@ -165,7 +205,10 @@ public final class ProgramReceiveTarget implements Comparable<ProgramReceiveTarg
     mTargetName = in.readUTF();
     
     if(version >= 2) {
-      mUsedSendType = in.readInt();
+      mUsedEventType = in.readInt();
+    }
+    if(version >= 3) {
+      mSupportedEventType = in.readInt();
     }
   }
 
@@ -176,11 +219,12 @@ public final class ProgramReceiveTarget implements Comparable<ProgramReceiveTarg
    * @throws IOException Thrown if an IO operation went wrong.
    */
   public void writeData(ObjectOutputStream out) throws IOException {
-    out.writeInt(2); //version
+    out.writeInt(3); //version
     out.writeUTF(mReceiveIfId);
     out.writeUTF(mTargetId);
     out.writeUTF(mTargetName);
-    out.writeInt(mUsedSendType);
+    out.writeInt(mUsedEventType);
+    out.writeInt(mSupportedEventType);
   }
 
   /**
@@ -279,7 +323,7 @@ public final class ProgramReceiveTarget implements Comparable<ProgramReceiveTarg
    * @deprecated since 4.2.2 use {@link #receivePrograms(int, Program[])} instead.
    */
   public void receivePrograms(Program[] programs) {
-    receivePrograms(ProgramReceiveIf.TYPE_SENDING_UNDIFINED, programs);
+    receivePrograms(TYPE_EVENT_UNDIFINED, programs);
   }
   
   /**
@@ -293,7 +337,7 @@ public final class ProgramReceiveTarget implements Comparable<ProgramReceiveTarg
     boolean result = false;
     
     ProgramReceiveIf plugin = getReceifeIfForIdOfTarget();
-    if (plugin != null && plugin.getSupportedProgramRecieveType() != Plugin.TYPE_PROGRAM_RECEIVE_NONE) {
+    if (plugin != null && plugin.canReceiveProgramsWithTarget()) {
       result = plugin.receivePrograms(type, programs, this);
     }
     
@@ -312,7 +356,7 @@ public final class ProgramReceiveTarget implements Comparable<ProgramReceiveTarg
     boolean result = false;
     
     ProgramReceiveIf plugin = getReceifeIfForIdOfTarget();
-    if (plugin != null && plugin.getSupportedProgramRecieveType() != Plugin.TYPE_PROGRAM_RECEIVE_NONE) {
+    if (plugin != null && plugin.canReceiveProgramsWithTarget()) {
       result = plugin.receiveValues(type, values, this);
     }
     
@@ -320,25 +364,73 @@ public final class ProgramReceiveTarget implements Comparable<ProgramReceiveTarg
   }
   
   /**
-   * Gets the sending type.
-   * @return The sending type 
+   * Gets the supported event type of this target.
+   * NOTE: If a target supports {@link #TYPE_EVENT_ADDED} and {@link #TYPE_EVENT_REMOVED} it will
+   * return a value of {@link #TYPE_EVENT_ADDED} + {@link #TYPE_EVENT_REMOVED}
+   * @return The supported event type.
    * @since 4.2.2
-   * @see {@link ProgramReceiveIf#TYPE_SENDING_UNDIFINED}, {@link ProgramReceiveIf#TYPE_SENDING_ADDED}, {@link ProgramReceiveIf#TYPE_SENDING_REMOVED}
+   * @see {@link #TYPE_EVENT_UNDIFINED}, {@link #TYPE_EVENT_ADDED} and {@link #TYPE_EVENT_REMOVED}
    */
-  public int getUsedSendingType() {
-    return mUsedSendType;
+  public int getSupportedEventType() {
+    return mSupportedEventType;
   }
   
   /**
-   * Sets the sending type.
-   * NOTE: If this target should support adding and removing of programs, set the
-   * type to {@link ProgramReceiveIf#TYPE_SENDING_ADDED} + {@link ProgramReceiveIf#TYPE_SENDING_REMOVED}
+   * Gets the event type the sending plugin to handle.
    * 
-   * @param usedSendType
+   * @return The event type 
+   * @since 4.2.2
+   * @see {@link #TYPE_EVENT_UNDIFINED}, {@link #TYPE_EVENT_ADDED}, {@link #TYPE_EVENT_REMOVED}
+   */
+  public int getEventType() {
+    return mUsedEventType;
+  }
+  
+  /**
+   * Sets the event type to use when using this target.
+   * NOTE: If this target should support adding and removing of programs, set the
+   * type to {@link #TYPE_EVENT_ADDED} + {@link #TYPE_EVENT_REMOVED}
+   * 
+   * @param eventType
    * @since 4.2.2
    * @see {@link ProgramReceiveIf#TYPE_SENDING_UNDIFINED}, {@link ProgramReceiveIf#TYPE_SENDING_ADDED}, {@link ProgramReceiveIf#TYPE_SENDING_REMOVED}
    */
-  public void setUsedSendType(int usedSendType) {
-    mUsedSendType = usedSendType;
+  public void setEventType(int eventType) {
+    mUsedEventType = eventType;
+  }
+  
+
+  /**
+   * Asks the user to select the type of sending of the programs.
+   * 
+   * @param parent The parent component for the option dialog.
+   * @param target The receive target to get the event type for.
+   * @return The type to use for sending of the programs
+   * @since 4.2.2
+   */
+  public static int getEventTypeForSendingAction(Component parent, ProgramReceiveTarget target) {
+    if(parent == null) {
+      parent = UiUtilities.getLastModalChildOf(MainFrame.getInstance());
+    }
+    
+    int result = target.getSupportedEventType();
+    
+    if(result == ProgramReceiveTarget.TYPE_EVENT_ADDED + ProgramReceiveTarget.TYPE_EVENT_REMOVED) {
+      final String[] options = {
+          LOCALIZER.msg("undefined", "I don't know"),
+          LOCALIZER.msg("added", "Added"),
+          LOCALIZER.msg("removed", "Removed")
+      };
+      
+      int selection = JOptionPane.showOptionDialog(parent, LOCALIZER.msg("message", "Were the programs to send added or removed?"), LOCALIZER.msg("title", "Type of sending?"), JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
+      
+      switch(selection) {
+        case JOptionPane.CANCEL_OPTION: result = TYPE_EVENT_REMOVED;break;
+        case JOptionPane.NO_OPTION: result = TYPE_EVENT_ADDED;break;
+        case JOptionPane.YES_OPTION: result = TYPE_EVENT_UNDIFINED;break;
+      }
+    }
+    
+    return result;
   }
 }

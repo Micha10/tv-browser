@@ -75,29 +75,6 @@ abstract public class Plugin implements Marker, ContextMenuIf, ProgramReceiveIf 
   public static final String CATEGORY_RATINGS = "ratings";
   public static final String CATEGORY_OTHER = "misc";
   
-  /**
-   * Type for plugins that do not support receiving programs
-   * from other plugins.
-   * @since 4.2.2
-   */
-  public static final int TYPE_PROGRAM_RECEIVE_NONE = -1;
-  
-  /**
-   * Type for plugins that do support receiving programs
-   * from other plugins without taking the supposed action
-   * of the sending plugin into account.
-   * @since 4.2.2
-   */
-  public static final int TYPE_PROGRAM_RECEIVE_DEFAULT = 0;
-  
-  /**
-   * Type for plugins that do support receiving programs
-   * from other plugins with handling of add and remove
-   * actions for the send programs.
-   * @since 4.2.2
-   */
-  public static final int TYPE_PROGRAM_RECEIVE_ADD_REMOVE = 1;
-  
   /** @deprecated since 3.4.4 use {@link #CATEGORY_ALL} instead */
   @Deprecated public static final String ALL_CATEGORY = CATEGORY_ALL;
   /** @deprecated since 3.4.4 use {@link #CATEGORY_REMOTE_CONTROL_SOFTWARE} instead */
@@ -855,34 +832,22 @@ abstract public class Plugin implements Marker, ContextMenuIf, ProgramReceiveIf 
    *
    * @return Whether the ProgramReceiveIf supports receiving programs from other plugins with a special target.
    *
-   * @see #receivePrograms(Program[],ProgramReceiveTarget)
+   * @see #receivePrograms(int,Program[],ProgramReceiveTarget)
    * @since 2.5
-   * @deprecated since 4.2.2 use {@link #getSupportedProgramRecieveType()} instead.
    */
   public boolean canReceiveProgramsWithTarget() {
     return false;
   }
   
   /**
-   * Gets the type of the receive action supported by this plugin.
-   * @see #TYPE_PROGRAM_RECEIVE_DEFAULT, {@link #TYPE_PROGRAM_RECEIVE_ADD_REMOVE}
-   * 
-   * @return The type of the supported program receive actions.
-   * @since 4.2.2
-   */
-  public int getSupportedProgramRecieveType() {
-    return canReceiveProgramsWithTarget() ? TYPE_PROGRAM_RECEIVE_DEFAULT : TYPE_PROGRAM_RECEIVE_NONE;
-  }
-
-  /**
    * Method called when programs are send to this plugin.
    * 
-   * @param type The type of the programs send by other plugin.
+   * @param type The type of the event that caused the sending of the programs.
    * @see #getSupportedProgramRecieveType()
    * @since 4.2.2
    */
-  public boolean receivePrograms(int receiveType, Program[] programArr, ProgramReceiveTarget receiveTarget) {
-    return (getSupportedProgramRecieveType() == TYPE_PROGRAM_RECEIVE_NONE || getSupportedProgramRecieveType() == TYPE_PROGRAM_RECEIVE_DEFAULT) && canReceiveProgramsWithTarget() ? receivePrograms(programArr, receiveTarget) : false;
+  public boolean receivePrograms(int eventType, Program[] programArr, ProgramReceiveTarget receiveTarget) {
+    return receivePrograms(programArr, receiveTarget);
   }
   
   /**
@@ -907,7 +872,7 @@ abstract public class Plugin implements Marker, ContextMenuIf, ProgramReceiveIf 
    * @since 4.2.2
    */
   public boolean receiveValues(int type, String[] values, ProgramReceiveTarget receiveTarget) {
-    return (getSupportedProgramRecieveType() == TYPE_PROGRAM_RECEIVE_NONE || getSupportedProgramRecieveType() == TYPE_PROGRAM_RECEIVE_DEFAULT) && canReceiveProgramsWithTarget() ? receiveValues(values, receiveTarget) : false;
+    return receiveValues(values, receiveTarget);
   }
   
   /**

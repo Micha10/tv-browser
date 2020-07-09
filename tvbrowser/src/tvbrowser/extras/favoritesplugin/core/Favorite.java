@@ -43,7 +43,6 @@ import devplugin.Plugin;
 import devplugin.Program;
 import devplugin.ProgramFieldType;
 import devplugin.ProgramFilter;
-import devplugin.ProgramReceiveIf;
 import devplugin.ProgramReceiveTarget;
 import devplugin.ProgramSearcher;
 import tvbrowser.core.plugin.PluginManagerImpl;
@@ -686,16 +685,13 @@ public abstract class Favorite {
       if(!dataUpdate) {
         for (ProgramReceiveTarget receiveTarget : programReceiveTargets) {
           if (receiveTarget != null && receiveTarget.getReceifeIfForIdOfTarget() != null) {
-            int type = receiveTarget.getUsedSendingType();
+            int type = receiveTarget.getEventType();
             
-            if(type == ProgramReceiveTarget.TYPE_SENDING_USED_NONE) {
-              type = ProgramReceiveIf.TYPE_SENDING_UNDIFINED;
-            }
-            else if(type == (ProgramReceiveIf.TYPE_SENDING_ADDED+ProgramReceiveIf.TYPE_SENDING_REMOVED)) {
-              type = ProgramReceiveIf.TYPE_SENDING_ADDED;
+            if(type == (ProgramReceiveTarget.TYPE_EVENT_ADDED+ProgramReceiveTarget.TYPE_EVENT_REMOVED)) {
+              type = ProgramReceiveTarget.TYPE_EVENT_ADDED;
             }
             
-            if(type != ProgramReceiveIf.TYPE_SENDING_REMOVED) {
+            if(type != ProgramReceiveTarget.TYPE_EVENT_REMOVED) {
               receiveTarget.receivePrograms(type, mNewPrograms.toArray(new Program[0]));
             }
           }
@@ -712,12 +708,9 @@ public abstract class Favorite {
       
       for (ProgramReceiveTarget receiveTarget : programReceiveTargets) {
         if (receiveTarget != null && receiveTarget.getReceifeIfForIdOfTarget() != null) {
-          ProgramReceiveIf receiveIf = receiveTarget.getReceifeIfForIdOfTarget();
-          int type = receiveTarget.getUsedSendingType();
+          int type = receiveTarget.getEventType();
           
-          if(receiveIf.getSupportedProgramRecieveType() == Plugin.TYPE_PROGRAM_RECEIVE_ADD_REMOVE &&
-              (type == (ProgramReceiveIf.TYPE_SENDING_ADDED+ProgramReceiveIf.TYPE_SENDING_REMOVED) ||
-               type == (ProgramReceiveIf.TYPE_SENDING_REMOVED))) {
+          if(type == ProgramReceiveTarget.TYPE_EVENT_REMOVED || type == ProgramReceiveTarget.TYPE_EVENT_REMOVED + ProgramReceiveTarget.TYPE_EVENT_ADDED) {
             supported.add(receiveTarget);
           }
         }
@@ -729,7 +722,7 @@ public abstract class Favorite {
         final ArrayList<Program> programs = toSend.get(FavoritesPlugin.getKeyForReceiveTarget(receiveTarget, false));
         
         if(programs != null && !programs.isEmpty()) {
-          receiveTarget.receivePrograms(ProgramReceiveIf.TYPE_SENDING_REMOVED, programs.toArray(new Program[0]));
+          receiveTarget.receivePrograms(ProgramReceiveTarget.TYPE_EVENT_REMOVED, programs.toArray(new Program[0]));
         }
       }
     }

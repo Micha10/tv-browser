@@ -16,7 +16,6 @@
  */
 package tvbrowser.extras.common;
 
-import devplugin.Plugin;
 import devplugin.Program;
 import devplugin.ProgramReceiveIf;
 import devplugin.ProgramReceiveTarget;
@@ -37,11 +36,6 @@ public abstract class AbstractInternalPluginProxy implements InternalPluginProxy
   }
   
   @Override
-  public int getSupportedProgramRecieveType() {
-    return canReceiveProgramsWithTarget() ? Plugin.TYPE_PROGRAM_RECEIVE_DEFAULT : Plugin.TYPE_PROGRAM_RECEIVE_NONE;
-  }
-  
-  @Override
   public ProgramReceiveTarget[] getProgramReceiveTargets() {
     return null;
   }
@@ -58,15 +52,11 @@ public abstract class AbstractInternalPluginProxy implements InternalPluginProxy
   
   @Override
   public boolean receivePrograms(int type, Program[] programArr, ProgramReceiveTarget receiveTarget) {
-    int typeSupported = getSupportedProgramRecieveType();
-    
-    return (typeSupported == Plugin.TYPE_PROGRAM_RECEIVE_NONE || typeSupported == Plugin.TYPE_PROGRAM_RECEIVE_DEFAULT) && canReceiveProgramsWithTarget() ? receivePrograms(programArr, receiveTarget) : false;
+    return receivePrograms(programArr, receiveTarget);
   }
   
   @Override
   public boolean receiveValues(int type, String[] values, ProgramReceiveTarget receiveTarget) {
-    int typeSupported = getSupportedProgramRecieveType();
-    
-    return (typeSupported == Plugin.TYPE_PROGRAM_RECEIVE_NONE || typeSupported == Plugin.TYPE_PROGRAM_RECEIVE_DEFAULT) && canReceiveProgramsWithTarget() ? receiveValues(values, receiveTarget) : false;
+    return receiveValues(values, receiveTarget);
   }
 }

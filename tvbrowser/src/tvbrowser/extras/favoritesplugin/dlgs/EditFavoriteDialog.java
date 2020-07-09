@@ -555,7 +555,9 @@ public class EditFavoriteDialog extends JDialog implements WindowClosingIf {
     }
 
     for (ProgramReceiveTarget target : mPassProgramPlugins) {
-      target.getReceifeIfForIdOfTarget().receivePrograms(ProgramReceiveIf.TYPE_SENDING_ADDED,mFavorite.getPrograms(),target);
+      if(target.getSupportedEventType() != ProgramReceiveTarget.TYPE_EVENT_REMOVED) {
+        target.getReceifeIfForIdOfTarget().receivePrograms(ProgramReceiveTarget.TYPE_EVENT_ADDED,mFavorite.getPrograms(),target);
+      }
     }
     
     if (mUseReminderCb.isSelected() && !wasReminderEnabled) {

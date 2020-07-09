@@ -423,12 +423,10 @@ public class FavoritesPlugin {
               final ProgramReceiveTarget[] receive = favorite.getForwardPlugins();
               
               for(ProgramReceiveTarget target : receive) {
-                if (target != null && target.getReceifeIfForIdOfTarget() != null) {
-                  ProgramReceiveIf receiveIf = target.getReceifeIfForIdOfTarget();
-                  
-                  if(receiveIf.getSupportedProgramRecieveType() == Plugin.TYPE_PROGRAM_RECEIVE_ADD_REMOVE) {
-                    receiveIf.receivePrograms(ProgramReceiveIf.TYPE_SENDING_REMOVED, programArr, target);
-                  }
+                if (target != null && target.getReceifeIfForIdOfTarget() != null &&
+                    (target.getEventType() == ProgramReceiveTarget.TYPE_EVENT_REMOVED ||
+                    target.getEventType() == ProgramReceiveTarget.TYPE_EVENT_REMOVED + ProgramReceiveTarget.TYPE_EVENT_ADDED)) {
+                  target.receivePrograms(ProgramReceiveTarget.TYPE_EVENT_REMOVED, programArr);
                 }
               }
             }
@@ -868,16 +866,9 @@ public class FavoritesPlugin {
     ArrayList<Favorite> errorFavorites = new ArrayList<Favorite>(0);
 
     for(ReceiveTargetItem target : targets) {
-      int type = target.getReceiveTarget().getUsedSendingType();
+      int type = target.getReceiveTarget().getEventType();
       
-      if(type == ProgramReceiveTarget.TYPE_SENDING_USED_NONE) {
-        type = ProgramReceiveIf.TYPE_SENDING_UNDIFINED;
-      }
-      else if(type == ProgramReceiveIf.TYPE_SENDING_ADDED + ProgramReceiveIf.TYPE_SENDING_REMOVED) {
-        type = ProgramReceiveIf.TYPE_SENDING_ADDED;
-      }
-      
-      if(!target.getReceiveTarget().receivePrograms(type,target.getPrograms())) {
+      if(type != ProgramReceiveTarget.TYPE_EVENT_REMOVED && !target.getReceiveTarget().receivePrograms(type,target.getPrograms())) {
         Favorite[] favs =FavoriteTreeModel.getInstance().getFavoritesContainingReceiveTarget(target.getReceiveTarget());
 
         for(Favorite fav : favs) {
@@ -1328,7 +1319,7 @@ public class FavoritesPlugin {
     ArrayList<ProgramReceiveTarget> list = new ArrayList<ProgramReceiveTarget>(0);
     for (ProgramReceiveTarget target : mClientPluginTargets) {
       ProgramReceiveIf plugin = target.getReceifeIfForIdOfTarget();
-      if (plugin != null && plugin.getSupportedProgramRecieveType() != Plugin.TYPE_PROGRAM_RECEIVE_NONE) {
+      if (plugin != null && plugin.canReceiveProgramsWithTarget()) {
         list.add(target);
       }
     }
@@ -1461,7 +1452,7 @@ public class FavoritesPlugin {
 
   public static String getKeyForReceiveTarget(ProgramReceiveTarget target, boolean withSendingType) {
     if(target != null) {
-      return target.getReceiveIfId() + "###" + target.getTargetId() + (withSendingType ? "###" + target.getUsedSendingType() : "");
+      return target.getReceiveIfId() + "###" + target.getTargetId() + (withSendingType ? "###" + target.getEventType() : "");
     }
 
     return null;

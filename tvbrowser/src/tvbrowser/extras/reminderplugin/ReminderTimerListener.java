@@ -46,7 +46,6 @@ import javax.swing.SwingUtilities;
 import org.apache.commons.lang3.StringUtils;
 
 import devplugin.Program;
-import devplugin.ProgramReceiveIf;
 import devplugin.ProgramReceiveTarget;
 import util.exc.ErrorHandler;
 import util.io.ExecutionHandler;
@@ -159,7 +158,7 @@ public class ReminderTimerListener {
     }
 
     for (ProgramReceiveTarget target : targets) {
-      target.getReceifeIfForIdOfTarget().receivePrograms(ProgramReceiveIf.TYPE_SENDING_UNDIFINED, programs.toArray(new Program[programs.size()]),target);
+      target.getReceifeIfForIdOfTarget().receivePrograms(ProgramReceiveTarget.TYPE_EVENT_UNDIFINED, programs.toArray(new Program[programs.size()]),target);
     }
 
     SwingUtilities.invokeLater(() -> new Thread("Update reminder tree") {

@@ -83,11 +83,6 @@ public class ReminderPluginProxy extends AbstractInternalPluginProxy implements 
   public String toString() {
     return ReminderPlugin.getName();
   }
-
-  @Override
-  public int getSupportedProgramRecieveType() {
-    return Plugin.TYPE_PROGRAM_RECEIVE_DEFAULT;
-  }
   
   public boolean receivePrograms(int type, Program[] programArr, ProgramReceiveTarget receiveTarget) {
     getReminderInstance().addPrograms(programArr);

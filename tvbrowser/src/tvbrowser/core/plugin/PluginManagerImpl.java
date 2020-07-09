@@ -1170,7 +1170,7 @@ public class PluginManagerImpl implements PluginManager {
     }
     
     for(PluginAccess plugin : plugins) {
-      if (plugin.getSupportedProgramRecieveType() != Plugin.TYPE_PROGRAM_RECEIVE_NONE
+      if (plugin.canReceiveProgramsWithTarget()
           && plugin.getProgramReceiveTargets() != null
           && plugin.getProgramReceiveTargets().length > 0
           &&

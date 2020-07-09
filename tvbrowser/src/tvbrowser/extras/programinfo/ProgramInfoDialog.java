@@ -84,11 +84,9 @@ import com.l2fprod.common.swing.JTaskPaneGroup;
 
 import devplugin.ActionMenu;
 import devplugin.ContextMenuIf;
-import devplugin.Plugin;
 import devplugin.PluginAccess;
 import devplugin.PluginManager;
 import devplugin.Program;
-import devplugin.ProgramReceiveIf;
 import devplugin.ProgramReceiveTarget;
 import devplugin.ProgramSearcher;
 import devplugin.SettingsItem;
@@ -385,7 +383,7 @@ class ProgramInfoDialog {
           final PluginAccess webPlugin = PluginManagerImpl.getInstance()
               .getActivatedPluginForId("java.webplugin.WebPlugin");
 
-          if (webPlugin != null && webPlugin.getSupportedProgramRecieveType() != Plugin.TYPE_PROGRAM_RECEIVE_NONE) {
+          if (webPlugin != null && webPlugin.canReceiveProgramsWithTarget()) {
             ProgramReceiveTarget[] targets = webPlugin
                 .getProgramReceiveTargets();
 
@@ -450,7 +448,7 @@ class ProgramInfoDialog {
                     .getActivatedPluginForId(keys[0]);
 
                 if (webPlugin != null
-                    && webPlugin.getSupportedProgramRecieveType() != Plugin.TYPE_PROGRAM_RECEIVE_NONE) {
+                    && webPlugin.canReceiveProgramsWithTarget()) {
                   ProgramReceiveTarget[] targets = webPlugin
                       .getProgramReceiveTargets();
 
@@ -511,7 +509,7 @@ class ProgramInfoDialog {
       }
 
       private void searchWebPlugin(String desc, ProgramReceiveTarget target) {
-        target.receiveValues(ProgramReceiveIf.TYPE_SENDING_UNDIFINED, new String[] { desc });
+        target.receiveValues(ProgramReceiveTarget.TYPE_EVENT_UNDIFINED, new String[] { desc });
       }
 
       private void searchWikipedia(String desc) {

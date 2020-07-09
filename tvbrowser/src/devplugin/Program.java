@@ -196,7 +196,6 @@ public interface Program {
   @Deprecated public static final int WAS_DELETED_STATE = STATE_WAS_DELETED;
 
   public static final int PRIORITY_MARK_NONE = -1;
-  /** @deprecated since 4.2.2 use {@link #getHighlightingPriorityMaximum()} instead */
   public static final int PRIORITY_MARK_MIN = 0;
   /** @deprecated since 4.2.2 use {@link #getHighlightingPriorityMaximum()} instead */
   public static final int PRIORITY_MARK_MEDIUM_LOWER = 1;

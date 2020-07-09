@@ -178,7 +178,7 @@ public class TVBrowser {
   private static final boolean mIsStable = false;
   private static final int mMajorVersion = 4;
   private static final int mMinorVersion = 21;
-  private static final int mSubMinorVersion = 51;
+  private static final int mSubMinorVersion = 52;
 
   /* If you want to change the version string, add it to the beginning of this array.
      We need the old version strings to import the settings.
@@ -192,6 +192,7 @@ public class TVBrowser {
   */
   /** The string array with the names of the earlier versions. */
   private static final String[] ALL_VERSIONS = new String[] {
+      "4.2.1.52 SVN",
       "4.2.1.51 SVN",
 		  "4.2.1.50 SVN",
 		  "4.2.1",

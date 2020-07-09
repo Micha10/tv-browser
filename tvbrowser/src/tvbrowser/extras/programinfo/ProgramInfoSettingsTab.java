@@ -290,7 +290,7 @@ public class ProgramInfoSettingsTab implements SettingsTab {
 
     int selectedIndex = -1;
 
-    if(webPlugin != null && webPlugin.getSupportedProgramRecieveType() != Plugin.TYPE_PROGRAM_RECEIVE_NONE) {
+    if(webPlugin != null && webPlugin.canReceiveProgramsWithTarget()) {
       ProgramReceiveTarget[] targets = webPlugin.getProgramReceiveTargets();
 
       if(targets != null) {

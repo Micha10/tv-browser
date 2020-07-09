@@ -58,7 +58,6 @@ import devplugin.PluginsProgramFilter;
 import devplugin.Program;
 import devplugin.ProgramInfo;
 import devplugin.ProgramRatingIf;
-import devplugin.ProgramReceiveIf;
 import devplugin.ProgramReceiveTarget;
 import devplugin.SettingsTab;
 import devplugin.ToolTipIcon;
@@ -813,19 +812,12 @@ public class JavaPluginProxy extends AbstractPluginProxy {
 
   @Override
   public boolean receivePrograms(Program[] programArr, ProgramReceiveTarget receiveTarget) {
-    // TODO Auto-generated method stub
-    return receivePrograms(ProgramReceiveIf.TYPE_SENDING_UNDIFINED, programArr, receiveTarget);
+    return doReceivePrograms(ProgramReceiveTarget.TYPE_EVENT_UNDIFINED, programArr, receiveTarget);
   }
 
   @Override
   public boolean receiveValues(String[] values, ProgramReceiveTarget receiveTarget) {
-    // TODO Auto-generated method stub
-    return receiveValues(ProgramReceiveIf.TYPE_SENDING_UNDIFINED, values, receiveTarget);
-  }
-
-  @Override
-  protected int doGetSupportedProgramRecieveType() {
-    return mPlugin.getSupportedProgramRecieveType();
+    return doReceiveValues(ProgramReceiveTarget.TYPE_EVENT_UNDIFINED, values, receiveTarget);
   }
 
   @Override

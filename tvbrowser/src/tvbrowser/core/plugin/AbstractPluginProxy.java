@@ -38,7 +38,6 @@ import devplugin.Channel;
 import devplugin.ChannelDayProgram;
 import devplugin.ContextMenuIf;
 import devplugin.ImportanceValue;
-import devplugin.Plugin;
 import devplugin.PluginCommunication;
 import devplugin.PluginInfo;
 import devplugin.PluginManager;
@@ -735,30 +734,6 @@ public abstract class AbstractPluginProxy implements PluginProxy, ContextMenuIf 
       return false;
     }
   }
-  
-  /**
-   * Gets the type of the receive action supported by this plugin.
-   * 
-   * @return The type of the supported program receive actions.
-   * @since 4.2.2
-   */
-  public final int getSupportedProgramRecieveType() {
-    try {
-      return doGetSupportedProgramRecieveType();
-    }catch (Throwable t) {
-      handlePluginException(t);
-      return Plugin.TYPE_PROGRAM_RECEIVE_NONE;
-    }
-  }
-
-  /**
-   * Really gets the type of the supported program receive actions.
-   *
-   * @return The type of the supported program receive actions.
-   * @see #receivePrograms(int,Program[],ProgramReceiveTarget)
-   * @since 4.2.2
-   */
-  protected abstract int doGetSupportedProgramRecieveType();
   
   /**
    * Really gets whether the plugin supports receiving programs from other

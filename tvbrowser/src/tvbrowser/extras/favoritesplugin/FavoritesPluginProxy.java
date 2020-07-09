@@ -211,9 +211,4 @@ public class FavoritesPluginProxy extends AbstractInternalPluginProxy implements
   public void handleTvBrowserStartFinished() {
     FavoritesPlugin.getInstance().handleTvBrowserStartFinished();
   }
-
-  @Override
-  public int getSupportedProgramRecieveType() {
-    return Plugin.TYPE_PROGRAM_RECEIVE_DEFAULT;
-  }
 }

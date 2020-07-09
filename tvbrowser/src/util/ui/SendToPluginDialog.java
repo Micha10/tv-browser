@@ -111,17 +111,17 @@ public class SendToPluginDialog extends JDialog implements WindowClosingIf {
     
     pb.addSeparator(LOCALIZER.msg("sendTo", "Send {0} programs to", mPrograms.length), CC.xyw(1,1,3));
     
-    mSendType = ProgramReceiveIf.TYPE_SENDING_UNDIFINED;
+    mSendType = ProgramReceiveTarget.TYPE_EVENT_UNDIFINED;
     mTypeAdd = new JRadioButton(LOCALIZER.msg("add", "Add"),true);
     mTypeAdd.addItemListener(e -> {
           if(e.getStateChange() == ItemEvent.SELECTED) {
-            mSendType = ProgramReceiveIf.TYPE_SENDING_ADDED;
+            mSendType = ProgramReceiveTarget.TYPE_EVENT_ADDED;
           }
         });
     mTypeRemove = new JRadioButton(LOCALIZER.msg("remove", "Remove"));
     mTypeRemove.addItemListener(e -> {
           if(e.getStateChange() == ItemEvent.SELECTED) {
-            mSendType = ProgramReceiveIf.TYPE_SENDING_REMOVED;
+            mSendType = ProgramReceiveTarget.TYPE_EVENT_REMOVED;
           }
         });
     ButtonGroup bg = new ButtonGroup();
@@ -146,24 +146,31 @@ public class SendToPluginDialog extends JDialog implements WindowClosingIf {
     pb.addSeparator(LOCALIZER.msg("target","Target:"), CC.xyw(1,5,3));
     
     mTargetList = new JComboBox<>(installedPluginArr[0].getProgramReceiveTargets());
+    mTargetList.addItemListener(e -> {
+      int eventType = ((ProgramReceiveTarget)e.getItem()).getSupportedEventType();
+      if(e.getStateChange() == ItemEvent.SELECTED) {
+        sendingPanel.setVisible(eventType == ProgramReceiveTarget.TYPE_EVENT_ADDED + ProgramReceiveTarget.TYPE_EVENT_REMOVED);
+      }
+      else {
+        mSendType = eventType;
+      }
+    });
     pb.add(mTargetList, CC.xy(2, 7));
     pb.add(sendingPanel, CC.xyw(1, 8, 3));
     
-    sendingPanel.setVisible(installedPluginArr[0].getSupportedProgramRecieveType() == Plugin.TYPE_PROGRAM_RECEIVE_ADD_REMOVE);
+    sendingPanel.setVisible(installedPluginArr[0].canReceiveProgramsWithTarget()&& mTargetList.getItemCount() > 1);
     
-    mTargetList.setEnabled(installedPluginArr[0].getSupportedProgramRecieveType() != Plugin.TYPE_PROGRAM_RECEIVE_NONE
+    mTargetList.setEnabled(installedPluginArr[0].canReceiveProgramsWithTarget()
         && mTargetList.getItemCount() > 1);
     
     mPluginList.addItemListener(e -> {
       if(e.getStateChange() == ItemEvent.SELECTED) {
-        mSendType = ProgramReceiveIf.TYPE_SENDING_UNDIFINED;
+        mSendType = ProgramReceiveTarget.TYPE_EVENT_UNDIFINED;
         ProgramReceiveTarget[] targets = ((ProgramReceiveIf)e.getItem()).getProgramReceiveTargets();
         
         mTargetList.removeAllItems();
         
-        int supportedType = ((ProgramReceiveIf)e.getItem()).getSupportedProgramRecieveType();
-        
-        if(supportedType != Plugin.TYPE_PROGRAM_RECEIVE_NONE) {
+        if(((ProgramReceiveIf)e.getItem()).canReceiveProgramsWithTarget()) {
           for(ProgramReceiveTarget target : targets) {
             if(!target.equals(mCallerTarget)) {
               mTargetList.addItem(target);
@@ -171,11 +178,17 @@ public class SendToPluginDialog extends JDialog implements WindowClosingIf {
           }
           
           mTargetList.setEnabled(targets.length > 1);
-          sendingPanel.setVisible(supportedType == Plugin.TYPE_PROGRAM_RECEIVE_ADD_REMOVE);
+          
+          if(mTargetList.getModel().getSize() > 0) {
+            sendingPanel.setVisible(mTargetList.getModel().getElementAt(0).getSupportedEventType() == ProgramReceiveTarget.TYPE_EVENT_ADDED + ProgramReceiveTarget.TYPE_EVENT_REMOVED);
+          }
           
           if(sendingPanel.isVisible()) {
             mTypeAdd.setSelected(true);
-            mSendType = ProgramReceiveIf.TYPE_SENDING_ADDED;
+            mSendType = ProgramReceiveTarget.TYPE_EVENT_ADDED;
+          }
+          else {
+            mSendType = targets[0].getSupportedEventType();
           }
         }
         else if(targets != null && targets.length > 0) {

@@ -359,10 +359,4 @@ public class BeanShellPluginProxy extends AbstractPluginProxy {
       // TODO Auto-generated method stub
       return false;
     }
-
-    @Override
-    protected int doGetSupportedProgramRecieveType() {
-      // TODO Auto-generated method stub
-      return Plugin.TYPE_PROGRAM_RECEIVE_NONE;
-    }
  }
