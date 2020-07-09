@@ -15,9 +15,9 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  *
  * SVN information:
- *     $Date$
- *   $Author$
- * $Revision$
+ *     $Date: 2017-06-13 17:25:57 +0200 (Di, 13 Jun 2017) $
+ *   $Author: ds10 $
+ * $Revision: 8720 $
  */
 package simplemarkerplugin.table;
 
@@ -28,7 +28,6 @@ import javax.swing.JTable;
 import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableCellRenderer;
 
-import devplugin.Program;
 import simplemarkerplugin.MarkList;
 
 /**
@@ -36,23 +35,14 @@ import simplemarkerplugin.MarkList;
  * 
  * @author René Mach
  */
-public class MarkerProgramImportanceRenderer extends DefaultTableCellRenderer {
+public class MarkerEventTypeRenderer extends DefaultTableCellRenderer {
 
   @Override
   public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
     Component c = super.getTableCellRendererComponent(table, value,
         isSelected, hasFocus, row, column);
     ((JLabel)c).setHorizontalAlignment(SwingConstants.CENTER);
-    
-    switch(((MarkList)value).getProgramImportance()) {
-      case Program.MIN_PROGRAM_IMPORTANCE: ((JLabel)c).setText(MarkListProgramImportanceCellEditor.IMPORTANCE_VALUE[1]);break;
-      case Program.LOWER_MEDIUM_PROGRAM_IMPORTANCE: ((JLabel)c).setText(MarkListProgramImportanceCellEditor.IMPORTANCE_VALUE[2]);break;
-      case Program.MEDIUM_PROGRAM_IMPORTANCE: ((JLabel)c).setText(MarkListProgramImportanceCellEditor.IMPORTANCE_VALUE[3]);break;
-      case Program.HIGHER_MEDIUM_PROGRAM_IMPORTANCE: ((JLabel)c).setText(MarkListProgramImportanceCellEditor.IMPORTANCE_VALUE[4]);break;
-      case Program.MAX_PROGRAM_IMPORTANCE: ((JLabel)c).setText(MarkListProgramImportanceCellEditor.IMPORTANCE_VALUE[5]);break;
-    
-      default: ((JLabel)c).setText(MarkListProgramImportanceCellEditor.IMPORTANCE_VALUE[0]);
-    }
+    ((JLabel)c).setText(MarkListEventTypeCellEditor.EVENT_VALUES[((MarkList)value).getSupportedEventType()]);
     
     return c;
   }

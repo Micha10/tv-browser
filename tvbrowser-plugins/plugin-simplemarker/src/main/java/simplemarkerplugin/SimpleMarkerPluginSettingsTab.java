@@ -23,7 +23,20 @@ package simplemarkerplugin;
 
 import java.awt.Dimension;
 import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.Window;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.Transferable;
+import java.awt.datatransfer.UnsupportedFlavorException;
+import java.awt.dnd.DnDConstants;
+import java.awt.dnd.DragGestureEvent;
+import java.awt.dnd.DragGestureListener;
+import java.awt.dnd.DragSource;
+import java.awt.dnd.DropTarget;
+import java.awt.dnd.DropTargetDragEvent;
+import java.awt.dnd.DropTargetDropEvent;
+import java.awt.dnd.DropTargetEvent;
+import java.awt.dnd.DropTargetListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -48,12 +61,15 @@ import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.ListSelectionModel;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumn;
 
 import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
@@ -65,10 +81,12 @@ import devplugin.SettingsItem;
 import devplugin.SettingsTab;
 import devplugin.Version;
 import simplemarkerplugin.table.DeleteShowSelectionRenderer;
+import simplemarkerplugin.table.MarkListEventTypeCellEditor;
 import simplemarkerplugin.table.MarkListPriorityCellEditor;
 import simplemarkerplugin.table.MarkListProgramImportanceCellEditor;
 import simplemarkerplugin.table.MarkListSendToPluginCellEditor;
 import simplemarkerplugin.table.MarkListTableModel;
+import simplemarkerplugin.table.MarkerEventTypeRenderer;
 import simplemarkerplugin.table.MarkerIDRenderer;
 import simplemarkerplugin.table.MarkerIconRenderer;
 import simplemarkerplugin.table.MarkerPriorityRenderer;
@@ -146,34 +164,33 @@ public class SimpleMarkerPluginSettingsTab implements SettingsTab,
     mListTable = new JTable(mModel);
     mListTable.getTableHeader().setReorderingAllowed(false);
     mListTable.getTableHeader().setResizingAllowed(false);
+    mListTable.getTableHeader().setPreferredSize(new Dimension(50,50));
+    
     mListTable.getColumnModel().getColumn(0).setCellRenderer(new MarkerIDRenderer());
     mListTable.getColumnModel().getColumn(0).setMinWidth(100);
+    
     mListTable.getColumnModel().getColumn(1).setCellRenderer(new MarkerIconRenderer());
-
-    int columnWidth = UiUtilities.getStringWidth(mListTable.getFont(),mModel.getColumnName(1)) + 10;
-    mListTable.getColumnModel().getColumn(1).setMaxWidth(columnWidth);
-    mListTable.getColumnModel().getColumn(1).setMinWidth(columnWidth);
+    mListTable.getColumnModel().getColumn(1).setMinWidth(setColumnWidth(mListTable.getColumnModel().getColumn(1),mModel.getColumnName(1)));
 
     mListTable.getColumnModel().getColumn(2).setCellRenderer(new MarkerPriorityRenderer());
-    columnWidth = UiUtilities.getStringWidth(mListTable.getFont(),mModel.getColumnName(2)) + 10;
-    mListTable.getColumnModel().getColumn(2).setMaxWidth(columnWidth);
-    mListTable.getColumnModel().getColumn(2).setMinWidth(columnWidth);
+    mListTable.getColumnModel().getColumn(2).setMinWidth(setColumnWidth(mListTable.getColumnModel().getColumn(2),mModel.getColumnName(2)));
 
     mListTable.getColumnModel().getColumn(3).setCellRenderer(new MarkerProgramImportanceRenderer());
-    columnWidth = UiUtilities.getStringWidth(mListTable.getFont(),mModel.getColumnName(3)) + 10;
-    mListTable.getColumnModel().getColumn(3).setMaxWidth(columnWidth);
-    mListTable.getColumnModel().getColumn(3).setMinWidth(columnWidth);
+    mListTable.getColumnModel().getColumn(3).setMinWidth(setColumnWidth(mListTable.getColumnModel().getColumn(3),mModel.getColumnName(3)));
 
     mListTable.getColumnModel().getColumn(4).setCellRenderer(new MarkerSendToPluginRenderer());
-    columnWidth = UiUtilities.getStringWidth(mListTable.getFont(),mModel.getColumnName(4)) + 10;
-    mListTable.getColumnModel().getColumn(4).setMaxWidth(columnWidth);
-    mListTable.getColumnModel().getColumn(4).setMinWidth(columnWidth);
+    mListTable.getColumnModel().getColumn(4).setMinWidth(setColumnWidth(mListTable.getColumnModel().getColumn(4),mModel.getColumnName(4)));
 
     mListTable.getColumnModel().getColumn(5).setCellRenderer(new DeleteShowSelectionRenderer());
-    columnWidth = UiUtilities.getStringWidth(mListTable.getFont(),mModel.getColumnName(5)) + 10;
-    mListTable.getColumnModel().getColumn(5).setMaxWidth(columnWidth);
-    mListTable.getColumnModel().getColumn(5).setPreferredWidth(columnWidth);
+    setColumnWidth(mListTable.getColumnModel().getColumn(5),mModel.getColumnName(5));
     mListTable.getColumnModel().getColumn(5).setMinWidth(30);
+    
+    if(SimpleMarkerPlugin.supportsEventTypes()) {
+      mListTable.getColumnModel().getColumn(6).setCellRenderer(new MarkerEventTypeRenderer());
+      mListTable.getColumnModel().getColumn(6).setMinWidth(setColumnWidth(mListTable.getColumnModel().getColumn(6),mModel.getColumnName(6)));
+      mListTable.getColumnModel().getColumn(6).setCellEditor(new MarkListEventTypeCellEditor());
+    }
+    
     
     mListTable.setRowHeight(25);
 
@@ -190,7 +207,101 @@ public class SimpleMarkerPluginSettingsTab implements SettingsTab,
     mListTable.getColumnModel().getColumn(2).setCellEditor(new MarkListPriorityCellEditor());
     mListTable.getColumnModel().getColumn(3).setCellEditor(new MarkListProgramImportanceCellEditor());
     mListTable.getColumnModel().getColumn(4).setCellEditor(new MarkListSendToPluginCellEditor());
-
+    mListTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+    
+    new DropTarget(mListTable, new DropTargetListener() {
+      @Override
+      public void dropActionChanged(DropTargetDragEvent dtde) {}
+      
+      @Override
+      public void drop(DropTargetDropEvent dtde) {
+        DataFlavor[] flavors = dtde.getCurrentDataFlavors();
+        
+        if(flavors != null && flavors.length == 1 && flavors[0].getHumanPresentableName() != null &&
+            flavors[0].getHumanPresentableName().equals("tableRowMove")) {
+          
+          try {
+            Object o = dtde.getTransferable().getTransferData(flavors[0]);
+            
+            if(o instanceof Integer) {
+              int row = (Integer)o;
+              int index = mListTable.rowAtPoint(dtde.getLocation());
+              Rectangle rect = mListTable.getCellRect(index, 0, true);
+              
+              if(dtde.getLocation().y > (rect.y + rect.height*2/3)) {
+                index++;
+              }
+              
+              ((DefaultTableModel)mListTable.getModel()).moveRow(row, row, index);
+              
+              if(row < index) {
+                index--;
+              }
+              
+              mListTable.getSelectionModel().addSelectionInterval(index, index);
+              
+              dtde.dropComplete(true);
+            }
+            else {
+              dtde.dropComplete(false);
+            }
+          } catch (Exception e) {
+            dtde.dropComplete(false);
+          }
+          
+        }
+        else {
+          dtde.dropComplete(false);
+        }
+      }
+      
+      @Override
+      public void dragOver(DropTargetDragEvent dtde) {
+        if(dtde.getCurrentDataFlavors() != null && dtde.getCurrentDataFlavors()[0].getHumanPresentableName() != null && dtde.getCurrentDataFlavors()[0].getHumanPresentableName().contentEquals("tableRowMove")) {
+          dtde.acceptDrag(dtde.getDropAction());
+        }
+        else {
+          dtde.rejectDrag();
+        }
+      }
+      
+      @Override
+      public void dragExit(DropTargetEvent dte) {}
+      
+      @Override
+      public void dragEnter(DropTargetDragEvent dtde) {
+        if(dtde.getCurrentDataFlavors() != null && dtde.getCurrentDataFlavors()[0].getHumanPresentableName() != null && dtde.getCurrentDataFlavors()[0].getHumanPresentableName().contentEquals("tableRowMove")) {
+          dtde.acceptDrag(dtde.getDropAction());
+        }
+        else {
+          dtde.rejectDrag();
+        }
+      }
+    });
+    
+    DragSource.getDefaultDragSource().createDefaultDragGestureRecognizer(mListTable, DnDConstants.ACTION_MOVE, new DragGestureListener() {
+        @Override
+        public void dragGestureRecognized(DragGestureEvent dge) {
+          dge.startDrag(null,new Transferable() {
+            
+            @Override
+            public boolean isDataFlavorSupported(DataFlavor flavor) {
+              return flavor.getHumanPresentableName() != null && flavor.getHumanPresentableName().equals("tableRowMove");
+            }
+            
+            @Override
+            public DataFlavor[] getTransferDataFlavors() {
+              return new DataFlavor[] {new DataFlavor(JTable.class, "tableRowMove")};
+            }
+            
+            @Override
+            public Object getTransferData(DataFlavor flavor) throws UnsupportedFlavorException, IOException {
+              return isDataFlavorSupported(flavor) ? mListTable.getSelectedRow() : null;
+            }
+          });
+        }
+    });
+    
     JScrollPane pane = new JScrollPane(mListTable);
     pane.setPreferredSize(new Dimension(200,150));
     pane.getViewport().setBackground(UIManager.getColor("List.background"));
@@ -201,7 +312,7 @@ public class SimpleMarkerPluginSettingsTab implements SettingsTab,
     
     y++;
     
-    panel.add(UiUtilities.createHtmlHelpTextArea(SimpleMarkerPlugin.getLocalizer().msg("settings.informAboutDeletedPrograms","*Inform about programs of that list that were deleted during a data update")), CC.xy(2, y));
+    panel.add(UiUtilities.createHtmlHelpTextArea(SimpleMarkerPlugin.getLocalizer().msg("settings.informAboutDeletedPrograms","¹ Inform about programs of that list that were deleted during a data update")+(SimpleMarkerPlugin.supportsEventTypes() ? "<br>"+SimpleMarkerPlugin.getLocalizer().msg("settings.eventTypeHelp","² Which type of received programs are processed by the list") : "")), CC.xy(2, y));
 
     JPanel south = new JPanel();
     south.setLayout(new BoxLayout(south, BoxLayout.X_AXIS));
@@ -255,6 +366,21 @@ public class SimpleMarkerPluginSettingsTab implements SettingsTab,
   }
   
   return new JPanel();
+  }
+  
+  private int setColumnWidth(TableColumn column, String name) {
+    int columnWidth = 0;
+    
+    String[] nameParts = name.replace("<html>", "").split("<br>");
+    
+    for(String part : nameParts) {
+      columnWidth = Math.max(columnWidth,UiUtilities.getStringWidth(mListTable.getFont(),part) + 10);
+    }
+    
+    column.setMaxWidth(columnWidth);
+    column.setPreferredWidth(columnWidth);
+    
+    return columnWidth;
   }
 
   public void saveSettings() {

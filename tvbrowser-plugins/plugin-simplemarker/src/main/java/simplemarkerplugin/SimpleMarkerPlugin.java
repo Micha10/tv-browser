@@ -94,7 +94,7 @@ import util.ui.WindowClosingIf;
  * @author René Mach
  */
 public class SimpleMarkerPlugin extends Plugin {
-  private static final Version mVersion = new Version(3,28,3,true);
+  private static final Version mVersion = new Version(3,30,0,true);
 
   /** The localizer for this class. */
   private static final util.ui.Localizer mLocalizer = util.ui.Localizer.getLocalizerFor(SimpleMarkerPlugin.class);
@@ -301,10 +301,6 @@ public class SimpleMarkerPlugin extends Plugin {
     return true;
   }
   
-  public int getSupportedProgramRecieveType() {
-    return 1;
-  }
-
   public ProgramReceiveTarget[] getProgramReceiveTargets() {
     return mMarkListVector.getReceiveTargets();
   }
@@ -894,5 +890,8 @@ public class SimpleMarkerPlugin extends Plugin {
     return mActionIdCount++;
   }
   
+  public static boolean supportsEventTypes() {
+    return Plugin.getPluginManager().getTVBrowserVersion().compareTo(new Version(4, 21, 52, false)) >= 0;
+  }
   
 }

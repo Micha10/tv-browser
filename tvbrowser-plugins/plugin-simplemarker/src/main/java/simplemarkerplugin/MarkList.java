@@ -50,6 +50,7 @@ import devplugin.Plugin;
 import devplugin.PluginTreeNode;
 import devplugin.Program;
 import devplugin.ProgramItem;
+import devplugin.ProgramReceiveIf;
 import devplugin.ProgramReceiveTarget;
 import util.io.IOUtilities;
 import util.program.ProgramUtilities;
@@ -80,6 +81,7 @@ public class MarkList extends Vector<Program> {
   private ArrayList<ProgramReceiveTarget> mReceiveTargets = new ArrayList<ProgramReceiveTarget>();
   private boolean mShowDeletedPrograms;
   private int mActionId;
+  private int mEventType;
 
   private static class MarkListProgramItem {
     private final String mProgramId;
@@ -210,6 +212,10 @@ public class MarkList extends Vector<Program> {
     else {
       mActionId = -1;
     }
+    
+    if(version >= 9) {
+      mEventType = in.readInt();
+    }
   }
 
   public void setActionId(int actionId) {
@@ -230,6 +236,7 @@ public class MarkList extends Vector<Program> {
     mProgramImportance = Program.DEFAULT_PROGRAM_IMPORTANCE;
     mShowDeletedPrograms = true;
     mActionId = actionId;
+    mEventType = 0;
   }
 
   /**
@@ -258,7 +265,7 @@ public class MarkList extends Vector<Program> {
    * @throws IOException if something went wrong with writing the data
    */
   protected void writeData(final ObjectOutputStream out) throws IOException {
-    out.writeInt(8); // Version
+    out.writeInt(9); // Version
     out.writeInt(mMarkPriority);
     out.writeObject(mName);
     out.writeUTF(mId);
@@ -290,6 +297,7 @@ public class MarkList extends Vector<Program> {
     out.writeByte(mProgramImportance);
     out.writeBoolean(mShowDeletedPrograms);
     out.writeInt(mActionId);
+    out.writeInt(mEventType);
   }
 
   /**
@@ -679,9 +687,28 @@ public class MarkList extends Vector<Program> {
    * @return The ProgramReceiveTarget of this list.
    */
   public ProgramReceiveTarget getReceiveTarget() {
-    return new ProgramReceiveTarget(SimpleMarkerPlugin.getInstance(),
-        SimpleMarkerPlugin.getLocalizer().msg("list.export", "Add to '{0}'", mName),
-        mId);
+    ProgramReceiveTarget result = new ProgramReceiveTarget(SimpleMarkerPlugin.getInstance(),
+        SimpleMarkerPlugin.getLocalizer().msg("list.export", "Add to '{0}'", mName), mId);
+    
+    if(SimpleMarkerPlugin.supportsEventTypes()) {
+      try {
+        Constructor<ProgramReceiveTarget> c = ProgramReceiveTarget.class.getConstructor(int.class, ProgramReceiveIf.class, String.class, String.class);
+        c.setAccessible(true);
+        
+        String name = SimpleMarkerPlugin.getLocalizer().msg("list.export", "Add to '{0}'", mName);
+        
+        if(mEventType == 2) {
+          name = SimpleMarkerPlugin.getLocalizer().msg("list.export.remove", "Remove from '{0}'", mName);
+        }
+        else if(mEventType == 3) {
+          name = SimpleMarkerPlugin.getLocalizer().msg("list.export.both", "Add/Remove to/from '{0}'", mName);
+        }
+        
+        result = c.newInstance(mEventType,SimpleMarkerPlugin.getInstance(),name,mId);
+      }catch(Exception e) {}
+    }
+    
+    return result;
   }
 
   /**
@@ -827,6 +854,22 @@ public class MarkList extends Vector<Program> {
    */
   public void setPluginTargets(Collection<ProgramReceiveTarget> targets) {
     mReceiveTargets = new ArrayList<ProgramReceiveTarget>(targets);
+  }
+  
+  /**
+   * @return The supported event type for receiving program.
+   */
+  public int getSupportedEventType() {
+    return mEventType;
+  }
+  
+  /**
+   * Sets the supported event type.
+   * 
+   * @param eventType The new supported event type.
+   */
+  public void setSupportedEventType(int eventType) {
+    mEventType = eventType;
   }
 
   /**

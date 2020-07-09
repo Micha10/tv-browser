@@ -1404,11 +1404,14 @@ tvbrowser-plugins/plugin-simplemarker/src/main/java/simplemarkerplugin/MarkLists
 tvbrowser-plugins/plugin-simplemarker/src/main/java/simplemarkerplugin/SimpleMarkerPlugin.java -text
 tvbrowser-plugins/plugin-simplemarker/src/main/java/simplemarkerplugin/SimpleMarkerPluginSettingsTab.java -text
 tvbrowser-plugins/plugin-simplemarker/src/main/java/simplemarkerplugin/SimpleMarkerSettings.java -text
+tvbrowser-plugins/plugin-simplemarker/src/main/java/simplemarkerplugin/WideComboBox.java -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-simplemarker/src/main/java/simplemarkerplugin/table/DeleteShowSelectionRenderer.java -text svneol=unset#text/plain
+tvbrowser-plugins/plugin-simplemarker/src/main/java/simplemarkerplugin/table/MarkListEventTypeCellEditor.java -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-simplemarker/src/main/java/simplemarkerplugin/table/MarkListPriorityCellEditor.java -text
 tvbrowser-plugins/plugin-simplemarker/src/main/java/simplemarkerplugin/table/MarkListProgramImportanceCellEditor.java -text
 tvbrowser-plugins/plugin-simplemarker/src/main/java/simplemarkerplugin/table/MarkListSendToPluginCellEditor.java -text
 tvbrowser-plugins/plugin-simplemarker/src/main/java/simplemarkerplugin/table/MarkListTableModel.java -text
+tvbrowser-plugins/plugin-simplemarker/src/main/java/simplemarkerplugin/table/MarkerEventTypeRenderer.java -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-simplemarker/src/main/java/simplemarkerplugin/table/MarkerIDRenderer.java -text
 tvbrowser-plugins/plugin-simplemarker/src/main/java/simplemarkerplugin/table/MarkerIconRenderer.java -text
 tvbrowser-plugins/plugin-simplemarker/src/main/java/simplemarkerplugin/table/MarkerPriorityRenderer.java -text

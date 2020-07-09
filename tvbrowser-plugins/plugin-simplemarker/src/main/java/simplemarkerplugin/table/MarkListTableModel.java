@@ -57,7 +57,7 @@ public class MarkListTableModel extends DefaultTableModel implements Serializabl
 
   @Override
   public int getColumnCount() {
-    return 6;
+    return SimpleMarkerPlugin.supportsEventTypes() ? 7 : 6;
   }
 
   @Override
@@ -76,7 +76,8 @@ public class MarkListTableModel extends DefaultTableModel implements Serializabl
       case 2: return SimpleMarkerPlugin.getLocalizer().msg("settings.markPriority", "Highlighting priority");
       case 3: return SimpleMarkerPlugin.getLocalizer().msg("settings.programImportance", "Program importance");
       case 4: return SimpleMarkerPlugin.getLocalizer().msg("settings.sendToPlugin", "Send to plugin");
-      case 5: return SimpleMarkerPlugin.getLocalizer().msg("settings.informDelProgramsForList", "Show removed programs*");
+      case 5: return SimpleMarkerPlugin.getLocalizer().msg("settings.informDelProgramsForList", "Show removed\nprograms*");
+      case 6: return SimpleMarkerPlugin.getLocalizer().msg("settings.eventType", "Supported receive\nevents");
     }
 
     return null;
@@ -100,6 +101,7 @@ public class MarkListTableModel extends DefaultTableModel implements Serializabl
       case 3: mLists.get(row).setProgramImportance((Byte)aValue); break;
       case 4: mLists.get(row).setPluginTargets((Collection<ProgramReceiveTarget>) aValue); break;
       case 5: mLists.get(row).setShowDeletedPrograms((Boolean) aValue); break;
+      case 6: mLists.get(row).setSupportedEventType((Integer)aValue); break;
     }
 
     fireTableChanged(new TableModelEvent(this));
@@ -119,5 +121,22 @@ public class MarkListTableModel extends DefaultTableModel implements Serializabl
   public void removeRow(int row) {
     mLists.remove(row);
     fireTableRowsDeleted(row, row);
+  }
+  
+  @Override
+  public void moveRow(int start, int end, int to) {
+    for(int i = end; i >= start; i--) {
+      MarkList move = mLists.remove(i);
+      
+      if(to < i) {
+        mLists.add(to, move);
+      }
+      else {
+        mLists.add(--to, move);
+      }
+      
+      fireTableDataChanged();
+    }
+    
   }
 }

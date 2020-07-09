@@ -44,7 +44,7 @@ public class MarkListProgramImportanceCellEditor extends AbstractCellEditor impl
 
   private static final long serialVersionUID = 1L;
 
-  final static String[] importanceValues = {
+  final static String[] IMPORTANCE_VALUE = {
       SimpleMarkerPlugin.getLocalizer().msg("settings.importance.default","Default importance"),
       SimpleMarkerPlugin.getLocalizer().msg("settings.importance.min","Mininum importance"),
       SimpleMarkerPlugin.getLocalizer().msg("settings.importance.lowerMedium","Lower medium importance"),
@@ -52,14 +52,14 @@ public class MarkListProgramImportanceCellEditor extends AbstractCellEditor impl
       SimpleMarkerPlugin.getLocalizer().msg("settings.importance.higherMedium","Higher medium importance"),
       SimpleMarkerPlugin.getLocalizer().msg("settings.importance.max","Maximum importance")};
 
-  private JComboBox mComboBox;
+  private JComboBox<String> mComboBox;
   private MarkList mItem;
   
   /**
    * Creates an instance of this class.
    */
   public MarkListProgramImportanceCellEditor() {
-    mComboBox = new JComboBox(importanceValues);
+    mComboBox = new JComboBox<String>(IMPORTANCE_VALUE);
   }
 
   public boolean isCellEditable(EventObject evt) {
