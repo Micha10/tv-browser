@@ -1156,8 +1156,8 @@ public class FavoritesPlugin {
       }catch (TvBrowserException exc) {
         ErrorHandler.handle(LOCALIZER.msg("couldNotUpdateFavorites","Could not update favorites."), exc);
       }
-
-      if (program != null && favorite.getPrograms().length == 0 && !favorite.isRemindAfterDownload()) {
+      
+      if (program == null && favorite.getPrograms().length == 0 && !favorite.isRemindAfterDownload()) {
         Object[] options = {LOCALIZER.msg("btn.notifyMe","Notify Me"), LOCALIZER.msg("btn.editFavorite","Edit Favorite"), LOCALIZER.msg("btn.ignore","Ignore")};
         int option = JOptionPane.showOptionDialog(parent, LOCALIZER.msg("dlg.noMatchingPrograms","Currently no program matches the newly created favorite.\n\nDo you want TV-Browser to notify you when any program matches this favorite?"),
                   LOCALIZER.msg("dlg.title.information","Information"),
@@ -1173,19 +1173,43 @@ public class FavoritesPlugin {
           editFavorite(favorite);
         }
       }
-
       else if (program != null && !favorite.contains(program)) {
-        // only show a warning for non matching favorites if the program is older than today
+        // only show a warning for non matching favorites if the program is not older than today
         if (program.getDate().compareTo(new devplugin.Date()) >= 0) {
-          Object[] options = {LOCALIZER.msg("btn.editFavorite","Edit Favorite"), LOCALIZER.msg("btn.ignore","Ignore")};
-          if (JOptionPane.showOptionDialog(parent, LOCALIZER.msg("dlg.programDoesntMatch","The currently selected program does not belong to the newly created favorite.\n\nDo you want to edit the favorite?"),
+          Exclusion[] globalExclusions = FavoritesPlugin.getInstance().getGlobalExclusions();
+          
+          StringBuilder excluded = new StringBuilder();
+          String message = LOCALIZER.msg("dlg.programDoesntMatch","The currently selected program does not belong to the newly created favorite.\n\nDo you want to edit the favorite?");
+          String optionEdit = LOCALIZER.msg("btn.editFavorite","Edit Favorite");
+          
+          for(Exclusion test : globalExclusions) {
+            if(test.isProgramExcluded(program)) {
+              if(excluded.length() > 0) {
+                excluded.append("\n");
+              }
+              excluded.append("    -").append(test.toString().replace("<html>", "").replace("</html>", ""));
+            }
+          }
+          
+          if(excluded.length() > 0) {
+            message = LOCALIZER.msg("dlg.programExcluded","The currently selected program is at excluded from the favorites by the following global exclusions:\n{0}\n\nDo you want to edit the global exclusions?",excluded.toString());
+            optionEdit = LOCALIZER.msg("btn.editGlobalExclusion","Edit global exclusions");
+          }
+          
+          Object[] options = {optionEdit, LOCALIZER.msg("btn.ignore","Ignore")};
+          if (JOptionPane.showOptionDialog(parent, message,
               LOCALIZER.msg("dlg.title.warning","Warning"),
               JOptionPane.YES_NO_OPTION,
               JOptionPane.WARNING_MESSAGE,
               null,
               options,
               options[1]) == JOptionPane.YES_OPTION) {
-            editFavorite(favorite);
+            if(excluded.length() == 0) {
+              editFavorite(favorite);
+            }
+            else {
+              MainFrame.getInstance().showSettingsDialog(SettingsItem.FAVORITE);
+            }
           }
         }
       }
