@@ -478,6 +478,16 @@ public class SelectableItemList<E> extends JPanel implements ListSelectionListen
   public void setFilterComboBox(JComboBox<? extends ItemFilter> filterBox) {
     mListModel.setComboBox(filterBox);
   }
+  
+  /**
+   * Sets the name filter for the shown values of the list.
+   * <p>
+   * @param nameFilter The name filter for the list
+   * @since 4.2.2
+   */
+  public void setNameFilter(ItemFilter nameFilter) {
+    mListModel.setNameFilter(nameFilter);
+  }
 
   /**
    * Removes the editor for selected cell
@@ -542,35 +552,47 @@ public class SelectableItemList<E> extends JPanel implements ListSelectionListen
   
   private class SelectableItemListModel extends AbstractListModel<SelectableItem<E>> {
     private JComboBox<? extends ItemFilter> mFilterBox;
+    private ItemFilter mNameFilter;
     
     private ArrayList<SelectableItem<E>> mFullList = new ArrayList<SelectableItem<E>>();
     private ArrayList<SelectableItem<E>> mFilteredList = new ArrayList<SelectableItem<E>>();
+    
+    protected void setNameFilter(ItemFilter filter) {
+      mNameFilter = filter;
+      mNameFilter.setChangeListener(e -> {
+        filter();
+      });
+    }
     
     protected void setComboBox(JComboBox<? extends ItemFilter> filterBox) {
       mFilterBox = filterBox;
       
       mFilterBox.addItemListener(e -> {
         if(e.getStateChange() == ItemEvent.SELECTED) {
-          mFilteredList.clear();
-          removeEditor();
-          
-          Object filter = mFilterBox.getSelectedItem();
-          
-          for(SelectableItem<E> o : mFullList) {
-            if(filter instanceof ItemFilter) {
-              if((((ItemFilter)filter).accept(o.getItem()))) {
-                mFilteredList.add(o);
-              }
-            }
-            else {
-              mFilteredList.add(o);
-            }
-          }
-          
-          fireIntervalRemoved(this,0,mFullList.size());
-          fireIntervalAdded(this,0,mFilteredList.size());
+          filter();
         }
       });
+    }
+    
+    private void filter() {
+      mFilteredList.clear();
+      removeEditor();
+      
+      Object filter = mFilterBox != null ? mFilterBox.getSelectedItem() : mNameFilter;
+      
+      for(SelectableItem<E> o : mFullList) {
+        if(filter instanceof ItemFilter) {
+          if((((ItemFilter)filter).accept(o.getItem())) && (mNameFilter == null || mNameFilter.accept(o.getItem()))) {
+            mFilteredList.add(o);
+          }
+        }
+        else {
+          mFilteredList.add(o);
+        }
+      }
+      
+      fireIntervalRemoved(this,0,mFullList.size());
+      fireIntervalAdded(this,0,mFilteredList.size());
     }
 
     protected void addElement(SelectableItem<E> o) {

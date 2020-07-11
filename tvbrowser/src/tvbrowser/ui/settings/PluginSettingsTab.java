@@ -143,7 +143,7 @@ public class PluginSettingsTab implements devplugin.SettingsTab, TableModelListe
     
     JPanel categorySelection = new JPanel(new FormLayout("default,3dlu,default:grow","default"));
     
-    JLabel filterLabel = new JLabel(SoftwareUpdateDlg.mLocalizer.msg("filterLabel","Show only Plugins with the following category:"));
+    JLabel filterLabel = new JLabel(SoftwareUpdateDlg.LOCALIZER.msg("filterLabel","Show only Plugins with the following category:"));
     mFilterBox = new JComboBox<FilterItem>();
     mFilterBox.addItemListener(e -> {
       populatePluginList();

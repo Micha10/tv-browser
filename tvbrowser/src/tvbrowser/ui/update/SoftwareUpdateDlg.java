@@ -64,17 +64,20 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
+import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.WindowConstants;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import com.jgoodies.forms.builder.ButtonBarBuilder;
-import com.jgoodies.forms.layout.CellConstraints;
+import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.RowSpec;
 import com.jgoodies.forms.layout.Sizes;
@@ -109,7 +112,7 @@ import util.ui.html.HTMLTextHelper;
 public class SoftwareUpdateDlg extends JDialog implements ActionListener, ListSelectionListener, WindowClosingIf {
 
   /** The localizer for this class. */
-  public static final util.ui.Localizer mLocalizer = util.ui.Localizer.getLocalizerFor(SoftwareUpdateDlg.class);
+  public static final util.ui.Localizer LOCALIZER = util.ui.Localizer.getLocalizerFor(SoftwareUpdateDlg.class);
 
   private JButton mCloseBtn, mDownloadBtn;
 
@@ -203,7 +206,7 @@ public class SoftwareUpdateDlg extends JDialog implements ActionListener, ListSe
     });
     
     mDownloadUrl = downloadUrl;
-    setTitle(mLocalizer.msg("title", "Download plugins"));
+    setTitle(LOCALIZER.msg("title", "Download plugins"));
 
     if(mIsVersionChange) {
       setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
@@ -216,17 +219,17 @@ public class SoftwareUpdateDlg extends JDialog implements ActionListener, ListSe
     mCloseBtn.addActionListener(this);
     mCloseBtn.setEnabled(!mIsVersionChange);
 
-    mDownloadBtn = new JButton(mLocalizer.msg("download", "Download selected items"));
+    mDownloadBtn = new JButton(LOCALIZER.msg("download", "Download selected items"));
     mDownloadBtn.addActionListener(this);
 
-    mHelpBtn = new JButton(mLocalizer.msg("openWebsite","Open website"), TVBrowserIcons.webBrowser(TVBrowserIcons.SIZE_SMALL));
+    mHelpBtn = new JButton(LOCALIZER.msg("openWebsite","Open website"), TVBrowserIcons.webBrowser(TVBrowserIcons.SIZE_SMALL));
     mHelpBtn.addActionListener(this);
     mHelpBtn.setEnabled(false);
 
     ButtonBarBuilder builder = new ButtonBarBuilder();
 
     if(dialogType == SoftwareUpdater.ONLY_UPDATE_TYPE && !mIsVersionChange) {
-      mAutoUpdates = new JCheckBox(mLocalizer.msg("autoUpdates","Find plugin updates automatically"), Settings.propAutoUpdatePlugins.getBoolean());
+      mAutoUpdates = new JCheckBox(LOCALIZER.msg("autoUpdates","Find plugin updates automatically"), Settings.propAutoUpdatePlugins.getBoolean());
       mAutoUpdates.addItemListener(e -> {
         Settings.propAutoUpdatePlugins.setBoolean(e.getStateChange() == ItemEvent.SELECTED);
       });
@@ -242,24 +245,23 @@ public class SoftwareUpdateDlg extends JDialog implements ActionListener, ListSe
     builder.addRelatedGap();
     builder.addFixed(mCloseBtn);
     
-
-    final CellConstraints cc = new CellConstraints();
-
+    int y = 1;
+    
     FormLayout layout = new FormLayout("default,5dlu,0dlu:grow","default");
 
     JPanel northPn = new JPanel(layout);
     
-    JLabel info = new JLabel(mLocalizer.msg("header","Here you can download new plugins and updates for it."));
+    JLabel info = new JLabel(LOCALIZER.msg("header","Here you can download new plugins and updates for it."));
     
     if(dialogType == SoftwareUpdater.ONLY_UPDATE_TYPE) {
-      info.setText(mLocalizer.msg("updateHeader","Updates for installed plugins/new matching data plugins were found."));
+      info.setText(LOCALIZER.msg("updateHeader","Updates for installed plugins/new matching data plugins were found."));
     }
     else if(dialogType == SoftwareUpdater.ONLY_DATA_SERVICE_TYPE) {
-      info.setText(mLocalizer.msg("dataServiceHeader","TV-Browser is based on Plugins. You will need at least one of the listed data Plugins."));
+      info.setText(LOCALIZER.msg("dataServiceHeader","TV-Browser is based on Plugins. You will need at least one of the listed data Plugins."));
       info.setFont(info.getFont().deriveFont(Font.BOLD).deriveFont((float)14));
     }
     
-    northPn.add(info, cc.xyw(1,1,3));
+    northPn.add(info, CC.xyw(1,y,3));
 
     JPanel southPn = new JPanel(new BorderLayout());
 
@@ -339,7 +341,7 @@ public class SoftwareUpdateDlg extends JDialog implements ActionListener, ListSe
 
         SoftwareUpdateItem item = (SoftwareUpdateItem)value;
 
-        JLabel label = pb.addLabel(HTMLTextHelper.convertHtmlToText(item.getName()) + " " + item.getVersion(), cc.xy(2,2));
+        JLabel label = pb.addLabel(HTMLTextHelper.convertHtmlToText(item.getName()) + " " + item.getVersion(), CC.xy(2,2));
         label.setFont(label.getFont().deriveFont(Font.BOLD, label.getFont().getSize2D()+2));
 
         int width = parentScrollPane.getSize().width - parentScrollPane.getVerticalScrollBar().getWidth() - leftColumnWidth - Sizes.dialogUnitXAsPixel(5,pb.getPanel()) * 4 - parentScrollPane.getInsets().left - parentScrollPane.getInsets().right;
@@ -364,7 +366,7 @@ public class SoftwareUpdateDlg extends JDialog implements ActionListener, ListSe
         };
         iconLabel.setIcon(icon);
 
-        pb.add(iconLabel, cc.xyw(2,4,3));
+        pb.add(iconLabel, CC.xyw(2,4,3));
 
         JLabel label3 = new JLabel();
 
@@ -373,10 +375,10 @@ public class SoftwareUpdateDlg extends JDialog implements ActionListener, ListSe
 	        if ((installedVersion != null) && (installedVersion.compareTo(item.getVersion()) < 0)) {
 	          label.setIcon(NEW_VERSION_ICON);
 
-	          label3.setText("(" + mLocalizer.msg("installed","Installed version: ") + installedVersion.toString()+")");
+	          label3.setText("(" + LOCALIZER.msg("installed","Installed version: ") + installedVersion.toString()+")");
 	          label3.setFont(label3.getFont().deriveFont(label3.getFont().getSize2D()+2));
 
-	          pb.add(label3, cc.xy(4,2));
+	          pb.add(label3, CC.xy(4,2));
 	        }
         }
 
@@ -395,9 +397,9 @@ public class SoftwareUpdateDlg extends JDialog implements ActionListener, ListSe
             lay.appendRow(RowSpec.decode("default"));
             lay.appendRow(RowSpec.decode("2dlu"));
 
-            pb.add(authorAndWebsite, cc.xyw(2,7,3));
+            pb.add(authorAndWebsite, CC.xyw(2,7,3));
 
-            JLabel authorLabel = new JLabel(mLocalizer.msg("author", "Author"));
+            JLabel authorLabel = new JLabel(LOCALIZER.msg("author", "Author"));
             authorLabel.setFont(authorLabel.getFont().deriveFont(Font.BOLD));
             authorLabel.setForeground(list.getSelectionForeground());
             authorLabel.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -405,8 +407,8 @@ public class SoftwareUpdateDlg extends JDialog implements ActionListener, ListSe
             JLabel authorName = new JLabel(HTMLTextHelper.convertHtmlToText(author));
             authorName.setForeground(list.getSelectionForeground());
 
-            authorAndWebsite.add(authorLabel, cc.xy(1,1));
-            authorAndWebsite.add(authorName, cc.xy(3,1));
+            authorAndWebsite.add(authorLabel, CC.xy(1,1));
+            authorAndWebsite.add(authorName, CC.xy(3,1));
           }
 
           if (website != null) {
@@ -415,14 +417,14 @@ public class SoftwareUpdateDlg extends JDialog implements ActionListener, ListSe
               lay.appendRow(RowSpec.decode("default"));
               lay.appendRow(RowSpec.decode("2dlu"));
 
-              pb.add(authorAndWebsite, cc.xyw(2,7,3));
+              pb.add(authorAndWebsite, CC.xyw(2,7,3));
             }
             else {
               authorAndWebsiteLayout.appendRow(RowSpec.decode("1dlu"));
               authorAndWebsiteLayout.appendRow(RowSpec.decode("default"));
             }
 
-            JLabel webLabel = new JLabel(mLocalizer.msg("website", "Website"));
+            JLabel webLabel = new JLabel(LOCALIZER.msg("website", "Website"));
             webLabel.setFont(webLabel.getFont().deriveFont(Font.BOLD));
             webLabel.setForeground(list.getSelectionForeground());
             webLabel.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -430,8 +432,8 @@ public class SoftwareUpdateDlg extends JDialog implements ActionListener, ListSe
             LinkButton webLink = new LinkButton(HTMLTextHelper.convertHtmlToText(website));
             webLink.setForeground(list.getSelectionForeground());
 
-            authorAndWebsite.add(webLabel, cc.xy(1,author == null ? 1 : 3));
-            authorAndWebsite.add(webLink, cc.xy(3,author == null ? 1 : 3));
+            authorAndWebsite.add(webLabel, CC.xy(1,author == null ? 1 : 3));
+            authorAndWebsite.add(webLink, CC.xy(3,author == null ? 1 : 3));
           }
 
           icon.setMaximumLineCount(-1);
@@ -481,10 +483,14 @@ public class SoftwareUpdateDlg extends JDialog implements ActionListener, ListSe
     if(dialogType != SoftwareUpdater.ONLY_UPDATE_TYPE && dialogType != SoftwareUpdater.ONLY_DATA_SERVICE_TYPE) {
       layout.appendRow(RowSpec.decode("5dlu"));
       layout.appendRow(RowSpec.decode("default"));
+      layout.appendRow(RowSpec.decode("default"));
 
-      JLabel filterLabel = new JLabel(mLocalizer.msg("filterLabel","Show only Plugins with the following category:"));
+      y += 2;
+      
+      JLabel filterLabel = new JLabel(LOCALIZER.msg("filterLabel","Show only Plugins with the following category:"));
+      JLabel nameFilterLabel = new JLabel(LOCALIZER.msg("nameFilterLabel","Show only Plugins with the following text:"));
 
-      northPn.add(filterLabel, cc.xy(1,3));
+      northPn.add(filterLabel, CC.xy(1,y));
 
       ArrayList<FilterItem> filterList = new ArrayList<FilterItem>(0);
 
@@ -514,7 +520,13 @@ public class SoftwareUpdateDlg extends JDialog implements ActionListener, ListSe
 
       mSoftwareUpdateItemList.setFilterComboBox(filterBox);
 
-      northPn.add(filterBox, cc.xy(3,3));
+      JTextField name = new JTextField();
+      mSoftwareUpdateItemList.setNameFilter(new NameFilterItem(name));
+      
+      northPn.add(filterBox, CC.xy(3,y++));
+      
+      northPn.add(nameFilterLabel, CC.xy(1, y));
+      northPn.add(name, CC.xy(3, y));
     }
 
     contentPane.add(northPn, BorderLayout.NORTH);
@@ -576,15 +588,15 @@ public class SoftwareUpdateDlg extends JDialog implements ActionListener, ListSe
       if (successfullyDownloadedItems > 0 && !mIsVersionChange && mDialogType != SoftwareUpdater.ONLY_DATA_SERVICE_TYPE) {
     	if (TVBrowser.restartEnabled()) {
     		String[] options = {"",""};
-    		options[0] = mLocalizer.msg("restartnow", "restart");
-    		options[1] = mLocalizer.msg("restartlater", "later");
-    		if (JOptionPane.showOptionDialog(UiUtilities.getLastModalChildOf(MainFrame.getInstance()),  mLocalizer.msg("restartplugin", "plugins has been installed.\nrestart TV-Browser?"),
-    				mLocalizer.msg("restartdialog","restart"), JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null,options ,options[0])==0){
+    		options[0] = LOCALIZER.msg("restartnow", "restart");
+    		options[1] = LOCALIZER.msg("restartlater", "later");
+    		if (JOptionPane.showOptionDialog(UiUtilities.getLastModalChildOf(MainFrame.getInstance()),  LOCALIZER.msg("restartplugin", "plugins has been installed.\nrestart TV-Browser?"),
+    				LOCALIZER.msg("restartdialog","restart"), JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null,options ,options[0])==0){
     	        TVBrowser.addRestart();
     	        MainFrame.getInstance().quit();
     		}
     	} else {
-    		JOptionPane.showMessageDialog(UiUtilities.getLastModalChildOf(MainFrame.getInstance()), mLocalizer.msg("restartprogram", "please restart tvbrowser before..."));
+    		JOptionPane.showMessageDialog(UiUtilities.getLastModalChildOf(MainFrame.getInstance()), LOCALIZER.msg("restartprogram", "please restart tvbrowser before..."));
     	}
         setVisible(false);
       }
@@ -676,7 +688,7 @@ public class SoftwareUpdateDlg extends JDialog implements ActionListener, ListSe
           if(((SoftwareUpdateItem)item).getWebsite() != null) {
             JPopupMenu menu = new JPopupMenu();
 
-            JMenuItem menuItem = new JMenuItem(mLocalizer.msg("openWebsite","Open website"), TVBrowserIcons.webBrowser(TVBrowserIcons.SIZE_SMALL));
+            JMenuItem menuItem = new JMenuItem(LOCALIZER.msg("openWebsite","Open website"), TVBrowserIcons.webBrowser(TVBrowserIcons.SIZE_SMALL));
             menuItem.addActionListener(evt -> {
               Launch.openURL(((SoftwareUpdateItem)item).getWebsite());
             });
@@ -689,6 +701,32 @@ public class SoftwareUpdateDlg extends JDialog implements ActionListener, ListSe
       }
     }
   }
+  
+  public static class NameFilterItem implements ItemFilter {
+    private JTextField mTextField;
+    
+    public NameFilterItem(final JTextField textField) {
+      mTextField = textField;
+    }
+
+    @Override
+    public boolean accept(Object o) {
+      boolean result = true;
+      
+      if(o instanceof PluginSoftwareUpdateItem) {
+        result = mTextField.getText().isBlank() || ((PluginSoftwareUpdateItem) o).getName().toLowerCase().contains(mTextField.getText().toLowerCase());        
+      }
+      
+      return result;
+    }
+    
+    @Override
+    public void setChangeListener(ChangeListener listener) {
+      mTextField.addCaretListener(e -> {
+        listener.stateChanged(new ChangeEvent(mTextField));
+      });
+    }
+  }
 
   public static class FilterItem implements ItemFilter {
     private String mType;
@@ -699,7 +737,7 @@ public class SoftwareUpdateDlg extends JDialog implements ActionListener, ListSe
 
     @Override
     public String toString() {
-      return mLocalizer.msg(mType,mType);
+      return LOCALIZER.msg(mType,mType);
     }
 
     @Override
@@ -732,7 +770,7 @@ public class SoftwareUpdateDlg extends JDialog implements ActionListener, ListSe
           return toString().compareToIgnoreCase(((FilterItem)o).toString());
         }
         else if(o instanceof String) {
-          return toString().compareToIgnoreCase(mLocalizer.msg((String)o,(String)o));
+          return toString().compareToIgnoreCase(LOCALIZER.msg((String)o,(String)o));
         }
       }
 

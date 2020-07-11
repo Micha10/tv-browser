@@ -1,5 +1,7 @@
 package util.ui.customizableitems;
 
+import javax.swing.event.ChangeListener;
+
 /**
  * A filter interface that is to be used
  * to support filtering in SelectableItemLists.
@@ -16,4 +18,10 @@ public interface ItemFilter {
    * <code>false</code> otherwise.
    */
   public boolean accept(Object o);
+  
+  /**
+   * @param listener The change listener to set for the component that should trigger updates.
+   * @since 4.2.2
+   */
+  default public void setChangeListener(ChangeListener listener) {}
 }
