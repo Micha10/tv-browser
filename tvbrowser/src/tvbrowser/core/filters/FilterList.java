@@ -209,6 +209,7 @@ public class FilterList {
       addInfoBitFilter("[ORIGINAL_AUDIO_FILTER]", attributesDir);
       addInfoBitFilter("[HD_FILTER]", attributesDir);
       addInfoBitFilter("[NEW_FILTER]", attributesDir);
+      addInfoBitFilter("[LIVE_FILTER]", attributesDir);
       
       //add default categories
       String categoriesDir = mLocalizer.msg("ProgramCategories", "program categories");

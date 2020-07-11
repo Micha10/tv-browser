@@ -36,6 +36,7 @@ public class InfoBitFilter implements ProgramFilter {
   public static final String AUDIO_DESCRIPTION_FILTER_KEY = "[AUDIO_DESCRIPTION_FILTER]";
   public static final String HD_FILTER_KEY = "[HD_FILTER]";
   public static final String NEW_FILTER_KEY = "[NEW_FILTER]";
+  public static final String LIVE_FILTER_KEY = "[LIVE_FILTER]";
   public static final String ORIGINAL_AUDIO_FILTER_KEY = "[ORIGINAL_AUDIO_FILTER]";
   public static final String ARTS_FILTER_KEY = "[ARTS_FILTER]";
   public static final String CHILDRENS_FILTER_KEY = "[CHILDRENS_FILTER]";
@@ -76,12 +77,15 @@ public class InfoBitFilter implements ProgramFilter {
       mName = "New";
       mKey = name;
       mInfoBits = new int[] { Program.INFO_NEW };
+    } else if (name.equals(LIVE_FILTER_KEY)) {
+      mName = "Live";
+      mKey = name;
+      mInfoBits = new int[] { Program.INFO_LIVE };
     } else if (name.equals(ORIGINAL_AUDIO_FILTER_KEY)) {
       mName = "OriginalAudio";
       mKey = name;
       mInfoBits = new int[] { Program.INFO_ORIGINAL_WITH_SUBTITLE, Program.INFO_AUDIO_TWO_CHANNEL_TONE };
-    }
-    else if (name.equals(ARTS_FILTER_KEY)) {
+    } else if (name.equals(ARTS_FILTER_KEY)) {
       mLocalized = catLocalizer.msg("categorie_arts", "Theater/Concert");
       mKey = name;
       mInfoBits = new int[] {Program.INFO_CATEGORIE_ARTS};
