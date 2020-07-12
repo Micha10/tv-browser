@@ -21,7 +21,9 @@
  */
 package simplemarkerplugin;
 
+import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Window;
@@ -43,6 +45,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.geom.Rectangle2D;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -111,6 +114,7 @@ import util.ui.UiUtilities;
  */
 public class SimpleMarkerPluginSettingsTab implements SettingsTab,
     MouseListener, ActionListener, KeyListener {
+  private static final Color COLOR_CUE_LINE = new Color(255,0,0,180);
 
   private JTable mListTable;
   private JButton mAdd, mDelete;
@@ -119,6 +123,8 @@ public class SimpleMarkerPluginSettingsTab implements SettingsTab,
   private JCheckBox mShowDateSeparators;
   private ArrayList<MarkList> mMarkLists;
   private JCheckBox mShowInContextMenu;
+  
+  private Rectangle2D mCueLine = new Rectangle2D.Float();
 
   public JPanel createSettingsPanel() {try {
     final FormLayout layout = new FormLayout("5dlu,default:grow,5dlu",
@@ -161,7 +167,24 @@ public class SimpleMarkerPluginSettingsTab implements SettingsTab,
 
     mModel = new MarkListTableModel(mMarkLists);
 
-    mListTable = new JTable(mModel);
+    mListTable = new JTable(mModel) {
+      // Stupid hack to prevent selection change for drag events.
+      @Override
+      public void changeSelection(int rowIndex, int columnIndex, boolean toggle, boolean extend) {
+        StackTraceElement[] els = Thread.currentThread().getStackTrace();
+        boolean drag = false;
+        
+        for(int i = 0; i < 5; i++) {
+          if(els[i].getClassName().equals("javax.swing.plaf.basic.BasicTableUI$Handler") && els[i].getMethodName().contentEquals("mouseDragged")) {
+            drag = true;
+          }
+        }
+        
+        if(!drag) {
+          super.changeSelection(rowIndex, columnIndex, toggle, extend);
+        }
+      }
+    };
     mListTable.getTableHeader().setReorderingAllowed(false);
     mListTable.getTableHeader().setResizingAllowed(false);
     mListTable.getTableHeader().setPreferredSize(new Dimension(50,50));
@@ -232,13 +255,15 @@ public class SimpleMarkerPluginSettingsTab implements SettingsTab,
                 index++;
               }
               
-              ((DefaultTableModel)mListTable.getModel()).moveRow(row, row, index);
-              
-              if(row < index) {
-                index--;
+              if(row != index) {
+                ((DefaultTableModel)mListTable.getModel()).moveRow(row, row, index);
+                
+                if(row < index) {
+                  index--;
+                }
+                
+                mListTable.getSelectionModel().addSelectionInterval(index, index);
               }
-              
-              mListTable.getSelectionModel().addSelectionInterval(index, index);
               
               dtde.dropComplete(true);
             }
@@ -258,15 +283,38 @@ public class SimpleMarkerPluginSettingsTab implements SettingsTab,
       @Override
       public void dragOver(DropTargetDragEvent dtde) {
         if(dtde.getCurrentDataFlavors() != null && dtde.getCurrentDataFlavors()[0].getHumanPresentableName() != null && dtde.getCurrentDataFlavors()[0].getHumanPresentableName().contentEquals("tableRowMove")) {
+          int index = mListTable.rowAtPoint(dtde.getLocation());
+          Rectangle rect = mListTable.getCellRect(index, 0, true);
+          
+          if(dtde.getLocation().y > (rect.y + rect.height*2/3)) {
+            rect.y += rect.height;
+            
+            if(index == mListTable.getRowCount()-1) {
+              rect.y--;
+            }
+          }
+          else if(index == 0) {
+            rect.y++;
+          }
+          
+          mListTable.paintImmediately(mCueLine.getBounds());
+          mCueLine.setRect(0,rect.y-1,mListTable.getWidth(),2);
+          
+          Graphics2D g2 = (Graphics2D) mListTable.getGraphics();
+          g2.setColor(COLOR_CUE_LINE);
+          g2.fill(mCueLine);
           dtde.acceptDrag(dtde.getDropAction());
         }
         else {
+          mListTable.paintImmediately(mCueLine.getBounds());
           dtde.rejectDrag();
         }
       }
       
       @Override
-      public void dragExit(DropTargetEvent dte) {}
+      public void dragExit(DropTargetEvent dte) {
+        mListTable.paintImmediately(mCueLine.getBounds());
+      }
       
       @Override
       public void dragEnter(DropTargetDragEvent dtde) {
@@ -283,7 +331,6 @@ public class SimpleMarkerPluginSettingsTab implements SettingsTab,
         @Override
         public void dragGestureRecognized(DragGestureEvent dge) {
           dge.startDrag(null,new Transferable() {
-            
             @Override
             public boolean isDataFlavorSupported(DataFlavor flavor) {
               return flavor.getHumanPresentableName() != null && flavor.getHumanPresentableName().equals("tableRowMove");
@@ -412,7 +459,7 @@ public class SimpleMarkerPluginSettingsTab implements SettingsTab,
       final int column = mListTable.columnAtPoint(e.getPoint());
       
       if(column == 1 && e.getClickCount() >= 2) {
-      chooseIcon(mListTable.rowAtPoint(e.getPoint()));
+        chooseIcon(mListTable.rowAtPoint(e.getPoint()));
       }
       else if(column == 5) {
         final int row = mListTable.rowAtPoint(e.getPoint());
