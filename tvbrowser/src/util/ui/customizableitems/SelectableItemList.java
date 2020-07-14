@@ -237,6 +237,12 @@ public class SelectableItemList<E> extends JPanel implements ListSelectionListen
     }
   }
   
+  public void updateCurrentSelection() {
+    removeEditor();
+    mList.repaint();
+    addEditor(mList.getSelectedIndex());
+  }
+  
   /**
    * @since 2.5
    * @param listener Add this Listener

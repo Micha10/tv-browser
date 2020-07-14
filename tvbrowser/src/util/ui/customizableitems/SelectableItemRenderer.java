@@ -126,6 +126,10 @@ public class SelectableItemRenderer<E> implements ListCellRenderer<SelectableIte
     }
     
     cb.setEnabled(list.isEnabled() && selectableItem.isSelectable());
+    
+    if(cb.isEnabled()) {
+      cb.setSelected(value.isSelected());
+    }
     }catch(Throwable t){t.printStackTrace();}
     return p;
   }

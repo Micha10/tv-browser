@@ -268,7 +268,6 @@ public class PluginChooserDlg extends JDialog implements WindowClosingIf {
         typePanel.add(DefaultComponentFactory.getInstance().createSeparator(LOCALIZER.msg("type", "Type of sending")), CC.xyw(1, 2, 2));
         add = new JRadioButton(LOCALIZER.msg("add", "Added"));
         add.addItemListener(e -> {
-          System.out.println("ADDED");
           if(currentTarget.get() != null && e.getStateChange() == ItemEvent.SELECTED) {
             currentTarget.get().setEventType(ProgramReceiveTarget.TYPE_EVENT_ADDED);
           }
@@ -434,7 +433,7 @@ public class PluginChooserDlg extends JDialog implements WindowClosingIf {
                       }
                       if (currPluginItem.isSelected() != (sel.size() > 0)) {
                         currPluginItem.setSelected(sel.size() > 0);
-                        mPluginItemList.updateUI();
+                        mPluginItemList.updateCurrentSelection();
                       }
                       mReceiveTargetTable.put(currPlugin, selTargets);
                     }
