@@ -56,7 +56,7 @@ public final class DreamboxConfig implements ConfigIf, Cloneable {
     /** HashMap for tvbrowser channels vs channels on dreambox*/
     private HashMap<Channel, DreamboxChannel> mChannels = new HashMap<Channel, DreamboxChannel>();
     /** HashMap for tvbrowser channels vs channels on dreambox*/
-    private HashMap<DreamboxChannel, Channel> mDChannels = new HashMap<DreamboxChannel, Channel>();
+    private HashMap<String, Channel> mDChannels = new HashMap<String, Channel>();
 
     /** Time after recording */
     private int mAfter = 0;
@@ -245,7 +245,7 @@ public final class DreamboxConfig implements ConfigIf, Cloneable {
               }
               
               if(dch != null) {
-                mDChannels.put(dch, ch);
+                mDChannels.put(dch.getReference(), ch);
               }
           }
         }
@@ -309,7 +309,7 @@ public final class DreamboxConfig implements ConfigIf, Cloneable {
               }
               
               if(dch != null) {
-                mDChannels.put(dch, ch);
+                mDChannels.put(dch.getReference(), ch);
               }
             }
           }
@@ -389,7 +389,7 @@ public final class DreamboxConfig implements ConfigIf, Cloneable {
     /**
      *  @return internal HashMap for Dreambox vs TVBrowser Channels
      */
-    private HashMap<DreamboxChannel, Channel> getDreamChannels() {
+    private HashMap<String, Channel> getDreamChannels() {
         return mDChannels;
     }
 
@@ -408,7 +408,7 @@ public final class DreamboxConfig implements ConfigIf, Cloneable {
      * @return TVBrowser channel for a given channel, <code>null</code> if not found
      */
     public Channel getChannel(DreamboxChannel channel) {
-        return mDChannels.get(channel);
+        return mDChannels.get(channel.getReference());
     }
 
     /**
@@ -418,7 +418,7 @@ public final class DreamboxConfig implements ConfigIf, Cloneable {
      */
     public void setExternalChannel(Channel channel, ExternalChannelIf dreamboxChannel) {
         mChannels.put(channel, (DreamboxChannel) dreamboxChannel);
-        mDChannels.put((DreamboxChannel) dreamboxChannel, channel);
+        mDChannels.put(((DreamboxChannel) dreamboxChannel).getReference(), channel);
     }
 
     /**
