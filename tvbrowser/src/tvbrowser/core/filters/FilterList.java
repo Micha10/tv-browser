@@ -296,11 +296,16 @@ public class FilterList {
 
 
   public boolean containsFilter(String filterName) {
-    for (ProgramFilter filter : mFilterTreeModel.getAllFilters()) {
-      if (filter.getName().equalsIgnoreCase(filterName)) {
-        return true;
+    final ProgramFilter[] filters = mFilterTreeModel.getAllFilters();
+    
+    if(filters != null) {
+      for (ProgramFilter filter : filters) {
+        if (filter.getName().equalsIgnoreCase(filterName)) {
+          return true;
+        }
       }
     }
+    
     return false;
   }
 
