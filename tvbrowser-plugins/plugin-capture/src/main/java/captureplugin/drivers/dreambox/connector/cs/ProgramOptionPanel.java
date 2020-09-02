@@ -134,7 +134,7 @@ public class ProgramOptionPanel extends JPanel implements ActionListener {
     }
 
     String defaultLocation = locationThread.getDefaultLocation();
-    if (!defaultLocation.equals("") && locations.contains(defaultLocation)) {
+    if (defaultLocation != null && !defaultLocation.equals("") && locations.contains(defaultLocation)) {
         int defaultIndex = locations.indexOf(defaultLocation);
         cmbLocation.setSelectedIndex(defaultIndex);
     }
