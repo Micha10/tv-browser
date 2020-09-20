@@ -26,6 +26,7 @@
 package util.paramhandler;
 
 import java.io.StringReader;
+import java.lang.reflect.Field;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -100,7 +101,7 @@ public class ParamLibrary {
         "end_month", "end_year", "end_day", "end_hour", "end_minute", "length_minutes", "length_sec", "short_info",
         "description", "episode", "original_episode", "episode_number", "channel_name", "channel_sort_number", "url",
         "start_day_of_week", "start_month_name", "genre", "start_unix", "end_unix", "custom", "production_year", "actors",
-        "origin"};
+        "origin","season_number"};
     return str;
   }
 
@@ -154,10 +155,6 @@ public class ParamLibrary {
   public String getStringForKey(Program program, String key) {
     if (key.equalsIgnoreCase("title")) {
       return program.getTitle();
-    } else if (key.equalsIgnoreCase("original_title")) {
-      return removeNull(program.getTextField(ProgramFieldType.ORIGINAL_TITLE_TYPE));
-    } else if (key.equalsIgnoreCase("origin")) {
-        return removeNull(program.getTextField(ProgramFieldType.ORIGIN_TYPE));
     } else if (key.equalsIgnoreCase("start_day")) {
       return String.valueOf(program.getDate().getDayOfMonth());
     } else if (key.equalsIgnoreCase("start_month")) {
@@ -191,16 +188,10 @@ public class ParamLibrary {
         return new StringBuilder(res).append('\n').append(copyright).toString();
       }
       return res;
-    } else if (key.equalsIgnoreCase("episode")) {
-      return removeNull(program.getTextField(ProgramFieldType.EPISODE_TYPE));
-    } else if (key.equalsIgnoreCase("original_episode")) {
-      return removeNull(program.getTextField(ProgramFieldType.ORIGINAL_EPISODE_TYPE));
     } else if (key.equalsIgnoreCase("channel_name")) {
       return removeNull(program.getChannel().getName());
     } else if (key.equalsIgnoreCase("channel_sort_number")) {
       return removeNull(program.getChannel().getSortNumber());
-    } else if (key.equalsIgnoreCase("url")) {
-      return removeNull(program.getTextField(ProgramFieldType.URL_TYPE));
     } else if (key.equalsIgnoreCase("start_day_of_week")) {
       SimpleDateFormat format = new SimpleDateFormat("EEEE");
       return format.format(new java.util.Date(program.getDate().getCalendar().getTimeInMillis()));
@@ -211,10 +202,6 @@ public class ParamLibrary {
       return Long.toString(createStartTime(program).getTimeInMillis() / 1000);
     } else if (key.equalsIgnoreCase("end_unix")) {
       return Long.toString(createEndTime(program).getTimeInMillis() / 1000);
-    } else if (key.equalsIgnoreCase("custom")) {
-      return removeNull(program.getTextField(ProgramFieldType.CUSTOM_TYPE));
-    } else if (key.equalsIgnoreCase("genre")) {
-      return removeNull(program.getTextField(ProgramFieldType.GENRE_TYPE));
     } else if (key.equalsIgnoreCase("episode_number")) {
       int epNum = program.getIntField(ProgramFieldType.EPISODE_NUMBER_TYPE);
       if (epNum == -1) {
@@ -229,6 +216,21 @@ public class ParamLibrary {
       return Integer.toString(productionYear);
     } else if (key.equalsIgnoreCase("actors")) {
       return removeNull(program.getTextField(ProgramFieldType.ACTOR_LIST_TYPE));
+    } else {
+      try {
+        Field f = ProgramFieldType.class.getDeclaredField(key.toUpperCase()+"_TYPE");
+        f.setAccessible(true);
+        ProgramFieldType value = (ProgramFieldType)f.get(null);
+        
+        if(value != null) {
+          switch(value.getFormat()) {
+            case ProgramFieldType.FORMAT_INT: return removeNull(program.getIntFieldAsString(value));
+            case ProgramFieldType.FORMAT_TEXT: return removeNull(program.getTextField(value));
+          }
+        }
+      } catch (Exception e) {
+        // ignore
+      }
     }
 
     mError = true;
