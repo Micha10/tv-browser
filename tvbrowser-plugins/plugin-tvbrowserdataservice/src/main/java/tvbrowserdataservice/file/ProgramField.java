@@ -310,7 +310,7 @@ public class ProgramField implements Cloneable {
         mDataFormat = ProgramFieldType.FORMAT_TEXT;
 
         try {
-            mData = StringUtils.trim(text).getBytes(TEXT_CHARSET);
+            mData = StringUtils.trim(text).replaceAll("\\A\\p{C}+|\\p{C}+\\Z","").getBytes(TEXT_CHARSET);
         }
         catch (UnsupportedEncodingException exc) {
             // This will never happen, because UTF-8 is always supported
