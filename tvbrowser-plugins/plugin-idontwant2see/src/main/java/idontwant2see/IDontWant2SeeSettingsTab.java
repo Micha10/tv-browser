@@ -56,7 +56,7 @@ public class IDontWant2SeeSettingsTab implements SettingsTab {
   private JRadioButton mSimpleContextMenu;
   private JRadioButton mCascadedContextMenu;
   private ExclusionTablePanel mExclusionPanel;
-  private Localizer mLocalizer = IDontWant2See.mLocalizer;
+  private Localizer mLocalizer = IDontWant2See.LOCALIZER;
   private DefaultProgramImportanceSelectionPanel mProgramImportancePanel;
   private IDontWant2SeeSettings mSettings;
   

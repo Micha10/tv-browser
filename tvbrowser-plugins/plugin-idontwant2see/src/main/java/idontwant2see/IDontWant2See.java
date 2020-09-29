@@ -26,6 +26,7 @@ package idontwant2see;
 import java.awt.AWTEvent;
 import java.awt.Dialog.ModalityType;
 import java.awt.Dimension;
+import java.awt.Frame;
 import java.awt.Toolkit;
 import java.awt.Window;
 import java.awt.event.AWTEventListener;
@@ -108,11 +109,11 @@ public final class IDontWant2See extends Plugin implements AWTEventListener {
   private static final String DONT_WANT_TO_SEE_IMPORT_SYNC_ADDRESS = "https://www.tvbrowser-app.de/data/scripts/syncDown.php?type=dontWantToSee";
   
   private static final boolean PLUGIN_IS_STABLE = true;
-  private static final Version PLUGIN_VERSION = new Version(0, 17, 1, PLUGIN_IS_STABLE);
+  private static final Version PLUGIN_VERSION = new Version(0, 18, 0, PLUGIN_IS_STABLE);
 
   private static final String RECEIVE_TARGET_EXCLUDE_EXACT = "target_exclude_exact";
 
-  static final Localizer mLocalizer = Localizer
+  static final Localizer LOCALIZER = Localizer
       .getLocalizerFor(IDontWant2See.class);
 
   private static Date mCurrentDate = Date.getCurrentDate();
@@ -168,6 +169,10 @@ public final class IDontWant2See extends Plugin implements AWTEventListener {
 
   static IDontWant2See getInstance() {
     return mInstance;
+  }
+  
+  Frame getSuperFrame() {
+    return getParentFrame();
   }
 
   public void handleTvDataUpdateFinished() {
@@ -242,8 +247,8 @@ public final class IDontWant2See extends Plugin implements AWTEventListener {
 	public PluginInfo getInfo() {
 		return new PluginInfo(
         IDontWant2See.class,
-        mLocalizer.msg("name", "I don't want to see!"),
-        mLocalizer
+        LOCALIZER.msg("name", "I don't want to see!"),
+        LOCALIZER
             .msg(
                 "desc",
                 "Removes all programs with an entered search text in the title from the program table."),
@@ -269,7 +274,7 @@ public final class IDontWant2See extends Plugin implements AWTEventListener {
     
 
     final ContextMenuAction openExclusionList = new ContextMenuAction(
-        mLocalizer.msg("editExclusionList", "Edit exclusion list"),
+        LOCALIZER.msg("editExclusionList", "Edit exclusion list"),
         createImageIcon("apps", "idontwant2see", 16));
     openExclusionList.putValue(Plugin.BIG_ICON, createImageIcon("apps","idontwant2see",22));
     openExclusionList.setActionListener(new ActionListener() {
@@ -286,10 +291,10 @@ public final class IDontWant2See extends Plugin implements AWTEventListener {
         }
 
         final JDialog exclusionListDlg = temDlg;
-        exclusionListDlg.setTitle(mLocalizer
+        exclusionListDlg.setTitle(LOCALIZER
             .msg("name", "I don't want to see!")
             + " - "
-            + mLocalizer.msg("editExclusionList", "Edit exclusion list"));
+            + LOCALIZER.msg("editExclusionList", "Edit exclusion list"));
 
         UiUtilities.registerForClosing(new WindowClosingIf() {
           public void close() {
@@ -346,7 +351,7 @@ public final class IDontWant2See extends Plugin implements AWTEventListener {
       }
     });
 
-    final ContextMenuAction undo = new ContextMenuAction(mLocalizer.msg(
+    final ContextMenuAction undo = new ContextMenuAction(LOCALIZER.msg(
         "undoLastExclusion", "Undo last exclusion"), createImageIcon("actions",
         "edit-undo", 16));
     undo.putValue(Plugin.BIG_ICON, createImageIcon("actions","edit-undo",22));
@@ -367,7 +372,7 @@ public final class IDontWant2See extends Plugin implements AWTEventListener {
       }
     });
     
-    ContextMenuAction export = new ContextMenuAction(mLocalizer.msg("menu.export","Export 'I don't want to see!' exclusion list to TV-Browser server"),createImageIcon("apps", "idontwant2see-android", TVBrowserIcons.SIZE_SMALL));
+    ContextMenuAction export = new ContextMenuAction(LOCALIZER.msg("menu.export","Export 'I don't want to see!' exclusion list to TV-Browser server"),createImageIcon("apps", "idontwant2see-android", TVBrowserIcons.SIZE_SMALL));
     export.putValue(Plugin.BIG_ICON, createImageIcon("apps", "idontwant2see-android", TVBrowserIcons.SIZE_LARGE));
     export.setActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
@@ -377,13 +382,13 @@ public final class IDontWant2See extends Plugin implements AWTEventListener {
           JTextField userName = new JTextField(mSettings.getUserName());
           JPasswordField userPassword = new JPasswordField(mSettings.getPassword());
           
-          message.add(new JLabel(mLocalizer.msg("menu.export.message","You need to enter your AndroidSync user name and password:")), CC.xyw(1, 1, 4));
-          message.add(new JLabel(mLocalizer.msg("settings.userName"," User name:")), CC.xy(2, 3));
+          message.add(new JLabel(LOCALIZER.msg("menu.export.message","You need to enter your AndroidSync user name and password:")), CC.xyw(1, 1, 4));
+          message.add(new JLabel(LOCALIZER.msg("settings.userName"," User name:")), CC.xy(2, 3));
           message.add(userName, CC.xy(4, 3));
-          message.add(new JLabel(mLocalizer.msg("settings.passWord","Password:")), CC.xy(2, 5));
+          message.add(new JLabel(LOCALIZER.msg("settings.passWord","Password:")), CC.xy(2, 5));
           message.add(userPassword, CC.xy(4, 5));
           
-          if(JOptionPane.showConfirmDialog(getParentFrame(), message, mLocalizer.msg("settings.synchronization", "Android synchronization"), JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null) == JOptionPane.OK_OPTION) {
+          if(JOptionPane.showConfirmDialog(getParentFrame(), message, LOCALIZER.msg("settings.synchronization", "Android synchronization"), JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null) == JOptionPane.OK_OPTION) {
             mSettings.setUserName(userName.getText().trim());
             mSettings.setPassword(new String(userPassword.getPassword()).trim());
             
@@ -396,7 +401,7 @@ public final class IDontWant2See extends Plugin implements AWTEventListener {
       }
     });
     
-    ContextMenuAction importExclusions = new ContextMenuAction(mLocalizer.msg("menu.import","Add exclusions from the TV-Browser server to the exclusion list of 'I don't want to see!'"),createImageIcon("apps", "idontwant2see-android", TVBrowserIcons.SIZE_SMALL));
+    ContextMenuAction importExclusions = new ContextMenuAction(LOCALIZER.msg("menu.import","Add exclusions from the TV-Browser server to the exclusion list of 'I don't want to see!'"),createImageIcon("apps", "idontwant2see-android", TVBrowserIcons.SIZE_SMALL));
     importExclusions.putValue(Plugin.BIG_ICON, createImageIcon("apps", "idontwant2see-android", TVBrowserIcons.SIZE_LARGE));
     importExclusions.setActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
@@ -406,13 +411,13 @@ public final class IDontWant2See extends Plugin implements AWTEventListener {
           JTextField userName = new JTextField(mSettings.getUserName());
           JPasswordField userPassword = new JPasswordField(mSettings.getPassword());
           
-          message.add(new JLabel(mLocalizer.msg("menu.export.message","You need to enter your AndroidSync user name and password:")), CC.xyw(1, 1, 4));
-          message.add(new JLabel(mLocalizer.msg("settings.userName"," User name:")), CC.xy(2, 3));
+          message.add(new JLabel(LOCALIZER.msg("menu.export.message","You need to enter your AndroidSync user name and password:")), CC.xyw(1, 1, 4));
+          message.add(new JLabel(LOCALIZER.msg("settings.userName"," User name:")), CC.xy(2, 3));
           message.add(userName, CC.xy(4, 3));
-          message.add(new JLabel(mLocalizer.msg("settings.passWord","Password:")), CC.xy(2, 5));
+          message.add(new JLabel(LOCALIZER.msg("settings.passWord","Password:")), CC.xy(2, 5));
           message.add(userPassword, CC.xy(4, 5));
           
-          if(JOptionPane.showConfirmDialog(getParentFrame(), message, mLocalizer.msg("settings.synchronization", "Android synchronization"), JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null) == JOptionPane.OK_OPTION) {
+          if(JOptionPane.showConfirmDialog(getParentFrame(), message, LOCALIZER.msg("settings.synchronization", "Android synchronization"), JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null) == JOptionPane.OK_OPTION) {
             mSettings.setUserName(userName.getText().trim());
             mSettings.setPassword(new String(userPassword.getPassword()).trim());
             
@@ -425,7 +430,7 @@ public final class IDontWant2See extends Plugin implements AWTEventListener {
       }
     });
 
-    return new ActionMenu(mLocalizer.msg(
+    return new ActionMenu(LOCALIZER.msg(
         "name", "I don't want to see!"), createImageIcon("apps",
         "idontwant2see", 16),new Action[] {openExclusionList,undo,export,importExclusions});
   }
@@ -447,30 +452,35 @@ public final class IDontWant2See extends Plugin implements AWTEventListener {
         
         conn.setRequestProperty  ("Authorization", "Basic " + new String(Base64.encodeBase64(getmethere.getBytes())));
         
-        read = new BufferedReader(new InputStreamReader(IOUtilities.openSaveGZipInputStream(conn.getInputStream()),"UTF-8"));
-        
-        /*String dateValue = read.readLine();
-        
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
-        java.util.Date syncDate = dateFormat.parse(dateValue.trim());
-        System.out.println(syncDate);
-        if(syncDate.getTime() > System.currentTimeMillis()) {*/
-          String line = null;
-                      
-          ArrayList<String> importExclusions = new ArrayList<String>();
+        String[] importExclusions = loadExclusions(conn.getInputStream(),false, "UTF-8");
           
-          while((line = read.readLine()) != null) {
-            if(line.contains(";;")) {
-              importExclusions.add(line);
-            }
-          }
-          
-          if(!importExclusions.isEmpty()) {
-            updateExclusions(importExclusions.toArray(new String[importExclusions.size()]));
-          }
+        if(importExclusions.length > 0) {
+          updateExclusions(importExclusions);
+        }
        // }
       }catch(Exception e) {e.printStackTrace();}
     }
+  }
+  
+  String[] loadExclusions(InputStream in, boolean acceptTextExclusions, String charset) {
+    ArrayList<String> importExclusions = new ArrayList<String>();
+    
+    try(BufferedReader read = new BufferedReader(new InputStreamReader(acceptTextExclusions ? in : IOUtilities.openSaveGZipInputStream(in),charset))) {
+      String line = null;
+      
+      while((line = read.readLine()) != null) {
+        if(line.contains(";;")) {
+          importExclusions.add(line);
+        }
+        else if(acceptTextExclusions && !line.isBlank()) {
+          importExclusions.add(line+";;1");
+        }
+      }
+    }catch(IOException ioe) {
+      ioe.printStackTrace();
+    }
+    
+    return importExclusions.toArray(new String[0]);
   }
   
   private void exportAndroid() {
@@ -590,7 +600,7 @@ public final class IDontWant2See extends Plugin implements AWTEventListener {
 
           System.out.println("DONE");
           
-          JOptionPane.showMessageDialog(getParentFrame(), mLocalizer.msg("success", "The data were send successfully."), mLocalizer.msg("successTitle", "Success"), JOptionPane.INFORMATION_MESSAGE);
+          JOptionPane.showMessageDialog(getParentFrame(), LOCALIZER.msg("success", "The exclusion data were send successfully to the Android synchronization server."), LOCALIZER.msg("successTitle", "Success"), JOptionPane.INFORMATION_MESSAGE);
       } catch (Exception e) {
         int response = 0;
         
@@ -604,11 +614,11 @@ public final class IDontWant2See extends Plugin implements AWTEventListener {
         }
         
         switch (response) {
-          case 404: JOptionPane.showMessageDialog(getParentFrame(), mLocalizer.msg("userError", "Username or password were not accepted. Please check them."), mLocalizer.msg("serverError", "Error in server connection"), JOptionPane.ERROR_MESSAGE);break;
-          case 415: JOptionPane.showMessageDialog(getParentFrame(), mLocalizer.msg("wrongFileError", "Server didn't accepted upload data. This should not happen. Please contact TV-Browser team."), mLocalizer.msg("serverError", "Error in server connection"), JOptionPane.ERROR_MESSAGE);break;
-          case 500: JOptionPane.showMessageDialog(getParentFrame(), mLocalizer.msg("serverFileError", "Server could not store data. Please try again, if this continues please contact TV-Browser team."), mLocalizer.msg("serverError", "Error in server connection"), JOptionPane.ERROR_MESSAGE);break;
+          case 404: JOptionPane.showMessageDialog(getParentFrame(), LOCALIZER.msg("userError", "Username or password were not accepted. Please check them."), LOCALIZER.msg("serverError", "Error in server connection"), JOptionPane.ERROR_MESSAGE);break;
+          case 415: JOptionPane.showMessageDialog(getParentFrame(), LOCALIZER.msg("wrongFileError", "Server didn't accepted upload data. This should not happen. Please contact TV-Browser team."), LOCALIZER.msg("serverError", "Error in server connection"), JOptionPane.ERROR_MESSAGE);break;
+          case 500: JOptionPane.showMessageDialog(getParentFrame(), LOCALIZER.msg("serverFileError", "Server could not store data. Please try again, if this continues please contact TV-Browser team."), LOCALIZER.msg("serverError", "Error in server connection"), JOptionPane.ERROR_MESSAGE);break;
           
-          default: JOptionPane.showMessageDialog(getParentFrame(), mLocalizer.msg("unknowError", "Something went wrong with the connection to the server. Reason unknown."), mLocalizer.msg("serverError", "Error in server connection"), JOptionPane.ERROR_MESSAGE);break;
+          default: JOptionPane.showMessageDialog(getParentFrame(), LOCALIZER.msg("unknowError", "Something went wrong with the connection to the server. Reason unknown."), LOCALIZER.msg("serverError", "Error in server connection"), JOptionPane.ERROR_MESSAGE);break;
         }
       
         e.printStackTrace();
@@ -629,7 +639,7 @@ public final class IDontWant2See extends Plugin implements AWTEventListener {
       }
   }
     else {
-      JOptionPane.showMessageDialog(getParentFrame(), mLocalizer.msg("setupFirst", "You have to enter user name and password first."), mLocalizer.msg("noUser", "No user name and/or password"), JOptionPane.ERROR_MESSAGE);
+      JOptionPane.showMessageDialog(getParentFrame(), LOCALIZER.msg("setupFirst", "You have to enter user name and password first."), LOCALIZER.msg("noUser", "No user name and/or password"), JOptionPane.ERROR_MESSAGE);
     }
   }
 
@@ -649,7 +659,7 @@ public final class IDontWant2See extends Plugin implements AWTEventListener {
         if (matcher.matches()) {
           actionDontWant = getActionInputTitle(p, matcher.group(2));
         }
-        actionDontWant.putValue(Action.NAME,mLocalizer.msg("name","I don't want to see!"));
+        actionDontWant.putValue(Action.NAME,LOCALIZER.msg("name","I don't want to see!"));
         actionDontWant.putValue(Action.SMALL_ICON,createImageIcon("apps","idontwant2see",16));
   
         return MenuCompat.createActionMenu(1, actionDontWant);
@@ -663,7 +673,7 @@ public final class IDontWant2See extends Plugin implements AWTEventListener {
         final ActionMenu action1 = MenuCompat.createActionMenu(1, actionDontWant);
         final ActionMenu action2 = MenuCompat.createActionMenu(2, actionInput);
         
-        return MenuCompat.createActionMenu(MenuCompat.ID_ACTION_NONE, mLocalizer
+        return MenuCompat.createActionMenu(MenuCompat.ID_ACTION_NONE, LOCALIZER
             .msg("name", "I don't want to see!"), createImageIcon("apps","idontwant2see",16),
             new ActionMenu[] {action1,action2}, mSettings.isSimpleMenu());
       }
@@ -674,7 +684,7 @@ public final class IDontWant2See extends Plugin implements AWTEventListener {
   }
 
   private ContextMenuAction getActionShowAgain(final Program p) {
-    return new ContextMenuAction(mLocalizer
+    return new ContextMenuAction(LOCALIZER
         .msg("menu.reshow", "I want to see!"), createImageIcon("actions",
         "edit-paste", 16)) {
       public void actionPerformed(final ActionEvent e) {
@@ -685,10 +695,10 @@ public final class IDontWant2See extends Plugin implements AWTEventListener {
   }
 
   private AbstractAction getActionInputTitle(final Program p, final String part) {
-    return new AbstractAction(mLocalizer.msg("menu.userEntered",
+    return new AbstractAction(LOCALIZER.msg("menu.userEntered",
         "User entered value")) {
       public void actionPerformed(final ActionEvent e) {
-        final JCheckBox caseSensitive = new JCheckBox(mLocalizer.msg(
+        final JCheckBox caseSensitive = new JCheckBox(LOCALIZER.msg(
             "caseSensitive",
             "case sensitive"), mSettings.isDefaultCaseSensitive());
         String title = p.getTitle();
@@ -724,10 +734,10 @@ public final class IDontWant2See extends Plugin implements AWTEventListener {
         });
         
         JOptionPane pane = new JOptionPane(new Object[] {
-            mLocalizer.msg("exclusionText",
+            LOCALIZER.msg("exclusionText",
                 "What should be excluded? (You can use the wildcard *)"),
             input, caseSensitive }, JOptionPane.QUESTION_MESSAGE, JOptionPane.OK_CANCEL_OPTION);
-        JDialog d = pane.createDialog(UiUtilities.getLastModalChildOf(getParentFrame()), mLocalizer.msg("exclusionTitle",
+        JDialog d = pane.createDialog(UiUtilities.getLastModalChildOf(getParentFrame()), LOCALIZER.msg("exclusionTitle",
             "Exclusion value entering"));
         d.setModalityType(ModalityType.DOCUMENT_MODAL);
         d.setVisible(true);
@@ -749,7 +759,7 @@ public final class IDontWant2See extends Plugin implements AWTEventListener {
 
           if (test.trim().length() <= 1) {
             JOptionPane.showMessageDialog(UiUtilities
-                .getLastModalChildOf(getParentFrame()), mLocalizer.msg(
+                .getLastModalChildOf(getParentFrame()), LOCALIZER.msg(
                 "notValid", "The entered text is not valid."), Localizer
                 .getLocalization(Localizer.I18N_ERROR),
                 JOptionPane.ERROR_MESSAGE);
@@ -760,7 +770,7 @@ public final class IDontWant2See extends Plugin implements AWTEventListener {
   }
 
   private AbstractAction getActionDontWantToSee(final Program p) {
-    return new AbstractAction(mLocalizer.msg("menu.completeCaseSensitive",
+    return new AbstractAction(LOCALIZER.msg("menu.completeCaseSensitive",
         "Complete title case-sensitive")) {
       public void actionPerformed(final ActionEvent e) {
         mSettings.getSearchList().add(new IDontWant2SeeListEntry(p.getTitle(), mSettings.isDefaultCaseSensitive()));
@@ -922,7 +932,7 @@ public final class IDontWant2See extends Plugin implements AWTEventListener {
   @Override
   public ProgramReceiveTarget[] getProgramReceiveTargets() {
     return new ProgramReceiveTarget[] { new ProgramReceiveTarget(this,
-        mLocalizer.msg("programTarget", "Exclude programs"),
+        LOCALIZER.msg("programTarget", "Exclude programs"),
         RECEIVE_TARGET_EXCLUDE_EXACT) };
   }
 
@@ -979,10 +989,10 @@ public final class IDontWant2See extends Plugin implements AWTEventListener {
     return "misc";
   }
   
-  private void updateExclusions(String[] exclusions) {
+  void updateExclusions(String[] exclusions) {
     ArrayList<IDontWant2SeeListEntry> entryList = mSettings.getSearchList();
     
-    boolean changed = false;;
+    int count = 0;
     
     for(String exclusion : exclusions) {
       String[] parts = exclusion.split(";;");
@@ -990,18 +1000,22 @@ public final class IDontWant2See extends Plugin implements AWTEventListener {
       IDontWant2SeeListEntry entry = new IDontWant2SeeListEntry(parts[0], parts[1].equals("1"));
       
       if(!entryList.contains(entry)) {
-        changed = true;
+        count++;
         entryList.add(entry);
       }
     }
     
-    if(changed) {
+    if(count > 0) {
+      JOptionPane.showMessageDialog(UiUtilities.getLastModalChildOf(getParentFrame()), LOCALIZER.msg("importSuccess.msg","{0} were exclusions imported.",count), LOCALIZER.msg("importSuccess.title", "Import successful"), JOptionPane.INFORMATION_MESSAGE);
       updateFilter(!mSettings.isSwitchToMyFilter());
       exportAndroid();
     }
+    else {
+      JOptionPane.showMessageDialog(UiUtilities.getLastModalChildOf(getParentFrame()), LOCALIZER.msg("importNothing.msg","The import didn't contain any new exclusions."), LOCALIZER.msg("importNothing.title","Nothing to import"), JOptionPane.INFORMATION_MESSAGE);
+    }
   }
   
-  private String getExclusions() {
+  String getExclusions() {
     StringBuilder value = new StringBuilder();
     
     ArrayList<IDontWant2SeeListEntry> entryList = mSettings.getSearchList();

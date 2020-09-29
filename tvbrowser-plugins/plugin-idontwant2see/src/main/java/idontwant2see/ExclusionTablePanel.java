@@ -34,6 +34,12 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Locale;
@@ -42,11 +48,14 @@ import java.util.regex.Pattern;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
@@ -56,6 +65,7 @@ import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.filechooser.FileFilter;
 
 import com.jgoodies.forms.builder.PanelBuilder;
 import com.jgoodies.forms.factories.CC;
@@ -64,6 +74,7 @@ import com.jgoodies.forms.layout.Sizes;
 
 import tvbrowser.core.icontheme.IconLoader;
 import tvbrowser.ui.settings.util.ColorLabel;
+import util.browserlauncher.Launch;
 import util.ui.Localizer;
 import util.ui.UiUtilities;
 
@@ -75,7 +86,7 @@ import util.ui.UiUtilities;
 public class ExclusionTablePanel extends JPanel {
   private JTable mTable;
   private IDontWant2SeeSettingsTableModel mTableModel;
-  private static final Localizer mLocalizer = IDontWant2See.mLocalizer;
+  private static final Localizer mLocalizer = IDontWant2See.LOCALIZER;
   
   protected ExclusionTablePanel(final IDontWant2SeeSettings settings) {
     mTableModel = new IDontWant2SeeSettingsTableModel(settings.getSearchList(),settings.getLastEnteredExclusionString());
@@ -245,7 +256,7 @@ public class ExclusionTablePanel extends JPanel {
     pb1.add(clearFilter, CC.xy(9, 1));
     
     final FormLayout layout = new FormLayout("default,0dlu:grow,default,0dlu:grow,default",
-        "default,3dlu,fill:default:grow,1dlu,default,4dlu,default,5dlu,pref");
+        "default,3dlu,fill:default:grow,1dlu,default,4dlu,default,5dlu,pref,5dlu,default");
     final PanelBuilder pb = new PanelBuilder(layout, this);
     
     int y = 1;
@@ -302,6 +313,98 @@ public class ExclusionTablePanel extends JPanel {
     pb.add(delete, CC.xy(5,y++));
     pb.add(UiUtilities.createHelpTextArea(mLocalizer.msg("settings.help",
     "To edit a value double click a cell. You can use wildcard * to search for any text.")), CC.xyw(1,++y,5));
+    
+    final JButton exportBtn = new JButton(mLocalizer.msg("settings.export", "Export exclusions to text file"));
+    exportBtn.addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        JFileChooser chooser = new JFileChooser(System.getProperty("user.home"));
+        chooser.setSelectedFile(new File(System.getProperty("user.home"),"i-dont-want-to-see-exclusions.txt"));
+        chooser.setMultiSelectionEnabled(false);
+        chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        chooser.setFileFilter(new FileFilter() {
+          @Override
+          public String getDescription() {
+            return "Text files";
+          }
+          
+          @Override
+          public boolean accept(File f) {
+            return f.isDirectory() || f.getName().toLowerCase().endsWith(".txt");
+          }
+        });
+        
+        if(chooser.showSaveDialog(UiUtilities.getLastModalChildOf(IDontWant2See.getInstance().getSuperFrame())) == JFileChooser.APPROVE_OPTION) {
+          String exclusions = IDontWant2See.getInstance().getExclusions();
+          
+          try(BufferedWriter out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(chooser.getSelectedFile()), Launch.getOs() == Launch.OS_WINDOWS ? "ISO-8859-15" : "UTF-8"))) {
+            out.write(exclusions);
+          }catch(IOException ioe) {
+            ioe.printStackTrace();
+          }          
+        }
+      }
+    });
+    
+    final JButton importBtn = new JButton(mLocalizer.msg("settings.import", "Import exclusions from text file"));
+    importBtn.addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        JFileChooser chooser = new JFileChooser(System.getProperty("user.home"));
+        chooser.setSelectedFile(new File(System.getProperty("user.home"),"i-dont-want-to-see-exclusions.txt"));
+        chooser.setMultiSelectionEnabled(false);
+        chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        chooser.setFileFilter(new FileFilter() {
+          @Override
+          public String getDescription() {
+            return "Text files";
+          }
+          
+          @Override
+          public boolean accept(File f) {
+            return f.isDirectory() || f.getName().toLowerCase().endsWith(".txt");
+          }
+        });
+        
+        if(chooser.showOpenDialog(UiUtilities.getLastModalChildOf(IDontWant2See.getInstance().getSuperFrame())) == JFileChooser.APPROVE_OPTION) {
+          try(FileInputStream in = new FileInputStream(chooser.getSelectedFile())) {
+            JRadioButton win = new JRadioButton("Windows");
+            JRadioButton linux = new JRadioButton("Linux");
+            JRadioButton macos = new JRadioButton("macOS");
+            JRadioButton other = new JRadioButton(mLocalizer.msg("import.os.other", "other OS"));
+            JRadioButton dontKnow = new JRadioButton(mLocalizer.msg("import.os.dontKnow", "don't know"));
+            
+            ButtonGroup bg = new ButtonGroup();
+            bg.add(win);
+            bg.add(linux);
+            bg.add(macos);
+            bg.add(other);
+            bg.add(dontKnow);
+            
+            switch(Launch.getOs()) {
+              case Launch.OS_WINDOWS: win.setSelected(true);break;
+              case Launch.OS_LINUX: linux.setSelected(true);break;
+              case Launch.OS_MAC: macos.setSelected(true);break;
+              case Launch.OS_OTHER: other.setSelected(true);break;
+            }
+            
+            JOptionPane.showConfirmDialog(UiUtilities.getLastModalChildOf(IDontWant2See.getInstance().getSuperFrame()), new Object[] {mLocalizer.msg("import.os.msg","On which OS was the import file created?"),win,linux,macos,other,dontKnow}, mLocalizer.msg("import.os.title","Select OS"), JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE);
+            IDontWant2See.getInstance().updateExclusions(IDontWant2See.getInstance().loadExclusions(in, true, win.isSelected() ? "ISO-8859-15" : "UTF-8"));
+          }catch(Exception ioe) {
+            ioe.printStackTrace();
+          }
+        }
+      }
+    });
+    
+    final PanelBuilder imExport = new PanelBuilder(new FormLayout("default,10dlu:grow,default","default"));
+    imExport.add(exportBtn, CC.xy(1,1));
+    imExport.add(importBtn, CC.xy(3,1));
+    
+    y+=2;
+    
+    pb.add(imExport.getPanel(), CC.xyw(1, y, 5));
+    
   }
   
   private void removeDuplicateRows() {

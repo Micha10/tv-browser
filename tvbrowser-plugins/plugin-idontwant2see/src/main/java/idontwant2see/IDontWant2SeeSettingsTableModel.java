@@ -109,10 +109,10 @@ public class IDontWant2SeeSettingsTableModel extends AbstractTableModel {
   
   public String getColumnName(final int column) {
     if(column == 0) {
-      return IDontWant2See.mLocalizer.msg("searchText","Search text");
+      return IDontWant2See.LOCALIZER.msg("searchText","Search text");
     }
     
-    return IDontWant2See.mLocalizer.msg("settings.caseSensitive","case-sensitive");
+    return IDontWant2See.LOCALIZER.msg("settings.caseSensitive","case-sensitive");
   }
   
   /**

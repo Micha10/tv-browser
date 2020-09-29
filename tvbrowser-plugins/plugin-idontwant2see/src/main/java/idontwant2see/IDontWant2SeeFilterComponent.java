@@ -37,7 +37,7 @@ import devplugin.Program;
  */
 public final class IDontWant2SeeFilterComponent extends PluginsFilterComponent {
   public String getUserPresentableClassName() {
-    return IDontWant2See.mLocalizer.msg("name","I don't want to see!");
+    return IDontWant2See.LOCALIZER.msg("name","I don't want to see!");
   }
 
   public boolean accept(final Program program) {
