@@ -486,7 +486,8 @@
 		<option value="-Dcom.apple.smallTabs=true"/>
 		<option value="--module-path=lib:tvbrowser.jar"/>
 	    <option value="-splash:imgs/splash.png"/>
-		<option value="-Xmx1024M"/>
+		<option value="-Xms16m"/>
+		<option value="-Xmx1G"/>
 		</appbundler>
 
 	    <copy todir="${tvbrowser-macjava.runtime.dir}/TV-Browser.app/Contents/Resources">
