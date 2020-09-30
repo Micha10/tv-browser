@@ -472,7 +472,7 @@ public final class IDontWant2See extends Plugin implements AWTEventListener {
         if(line.contains(";;")) {
           importExclusions.add(line);
         }
-        else if(acceptTextExclusions && !line.isBlank()) {
+        else if(acceptTextExclusions && !line.isEmpty()) {
           importExclusions.add(line+";;1");
         }
       }
