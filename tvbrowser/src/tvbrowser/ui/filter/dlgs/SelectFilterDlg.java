@@ -70,7 +70,7 @@ import util.ui.WindowClosingIf;
 
 public class SelectFilterDlg extends JDialog implements ActionListener, WindowClosingIf {
 
-  public static final util.ui.Localizer mLocalizer = util.ui.Localizer.getLocalizerFor(SelectFilterDlg.class);
+  public static final util.ui.Localizer LOCALIZER = util.ui.Localizer.getLocalizerFor(SelectFilterDlg.class);
 
   private static SelectFilterDlg mInstance;
 
@@ -92,7 +92,7 @@ public class SelectFilterDlg extends JDialog implements ActionListener, WindowCl
   }
   
   private SelectFilterDlg(Window parent) {
-    super(parent, mLocalizer.msg("title", "Edit Filters"), Dialog.ModalityType.DOCUMENT_MODAL);
+    super(parent, LOCALIZER.msg("title", "Edit Filters"), Dialog.ModalityType.DOCUMENT_MODAL);
     mInstance = this;
     
     FormLayout layout = new FormLayout("default,default:grow,default","default,4dlu,fill:default:grow,5dlu,default");
@@ -112,9 +112,9 @@ public class SelectFilterDlg extends JDialog implements ActionListener, WindowCl
     mRemoveBtn = UiUtilities.createToolBarButton(Localizer.getLocalization(Localizer.I18N_DELETE),TVBrowserIcons.delete(TVBrowserIcons.SIZE_LARGE));
     mSeperator = UiUtilities.createToolBarButton(FilterTree.mLocalizer.msg("newSeparator", "Add separator"),IconLoader.getInstance().getIconFromTheme("emblems", "separator", 22));
     mDefaultFilterBtn = UiUtilities.createToolBarButton(Localizer.getLocalization(Localizer.I18N_STANDARD),IconLoader.getInstance().getIconFromTheme("actions", "view-filter", 22));
-    mUpBtn = UiUtilities.createToolBarButton(mLocalizer.msg("up","Move selected value up"),TVBrowserIcons.up(TVBrowserIcons.SIZE_LARGE));
-    mDownBtn = UiUtilities.createToolBarButton(mLocalizer.msg("down","Move selected value down"),TVBrowserIcons.down(TVBrowserIcons.SIZE_LARGE));    
-    mSortAlphabetically = UiUtilities.createToolBarButton(mLocalizer.msg("sortAlphabetically", "Sort filters alphabetically"), IconLoader.getInstance().getIconFromTheme("actions", "sort-list", TVBrowserIcons.SIZE_LARGE));
+    mUpBtn = UiUtilities.createToolBarButton(LOCALIZER.msg("up","Move selected value up"),TVBrowserIcons.up(TVBrowserIcons.SIZE_LARGE));
+    mDownBtn = UiUtilities.createToolBarButton(LOCALIZER.msg("down","Move selected value down"),TVBrowserIcons.down(TVBrowserIcons.SIZE_LARGE));    
+    mSortAlphabetically = UiUtilities.createToolBarButton(LOCALIZER.msg("sortAlphabetically", "Sort filters alphabetically"), IconLoader.getInstance().getIconFromTheme("actions", "sort-list", TVBrowserIcons.SIZE_LARGE));
     
     JToolBar toolbarPn = new JToolBar();
     toolbarPn.setBorder(BorderFactory.createEmptyBorder());
@@ -343,8 +343,8 @@ public class SelectFilterDlg extends JDialog implements ActionListener, WindowCl
   }
   
   void deleteSelectedItem(FilterNode node) {
-    if(JOptionPane.showConfirmDialog(this,mLocalizer.msg("delete","Do you really want to delete the selected value?"),
-        mLocalizer.msg("deleteTitle", "Delete selected value..."),JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+    if(JOptionPane.showConfirmDialog(this,LOCALIZER.msg("delete","Do you really want to delete the selected value?"),
+        LOCALIZER.msg("deleteTitle", "Delete selected value..."),JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
       int[] rows = mFilterTree.getSelectionRows();
       
       if(node.isDirectoryNode() && node.getChildCount() < 1) {

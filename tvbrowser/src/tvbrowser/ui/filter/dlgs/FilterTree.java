@@ -504,7 +504,7 @@ public class FilterTree extends JTree implements DragGestureListener, DropTarget
       
       menu.add(item);
       
-      item = new JMenuItem(SelectFilterDlg.mLocalizer.msg("sortAlphabetically", "Sort filters alphabetically"), IconLoader.getInstance().getIconFromTheme("actions", "sort-list", TVBrowserIcons.SIZE_SMALL));
+      item = new JMenuItem(SelectFilterDlg.LOCALIZER.msg("sortAlphabetically", "Sort filters alphabetically"), IconLoader.getInstance().getIconFromTheme("actions", "sort-list", TVBrowserIcons.SIZE_SMALL));
       item.addActionListener(e -> {
         sortAlphabetically(last);
       });
@@ -605,7 +605,7 @@ public class FilterTree extends JTree implements DragGestureListener, DropTarget
       public int compare(TreeNode node1, TreeNode node2) {
         return node1.toString().compareToIgnoreCase(node2.toString());
       }
-    }, SelectFilterDlg.mLocalizer.msg("sortAlphabetically", "Sort filters alphabetically"));
+    }, SelectFilterDlg.LOCALIZER.msg("sortAlphabetically", "Sort filters alphabetically"));
     
     reload(node);
   }
