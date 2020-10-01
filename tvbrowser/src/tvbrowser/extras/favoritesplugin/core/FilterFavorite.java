@@ -211,7 +211,7 @@ public class FilterFavorite extends Favorite implements PendingFilterLoader {
         mFilterSelection.setSelectedItem(mFilterInstance);
       }
       
-      JButton editFilter = new JButton(SelectFilterDlg.mLocalizer.msg("title", "Edit Filters"));
+      JButton editFilter = new JButton(SelectFilterDlg.LOCALIZER.msg("title", "Edit Filters"));
       editFilter.addActionListener(e -> {
         SelectFilterDlg filterDlg = SelectFilterDlg.create(UiUtilities.getLastModalChildOf(MainFrame.getInstance()));
         filterDlg.setVisible(true);

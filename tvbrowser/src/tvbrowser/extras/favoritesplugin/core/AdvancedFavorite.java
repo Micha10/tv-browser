@@ -349,7 +349,7 @@ public class AdvancedFavorite extends Favorite implements PendingFilterLoader {
         }
       }
       
-      mEditFilter = new JButton(SelectFilterDlg.mLocalizer.msg("title", "Edit Filters"));
+      mEditFilter = new JButton(SelectFilterDlg.LOCALIZER.msg("title", "Edit Filters"));
       mEditFilter.addActionListener(e -> {
         SelectFilterDlg filterDlg = SelectFilterDlg.create(UiUtilities.getLastModalChildOf(MainFrame.getInstance()));
         filterDlg.setVisible(true);

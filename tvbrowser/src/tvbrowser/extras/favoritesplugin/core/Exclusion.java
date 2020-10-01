@@ -46,6 +46,10 @@ import devplugin.ProgramInfoHelper;
 public class Exclusion implements Comparable<Exclusion> {
   private static final util.ui.Localizer mLocalizer = util.ui.Localizer.getLocalizerFor(Exclusion.class);
   
+  public static final int TYPE_DURATION_NONE = 0;
+  public static final int TYPE_DURATION_TOO_SHORT = 1;
+  public static final int TYPE_DURATION_TOO_LONG = 2;
+  
   public static final int DAYLIMIT_DAILY = LimitationConfiguration.DAYLIMIT_DAILY;
   private static final int DAYLIMIT_WEEKEND = LimitationConfiguration.DAYLIMIT_WEEKEND;
   private static final int DAYLIMIT_SUNDAY = LimitationConfiguration.DAYLIMIT_SUNDAY;
@@ -61,6 +65,8 @@ public class Exclusion implements Comparable<Exclusion> {
   private ProgramFilter mFilter;
   private String mFilterName;
   private int mCategory;
+  private int mDuration;
+  private int mTypeDuration;
   
   private ProgramFieldExclusion mProgramFieldExclusion;
 
@@ -76,8 +82,10 @@ public class Exclusion implements Comparable<Exclusion> {
    * @param episodeTitle null, if any episode title is allowed
    * @param category the category of the program or 0 if no category should be filtered
    * @param programFieldExclusion a program field to exclude from
+   * @param typeDuration type of the duration exclusion
+   * @param duration real duration to consider for duration exclusion
    */
-  public Exclusion(String title, String topic, Channel channel, int timeFrom, int timeTo, int dayOfWeek, String filterName, String episodeTitle, int category, ProgramFieldExclusion programFieldExclusion) {
+  public Exclusion(String title, String topic, Channel channel, int timeFrom, int timeTo, int dayOfWeek, String filterName, String episodeTitle, int category, ProgramFieldExclusion programFieldExclusion, int typeDuration, int duration) {
     mTitle = title;
     mTopic = topic;
     mChannel = new ChannelItem(channel);
@@ -88,6 +96,8 @@ public class Exclusion implements Comparable<Exclusion> {
     mEpisodeTitle = episodeTitle;
     mCategory = category;
     mProgramFieldExclusion = programFieldExclusion;
+    mTypeDuration = typeDuration;
+    mDuration = duration;
   }
 
   public Exclusion(ObjectInputStream in) throws ClassNotFoundException, IOException {
@@ -164,11 +174,20 @@ public class Exclusion implements Comparable<Exclusion> {
     else {
       mProgramFieldExclusion = null;
     }
+    
+    if(version > 8) {
+      mTypeDuration = in.readInt();
+      mDuration = in.readInt();
+    }
+    else {
+      mTypeDuration = TYPE_DURATION_NONE;
+      mDuration = 0;
+    }
   }
 
 
   public void writeData(ObjectOutputStream out) throws IOException {
-    out.writeInt(8);  // version
+    out.writeInt(9);  // version
     out.writeBoolean(mChannel != null);
     if (mChannel != null) {
       mChannel.saveItem(out);
@@ -206,8 +225,18 @@ public class Exclusion implements Comparable<Exclusion> {
     if(mProgramFieldExclusion != null) {
       mProgramFieldExclusion.writeData(out);
     }
+    
+    out.writeInt(mTypeDuration);
+    out.writeInt(mDuration);
   }
 
+  public int getTypeDuration() {
+    return mTypeDuration;
+  }
+  
+  public int getDuration() {
+    return mDuration;
+  }
 
   public String getTitle() {
     return mTitle;
@@ -275,6 +304,7 @@ public class Exclusion implements Comparable<Exclusion> {
     boolean episodeTitleExcl = false;
     boolean categoryExcl = false;
     boolean programFieldExcl = false;
+    boolean durationExcl = false;
     
     if(isInvalid()) {
       return false;
@@ -409,7 +439,17 @@ public class Exclusion implements Comparable<Exclusion> {
       programFieldExcl = true;
     }
     
-    return channelExcl && titleExcl && topicExcl && timeExcl && dayExcl && filterExclusion && episodeTitleExcl && categoryExcl && programFieldExcl;
+    if(mTypeDuration != TYPE_DURATION_NONE) {
+      switch(mTypeDuration) {
+        case TYPE_DURATION_TOO_SHORT: durationExcl = prog.getLength() <= mDuration;break;
+        case TYPE_DURATION_TOO_LONG: durationExcl = prog.getLength() >= mDuration;break;
+      }
+    }
+    else {
+      durationExcl = true;
+    }
+    
+    return channelExcl && titleExcl && topicExcl && timeExcl && dayExcl && filterExclusion && episodeTitleExcl && categoryExcl && programFieldExcl && durationExcl;
   }
   
   /**
