@@ -35,6 +35,7 @@ import javax.swing.UIManager;
 
 import tvbrowser.ui.mainframe.MainFrame;
 import util.ui.UIThreadRunner;
+import util.ui.UiUtilities;
 
 
 /**
@@ -111,7 +112,7 @@ public class ErrorHandler {
     try {
       if(!MainFrame.isStarting()) {
         UIThreadRunner.invokeAndWait(() -> {
-          ErrorWindow errorWindow = new ErrorWindow(mParent, msg, throwable);
+          ErrorWindow errorWindow = new ErrorWindow(UiUtilities.getLastModalChildOf(mParent), msg, throwable);
           errorWindow.centerAndShow();
         });
       }

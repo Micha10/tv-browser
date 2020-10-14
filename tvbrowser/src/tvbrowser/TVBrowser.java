@@ -165,7 +165,7 @@ public class TVBrowser {
   
  // private static final String SUN_JAVA_WARNING = "TV-Browser was developed for Sun Java and may not run correctly with your Java implementation.";
 
-  private static final Logger mLog
+  private static final Logger LOG
     = Logger.getLogger(TVBrowser.class.getName());
 
   /** The localizer for this class. */
@@ -460,7 +460,7 @@ public class TVBrowser {
       TimeZone.setDefault(TimeZone.getTimeZone(timezone));
     }
     
-    mLog.info("Using timezone "+TimeZone.getDefault().getDisplayName());
+    LOG.info("Using timezone "+TimeZone.getDefault().getDisplayName());
 
     // refresh the localizers because we know the language now
     Localizer.emptyLocalizerCache();
@@ -507,7 +507,7 @@ public class TVBrowser {
       splashRef.set(new DummySplash());
     }
     
-    mLog.info("Deleting expired TV listings...");
+    LOG.info("Deleting expired TV listings...");
     TvDataBase.getInstance().deleteExpiredFiles(TvDataBase.DEFAULT_DATA_LIFESPAN, false);
 
     /* Initialize the MarkedProgramsMap */
@@ -526,7 +526,7 @@ public class TVBrowser {
     
     SearchPlugin.getInstance();
 
-    mLog.info("Loading TV listings service...");
+    LOG.info("Loading TV listings service...");
     splashRef.get().setMessage(mLocalizer.msg("startScreen.dataService", "Loading TV listings service..."));
     
     TvDataServiceProxyManager.getInstance().init();
@@ -547,12 +547,12 @@ public class TVBrowser {
     GenericFilterMap.getInstance();
     
     if (!lookAndFeelInitialized) {
-      mLog.info("Loading Look&Feel...");
+      LOG.info("Loading Look&Feel...");
       splashRef.get().setMessage(mLocalizer.msg("startScreen.laf", "Loading look and feel..."));
       updateLookAndFeel();
     }
     
-    mLog.info("Loading plugins...");
+    LOG.info("Loading plugins...");
     splashRef.get().setMessage(mLocalizer.msg("startScreen.plugins", "Loading plugins..."));
     
     try {
@@ -568,10 +568,10 @@ public class TVBrowser {
     
     splashRef.get().setMessage(mLocalizer.msg("startScreen.tvData", "Checking TV database..."));
 
-    mLog.info("Checking TV listings inventory...");
+    LOG.info("Checking TV listings inventory...");
     TvDataBase.getInstance().checkTvDataInventory(TvDataBase.DEFAULT_DATA_LIFESPAN);
 
-    mLog.info("Starting up...");
+    LOG.info("Starting up...");
     splashRef.get().setMessage(mLocalizer.msg("startScreen.ui", "Starting up..."));
     
     Toolkit.getDefaultToolkit().getSystemEventQueue().push(new TextComponentPopupEventQueue());
@@ -1168,10 +1168,10 @@ public class TVBrowser {
             System.setProperty(key, value);
           }
         } else {
-          mLog.warning("Wrong Syntax in parameter: '" + argument + "'");
+          LOG.warning("Wrong Syntax in parameter: '" + argument + "'");
         }
       } else {
-        mLog.warning("Unknown command line parameter: '" + argument + "'");
+        LOG.warning("Unknown command line parameter: '" + argument + "'");
       }
     }
   }
@@ -1272,7 +1272,7 @@ public class TVBrowser {
         writeLinesToLogFile(lockFileAccess.get(), lines);
       }catch(Exception e){
         if(e instanceof IOException) {
-          mLog.log(Level.WARNING, e.getLocalizedMessage(), e);
+          LOG.log(Level.WARNING, e.getLocalizedMessage(), e);
         }
       }
     }
@@ -1385,12 +1385,12 @@ public class TVBrowser {
       if(mToggleSocket.get() != null) {
         mToggleSocket.get().initMainFrame();
       }
-      mLog.info("platform independent mode is ON");
+      LOG.info("platform independent mode is ON");
       addTrayWindowListener();
     }
 
     // Set the right size
-    mLog.info("Setting frame size and location");
+    LOG.info("Setting frame size and location");
     
     final int windowWidth = Settings.propWindowWidth.getInt();
     final int windowHeight = Settings.propWindowHeight.getInt();
@@ -1452,7 +1452,7 @@ public class TVBrowser {
     }
 
     if (Settings.propShowAssistant.getBoolean()) {
-      mLog.info("Running setup assistant");
+      LOG.info("Running setup assistant");
       mainFrame.runSetupAssistant();
     }
   }
@@ -1486,7 +1486,7 @@ public class TVBrowser {
       return;
     }
     if(log) {
-      mLog.info("Channel Settings (day light saving time corrections/icons)");
+      LOG.info("Channel Settings (day light saving time corrections/icons)");
     }
     //ChannelList.storeAllSettings();
 
@@ -1495,7 +1495,7 @@ public class TVBrowser {
     mainFrame.storeSettings();
 
     if(log) {
-      mLog.info("Storing window size and location");
+      LOG.info("Storing window size and location");
 
       int state = mainFrame.getExtendedState();
 
@@ -1517,7 +1517,7 @@ public class TVBrowser {
     }
 
     if(log) {
-      mLog.info("Storing settings");
+      LOG.info("Storing settings");
     }
     try {
       Settings.storeSettings(log);
@@ -1841,7 +1841,7 @@ public class TVBrowser {
               // TODO Auto-generated catch block
               e.printStackTrace();
             }
-            mLog.info("setting look and feel to " + curLookAndFeel);
+            LOG.info("setting look and feel to " + curLookAndFeel);
           });
         }
       } catch (Exception exc) {

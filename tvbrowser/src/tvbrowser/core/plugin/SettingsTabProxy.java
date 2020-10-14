@@ -63,11 +63,11 @@ public class SettingsTabProxy {
   }
 
   public void saveSettings() {
-    try {
+    //try {
       mSettingsTab.saveSettings();
-    }catch(Throwable t) {
+    /*}catch(Throwable t) {
       mLog.log(Level.WARNING, "Could not save settings", t);
-    }
+    }*/
   }
 
   public Icon getIcon() {

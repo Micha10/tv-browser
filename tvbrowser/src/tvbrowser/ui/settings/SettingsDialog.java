@@ -98,8 +98,7 @@ import util.ui.WindowClosingIf;
  * @author Til Schneider, www.murfman.de
  */
 public class SettingsDialog implements WindowClosingIf {
-
-  private static final util.ui.Localizer mLocalizer = util.ui.Localizer
+  private static final util.ui.Localizer LOCALIZER = util.ui.Localizer
       .getLocalizerFor(SettingsDialog.class);
 
   private JDialog mDialog;
@@ -190,7 +189,7 @@ public class SettingsDialog implements WindowClosingIf {
 
     ButtonBarBuilder builder = new ButtonBarBuilder();
 
-    mHelpBt = new JButton(mLocalizer.msg("help", "Online help"));
+    mHelpBt = new JButton(LOCALIZER.msg("help", "Online help"));
     mHelpBt.addActionListener(e -> {
       Launch.openURL(mHelpBt.getToolTipText());
     });
@@ -199,10 +198,14 @@ public class SettingsDialog implements WindowClosingIf {
 
     JButton okBt = new JButton(Localizer.getLocalization(Localizer.I18N_OK));
     okBt.addActionListener(evt -> {
-      saveSettingsTab();
-      saveSettings();
-      invalidateTree();
-      close();
+      try {
+        saveSettingsTab();
+        saveSettings();
+        invalidateTree();
+        close();
+      }catch(Throwable t) {
+        ErrorHandler.handle(LOCALIZER.msg("error.saving", "Saving settings caused an error."), t);
+      }
     });
     mDialog.getRootPane().setDefaultButton(okBt);
 
@@ -213,12 +216,17 @@ public class SettingsDialog implements WindowClosingIf {
       close();
     });
 
-    JButton applyBt = new JButton(mLocalizer.msg("apply", "Apply"));
+    JButton applyBt = new JButton(LOCALIZER.msg("apply", "Apply"));
     applyBt.addActionListener(evt -> {
-      saveSettings();
-      invalidateTree();
-      Settings.handleChangedSettings();
-      showSettingsPanelForSelectedNode();
+      try {
+        saveSettings();
+        invalidateTree();
+        Settings.handleChangedSettings();
+        showSettingsPanelForSelectedNode();
+      }catch(Throwable t) {
+        System.out.println("hier");
+        ErrorHandler.handle(LOCALIZER.msg("error.saving", "Saving settings caused an error."), t);
+      }
     });
 
     builder.addGlue();
@@ -349,7 +357,7 @@ public class SettingsDialog implements WindowClosingIf {
     root.add(graphicalSettings);
 
     SettingNode technicalSettings = new SettingNode(new DefaultSettingsTab(
-        mLocalizer.msg("technical", "Technical"), null));
+        LOCALIZER.msg("technical", "Technical"), null));
     root.add(technicalSettings);
 
     if (TVBrowser.isUsingSystemTray()) {
@@ -535,7 +543,7 @@ public class SettingsDialog implements WindowClosingIf {
         mHelpBt.setToolTipText(help);
         mHelpBt.setEnabled(true);
       } else {
-        mHelpBt.setToolTipText(mLocalizer.msg("noHelp", "No help available"));
+        mHelpBt.setToolTipText(LOCALIZER.msg("noHelp", "No help available"));
         mHelpBt.setEnabled(false);
       }
       JPanel scroll = new JPanel(new FormLayout("min:grow","fill:default:grow"));
@@ -564,7 +572,7 @@ public class SettingsDialog implements WindowClosingIf {
       
       mSettingsPn.add(pane);
     } else {
-      mHelpBt.setToolTipText(mLocalizer.msg("noHelp", "No help available"));
+      mHelpBt.setToolTipText(LOCALIZER.msg("noHelp", "No help available"));
       mHelpBt.setEnabled(false);
     }
   }
@@ -600,7 +608,7 @@ public class SettingsDialog implements WindowClosingIf {
       contentPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
       JLabel titleLb = new JLabel(mTitle);
       titleLb.setFont(new Font("Dialog", Font.PLAIN, 32));
-      JLabel lb = new JLabel(mLocalizer.msg("selectCategory",
+      JLabel lb = new JLabel(LOCALIZER.msg("selectCategory",
           "Please select a category on the left."));
       lb.setFont(new Font("Dialog", Font.PLAIN, 14));
       lb.setBorder(BorderFactory.createEmptyBorder(20, 0, 0, 0));
@@ -707,7 +715,7 @@ public class SettingsDialog implements WindowClosingIf {
           try {
             mSettingsPn = mSettingsTab.createSettingsPanel();
           } catch (Throwable e) {
-            ErrorHandler.handle(mLocalizer.msg("loadError",
+            ErrorHandler.handle(LOCALIZER.msg("loadError",
                 "An error occurred during loading of {0}", mSettingsTab
                     .getTitle()), e);
           }
@@ -734,7 +742,7 @@ public class SettingsDialog implements WindowClosingIf {
             url = PluginInfo.getHelpUrl(plugin.getId());
           }
         } else {
-          url = mLocalizer.msg("settingsUrl",
+          url = LOCALIZER.msg("settingsUrl",
               "http://enwiki.tvbrowser.org/index.php/Settings {0}",
               mSettingsTab.getTitle());
         }
