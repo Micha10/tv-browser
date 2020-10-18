@@ -444,7 +444,7 @@ public class TVBrowser {
      * ATTENTION: This has to be done before all Internet connections
      */
     updateProxySettings();
-System.out.println("LAST " + Settings.propDateOldSettingsCheckedLast.getDate());
+    
     //Update plugin on version change
     if(Settings.propTVBrowserVersion.getVersion() != null && VERSION.compareTo(Settings.propTVBrowserVersion.getVersion()) > 0) {
       updateLookAndFeel();
