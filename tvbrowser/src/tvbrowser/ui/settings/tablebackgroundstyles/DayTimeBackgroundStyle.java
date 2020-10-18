@@ -41,8 +41,8 @@ import util.ui.TabLayout;
  */
 public class DayTimeBackgroundStyle implements TableBackgroundStyle {
 
-  private static final util.ui.Localizer mLocalizer
-     = util.ui.Localizer.getLocalizerFor(DayTimeBackgroundStyle.class);
+  private static final util.i18n.Localizer mLocalizer
+     = util.i18n.Localizer.getLocalizerFor(DayTimeBackgroundStyle.class);
 
   private JTextField mTimeOfDayEdgeTF, mTimeOfDayEarlyTF, mTimeOfDayMiddayTF,
                      mTimeOfDayAfternoonTF, mTimeOfDayEveningTF;

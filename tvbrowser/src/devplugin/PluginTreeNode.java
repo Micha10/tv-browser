@@ -45,7 +45,7 @@ import tvbrowser.core.TvDataUpdater;
 import tvbrowser.ui.pluginview.Node;
 import tvbrowser.ui.pluginview.PluginTreeModel;
 import util.program.ProgramUtilities;
-import util.ui.Localizer;
+import util.i18n.Localizer;
 import util.ui.UIThreadRunner;
 
 
@@ -55,8 +55,8 @@ import util.ui.UIThreadRunner;
  */
 public class PluginTreeNode implements Comparable<PluginTreeNode> {
 
-  private static final util.ui.Localizer mLocalizer =
-      util.ui.Localizer.getLocalizerFor(PluginTreeNode.class);
+  private static final util.i18n.Localizer mLocalizer =
+      util.i18n.Localizer.getLocalizerFor(PluginTreeNode.class);
 
   private byte mNodeType;
   private ArrayList<PluginTreeNode> mChildNodes;

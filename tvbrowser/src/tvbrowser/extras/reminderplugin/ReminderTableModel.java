@@ -10,7 +10,7 @@ import javax.swing.table.AbstractTableModel;
 import devplugin.Program;
 
 import tvbrowser.core.plugin.PluginManagerImpl;
-import util.ui.Localizer;
+import util.i18n.Localizer;
 
 /**
  * The model for the reminder table.

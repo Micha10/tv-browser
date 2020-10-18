@@ -21,7 +21,7 @@ import tvbrowser.core.Settings;
 import util.io.IOUtilities;
 import util.settings.PluginPictureSettings;
 import util.settings.ProgramPanelSettings;
-import util.ui.Localizer;
+import util.i18n.Localizer;
 import util.ui.ProgramPanel;
 import util.ui.ScrollableJPanel;
 import util.ui.UiUtilities;

@@ -39,7 +39,7 @@ import util.io.ExecutionHandler;
 import util.io.IOUtilities;
 import util.io.Mirror;
 import util.io.PropertiesSorted;
-import util.ui.Localizer;
+import util.i18n.Localizer;
 import util.ui.UiUtilities;
 
 /**

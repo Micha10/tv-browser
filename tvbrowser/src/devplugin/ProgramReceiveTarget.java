@@ -27,7 +27,7 @@ import javax.swing.JOptionPane;
 
 import tvbrowser.ui.mainframe.MainFrame;
 import util.misc.HashCodeUtilities;
-import util.ui.Localizer;
+import util.i18n.Localizer;
 import util.ui.UiUtilities;
 
 /**

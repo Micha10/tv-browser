@@ -41,7 +41,7 @@ import tvbrowser.core.plugin.PluginProxyManager;
 
 public class PluginFilterComponent extends AbstractFilterComponent {
 
-  private static final util.ui.Localizer mLocalizer = util.ui.Localizer
+  private static final util.i18n.Localizer mLocalizer = util.i18n.Localizer
       .getLocalizerFor(PluginFilterComponent.class);
 
   private JComboBox<PluginProxy> mBox;

@@ -39,12 +39,12 @@ import com.jgoodies.forms.layout.FormLayout;
 
 import devplugin.Channel;
 import devplugin.Program;
-import util.ui.Localizer;
+import util.i18n.Localizer;
 import util.ui.OrderChooser;
 
 public class ChannelFilterComponent extends AbstractFilterComponent {
 
-  private static final util.ui.Localizer mLocalizer = util.ui.Localizer
+  private static final util.i18n.Localizer mLocalizer = util.i18n.Localizer
       .getLocalizerFor(ChannelFilterComponent.class);
 
   private OrderChooser<Channel> mList;

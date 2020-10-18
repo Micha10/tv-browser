@@ -67,7 +67,7 @@ import tvbrowser.ui.settings.util.ColorLabel;
 import util.settings.ProgramFieldTypeArrayProperty;
 import util.settings.StringArrayProperty;
 import util.ui.EnhancedPanelBuilder;
-import util.ui.Localizer;
+import util.i18n.Localizer;
 import util.ui.OrderChooser;
 import util.ui.TVBrowserIcons;
 import util.ui.UiUtilities;

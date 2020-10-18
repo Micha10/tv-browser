@@ -45,8 +45,8 @@ import util.ui.ProgramList;
 
 public class RemovedProgramsPanel extends AfterDataUpdateInfoPanel {
 
-  private static final util.ui.Localizer mLocalizer
-     = util.ui.Localizer.getLocalizerFor(RemovedProgramsPanel. class );
+  private static final util.i18n.Localizer mLocalizer
+     = util.i18n.Localizer.getLocalizerFor(RemovedProgramsPanel. class );
   private JCheckBox mDisable;
   private ProgramList mProgramList;
 

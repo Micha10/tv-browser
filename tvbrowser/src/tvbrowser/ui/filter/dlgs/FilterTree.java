@@ -73,13 +73,13 @@ import tvbrowser.core.filters.ShowAllFilter;
 import tvbrowser.core.filters.UserFilter;
 import tvbrowser.core.icontheme.IconLoader;
 import tvbrowser.ui.mainframe.MainFrame;
-import util.ui.Localizer;
+import util.i18n.Localizer;
 import util.ui.OverlayListener;
 import util.ui.TVBrowserIcons;
 import util.ui.UiUtilities;
 
 public class FilterTree extends JTree implements DragGestureListener, DropTargetListener {
-  public static final Localizer mLocalizer = Localizer.getLocalizerFor(FilterTree.class);
+  public static final Localizer LOCALIZER = Localizer.getLocalizerFor(FilterTree.class);
 
   private FilterNode mTransferNode;
   private Rectangle2D mCueLine = new Rectangle2D.Float();
@@ -476,7 +476,7 @@ public class FilterTree extends JTree implements DragGestureListener, DropTarget
     JMenuItem item;
     
     if(last.isDirectoryNode() && last.getChildCount() > 0) {
-      item = new JMenuItem(isExpanded(path) ? mLocalizer.msg("collapse", "Collapse") : mLocalizer.msg("expand", "Expand"));
+      item = new JMenuItem(isExpanded(path) ? LOCALIZER.msg("collapse", "Collapse") : LOCALIZER.msg("expand", "Expand"));
       item.setFont(item.getFont().deriveFont(Font.BOLD));
       item.addActionListener(e -> {
         if(isExpanded(path)) {
@@ -490,14 +490,14 @@ public class FilterTree extends JTree implements DragGestureListener, DropTarget
         menu.add(item);
       }
 
-      item = new JMenuItem(mLocalizer.msg("expandAll", "Expand all"));
+      item = new JMenuItem(LOCALIZER.msg("expandAll", "Expand all"));
       item.addActionListener(e -> {
         expandAll(last);
       });
 
       menu.add(item);
 
-      item = new JMenuItem(mLocalizer.msg("collapseAll", "Collapse all"));
+      item = new JMenuItem(LOCALIZER.msg("collapseAll", "Collapse all"));
       item.addActionListener(e -> {
         collapseAll(last);
       });
@@ -514,7 +514,7 @@ public class FilterTree extends JTree implements DragGestureListener, DropTarget
     }
 
     if (!last.isDirectoryNode() && last.getFilter() instanceof UserFilter) {
-      item = new JMenuItem(mLocalizer.ellipsisMsg("editFilter", "Edit filter '{0}'", last.getFilter().getName()),
+      item = new JMenuItem(LOCALIZER.ellipsisMsg("editFilter", "Edit filter '{0}'", last.getFilter().getName()),
           TVBrowserIcons.edit(TVBrowserIcons.SIZE_SMALL));
       item.setFont(item.getFont().deriveFont(Font.BOLD));
 
@@ -525,7 +525,7 @@ public class FilterTree extends JTree implements DragGestureListener, DropTarget
       menu.addSeparator();
     }
 
-    item = new JMenuItem(mLocalizer.msg("newFolder", "New folder"),
+    item = new JMenuItem(LOCALIZER.msg("newFolder", "New folder"),
         IconLoader.getInstance().getIconFromTheme("actions", "folder-new", 16));
 
     item.addActionListener(e -> {
@@ -533,7 +533,7 @@ public class FilterTree extends JTree implements DragGestureListener, DropTarget
     });
     menu.add(item);
 
-    item = new JMenuItem(mLocalizer.msg("newFilter", "New Filter"), TVBrowserIcons.newIcon(TVBrowserIcons.SIZE_SMALL));
+    item = new JMenuItem(LOCALIZER.msg("newFilter", "New Filter"), TVBrowserIcons.newIcon(TVBrowserIcons.SIZE_SMALL));
 
     item.addActionListener(e -> {
       SelectFilterDlg.getInstance().createNewFilter(last);
@@ -542,7 +542,7 @@ public class FilterTree extends JTree implements DragGestureListener, DropTarget
 
     if(last.isDirectoryNode()) {
       if(!last.equals(mRootNode)) {
-        item = new JMenuItem(mLocalizer.msg("renameFolder", "Rename folder"),
+        item = new JMenuItem(LOCALIZER.msg("renameFolder", "Rename folder"),
             TVBrowserIcons.edit(TVBrowserIcons.SIZE_SMALL));
 
         item.addActionListener(e -> {
@@ -553,7 +553,7 @@ public class FilterTree extends JTree implements DragGestureListener, DropTarget
       }
     }
 
-    item = new JMenuItem(mLocalizer.msg("newSeparator", "Add separator"),IconLoader.getInstance().getIconFromTheme("emblems", "separator", 16));
+    item = new JMenuItem(LOCALIZER.msg("newSeparator", "Add separator"),IconLoader.getInstance().getIconFromTheme("emblems", "separator", 16));
     item.addActionListener(e -> {
       SelectFilterDlg.getInstance().addSeparator(last);
     });
@@ -580,7 +580,7 @@ public class FilterTree extends JTree implements DragGestureListener, DropTarget
       
       if(!((Settings.propDefaultFilter.getString().equals(id + "###" + name)) ||
           (Settings.propDefaultFilter.getString().trim().length() < 1 && last.getFilter() instanceof ShowAllFilter))) {
-        item = new JMenuItem(mLocalizer.msg("setDefault","Set as default"),IconLoader.getInstance().getIconFromTheme("actions", "view-filter", 16));
+        item = new JMenuItem(LOCALIZER.msg("setDefault","Set as default"),IconLoader.getInstance().getIconFromTheme("actions", "view-filter", 16));
         item.addActionListener(e -> {
           SelectFilterDlg.getInstance().setDefaultFilter(last);
         });
@@ -836,7 +836,7 @@ public class FilterTree extends JTree implements DragGestureListener, DropTarget
 
   protected void renameFolder(FilterNode node) {
     if(node != null && node.isDirectoryNode()) {
-      String value = JOptionPane.showInputDialog(UiUtilities.getLastModalChildOf(MainFrame.getInstance()), mLocalizer.msg("folderName","Folder name:"), node.getUserObject());
+      String value = JOptionPane.showInputDialog(UiUtilities.getLastModalChildOf(MainFrame.getInstance()), LOCALIZER.msg("folderName","Folder name:"), node.getUserObject());
 
       if(value != null) {
         node.setUserObject(value);

@@ -50,8 +50,8 @@ import devplugin.CancelableSettingsTab;
 
 public class ConfigPluginSettingsTab extends AbstractSettingsTab implements CancelableSettingsTab {
 
-  private static final util.ui.Localizer mLocalizer
-     = util.ui.Localizer.getLocalizerFor(ConfigPluginSettingsTab.class);
+  private static final util.i18n.Localizer LOCALIZER
+     = util.i18n.Localizer.getLocalizerFor(ConfigPluginSettingsTab.class);
 
 
   private PluginProxy mPlugin;
@@ -115,21 +115,21 @@ public class ConfigPluginSettingsTab extends AbstractSettingsTab implements Canc
       }
       // active plugin with no settings
       else {
-        mPluginPanel.add(createEmptyPanel(mLocalizer.msg("noSettings", "No settings"), mLocalizer.msg("noSettings.text", "This plugin has no settings.")), BorderLayout.NORTH);
+        mPluginPanel.add(createEmptyPanel(LOCALIZER.msg("noSettings", "No settings"), LOCALIZER.msg("noSettings.text", "This plugin has no settings.")), BorderLayout.NORTH);
       }
     } else if (Settings.propBlockedPluginArray.isBlocked(mPlugin)) {
-      mPluginPanel.add(createEmptyPanel(mLocalizer.msg("blocked", "Blocked"), mLocalizer.msg("blocked.text", "This plugin is blocked and cannot be activated.")), BorderLayout.NORTH);
+      mPluginPanel.add(createEmptyPanel(LOCALIZER.msg("blocked", "Blocked"), LOCALIZER.msg("blocked.text", "This plugin is blocked and cannot be activated.")), BorderLayout.NORTH);
     } else {
       // The plugin is not activated -> Tell it the user
       EnhancedPanelBuilder panelActivate = new EnhancedPanelBuilder(FormSpecs.RELATED_GAP_COLSPEC.encode() + "," + FormSpecs.PREF_COLSPEC.encode() + "," + FormSpecs.RELATED_GAP_COLSPEC.encode() + "," + FormSpecs.PREF_COLSPEC.encode() + ",default:grow");
       CellConstraints cc = new CellConstraints();
 
-      panelActivate.addParagraph(mLocalizer.msg("activation", "Activation"));
+      panelActivate.addParagraph(LOCALIZER.msg("activation", "Activation"));
 
       panelActivate.addRow();
-      panelActivate.add(new JLabel(mLocalizer.msg("notactivated", "This Plugin is currently not activated.")), cc.xy(2, panelActivate.getRow()));
+      panelActivate.add(new JLabel(LOCALIZER.msg("notactivated", "This Plugin is currently not activated.")), cc.xy(2, panelActivate.getRow()));
 
-      final JButton btnActivate = new JButton(mLocalizer.msg("activate", "Activate"));
+      final JButton btnActivate = new JButton(LOCALIZER.msg("activate", "Activate"));
       btnActivate.addActionListener(e -> {
         try {
           btnActivate.setEnabled(false);

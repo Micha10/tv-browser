@@ -62,7 +62,7 @@ public class SearchPlugin {
   /**
    * The localizer for this class.
    */
-  protected static final util.ui.Localizer mLocalizer = util.ui.Localizer
+  protected static final util.i18n.Localizer mLocalizer = util.i18n.Localizer
       .getLocalizerFor(SearchPlugin.class);
   private static final String DATAFILE_PREFIX = "searchplugin.SearchPlugin";
 

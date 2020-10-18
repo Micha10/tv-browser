@@ -37,7 +37,7 @@ import devplugin.Program;
  */
 public class ProgramTypeFilterComponent extends AbstractFilterComponent {
 
-  private static final util.ui.Localizer mLocalizer = util.ui.Localizer
+  private static final util.i18n.Localizer mLocalizer = util.i18n.Localizer
       .getLocalizerFor(ProgramTypeFilterComponent.class);
 
   private static final int[] CATEGORIES = { Channel.CATEGORY_TV,

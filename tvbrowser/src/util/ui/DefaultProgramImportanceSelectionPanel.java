@@ -38,6 +38,8 @@ import com.jgoodies.forms.layout.FormLayout;
 import devplugin.Program;
 import devplugin.SettingsItem;
 
+import util.i18n.Localizer;
+
 /**
  * A class that is a panel that allows selection of the program importance.
  * 
@@ -45,7 +47,7 @@ import devplugin.SettingsItem;
  * @since 3.0
  */
 public class DefaultProgramImportanceSelectionPanel extends JPanel {
-  private static final Localizer mLocalizer = Localizer.getLocalizerFor(DefaultProgramImportanceSelectionPanel.class);
+  private static final Localizer LOCALIZER = Localizer.getLocalizerFor(DefaultProgramImportanceSelectionPanel.class);
   private JComboBox<String> mProgramImportanceSelection;
   private JEditorPane mHelpLabel;
   
@@ -60,7 +62,7 @@ public class DefaultProgramImportanceSelectionPanel extends JPanel {
     mProgramImportanceSelection = new JComboBox<>(getProgramImportanceNames(true));
     mProgramImportanceSelection.setSelectedIndex(getIndexForImportance(importance));
     
-    mHelpLabel = UiUtilities.createHtmlHelpTextArea(mLocalizer.msg("help","The selected importance is used to determinate the transparency of a program. It's calculated over all plugins as mean value. Lower importance leads to higher transparency. This works only if the plugins are allowed to set the transparency at <a href=\"#link\">program panel settings</a>."), e -> {
+    mHelpLabel = UiUtilities.createHtmlHelpTextArea(LOCALIZER.msg("help","The selected importance is used to determinate the transparency of a program. It's calculated over all plugins as mean value. Lower importance leads to higher transparency. This works only if the plugins are allowed to set the transparency at <a href=\"#link\">program panel settings</a>."), e -> {
       if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
         SettingsDialog.getInstance().showSettingsTab(SettingsItem.PROGRAMPANELLOOK);
       }
@@ -73,7 +75,7 @@ public class DefaultProgramImportanceSelectionPanel extends JPanel {
       y++;
     }
     
-    pb.addLabel(mLocalizer.msg("color","Program importance:"), cc.xy(2,y));
+    pb.addLabel(LOCALIZER.msg("color","Program importance:"), cc.xy(2,y));
     pb.add(mProgramImportanceSelection, cc.xy(4,y++));y++;
     pb.add(mHelpLabel, cc.xyw(2,++y,4));
   }
@@ -125,7 +127,7 @@ public class DefaultProgramImportanceSelectionPanel extends JPanel {
    * @return The title of this settings panel.
    */
   public static String getTitle() {
-    return mLocalizer.msg("title","Program transparency");
+    return LOCALIZER.msg("title","Program transparency");
   }
   
   /**
@@ -136,10 +138,10 @@ public class DefaultProgramImportanceSelectionPanel extends JPanel {
    */
   public static String[] getProgramImportanceNames(boolean withDefaultImportance) {
     if(withDefaultImportance) {
-      return new String[] {mLocalizer.msg("color.default","Default importance"),mLocalizer.msg("color.min","Mininum importance"),mLocalizer.msg("color.lowerMedium","Lower medium importance"),mLocalizer.msg("color.medium","Medium importance"),mLocalizer.msg("color.higherMedium","Higher medium importance"),mLocalizer.msg("color.max","Maximum importance")};
+      return new String[] {LOCALIZER.msg("color.default","Default importance"),LOCALIZER.msg("color.min","Mininum importance"),LOCALIZER.msg("color.lowerMedium","Lower medium importance"),LOCALIZER.msg("color.medium","Medium importance"),LOCALIZER.msg("color.higherMedium","Higher medium importance"),LOCALIZER.msg("color.max","Maximum importance")};
     }
     else {
-      return new String[] {mLocalizer.msg("color.min","Mininum importance"),mLocalizer.msg("color.lowerMedium","Lower medium importance"),mLocalizer.msg("color.medium","Medium importance"),mLocalizer.msg("color.higherMedium","Higher medium importance"),mLocalizer.msg("color.max","Maximum importance")};
+      return new String[] {LOCALIZER.msg("color.min","Mininum importance"),LOCALIZER.msg("color.lowerMedium","Lower medium importance"),LOCALIZER.msg("color.medium","Medium importance"),LOCALIZER.msg("color.higherMedium","Higher medium importance"),LOCALIZER.msg("color.max","Maximum importance")};
     }
   }
 }

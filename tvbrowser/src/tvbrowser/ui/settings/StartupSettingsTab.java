@@ -54,7 +54,7 @@ import tvbrowser.core.icontheme.IconLoader;
 import tvbrowser.ui.mainframe.MainFrame;
 import tvbrowser.ui.mainframe.PeriodItem;
 import util.io.windows.registry.RegistryKey;
-import util.ui.Localizer;
+import util.i18n.Localizer;
 import util.ui.UiUtilities;
 import util.ui.WideComboBox;
 
@@ -68,7 +68,7 @@ public class StartupSettingsTab implements devplugin.SettingsTab {
   private static final DayPeriod VALUE_AUTO_CHANNEL_UPDATE_PERIOD_DEFAULT = new DayPeriod(14);
   
   /** The localizer for this class. */
-  private static final util.ui.Localizer mLocalizer = util.ui.Localizer
+  private static final util.i18n.Localizer mLocalizer = util.i18n.Localizer
       .getLocalizerFor(StartupSettingsTab.class);
 
   private JPanel mSettingsPn;

@@ -32,7 +32,7 @@ import javax.swing.DefaultListModel;
 import javax.swing.JList;
 
 import tvbrowser.TVBrowser;
-import util.ui.Localizer;
+import util.i18n.Localizer;
 import devplugin.Channel;
 
 /**
@@ -40,7 +40,7 @@ import devplugin.Channel;
  */
 public class ChannelJList extends JList<Object> {
   /** Localizer */
-  private static final util.ui.Localizer mLocalizer = util.ui.Localizer.getLocalizerFor(ChannelJList.class);
+  private static final util.i18n.Localizer mLocalizer = util.i18n.Localizer.getLocalizerFor(ChannelJList.class);
 
   public ChannelJList() { }
 

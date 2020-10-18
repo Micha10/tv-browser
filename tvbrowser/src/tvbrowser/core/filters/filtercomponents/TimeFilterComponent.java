@@ -46,7 +46,7 @@ import util.ui.CaretPositionCorrector;
 
 public class TimeFilterComponent extends AbstractFilterComponent {
 
-  private static final util.ui.Localizer mLocalizer = util.ui.Localizer
+  private static final util.i18n.Localizer mLocalizer = util.i18n.Localizer
       .getLocalizerFor(TimeFilterComponent.class);
 
   private JSpinner mFromTimeSp, mToTimeSp;

@@ -34,7 +34,7 @@ import java.util.Calendar;
 import org.apache.commons.lang3.StringUtils;
 
 import util.misc.TextLineBreakerStringWidth;
-import util.ui.Localizer;
+import util.i18n.Localizer;
 
 import devplugin.Program;
 import devplugin.ProgramFieldType;
@@ -48,7 +48,7 @@ import devplugin.ProgramFieldType;
  */
 public class ParamLibrary {
   /** Translator */
-  private static final Localizer mLocalizer = Localizer.getLocalizerFor(ParamLibrary.class);
+  private static final Localizer LOCALIZER = Localizer.getLocalizerFor(ParamLibrary.class);
 
   /** True if an Error occurred */
   private boolean mError = false;
@@ -112,9 +112,9 @@ public class ParamLibrary {
    * @return description for one key
    */
   public String getDescriptionForKey(String key) {
-    String translation = mLocalizer.msg("parameter_" + key, "");
+    String translation = LOCALIZER.msg("parameter_" + key, "");
     if (translation.startsWith("[ParamLibrary.parameter")) {
-      return mLocalizer.msg("noDescription", "No Description available");
+      return LOCALIZER.msg("noDescription", "No Description available");
     }
     return translation;
   }
@@ -137,9 +137,9 @@ public class ParamLibrary {
    */
   public String getDescriptionForFunctions(String function) {
 
-    String translation = mLocalizer.msg("function_" + function, "");
+    String translation = LOCALIZER.msg("function_" + function, "");
     if (translation.startsWith("[ParamLibrary.function")) {
-      return mLocalizer.msg("noDescription", "No Description available");
+      return LOCALIZER.msg("noDescription", "No Description available");
     }
 
     return translation;
@@ -234,7 +234,7 @@ public class ParamLibrary {
     }
 
     mError = true;
-    mErrorString = mLocalizer.msg("unkownParam", "Unknown Parameter") + ": '" + key + "'";
+    mErrorString = LOCALIZER.msg("unkownParam", "Unknown Parameter") + ": '" + key + "'";
 
     return null;
   }
@@ -306,7 +306,7 @@ public class ParamLibrary {
     if (function.equalsIgnoreCase("isset")) {
       if (params.length != 2) {
         mError = true;
-        mErrorString = mLocalizer.msg("isset2Params", "isset needs 2 Parameters");
+        mErrorString = LOCALIZER.msg("isset2Params", "isset needs 2 Parameters");
         return null;
       }
 
@@ -318,7 +318,7 @@ public class ParamLibrary {
     } else if (function.equalsIgnoreCase("testparam")) {
       if ((params.length < 2) || ((params.length > 3))) {
         mError = true;
-        mErrorString = mLocalizer.msg("testparam2Params", "testparam needs 2-3 Parameters");
+        mErrorString = LOCALIZER.msg("testparam2Params", "testparam needs 2-3 Parameters");
         return null;
       }
 
@@ -334,7 +334,7 @@ public class ParamLibrary {
     } else if (function.equalsIgnoreCase("urlencode")) {
       if (params.length != 2) {
         mError = true;
-        mErrorString = mLocalizer.msg("urlencode2Params", "urlencode needs 2 Parameters");
+        mErrorString = LOCALIZER.msg("urlencode2Params", "urlencode needs 2 Parameters");
         return null;
       }
 
@@ -342,7 +342,7 @@ public class ParamLibrary {
         return URLEncoder.encode(params[0], params[1]);
       } catch (Exception e) {
         mError = true;
-        mErrorString = mLocalizer.msg("urlencodeProblems", "Problems with encoding : ") + e.toString();
+        mErrorString = LOCALIZER.msg("urlencodeProblems", "Problems with encoding : ") + e.toString();
         return null;
       }
     } else if (function.equalsIgnoreCase("concat")) {
@@ -369,7 +369,7 @@ public class ParamLibrary {
     } else if (function.equalsIgnoreCase("leadingZero")) {
       if (params.length > 2) {
         mError = true;
-        mErrorString = mLocalizer.msg("leadingZero2Params", "leadingZero has max. 2 Parameters");
+        mErrorString = LOCALIZER.msg("leadingZero2Params", "leadingZero has max. 2 Parameters");
         return null;
       }
 
@@ -380,7 +380,7 @@ public class ParamLibrary {
           num = Integer.parseInt(params[1]);
         } catch (Exception ex) {
           mError = true;
-          mErrorString = mLocalizer.msg("leadingZeroProblems", "Could not parse Number") + " : " + params[1];
+          mErrorString = LOCALIZER.msg("leadingZeroProblems", "Could not parse Number") + " : " + params[1];
           return null;
         }
       }
@@ -389,7 +389,7 @@ public class ParamLibrary {
     } else if (function.equalsIgnoreCase("splitAt")) {
       if (params.length != 2) {
         mError = true;
-        mErrorString = mLocalizer.msg("splitAt2Params", "splitAt needs 2 Parameters");
+        mErrorString = LOCALIZER.msg("splitAt2Params", "splitAt needs 2 Parameters");
         return null;
       }
 
@@ -399,7 +399,7 @@ public class ParamLibrary {
         num = Integer.parseInt(params[1]);
       } catch (Exception ex) {
         mError = true;
-        mErrorString = mLocalizer.msg("splitAtNumberProblems", "Could not parse Number") + " : " + params[1];
+        mErrorString = LOCALIZER.msg("splitAtNumberProblems", "Could not parse Number") + " : " + params[1];
         return null;
       }
 
@@ -417,7 +417,7 @@ public class ParamLibrary {
 
       } catch (Exception ex) {
         mError = true;
-        mErrorString = mLocalizer.msg("splitAtSplitProblems", "Could not split String") + " :\n " + ex.toString();
+        mErrorString = LOCALIZER.msg("splitAtSplitProblems", "Could not split String") + " :\n " + ex.toString();
         return null;
       }
 
@@ -425,7 +425,7 @@ public class ParamLibrary {
     } else if (function.equalsIgnoreCase("maxlength")) {
       if (params.length != 2) {
         mError = true;
-        mErrorString = mLocalizer.msg("maxlength2Params", "maxlength needs 2 Parameters");
+        mErrorString = LOCALIZER.msg("maxlength2Params", "maxlength needs 2 Parameters");
         return null;
       }
 
@@ -435,7 +435,7 @@ public class ParamLibrary {
         num = Integer.parseInt(params[1]);
       } catch (Exception ex) {
         mError = true;
-        mErrorString = mLocalizer.msg("maxlengthNumberProblems", "Could not parse Number") + " : " + params[1];
+        mErrorString = LOCALIZER.msg("maxlengthNumberProblems", "Could not parse Number") + " : " + params[1];
         return null;
       }
 
@@ -449,7 +449,7 @@ public class ParamLibrary {
     } else if(function.equalsIgnoreCase("replace")) {
     	if(params.length != 2) {
     		mError = true;
-            mErrorString = mLocalizer.msg("replace2Params", "replace needs 2 Parameters");
+            mErrorString = LOCALIZER.msg("replace2Params", "replace needs 2 Parameters");
             return null;
     	}
     	
@@ -460,7 +460,7 @@ public class ParamLibrary {
     	for(String replace : replaceValues) {
     		if(!replace.contains("::")) {
     		  mError = true;
-    		  mErrorString = mLocalizer.msg("replaceMissingColon", "Replace values need to contain two following colons");
+    		  mErrorString = LOCALIZER.msg("replaceMissingColon", "Replace values need to contain two following colons");
               
     		  return null;
     		}
@@ -474,7 +474,7 @@ public class ParamLibrary {
     }
 
     mError = true;
-    mErrorString = mLocalizer.msg("unknownFunction", "Unknown function : {0}", function);
+    mErrorString = LOCALIZER.msg("unknownFunction", "Unknown function : {0}", function);
 
     return null;
   }

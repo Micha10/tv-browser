@@ -118,7 +118,7 @@ import util.settings.StringProperty;
 import util.settings.VariableIntProperty;
 import util.settings.VersionProperty;
 import util.settings.WindowSetting;
-import util.ui.Localizer;
+import util.i18n.Localizer;
 import util.ui.UiUtilities;
 import util.ui.persona.Persona;
 import util.ui.view.SplitViewProperty;
@@ -225,10 +225,10 @@ public class Settings {
       final File targetTvDataDir = new File(getDefaultTvDataDir());
 
       if(new File(getUserSettingsDirName(),SETTINGS_FILE).isFile()) {
-        String[] options = {MainFrame.mLocalizer.msg("continue","Continue"),
-                            MainFrame.mLocalizer.msg("stop","Cancel copying now")};
-        String title = MainFrame.mLocalizer.msg("copyToSystemTitleWarning","Settings already exists");
-        String msg = MainFrame.mLocalizer.msg("copyToSystemWarningMsg","Settings already exist in the system settings directory!\nIf you continue the current settings will be overwritten!");
+        String[] options = {MainFrame.LOCALIZER.msg("continue","Continue"),
+                            MainFrame.LOCALIZER.msg("stop","Cancel copying now")};
+        String title = MainFrame.LOCALIZER.msg("copyToSystemTitleWarning","Settings already exists");
+        String msg = MainFrame.LOCALIZER.msg("copyToSystemWarningMsg","Settings already exist in the system settings directory!\nIf you continue the current settings will be overwritten!");
 
         mCopyToSystem = JOptionPane.showOptionDialog(MainFrame.getInstance(),msg,title,JOptionPane.YES_NO_OPTION,JOptionPane.WARNING_MESSAGE,null,options,options[1]) == JOptionPane.YES_OPTION;
       }
@@ -530,11 +530,11 @@ public class Settings {
             UIManager.setLookAndFeel(UiUtilities.getDefaultLookAndFeelClassName(false));
           }catch(Exception e) { /*ignore*/}
   
-          String[] options = {MainFrame.mLocalizer.msg("import","Import settings"),
-              MainFrame.mLocalizer.msg("importTransportable","Select import directory"),
-              MainFrame.mLocalizer.msg("configureNew","Create new configuration")};
-          String title = MainFrame.mLocalizer.msg("importInfoTitle","Import settings?");
-          String msg = MainFrame.mLocalizer.msg("importInfoMsg","TV-Browser has found settings for import.\nShould the settings be imported now?");
+          String[] options = {MainFrame.LOCALIZER.msg("import","Import settings"),
+              MainFrame.LOCALIZER.msg("importTransportable","Select import directory"),
+              MainFrame.LOCALIZER.msg("configureNew","Create new configuration")};
+          String title = MainFrame.LOCALIZER.msg("importInfoTitle","Import settings?");
+          String msg = MainFrame.LOCALIZER.msg("importInfoMsg","TV-Browser has found settings for import.\nShould the settings be imported now?");
   
           int answer = JOptionPane.showOptionDialog(null,msg,title,JOptionPane.YES_NO_CANCEL_OPTION,JOptionPane.WARNING_MESSAGE,null,options,options[0]);
           
@@ -557,10 +557,10 @@ public class Settings {
             UIManager.setLookAndFeel(UiUtilities.getDefaultLookAndFeelClassName(false));
           }catch(Exception e) { /*ignore*/}
           
-          String[] options = {MainFrame.mLocalizer.msg("importTransportable","Select import directory"),
-              MainFrame.mLocalizer.msg("configureNew","Create new configuration")};
-          String title = MainFrame.mLocalizer.msg("importInfoTitle","Import settings?");
-          String msg = MainFrame.mLocalizer.msg("importInfoMsgTransportable","No settings were found on the system.\nDo you want to select the directory of another\ntransportable version for import of settings?");
+          String[] options = {MainFrame.LOCALIZER.msg("importTransportable","Select import directory"),
+              MainFrame.LOCALIZER.msg("configureNew","Create new configuration")};
+          String title = MainFrame.LOCALIZER.msg("importInfoTitle","Import settings?");
+          String msg = MainFrame.LOCALIZER.msg("importInfoMsgTransportable","No settings were found on the system.\nDo you want to select the directory of another\ntransportable version for import of settings?");
 
           if(JOptionPane.showOptionDialog(null,msg,title,JOptionPane.YES_NO_OPTION,JOptionPane.WARNING_MESSAGE,null,options,options[1]) == JOptionPane.YES_OPTION) {
             oldDir = loadExternalSettings();
@@ -1023,8 +1023,8 @@ public class Settings {
   }
   
   private static File loadExternalSettings() {
-    String msg = MainFrame.mLocalizer.msg("importTransportableInfo", "To import settings of another transportable version select the program\ndirectory of that other transportable version in the next setp.");
-    String title = MainFrame.mLocalizer.msg("importTransportableTitle", "Import settings from transportable version");
+    String msg = MainFrame.LOCALIZER.msg("importTransportableInfo", "To import settings of another transportable version select the program\ndirectory of that other transportable version in the next setp.");
+    String title = MainFrame.LOCALIZER.msg("importTransportableTitle", "Import settings from transportable version");
     JOptionPane.showMessageDialog(null, msg, title, JOptionPane.INFORMATION_MESSAGE);
     
     JFileChooser chooseDir = new JFileChooser(System.getProperty("user.home"));
@@ -1036,8 +1036,8 @@ public class Settings {
     
     do {
       if(selection == JFileChooser.APPROVE_OPTION) {
-        String msg2 = MainFrame.mLocalizer.msg("importTransportableError", "You've selected a directory that don't contains a transportable TV-Browser.\nWould you like to try again?");
-        String title2 = MainFrame.mLocalizer.msg("importTransportableErrorTitle", "Wrong directory selected");
+        String msg2 = MainFrame.LOCALIZER.msg("importTransportableError", "You've selected a directory that don't contains a transportable TV-Browser.\nWould you like to try again?");
+        String title2 = MainFrame.LOCALIZER.msg("importTransportableErrorTitle", "Wrong directory selected");
         
         if(JOptionPane.showConfirmDialog(null, msg2, title2, JOptionPane.YES_NO_OPTION) == JOptionPane.NO_OPTION) {
           selection = JFileChooser.CANCEL_OPTION;

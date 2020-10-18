@@ -80,7 +80,7 @@ import tvbrowser.extras.favoritesplugin.FavoritesPlugin;
 import tvbrowser.extras.favoritesplugin.FavoritesPluginProxy;
 import tvbrowser.extras.reminderplugin.ReminderPlugin;
 import tvbrowser.extras.reminderplugin.ReminderPluginProxy;
-import util.ui.Localizer;
+import util.i18n.Localizer;
 import util.ui.OverlayListener;
 
 /**

@@ -56,12 +56,12 @@ import tvbrowser.core.filters.SingleChannelFilter;
 import tvbrowser.core.filters.UserFilter;
 import tvbrowser.core.plugin.PluginManagerImpl;
 import tvbrowser.ui.mainframe.MainFrame;
-import util.ui.Localizer;
+import util.i18n.Localizer;
 import util.ui.UiUtilities;
 
 public class FilterTreeModel extends DefaultTreeModel {
-  private static final Localizer mLocalizer = Localizer.getLocalizerFor(FilterTreeModel.class);
-  private static FilterTreeModel mInstance;
+  private static final Localizer LOCALIZER = Localizer.getLocalizerFor(FilterTreeModel.class);
+  private static FilterTreeModel INSTANCE;
   
   private static ArrayList<FilterChangeListenerV2> CHANGE_LISTENER_LISTV2;
   
@@ -78,16 +78,16 @@ public class FilterTreeModel extends DefaultTreeModel {
       rootNode.addFilter(filter);
     }
 
-    mInstance = new FilterTreeModel(rootNode);
-    return mInstance;
+    INSTANCE = new FilterTreeModel(rootNode);
+    return INSTANCE;
   }
   
   public static FilterTreeModel initInstance(ObjectInputStream in) throws IOException, ClassNotFoundException {
     int version = in.readInt();
     FilterNode rootNode = new FilterNode(in, version);
     fixRootNode(rootNode);
-    mInstance = new FilterTreeModel(rootNode);
-    return mInstance;
+    INSTANCE = new FilterTreeModel(rootNode);
+    return INSTANCE;
   }
   
   /**
@@ -106,7 +106,7 @@ public class FilterTreeModel extends DefaultTreeModel {
    * @param rootNode
    */
   private static void fixRootNode(final FilterNode rootNode) {
-    String rootLabel = mLocalizer.msg("rootLabel", "All filters");
+    String rootLabel = LOCALIZER.msg("rootLabel", "All filters");
     if (StringUtils.isEmpty(rootLabel)) {
       rootLabel = "FILTERS_ROOT";
     }
@@ -115,11 +115,11 @@ public class FilterTreeModel extends DefaultTreeModel {
   
   
   public static FilterTreeModel getInstance() {
-    if (mInstance == null) {
-      mInstance = initInstance(new ProgramFilter[0]);
+    if (INSTANCE == null) {
+      INSTANCE = initInstance(new ProgramFilter[0]);
     }
 
-    return mInstance;
+    return INSTANCE;
   }
   
   public boolean isLeaf(Object nodeObject) {
@@ -457,7 +457,7 @@ public class FilterTreeModel extends DefaultTreeModel {
    * @param title Title of confirmation message dialog
    */
   public void sort(FilterNode node, Comparator<TreeNode> comp, String title) {
-    String msg = mLocalizer.msg("reallySort",
+    String msg = LOCALIZER.msg("reallySort",
         "Do you really want to sort '{0}'?\n\nThe current order will get lost.", node.toString());
     int result = JOptionPane.showConfirmDialog(UiUtilities
         .getLastModalChildOf(MainFrame.getInstance()), msg, title,

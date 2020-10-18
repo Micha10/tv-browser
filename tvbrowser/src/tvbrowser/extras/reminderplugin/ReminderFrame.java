@@ -68,7 +68,7 @@ import tvbrowser.ui.mainframe.MainFrame;
 import util.io.IOUtilities;
 import util.settings.PluginPictureSettings;
 import util.settings.ProgramPanelSettings;
-import util.ui.Localizer;
+import util.i18n.Localizer;
 import util.ui.ProgramPanel;
 import util.ui.UiUtilities;
 import util.ui.WindowClosingIf;
@@ -79,8 +79,8 @@ import util.ui.WindowClosingIf;
  * @author Martin Oberhauser
  */
 public class ReminderFrame implements WindowClosingIf, ChangeListener {
-  public static final util.ui.Localizer LOCALIZER
-    = util.ui.Localizer.getLocalizerFor(ReminderFrame.class);
+  public static final util.i18n.Localizer LOCALIZER
+    = util.i18n.Localizer.getLocalizerFor(ReminderFrame.class);
 
   /**
    * The frame that shows this reminder. The reminder is shown in a frame if

@@ -52,7 +52,7 @@ import javax.swing.JTextArea;
 
 import util.io.IOUtilities;
 import util.ui.ImageUtilities;
-import util.ui.Localizer;
+import util.i18n.Localizer;
 import util.ui.TVBrowserIcons;
 import util.ui.UiUtilities;
 
@@ -168,14 +168,14 @@ class ErrorWindow {
 
     if (messageType == ErrorHandler.SHOW_YES_NO) {
 
-      mYesBt = new JButton(ErrorHandler.mLocalizer.msg("yes", "Yes"));
+      mYesBt = new JButton(ErrorHandler.LOCALIZER.msg("yes", "Yes"));
       mYesBt.addActionListener(evt -> {
         mReturn = ErrorHandler.YES_PRESSED;
         getWindow().dispose();
       });
       buttonPn.add(mYesBt);
 
-      mNoBt = new JButton(ErrorHandler.mLocalizer.msg("no", "No"));
+      mNoBt = new JButton(ErrorHandler.LOCALIZER.msg("no", "No"));
       mNoBt.addActionListener(evt -> {
         mReturn = ErrorHandler.NO_PRESSED;
         getWindow().dispose();
@@ -197,7 +197,7 @@ class ErrorWindow {
       mFrame.getRootPane().setDefaultButton(mOkBt);
     }
 
-    msg = ErrorHandler.mLocalizer.msg("details", "Details");
+    msg = ErrorHandler.LOCALIZER.msg("details", "Details");
     mDetailBt = new JButton(msg);
     mDetailBt.addActionListener(e -> {
       setDetailsVisible(!mDetailsVisible);
@@ -273,7 +273,7 @@ class ErrorWindow {
       }
     }
 
-    msg = ErrorHandler.mLocalizer.msg("copyToClipboard", "Copy to clipboard");
+    msg = ErrorHandler.LOCALIZER.msg("copyToClipboard", "Copy to clipboard");
     JButton copyToClipBoardBt = new JButton(msg);
     copyToClipBoardBt.addActionListener(e -> {
       copyDetailsToClipBoard();

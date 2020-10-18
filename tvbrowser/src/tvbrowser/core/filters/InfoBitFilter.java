@@ -57,7 +57,7 @@ public class InfoBitFilter implements ProgramFilter {
 
   public InfoBitFilter(String name) {
     
-    util.ui.Localizer catLocalizer = util.ui.Localizer.getLocalizerFor(devplugin.ProgramInfoHelper.class);
+    util.i18n.Localizer catLocalizer = util.i18n.Localizer.getLocalizerFor(devplugin.ProgramInfoHelper.class);
     
     if (name.equals(SUBTITLE_FILTER_KEY)) {
       mName = "Subtitled";
@@ -160,7 +160,7 @@ public class InfoBitFilter implements ProgramFilter {
   /**
    * Localizer
    */
-  private static final util.ui.Localizer mLocalizer = util.ui.Localizer.getLocalizerFor(InfoBitFilter.class);
+  private static final util.i18n.Localizer mLocalizer = util.i18n.Localizer.getLocalizerFor(InfoBitFilter.class);
 
   /**
    * Accept only programs with subtitle or sign language

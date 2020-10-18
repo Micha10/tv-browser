@@ -87,7 +87,7 @@ import util.browserlauncher.Launch;
 import util.exc.ErrorHandler;
 import util.misc.OperatingSystem;
 import util.ui.ChannelLabel;
-import util.ui.Localizer;
+import util.i18n.Localizer;
 import util.ui.SingleAndDoubleClickTreeUI;
 import util.ui.TVBrowserIcons;
 import util.ui.UiUtilities;
@@ -98,7 +98,7 @@ import util.ui.WindowClosingIf;
  * @author Til Schneider, www.murfman.de
  */
 public class SettingsDialog implements WindowClosingIf {
-  private static final util.ui.Localizer LOCALIZER = util.ui.Localizer
+  private static final util.i18n.Localizer LOCALIZER = util.i18n.Localizer
       .getLocalizerFor(SettingsDialog.class);
 
   private JDialog mDialog;

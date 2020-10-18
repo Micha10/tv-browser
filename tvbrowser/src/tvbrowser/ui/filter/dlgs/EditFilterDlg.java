@@ -82,16 +82,16 @@ import tvbrowser.core.filters.filtercomponents.SingleChannelFilterComponent;
 import util.ui.DragAndDropMouseListener;
 import util.ui.ListDragAndDropHandler;
 import util.ui.ListDropAction;
-import util.ui.Localizer;
+import util.i18n.Localizer;
 import util.ui.TVBrowserIcons;
 import util.ui.UiUtilities;
 import util.ui.WindowClosingIf;
 
 public class EditFilterDlg extends JDialog implements ActionListener, DocumentListener, CaretListener, WindowClosingIf, ListDropAction<FilterItem> {
 
-  private static final util.ui.Localizer mLocalizer = util.ui.Localizer.getLocalizerFor(EditFilterDlg.class);
+  private static final util.i18n.Localizer mLocalizer = util.i18n.Localizer.getLocalizerFor(EditFilterDlg.class);
 
-  private static final util.ui.Localizer mFilterLocalizer = util.ui.Localizer.getLocalizerFor(UserFilter.class);
+  private static final util.i18n.Localizer mFilterLocalizer = util.i18n.Localizer.getLocalizerFor(UserFilter.class);
 
   private JButton mNewBtn, mEditBtn, mCopyButton, mRemoveBtn, mOkBtn, mCancelBtn;
 

@@ -29,7 +29,7 @@ import javax.swing.JPanel;
 
 import devplugin.Program;
 import devplugin.ProgramFieldType;
-import util.ui.Localizer;
+import util.i18n.Localizer;
 
 public class SingleTitleFilterComponent extends AbstractFilterComponent {
 

@@ -26,33 +26,8 @@
 
 package util.ui;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
-import java.text.MessageFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Locale;
-import java.util.Map.Entry;
-import java.util.MissingResourceException;
-import java.util.Properties;
-import java.util.ResourceBundle;
-import java.util.jar.JarEntry;
-import java.util.jar.JarFile;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
-
-import tvbrowser.TVBrowser;
-import tvbrowser.core.Settings;
-import util.io.IOUtilities;
 
 /**
  * Does the localization of texts.
@@ -73,92 +48,54 @@ import util.io.IOUtilities;
  * </ul>
  *
  * @author Til Schneider, www.murfman.de
+ * @deprecated since 4.2.2 use {@link #util.i18n.Localizer} instead.
  */
 public class Localizer {
-  private static Localizer mLocalizer = null;
-
-  public final static String I18N_OK = "i18n_ok";
-  public final static String I18N_CANCEL = "i18n_cancel";
-  public final static String I18N_CLOSE = "i18n_close";
-  public final static String I18N_COPY = "i18n_copy";
-  public final static String I18N_DELETE = "i18n_delete";
-  public final static String I18N_EDIT = "i18n_edit";
-  public final static String I18N_PROGRAM = "i18n_program";
-  public final static String I18N_PROGRAMS = "i18n_programs";
-  public final static String I18N_CHANNEL = "i18n_channel";
-  public final static String I18N_CHANNELS = "i18n_channels";
-  public final static String I18N_HELP = "i18n_help";
-  public final static String I18N_FILE = "i18n_file";
-  public final static String I18N_ADD = "i18n_add";
-  public final static String I18N_SETTINGS = "i18n_settings";
-  public final static String I18N_UP = "i18n_up";
-  public final static String I18N_DOWN = "i18n_down";
-  public final static String I18N_LEFT = "i18n_left";
-  public final static String I18N_RIGHT = "i18n_right";
-  public final static String I18N_BACK = "i18n_back";
-  public final static String I18N_NEXT = "i18n_next";
-  public final static String I18N_PICTURES = "i18n_pictures";
-  public final static String I18N_OPTIONS = "i18n_options";
-  public final static String I18N_SELECT = "i18n_select";
-  public final static String I18N_ERROR = "i18n_error";
-  public final static String I18N_DEFAULT = "i18n_default";
-  public final static String I18N_STANDARD = "i18n_standard";
-  public final static String I18N_YESTERDAY = "i18n_yesterday";
-  public final static String I18N_TODAY = "i18n_today";
-  public final static String I18N_TOMORROW = "i18n_tomorrow";
-  public final static String I18N_INFO = "i18n_info";
-  public final static String I18N_WARNING = "i18n_warning";
-  
-
-  /** The logger for this class. */
-  private static final java.util.logging.Logger mLog
-    = Logger.getLogger(Localizer.class.getName());
-
-  private static HashMap<String, String> standardLocalizations;
-
-  /**
-   * To avoid the creation of to many objects, this array is used for calls using
-   * one argument.
-   */
-  private static final Object[] ONE_ARG_ARR = new Object[1];
-
-  /**
-   * To avoid the creation of to many objects, this array is used for calls using
-   * two arguments.
-   */
-  private static final Object[] TWO_ARGS_ARR = new Object[2];
-
-  /**
-   * To avoid the creation of to many objects, this array is used for calls using
-   * three arguments.
-   */
-  private static final Object[] THREE_ARGS_ARR = new Object[3];
-
   /** Contains for a Class (key) a Localizer (value). */
   private static final HashMap<Class<?>, Localizer> mLocalizerCache = new HashMap<Class<?>, Localizer>();
-
-  /** The base name of the ResourceBundle used by this Localizer. */
-  private String mBaseName;
-
-  /**
-   * map of localized strings of this localizer (merged translated and default strings)
-   */
-  private HashMap<String, String> mResource;
-
-  /**
-   * Because one ResourceBundle is used by all the Localizers of classes from the
-   * same package, a prefix is added to the key to distinguish the keys from different
-   * classes.
-   */
-  private String mKeyPrefix;
-
+  
+  public final static String I18N_OK = util.i18n.Localizer.I18N_OK;
+  public final static String I18N_CANCEL = util.i18n.Localizer.I18N_CANCEL;
+  public final static String I18N_CLOSE = util.i18n.Localizer.I18N_CLOSE;
+  public final static String I18N_COPY = util.i18n.Localizer.I18N_COPY;
+  public final static String I18N_DELETE = util.i18n.Localizer.I18N_DELETE;
+  public final static String I18N_EDIT = util.i18n.Localizer.I18N_EDIT;
+  public final static String I18N_PROGRAM = util.i18n.Localizer.I18N_PROGRAM;
+  public final static String I18N_PROGRAMS = util.i18n.Localizer.I18N_PROGRAMS;
+  public final static String I18N_CHANNEL = util.i18n.Localizer.I18N_CHANNEL;
+  public final static String I18N_CHANNELS = util.i18n.Localizer.I18N_CHANNELS;
+  public final static String I18N_HELP = util.i18n.Localizer.I18N_HELP;
+  public final static String I18N_FILE = util.i18n.Localizer.I18N_FILE;
+  public final static String I18N_ADD = util.i18n.Localizer.I18N_ADD;
+  public final static String I18N_SETTINGS = util.i18n.Localizer.I18N_SETTINGS;
+  public final static String I18N_UP = util.i18n.Localizer.I18N_UP;
+  public final static String I18N_DOWN = util.i18n.Localizer.I18N_DOWN;
+  public final static String I18N_LEFT = util.i18n.Localizer.I18N_LEFT;
+  public final static String I18N_RIGHT = util.i18n.Localizer.I18N_RIGHT;
+  public final static String I18N_BACK = util.i18n.Localizer.I18N_BACK;
+  public final static String I18N_NEXT = util.i18n.Localizer.I18N_NEXT;
+  public final static String I18N_PICTURES = util.i18n.Localizer.I18N_PICTURES;
+  public final static String I18N_OPTIONS = util.i18n.Localizer.I18N_OPTIONS;
+  public final static String I18N_SELECT = util.i18n.Localizer.I18N_SELECT;
+  public final static String I18N_SELECT_ALL = util.i18n.Localizer.I18N_SELECT_ALL;
+  public final static String I18N_CLEAR_SELECTION = util.i18n.Localizer.I18N_CLEAR_SELECTION;
+  public final static String I18N_ERROR = util.i18n.Localizer.I18N_ERROR;
+  public final static String I18N_DEFAULT = util.i18n.Localizer.I18N_DEFAULT;
+  public final static String I18N_STANDARD = util.i18n.Localizer.I18N_STANDARD;
+  public final static String I18N_YESTERDAY = util.i18n.Localizer.I18N_YESTERDAY;
+  public final static String I18N_TODAY = util.i18n.Localizer.I18N_TODAY;
+  public final static String I18N_TOMORROW = util.i18n.Localizer.I18N_TOMORROW;
+  public final static String I18N_INFO = util.i18n.Localizer.I18N_INFO;
+  public final static String I18N_WARNING = util.i18n.Localizer.I18N_WARNING;
+  
   /**
    * ellipsis suffix for use in menus
    */
   private static final String ELLIPSIS = "...";
 
-  private Module mModule;
-
+  
+  private util.i18n.Localizer mLocalizer;
+  
   /**
    * Creates a new instance of Localizer.
    *
@@ -169,152 +106,9 @@ public class Localizer {
   }
 
   protected void initializeForClass(final Class<?> clazz) {
-    String className = clazz.getName();
-    int lastDot = className.lastIndexOf('.');
-    String packageName;
-    if (lastDot == -1) {
-      // This class has no package
-      packageName = "";
-    } else {
-      packageName = className.substring(0, lastDot);
-    }
-
-    mKeyPrefix = className.substring(packageName.length() + 1) + ".";
-
-    lastDot = packageName.lastIndexOf('.');
-    if (lastDot == -1) {
-      mBaseName = packageName + "." + packageName;
-    } else {
-      mBaseName = packageName + packageName.substring(lastDot);
-    }
-
-    mModule = clazz.getModule();
-  }
-
-  private boolean loadBundle(String name, final Locale userLocale) {
-	  boolean result = false;
-	  
-	  try {
-		  if(userLocale != null) {
-			  name = name + "_" + userLocale.getLanguage();
-		  }
-		  
-		  name = name.replace(".", "/") + ".properties";
-		  
-	      // Check User-Home
-	      File file = new File(Settings.getUserSettingsDirName() + "/lang/" +name);
-	      
-	      if (file.exists()) {
-	        try {
-	          return loadBundleFromStream(new FileInputStream(file));
-	        } catch (FileNotFoundException e) {
-	          mLog.log(Level.WARNING, "Could not open language properties found in user settings directory.", e);
-	        }
-	      }
-	    
-	      // Check TV-Browser Location
-	      file = new File("lang/" + name);
-	    
-	      if (file.exists()) {
-	        try {
-	          return loadBundleFromStream(new FileInputStream(file));
-	        } catch (FileNotFoundException e) {
-	          mLog.log(Level.WARNING, "Could not open language properties found in program directory.", e);
-	        }
-	      }
-	      
-	      int propertyIndex = name.indexOf(".properties");
-	      int localeIndex = name.indexOf("_");
-	      
-	      if(localeIndex != -1) {
-	        String locale = name.substring(localeIndex,propertyIndex);
-	        
-	        // check user home for zip file with translation 
-	        File zip = new File(Settings.getUserSettingsDirName() + "/languages/tvbrowser-translation" + locale + ".zip");
-	        
-	        if(!zip.isFile()) {
-	          // not in user home, check program directory
-	          zip = new File("/languages/tvbrowser-translation" + locale + ".zip");
-	        }
-	        
-	        if(zip.isFile()) {
-	          
-	          @SuppressWarnings("resource")
-	          ZipFile zipFile = new ZipFile(zip);
-	          
-	          ZipEntry entry = zipFile.getEntry(name);
-	          
-	          if(entry == null) {
-	            entry = zipFile.getEntry(name.replace("/", "\\"));
-	          }
-	          
-	          if(entry != null) {
-	            return loadBundleFromStream(zipFile.getInputStream(entry));
-	          }
-	        }
-	      }
-	    }catch(Throwable e) {
-	      mLog.log(Level.SEVERE, "Could not load user defined language properties, using default instead.", e);
-	    }
-	  
-	  return result;
+    mLocalizer = util.i18n.Localizer.getLocalizerFor(clazz);
   }
   
-  private boolean loadBundleFromStream(InputStream in) throws IOException {
-	  boolean result = false;
-	  Properties prop = new Properties();
-	  prop.load(in);
-	  
-	  if(!prop.isEmpty()) {
-		  if(mResource == null) {
-			  mResource = new HashMap<String, String>();
-		  }
-		  
-          for (Enumeration<Object> enumKeys = prop.keys(); enumKeys.hasMoreElements();) {
-            String key = enumKeys.nextElement().toString();
-            if (key.startsWith(mKeyPrefix) && !mResource.containsKey(key)) {
-              mResource.put(key, prop.getProperty(key));
-              result = true;
-            }
-          }
-	  }
-	  
-	  return result;
-  }
-  
-  private HashMap<String, String> loadResourceBundle() {
-    if (mResource != null) {
-      return mResource;
-    }
-    try {
-  	  loadBundle(mBaseName,Locale.getDefault());
-  	  loadBundle(mBaseName,null);
-  	  
-      // load the resource bundle including all parents
-      ResourceBundle bundle = ResourceBundle.getBundle(mBaseName, Locale.getDefault(), mModule);
-      
-      if (bundle != null) {
-        // now merge the bundle and all parents into one hash map to save memory
-    	if(mResource == null) {
-    		mResource = new HashMap<String, String>();
-    	}
-    	
-        for (Enumeration<String> enumKeys = bundle.getKeys(); enumKeys.hasMoreElements();) {
-          String key = enumKeys.nextElement();
-          if (key.startsWith(mKeyPrefix) && !mResource.containsKey(key)) {
-            mResource.put(key, bundle.getString(key));
-          }
-        }
-      }
-  
-    }
-    catch (MissingResourceException exc) {
-      mLog.warning("ResourceBundle not found: '" + mBaseName + "'");
-      exc.printStackTrace();
-    }
-    return mResource;
-  }
-
   protected static Localizer getCachedLocalizerFor(final Class<?> clazz) {
     return mLocalizerCache.get(clazz);
   }
@@ -357,11 +151,7 @@ public class Localizer {
    * @return a localized message.
    */
   public String msg(final String key, final String defaultMsg, final Object arg1) {
-    synchronized (ONE_ARG_ARR) {
-      ONE_ARG_ARR[0] = arg1;
-
-      return msg(key, defaultMsg, ONE_ARG_ARR);
-    }
+    return mLocalizer.ellipsisMsg(key, defaultMsg, arg1);
   }
 
 
@@ -376,12 +166,7 @@ public class Localizer {
    * @return a localized message.
    */
   public String msg(final String key, final String defaultMsg, final Object arg1, final Object arg2) {
-    synchronized (TWO_ARGS_ARR) {
-      TWO_ARGS_ARR[0] = arg1;
-      TWO_ARGS_ARR[1] = arg2;
-
-      return msg(key, defaultMsg, TWO_ARGS_ARR);
-    }
+    return mLocalizer.msg(key, defaultMsg, arg1, arg2);
   }
 
 
@@ -399,13 +184,7 @@ public class Localizer {
   public String msg(final String key, final String defaultMsg, final Object arg1, final Object arg2,
     final Object arg3)
   {
-    synchronized (THREE_ARGS_ARR) {
-      THREE_ARGS_ARR[0] = arg1;
-      THREE_ARGS_ARR[1] = arg2;
-      THREE_ARGS_ARR[2] = arg3;
-
-      return msg(key, defaultMsg, THREE_ARGS_ARR);
-    }
+    return mLocalizer.msg(key, defaultMsg, arg1, arg2, arg3);
   }
 
 
@@ -420,16 +199,7 @@ public class Localizer {
    * @return a localized message.
    */
   public String msg(final String key, final String defaultMsg, final Object[] args) {
-    String msg = msg(key, defaultMsg);
-    checkMessage(key, msg);
-
-    // Workaround: The MessageFormat uses the ' char for quoting strings.
-    //             so the "{0}" in "AB '{0}' CD" will not be replaced.
-    //             In order to avoid this we quote every ' with '', so
-    //             everything will be replaced as expected.
-    msg = IOUtilities.replace(msg, "'", "''");
-
-    return MessageFormat.format(msg, args);
+    return mLocalizer.msg(key, defaultMsg, args);
   }
 
 
@@ -442,7 +212,7 @@ public class Localizer {
    * @return a localized message.
    */
   public String msg(final String key, final String defaultMsg) {
-    return msg(key,defaultMsg,true);
+    return mLocalizer.msg(key,defaultMsg,true);
   }
 
   /**
@@ -455,47 +225,7 @@ public class Localizer {
    * @since 2.5.1
    */
   public String msg(String key, final String defaultMsg, final boolean warn) {
-    key = mKeyPrefix + key;
-
-    String msg = null;
-    if (loadResourceBundle() != null) {
-      try {
-        msg = mResource.get(key);
-        if (warn) {
-          checkMessage(key, msg);
-        }
-      }
-      catch (MissingResourceException exc) {
-        //Empty
-      }
-    }
-
-    if (msg == null) {
-      if (mResource != null && warn) {
-        // Workaround: There is a bug in the logging mechanism of Java.
-        //             When someone tries to log an exception which uses
-        //             localization then the logging stucks in a deadlock,
-        //             when the exception message was not found in the resource
-        //             bundle. The reason of this is, that the following log
-        //             waits until the error log has finished and the error log
-        //             waits until this method returns, but this method does not
-        //             return because the following log waits. -- A classical
-        //             dead lock.
-        // Solution:   We do the following log in another thread, so this method
-        //             can return and the error log gets its message and can
-        //             unlock the logging.
-        final String fkey = key;
-        Thread logThread = new Thread("Log missing resource") {
-          public void run() {
-            mLog.warning("Key '" + fkey + "' not found in resource bundle '" + mBaseName + "'");
-          }
-        };
-        logThread.start();
-      }
-      return "[" + key + "#" + defaultMsg + "]";
-    } else {
-      return msg;
-    }
+    return mLocalizer.msg(key, defaultMsg, warn);
   }
 
   /**
@@ -507,90 +237,7 @@ public class Localizer {
    * @since 2.3
    */
   public Locale[] getAllAvailableLocales() {
-	// always have English locale available
-    ArrayList<Locale> langArray = new ArrayList<Locale>();
-    langArray.add(Locale.ENGLISH);
-
-    try {
-      File jar = new File("tvbrowser.jar");
-
-      if (!jar.exists()) {
-        URL url = getClass().getProtectionDomain().getCodeSource().getLocation();
-        jar = new File(url.getFile());
-      }
-
-      // First Step: look into tvbrowser.jar
-      JarFile file = new JarFile(jar);
-
-      try {
-        Enumeration<JarEntry> entries = file.entries();
-  
-        while (entries.hasMoreElements()) {
-          JarEntry entry = entries.nextElement();
-          String name = entry.getName();
-          if (name.startsWith("tvbrowser/tvbrowser_") && (name.lastIndexOf(".properties") > 0)) {
-            name = name.substring(20, name.lastIndexOf(".properties"));
-            langArray.add(getLocaleForString(name));
-          }
-        }
-      }finally {
-        if(file != null) {
-          try {
-            file.close();
-          }catch(IOException ioe) {}
-        }
-      }
-      
-      addLocaleFiles(new File(Settings.getUserSettingsDirName() + "/lang/tvbrowser"), langArray);
-      addLocaleFiles(new File("lang/tvbrowser"), langArray);
-      
-      addLocaleFiles(new File(Settings.getUserSettingsDirName() + "/languages"), langArray);
-      addLocaleFiles(new File("/languages"), langArray);
-    } catch (FileNotFoundException e) {
-      e.printStackTrace();
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
-
-    Locale[] locales = langArray.toArray(new Locale[langArray.size()]);
-
-    Arrays.sort(locales, new Comparator<Locale>() {
-      public int compare(Locale o1, Locale o2) {
-        return o1.getDisplayName().compareTo(o2.getDisplayName());
-      }
-    });
-
-    return locales;
-  }
-
-  /**
-   * Adds all found Locales of tvbrowser/tvbrowser.properties to the langArray
-   *
-   * @param dir search this directory
-   * @param langArray add found locales to this ArrayList
-   */
-  private void addLocaleFiles(final File dir, final ArrayList<Locale> langArray) {
-    if (dir.exists() && dir.isDirectory()) {
-      String[] files = dir.list();
-      if (files != null) {
-        for (String string : files) {
-          if (string.startsWith("tvbrowser_") && string.endsWith(".properties")) {
-            Locale loc = getLocaleForString(string.substring(10, string.lastIndexOf(".properties")));
-            
-            if (!langArray.contains(loc)) {
-              langArray.add(loc);
-            }
-          }
-          else if(string.startsWith("tvbrowser") && string.toLowerCase().endsWith(".zip")) {
-            Locale loc = getLocaleForString(string.substring(string.indexOf("_")+1, string.lastIndexOf(".zip")));
-            
-            if (!langArray.contains(loc)) {
-              langArray.add(loc);
-            }
-          }
-        }
-      }
-    }
+    return mLocalizer.getAllAvailableLocales();
   }
 
   /**
@@ -601,15 +248,7 @@ public class Localizer {
    * @return Locale
    */
   public static Locale getLocaleForString(final String string) {
-    String[] split = string.split("_");
-
-    if (split.length >= 3) {
-      return new Locale(split[0], split[1], split[2]);
-    } else if (split.length == 2) {
-      return new Locale(split[0], split[1]);
-    } else {
-      return new Locale(split[0]);
-    }
+    return util.i18n.Localizer.getLocaleForString(string);
   }
 
   /**
@@ -618,67 +257,7 @@ public class Localizer {
    * @return localized message for key
    */
   public static String getLocalization(final String key) {
-    if(mLocalizer == null) {
-      mLocalizer = Localizer.getLocalizerFor(Localizer.class);
-    }
-
-    String value = mLocalizer.msg(key,null);
-
-    if(value == null) {
-      if(key.equals(I18N_OK)) {
-        value = "OK";
-      } else if(key.equals(I18N_CANCEL)) {
-        value = "Cancel";
-      } else if(key.equals(I18N_CLOSE)) {
-        value = "Close";
-      } else if(key.equals(I18N_COPY)) {
-          value = "Copy";
-      } else if(key.equals(I18N_DELETE)) {
-        value = "Delete";
-      } else if(key.equals(I18N_EDIT)) {
-        value = "Edit";
-      } else if(key.equals(I18N_PROGRAM)) {
-        value = "Program";
-      } else if(key.equals(I18N_PROGRAMS)) {
-        value = "Programs";
-      } else if(key.equals(I18N_CHANNEL)) {
-        value = "Channel";
-      } else if(key.equals(I18N_CHANNELS)) {
-        value = "Channels";
-      } else if(key.equals(I18N_HELP)) {
-        value = "Help";
-      } else if(key.equals(I18N_FILE)) {
-        value = "File";
-      } else if(key.equals(I18N_ADD)) {
-        value = "Add";
-      } else if(key.equals(I18N_SETTINGS)) {
-        value = "Settings";
-      } else if(key.equals(I18N_UP)) {
-        value = "Up";
-      } else if(key.equals(I18N_DOWN)) {
-        value = "Down";
-      } else if(key.equals(I18N_LEFT)) {
-        value = "Left";
-      } else if(key.equals(I18N_RIGHT)) {
-        value = "Right";
-      } else if(key.equals(I18N_BACK)) {
-        value = "Back";
-      } else if(key.equals(I18N_NEXT)) {
-        value = "Next";
-      } else if(key.equals(I18N_PICTURES)) {
-        value = "Pictures";
-      } else if(key.equals(I18N_OPTIONS)) {
-        value = "Options";
-      } else if(key.equals(I18N_SELECT)) {
-        value = "Select";
-      } else if(key.equals(I18N_ERROR)) {
-        value = "Error";
-      } else if(key.equals(I18N_DEFAULT)) {
-        value = "Default";
-      }
-    }
-
-    return value;
+    return util.i18n.Localizer.getLocalization(key);
   }
 
   /**
@@ -689,31 +268,7 @@ public class Localizer {
   public static String getEllipsisLocalization(final String key) {
     return ellipsisSuffix(getLocalization(key));
   }
-
-  private void checkMessage(final String key, final String localizedMessage) {
-    if (TVBrowser.isStable()) {
-      return;
-    }
-    if (mKeyPrefix.equals("Localizer.")) {
-      return;
-    }
-    if (standardLocalizations == null) {
-      HashMap<String, String> std = new HashMap<String, String>(20);
-      HashMap<String, String> standardResource = Localizer.getLocalizerFor(Localizer.class).loadResourceBundle();
-      for (Entry<String, String> entry : standardResource.entrySet()) {
-        String standardKey = entry.getKey();
-        if (standardKey.startsWith("Localizer.")) {
-          std.put(entry.getValue(), standardKey);
-        }
-      }
-      standardLocalizations = std;
-    }
-    if (standardLocalizations.containsKey(localizedMessage)) {
-      String standardKey = standardLocalizations.get(localizedMessage);
-      mLog.warning("Localization of message '" + key + "' should be replaced by Localizer.getLocalization(" + standardKey.substring(0,10)+standardKey.substring(10).toUpperCase() +")");
-    }
-  }
-
+  
   /**
    * get a localized message with an ellipsis as suffix
    * @param key localization key
@@ -722,7 +277,7 @@ public class Localizer {
    * @since 3.0
    */
   public String ellipsisMsg(final String key, final String defaultMessage) {
-    return ellipsisSuffix(msg(key, defaultMessage));
+    return mLocalizer.ellipsisMsg(key, defaultMessage);
   }
 
   private static String ellipsisSuffix(String msg) {
@@ -741,7 +296,7 @@ public class Localizer {
    * @return a localized message.
    */
   public String ellipsisMsg(final String key, final String defaultMsg, final Object arg1) {
-    return ellipsisSuffix(msg(key, defaultMsg, arg1));
+    return mLocalizer.ellipsisMsg(key, defaultMsg, arg1);
   }
 
   /**
@@ -751,11 +306,7 @@ public class Localizer {
    * @since 3.0
    */
   public boolean hasMessage(final String key) {
-    loadResourceBundle();
-    if (mResource == null) {
-      return false;
-    }
-  	return mResource.containsKey(key);
+    return mLocalizer.hasMessage(key);
   }
 
   /**
@@ -765,9 +316,6 @@ public class Localizer {
    * @since 3.0
    */
   public String ellipsis(final String someString) {
-    if (someString == null) {
-      return null;
-    }
-    return ellipsisSuffix(someString);
+    return mLocalizer.ellipsis(someString);
   }
 }

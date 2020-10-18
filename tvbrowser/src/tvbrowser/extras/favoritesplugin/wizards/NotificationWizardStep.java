@@ -46,8 +46,8 @@ import devplugin.Program;
 
 public class NotificationWizardStep extends AbstractWizardStep {
 
-  private static final util.ui.Localizer mLocalizer
-    = util.ui.Localizer.getLocalizerFor(NotificationWizardStep.class);
+  private static final util.i18n.Localizer mLocalizer
+    = util.i18n.Localizer.getLocalizerFor(NotificationWizardStep.class);
 
   private JCheckBox mReminderCb;
   private JCheckBox mCheckOnUpdateCb;

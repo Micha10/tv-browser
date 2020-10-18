@@ -33,7 +33,7 @@ import devplugin.Plugin;
 public abstract class TVBrowserAction extends AbstractAction {
 
   /** The localizer for this class. */
-  protected static final util.ui.Localizer mLocalizer = util.ui.Localizer.getLocalizerFor(TVBrowserAction.class);
+  protected static final util.i18n.Localizer mLocalizer = util.i18n.Localizer.getLocalizerFor(TVBrowserAction.class);
 
   private ImageIcon mSmallIcon;
   private KeyStroke mAccelerator;

@@ -41,7 +41,7 @@ import tvbrowser.ui.mainframe.MainFrame;
 import tvbrowser.ui.pluginview.PluginTree;
 import util.browserlauncher.Launch;
 import util.exc.TvBrowserException;
-import util.ui.Localizer;
+import util.i18n.Localizer;
 import util.ui.TVBrowserIcons;
 import util.ui.menu.MenuUtil;
 import devplugin.ActionMenu;
@@ -54,7 +54,7 @@ import devplugin.PluginInfo;
  */
 public abstract class PluginContextMenu extends AbstractContextMenu {
 
-  private static final util.ui.Localizer mLocalizer = util.ui.Localizer
+  private static final util.i18n.Localizer mLocalizer = util.i18n.Localizer
       .getLocalizerFor(PluginContextMenu.class);
 
   private ActionMenu[] mActionMenus;

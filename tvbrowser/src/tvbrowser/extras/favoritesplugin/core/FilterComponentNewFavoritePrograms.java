@@ -9,7 +9,7 @@ import javax.swing.JPanel;
 import devplugin.Program;
 import tvbrowser.core.filters.filtercomponents.AbstractFilterComponent;
 import tvbrowser.extras.favoritesplugin.FavoritesPlugin;
-import util.ui.Localizer;
+import util.i18n.Localizer;
 
 public class FilterComponentNewFavoritePrograms extends AbstractFilterComponent {
   private static final Localizer LOCALIZER = Localizer.getLocalizerFor(FilterComponentNewFavoritePrograms.class); 

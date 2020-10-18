@@ -47,7 +47,7 @@ import util.ui.customizableitems.SelectableItemList;
  */
 public class DayFilterComponent extends AbstractFilterComponent {
 
-  private static final util.ui.Localizer mLocalizer = util.ui.Localizer
+  private static final util.i18n.Localizer mLocalizer = util.i18n.Localizer
       .getLocalizerFor(DayFilterComponent.class);
   private final String[] allDays = new String[] {mLocalizer.msg("monday", "Monday"), mLocalizer.msg("tuesday", "Tuesday"), mLocalizer.msg("wednesday", "Wednesday"), mLocalizer.msg("thursday", "Thursday"), mLocalizer.msg("friday", "Friday"), mLocalizer.msg("saturday", "Saturday"), mLocalizer.msg("sunday", "Sunday")};
 

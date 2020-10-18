@@ -21,10 +21,10 @@ import javax.swing.JButton;
 import com.jgoodies.forms.builder.ButtonBarBuilder;
 
 import util.browserlauncher.Launch;
-import util.ui.Localizer;
+import util.i18n.Localizer;
 
 public class Utilities {
-  private static final util.ui.Localizer mLocalizer = util.ui.Localizer.getLocalizerFor(Utilities.class);
+  private static final util.i18n.Localizer mLocalizer = util.i18n.Localizer.getLocalizerFor(Utilities.class);
 
   static JButton createHelpButton() {
     JButton helpButton = new JButton(Localizer.getLocalization(Localizer.I18N_HELP));

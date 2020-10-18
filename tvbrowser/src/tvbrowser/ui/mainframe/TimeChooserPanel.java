@@ -52,8 +52,8 @@ import util.ui.persona.Persona;
 public class TimeChooserPanel extends JPanel implements ChangeListener, MouseListener {
     
     /** The localizer for this class. */
-    private static final util.ui.Localizer mLocalizer
-        = util.ui.Localizer.getLocalizerFor(TimeChooserPanel.class);
+    private static final util.i18n.Localizer mLocalizer
+        = util.i18n.Localizer.getLocalizerFor(TimeChooserPanel.class);
 
     
     private MainFrame mParent;

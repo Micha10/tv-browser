@@ -53,13 +53,14 @@ import com.jgoodies.forms.factories.Borders;
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 
+import util.i18n.Localizer;
 /**
  * A Color chooser with Alpha-Selection
  */
 public class AlphaColorChooser extends JDialog implements ChangeListener {
     /** The localizer for this class. */
-    private static final util.ui.Localizer mLocalizer
-      = util.ui.Localizer.getLocalizerFor(AlphaColorChooser.class);
+    private static final Localizer LOCALIZER
+      = Localizer.getLocalizerFor(AlphaColorChooser.class);
     
     /**
      * The Sliders
@@ -135,21 +136,21 @@ public class AlphaColorChooser extends JDialog implements ChangeListener {
         c.fill = GridBagConstraints.BOTH;
 
         JPanel values = new JPanel(new TabLayout(3));
-        values.setBorder(BorderFactory.createTitledBorder(mLocalizer.msg("Values","Values")+":"));
+        values.setBorder(BorderFactory.createTitledBorder(LOCALIZER.msg("Values","Values")+":"));
 
-        values.add(new JLabel(mLocalizer.msg("red","Red")+":"));
+        values.add(new JLabel(LOCALIZER.msg("red","Red")+":"));
         values.add(mRedSl = createSlider());
         values.add(mRedSp = createSpinner());
 
-        values.add(new JLabel(mLocalizer.msg("green","Green")+":"));
+        values.add(new JLabel(LOCALIZER.msg("green","Green")+":"));
         values.add(mGreenSl = createSlider());
         values.add(mGreenSp = createSpinner());
 
-        values.add(new JLabel(mLocalizer.msg("blue","Blue")+":"));
+        values.add(new JLabel(LOCALIZER.msg("blue","Blue")+":"));
         values.add(mBlueSl = createSlider());
         values.add(mBlueSp = createSpinner());
 
-        values.add(new JLabel(mLocalizer.msg("alpha","Alpha")+":"));
+        values.add(new JLabel(LOCALIZER.msg("alpha","Alpha")+":"));
         values.add(mAlphaSl = createSlider());
         values.add(mAlphaSp = createSpinner());
 
@@ -165,7 +166,7 @@ public class AlphaColorChooser extends JDialog implements ChangeListener {
         panel.add(values, c);
 
         JPanel color = new JPanel(new BorderLayout());
-        color.setBorder(BorderFactory.createTitledBorder(mLocalizer.msg("Color","Color")+":"));
+        color.setBorder(BorderFactory.createTitledBorder(LOCALIZER.msg("Color","Color")+":"));
 
         mColorPanel = new PaintColor();
         color.add(mColorPanel, BorderLayout.CENTER);

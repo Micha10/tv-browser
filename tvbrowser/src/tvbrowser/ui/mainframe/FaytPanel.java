@@ -51,7 +51,7 @@ import com.jgoodies.forms.layout.FormLayout;
 import devplugin.Date;
 import devplugin.ProgramFilter;
 import tvbrowser.core.icontheme.IconLoader;
-import util.ui.Localizer;
+import util.i18n.Localizer;
 
 /**
  * A Panel for FindAsYouType in program table.

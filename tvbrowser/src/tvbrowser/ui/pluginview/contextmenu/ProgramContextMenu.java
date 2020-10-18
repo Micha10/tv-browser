@@ -56,8 +56,8 @@ public class ProgramContextMenu extends AbstractContextMenu {
   /**
    * The localizer for this class.
    */
-  private static final util.ui.Localizer mLocalizer
-          = util.ui.Localizer.getLocalizerFor(ProgramContextMenu.class);
+  private static final util.i18n.Localizer mLocalizer
+          = util.i18n.Localizer.getLocalizerFor(ProgramContextMenu.class);
 
   private TreePath[] mPaths;
   private Action mDefaultAction;

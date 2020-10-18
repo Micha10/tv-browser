@@ -56,7 +56,7 @@ import devplugin.ProgressMonitor;
  */
 public class Mirror {
   /** The localizer for this class. */
-  public static final util.ui.Localizer mLocalizer = util.ui.Localizer.getLocalizerFor(Mirror.class);
+  public static final util.i18n.Localizer mLocalizer = util.i18n.Localizer.getLocalizerFor(Mirror.class);
 
   private static final int MAX_UP_TO_DATE_CHECKS = 10;
   private static final int MAX_LAST_UPDATE_DAYS = 5;

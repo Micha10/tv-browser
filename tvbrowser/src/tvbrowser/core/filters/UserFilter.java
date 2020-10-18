@@ -54,7 +54,7 @@ class Token {
   final static int OR = 0, AND = 1, NOT = 2, ITEM = 3, LEFT_BRACKET = 4,
       RIGHT_BRACKET = 5;
 
-  private static final util.ui.Localizer mLocalizer = util.ui.Localizer
+  private static final util.i18n.Localizer mLocalizer = util.i18n.Localizer
       .getLocalizerFor(Token.class);
 
   public int type;
@@ -86,7 +86,7 @@ class Token {
 
 public class UserFilter implements devplugin.ProgramFilter {
 
-  private static final util.ui.Localizer mLocalizer = util.ui.Localizer
+  private static final util.i18n.Localizer mLocalizer = util.i18n.Localizer
       .getLocalizerFor(UserFilter.class);
 
   private String mName, mRule;

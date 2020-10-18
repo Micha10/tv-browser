@@ -61,7 +61,7 @@ import tvbrowser.core.ChannelList;
 import tvbrowser.core.DummyChannel;
 import tvbrowser.core.Settings;
 import tvbrowser.core.tvdataservice.TvDataServiceProxy;
-import util.ui.Localizer;
+import util.i18n.Localizer;
 import util.ui.UiUtilities;
 import util.ui.WindowClosingIf;
 
@@ -78,7 +78,7 @@ public class UpdateDlg extends JDialog implements ActionListener, WindowClosingI
     return LAST_CLOSED + 500 < System.currentTimeMillis();
   }
   
-  private static final util.ui.Localizer mLocalizer = util.ui.Localizer
+  private static final util.i18n.Localizer mLocalizer = util.i18n.Localizer
       .getLocalizerFor(UpdateDlg.class);
 
   protected static final int CANCEL = -1, GETALL = 28;

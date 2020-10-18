@@ -41,7 +41,7 @@ import devplugin.ProgressMonitor;
 
 public class ChannelGroupManager {
 
-  private static final util.ui.Localizer mLocalizer = util.ui.Localizer.getLocalizerFor(ChannelGroupManager.class);
+  private static final util.i18n.Localizer mLocalizer = util.i18n.Localizer.getLocalizerFor(ChannelGroupManager.class);
   private static ChannelGroupManager mInstance;
 
   private HashMap<TvDataServiceProxy, ArrayList<ChannelGroup>> mServiceToGroupsMap; // key:

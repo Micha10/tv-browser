@@ -41,8 +41,8 @@ import devplugin.ProgramSearcher;
  */
 public class SearchFilter implements ProgramFilter {
   /** The localizer of this class. */
-  private static final util.ui.Localizer mLocalizer
-    = util.ui.Localizer.getLocalizerFor(SearchFilter.class);
+  private static final util.i18n.Localizer mLocalizer
+    = util.i18n.Localizer.getLocalizerFor(SearchFilter.class);
   /** Instance */
   private static SearchFilter mInstance;
   /** Settings of the Search */

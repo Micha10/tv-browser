@@ -25,6 +25,7 @@ import tvbrowser.ui.settings.GlobalPluginProgramFormatingSettings;
 import tvbrowser.ui.settings.SettingsDialog;
 import util.program.AbstractPluginProgramFormating;
 import util.program.LocalPluginProgramFormating;
+import util.i18n.Localizer;
 
 /**
  * A class that provides a panel for configuration of the
@@ -34,7 +35,7 @@ import util.program.LocalPluginProgramFormating;
  * @since 2.5.1
  */
 public class PluginProgramConfigurationPanel extends JPanel implements ActionListener {
-  private static final Localizer mLocalizer = Localizer.getLocalizerFor(PluginProgramConfigurationPanel.class);
+  private static final Localizer LOCALIZER = Localizer.getLocalizerFor(PluginProgramConfigurationPanel.class);
   
   private OrderChooser<AbstractPluginProgramFormating> mOrder;
   private JButton mAdd, mEdit, mDelete;
@@ -127,13 +128,13 @@ public class PluginProgramConfigurationPanel extends JPanel implements ActionLis
       }
     });
     
-    mHelpLabel = UiUtilities.createHtmlHelpTextArea(mLocalizer.msg("help","This list contains formattings that are provided by the plugin itself and formating available for all plugins. You can configure formatings, that are provided by the plugin itself, direct here. The formatings that are available for all plugins can be configured in <a href=\"#link\">{0}</a>.",GlobalPluginProgramFormatingSettings.mLocalizer.msg("title","Plugin program formating")), e -> {
+    mHelpLabel = UiUtilities.createHtmlHelpTextArea(LOCALIZER.msg("help","This list contains formattings that are provided by the plugin itself and formating available for all plugins. You can configure formatings, that are provided by the plugin itself, direct here. The formatings that are available for all plugins can be configured in <a href=\"#link\">{0}</a>.",GlobalPluginProgramFormatingSettings.mLocalizer.msg("title","Plugin program formating")), e -> {
       if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
         SettingsDialog.getInstance().showSettingsTab(SettingsItem.PLUGINPROGRAMFORMAT);
       }
     });
     
-    pb.addLabel(mLocalizer.msg("title","Formatings that should be shown for selection in the context menu:"),cc.xy(2,1));
+    pb.addLabel(LOCALIZER.msg("title","Formatings that should be shown for selection in the context menu:"),cc.xy(2,1));
     pb.add(mOrder, cc.xy(2,2));
     pb.add(buttonPanel, cc.xy(2,4));
     pb.add(mHelpLabel, cc.xy(2,6));
@@ -177,7 +178,7 @@ public class PluginProgramConfigurationPanel extends JPanel implements ActionLis
 
   public void actionPerformed(ActionEvent e) {
     if(e.getSource() == mAdd) {
-      LocalPluginProgramFormating newFormatting = new LocalPluginProgramFormating(mLocalizer.msg("newName", "New formatting"), mDefaultLocalFormating.getTitleValue(), mDefaultLocalFormating.getContentValue(), mDefaultLocalFormating.getEncodingValue());
+      LocalPluginProgramFormating newFormatting = new LocalPluginProgramFormating(LOCALIZER.msg("newName", "New formatting"), mDefaultLocalFormating.getTitleValue(), mDefaultLocalFormating.getContentValue(), mDefaultLocalFormating.getEncodingValue());
       mOrder.addElement(newFormatting);
       mOrder.setSelectedIndex(mOrder.getItemCount() - 1);
       LocalPluginProgramFormatingSettingsDialog.createInstance(UiUtilities.getLastModalChildOf(MainFrame.getInstance()), (LocalPluginProgramFormating)mOrder.getSelectedValue(), mDefaultLocalFormating, mShowTitleSetting, mShowEncodingSetting);

@@ -60,7 +60,7 @@ import util.ui.persona.Persona;
 import util.ui.persona.PersonaListener;
 
 public class ReminderListPanel extends TabListenerPanel implements PersonaListener, ProgramMouseAndContextMenuListener {
-  private static final util.ui.Localizer mLocalizer = ReminderListDialog.mLocalizer; 
+  private static final util.i18n.Localizer mLocalizer = ReminderListDialog.mLocalizer; 
   
   private JButton mUndo, mDelete, mSend, mScrollToPreviousDay, mScrollToNextDay;
   private ReminderList mReminderList;

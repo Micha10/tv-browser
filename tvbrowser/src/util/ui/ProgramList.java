@@ -55,6 +55,7 @@ import tvbrowser.core.plugin.PluginProxy;
 import tvbrowser.core.plugin.PluginProxyManager;
 import tvbrowser.core.plugin.PluginStateListener;
 import util.exc.TvBrowserException;
+import util.i18n.Localizer;
 import util.programkeyevent.ProgramKeyAndContextMenuListener;
 import util.programkeyevent.ProgramKeyEventHandler;
 import util.programmouseevent.AutoScrollerAndClickKeyHandler;
@@ -67,7 +68,7 @@ import util.settings.ProgramPanelSettings;
 public class ProgramList extends JList<Object> implements ChangeListener,
     ListDataListener, PluginStateListener, 
     ProgramKeyAndContextMenuListener, AutoScrollerAndClickKeyHandler.ProgramAutoScrollListener {
-  private final static Localizer mLocalizer = Localizer.getLocalizerFor(ProgramList.class);
+  private final static Localizer LOCALIZER = Localizer.getLocalizerFor(ProgramList.class);
   
   /** Key for separator list entry */
   public final static String DATE_SEPARATOR = "DATE_SEPARATOR";
@@ -788,14 +789,14 @@ public class ProgramList extends JList<Object> implements ChangeListener,
    * @return The tool tip text for the previous scroll action,
    */
   public static String getPreviousActionTooltip() {
-    return mLocalizer.msg("prevTooltip", "Scrolls to previous day from current view position (if there is previous day in the list)");
+    return LOCALIZER.msg("prevTooltip", "Scrolls to previous day from current view position (if there is previous day in the list)");
   }
   
   /**
    * @return The tool tip text for the next scroll action,
    */
   public static String getNextActionTooltip() {
-    return mLocalizer.msg("nextTooltip", "Scrolls to next day from current view position (if there is next day in the list)");
+    return LOCALIZER.msg("nextTooltip", "Scrolls to next day from current view position (if there is next day in the list)");
   }
 
   @Override

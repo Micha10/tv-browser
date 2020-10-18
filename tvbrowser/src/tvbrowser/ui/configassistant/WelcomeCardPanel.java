@@ -46,8 +46,8 @@ import com.jgoodies.forms.layout.FormLayout;
 class WelcomeCardPanel extends AbstractCardPanel {
   private JPanel mContent;
   
-  private static final util.ui.Localizer mLocalizer
-        = util.ui.Localizer.getLocalizerFor(WelcomeCardPanel.class);
+  private static final util.i18n.Localizer mLocalizer
+        = util.i18n.Localizer.getLocalizerFor(WelcomeCardPanel.class);
  
   public WelcomeCardPanel(PrevNextButtons btns) {
     super(btns);

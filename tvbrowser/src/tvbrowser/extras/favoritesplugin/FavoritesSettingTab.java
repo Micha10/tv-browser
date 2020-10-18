@@ -66,8 +66,8 @@ import util.ui.UiUtilities;
 public class FavoritesSettingTab implements SettingsTab {
 
   /** The localizer for this class. */
-  private static final util.ui.Localizer mLocalizer
-    = util.ui.Localizer.getLocalizerFor(FavoritesSettingTab.class);
+  private static final util.i18n.Localizer mLocalizer
+    = util.i18n.Localizer.getLocalizerFor(FavoritesSettingTab.class);
 
   private ProgramReceiveTarget[] mClientPluginTargets, mCurrentClientPluginTargets;
   private JLabel mPluginLabel;

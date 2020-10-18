@@ -63,16 +63,16 @@ import tvbrowser.core.filters.UserFilter;
 import tvbrowser.core.icontheme.IconLoader;
 import tvbrowser.extras.favoritesplugin.core.FavoriteFilter;
 import tvbrowser.ui.mainframe.MainFrame;
-import util.ui.Localizer;
+import util.i18n.Localizer;
 import util.ui.TVBrowserIcons;
 import util.ui.UiUtilities;
 import util.ui.WindowClosingIf;
 
 public class SelectFilterDlg extends JDialog implements ActionListener, WindowClosingIf {
 
-  public static final util.ui.Localizer LOCALIZER = util.ui.Localizer.getLocalizerFor(SelectFilterDlg.class);
+  public static final util.i18n.Localizer LOCALIZER = util.i18n.Localizer.getLocalizerFor(SelectFilterDlg.class);
 
-  private static SelectFilterDlg mInstance;
+  private static SelectFilterDlg INSTANCE;
 
   private JButton mHelpBtn, mNewFolder, mCopyBtn, mEditBtn, mRemoveBtn, mNewBtn, mOkBtn, mUpBtn, mDownBtn, mSeperator, mDefaultFilterBtn, mSortAlphabetically;
 
@@ -80,20 +80,20 @@ public class SelectFilterDlg extends JDialog implements ActionListener, WindowCl
   private FilterTree mFilterTree;
   
   public static SelectFilterDlg create(Window parent) {
-    if(mInstance == null) {
+    if(INSTANCE == null) {
       new SelectFilterDlg(UiUtilities.getLastModalChildOf(MainFrame.getInstance()));
     }
     
-    return mInstance;
+    return INSTANCE;
   }
   
   static SelectFilterDlg getInstance() {
-    return mInstance;
+    return INSTANCE;
   }
   
   private SelectFilterDlg(Window parent) {
     super(parent, LOCALIZER.msg("title", "Edit Filters"), Dialog.ModalityType.DOCUMENT_MODAL);
-    mInstance = this;
+    INSTANCE = this;
     
     FormLayout layout = new FormLayout("default,default:grow,default","default,4dlu,fill:default:grow,5dlu,default");
     
@@ -105,12 +105,12 @@ public class SelectFilterDlg extends JDialog implements ActionListener, WindowCl
     mFilterList = FilterList.getInstance();
     mFilterTree = new FilterTree();
     
-    mNewBtn = UiUtilities.createToolBarButton(FilterTree.mLocalizer.msg("newFilter", "New Filter"),TVBrowserIcons.newIcon(TVBrowserIcons.SIZE_LARGE));
-    mNewFolder = UiUtilities.createToolBarButton(FilterTree.mLocalizer.msg("newFolder", "New folder"),IconLoader.getInstance().getIconFromTheme("actions", "folder-new", 22));
+    mNewBtn = UiUtilities.createToolBarButton(FilterTree.LOCALIZER.msg("newFilter", "New Filter"),TVBrowserIcons.newIcon(TVBrowserIcons.SIZE_LARGE));
+    mNewFolder = UiUtilities.createToolBarButton(FilterTree.LOCALIZER.msg("newFolder", "New folder"),IconLoader.getInstance().getIconFromTheme("actions", "folder-new", 22));
     mCopyBtn = UiUtilities.createToolBarButton(Localizer.getEllipsisLocalization(Localizer.I18N_COPY),TVBrowserIcons.copy(TVBrowserIcons.SIZE_LARGE));
     mEditBtn = UiUtilities.createToolBarButton(Localizer.getEllipsisLocalization(Localizer.I18N_EDIT),TVBrowserIcons.edit(TVBrowserIcons.SIZE_LARGE));
     mRemoveBtn = UiUtilities.createToolBarButton(Localizer.getLocalization(Localizer.I18N_DELETE),TVBrowserIcons.delete(TVBrowserIcons.SIZE_LARGE));
-    mSeperator = UiUtilities.createToolBarButton(FilterTree.mLocalizer.msg("newSeparator", "Add separator"),IconLoader.getInstance().getIconFromTheme("emblems", "separator", 22));
+    mSeperator = UiUtilities.createToolBarButton(FilterTree.LOCALIZER.msg("newSeparator", "Add separator"),IconLoader.getInstance().getIconFromTheme("emblems", "separator", 22));
     mDefaultFilterBtn = UiUtilities.createToolBarButton(Localizer.getLocalization(Localizer.I18N_STANDARD),IconLoader.getInstance().getIconFromTheme("actions", "view-filter", 22));
     mUpBtn = UiUtilities.createToolBarButton(LOCALIZER.msg("up","Move selected value up"),TVBrowserIcons.up(TVBrowserIcons.SIZE_LARGE));
     mDownBtn = UiUtilities.createToolBarButton(LOCALIZER.msg("down","Move selected value down"),TVBrowserIcons.down(TVBrowserIcons.SIZE_LARGE));    
@@ -281,7 +281,7 @@ public class SelectFilterDlg extends JDialog implements ActionListener, WindowCl
     mFilterList.store();
     
     setVisible(false);
-    mInstance = null;
+    INSTANCE = null;
   }
   
   void copySelectedFilter(FilterNode node) {
@@ -399,7 +399,7 @@ public class SelectFilterDlg extends JDialog implements ActionListener, WindowCl
   }
   
   void createNewFolder(FilterNode parent) {
-    String value = JOptionPane.showInputDialog(UiUtilities.getLastModalChildOf(MainFrame.getInstance()), FilterTree.mLocalizer.msg("folderName","Folder name:"), FilterTree.mLocalizer.msg("newFolder","New folder"));
+    String value = JOptionPane.showInputDialog(UiUtilities.getLastModalChildOf(MainFrame.getInstance()), FilterTree.LOCALIZER.msg("folderName","Folder name:"), FilterTree.LOCALIZER.msg("newFolder","New folder"));
 
     if(value != null && value.length() > 0) {
       FilterNode node = new FilterNode(value);
@@ -441,8 +441,8 @@ public class SelectFilterDlg extends JDialog implements ActionListener, WindowCl
   }
   
   public static void updateFilterTreeUI() {
-    if(mInstance != null) {
-      mInstance.mFilterTree.updateUI();
+    if(INSTANCE != null) {
+      INSTANCE.mFilterTree.updateUI();
     }
   }
 }

@@ -42,7 +42,7 @@ import tvbrowser.ui.settings.util.ColorLabel;
 import util.program.ProgramTextCreator;
 import util.ui.EnhancedPanelBuilder;
 import util.ui.FontChooserPanel;
-import util.ui.Localizer;
+import util.i18n.Localizer;
 import util.ui.OrderChooser;
 import util.ui.PluginsPictureSettingsPanel;
 import util.ui.ScrollableJPanel;

@@ -81,7 +81,7 @@ import tvdataservice.TvDataUpdateManager;
 import util.exc.ErrorHandler;
 import util.io.NetworkUtilities;
 import util.ui.EnhancedPanelBuilder;
-import util.ui.Localizer;
+import util.i18n.Localizer;
 import util.ui.UIThreadRunner;
 import util.ui.UiUtilities;
 import util.ui.WindowClosingIf;
@@ -96,8 +96,8 @@ import util.ui.progress.ProgressMonitorGroup;
 public class TvDataUpdater {
 
   /** The localizer for this class. */
-  private static final util.ui.Localizer mLocalizer
-    = util.ui.Localizer.getLocalizerFor(TvDataUpdater.class);
+  private static final util.i18n.Localizer mLocalizer
+    = util.i18n.Localizer.getLocalizerFor(TvDataUpdater.class);
 
   /** The logger for this class. */
   private static final Logger mLog

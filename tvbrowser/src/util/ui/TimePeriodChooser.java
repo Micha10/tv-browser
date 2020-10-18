@@ -13,10 +13,11 @@ import tvbrowser.core.Settings;
 
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
+import util.i18n.Localizer;
 
 public class TimePeriodChooser extends JPanel {
 
-  public static final util.ui.Localizer mLocalizer = util.ui.Localizer.getLocalizerFor(TimePeriodChooser.class);
+  public static final Localizer LOCALIZER = Localizer.getLocalizerFor(TimePeriodChooser.class);
 
   public static final int ALIGN_LEFT = 0;
 
@@ -51,9 +52,9 @@ public class TimePeriodChooser extends JPanel {
     
     CellConstraints cc = new CellConstraints();
 
-    content.add(mLabel1 = new JLabel(mLocalizer.msg("between", "between")), cc.xy(1, 1));
+    content.add(mLabel1 = new JLabel(LOCALIZER.msg("between", "between")), cc.xy(1, 1));
     content.add(mTimeFromSp, cc.xy(3, 1));
-    content.add(mLabel2 = new JLabel(mLocalizer.msg("and", "and")), cc.xy(5, 1));
+    content.add(mLabel2 = new JLabel(LOCALIZER.msg("and", "and")), cc.xy(5, 1));
     content.add(mTimeToSp, cc.xy(7, 1));
 
     if (from >= 0) {

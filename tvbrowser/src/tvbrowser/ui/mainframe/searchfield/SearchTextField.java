@@ -45,8 +45,8 @@ import util.ui.UiUtilities;
  */
 public class SearchTextField extends JTextField implements FocusListener{
   /** The localizer of this class. */
-  protected static final util.ui.Localizer mLocalizer
-    = util.ui.Localizer.getLocalizerFor(SearchTextField.class);
+  protected static final util.i18n.Localizer mLocalizer
+    = util.i18n.Localizer.getLocalizerFor(SearchTextField.class);
   /** Color */
   private Color mTextColor, mNoTextColor;
 

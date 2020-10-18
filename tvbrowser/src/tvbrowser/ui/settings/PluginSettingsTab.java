@@ -82,7 +82,7 @@ import util.browserlauncher.Launch;
 import util.exc.ErrorHandler;
 import util.exc.TvBrowserException;
 import util.ui.ImageIconEnhanced;
-import util.ui.Localizer;
+import util.i18n.Localizer;
 import util.ui.TVBrowserIcons;
 import util.ui.UiUtilities;
 
@@ -94,7 +94,7 @@ import util.ui.UiUtilities;
 
 public class PluginSettingsTab implements devplugin.SettingsTab, TableModelListener {
   /** Localizer */
-  private static final util.ui.Localizer mLocalizer = util.ui.Localizer.getLocalizerFor(PluginSettingsTab.class);
+  private static final util.i18n.Localizer mLocalizer = util.i18n.Localizer.getLocalizerFor(PluginSettingsTab.class);
   /** Logger */
   private static final Logger mLog = Logger.getLogger(PluginSettingsTab.class.getName());
   /** List of Plugins */

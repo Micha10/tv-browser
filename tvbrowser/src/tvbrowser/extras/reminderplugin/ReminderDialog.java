@@ -52,14 +52,14 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
-import util.ui.Localizer;
+import util.i18n.Localizer;
 import util.ui.UiUtilities;
 import util.ui.WindowClosingIf;
 
 public class ReminderDialog extends JDialog implements WindowClosingIf {
 
-  private static final util.ui.Localizer mLocalizer
-    = util.ui.Localizer.getLocalizerFor(ReminderDialog.class);
+  private static final util.i18n.Localizer mLocalizer
+    = util.i18n.Localizer.getLocalizerFor(ReminderDialog.class);
 
   private boolean mOkPressed=false;
 

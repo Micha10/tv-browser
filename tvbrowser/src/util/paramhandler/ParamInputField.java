@@ -44,7 +44,7 @@ import javax.swing.text.BadLocationException;
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 
-import util.ui.Localizer;
+import util.i18n.Localizer;
 import util.ui.UiUtilities;
 
 

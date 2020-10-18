@@ -31,7 +31,7 @@ import javax.swing.ImageIcon;
 
 import tvbrowser.core.tvdataservice.TvDataServiceProxy;
 import util.ui.ImageIconEnhanced;
-import util.ui.Localizer;
+import util.i18n.Localizer;
 
 import devplugin.Channel;
 import devplugin.ChannelGroup;

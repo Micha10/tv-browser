@@ -36,11 +36,13 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import util.i18n.Localizer;
+
 public class DirectoryChooserPanel extends JPanel {
  
   /** The localizer for this class. */
-         private static final util.ui.Localizer mLocalizer
-         = util.ui.Localizer.getLocalizerFor(DirectoryChooserPanel.class);
+         private static final Localizer LOCALIZER
+         = Localizer.getLocalizerFor(DirectoryChooserPanel.class);
  
   private JTextField mTextField;
   private JButton mBtn;
@@ -75,7 +77,7 @@ public class DirectoryChooserPanel extends JPanel {
     mTextField=new JTextField(text);
     add(mTextField,BorderLayout.CENTER);
     
-    mBtn=new JButton(mLocalizer.msg("change","change"));
+    mBtn=new JButton(LOCALIZER.msg("change","change"));
     mBtn.addActionListener(event -> {
       JFileChooser fc =new JFileChooser();
       fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);

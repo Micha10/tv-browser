@@ -50,12 +50,12 @@ import tvbrowser.core.plugin.PluginManagerImpl;
 import tvbrowser.ui.mainframe.MainFrame;
 import tvbrowser.ui.settings.channel.ChannelJList;
 import util.ui.ChannelListCellRenderer;
-import util.ui.Localizer;
+import util.i18n.Localizer;
 import util.ui.UiUtilities;
 
 public class ChannelListChangesDialog extends JDialog {
   /** The localizer for this class. */
-  private static final util.ui.Localizer LOCALIZER = util.ui.Localizer
+  private static final util.i18n.Localizer LOCALIZER = util.i18n.Localizer
       .getLocalizerFor(ChannelListChangesDialog.class);
 
   private ArrayList<Channel> mAddedList;

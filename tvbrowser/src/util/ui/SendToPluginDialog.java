@@ -30,6 +30,7 @@ import devplugin.Program;
 import devplugin.ProgramReceiveIf;
 import devplugin.ProgramReceiveTarget;
 import tvbrowser.core.Settings;
+import util.i18n.Localizer;
 
 /**
  * Ein Dialog, der es erlaubt, Programme an andere Plugins weiter zu reichen

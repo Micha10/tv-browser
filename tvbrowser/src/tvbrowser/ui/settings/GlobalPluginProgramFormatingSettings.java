@@ -39,7 +39,7 @@ import tvbrowser.core.plugin.programformating.GlobalPluginProgramFormatingManage
 import tvbrowser.ui.mainframe.MainFrame;
 import util.program.AbstractPluginProgramFormating;
 import util.ui.LocalPluginProgramFormatingSettingsDialog;
-import util.ui.Localizer;
+import util.i18n.Localizer;
 import util.ui.TVBrowserIcons;
 import util.ui.UiUtilities;
 import util.ui.customizableitems.SortableItemList;

@@ -38,7 +38,7 @@ import javax.swing.JPanel;
 import com.jgoodies.forms.factories.Borders;
 
 import tvbrowser.core.Settings;
-import util.ui.Localizer;
+import util.i18n.Localizer;
 import util.ui.UiUtilities;
 import util.ui.WindowClosingIf;
 
@@ -48,7 +48,7 @@ import util.ui.WindowClosingIf;
  * @author Martin Oberhauser
  */
 public class ReminderListDialog extends JDialog implements WindowClosingIf {
-  static final util.ui.Localizer mLocalizer = util.ui.Localizer.getLocalizerFor(ReminderListDialog.class);
+  static final util.i18n.Localizer mLocalizer = util.i18n.Localizer.getLocalizerFor(ReminderListDialog.class);
   
   private ReminderListPanel mReminderListPanel;
   

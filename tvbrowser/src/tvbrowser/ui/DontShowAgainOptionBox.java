@@ -39,8 +39,8 @@ import tvbrowser.core.Settings;
 public class DontShowAgainOptionBox {
 
   /** The localizer for this class. */
-  private static final util.ui.Localizer mLocalizer
-      = util.ui.Localizer.getLocalizerFor(DontShowAgainOptionBox.class);
+  private static final util.i18n.Localizer mLocalizer
+      = util.i18n.Localizer.getLocalizerFor(DontShowAgainOptionBox.class);
 
   /**
    * Creates an option dialog with JOptionPane.

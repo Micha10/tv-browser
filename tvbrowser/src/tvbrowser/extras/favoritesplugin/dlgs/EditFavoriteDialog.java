@@ -72,7 +72,7 @@ import tvbrowser.ui.mainframe.MainFrame;
 import util.exc.ErrorHandler;
 import util.exc.TvBrowserException;
 import util.ui.ChannelChooserDlg;
-import util.ui.Localizer;
+import util.i18n.Localizer;
 import util.ui.PluginChooserDlg;
 import util.ui.ScrollableJPanel;
 import util.ui.TabLayout;
@@ -85,7 +85,7 @@ import util.ui.WindowClosingIf;
  */
 public class EditFavoriteDialog extends JDialog implements WindowClosingIf {
 
-  private static final util.ui.Localizer mLocalizer = util.ui.Localizer.getLocalizerFor(EditFavoriteDialog.class);
+  private static final util.i18n.Localizer mLocalizer = util.i18n.Localizer.getLocalizerFor(EditFavoriteDialog.class);
 
   private Favorite mFavorite;
 

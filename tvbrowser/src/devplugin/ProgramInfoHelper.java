@@ -7,7 +7,7 @@ import javax.swing.Icon;
 
 import tvbrowser.core.Settings;
 import tvbrowser.core.icontheme.InfoThemeLoader;
-import util.ui.Localizer;
+import util.i18n.Localizer;
 
 /**
  * Holds all Information needed to Display the additional

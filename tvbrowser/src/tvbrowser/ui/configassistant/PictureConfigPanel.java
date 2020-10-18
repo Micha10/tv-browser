@@ -26,7 +26,7 @@ import tvbrowser.core.tvdataservice.TvDataServiceProxy;
 import tvbrowser.core.tvdataservice.TvDataServiceProxyManager;
 import tvdataservice.PictureSettingsIf;
 import tvdataservice.SettingsPanel;
-import util.ui.Localizer;
+import util.i18n.Localizer;
 import util.ui.UiUtilities;
 
 import com.jgoodies.forms.builder.PanelBuilder;

@@ -53,7 +53,7 @@ import javax.swing.plaf.ListUI;
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 
-import util.ui.Localizer;
+import util.i18n.Localizer;
 
 /**
  * A class that provides a list that contains selectable items.
@@ -65,7 +65,7 @@ public class SelectableItemList<E> extends JPanel implements ListSelectionListen
   
   private static final long serialVersionUID = 1L;
 
-  private static final Localizer mLocalizer = Localizer.getLocalizerFor(SelectableItemList.class);
+  private static final Localizer LOCALIZER = Localizer.getLocalizerFor(SelectableItemList.class);
   
   private SelectableItemListModel mListModel;
   private SelectableItemRenderer<E> mItemRenderer;
@@ -199,15 +199,15 @@ public class SelectableItemList<E> extends JPanel implements ListSelectionListen
     
     JPanel p3 = new JPanel(layout);
     
-    mSelectAllBt = new JButton(mLocalizer.msg("addAll", "Select all items"));
-    mSelectAllBt.setToolTipText(mLocalizer.msg("tooltip.all", "Select all items in the list."));
+    mSelectAllBt = new JButton(LOCALIZER.msg("addAll", "Select all items"));
+    mSelectAllBt.setToolTipText(LOCALIZER.msg("tooltip.all", "Select all items in the list."));
     mSelectAllBt.addActionListener(e -> {
       selectAll();
     });
     p3.add(mSelectAllBt, cc.xy(1,1));
 
-    mDeSelectAllBt = new JButton(mLocalizer.msg("delAll", "Deselect all items"));
-    mDeSelectAllBt.setToolTipText(mLocalizer.msg("tooltip.none", "Deselect all items in the list."));
+    mDeSelectAllBt = new JButton(LOCALIZER.msg("delAll", "Deselect all items"));
+    mDeSelectAllBt.setToolTipText(LOCALIZER.msg("tooltip.none", "Deselect all items in the list."));
     mDeSelectAllBt.addActionListener(e -> {
       clearSelection();
     });

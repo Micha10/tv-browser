@@ -38,7 +38,7 @@ import com.jgoodies.forms.layout.FormLayout;
  * The Step-List on top of the Wizard
  */
 public class StatusPanel extends JPanel {
-  private static final util.ui.Localizer mLocalizer = util.ui.Localizer.getLocalizerFor(StatusPanel.class);
+  private static final util.i18n.Localizer mLocalizer = util.i18n.Localizer.getLocalizerFor(StatusPanel.class);
 
   protected static final int NETWORK = 0;
   protected static final int CHANNELS = 1;

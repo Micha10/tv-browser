@@ -39,7 +39,7 @@ import javax.swing.ImageIcon;
 import tvbrowser.core.Settings;
 import tvbrowser.core.icontheme.IconLoader;
 import util.ui.ImageIconEnhanced;
-import util.ui.Localizer;
+import util.i18n.Localizer;
 
 /**
  * A class that contains infos about a Persona.

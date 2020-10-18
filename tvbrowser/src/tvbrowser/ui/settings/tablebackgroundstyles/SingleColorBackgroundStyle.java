@@ -44,8 +44,8 @@ import com.jgoodies.forms.layout.FormLayout;
  */
 public class SingleColorBackgroundStyle implements TableBackgroundStyle {
 
-  private static final util.ui.Localizer mLocalizer
-    = util.ui.Localizer.getLocalizerFor(SingleColorBackgroundStyle.class);
+  private static final util.i18n.Localizer mLocalizer
+    = util.i18n.Localizer.getLocalizerFor(SingleColorBackgroundStyle.class);
   
   private ColorLabel mColorLabel;
 

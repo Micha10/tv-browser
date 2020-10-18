@@ -49,6 +49,7 @@ import devplugin.PluginAccess;
 import tvbrowser.core.plugin.PluginManagerImpl;
 import tvbrowser.extras.favoritesplugin.FavoritesPluginProxy;
 import tvbrowser.extras.reminderplugin.ReminderPluginProxy;
+import util.i18n.Localizer;
 import util.ui.customizableitems.SelectableItemList;
 
 /**
@@ -62,8 +63,8 @@ public class MarkerChooserDlg extends JDialog implements WindowClosingIf {
   private Marker[] mPluginArr;
   private SelectableItemList<Marker> mPluginItemList;
   
-  private static final util.ui.Localizer mLocalizer
-     = util.ui.Localizer.getLocalizerFor(MarkerChooserDlg.class);
+  private static final Localizer LOCALIZER
+     = Localizer.getLocalizerFor(MarkerChooserDlg.class);
 
   /**
    * 
@@ -81,7 +82,7 @@ public class MarkerChooserDlg extends JDialog implements WindowClosingIf {
   }
   
   private void init(Marker[] channelArr, String description) {
-    setTitle(mLocalizer.msg("title","Choose Plugins"));
+    setTitle(LOCALIZER.msg("title","Choose Plugins"));
     UiUtilities.registerForClosing(this);
     
     if (channelArr == null) {

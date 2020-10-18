@@ -43,7 +43,7 @@ import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 
 class NetworkSuccessPanel extends AbstractCardPanel {
-  private static final util.ui.Localizer mLocalizer = util.ui.Localizer.getLocalizerFor(NetworkSuccessPanel.class);
+  private static final util.i18n.Localizer mLocalizer = util.i18n.Localizer.getLocalizerFor(NetworkSuccessPanel.class);
 
   private JPanel mContent,mCardPanel;
   private AuthenticationChannelCardPanel mAuthentication;

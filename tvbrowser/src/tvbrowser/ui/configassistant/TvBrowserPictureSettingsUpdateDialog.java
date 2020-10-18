@@ -37,7 +37,7 @@ import com.jgoodies.forms.layout.FormLayout;
 
 import tvbrowser.core.Settings;
 import util.settings.ProgramPanelSettings;
-import util.ui.Localizer;
+import util.i18n.Localizer;
 import util.ui.UiUtilities;
 import util.ui.WindowClosingIf;
 

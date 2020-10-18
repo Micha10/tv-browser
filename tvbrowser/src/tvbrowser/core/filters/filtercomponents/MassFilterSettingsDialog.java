@@ -32,7 +32,7 @@ import javax.swing.JPanel;
 
 import com.jgoodies.forms.factories.Borders;
 
-import util.ui.Localizer;
+import util.i18n.Localizer;
 import util.ui.SearchForm;
 import util.ui.SearchFormSettings;
 
@@ -44,7 +44,7 @@ import util.ui.SearchFormSettings;
 public class MassFilterSettingsDialog extends JDialog {
 
   /** Translation */
-  private static final util.ui.Localizer mLocalizer = util.ui.Localizer
+  private static final util.i18n.Localizer mLocalizer = util.i18n.Localizer
       .getLocalizerFor(MassFilterSettingsDialog.class);
   /** Show Search-Form */
   private SearchForm mForm;

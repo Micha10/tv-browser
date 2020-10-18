@@ -54,8 +54,8 @@ public class TvDataServiceProxyManager {
   public static final String PLUGIN_DIRECTORY = "tvdataservice";
 
   /** The localizer for this class. */
-  private static final util.ui.Localizer mLocalizer
-      = util.ui.Localizer.getLocalizerFor(TvDataServiceProxyManager.class);
+  private static final util.i18n.Localizer mLocalizer
+      = util.i18n.Localizer.getLocalizerFor(TvDataServiceProxyManager.class);
 
   private static TvDataServiceProxyManager mInstance;
 

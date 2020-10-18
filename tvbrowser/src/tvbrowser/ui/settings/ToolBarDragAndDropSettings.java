@@ -62,7 +62,7 @@ import tvbrowser.ui.mainframe.MainFrame;
 import tvbrowser.ui.mainframe.toolbar.ContextMenu;
 import tvbrowser.ui.mainframe.toolbar.DefaultToolBarModel;
 import tvbrowser.ui.mainframe.toolbar.ToolBar;
-import util.ui.Localizer;
+import util.i18n.Localizer;
 import util.ui.TVBrowserIcons;
 import util.ui.UiUtilities;
 import util.ui.WindowClosingIf;
@@ -82,7 +82,7 @@ public class ToolBarDragAndDropSettings extends JDialog implements
     MouseListener, WindowClosingIf {
 
   /** The localizer for this class. */
-  public static final util.ui.Localizer mLocalizer = util.ui.Localizer
+  public static final util.i18n.Localizer mLocalizer = util.i18n.Localizer
       .getLocalizerFor(ToolBarDragAndDropSettings.class);
 
   private static final Logger mLog = java.util.logging.Logger

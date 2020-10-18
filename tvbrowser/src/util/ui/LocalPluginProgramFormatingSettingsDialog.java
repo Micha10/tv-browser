@@ -50,6 +50,7 @@ import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.RowSpec;
 
 import devplugin.Plugin;
+import util.i18n.Localizer;
 import util.paramhandler.ParamHelpDialog;
 import util.paramhandler.ParamLibrary;
 import util.paramhandler.ParamParser;
@@ -62,7 +63,7 @@ import util.program.AbstractPluginProgramFormating;
  * @since 2.5.1
  */
 public class LocalPluginProgramFormatingSettingsDialog extends JDialog implements WindowClosingIf, ActionListener {
-  private static final Localizer mLocalizer = Localizer.getLocalizerFor(LocalPluginProgramFormatingSettingsDialog.class);
+  private static final Localizer LOCALIZER = Localizer.getLocalizerFor(LocalPluginProgramFormatingSettingsDialog.class);
 
   private AbstractPluginProgramFormating mConfig, mDefaultConfig;
   private JButton mSetName, mPreview, mSetBack, mHelp, mOk, mCancel;
@@ -98,7 +99,7 @@ public class LocalPluginProgramFormatingSettingsDialog extends JDialog implement
     mConfig = config;
     mDefaultConfig = defaultConfig;
 
-    setTitle(mLocalizer.msg("settingsFor","Settings for ") + config.getName());
+    setTitle(LOCALIZER.msg("settingsFor","Settings for ") + config.getName());
     UiUtilities.registerForClosing(this);
 
     CellConstraints cc = new CellConstraints();
@@ -107,7 +108,7 @@ public class LocalPluginProgramFormatingSettingsDialog extends JDialog implement
     pb.border(Borders.DIALOG);
 
     mName = new JLabel(config.getName());
-    mSetName = new JButton(mLocalizer.msg("changeName","Change name"));
+    mSetName = new JButton(LOCALIZER.msg("changeName","Change name"));
     mSetName.addActionListener(this);
 
     JPanel panel = new JPanel(new FormLayout("pref:grow,5dlu,pref","pref"));
@@ -128,7 +129,7 @@ public class LocalPluginProgramFormatingSettingsDialog extends JDialog implement
     mEncoding.setSelectedItem(config.getEncodingValue());
     mEncoding.addActionListener(this);
 
-    mPreview = new JButton(mLocalizer.msg("preview","Preview"));
+    mPreview = new JButton(LOCALIZER.msg("preview","Preview"));
     mPreview.addActionListener(this);
 
     mSetBack = new JButton(Localizer.getLocalization(Localizer.I18N_DEFAULT));
@@ -156,18 +157,18 @@ public class LocalPluginProgramFormatingSettingsDialog extends JDialog implement
 
     int y = 1;
 
-    pb.addLabel(mLocalizer.msg("name","Name") + ":", cc.xy(1,y));
+    pb.addLabel(LOCALIZER.msg("name","Name") + ":", cc.xy(1,y));
     pb.add(panel, cc.xy(3,y++));
 
     if(showTitleSetting) {
       baseLayout.insertRow(y++, RowSpec.decode("2dlu"));
       baseLayout.insertRow(y, RowSpec.decode("pref"));
 
-      pb.addLabel(mLocalizer.msg("title","Titel") + ":", cc.xy(1,y));
+      pb.addLabel(LOCALIZER.msg("title","Titel") + ":", cc.xy(1,y));
       pb.add(mTitle, cc.xy(3,y++));
     }
 
-    pb.addLabel(mLocalizer.msg("content","Content") + ":", cc.xyw(1,++y,3));
+    pb.addLabel(LOCALIZER.msg("content","Content") + ":", cc.xyw(1,++y,3));
     pb.add(new JScrollPane(mContentArea), cc.xyw(1,++y,3));
 
     y++;
@@ -176,7 +177,7 @@ public class LocalPluginProgramFormatingSettingsDialog extends JDialog implement
       baseLayout.insertRow(y++, RowSpec.decode("5dlu"));
       baseLayout.insertRow(y, RowSpec.decode("pref"));
 
-      pb.addLabel(mLocalizer.msg("encoding","Encoding") + ":", cc.xy(1,y));
+      pb.addLabel(LOCALIZER.msg("encoding","Encoding") + ":", cc.xy(1,y));
       pb.add(mEncoding, cc.xy(3,y++));
     }
 
@@ -204,7 +205,7 @@ public class LocalPluginProgramFormatingSettingsDialog extends JDialog implement
       dialog.setVisible(true);
     }
     else if(e.getSource() == mSetName) {
-      String value = JOptionPane.showInputDialog(this,mLocalizer.msg("changeName","Change name") + ":",mName.getText());
+      String value = JOptionPane.showInputDialog(this,LOCALIZER.msg("changeName","Change name") + ":",mName.getText());
 
       if(value != null) {
         mName.setText(value);
@@ -235,7 +236,7 @@ public class LocalPluginProgramFormatingSettingsDialog extends JDialog implement
       content = "";
     }
 
-    final JDialog dialog = new JDialog(this, mLocalizer.msg("preview", "Preview"), true);
+    final JDialog dialog = new JDialog(this, LOCALIZER.msg("preview", "Preview"), true);
     JPanel contentPanel = (JPanel) dialog.getContentPane();
 
     UiUtilities.registerForClosing(new WindowClosingIf() {
@@ -276,7 +277,7 @@ public class LocalPluginProgramFormatingSettingsDialog extends JDialog implement
    */
   protected void defaultPressed() {
     int ret = JOptionPane.showConfirmDialog(this,
-        mLocalizer.msg("reset", "Reset to default Settings?"),
+        LOCALIZER.msg("reset", "Reset to default Settings?"),
         Localizer.getLocalization(Localizer.I18N_DEFAULT)+"?", JOptionPane.YES_NO_OPTION);
     if (ret == JOptionPane.YES_OPTION) {
       mTitle.setText(mDefaultConfig.getTitleValue());

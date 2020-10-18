@@ -61,7 +61,7 @@ import tvbrowser.extras.favoritesplugin.dlgs.FavoriteTreeModel;
 import util.settings.PluginPictureSettings;
 import util.settings.ProgramPanelSettings;
 import util.ui.ImageIconEnhanced;
-import util.ui.Localizer;
+import util.i18n.Localizer;
 import util.ui.UiUtilities;
 import util.ui.html.ExtendedHTMLDocument;
 import util.ui.html.HTMLTextHelper;
@@ -75,7 +75,7 @@ public class ProgramTextCreator {
   /**
    * The Localizer for this class.
    */
-  private static final util.ui.Localizer mLocalizer = util.ui.Localizer
+  private static final util.i18n.Localizer mLocalizer = util.i18n.Localizer
       .getLocalizerFor(ProgramTextCreator.class);
 
   private static String mBodyFontSize;

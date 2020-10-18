@@ -55,7 +55,7 @@ import tvbrowser.ui.mainframe.MainFrame;
 import util.settings.ContextMenuMouseActionSetting;
 import util.ui.CustomComboBoxRenderer;
 import util.ui.EnhancedPanelBuilder;
-import util.ui.Localizer;
+import util.i18n.Localizer;
 import util.ui.TVBrowserIcons;
 import util.ui.html.HTMLTextHelper;
 
@@ -70,7 +70,7 @@ import devplugin.Program;
 
 public class MouseSettingsTab implements devplugin.SettingsTab {
 
-	private static final util.ui.Localizer mLocalizer = util.ui.Localizer
+	private static final util.i18n.Localizer mLocalizer = util.i18n.Localizer
 			.getLocalizerFor(MouseSettingsTab.class);
 	
   private static final String[] mLeftModifiersName = {

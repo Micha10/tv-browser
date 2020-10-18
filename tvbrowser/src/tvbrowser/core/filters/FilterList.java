@@ -69,7 +69,7 @@ public class FilterList {
   private FilterTreeModel mFilterTreeModel;
   private final static String FILTER_TREE_DAT = "filters.dat";
     
-  private static final Logger mLog
+  private static final Logger LOG
           = Logger.getLogger(FilterList.class.getName());
 
   private FilterList() {
@@ -79,7 +79,7 @@ public class FilterList {
   /**
    * Localizer
    */
-  private static final util.ui.Localizer mLocalizer = util.ui.Localizer.getLocalizerFor(FilterList.class);
+  private static final util.i18n.Localizer LOCALIZER = util.i18n.Localizer.getLocalizerFor(FilterList.class);
 
   
   public static File getFilterDirectory() {
@@ -136,7 +136,7 @@ public class FilterList {
           try {
             filter = new UserFilter(file);
           } catch (ParserException e) {
-            mLog.warning("error parsing filter from file " + file + "; exception: " + e);
+            LOG.warning("error parsing filter from file " + file + "; exception: " + e);
           }
           if (filter != null) {
             filterList.put(filter.getName(), filter);
@@ -202,7 +202,7 @@ public class FilterList {
       }
       
       //add default attributes
-      String attributesDir = mLocalizer.msg("ProgramAttributes", "program attributes");
+      String attributesDir = LOCALIZER.msg("ProgramAttributes", "program attributes");
       
       addInfoBitFilter("[SUBTITLE_FILTER]", attributesDir);
       addInfoBitFilter("[AUDIO_DESCRIPTION_FILTER]", attributesDir);
@@ -212,7 +212,7 @@ public class FilterList {
       addInfoBitFilter("[LIVE_FILTER]", attributesDir);
       
       //add default categories
-      String categoriesDir = mLocalizer.msg("ProgramCategories", "program categories");
+      String categoriesDir = LOCALIZER.msg("ProgramCategories", "program categories");
       addInfoBitFilter("[MOVIE_FILTER]", categoriesDir);
       addInfoBitFilter("[SERIES_FILTER]", categoriesDir);
       addInfoBitFilter("[SHOW_FILTER]", categoriesDir);
@@ -321,7 +321,7 @@ public class FilterList {
   }
   
   public void updateAvailableChannels(Channel[] channels) {
-    mFilterTreeModel.updateAvailableChannels(channels, mLocalizer.msg("channelDirectory", "Channel filters"),mLocalizer.msg("ProgramCategories", "program categories"));
+    mFilterTreeModel.updateAvailableChannels(channels, LOCALIZER.msg("channelDirectory", "Channel filters"),LOCALIZER.msg("ProgramCategories", "program categories"));
     
     if(!MainFrame.isStarting()) {
       MainFrame.getInstance().updateFilterMenu();

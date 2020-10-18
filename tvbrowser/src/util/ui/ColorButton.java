@@ -36,13 +36,15 @@ import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 
+import util.i18n.Localizer;
+
 /**
  * This is a Button that allows the selection of a Color
  */
 public class ColorButton extends JButton implements ActionListener{
     /** The localizer for this class. */
-    private static final util.ui.Localizer mLocalizer
-      = util.ui.Localizer.getLocalizerFor(ColorButton.class);
+    private static final Localizer mLocalizer
+      = Localizer.getLocalizerFor(ColorButton.class);
     
     /** Color */
     private Color mColor;

@@ -43,7 +43,7 @@ import tvbrowser.ui.mainframe.MainFrame;
 import util.exc.ErrorHandler;
 import util.io.ExecutionHandler;
 import util.io.IOUtilities;
-import util.ui.Localizer;
+import util.i18n.Localizer;
 import util.ui.UiUtilities;
 import util.ui.WindowClosingIf;
 
@@ -61,7 +61,7 @@ import devplugin.SettingsItem;
  */
 public class Launch {
   /** The localizer used by this class. */
-  private static final util.ui.Localizer mLocalizer = util.ui.Localizer.getLocalizerFor(Launch.class);
+  private static final util.i18n.Localizer mLocalizer = util.i18n.Localizer.getLocalizerFor(Launch.class);
 
   /** Mac OS JVM */
   public static final int OS_MAC = 0;

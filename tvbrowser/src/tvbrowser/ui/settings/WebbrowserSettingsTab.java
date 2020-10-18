@@ -46,7 +46,7 @@ import util.browserlauncher.Launch;
 import util.io.IOUtilities;
 import util.misc.OperatingSystem;
 import util.ui.LinkButton;
-import util.ui.Localizer;
+import util.i18n.Localizer;
 import util.ui.UiUtilities;
 
 import com.jgoodies.forms.factories.Borders;
@@ -59,7 +59,7 @@ import com.jgoodies.forms.layout.FormLayout;
  */
 public class WebbrowserSettingsTab implements devplugin.SettingsTab {
   /** The localizer for this class. */
-  private static final util.ui.Localizer mLocalizer = util.ui.Localizer.getLocalizerFor(WebbrowserSettingsTab.class);
+  private static final util.i18n.Localizer mLocalizer = util.i18n.Localizer.getLocalizerFor(WebbrowserSettingsTab.class);
 
   private JPanel mSettingsPn;
   private JFileChooser mFileChooser;

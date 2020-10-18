@@ -48,7 +48,7 @@ import devplugin.ChannelGroup;
 import tvbrowser.core.tvdataservice.ChannelGroupManager;
 import tvbrowser.core.tvdataservice.TvDataServiceProxy;
 import util.browserlauncher.Launch;
-import util.ui.Localizer;
+import util.i18n.Localizer;
 import util.ui.UiUtilities;
 import util.ui.WindowClosingIf;
 import util.ui.html.ExtendedHTMLDocument;
@@ -60,8 +60,8 @@ import util.ui.html.HTMLTextHelper;
  */
 public class ChannelGroupInfoDialog extends JDialog implements WindowClosingIf{
   /** Translation */
-  private static final util.ui.Localizer mLocalizer
-  = util.ui.Localizer.getLocalizerFor(ChannelGroupInfoDialog.class);
+  private static final util.i18n.Localizer mLocalizer
+  = util.i18n.Localizer.getLocalizerFor(ChannelGroupInfoDialog.class);
 
   /** Infos about the channel group */
   private ChannelGroup mChannelGroup;

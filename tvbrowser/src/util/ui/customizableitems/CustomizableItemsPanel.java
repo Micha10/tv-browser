@@ -55,8 +55,8 @@ import util.ui.UiUtilities;
  */
 public class CustomizableItemsPanel<E> extends JPanel {
 
-  private static final util.ui.Localizer mLocalizer
-    = util.ui.Localizer.getLocalizerFor(CustomizableItemsPanel.class);
+  private static final util.i18n.Localizer mLocalizer
+    = util.i18n.Localizer.getLocalizerFor(CustomizableItemsPanel.class);
 
   private final DefaultListModel<E> mLeftListModel, mRightListModel;
   private final JList<E> mLeftList, mRightList;

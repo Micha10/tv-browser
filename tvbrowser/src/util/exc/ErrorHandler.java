@@ -64,12 +64,12 @@ public class ErrorHandler {
   public static final int NO_PRESSED = 3;
 
   /** The logger for this class. */
-  private static final Logger mLog
+  private static final Logger LOG
     = Logger.getLogger(ErrorHandler.class.getName());
 
   /** The localizer of this class. */
-  static final util.ui.Localizer mLocalizer
-    = util.ui.Localizer.getLocalizerFor(ErrorHandler.class);
+  static final util.i18n.Localizer LOCALIZER
+    = util.i18n.Localizer.getLocalizerFor(ErrorHandler.class);
 
   /** The icon to use for error messages. */
   static final Icon ERROR_ICON = UIManager.getIcon("OptionPane.errorIcon");
@@ -108,7 +108,7 @@ public class ErrorHandler {
    * @param throwable The exception to handle.
    */
   public static void handle(final String msg, final Throwable throwable) {
-    mLog.log(Level.SEVERE, msg, throwable);
+    LOG.log(Level.SEVERE, msg, throwable);
     try {
       if(!MainFrame.isStarting()) {
         UIThreadRunner.invokeAndWait(() -> {
@@ -137,7 +137,7 @@ public class ErrorHandler {
    * @since 2.1
    */
   public static int handle(String msg, Throwable thr, int messageType) {
-    mLog.log(Level.SEVERE, msg, thr);
+    LOG.log(Level.SEVERE, msg, thr);
 
     if(!MainFrame.isStarting()) {
       ErrorWindow errwin = new ErrorWindow(mParent, msg, thr, messageType);

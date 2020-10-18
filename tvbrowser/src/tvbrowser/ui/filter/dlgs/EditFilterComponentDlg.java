@@ -88,7 +88,7 @@ import tvbrowser.core.filters.filtercomponents.SingleTitleFilterComponent;
 import tvbrowser.core.filters.filtercomponents.TimeFilterComponent;
 import tvbrowser.core.plugin.PluginManagerImpl;
 import tvbrowser.extras.favoritesplugin.core.FilterComponentNewFavoritePrograms;
-import util.ui.Localizer;
+import util.i18n.Localizer;
 import util.ui.UiUtilities;
 import util.ui.WindowClosingIf;
 
@@ -96,7 +96,7 @@ public class EditFilterComponentDlg extends JDialog implements ActionListener, D
 
   private static final String REGEX_INVALID_CHARACTERS = "[\\p{Punct}\\s&&[^_]]";
 
-  private static final util.ui.Localizer mLocalizer = util.ui.Localizer.getLocalizerFor(EditFilterComponentDlg.class);
+  private static final util.i18n.Localizer mLocalizer = util.i18n.Localizer.getLocalizerFor(EditFilterComponentDlg.class);
 
   private tvbrowser.core.filters.FilterComponent mSelectedFilterComponent;
 

@@ -30,7 +30,7 @@ import devplugin.ProgramFieldType;
 
 public class AgeLimitFilterComponent extends AbstractFilterComponent {
 
-  private static final util.ui.Localizer mLocalizer = util.ui.Localizer
+  private static final util.i18n.Localizer mLocalizer = util.i18n.Localizer
       .getLocalizerFor(AgeLimitFilterComponent.class);
 
   public AgeLimitFilterComponent(String name, String description) {

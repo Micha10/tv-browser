@@ -99,7 +99,7 @@ import util.ui.ExtensionFileFilter;
 import util.ui.FilterableProgramListPanel;
 import util.ui.ListDragAndDropHandler;
 import util.ui.ListDropAction;
-import util.ui.Localizer;
+import util.i18n.Localizer;
 import util.ui.ProgramList;
 import util.ui.SendToPluginDialog;
 import util.ui.TVBrowserIcons;

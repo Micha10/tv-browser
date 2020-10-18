@@ -35,6 +35,7 @@ import javax.swing.JRadioButton;
 import tvbrowser.TVBrowser;
 import tvbrowser.core.Settings;
 import tvbrowser.core.icontheme.IconLoader;
+import util.i18n.Localizer;
 import util.misc.JavaVersion;
 import util.misc.OperatingSystem;
 
@@ -53,7 +54,7 @@ import devplugin.SettingsTab;
  */
 public class TrayBaseSettingsTab implements SettingsTab {
 
-  protected static final util.ui.Localizer mLocalizer = util.ui.Localizer
+  protected static final Localizer LOCALIZER = Localizer
   .getLocalizerFor(TrayBaseSettingsTab.class);
 
   private JCheckBox mTrayIsEnabled, mMinimizeToTrayChb, mNowOnRestore, mTrayIsAnialiasing;
@@ -69,27 +70,27 @@ public class TrayBaseSettingsTab implements SettingsTab {
     builder.border(Borders.DIALOG);
     CellConstraints cc = new CellConstraints();
 
-    String msg = mLocalizer.msg("trayIsEnabled", "Tray activated");
+    String msg = LOCALIZER.msg("trayIsEnabled", "Tray activated");
     mOldState = Settings.propTrayIsEnabled.getBoolean();
     mTrayIsEnabled = new JCheckBox(msg, mOldState);
 
-    msg = mLocalizer.msg("minimizeToTray", "Minimize to Tray");
+    msg = LOCALIZER.msg("minimizeToTray", "Minimize to Tray");
     boolean checked = Settings.propTrayMinimizeTo.getBoolean();
     mMinimizeToTrayChb = new JCheckBox(msg, checked && mOldState);
     mMinimizeToTrayChb.setEnabled(mTrayIsEnabled.isSelected());
     
-    msg = mLocalizer.msg("nowOnDeIconify", "Jump to now when restoring application");
+    msg = LOCALIZER.msg("nowOnDeIconify", "Jump to now when restoring application");
     checked = Settings.propNowOnRestore.getBoolean();
     mNowOnRestore = new JCheckBox(msg, checked);
 
-    msg = mLocalizer.msg("trayAntialiasing", "Antialiasing enabled");
+    msg = LOCALIZER.msg("trayAntialiasing", "Antialiasing enabled");
     checked = Settings.propTrayIsAntialiasing.getBoolean();
     mTrayIsAnialiasing = new JCheckBox(msg, checked);
     
     if(System.getProperty("os.name").toLowerCase().startsWith("linux") && (JavaVersion.getVersion() < JavaVersion.VERSION_1_6 || OperatingSystem.isKDE())) {
       mMinimizeToTrayChb.addActionListener(e -> {
         if(mMinimizeToTrayChb.isSelected()) {
-          JOptionPane.showMessageDialog(builder.getPanel(),mLocalizer.msg("minimizeToTrayWarning","This function might not work as expected on Unix systems like KDE or Gnome.\nSo it's recommended not to select this checkbox."),mLocalizer.msg("warning","Warning"), JOptionPane.WARNING_MESSAGE);
+          JOptionPane.showMessageDialog(builder.getPanel(),LOCALIZER.msg("minimizeToTrayWarning","This function might not work as expected on Unix systems like KDE or Gnome.\nSo it's recommended not to select this checkbox."),LOCALIZER.msg("warning","Warning"), JOptionPane.WARNING_MESSAGE);
         }
       });
     }
@@ -97,14 +98,14 @@ public class TrayBaseSettingsTab implements SettingsTab {
     //filter settings
     ButtonGroup filter = new ButtonGroup();
     
-    msg = mLocalizer.msg("trayFilterAll", "Filter all programs");
+    msg = LOCALIZER.msg("trayFilterAll", "Filter all programs");
     mFilterAll = new JRadioButton(msg);
 
-    msg = mLocalizer.msg("trayFilterNotMarked", "Filter programs, if not marked");
+    msg = LOCALIZER.msg("trayFilterNotMarked", "Filter programs, if not marked");
     checked = Settings.propTrayFilterNotMarked.getBoolean();
     mNoMarkedFiltering = new JRadioButton(msg, checked);
 
-    msg = mLocalizer.msg("trayFilterNot", "Don't filter programs");
+    msg = LOCALIZER.msg("trayFilterNot", "Don't filter programs");
     checked = Settings.propTrayFilterNot.getBoolean();
     mNoFiltering = new JRadioButton(msg, checked);
     
@@ -117,12 +118,12 @@ public class TrayBaseSettingsTab implements SettingsTab {
     filter.add(mNoFiltering);
 
     //create panel
-    builder.addSeparator(mLocalizer.msg("basics", "Basic settings"), cc.xyw(1,1,3));
+    builder.addSeparator(LOCALIZER.msg("basics", "Basic settings"), cc.xyw(1,1,3));
     builder.add(mTrayIsEnabled, cc.xy(2,3));
     builder.add(mTrayIsAnialiasing, cc.xy(2,4));
     builder.add(mMinimizeToTrayChb, cc.xy(2,5));
     
-    builder.addSeparator(mLocalizer.msg("filter", "Filter settings"), cc.xyw(1,10,3));
+    builder.addSeparator(LOCALIZER.msg("filter", "Filter settings"), cc.xyw(1,10,3));
     builder.add(mFilterAll, cc.xy(2,12));
     builder.add(mNoMarkedFiltering, cc.xy(2,13));
     builder.add(mNoFiltering, cc.xy(2,14));
@@ -170,7 +171,7 @@ public class TrayBaseSettingsTab implements SettingsTab {
   }
 
   public String getTitle() {
-    return mLocalizer.msg("title","Tray settings");
+    return LOCALIZER.msg("title","Tray settings");
   }
 
   protected static boolean isTrayEnabled() {

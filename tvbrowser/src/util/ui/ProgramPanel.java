@@ -73,6 +73,7 @@ import tvbrowser.extras.common.InternalPluginProxyList;
 import tvbrowser.extras.favoritesplugin.FavoritesPluginProxy;
 import tvbrowser.extras.favoritesplugin.core.Favorite;
 import tvbrowser.extras.favoritesplugin.dlgs.FavoriteTreeModel;
+import util.i18n.Localizer;
 import util.io.IOUtilities;
 import util.misc.StringPool;
 import util.program.ProgramUtilities;
@@ -91,7 +92,7 @@ public class ProgramPanel extends JComponent implements ChangeListener, PluginSt
   private static final Logger mLog = java.util.logging.Logger
       .getLogger(TextAreaIcon.class.getName());
 
-  private static final util.ui.Localizer mLocalizer = util.ui.Localizer
+  private static final Localizer LOCALIZER = Localizer
       .getLocalizerFor(ProgramPanel.class);
 
   private static final boolean USE_FULL_HEIGHT = true;
@@ -1341,7 +1342,7 @@ private static Font getDynamicFontSize(Font font, int offset) {
       }
     }
     if (buffer.length() > 0) {
-      buffer.insert(0, "<html><b>" + mLocalizer.msg("markedBy", "Marked by")
+      buffer.insert(0, "<html><b>" + LOCALIZER.msg("markedBy", "Marked by")
           + "</b><br/>");
       buffer.append("</html>");
       return buffer.toString();

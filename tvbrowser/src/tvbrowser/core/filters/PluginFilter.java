@@ -32,8 +32,8 @@ import devplugin.ProgramFilter;
 public class PluginFilter implements ProgramFilter {
   public static final String KEY = "[SHOW_MARKED_PROGRAMS]";
 
-  private static final util.ui.Localizer mLocalizer
-          = util.ui.Localizer.getLocalizerFor(PluginFilter.class);
+  private static final util.i18n.Localizer mLocalizer
+          = util.i18n.Localizer.getLocalizerFor(PluginFilter.class);
 
 
   public boolean accept(devplugin.Program prog) {

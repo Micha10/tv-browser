@@ -43,7 +43,7 @@ import util.ui.FontChooserPanel;
 public class FontsSettingsTab implements devplugin.SettingsTab {
 
   /** The localizer for this class. */
-  private static final util.ui.Localizer mLocalizer = util.ui.Localizer.getLocalizerFor(FontsSettingsTab.class);
+  private static final util.i18n.Localizer mLocalizer = util.i18n.Localizer.getLocalizerFor(FontsSettingsTab.class);
 
   private JCheckBox mUseUserDefindedFontsCB;
 

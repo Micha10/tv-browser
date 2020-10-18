@@ -43,7 +43,7 @@ import devplugin.SettingsTab;
  */
 public class SettingsTabProxy {
 
-  private static final Logger mLog = java.util.logging.Logger
+  private static final Logger LOG = java.util.logging.Logger
        .getLogger(SettingsTabProxy.class.getName());
 
 
@@ -57,7 +57,7 @@ public class SettingsTabProxy {
     try {
       return mSettingsTab.createSettingsPanel();
     }catch(Throwable t) {
-      mLog.log(Level.WARNING, "Could not get settings panel", t);
+      LOG.log(Level.WARNING, "Could not get settings panel", t);
       return null;
     }
   }
@@ -78,7 +78,7 @@ public class SettingsTabProxy {
       }
       return icon;
     }catch(Throwable t) {
-      mLog.log(Level.WARNING, "Could not get settings icon", t);
+      LOG.log(Level.WARNING, "Could not get settings icon", t);
       return null;
     }
   }
@@ -87,7 +87,7 @@ public class SettingsTabProxy {
     try {
       return mSettingsTab.getTitle();
     }catch(Throwable t) {
-      mLog.log(Level.WARNING, "Could not get settings panel title", t);
+      LOG.log(Level.WARNING, "Could not get settings panel title", t);
       return "";
     }
   }
@@ -98,7 +98,7 @@ public class SettingsTabProxy {
         ((CancelableSettingsTab)mSettingsTab).cancel();
       }
     }catch(Throwable t) {
-      mLog.log(Level.WARNING, "Could not inform about closing", t);
+      LOG.log(Level.WARNING, "Could not inform about closing", t);
     }
   }
 }

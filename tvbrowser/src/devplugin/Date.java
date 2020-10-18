@@ -32,7 +32,7 @@ import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
 import tvbrowser.core.Settings;
-import util.ui.Localizer;
+import util.i18n.Localizer;
 
 /**
  * the date of a program. it holds year, month and day.
@@ -602,6 +602,6 @@ public class Date implements Comparable<Date>
   }
 
   public static void resetLocalizer() {
-    LOCALIZER = util.ui.Localizer.getLocalizerFor(Date.class);
+    LOCALIZER = util.i18n.Localizer.getLocalizerFor(Date.class);
   }
 }

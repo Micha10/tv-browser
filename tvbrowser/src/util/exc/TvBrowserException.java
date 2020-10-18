@@ -26,7 +26,7 @@
 
 package util.exc;
 
-import util.ui.Localizer;
+import util.i18n.Localizer;
 
 /**
  * The base exception used within the TV-Browser. It supports

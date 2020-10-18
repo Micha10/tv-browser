@@ -49,8 +49,8 @@ import devplugin.ProgramFilter;
  */
 public class FilterButtons implements ActionListener {
     /** The localizer for this class. */
-    public static final util.ui.Localizer mLocalizer
-      = util.ui.Localizer.getLocalizerFor(FilterButtons.class);
+    public static final util.i18n.Localizer mLocalizer
+      = util.i18n.Localizer.getLocalizerFor(FilterButtons.class);
 
     /** Menu-Items */
     private JMenuItem mCreateFilterMI, mSendFilterMI;

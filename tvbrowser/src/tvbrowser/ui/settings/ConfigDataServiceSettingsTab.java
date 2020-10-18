@@ -43,8 +43,8 @@ public class ConfigDataServiceSettingsTab extends AbstractSettingsTab implements
   private TvDataServiceProxy mDataService;
   private SettingsPanel mSettingsPanel;
 
-  private static final util.ui.Localizer mLocalizer
-  = util.ui.Localizer.getLocalizerFor(ConfigDataServiceSettingsTab.class);
+  private static final util.i18n.Localizer mLocalizer
+  = util.i18n.Localizer.getLocalizerFor(ConfigDataServiceSettingsTab.class);
 
   public ConfigDataServiceSettingsTab(TvDataServiceProxy dataService) {
     mDataService=dataService;

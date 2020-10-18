@@ -66,7 +66,7 @@ import util.ui.CaretPositionCorrector;
 import util.ui.ColorButton;
 import util.ui.ImageIconEnhanced;
 import util.ui.ImageUtilities;
-import util.ui.Localizer;
+import util.i18n.Localizer;
 import util.ui.UiUtilities;
 import util.ui.WindowClosingIf;
 
@@ -78,7 +78,7 @@ import util.ui.WindowClosingIf;
  */
 public class ChannelConfigDlg extends JDialog implements ActionListener, WindowClosingIf {
   /** Localizer */
-  static final util.ui.Localizer mLocalizer = util.ui.Localizer.getLocalizerFor(ChannelConfigDlg.class);
+  static final util.i18n.Localizer mLocalizer = util.i18n.Localizer.getLocalizerFor(ChannelConfigDlg.class);
   /** Current Channel */
   private Channel mChannel;
   /** Close/OK Buttons */

@@ -2744,7 +2744,11 @@ tvbrowser/src/util/exc/exc_hr.properties -text svneol=unset#text/plain
 tvbrowser/src/util/exc/exc_it.properties -text
 tvbrowser/src/util/exc/exc_pl.properties -text svneol=unset#text/plain
 tvbrowser/src/util/exc/exc_sk.properties -text
+tvbrowser/src/util/i18n/Localizer.java -text svneol=unset#text/plain
+tvbrowser/src/util/i18n/PooledLocalizer.java -text svneol=unset#text/plain
 tvbrowser/src/util/i18n/WritingConversion.java -text
+tvbrowser/src/util/i18n/i18n.properties -text svneol=unset#text/plain
+tvbrowser/src/util/i18n/i18n_de.properties -text svneol=unset#text/plain
 tvbrowser/src/util/io/BufferedRandomAccessFile.java -text
 tvbrowser/src/util/io/DownloadJob.java -text
 tvbrowser/src/util/io/NtpMessage.java -text

@@ -53,8 +53,8 @@ import util.paramhandler.ParamParser;
 
 public class ReminderTimerListener {
 
-  private static final util.ui.Localizer mLocalizer
-      = util.ui.Localizer.getLocalizerFor(ReminderTimerListener.class );
+  private static final util.i18n.Localizer mLocalizer
+      = util.i18n.Localizer.getLocalizerFor(ReminderTimerListener.class );
 
   private static final Logger mLog = Logger.getLogger(ReminderTimerListener.class.getName());
 

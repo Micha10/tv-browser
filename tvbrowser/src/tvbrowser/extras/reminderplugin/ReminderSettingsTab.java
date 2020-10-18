@@ -79,8 +79,8 @@ import util.ui.UiUtilities;
 public class ReminderSettingsTab implements SettingsTab {
 
   /** The localizer for this class. */
-  private static final util.ui.Localizer mLocalizer
-      = util.ui.Localizer.getLocalizerFor(ReminderSettingsTab.class);
+  private static final util.i18n.Localizer mLocalizer
+      = util.i18n.Localizer.getLocalizerFor(ReminderSettingsTab.class);
 
   private Properties mSettings;
 

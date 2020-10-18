@@ -73,7 +73,7 @@ import util.io.stream.ObjectOutputStreamProcessor;
 import util.io.stream.StreamUtilities;
 import util.settings.PluginPictureSettings;
 import util.settings.ProgramPanelSettings;
-import util.ui.Localizer;
+import util.i18n.Localizer;
 import util.ui.SearchForm;
 import util.ui.SearchFormSettings;
 import util.ui.SearchHelper;
@@ -89,8 +89,8 @@ import util.ui.persona.Persona;
  */
 public class SearchField extends JPanel {
   /** The localizer of this class. */
-  private static final util.ui.Localizer mLocalizer
-    = util.ui.Localizer.getLocalizerFor(SearchField.class);
+  private static final util.i18n.Localizer mLocalizer
+    = util.i18n.Localizer.getLocalizerFor(SearchField.class);
   /** TextField */
   private SearchTextField mText;
   /** Settings for the Search */

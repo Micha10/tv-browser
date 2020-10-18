@@ -54,7 +54,7 @@ import com.jgoodies.forms.layout.FormLayout;
  */
 public class SettingsWaitingDialog extends JDialog {
 
-  private static final util.ui.Localizer mLocalizer = util.ui.Localizer
+  private static final util.i18n.Localizer mLocalizer = util.i18n.Localizer
       .getLocalizerFor(SettingsWaitingDialog.class);
 
   public SettingsWaitingDialog(Window dialog) {

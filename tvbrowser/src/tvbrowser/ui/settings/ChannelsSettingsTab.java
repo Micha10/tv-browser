@@ -118,7 +118,7 @@ import util.ui.DragAndDropMouseListener;
 import util.ui.LinkButton;
 import util.ui.ListDragAndDropHandler;
 import util.ui.ListDropAction;
-import util.ui.Localizer;
+import util.i18n.Localizer;
 import util.ui.TVBrowserIcons;
 import util.ui.UiUtilities;
 import util.ui.customizableitems.SortableItemList;
@@ -146,7 +146,7 @@ public class ChannelsSettingsTab implements SettingsTab, ListDropAction<Object> 
   /**
    * Translation
    */
-  private static final util.ui.Localizer mLocalizer = util.ui.Localizer
+  private static final util.i18n.Localizer LOCALIZER = util.i18n.Localizer
       .getLocalizerFor(ChannelsSettingsTab.class);
 
   /**
@@ -253,12 +253,12 @@ public class ChannelsSettingsTab implements SettingsTab, ListDropAction<Object> 
 
     mAvailableSeparator = DefaultComponentFactory.getInstance()
         .createSeparator(
-            mLocalizer.msg("availableChannels", "Available channels") + ":");
+            LOCALIZER.msg("availableChannels", "Available channels") + ":");
     mAvailableSeparator.setBorder(BorderFactory.createEmptyBorder(5, 0, 5, 5));
 
     mSubscribedSeparator = DefaultComponentFactory.getInstance()
         .createSeparator(
-            mLocalizer.msg("subscribedChannels", "Subscribed channels") + ":");
+            LOCALIZER.msg("subscribedChannels", "Subscribed channels") + ":");
     mSubscribedSeparator.setBorder(BorderFactory.createEmptyBorder(5, 0, 5, 5));
 
     northPn.add(mAvailableSeparator, BorderLayout.NORTH);
@@ -286,7 +286,7 @@ public class ChannelsSettingsTab implements SettingsTab, ListDropAction<Object> 
     });
     
     mButtonAddSeparator = new LineButton();
-    mButtonAddSeparator.setToolTipText(mLocalizer.msg("addSeparator", "Add separator"));
+    mButtonAddSeparator.setToolTipText(LOCALIZER.msg("addSeparator", "Add separator"));
     mButtonAddSeparator.addActionListener(e -> {
       int index = mSubscribedChannels.getSelectedIndex()+1;
       Object test = mSubscribedChannels.getSelectedValue();
@@ -310,7 +310,7 @@ public class ChannelsSettingsTab implements SettingsTab, ListDropAction<Object> 
         });
     
     mButtonDeleteSeparator = new JButton(TVBrowserIcons.delete(TVBrowserIcons.SIZE_LARGE));
-    mButtonDeleteSeparator.setToolTipText(mLocalizer.msg("deleteSeparator", "Delete selected separator"));
+    mButtonDeleteSeparator.setToolTipText(LOCALIZER.msg("deleteSeparator", "Delete selected separator"));
     mButtonDeleteSeparator.addActionListener(e -> {
       int index = mSubscribedChannels.getSelectedIndex();
       
@@ -350,7 +350,7 @@ public class ChannelsSettingsTab implements SettingsTab, ListDropAction<Object> 
     
     restoreForPopup();
     
-    mImExportChannels = new JButton(mLocalizer.msg("imExportChannels", "Export/import channels"));
+    mImExportChannels = new JButton(LOCALIZER.msg("imExportChannels", "Export/import channels"));
     mImExportChannels.addActionListener(e -> {
       showImExportSelection();
     });
@@ -362,14 +362,14 @@ public class ChannelsSettingsTab implements SettingsTab, ListDropAction<Object> 
     listBoxPnRight.add(new JScrollPane(mSubscribedChannels),
         BorderLayout.CENTER);
 
-    final JButton setSortNumbers = new JButton(mLocalizer.msg("setSortNumbers", "Set sort numbers"));
+    final JButton setSortNumbers = new JButton(LOCALIZER.msg("setSortNumbers", "Set sort numbers"));
     setSortNumbers.setEnabled(false);
     
     setSortNumbers.addActionListener(e -> {
       setSortNumbers();
     });
     
-    final JButton configureChannels = new JButton(mLocalizer.msg(
+    final JButton configureChannels = new JButton(LOCALIZER.msg(
         "configSelectedChannels", "Configure selected channels"));
     configureChannels.setEnabled(false);
 
@@ -437,11 +437,11 @@ public class ChannelsSettingsTab implements SettingsTab, ListDropAction<Object> 
     result.add(panel, BorderLayout.CENTER);
 
     LinkButton urlLabel = new LinkButton(
-        mLocalizer
+        LOCALIZER
             .msg(
                 "addMoreChannels",
                 "You want to add your own channels? Click here!"),
-        mLocalizer.msg("addMoreChannelsUrl",
+        LOCALIZER.msg("addMoreChannelsUrl",
             "http://enwiki.tvbrowser.org/index.php/Available_stations"));
 
     JPanel buttonsPanel = new JPanel(new BorderLayout());
@@ -451,7 +451,7 @@ public class ChannelsSettingsTab implements SettingsTab, ListDropAction<Object> 
 
     result.add(buttonsPanel, BorderLayout.SOUTH);
 
-    JButton refreshList = new JButton(mLocalizer.msg("updateChannelList",
+    JButton refreshList = new JButton(LOCALIZER.msg("updateChannelList",
         "Update channel list"), TVBrowserIcons.refresh(TVBrowserIcons.SIZE_SMALL));
 
     refreshList.addActionListener(e -> {
@@ -489,8 +489,8 @@ public class ChannelsSettingsTab implements SettingsTab, ListDropAction<Object> 
         if (!mInitChannelsAsked && mChannelListModel.getAvailableChannels().length == 0){
           mInitChannelsAsked = true;
           int ret = JOptionPane.showConfirmDialog(result,
-              mLocalizer.msg("loadChannelsQuestion", "Should I download the channel list?"),
-              mLocalizer.msg("loadChannelsTitle", "No channels found"),
+              LOCALIZER.msg("loadChannelsQuestion", "Should I download the channel list?"),
+              LOCALIZER.msg("loadChannelsTitle", "No channels found"),
               JOptionPane.YES_NO_OPTION);
           if (ret == JOptionPane.YES_OPTION) {
             refreshChannelList();
@@ -526,7 +526,7 @@ public class ChannelsSettingsTab implements SettingsTab, ListDropAction<Object> 
       plugin = PluginProxyManager.getInstance().getPluginForId("java.androidsync.AndroidSync");
       
       if(plugin == null) {
-        if(JOptionPane.showConfirmDialog(null, mLocalizer.msg("syncInstallPluginMsg","You can synchronize your channels with the AndroidSync plugin, therefor it needs to be installed.\n\nDo you want to install the AndroidSync plugin now and synchronize the channels?"), mLocalizer.msg("syncInstallPluginTitle","Install AndroidSync plugin?"), JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE) == JOptionPane.OK_OPTION) {
+        if(JOptionPane.showConfirmDialog(null, LOCALIZER.msg("syncInstallPluginMsg","You can synchronize your channels with the AndroidSync plugin, therefor it needs to be installed.\n\nDo you want to install the AndroidSync plugin now and synchronize the channels?"), LOCALIZER.msg("syncInstallPluginTitle","Install AndroidSync plugin?"), JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE) == JOptionPane.OK_OPTION) {
           File target = new File(Settings.propPluginsDirectory.getString(),"AndroidSync.jar");
           boolean error = false;
           
@@ -541,7 +541,7 @@ public class ChannelsSettingsTab implements SettingsTab, ListDropAction<Object> 
             loadSyncCommunication();
             
             if(!synchronizeChannels()) {
-              JOptionPane.showMessageDialog(null, mLocalizer.msg("syncNotPossibleMsg", "Channels could not be synchronized.\n\nPlease select the channels manually"), mLocalizer.msg("syncNotPossibleTitle", "Channels were not synchronized"), JOptionPane.ERROR_MESSAGE);
+              JOptionPane.showMessageDialog(null, LOCALIZER.msg("syncNotPossibleMsg", "Channels could not be synchronized.\n\nPlease select the channels manually"), LOCALIZER.msg("syncNotPossibleTitle", "Channels were not synchronized"), JOptionPane.ERROR_MESSAGE);
             }
           } catch (MalformedURLException e) {
             error = true;
@@ -552,21 +552,21 @@ public class ChannelsSettingsTab implements SettingsTab, ListDropAction<Object> 
           }
           
           if(error) {
-            JOptionPane.showMessageDialog(null, mLocalizer.msg("syncNotInstalledMsg", "Plugin could not be installed.\n\nPlease select the channels manually"), mLocalizer.msg("syncNotInstalledTitle", "AndroidSync could not be installed"), JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, LOCALIZER.msg("syncNotInstalledMsg", "Plugin could not be installed.\n\nPlease select the channels manually"), LOCALIZER.msg("syncNotInstalledTitle", "AndroidSync could not be installed"), JOptionPane.ERROR_MESSAGE);
           }
         }
       }
-      else if(!plugin.isActivated() && JOptionPane.showConfirmDialog(null, mLocalizer.msg("syncActivateMsg", "You can synchronize your channels with the AndroidSync plugin, therefor it needs to be activated.\n\nDo you want to activate the AndroidSync plugin now?"), mLocalizer.msg("syncActivateTitle", "Activate AndroidSync?"), JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE) == JOptionPane.OK_OPTION) {
+      else if(!plugin.isActivated() && JOptionPane.showConfirmDialog(null, LOCALIZER.msg("syncActivateMsg", "You can synchronize your channels with the AndroidSync plugin, therefor it needs to be activated.\n\nDo you want to activate the AndroidSync plugin now?"), LOCALIZER.msg("syncActivateTitle", "Activate AndroidSync?"), JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE) == JOptionPane.OK_OPTION) {
         try {
           PluginProxyManager.getInstance().activatePlugin(plugin);
           
           loadSyncCommunication();
           
           if(!synchronizeChannels()) {
-            JOptionPane.showMessageDialog(null, mLocalizer.msg("syncNotPossibleMsg", "Channels could not be synchronized.\n\nPlease select the channels manually"), mLocalizer.msg("syncNotPossibleTitle", "Channels were not synchronized"), JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, LOCALIZER.msg("syncNotPossibleMsg", "Channels could not be synchronized.\n\nPlease select the channels manually"), LOCALIZER.msg("syncNotPossibleTitle", "Channels were not synchronized"), JOptionPane.ERROR_MESSAGE);
           }
         } catch (TvBrowserException e) {
-          JOptionPane.showMessageDialog(null, mLocalizer.msg("syncNotActivatedMsg", "Plugin could not be activated.\n\nPlease select the channels manually"), mLocalizer.msg("syncNotActivatedTitle", "AndroidSync could not be activated"), JOptionPane.ERROR_MESSAGE);
+          JOptionPane.showMessageDialog(null, LOCALIZER.msg("syncNotActivatedMsg", "Plugin could not be activated.\n\nPlease select the channels manually"), LOCALIZER.msg("syncNotActivatedTitle", "AndroidSync could not be activated"), JOptionPane.ERROR_MESSAGE);
         }
       }
     }
@@ -590,7 +590,7 @@ public class ChannelsSettingsTab implements SettingsTab, ListDropAction<Object> 
       });
       
       if(mSyncCommunication != null) {
-        JMenuItem item = new JMenuItem(mLocalizer.msg("synchronize", "Synchronize channels with AndroidSync"));
+        JMenuItem item = new JMenuItem(LOCALIZER.msg("synchronize", "Synchronize channels with AndroidSync"));
         item.addActionListener(e -> {
           synchronizeChannels();
         });
@@ -599,14 +599,14 @@ public class ChannelsSettingsTab implements SettingsTab, ListDropAction<Object> 
         imExportChannelsPopup.addSeparator();
       }
       
-      JMenuItem item = new JMenuItem(mLocalizer.msg("exportChannelsBtn", "Export channels to file"));
+      JMenuItem item = new JMenuItem(LOCALIZER.msg("exportChannelsBtn", "Export channels to file"));
       item.addActionListener(e -> {
         exportChannelsToFile();
       });
       
       imExportChannelsPopup.add(item);
       
-      item = new JMenuItem(mLocalizer.msg("importChannelsBtn", "Import channels from file"));
+      item = new JMenuItem(LOCALIZER.msg("importChannelsBtn", "Import channels from file"));
       item.addActionListener(e -> {
         importChannelsFromFile();
       });
@@ -618,11 +618,11 @@ public class ChannelsSettingsTab implements SettingsTab, ListDropAction<Object> 
   }
   
   private void importChannelsFromFile() {
-    FileNameExtensionFilter filter = new FileNameExtensionFilter(mLocalizer.msg("textFileType", "Text files"), "txt");
+    FileNameExtensionFilter filter = new FileNameExtensionFilter(LOCALIZER.msg("textFileType", "Text files"), "txt");
     
     JFileChooser chooser = new JFileChooser();
     chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-    chooser.setDialogTitle(mLocalizer.msg("exportChannels", "Export channels"));
+    chooser.setDialogTitle(LOCALIZER.msg("exportChannels", "Export channels"));
     chooser.addChoosableFileFilter(filter);
     chooser.setFileFilter(filter);
     chooser.setSelectedFile(new File(IOUtilities.translateRelativePath(Settings.propLastChannelExportFile.getString())));
@@ -655,18 +655,18 @@ public class ChannelsSettingsTab implements SettingsTab, ListDropAction<Object> 
         }
         
         if(!channelList.isEmpty() && importChannels(channelList.toArray(new String[channelList.size()]))) {
-          JOptionPane.showMessageDialog(null, mLocalizer.msg("synched", "Channels were successfully synchronized."), mLocalizer.msg("importSuccess", "Channels were imported successfully."), JOptionPane.INFORMATION_MESSAGE);
+          JOptionPane.showMessageDialog(null, LOCALIZER.msg("synched", "Channels were successfully synchronized."), LOCALIZER.msg("importSuccess", "Channels were imported successfully."), JOptionPane.INFORMATION_MESSAGE);
         }
       }
     }
   }
   
   private void exportChannelsToFile() {
-    FileNameExtensionFilter filter = new FileNameExtensionFilter(mLocalizer.msg("textFileType", "Text files"), "txt");
+    FileNameExtensionFilter filter = new FileNameExtensionFilter(LOCALIZER.msg("textFileType", "Text files"), "txt");
     
     JFileChooser chooser = new JFileChooser();
     chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-    chooser.setDialogTitle(mLocalizer.msg("exportChannels", "Export channels"));
+    chooser.setDialogTitle(LOCALIZER.msg("exportChannels", "Export channels"));
     chooser.addChoosableFileFilter(filter);
     chooser.setFileFilter(filter);
     chooser.setSelectedFile(new File(IOUtilities.translateRelativePath(Settings.propLastChannelExportFile.getString())));
@@ -681,7 +681,7 @@ public class ChannelsSettingsTab implements SettingsTab, ListDropAction<Object> 
       
       boolean save = true;
       
-      if(file.isFile() && JOptionPane.showConfirmDialog(UiUtilities.getLastModalChildOf(MainFrame.getInstance()), mLocalizer.msg("exportOverrideMsg", "The file already exists.\nDo you want to override it?"), mLocalizer.msg("exportOverrideTitle", "Override file?"), JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) != JOptionPane.YES_OPTION) {
+      if(file.isFile() && JOptionPane.showConfirmDialog(UiUtilities.getLastModalChildOf(MainFrame.getInstance()), LOCALIZER.msg("exportOverrideMsg", "The file already exists.\nDo you want to override it?"), LOCALIZER.msg("exportOverrideTitle", "Override file?"), JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) != JOptionPane.YES_OPTION) {
         save = false;
       }
       
@@ -803,7 +803,7 @@ public class ChannelsSettingsTab implements SettingsTab, ListDropAction<Object> 
             methodResult = importChannels((String[])result);
             
             if(methodResult) {
-              JOptionPane.showMessageDialog(null, mLocalizer.msg("synched", "Channels were successfully synchronized."), mLocalizer.msg("syncSuccess", "Synchronization success"), JOptionPane.INFORMATION_MESSAGE);
+              JOptionPane.showMessageDialog(null, LOCALIZER.msg("synched", "Channels were successfully synchronized."), LOCALIZER.msg("syncSuccess", "Synchronization success"), JOptionPane.INFORMATION_MESSAGE);
             }
           }
         } catch (SecurityException e1) {
@@ -836,7 +836,7 @@ public class ChannelsSettingsTab implements SettingsTab, ListDropAction<Object> 
 
     JComponent filterSeparator = DefaultComponentFactory.getInstance()
         .createSeparator(
-            mLocalizer.msg("channelFilter", "Channel Filter") + ":");
+            LOCALIZER.msg("channelFilter", "Channel Filter") + ":");
     filterSeparator.setBorder(BorderFactory.createEmptyBorder(0, 0, 5, 0));
 
     filter.add(filterSeparator, cc.xy(1, 1));
@@ -846,20 +846,20 @@ public class ChannelsSettingsTab implements SettingsTab, ListDropAction<Object> 
         "pref, 3dlu, pref, pref"));
 
     mCountryCB = new JComboBox<>();
-    filterPanel.add(new JLabel(mLocalizer.msg("country", "Country") + ":"), cc
+    filterPanel.add(new JLabel(LOCALIZER.msg("country", "Country") + ":"), cc
         .xy(1, 1));
     filterPanel.add(mCountryCB, cc.xyw(3, 1, 2));
 
     mCategoryCB = new JComboBox<>();
     mCategoryCB.setMaximumRowCount(20);
 
-    filterPanel.add(new JLabel(mLocalizer.msg("category", "Category") + ":"),
+    filterPanel.add(new JLabel(LOCALIZER.msg("category", "Category") + ":"),
         cc.xy(6, 1));
     filterPanel.add(mCategoryCB, cc.xyw(8, 1, 2));
 
     JPanel namePanel = new JPanel(new BorderLayout());
 
-    namePanel.add(new JLabel(mLocalizer.msg("filterText",
+    namePanel.add(new JLabel(LOCALIZER.msg("filterText",
         "With the following Text")
         + ": "), BorderLayout.WEST);
 
@@ -872,12 +872,12 @@ public class ChannelsSettingsTab implements SettingsTab, ListDropAction<Object> 
     mPluginCB.setMaximumRowCount(20);
 
     if (mShowPlugins) {
-      filterPanel.add(new JLabel(mLocalizer.msg("plugin", "Plugin") + ":"),
+      filterPanel.add(new JLabel(LOCALIZER.msg("plugin", "Plugin") + ":"),
         cc.xy(6, 3));
       filterPanel.add(mPluginCB, cc.xyw(8, 3, 2));
     }
     
-    JButton reset = new JButton(mLocalizer.msg("reset", "Reset"));
+    JButton reset = new JButton(LOCALIZER.msg("reset", "Reset"));
 
     reset.addActionListener(e -> {
       mChannelName.setText("");
@@ -957,10 +957,10 @@ public class ChannelsSettingsTab implements SettingsTab, ListDropAction<Object> 
     Channel[] allChannels = ChannelList.getAvailableChannels();
 
     mCategoryCB.removeAllItems();
-    mCategoryCB.addItem(new FilterItem(mLocalizer.msg("allCategories",
+    mCategoryCB.addItem(new FilterItem(LOCALIZER.msg("allCategories",
         "All Categories"), null));
 
-    mCategoryCB.addItem(new FilterItem(mLocalizer.msg("allExceptEventCinema",
+    mCategoryCB.addItem(new FilterItem(LOCALIZER.msg("allExceptEventCinema",
         "All except Event/Cinema"), new Integer[] { Channel.CATEGORY_TV,
         Channel.CATEGORY_RADIO, Channel.CATEGORY_NONE }));
 
@@ -968,7 +968,7 @@ public class ChannelsSettingsTab implements SettingsTab, ListDropAction<Object> 
       addCategoryFilter(Channel.CATEGORY_TV);
 
       if (channelListContains(allChannels, Channel.CATEGORY_TV)) {
-        mCategoryCB.addItem(new FilterItem(mLocalizer.msg("categoryNotSpecial",
+        mCategoryCB.addItem(new FilterItem(LOCALIZER.msg("categoryNotSpecial",
             "TV"), new Integer[] { Channel.CATEGORY_TV,
           Channel.CATEGORY_SPECIAL_MUSIC * -1, Channel.CATEGORY_SPECIAL_SPORT * -1,
           Channel.CATEGORY_SPECIAL_NEWS * -1, Channel.CATEGORY_SPECIAL_OTHER * -1 }));
@@ -989,7 +989,7 @@ public class ChannelsSettingsTab implements SettingsTab, ListDropAction<Object> 
         addCategoryFilter(Channel.CATEGORY_SPECIAL_OTHER);
       }
       if (channelListContains(allChannels, Channel.CATEGORY_TV)) {
-        mCategoryCB.addItem(new FilterItem(mLocalizer.msg("categoryFreeTv",
+        mCategoryCB.addItem(new FilterItem(LOCALIZER.msg("categoryFreeTv",
             "TV"), new Integer[] { Channel.CATEGORY_TV, Channel.CATEGORY_PAY_TV * -1}));
       }
       if (channelListContains(allChannels, Channel.CATEGORY_PAY_TV)) {
@@ -1030,7 +1030,7 @@ public class ChannelsSettingsTab implements SettingsTab, ListDropAction<Object> 
     }
 
     mCountryCB.removeAllItems();
-    mCountryCB.addItem(new FilterItem(mLocalizer.msg("allCountries",
+    mCountryCB.addItem(new FilterItem(LOCALIZER.msg("allCountries",
         "All Countries"), null));
     ArrayList<FilterItem> items = new ArrayList<FilterItem>(countries.size());
     for (String country : countries) {
@@ -1056,7 +1056,7 @@ public class ChannelsSettingsTab implements SettingsTab, ListDropAction<Object> 
     
     mPluginCB.removeAllItems();
         
-    mPluginCB.addItem(new FilterItem(mLocalizer.msg("allPlugins",
+    mPluginCB.addItem(new FilterItem(LOCALIZER.msg("allPlugins",
     "All Plugins"), null));
     items = new ArrayList<FilterItem>();
     for(TvDataServiceProxy dataService : TvDataServiceProxyManager.getInstance().getDataServices()) {
@@ -1325,7 +1325,7 @@ public class ChannelsSettingsTab implements SettingsTab, ListDropAction<Object> 
   }
 
   private void updateChannelNumbers() {
-    String text = mLocalizer.msg("channelCount", "subscribed to {0} of {1} channels", mSubscribedChannels.getModel().getSize(), mAllChannels.getModel().getSize());
+    String text = LOCALIZER.msg("channelCount", "subscribed to {0} of {1} channels", mSubscribedChannels.getModel().getSize(), mAllChannels.getModel().getSize());
     mAvailableSeparator.setToolTipText(text);
     mSubscribedSeparator.setToolTipText(text);
   }
@@ -1398,7 +1398,7 @@ public class ChannelsSettingsTab implements SettingsTab, ListDropAction<Object> 
     mRightButton.setEnabled(!newModel.isEmpty());
     mAllChannels.setEnabled(!newModel.isEmpty());
     if (mAllChannels.getModel().getSize() == 0) {
-      ((DefaultListModel<Object>) mAllChannels.getModel()).addElement(mLocalizer.msg(
+      ((DefaultListModel<Object>) mAllChannels.getModel()).addElement(LOCALIZER.msg(
           "noChannelFound", "No Channel Found"));
     }
     else {
@@ -1435,8 +1435,8 @@ public class ChannelsSettingsTab implements SettingsTab, ListDropAction<Object> 
   private void refreshChannelList() {
     if (!NetworkUtilities.checkConnection()) {
       JOptionPane.showMessageDialog(null,
-          mLocalizer.msg("noConnection.message", "No connection to the Internet established.\n\nThe channel list can only be updated if a connection\nto the Internet is available."),
-          mLocalizer.msg("noConnection.title", "No connection!"),
+          LOCALIZER.msg("noConnection.message", "No connection to the Internet established.\n\nThe channel list can only be updated if a connection\nto the Internet is available."),
+          LOCALIZER.msg("noConnection.title", "No connection!"),
           JOptionPane.ERROR_MESSAGE);
       return;
     }
@@ -1490,9 +1490,9 @@ public class ChannelsSettingsTab implements SettingsTab, ListDropAction<Object> 
     
     JSpinner start = new JSpinner(new SpinnerNumberModel(smallest, 1, 10000, 1));
     
-    Object[] message = new Object[] {mLocalizer.msg("numberChannels", "Create channel numbers (up), start with:"),start};
+    Object[] message = new Object[] {LOCALIZER.msg("numberChannels", "Create channel numbers (up), start with:"),start};
     
-    if(JOptionPane.showConfirmDialog(UiUtilities.getLastModalChildOf(MainFrame.getInstance()), message, mLocalizer.msg("setSortNumbers", "Set sort numbers"), JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE) == JOptionPane.OK_OPTION) {
+    if(JOptionPane.showConfirmDialog(UiUtilities.getLastModalChildOf(MainFrame.getInstance()), message, LOCALIZER.msg("setSortNumbers", "Set sort numbers"), JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE) == JOptionPane.OK_OPTION) {
       List<Object> list = mSubscribedChannels.getSelectedValuesList();
       
       int value = (Integer)start.getValue();
@@ -1579,11 +1579,11 @@ public class ChannelsSettingsTab implements SettingsTab, ListDropAction<Object> 
           .showOptionDialog(
               "missingIcon",
               MainFrame.getInstance(),
-              mLocalizer
+              LOCALIZER
                   .msg(
                       "noIconAvailable.message",
                       "You have added a channel without channel icon. Due to copyright reasons we cannot provide icons for each channel.\nFor better visual differentiation you can add your icon to the channel using the right mouse menu in the channel list."),
-              mLocalizer.msg("noIconAvailable.title", "No channel icon"));
+              LOCALIZER.msg("noIconAvailable.title", "No channel icon"));
     }
   }
 

@@ -72,7 +72,7 @@ import util.exc.TvBrowserException;
 import util.io.IOUtilities;
 import util.io.stream.ObjectOutputStreamProcessor;
 import util.io.stream.StreamUtilities;
-import util.ui.Localizer;
+import util.i18n.Localizer;
 import util.ui.TVBrowserIcons;
 import util.ui.UiUtilities;
 
@@ -84,7 +84,7 @@ import util.ui.UiUtilities;
 public class JavaPluginProxy extends AbstractPluginProxy {
 
   /** The logger for this class */
-  private static final Logger mLog
+  private static final Logger LOG
     = Logger.getLogger(JavaPluginProxy.class.getName());
 
   /** The plugin itself. */
@@ -198,7 +198,7 @@ public class JavaPluginProxy extends AbstractPluginProxy {
           try {
             in = new ObjectInputStream(new BufferedInputStream(new FileInputStream(datFileBackup), 0x4000));
             mPlugin.readData(in);
-            mLog.severe("Date file '" + datFile.getAbsolutePath() + "' could not be read. Read old file instead: '" + datFileBackup.getAbsolutePath() + "'.");
+            LOG.severe("Date file '" + datFile.getAbsolutePath() + "' could not be read. Read old file instead: '" + datFileBackup.getAbsolutePath() + "'.");
           }catch(Throwable thr1) {
             throw new TvBrowserException(getClass(), "error.3",
                 "Loading data for plugin {0} failed.\n({1})",
@@ -256,7 +256,7 @@ public class JavaPluginProxy extends AbstractPluginProxy {
    */
   protected void doSaveSettings(File userDirectory, boolean log) throws TvBrowserException {
     if(log) {
-      mLog.info("Storing plugin settings for " + getId() + "...");
+      LOG.info("Storing plugin settings for " + getId() + "...");
     }
 
     // save the plugin data in a temp file
@@ -408,12 +408,12 @@ public class JavaPluginProxy extends AbstractPluginProxy {
         Action action = actMenu.getAction();
         if (action != null && !(action instanceof ContextMenuAction)) {
           if (action.getValue(Action.SMALL_ICON) == null) {
-            mLog.warning("Small icon missing for button action "
+            LOG.warning("Small icon missing for button action "
                 + action.getValue(Action.NAME));
             action.putValue(Action.SMALL_ICON, TVBrowserIcons.warning(TVBrowserIcons.SIZE_SMALL));
           }
           if (action.getValue(Plugin.BIG_ICON) == null) {
-            mLog.warning("Big icon missing for button action "
+            LOG.warning("Big icon missing for button action "
                 + action.getValue(Action.NAME));
             action.putValue(Plugin.BIG_ICON, TVBrowserIcons.warning(TVBrowserIcons.SIZE_LARGE));
           }

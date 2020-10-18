@@ -35,6 +35,7 @@ import javax.swing.JCheckBox;
 import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JTextField;
+import util.i18n.Localizer;
 
 /**
  * This class provides a new JComponent containing three components: JCheckBox,
@@ -44,8 +45,8 @@ import javax.swing.JTextField;
  */
 public class FileCheckBox extends JComponent {
 
-  private static final util.ui.Localizer mLocalizer
-    = util.ui.Localizer.getLocalizerFor(FileCheckBox.class);
+  private static final Localizer LOCALIZER
+    = Localizer.getLocalizerFor(FileCheckBox.class);
 
   protected String mTitle;
   protected JCheckBox mCheckbox;
@@ -71,7 +72,7 @@ public class FileCheckBox extends JComponent {
       mCheckbox.setPreferredSize(new Dimension(tab,(int)dim.getHeight()));
     }
 
-    mChoosebtn=new JButton(mLocalizer.ellipsisMsg("change", "Change"));
+    mChoosebtn=new JButton(LOCALIZER.ellipsisMsg("change", "Change"));
 
     add(mCheckbox,BorderLayout.WEST);
     add(mTextfield,BorderLayout.CENTER);

@@ -67,6 +67,7 @@ import tvbrowser.extras.searchplugin.SearchDialog;
 import tvbrowser.ui.mainframe.MainFrame;
 import util.exc.ErrorHandler;
 import util.exc.TvBrowserException;
+import util.i18n.Localizer;
 import util.settings.PluginPictureSettings;
 import util.settings.ProgramPanelSettings;
 
@@ -79,7 +80,7 @@ import util.settings.ProgramPanelSettings;
  */
 public class SearchHelper {
   /** The localizer of this class. */
-  private static final util.ui.Localizer mLocalizer = util.ui.Localizer.getLocalizerFor(SearchHelper.class);
+  private static final Localizer LOCALIZER = Localizer.getLocalizerFor(SearchHelper.class);
   /** Instance of the Helper */
   private static SearchHelper mInstance;
 
@@ -181,7 +182,7 @@ public class SearchHelper {
    */
   private void doSearch(final Component comp,final SearchFormSettings searcherSettings, final ProgramPanelSettings pictureSettings, final boolean showDialog) {
     if(showDialog) {
-      mDialog = createHitsDialog(comp, new Program[0], mLocalizer.msg("search","Search"), searcherSettings, pictureSettings);
+      mDialog = createHitsDialog(comp, new Program[0], LOCALIZER.msg("search","Search"), searcherSettings, pictureSettings);
     }
 
     new Thread((Runnable) () -> {
@@ -194,7 +195,7 @@ public class SearchHelper {
         ProgressMonitor progressMonitor = null;
         if (mProgressMonitor == null && !TvDataUpdater.getInstance().isDownloading()) {
           progressMonitor = MainFrame.getInstance().getStatusBar().createProgressMonitor();
-          progressMonitor.setMessage(mLocalizer.msg("searching","Searching"));
+          progressMonitor.setMessage(LOCALIZER.msg("searching","Searching"));
         }
 
         Program[] programArr = mSearcher.search(searcherSettings.getFieldTypes(), startDate, searcherSettings
@@ -203,7 +204,7 @@ public class SearchHelper {
         comp.setCursor(cursor);
         if (programArr.length == 0) {
           UIThreadRunner.invokeLater(() -> {
-            String msg = mLocalizer.msg("nothingFound", "No programs found with {0}!",
+            String msg = LOCALIZER.msg("nothingFound", "No programs found with {0}!",
                 searcherSettings.getSearchText());
             JOptionPane.showMessageDialog(UiUtilities.getLastModalChildOf(MainFrame.getInstance()), msg);
 
@@ -216,7 +217,7 @@ public class SearchHelper {
           mFilterSelection.setEnabled(true);
           
           if(!showDialog) {
-            String title = mLocalizer.msg("hitsTitle", "Programs with {0}", searcherSettings.getSearchText());
+            String title = LOCALIZER.msg("hitsTitle", "Programs with {0}", searcherSettings.getSearchText());
 
             createHitsDialog(comp, programArr, title, searcherSettings, pictureSettings).setVisible(true);
            
@@ -394,7 +395,7 @@ public class SearchHelper {
     Icon icon = TVBrowserIcons.copy(TVBrowserIcons.SIZE_SMALL);
     final JButton sendBt = new JButton(icon);
     sendBt.setEnabled(false);
-    sendBt.setToolTipText(mLocalizer.msg("send", "Send Programs to another Plugin"));
+    sendBt.setToolTipText(LOCALIZER.msg("send", "Send Programs to another Plugin"));
     sendBt.addActionListener(evt -> {
       Program[] program = mProgramList.getSelectedPrograms();
 
@@ -430,7 +431,7 @@ public class SearchHelper {
     if (!(comp instanceof SearchDialog)) {
       icon = TVBrowserIcons.edit(TVBrowserIcons.SIZE_SMALL);
       JButton changeBt = new JButton(icon);
-      changeBt.setToolTipText(mLocalizer.msg("edit", "Change search parameters"));
+      changeBt.setToolTipText(LOCALIZER.msg("edit", "Change search parameters"));
       changeBt.addActionListener(evt -> {
         dlg.dispose();
         SearchDialog searchDialog = new SearchDialog(parentWindow);

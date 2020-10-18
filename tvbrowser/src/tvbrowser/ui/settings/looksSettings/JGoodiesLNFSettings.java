@@ -48,7 +48,7 @@ import com.jgoodies.looks.plastic.PlasticTheme;
 import tvbrowser.core.Settings;
 import tvbrowser.ui.BrownSugarDark;
 import tvbrowser.ui.DarkStarDark;
-import util.ui.Localizer;
+import util.i18n.Localizer;
 import util.ui.UiUtilities;
 import util.ui.WindowClosingIf;
 
@@ -59,7 +59,7 @@ import util.ui.WindowClosingIf;
  */
 public class JGoodiesLNFSettings extends JDialog implements WindowClosingIf {
   /** Translation */
-  private static final util.ui.Localizer mLocalizer = util.ui.Localizer.getLocalizerFor(JGoodiesLNFSettings.class);
+  private static final util.i18n.Localizer mLocalizer = util.i18n.Localizer.getLocalizerFor(JGoodiesLNFSettings.class);
 
   /** Color-Schema */
   private JComboBox<PlasticTheme> mColorScheme;

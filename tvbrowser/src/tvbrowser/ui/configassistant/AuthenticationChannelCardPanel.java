@@ -51,7 +51,7 @@ import util.ui.progress.Progress;
 import util.ui.progress.ProgressWindow;
 
 class AuthenticationChannelCardPanel extends AbstractCardPanel {
-  private static final util.ui.Localizer mLocalizer = util.ui.Localizer
+  private static final util.i18n.Localizer mLocalizer = util.i18n.Localizer
       .getLocalizerFor(AuthenticationChannelCardPanel.class);
 
   private JPanel mContent;

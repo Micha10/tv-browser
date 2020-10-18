@@ -39,8 +39,8 @@ public class FilterPanel extends JPanel {
   private String mCurrentName;
   private JButton mDeactivate;
   
-  private static final util.ui.Localizer mLocalizer
-  = util.ui.Localizer.getLocalizerFor(FilterPanel.class);
+  private static final util.i18n.Localizer mLocalizer
+  = util.i18n.Localizer.getLocalizerFor(FilterPanel.class);
 
   /**
    * Create the Filter-Panel

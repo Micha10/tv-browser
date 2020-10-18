@@ -50,7 +50,7 @@ import devplugin.Channel;
 import devplugin.SettingsItem;
 import devplugin.SettingsTab;
 import tvbrowser.core.Settings;
-import util.ui.Localizer;
+import util.i18n.Localizer;
 import util.ui.OrderChooser;
 import util.ui.UiUtilities;
 
@@ -62,7 +62,7 @@ import util.ui.UiUtilities;
  */
 public class TrayProgramsChannelsSettingsTab implements SettingsTab {
 
-  private static final util.ui.Localizer mLocalizer = TrayBaseSettingsTab.mLocalizer;
+  private static final util.i18n.Localizer mLocalizer = TrayBaseSettingsTab.LOCALIZER;
   
   private JCheckBox mUseUserChannels;
   private OrderChooser<Channel> mChannelOCh;

@@ -43,6 +43,7 @@ import com.jgoodies.forms.layout.RowSpec;
 import devplugin.Channel;
 import devplugin.Plugin;
 import util.ui.customizableitems.SelectableItemList;
+import util.i18n.Localizer;
 
 /**
  * The ChannelChooserDlg class provides a Dialog for choosing channels. The user
@@ -65,8 +66,8 @@ public class ChannelChooserDlg extends JDialog implements WindowClosingIf {
    */
   public static final int SELECTABLE_ITEM_LIST = 1;
 
-  private static final util.ui.Localizer mLocalizer
-     = util.ui.Localizer.getLocalizerFor(ChannelChooserDlg.class);
+  private static final Localizer mLocalizer
+     = Localizer.getLocalizerFor(ChannelChooserDlg.class);
 
   /**
    * 

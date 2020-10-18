@@ -47,7 +47,7 @@ import tvbrowser.TVBrowser;
 import tvbrowser.core.Settings;
 import tvbrowser.core.icontheme.IconLoader;
 import util.ui.CaretPositionCorrector;
-import util.ui.Localizer;
+import util.i18n.Localizer;
 import util.ui.TVBrowserIcons;
 import util.ui.TabLayout;
 import util.ui.UiUtilities;
@@ -68,7 +68,7 @@ import devplugin.SettingsTab;
  */
 public class ButtonsSettingsTab implements SettingsTab {
 
-  private static final util.ui.Localizer mLocalizer = util.ui.Localizer.getLocalizerFor(ButtonsSettingsTab.class);
+  private static final util.i18n.Localizer mLocalizer = util.i18n.Localizer.getLocalizerFor(ButtonsSettingsTab.class);
 
   private JPanel mSettingsPn;
 

@@ -31,7 +31,7 @@ import java.util.ArrayList;
 import javax.swing.Icon;
 import javax.swing.tree.DefaultMutableTreeNode;
 
-import util.ui.Localizer;
+import util.i18n.Localizer;
 import devplugin.ActionMenu;
 import devplugin.Date;
 import devplugin.NodeFormatter;

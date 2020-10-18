@@ -95,7 +95,7 @@ import util.exc.TvBrowserException;
 import util.misc.OperatingSystem;
 import util.ui.FixedSizeIcon;
 import util.ui.ImageIconEnhanced;
-import util.ui.Localizer;
+import util.i18n.Localizer;
 import util.ui.ScrollableMenu;
 import util.ui.TVBrowserIcons;
 import util.ui.UIThreadRunner;
@@ -105,7 +105,7 @@ import util.ui.persona.Persona;
 public abstract class MenuBar extends JMenuBar implements ActionListener {
 
 	/** The localizer for this class. */
-	public static final util.ui.Localizer mLocalizer = util.ui.Localizer
+	public static final util.i18n.Localizer mLocalizer = util.i18n.Localizer
 			.getLocalizerFor(MainFrame.class);
 
 	private MainFrame mMainFrame;

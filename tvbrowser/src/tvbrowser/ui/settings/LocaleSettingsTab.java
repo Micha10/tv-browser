@@ -74,7 +74,7 @@ import tvbrowser.core.icontheme.IconLoader;
 import tvbrowser.ui.mainframe.MainFrame;
 import util.io.IOUtilities;
 import util.ui.CustomComboBoxRenderer;
-import util.ui.Localizer;
+import util.i18n.Localizer;
 import util.ui.UiUtilities;
 import util.ui.WindowClosingIf;
 import util.ui.customizableitems.SelectableItem;
@@ -86,7 +86,7 @@ import util.ui.customizableitems.SelectableItemRendererCenterComponentIf;
  */
 public class LocaleSettingsTab implements devplugin.SettingsTab {
   /** The localizer for this class. */
-  private static final util.ui.Localizer mLocalizer = util.ui.Localizer.getLocalizerFor(LocaleSettingsTab.class);
+  private static final util.i18n.Localizer mLocalizer = util.i18n.Localizer.getLocalizerFor(LocaleSettingsTab.class);
   private static final Logger mLog =  Logger.getLogger(LocaleSettingsTab.class.getName());
   
   private JPanel mSettingsPn;

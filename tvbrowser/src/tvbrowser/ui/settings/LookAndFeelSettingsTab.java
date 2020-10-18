@@ -61,14 +61,14 @@ import tvbrowser.ui.settings.looksSettings.JGoodiesLNFSettings;
 import tvbrowser.ui.settings.looksSettings.SkinLNFSettings;
 import util.ui.CustomComboBoxRenderer;
 import util.ui.LinkButton;
-import util.ui.Localizer;
+import util.i18n.Localizer;
 import util.ui.UiUtilities;
 import util.ui.persona.Persona;
 import util.ui.persona.PersonaInfo;
 
 public final class LookAndFeelSettingsTab implements SettingsTab {
 
-  static final util.ui.Localizer mLocalizer = util.ui.Localizer.getLocalizerFor(LookAndFeelSettingsTab.class);
+  static final util.i18n.Localizer mLocalizer = util.i18n.Localizer.getLocalizerFor(LookAndFeelSettingsTab.class);
 
   private JComboBox<LookAndFeelObj> mLfComboBox;
 

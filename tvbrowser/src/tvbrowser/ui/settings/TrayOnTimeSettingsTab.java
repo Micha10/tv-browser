@@ -19,7 +19,7 @@ import devplugin.SettingsTab;
 import tvbrowser.core.Settings;
 import tvbrowser.ui.settings.util.ColorButton;
 import tvbrowser.ui.settings.util.ColorLabel;
-import util.ui.Localizer;
+import util.i18n.Localizer;
 import util.ui.UiUtilities;
 
 /**
@@ -32,7 +32,7 @@ public class TrayOnTimeSettingsTab implements SettingsTab {
 
   private JCheckBox mIsEnabled, mShowTime, mShowToolTip, mShowProgress;
   private JRadioButton mShowInSubMenu, mShowInTray;
-  private static final Localizer mLocalizer = TrayBaseSettingsTab.mLocalizer;
+  private static final Localizer mLocalizer = TrayBaseSettingsTab.LOCALIZER;
   private JLabel mIconSeparator, mSeparator1, mSeparator2, mDarkLabel, mLightLabel;
   private static boolean mTrayIsEnabled = Settings.propTrayIsEnabled.getBoolean();
   

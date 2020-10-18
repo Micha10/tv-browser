@@ -39,7 +39,7 @@ import javax.swing.JScrollPane;
 import javax.swing.Timer;
 import javax.swing.UIManager;
 
-import util.ui.Localizer;
+import util.i18n.Localizer;
 import util.ui.UiUtilities;
 import util.ui.WindowClosingIf;
 import util.ui.html.HTMLTextHelper;
@@ -52,8 +52,8 @@ public class LicenseBox extends JDialog implements ActionListener,WindowClosingI
   private boolean mAgreed=false;
   private boolean mMustAgree;
   
-  private static final util.ui.Localizer mLocalizer
-      = util.ui.Localizer.getLocalizerFor(LicenseBox.class);
+  private static final util.i18n.Localizer mLocalizer
+      = util.i18n.Localizer.getLocalizerFor(LicenseBox.class);
   
   public LicenseBox(JFrame parent, String licenseTxt, boolean mustAgree) {
     

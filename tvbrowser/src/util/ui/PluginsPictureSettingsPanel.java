@@ -40,6 +40,7 @@ import com.jgoodies.forms.layout.FormLayout;
 
 import devplugin.SettingsItem;
 import tvbrowser.ui.settings.SettingsDialog;
+import util.i18n.Localizer;
 import util.settings.PluginPictureSettings;
 
 /**
@@ -49,7 +50,7 @@ import util.settings.PluginPictureSettings;
  * @since 2.6
  */
 public class PluginsPictureSettingsPanel extends JPanel {
-  private static final Localizer mLocalizer = Localizer.getLocalizerFor(PluginsPictureSettingsPanel.class);
+  private static final Localizer LOCALIZER = Localizer.getLocalizerFor(PluginsPictureSettingsPanel.class);
   
   private JRadioButton mGlobalSettings;
   private JRadioButton mPictureAndDescription;
@@ -77,9 +78,9 @@ public class PluginsPictureSettingsPanel extends JPanel {
       }
     };
     
-    mGlobalSettings = new JRadioButton(mLocalizer.msg("globalSettings","Use default settings for plugins"), settings.getType() == PluginPictureSettings.ALL_PLUGINS_SETTINGS_TYPE);
-    mPictureAndDescription = new JRadioButton(mLocalizer.msg("pictureAndDesc","Show picture and picture description (if available)"), settings.getType() == PluginPictureSettings.PICTURE_AND_DISCRIPTION_TYPE);
-    mOnlyPictures = new JRadioButton(mLocalizer.msg("onlyPictures","Show only pictures (if available)"), settings.getType() == PluginPictureSettings.ONLY_PICTURE_TYPE);
+    mGlobalSettings = new JRadioButton(LOCALIZER.msg("globalSettings","Use default settings for plugins"), settings.getType() == PluginPictureSettings.ALL_PLUGINS_SETTINGS_TYPE);
+    mPictureAndDescription = new JRadioButton(LOCALIZER.msg("pictureAndDesc","Show picture and picture description (if available)"), settings.getType() == PluginPictureSettings.PICTURE_AND_DISCRIPTION_TYPE);
+    mOnlyPictures = new JRadioButton(LOCALIZER.msg("onlyPictures","Show only pictures (if available)"), settings.getType() == PluginPictureSettings.ONLY_PICTURE_TYPE);
     
     mGlobalSettings.addItemListener(itemListener);
     mPictureAndDescription.addItemListener(itemListener);
@@ -93,7 +94,7 @@ public class PluginsPictureSettingsPanel extends JPanel {
       bg.add(mGlobalSettings);
       add(mGlobalSettings, CC.xyw(1,y++,2));
       
-      JEditorPane helpLabel = UiUtilities.createHtmlHelpTextArea(mLocalizer.msg("help","The default plugin setting can be changed in the <a href=\"#link\">picture settings</a>."), e -> {
+      JEditorPane helpLabel = UiUtilities.createHtmlHelpTextArea(LOCALIZER.msg("help","The default plugin setting can be changed in the <a href=\"#link\">picture settings</a>."), e -> {
         if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
           SettingsDialog.getInstance().showSettingsTab(SettingsItem.PICTURES);
         }
@@ -110,7 +111,7 @@ public class PluginsPictureSettingsPanel extends JPanel {
     add(mOnlyPictures, CC.xyw(1,y++,2));
     
     if(showDisableButtonDontShowAllButton) {
-      mNoPictures = new JRadioButton(mLocalizer.msg("noPictures","Don't show pictures and description"), settings.getType() == PluginPictureSettings.NO_PICTURE_TYPE);
+      mNoPictures = new JRadioButton(LOCALIZER.msg("noPictures","Don't show pictures and description"), settings.getType() == PluginPictureSettings.NO_PICTURE_TYPE);
       mNoPictures.addItemListener(itemListener);
       bg.add(mNoPictures);
       add(mNoPictures, CC.xyw(1,++y,2));
@@ -144,7 +145,7 @@ public class PluginsPictureSettingsPanel extends JPanel {
    * @return The title of this settings.
    */
   public static String getTitle() {
-    return mLocalizer.msg("title","Picture setting of the program list");
+    return LOCALIZER.msg("title","Picture setting of the program list");
   }
   
   /**

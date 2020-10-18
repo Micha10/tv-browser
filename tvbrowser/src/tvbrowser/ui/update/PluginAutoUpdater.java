@@ -35,7 +35,7 @@ import tvbrowser.ui.mainframe.MainFrame;
 import tvbrowser.ui.mainframe.SoftwareUpdater;
 import util.io.IOUtilities;
 import util.io.Mirror;
-import util.ui.Localizer;
+import util.i18n.Localizer;
 
 /**
  * A class that searchs for updates of the installed plugins.

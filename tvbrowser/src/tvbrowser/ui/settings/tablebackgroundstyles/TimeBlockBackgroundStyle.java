@@ -21,8 +21,8 @@ import util.ui.TabLayout;
  */
 public class TimeBlockBackgroundStyle implements TableBackgroundStyle {
 
-   public static final util.ui.Localizer mLocalizer
-    = util.ui.Localizer.getLocalizerFor(TimeBlockBackgroundStyle.class);
+   public static final util.i18n.Localizer mLocalizer
+    = util.i18n.Localizer.getLocalizerFor(TimeBlockBackgroundStyle.class);
 
 
   private JSpinner mTimeBlockSizeSp;

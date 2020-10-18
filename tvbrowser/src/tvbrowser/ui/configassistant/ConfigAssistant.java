@@ -45,7 +45,7 @@ import javax.swing.WindowConstants;
 import tvbrowser.core.Settings;
 import tvbrowser.core.tvdataservice.TvDataServiceProxy;
 import tvbrowser.core.tvdataservice.TvDataServiceProxyManager;
-import util.ui.Localizer;
+import util.i18n.Localizer;
 import util.ui.UiUtilities;
 import util.ui.WindowClosingIf;
 
@@ -65,7 +65,7 @@ public class ConfigAssistant extends JDialog implements ActionListener, PrevNext
 
   private JPanel mCardPn;
 
-  private static final util.ui.Localizer mLocalizer = util.ui.Localizer.getLocalizerFor(ConfigAssistant.class);
+  private static final util.i18n.Localizer mLocalizer = util.i18n.Localizer.getLocalizerFor(ConfigAssistant.class);
 
   public ConfigAssistant(JFrame parent) {
     super(parent, true);

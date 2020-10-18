@@ -30,8 +30,8 @@ import devplugin.ProgramFilter;
 
 public class ShowAllFilter implements devplugin.ProgramFilter {
   public static final String KEY = "[SHOW_ALL_FITLER]";
-  private static final util.ui.Localizer mLocalizer
-         = util.ui.Localizer.getLocalizerFor(ShowAllFilter.class);
+  private static final util.i18n.Localizer mLocalizer
+         = util.i18n.Localizer.getLocalizerFor(ShowAllFilter.class);
   
     
   public boolean accept(devplugin.Program prog) {

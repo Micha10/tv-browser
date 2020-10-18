@@ -43,7 +43,7 @@ import devplugin.Program;
  */
 public class DateFilterComponent extends AbstractFilterComponent {
 
-  private static final util.ui.Localizer mLocalizer = util.ui.Localizer
+  private static final util.i18n.Localizer mLocalizer = util.i18n.Localizer
       .getLocalizerFor(DateFilterComponent.class);
   private JSpinner mFromSpinner;
   private JSpinner mToSpinner;

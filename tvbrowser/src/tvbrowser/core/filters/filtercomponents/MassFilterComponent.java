@@ -51,7 +51,7 @@ import util.ui.UiUtilities;
 public class MassFilterComponent extends AbstractFilterComponent {
 
   /** Translation */
-  private static final util.ui.Localizer mLocalizer = util.ui.Localizer
+  private static final util.i18n.Localizer mLocalizer = util.i18n.Localizer
       .getLocalizerFor(MassFilterComponent.class);
 
   private String mText;

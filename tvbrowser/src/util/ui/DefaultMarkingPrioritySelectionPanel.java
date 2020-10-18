@@ -30,7 +30,7 @@ import devplugin.SettingsItem;
 import tvbrowser.core.Settings;
 import tvbrowser.ui.settings.MarkingsSettingsTab;
 import tvbrowser.ui.settings.SettingsDialog;
-
+import util.i18n.Localizer;
 
 
 /**
@@ -258,11 +258,11 @@ public final class DefaultMarkingPrioritySelectionPanel extends JPanel {
     int i = 0;
     
     if (withNoMarkPriority) {
-      colors[i++] = MarkingsSettingsTab.mLocalizer.msg("color.noPriority", "Don't highlight");
+      colors[i++] = MarkingsSettingsTab.LOCALIZER.msg("color.noPriority", "Don't highlight");
     }
     
     for(;i < colors.length; i++) {
-      colors[i] = (i+offset) +". "+ MarkingsSettingsTab.mLocalizer.msg("color.colorPriority","Color/priority");
+      colors[i] = (i+offset) +". "+ MarkingsSettingsTab.LOCALIZER.msg("color.colorPriority","Color/priority");
     }
     
     return colors;

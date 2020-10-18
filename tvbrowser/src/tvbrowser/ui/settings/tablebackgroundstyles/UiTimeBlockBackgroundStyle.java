@@ -41,8 +41,8 @@ import tvbrowser.core.Settings;
  */
 public class UiTimeBlockBackgroundStyle implements TableBackgroundStyle {
 
-  private static final util.ui.Localizer mLocalizer
-    = util.ui.Localizer.getLocalizerFor(UiTimeBlockBackgroundStyle.class);
+  private static final util.i18n.Localizer mLocalizer
+    = util.i18n.Localizer.getLocalizerFor(UiTimeBlockBackgroundStyle.class);
   
   private JSpinner mTimeBlockSizeSp;
   private JCheckBox mTimeBlockShowWestChB;

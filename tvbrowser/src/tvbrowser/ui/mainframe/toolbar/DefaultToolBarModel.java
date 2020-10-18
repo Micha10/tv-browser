@@ -76,14 +76,14 @@ import tvbrowser.ui.mainframe.MainFrame;
 import tvbrowser.ui.mainframe.actions.TVBrowserAction;
 import tvbrowser.ui.mainframe.actions.TVBrowserActions;
 import util.misc.OperatingSystem;
-import util.ui.Localizer;
+import util.i18n.Localizer;
 import util.ui.ScrollableMenu;
 import util.ui.UIThreadRunner;
 import util.ui.UiUtilities;
 
 public class DefaultToolBarModel implements ToolBarModel, DateListener {
 
-  private static final util.ui.Localizer mLocalizer = util.ui.Localizer
+  private static final util.i18n.Localizer mLocalizer = util.i18n.Localizer
       .getLocalizerFor(DefaultToolBarModel.class);
 
   private Map<String, Action> mAvailableActions;
@@ -282,7 +282,7 @@ public class DefaultToolBarModel implements ToolBarModel, DateListener {
       }
     }
 
-    String scrollTo = MainFrame.mLocalizer
+    String scrollTo = MainFrame.LOCALIZER
         .msg("menuinfo.scrollTo", "Scroll to")
         + ": ";
     for (final int timeMinutes : Settings.propTimeButtons.getIntArray()) {
@@ -613,7 +613,7 @@ public class DefaultToolBarModel implements ToolBarModel, DateListener {
         .getIconFromTheme("actions", "process-stop", 16));
     mUpdateAction.putValue(Plugin.BIG_ICON, IconLoader.getInstance()
         .getIconFromTheme("actions", "process-stop", 22));
-    mUpdateAction.putValue(Action.SHORT_DESCRIPTION, MainFrame.mLocalizer.msg(
+    mUpdateAction.putValue(Action.SHORT_DESCRIPTION, MainFrame.LOCALIZER.msg(
         "menuinfo.stop", ""));
   }
 
@@ -623,7 +623,7 @@ public class DefaultToolBarModel implements ToolBarModel, DateListener {
         .getIconFromTheme("apps", "system-software-update", 16));
     mUpdateAction.putValue(Plugin.BIG_ICON, IconLoader.getInstance()
         .getIconFromTheme("apps", "system-software-update", 22));
-    mUpdateAction.putValue(Action.SHORT_DESCRIPTION, MainFrame.mLocalizer.msg(
+    mUpdateAction.putValue(Action.SHORT_DESCRIPTION, MainFrame.LOCALIZER.msg(
         "menuinfo.update", ""));
 
   }

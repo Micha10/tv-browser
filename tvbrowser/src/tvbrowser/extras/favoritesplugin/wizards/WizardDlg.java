@@ -44,13 +44,13 @@ import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.Sizes;
 
-import util.ui.Localizer;
+import util.i18n.Localizer;
 import util.ui.UiUtilities;
 import util.ui.WindowClosingIf;
 
 public class WizardDlg extends JDialog implements WindowClosingIf {
 
-  protected static final util.ui.Localizer mLocalizer = util.ui.Localizer
+  protected static final util.i18n.Localizer mLocalizer = util.i18n.Localizer
       .getLocalizerFor(WizardDlg.class);
 
   private static final int CANCEL = 0;

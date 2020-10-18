@@ -23,7 +23,7 @@ import devplugin.PluginInfo;
 import tvbrowser.core.Settings;
 import util.browserlauncher.Launch;
 import util.ui.ImageIconEnhanced;
-import util.ui.Localizer;
+import util.i18n.Localizer;
 import util.ui.UiUtilities;
 import util.ui.WindowClosingIf;
 import util.ui.html.ExtendedHTMLDocument;
@@ -37,8 +37,8 @@ import util.ui.html.HTMLTextHelper;
  */
 public class PluginInfoDialog extends JDialog implements WindowClosingIf {
   /** Translation */
-  private static final util.ui.Localizer mLocalizer
-  = util.ui.Localizer.getLocalizerFor(PluginInfoDialog.class);
+  private static final util.i18n.Localizer mLocalizer
+  = util.i18n.Localizer.getLocalizerFor(PluginInfoDialog.class);
 
   /** Infos about the Plugin */
   private PluginInfo mPluginInfo;

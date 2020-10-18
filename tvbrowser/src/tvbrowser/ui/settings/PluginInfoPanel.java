@@ -29,7 +29,7 @@ package tvbrowser.ui.settings;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import util.ui.Localizer;
+import util.i18n.Localizer;
 
 import com.jgoodies.forms.factories.DefaultComponentFactory;
 import com.jgoodies.forms.layout.CellConstraints;
@@ -40,7 +40,7 @@ import com.jgoodies.forms.layout.FormLayout;
  */
 class PluginInfoPanel extends JPanel {
 
-  private static final util.ui.Localizer mLocalizer = util.ui.Localizer
+  private static final util.i18n.Localizer mLocalizer = util.i18n.Localizer
       .getLocalizerFor(PluginInfoPanel.class);
 
   private JLabel mNameLabel;

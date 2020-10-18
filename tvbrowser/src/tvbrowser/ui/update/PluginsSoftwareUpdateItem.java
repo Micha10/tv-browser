@@ -43,8 +43,8 @@ import util.ui.UiUtilities;
 
 
 public class PluginsSoftwareUpdateItem extends SoftwareUpdateItem {
-  private static final util.ui.Localizer mLocalizer
-    = util.ui.Localizer.getLocalizerFor(PluginsSoftwareUpdateItem.class);
+  private static final util.i18n.Localizer mLocalizer
+    = util.i18n.Localizer.getLocalizerFor(PluginsSoftwareUpdateItem.class);
 
   public PluginsSoftwareUpdateItem(String name) {
     super(name);

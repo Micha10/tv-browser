@@ -94,7 +94,7 @@ import util.browserlauncher.Launch;
 import util.exc.TvBrowserException;
 import util.ui.EnhancedPanelBuilder;
 import util.ui.LinkButton;
-import util.ui.Localizer;
+import util.i18n.Localizer;
 import util.ui.TVBrowserIcons;
 import util.ui.TextAreaIcon;
 import util.ui.UiUtilities;
@@ -112,7 +112,7 @@ import util.ui.html.HTMLTextHelper;
 public class SoftwareUpdateDlg extends JDialog implements ActionListener, ListSelectionListener, WindowClosingIf {
 
   /** The localizer for this class. */
-  public static final util.ui.Localizer LOCALIZER = util.ui.Localizer.getLocalizerFor(SoftwareUpdateDlg.class);
+  public static final util.i18n.Localizer LOCALIZER = util.i18n.Localizer.getLocalizerFor(SoftwareUpdateDlg.class);
 
   private JButton mCloseBtn, mDownloadBtn;
 

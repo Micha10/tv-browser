@@ -200,7 +200,7 @@ import util.io.NetworkUtilities;
 import util.misc.OperatingSystem;
 import util.programkeyevent.ProgramKeyEventHandler;
 import util.settings.ContextMenuMouseActionSetting;
-import util.ui.Localizer;
+import util.i18n.Localizer;
 import util.ui.TVBrowserIcons;
 import util.ui.UIThreadRunner;
 import util.ui.UiUtilities;
@@ -218,11 +218,11 @@ import util.ui.view.Node;
 public class MainFrame extends JFrame implements DateListener,DropTargetListener,PersonaListener,
                                                      PluginStateListener,FilterChangeListenerV2 {
 
-  private static final Logger mLog = java.util.logging.Logger
+  private static final Logger LOG = java.util.logging.Logger
       .getLogger(tvbrowser.TVBrowser.class.getName());
 
   /** The localizer for this class. */
-  public static final util.ui.Localizer mLocalizer = util.ui.Localizer
+  public static final util.i18n.Localizer LOCALIZER = util.i18n.Localizer
       .getLocalizerFor(MainFrame.class);
 
   private static final int DIRECTION_LEFT = 1;
@@ -405,17 +405,17 @@ public class MainFrame extends JFrame implements DateListener,DropTargetListener
             mStatusBar.getLabel() });
       } catch (Exception e) {
         if (TVBrowser.isTransportable()) {
-          mLog.info("Using default menu bar (instead of MacOSXMenuBar) for transportable version.");
+          LOG.info("Using default menu bar (instead of MacOSXMenuBar) for transportable version.");
         }
-        mLog.warning("Could not instantiate MacOSXMenuBar\n" + e.toString());
+        LOG.warning("Could not instantiate MacOSXMenuBar\n" + e.toString());
         if (e.getCause() != null) {
           StringWriter sw = new StringWriter();
           e.getCause().printStackTrace(new PrintWriter(sw));
-          mLog.warning(sw.toString());
+          LOG.warning(sw.toString());
         }
         mMenuBar = new DefaultMenuBar(this, mStatusBar.getLabel());
         mMenuBar.setVisible(Settings.propIsMenubarVisible.getBoolean());
-        mLog.info("Using default menu bar");
+        LOG.info("Using default menu bar");
       }
       
       if(Desktop.isDesktopSupported()) {
@@ -587,7 +587,7 @@ public class MainFrame extends JFrame implements DateListener,DropTargetListener
       }
       
       private void showContextMenu(MouseEvent e) {
-        final JMenuItem settings = new JMenuItem(mLocalizer.msg("configTabs", "Configure tabs..."), TVBrowserIcons.preferences(TVBrowserIcons.SIZE_SMALL));
+        final JMenuItem settings = new JMenuItem(LOCALIZER.msg("configTabs", "Configure tabs..."), TVBrowserIcons.preferences(TVBrowserIcons.SIZE_SMALL));
         settings.addActionListener(evt -> {
           showSettingsDialog(SettingsItem.CENTERPANELSETUP);
         });
@@ -602,7 +602,7 @@ public class MainFrame extends JFrame implements DateListener,DropTargetListener
           final String settingsId = ((JComponent)mCenterTabPane.getComponentAt(index)).getName();
           
           if(settingsId != null) {
-            final String name = SettingsItem.PROGRAMTABLELOOK.equals(settingsId) ? mLocalizer.msg("configProgramTable","Configure program table...") : mLocalizer.msg("configPlugins","Configure plugin..."); 
+            final String name = SettingsItem.PROGRAMTABLELOOK.equals(settingsId) ? LOCALIZER.msg("configProgramTable","Configure program table...") : LOCALIZER.msg("configPlugins","Configure plugin..."); 
             
             JMenuItem settingsPlugin = new JMenuItem(name);
             settingsPlugin.addActionListener(evt -> {
@@ -1585,10 +1585,10 @@ public class MainFrame extends JFrame implements DateListener,DropTargetListener
   }
 
   public void quit() {
-    String[] options = {mLocalizer.msg("exitConfirmTitle","Exit TV-Browser"),Localizer.getLocalization(Localizer.I18N_CANCEL)};
+    String[] options = {LOCALIZER.msg("exitConfirmTitle","Exit TV-Browser"),Localizer.getLocalization(Localizer.I18N_CANCEL)};
 
     if(DontShowAgainOptionBox.showOptionDialog("MainFrame.askForExitConfirm",this.isActive() ? this : null,
-        mLocalizer.msg("exitConirmText","Do you really want to quit TV-Browser?"), options[0], JOptionPane.QUESTION_MESSAGE,
+        LOCALIZER.msg("exitConirmText","Do you really want to quit TV-Browser?"), options[0], JOptionPane.QUESTION_MESSAGE,
         JOptionPane.YES_NO_OPTION, options, options[0], null) != JOptionPane.YES_OPTION) {
       return;
     }
@@ -1611,7 +1611,7 @@ public class MainFrame extends JFrame implements DateListener,DropTargetListener
 
       JPanel main = new JPanel(new FormLayout("5dlu,pref,5dlu","5dlu,pref,5dlu"));
       main.setBorder(BorderFactory.createLineBorder(Color.black));
-      main.add(new JLabel(mLocalizer.msg("downloadinfo","A data update is running. TV-Browser will be closed when the update is done.")), new CellConstraints().xy(2,2));
+      main.add(new JLabel(LOCALIZER.msg("downloadinfo","A data update is running. TV-Browser will be closed when the update is done.")), new CellConstraints().xy(2,2));
 
       info.setContentPane(main);
       info.pack();
@@ -1643,7 +1643,7 @@ public class MainFrame extends JFrame implements DateListener,DropTargetListener
     PluginProxyManager.getInstance().shutdownAllPlugins(log);
 
     if (log) {
-      mLog.info("Storing dataservice settings");
+      LOG.info("Storing dataservice settings");
     }
     TvDataServiceProxyManager.getInstance().shutDown();
 
@@ -1669,7 +1669,7 @@ public class MainFrame extends JFrame implements DateListener,DropTargetListener
     JREUpdater.doUpdateIfAvailable();
     
     if (log) {
-      mLog.info("Quitting");
+      LOG.info("Quitting");
       System.exit(0);
     }
   }
@@ -1733,7 +1733,7 @@ public class MainFrame extends JFrame implements DateListener,DropTargetListener
       
       if(PluginLoader.getInstance().hasToShowMouseInfo() && 
           JOptionPane.showConfirmDialog(MainFrame.this, 
-              mLocalizer.msg("askOpenMouseSettings", "Plugins were installed that support mouse actions.\n\nDo you want to open the mouse settings now to configure those actions?"), 
+              LOCALIZER.msg("askOpenMouseSettings", "Plugins were installed that support mouse actions.\n\nDo you want to open the mouse settings now to configure those actions?"), 
               Localizer.getLocalization(Localizer.I18N_INFO), JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
         showSettingsDialog(SettingsItem.MOUSE);
       }
@@ -1812,7 +1812,7 @@ public class MainFrame extends JFrame implements DateListener,DropTargetListener
                 if(chProg != null && chProg.getProgramCount() > 0 && mOnAirRowProgramsArr[i] != -1) {
                   if (mOnAirRowProgramsArr[i] >= chProg.getProgramCount()) {
                     fillOnAirArrays(ch);
-                    mLog.warning("Reset of on-air-arrays");
+                    LOG.warning("Reset of on-air-arrays");
                   }
                   Program p = chProg.getProgramAt(mOnAirRowProgramsArr[i]);
 
@@ -1918,7 +1918,7 @@ public class MainFrame extends JFrame implements DateListener,DropTargetListener
           }
           // now delete the data
           SwingUtilities.invokeLater(() -> {
-            mLog.info("Deleting expired TV listings...");
+            LOG.info("Deleting expired TV listings...");
             TvDataBase.getInstance().deleteExpiredFiles(1, true);
           });
         }
@@ -1995,7 +1995,7 @@ public class MainFrame extends JFrame implements DateListener,DropTargetListener
 
   public void scrollToProgram(final Program program, final Runnable callback) {
     if (!getProgramFilter().accept(program)) {
-      int result = JOptionPane.showOptionDialog(this, mLocalizer.msg("programFiltered", "The program {0} is not visible with the filter {1} being active.\nDo you want to deactivate the filter?", program.getTitle(), getProgramFilter().getName()),mLocalizer.msg("programNotVisible","Program not visible"),
+      int result = JOptionPane.showOptionDialog(this, LOCALIZER.msg("programFiltered", "The program {0} is not visible with the filter {1} being active.\nDo you want to deactivate the filter?", program.getTitle(), getProgramFilter().getName()),LOCALIZER.msg("programNotVisible","Program not visible"),
           JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, null, null);
       if (result == JOptionPane.YES_OPTION) {
         mStoredViewPosition = null;
@@ -2142,7 +2142,7 @@ public class MainFrame extends JFrame implements DateListener,DropTargetListener
 
   public void runSetupAssistant() {
 
-    ProgressWindow progWin = new ProgressWindow(this, mLocalizer.msg(
+    ProgressWindow progWin = new ProgressWindow(this, LOCALIZER.msg(
         "loadingAssistant", ""));
     final JFrame parent = this;
     progWin.run(new Progress() {
@@ -2176,10 +2176,10 @@ public class MainFrame extends JFrame implements DateListener,DropTargetListener
 
   public void copySettingsToSystem() {
     if(TVBrowser.isTransportable()) {
-      String[] options = {mLocalizer.msg("copy","Copy"),
-                          mLocalizer.msg("dontCopy","Don't copy")};
-      String title = mLocalizer.msg("copyToSystemTitle","Copy settings and data to system");
-      String msg = mLocalizer.msg("copyToSystemMsg","Should the settings and TV data be copied to the system?\nTV-Browser will therefor will be quit automatically.");
+      String[] options = {LOCALIZER.msg("copy","Copy"),
+                          LOCALIZER.msg("dontCopy","Don't copy")};
+      String title = LOCALIZER.msg("copyToSystemTitle","Copy settings and data to system");
+      String msg = LOCALIZER.msg("copyToSystemMsg","Should the settings and TV data be copied to the system?\nTV-Browser will therefor will be quit automatically.");
 
       if(JOptionPane.showOptionDialog(this,msg,title,JOptionPane.YES_NO_OPTION,JOptionPane.QUESTION_MESSAGE,null,options,options[1]) == JOptionPane.YES_OPTION) {
         quit(true,true);
@@ -2265,11 +2265,11 @@ public class MainFrame extends JFrame implements DateListener,DropTargetListener
         .showOptionDialog(
             "downloadDone",
             MainFrame.getInstance(),
-            mLocalizer
+            LOCALIZER
                 .msg(
                     "downloaddone.message",
                     "The download is done."),
-            mLocalizer.msg("downloaddone.title", "Done"));
+            LOCALIZER.msg("downloaddone.title", "Done"));
 
   }
 
@@ -2496,7 +2496,7 @@ public class MainFrame extends JFrame implements DateListener,DropTargetListener
           TvDataUpdater.getInstance().downloadTvData(daysToDownload, services,
               progressBar, mStatusBar.getLabel());
         } catch (Throwable t) {
-          String msg = mLocalizer.msg("error.3", "An unexpected error occurred during update.");
+          String msg = LOCALIZER.msg("error.3", "An unexpected error occurred during update.");
           ErrorHandler.handle(msg, t);
         } finally {
           SwingUtilities.invokeLater(() -> {
@@ -2568,8 +2568,8 @@ public class MainFrame extends JFrame implements DateListener,DropTargetListener
     try {
       if (ChannelList.getNumberOfSubscribedChannels() == 0) {
         int result = JOptionPane.showOptionDialog(this,
-            mLocalizer.msg("subscribeBeforeUpdate.msg", "You have not defined any channels.\n\nDo you want to subscribe to some channels before starting the data update?"),
-            mLocalizer.msg("subscribeBeforeUpdate.title", "No subscribed channels"),
+            LOCALIZER.msg("subscribeBeforeUpdate.msg", "You have not defined any channels.\n\nDo you want to subscribe to some channels before starting the data update?"),
+            LOCALIZER.msg("subscribeBeforeUpdate.title", "No subscribed channels"),
             JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, null,
             null);
         if (result == JOptionPane.YES_OPTION) {
@@ -2727,11 +2727,11 @@ public class MainFrame extends JFrame implements DateListener,DropTargetListener
     int answer = JOptionPane.YES_OPTION;
 
     if(!noQuestion) {
-      Object[] options = { mLocalizer.msg("checknow", "Check now"),
+      Object[] options = { LOCALIZER.msg("checknow", "Check now"),
           Localizer.getLocalization(Localizer.I18N_CANCEL) };
-      String msg = mLocalizer.msg("question.1",
+      String msg = LOCALIZER.msg("question.1",
           "do you want to check for new plugins");
-      answer = JOptionPane.showOptionDialog(this, msg, mLocalizer.msg(
+      answer = JOptionPane.showOptionDialog(this, msg, LOCALIZER.msg(
           "title.1", "update plugins"), JOptionPane.YES_NO_OPTION,
           JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
     }
@@ -2754,7 +2754,7 @@ public class MainFrame extends JFrame implements DateListener,DropTargetListener
     new Thread("Plugin Update Thread") {
       public void run() {
         try {
-          infoLabel.setText(mLocalizer.msg("searchForPluginUpdates","Search for plugin updates..."));
+          infoLabel.setText(LOCALIZER.msg("searchForPluginUpdates","Search for plugin updates..."));
           java.net.URL url = new java.net.URL(baseUrl + "/" + PluginAutoUpdater.PLUGIN_UPDATES_FILENAME);
           SoftwareUpdater softwareUpdater = new SoftwareUpdater(url,dialogType,false);
           mSoftwareUpdateItems = softwareUpdater
@@ -2766,10 +2766,10 @@ public class MainFrame extends JFrame implements DateListener,DropTargetListener
         
         if(!dontShowUpdateDlg) {
           if (mSoftwareUpdateItems == null && dialogType != SoftwareUpdater.ONLY_UPDATE_TYPE) {
-            JOptionPane.showMessageDialog(UiUtilities.getLastModalChildOf(MainFrame.getInstance()), mLocalizer.msg("error.1",
+            JOptionPane.showMessageDialog(UiUtilities.getLastModalChildOf(MainFrame.getInstance()), LOCALIZER.msg("error.1",
                 "software check failed."));
           } else if (mSoftwareUpdateItems != null && mSoftwareUpdateItems.length == 0 && dialogType != SoftwareUpdater.ONLY_UPDATE_TYPE) {
-            JOptionPane.showMessageDialog(UiUtilities.getLastModalChildOf(MainFrame.getInstance()), mLocalizer.msg("error.2",
+            JOptionPane.showMessageDialog(UiUtilities.getLastModalChildOf(MainFrame.getInstance()), LOCALIZER.msg("error.2",
                 "No new items available"));
           } else if(mSoftwareUpdateItems != null && mSoftwareUpdateItems.length > 0) {
             final Window parent = UiUtilities.getLastModalChildOf(MainFrame
@@ -2810,9 +2810,9 @@ public class MainFrame extends JFrame implements DateListener,DropTargetListener
           }
 
           if(message.length() > 0) {
-            message.insert(0,mLocalizer.msg("update.blockedInfo","The following Plugins were blocked and cannot be used in their current version:\n"));
+            message.insert(0,LOCALIZER.msg("update.blockedInfo","The following Plugins were blocked and cannot be used in their current version:\n"));
 
-            showInfoTextMessage(mLocalizer.msg("update.blockedPlugins","Plugins blocked!"),message.toString(),450);
+            showInfoTextMessage(LOCALIZER.msg("update.blockedPlugins","Plugins blocked!"),message.toString(),450);
           }
         }
 
@@ -2851,13 +2851,13 @@ public class MainFrame extends JFrame implements DateListener,DropTargetListener
 
   public void askForDataUpdateNoDataAvailable() {
     if(mProgramTableModel.getAvailableChannelCount() > 0) {
-      askForDataUpdate(mLocalizer.msg("askforupdatedlg.noData",
+      askForDataUpdate(LOCALIZER.msg("askforupdatedlg.noData",
         "No TV data for todays program available."));
     }
   }
 
   public void askForDataUpdateChannelsAdded() {
-	  askForDataUpdate(mLocalizer.msg("askforupdatedlg.addedChannels",
+	  askForDataUpdate(LOCALIZER.msg("askforupdatedlg.addedChannels",
       "You have added channels."));
   }
 
@@ -2916,7 +2916,7 @@ public class MainFrame extends JFrame implements DateListener,DropTargetListener
   
   public void setShowMenubar(boolean visible) {
     if(!visible) {
-      DontShowAgainOptionBox.showOptionDialog("mainFrame.menuBarDisabled",this,mLocalizer.msg("menuBarDisabled","You have disabled the menu bar.\nTo show it again press F7 on your keyboard."));
+      DontShowAgainOptionBox.showOptionDialog("mainFrame.menuBarDisabled",this,LOCALIZER.msg("menuBarDisabled","You have disabled the menu bar.\nTo show it again press F7 on your keyboard."));
     }
     
     Settings.propIsMenubarVisible.setBoolean(visible);
@@ -3333,12 +3333,12 @@ public class MainFrame extends JFrame implements DateListener,DropTargetListener
       }
 
       if (alreadyInstalled.length() > 0) {
-        showInfoTextMessage(mLocalizer.msg("update.alreadyInstalled",
+        showInfoTextMessage(LOCALIZER.msg("update.alreadyInstalled",
             "The following Plugin in current version are already installed:"), alreadyInstalled.toString(), 400);
       }
 
       if (notCompatiblePlugins.length() > 0) {
-        showInfoTextMessage(mLocalizer.msg("update.noTVBPlugin", "This following files are not TV-Browser Plugins:"),
+        showInfoTextMessage(LOCALIZER.msg("update.noTVBPlugin", "This following files are not TV-Browser Plugins:"),
             notCompatiblePlugins.toString(), 400);
       }
 

@@ -51,6 +51,7 @@ import javax.swing.text.html.HTMLDocument;
 import javax.swing.text.html.HTMLFrameHyperlinkEvent;
 
 import util.exc.ErrorHandler;
+import util.i18n.Localizer;
 import util.io.IOUtilities;
 
 /**
@@ -62,8 +63,8 @@ import util.io.IOUtilities;
 public class HelpDialog implements ActionListener, HyperlinkListener {
 
   /** The localizer for this class. */
-  private static final util.ui.Localizer mLocalizer
-    = util.ui.Localizer.getLocalizerFor(HelpDialog.class);
+  private static final Localizer LOCALIZER
+    = Localizer.getLocalizerFor(HelpDialog.class);
   
   /** The minimum size of the help dialog. */
   public static final Dimension MIN_HELP_DIALOG_SIZE = new Dimension(350, 400);
@@ -278,7 +279,7 @@ public class HelpDialog implements ActionListener, HyperlinkListener {
       text = new String(IOUtilities.loadFileFromJar(filename, clazz));
     }
     catch (IOException exc) {
-      String msg = mLocalizer.msg("error.1", "Can't open site \"{0}\"!",
+      String msg = LOCALIZER.msg("error.1", "Can't open site \"{0}\"!",
         filename);
       ErrorHandler.handle(msg, exc);
 

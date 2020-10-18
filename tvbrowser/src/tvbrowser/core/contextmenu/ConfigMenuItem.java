@@ -1,6 +1,6 @@
 package tvbrowser.core.contextmenu;
 
-import util.ui.Localizer;
+import util.i18n.Localizer;
 import devplugin.ActionMenu;
 import devplugin.ContextMenuIf;
 import devplugin.Program;

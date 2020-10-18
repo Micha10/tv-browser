@@ -37,7 +37,7 @@ import util.ui.TVBrowserIcons;
  */
 public abstract class FindAction extends AbstractAction implements DocumentListener, KeyListener, Runnable {
 
-  private static final util.ui.Localizer mLocalizer = util.ui.Localizer.getLocalizerFor(FindAction.class);
+  private static final util.i18n.Localizer mLocalizer = util.i18n.Localizer.getLocalizerFor(FindAction.class);
 
   private JTextField mSearchField = new JTextField();
 

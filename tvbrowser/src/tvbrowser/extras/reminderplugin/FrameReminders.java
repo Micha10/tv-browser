@@ -37,7 +37,7 @@ import tvbrowser.core.icontheme.IconLoader;
 import tvbrowser.core.plugin.PluginManagerImpl;
 import tvbrowser.extras.reminderplugin.PanelReminder.InterfaceClose;
 import tvbrowser.ui.mainframe.MainFrame;
-import util.ui.Localizer;
+import util.i18n.Localizer;
 import util.ui.ScrollableJPanel;
 import util.ui.TVBrowserIcons;
 import util.ui.UiUtilities;

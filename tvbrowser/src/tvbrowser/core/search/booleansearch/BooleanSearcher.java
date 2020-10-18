@@ -59,7 +59,7 @@ import tvbrowser.core.search.AbstractSearcher;
 public class BooleanSearcher extends AbstractSearcher {
 
   /** The localizer of this class. */
-  private static final util.ui.Localizer mLocalizer = util.ui.Localizer.getLocalizerFor(BooleanSearcher.class);
+  private static final util.i18n.Localizer mLocalizer = util.i18n.Localizer.getLocalizerFor(BooleanSearcher.class);
 
   private IMatcher mRootMatcher;
 

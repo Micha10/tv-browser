@@ -24,6 +24,7 @@ import tvbrowser.ui.mainframe.actions.TVBrowserActions;
 import tvbrowser.ui.settings.ChannelsSettingsTab;
 import tvbrowser.ui.settings.channel.ChannelConfigDlg;
 import util.browserlauncher.Launch;
+import util.i18n.Localizer;
 import util.ui.menu.MenuUtil;
 import devplugin.ActionMenu;
 import devplugin.Channel;
@@ -40,7 +41,7 @@ public class ChannelContextMenu implements ActionListener {
   /**
    * The localizer for this class.
    */
-  public static final Localizer mLocalizer = Localizer
+  public static final Localizer LOCALIZER = Localizer
       .getLocalizerFor(ChannelContextMenu.class);
 
   private JPopupMenu mMenu;
@@ -76,15 +77,15 @@ public class ChannelContextMenu implements ActionListener {
     mComponent = e.getComponent();
 
     mMenu = new JPopupMenu();
-    mChAdd = new JMenuItem(mLocalizer.msg("addChannels", "Add/Remove channels"));
-    mChConf = new JMenuItem(mLocalizer.msg("configChannel", "Setup channel"),
+    mChAdd = new JMenuItem(LOCALIZER.msg("addChannels", "Add/Remove channels"));
+    mChConf = new JMenuItem(LOCALIZER.msg("configChannel", "Setup channel"),
         TVBrowserIcons.edit(TVBrowserIcons.SIZE_SMALL));
-    mChGoToURL = new JMenuItem(mLocalizer.msg("openURL", "Open internet page"),
+    mChGoToURL = new JMenuItem(LOCALIZER.msg("openURL", "Open internet page"),
         IconLoader.getInstance().getIconFromTheme("apps",
             "internet-web-browser"));
 
     // dynamically create filters from available channel filter components
-    mFilterChannels = new JMenu(mLocalizer.msg("filterChannels",
+    mFilterChannels = new JMenu(LOCALIZER.msg("filterChannels",
         "Channel filter"));
     MainFrame.getInstance().updateChannelGroupMenu(mFilterChannels);
 
@@ -100,12 +101,12 @@ public class ChannelContextMenu implements ActionListener {
       mMenu.add(mFilterChannels);
       mMenu.addSeparator();
       mMenu.add(mChAdd);
-      JMenu configureLayout = new JMenu(mLocalizer.msg("layout", "Layout"));
-      layoutBoth = new JRadioButtonMenuItem(mLocalizer.msg("layoutBoth",
+      JMenu configureLayout = new JMenu(LOCALIZER.msg("layout", "Layout"));
+      layoutBoth = new JRadioButtonMenuItem(LOCALIZER.msg("layoutBoth",
           "Logo and name"));
-      layoutLogo = new JRadioButtonMenuItem(mLocalizer
+      layoutLogo = new JRadioButtonMenuItem(LOCALIZER
           .msg("layoutLogo", "Logo"));
-      layoutName = new JRadioButtonMenuItem(mLocalizer
+      layoutName = new JRadioButtonMenuItem(LOCALIZER
           .msg("layoutName", "Name"));
       configureLayout.add(layoutBoth);
       configureLayout.add(layoutLogo);

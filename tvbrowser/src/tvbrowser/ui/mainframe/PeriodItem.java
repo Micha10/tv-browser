@@ -26,12 +26,12 @@
 
 package tvbrowser.ui.mainframe;
 
-import util.ui.Localizer;
+import util.i18n.Localizer;
 
 public class PeriodItem {
 
-  private static final util.ui.Localizer mLocalizer
-    = util.ui.Localizer.getLocalizerFor(PeriodItem.class);
+  private static final util.i18n.Localizer mLocalizer
+    = util.i18n.Localizer.getLocalizerFor(PeriodItem.class);
 
   private int mDays;
 

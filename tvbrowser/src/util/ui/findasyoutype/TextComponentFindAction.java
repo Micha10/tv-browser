@@ -51,7 +51,7 @@ import util.ui.TVBrowserIcons;
 public class TextComponentFindAction extends FindAction implements
     FocusListener, ComponentListener {
 
-  private static final util.ui.Localizer mLocalizer = util.ui.Localizer
+  private static final util.i18n.Localizer mLocalizer = util.i18n.Localizer
       .getLocalizerFor(TextComponentFindAction.class);
 
   private JPanel mSearchBar;

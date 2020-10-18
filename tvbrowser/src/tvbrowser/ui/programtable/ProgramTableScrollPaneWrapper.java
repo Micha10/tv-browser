@@ -35,7 +35,7 @@ import com.jgoodies.forms.layout.FormLayout;
 import tvbrowser.core.filters.FilterManagerImpl;
 import tvbrowser.core.plugin.PluginManagerImpl;
 import tvbrowser.ui.mainframe.MainFrame;
-import util.ui.Localizer;
+import util.i18n.Localizer;
 
 import devplugin.PluginCenterPanel;
 import devplugin.SettingsItem;

@@ -61,8 +61,8 @@ import util.ui.WrapperFilter;
 
 public class AdvancedFavorite extends Favorite implements PendingFilterLoader {
 
-  private static final util.ui.Localizer mLocalizer
-        = util.ui.Localizer.getLocalizerFor(AdvancedFavorite.class);
+  private static final util.i18n.Localizer mLocalizer
+        = util.i18n.Localizer.getLocalizerFor(AdvancedFavorite.class);
 
   public static final String TYPE_ID = "advanced";
 

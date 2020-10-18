@@ -54,7 +54,7 @@ import devplugin.SettingsTab;
  * @author René Mach
  */
 public class ChannelIconAndNameSettingsTab implements SettingsTab {
-  private static final util.ui.Localizer mLocalizer = util.ui.Localizer.getLocalizerFor(ChannelIconAndNameSettingsTab.class);
+  private static final util.i18n.Localizer mLocalizer = util.i18n.Localizer.getLocalizerFor(ChannelIconAndNameSettingsTab.class);
   
   private JRadioButton mShowIconAndNameInProgramTable;
   private JRadioButton mShowOnlyIconInProgramTable;

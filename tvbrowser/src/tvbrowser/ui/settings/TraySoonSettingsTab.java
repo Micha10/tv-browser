@@ -17,7 +17,7 @@ import com.jgoodies.forms.layout.FormLayout;
 import devplugin.SettingsItem;
 import devplugin.SettingsTab;
 import tvbrowser.core.Settings;
-import util.ui.Localizer;
+import util.i18n.Localizer;
 import util.ui.UiUtilities;
 
 /**
@@ -28,7 +28,7 @@ import util.ui.UiUtilities;
  */
 public class TraySoonSettingsTab implements SettingsTab {
 
-  private static final Localizer mLocalizer = TrayBaseSettingsTab.mLocalizer;
+  private static final Localizer mLocalizer = TrayBaseSettingsTab.LOCALIZER;
   private JCheckBox mIsEnabled, mShowTime, mShowToolTip;
   private JLabel mIconSeparator,mSeparator1, mSeparator2;
   private static boolean mTrayIsEnabled = Settings.propTrayIsEnabled.getBoolean();

@@ -64,7 +64,7 @@ import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.Sizes;
 
 import tvbrowser.core.Settings;
-import util.ui.Localizer;
+import util.i18n.Localizer;
 import util.ui.ScrollableJPanel;
 import util.ui.UiUtilities;
 import util.ui.WindowClosingIf;

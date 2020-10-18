@@ -29,7 +29,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Iterator;
 
-import util.ui.Localizer;
+import util.i18n.Localizer;
 
 /**
  * Contains all the field types of a program.
@@ -42,11 +42,11 @@ import util.ui.Localizer;
  */
 public class ProgramFieldType {
 
-  private static Localizer mLocalizer
-    = util.ui.Localizer.getLocalizerFor(ProgramFieldType.class);
+  private static Localizer LOCALIZER
+    = Localizer.getLocalizerFor(ProgramFieldType.class);
 
-  private static final ArrayList<ProgramFieldType> mKnownTypeList = new ArrayList<ProgramFieldType>();
-  private static ProgramFieldType[] mKnownTypeArray;
+  private static final ArrayList<ProgramFieldType> KNOWN_TYPE_LIST = new ArrayList<ProgramFieldType>();
+  private static ProgramFieldType[] KNOWN_TYPE_ARRAY;
   private static final Comparator<ProgramFieldType> COMPARATOR_LOCAL_NAMES = new Comparator<ProgramFieldType>() {
     @Override
     public int compare(ProgramFieldType o1, ProgramFieldType o2) {
@@ -495,15 +495,15 @@ public class ProgramFieldType {
     mStorageIndex = storageIndex;
 
     if (isKnownType) {
-      mKnownTypeList.add(this);
+      KNOWN_TYPE_LIST.add(this);
       int maxTypeId = 0;
-      for (int i=0;i<mKnownTypeList.size();i++) {
-      	maxTypeId = Math.max(maxTypeId, (mKnownTypeList.get(i)).getTypeId());
+      for (int i=0;i<KNOWN_TYPE_LIST.size();i++) {
+      	maxTypeId = Math.max(maxTypeId, (KNOWN_TYPE_LIST.get(i)).getTypeId());
       }
-      mKnownTypeArray=new ProgramFieldType[maxTypeId+1];
-      for (int i=0;i<mKnownTypeList.size();i++) {
-        ProgramFieldType type=mKnownTypeList.get(i);
-        mKnownTypeArray[type.getTypeId()] = type;
+      KNOWN_TYPE_ARRAY=new ProgramFieldType[maxTypeId+1];
+      for (int i=0;i<KNOWN_TYPE_LIST.size();i++) {
+        ProgramFieldType type=KNOWN_TYPE_LIST.get(i);
+        KNOWN_TYPE_ARRAY[type.getTypeId()] = type;
       }
       // check for invalid/duplicate storage index fields
       if (((format == FORMAT_TEXT || format == FORMAT_BINARY) && (storageIndex >= OBJECT_FIELDS_COUNT))
@@ -530,8 +530,8 @@ public class ProgramFieldType {
 
 
   public static ProgramFieldType getTypeForId(int typeId) {
-    if (typeId< mKnownTypeArray.length) {
-      return mKnownTypeArray[typeId];
+    if (typeId< KNOWN_TYPE_ARRAY.length) {
+      return KNOWN_TYPE_ARRAY[typeId];
     }
 
     return new ProgramFieldType(typeId, FORMAT_UNKNOWN, false,
@@ -551,7 +551,7 @@ public class ProgramFieldType {
 
 
   public static Iterator<ProgramFieldType> getTypeIterator() {
-    return mKnownTypeList.iterator();
+    return KNOWN_TYPE_LIST.iterator();
   }
 
 
@@ -569,7 +569,7 @@ public class ProgramFieldType {
 
   public String getLocalizedName() {
     if(mLocalizedName == null) {
-      mLocalizedName = mLocalizer.msg(mLocalizerKey, mLocalizerDefaultMsg);
+      mLocalizedName = LOCALIZER.msg(mLocalizerKey, mLocalizerDefaultMsg);
     }
 
     return mLocalizedName;
@@ -621,7 +621,7 @@ public class ProgramFieldType {
 
 
   public static void resetLocalizer() {
-    mLocalizer = Localizer.getLocalizerFor(ProgramFieldType.class);
+    LOCALIZER = Localizer.getLocalizerFor(ProgramFieldType.class);
   }
 
   /**

@@ -59,7 +59,7 @@ import tvbrowser.ui.mainframe.MainFrame;
 import tvbrowser.ui.settings.ContextmenuSettingsTab;
 import util.settings.ContextMenuMouseActionSetting;
 //import util.settings.StringProperty;
-import util.ui.Localizer;
+import util.i18n.Localizer;
 import util.ui.TVBrowserIcons;
 import util.ui.menu.MenuUtil;
 

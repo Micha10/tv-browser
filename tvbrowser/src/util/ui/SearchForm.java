@@ -58,6 +58,7 @@ import com.jgoodies.forms.layout.FormLayout;
 import devplugin.PluginManager;
 import devplugin.ProgramFieldType;
 import tvbrowser.core.Settings;
+import util.i18n.Localizer;
 
 /**
  * A search form for searching TV listings.
@@ -67,17 +68,17 @@ import tvbrowser.core.Settings;
 public class SearchForm extends JPanel {
 
   /** The localizer of this class. */
-  private static final util.ui.Localizer mLocalizer
-    = util.ui.Localizer.getLocalizerFor(SearchForm.class);
+  private static final Localizer LOCALIZER
+    = Localizer.getLocalizerFor(SearchForm.class);
 
   /** The messages for the time combo box. */
   private static final String[] TIME_STRING_ARR = new String[] {
     Localizer.getLocalization(Localizer.I18N_TODAY),
     Localizer.getLocalization(Localizer.I18N_TOMORROW),
-    mLocalizer.msg("search.7", "Next week"),
-      mLocalizer.msg("search.14", "2 weeks"),
-      mLocalizer.msg("search.21", "3 weeks"),
-      mLocalizer.msg("search.1000", "All data")
+    LOCALIZER.msg("search.7", "Next week"),
+      LOCALIZER.msg("search.14", "2 weeks"),
+      LOCALIZER.msg("search.21", "3 weeks"),
+      LOCALIZER.msg("search.1000", "All data")
   };
 
   /** The values for the time combo box. */
@@ -181,42 +182,42 @@ public class SearchForm extends JPanel {
             }
           }
         });
-        topBuilder.append(mLocalizer.msg("searchTerm", "Search term"), mPatternCB);
+        topBuilder.append(LOCALIZER.msg("searchTerm", "Search term"), mPatternCB);
 
       } else {
         mPatternTF = new JTextField(20);
-        topBuilder.append(mLocalizer.msg("searchTerm", "Search term"), mPatternTF);
+        topBuilder.append(LOCALIZER.msg("searchTerm", "Search term"), mPatternTF);
       }
     }
 
     if (showTimeSelection) {
       mTimeCB = new JComboBox<>(TIME_STRING_ARR);
-      topBuilder.append(mLocalizer.msg("period", "Period"), mTimeCB);
+      topBuilder.append(LOCALIZER.msg("period", "Period"), mTimeCB);
     }
 
     // Search in
     bg = new ButtonGroup();
     String msg;
 
-    searchInPanel.addSeparator(mLocalizer.msg("searchIn", "Search in"), CC.xyw(1,1,2));
+    searchInPanel.addSeparator(LOCALIZER.msg("searchIn", "Search in"), CC.xyw(1,1,2));
 
     final ActionListener updateEnabledListener = e -> {
       updateEnabled();
     };
 
-    mSearchTitleRB = new JRadioButton(mLocalizer.msg("onlyTitle", "Only in title"));
+    mSearchTitleRB = new JRadioButton(LOCALIZER.msg("onlyTitle", "Only in title"));
     mSearchTitleRB.setSelected(true);
     mSearchTitleRB.addActionListener(updateEnabledListener);
     bg.add(mSearchTitleRB);
     searchInPanel.add(mSearchTitleRB, CC.xy(2,3));
 
-    msg = mLocalizer.msg("allFields", "All fields");
+    msg = LOCALIZER.msg("allFields", "All fields");
     mSearchAllRB = new JRadioButton(msg);
     mSearchAllRB.addActionListener(updateEnabledListener);
     bg.add(mSearchAllRB);
     searchInPanel.add(mSearchAllRB, CC.xy(2,4));
 
-    mSearchUserDefinedRB = new JRadioButton(mLocalizer.msg("certainFields", "Certain Fields"));
+    mSearchUserDefinedRB = new JRadioButton(LOCALIZER.msg("certainFields", "Certain Fields"));
     mSearchUserDefinedRB.addActionListener(updateEnabledListener);
     bg.add(mSearchUserDefinedRB);
 
@@ -232,34 +233,34 @@ public class SearchForm extends JPanel {
 
     optionsPanel.addSeparator(Localizer.getLocalization(Localizer.I18N_OPTIONS), CC.xyw(1,1,3));
 
-    mCaseSensitiveChB = new JCheckBox(mLocalizer.msg("caseSensitive", "Case sensitive"));
+    mCaseSensitiveChB = new JCheckBox(LOCALIZER.msg("caseSensitive", "Case sensitive"));
     optionsPanel.add(mCaseSensitiveChB, CC.xy(2,3));
 
     bg = new ButtonGroup();
-    mSearcherTypeExactlyRB = new JRadioButton(mLocalizer.msg("matchExactly", "Match exactly"));
+    mSearcherTypeExactlyRB = new JRadioButton(LOCALIZER.msg("matchExactly", "Match exactly"));
     bg.add(mSearcherTypeExactlyRB);
     optionsPanel.add(mSearcherTypeExactlyRB, CC.xy(2,4));
     
-    mSearcherTypeWholeTermRB = new JRadioButton(mLocalizer.msg("wholeTerm", "Whole term"));
+    mSearcherTypeWholeTermRB = new JRadioButton(LOCALIZER.msg("wholeTerm", "Whole term"));
     bg.add(mSearcherTypeWholeTermRB);
     optionsPanel.add(mSearcherTypeWholeTermRB, CC.xy(2,5));
     
-    mSearcherTypeKeywordRB = new JRadioButton(mLocalizer.msg("matchSubstring", "Term is a keyword"));
+    mSearcherTypeKeywordRB = new JRadioButton(LOCALIZER.msg("matchSubstring", "Term is a keyword"));
     mSearcherTypeKeywordRB.setSelected(true);
     bg.add(mSearcherTypeKeywordRB);
     optionsPanel.add(mSearcherTypeKeywordRB, CC.xy(2,6));
     
-    mSearcherTypeBooleanRB = new JRadioButton(mLocalizer.msg("matchBoolean", "Term is a boolean (with AND, OR, a.s.o.)"));
+    mSearcherTypeBooleanRB = new JRadioButton(LOCALIZER.msg("matchBoolean", "Term is a boolean (with AND, OR, a.s.o.)"));
     bg.add(mSearcherTypeBooleanRB);
     optionsPanel.add(mSearcherTypeBooleanRB, CC.xy(2,7));
 
-    mSearcherTypeRegexRB = new JRadioButton(mLocalizer.msg("matchRegex", "Term is a regular expression"));
+    mSearcherTypeRegexRB = new JRadioButton(LOCALIZER.msg("matchRegex", "Term is a regular expression"));
     bg.add(mSearcherTypeRegexRB);
     optionsPanel.add(mSearcherTypeRegexRB, CC.xy(2,8));
 
     final LinkButton b = new LinkButton(
-            "("+mLocalizer.msg("regExHelp","Help for regular expressions")+")",
-            mLocalizer.msg("regExUrl","http://wiki.tvbrowser.org/index.php/Regul%C3%A4re_Ausdr%C3%BCcke"));
+            "("+LOCALIZER.msg("regExHelp","Help for regular expressions")+")",
+            LOCALIZER.msg("regExUrl","http://wiki.tvbrowser.org/index.php/Regul%C3%A4re_Ausdr%C3%BCcke"));
     b.setHorizontalAlignment(SwingConstants.CENTER);
     optionsPanel.add(b, CC.xy(2,10));
 
@@ -647,7 +648,7 @@ public class SearchForm extends JPanel {
       String msg;
 
       mDlg = UiUtilities.createDialog(parent, true);
-      msg = mLocalizer.msg("chooseSearchFields", "Choose search fields");
+      msg = LOCALIZER.msg("chooseSearchFields", "Choose search fields");
       mDlg.setTitle(msg);
 
       UiUtilities.registerForClosing(new WindowClosingIf() {
@@ -666,7 +667,7 @@ public class SearchForm extends JPanel {
       main.setBorder(UiUtilities.DIALOG_BORDER);
       mDlg.setContentPane(main);
 
-      msg = mLocalizer.msg("chooseSearchFieldHelp",
+      msg = LOCALIZER.msg("chooseSearchFieldHelp",
         "Please select the fields to search for");
       main.add(UiUtilities.createHelpTextArea(msg + "\n"), BorderLayout.NORTH);
 
@@ -678,7 +679,7 @@ public class SearchForm extends JPanel {
       buttons.setBorder(BorderFactory.createEmptyBorder(5,0,5,0));
       
       if(showDefaultSelection) {
-        mDefaultSelection = new JCheckBox(mLocalizer.msg("showDefaultSelection", "Save selected as default"));
+        mDefaultSelection = new JCheckBox(LOCALIZER.msg("showDefaultSelection", "Save selected as default"));
         buttons.addButton(mDefaultSelection);
       }
       

@@ -24,8 +24,8 @@
 package tvbrowser.extras.reminderplugin;
 
 public class RemindValue {
-  private static final util.ui.Localizer mLocalizer
-    = util.ui.Localizer.getLocalizerFor(RemindValue.class);
+  private static final util.i18n.Localizer mLocalizer
+    = util.i18n.Localizer.getLocalizerFor(RemindValue.class);
   
   private int mMinutes;
   private String mTranslation;

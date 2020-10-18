@@ -37,7 +37,7 @@ import tvbrowser.ui.mainframe.MainFrame;
  */
 public abstract class AbstractDateSelector extends JPanel implements
     MouseListener {
-  private static final util.ui.Localizer mLocalizer = util.ui.Localizer
+  private static final util.i18n.Localizer mLocalizer = util.i18n.Localizer
       .getLocalizerFor(AbstractDateSelector.class);
 
   private Date mCurChoosenDate = Date.getCurrentDate();

@@ -73,7 +73,7 @@ import util.ui.WrapperFilter;
 
 public class ExcludeWizardStep extends AbstractWizardStep {
 
-  private static final util.ui.Localizer mLocalizer = util.ui.Localizer.getLocalizerFor(ExcludeWizardStep.class);
+  private static final util.i18n.Localizer LOCALIZER = util.i18n.Localizer.getLocalizerFor(ExcludeWizardStep.class);
 
   private static final int MODE_CREATE_DERIVED_FROM_PROGRAM = 0;
 
@@ -168,44 +168,44 @@ public class ExcludeWizardStep extends AbstractWizardStep {
     mFavorite = favorite;
     mProgram = prog;
     mExclusion = exclusion;
-    mDoneBtnText = mLocalizer.msg("doneButton.exclusion","Create exclusion criteria now");
+    mDoneBtnText = LOCALIZER.msg("doneButton.exclusion","Create exclusion criteria now");
 
     if (mode == MODE_CREATE_EXCLUSION || mode == MODE_EDIT_EXCLUSION) {
-      mMainQuestion = mLocalizer.msg("mainQuestion.edit",
+      mMainQuestion = LOCALIZER.msg("mainQuestion.edit",
           "What programs do you want to exclude?");
-      mChannelQuestion = mLocalizer.msg("channelQuestion.edit", "Programs aired on this channel:");
-      mTopicQuestion = mLocalizer.msg("topicQuestion.edit", "Programs containing this term:");
-      mTimeQuestion = mLocalizer.msg("timeQuestion.edit", "Programs that start during this period:");
-      mTitleQuestion = mLocalizer.msg("titleQuestion.edit", "Programs with this title:");
-      mEpisodeTitleQuestion = mLocalizer.msg("episodeTitleQuestion.edit", "Program with this episode title:");
-      mDayQuestion = mLocalizer.msg("dayOfWeekQuestion.edit","Programs on this day of week:");
-      mFilterQuestion = mLocalizer.msg("filterQuestion.edit","Programs of the filter:");
-      mCateogryQuestion = mLocalizer.msg("categoryQuestion.edit", "Programs with category:");
-      mProgramFieldQuestion = mLocalizer.msg("programFieldQuestion.edit", "Programs with:");
-      mDurationQuestion = mLocalizer.msg("programDurationQuestion.edit", "Programs with duration:");
+      mChannelQuestion = LOCALIZER.msg("channelQuestion.edit", "Programs aired on this channel:");
+      mTopicQuestion = LOCALIZER.msg("topicQuestion.edit", "Programs containing this term:");
+      mTimeQuestion = LOCALIZER.msg("timeQuestion.edit", "Programs that start during this period:");
+      mTitleQuestion = LOCALIZER.msg("titleQuestion.edit", "Programs with this title:");
+      mEpisodeTitleQuestion = LOCALIZER.msg("episodeTitleQuestion.edit", "Program with this episode title:");
+      mDayQuestion = LOCALIZER.msg("dayOfWeekQuestion.edit","Programs on this day of week:");
+      mFilterQuestion = LOCALIZER.msg("filterQuestion.edit","Programs of the filter:");
+      mCateogryQuestion = LOCALIZER.msg("categoryQuestion.edit", "Programs with category:");
+      mProgramFieldQuestion = LOCALIZER.msg("programFieldQuestion.edit", "Programs with:");
+      mDurationQuestion = LOCALIZER.msg("programDurationQuestion.edit", "Programs with duration:");
     } else {
       if(mFavorite != null) {
-        mMainQuestion = mLocalizer.msg("mainQuestion.create",
+        mMainQuestion = LOCALIZER.msg("mainQuestion.create",
             "Warum gehoert diese Sendung nicht zur Lieblingssendung '{0}'?", mFavorite.getName());
       }
       else {
-        mMainQuestion = mLocalizer.msg("mainQuestion.createGlobal","Why do you want exclude this program?");
+        mMainQuestion = LOCALIZER.msg("mainQuestion.createGlobal","Why do you want exclude this program?");
       }
 
-      mChannelQuestion = mLocalizer.msg("channelQuestion.create", "Wrong channel:");
-      mTopicQuestion = mLocalizer.msg("topicQuestion.create", "Wrong topic:");
-      mTimeQuestion = mLocalizer.msg("timeQuestion.create", "Wrong start time:");
-      mTitleQuestion = mLocalizer.msg("titleQuestion.create", "Wrong episode title:");
-      mEpisodeTitleQuestion = mLocalizer.msg("episodeTitleQuestion.create", "Wrong episode number:");
-      mDayQuestion = mLocalizer.msg("dayOfWeekQuestion.create","Wrong day:");
-      mCateogryQuestion = mLocalizer.msg("categoryQuestion.create", "Wrong category:");
-      mProgramFieldQuestion = mLocalizer.msg("programFieldQuestion.create", "Wrong:");
-      mDurationQuestion = mLocalizer.msg("programDurationQuestion.create", "Wrong duration:");
+      mChannelQuestion = LOCALIZER.msg("channelQuestion.create", "Wrong channel:");
+      mTopicQuestion = LOCALIZER.msg("topicQuestion.create", "Wrong topic:");
+      mTimeQuestion = LOCALIZER.msg("timeQuestion.create", "Wrong start time:");
+      mTitleQuestion = LOCALIZER.msg("titleQuestion.create", "Wrong episode title:");
+      mEpisodeTitleQuestion = LOCALIZER.msg("episodeTitleQuestion.create", "Wrong episode number:");
+      mDayQuestion = LOCALIZER.msg("dayOfWeekQuestion.create","Wrong day:");
+      mCateogryQuestion = LOCALIZER.msg("categoryQuestion.create", "Wrong category:");
+      mProgramFieldQuestion = LOCALIZER.msg("programFieldQuestion.create", "Wrong:");
+      mDurationQuestion = LOCALIZER.msg("programDurationQuestion.create", "Wrong duration:");
     }
   }
 
   public String getTitle() {
-    return mLocalizer.msg("title", "Exclude Programs");
+    return LOCALIZER.msg("title", "Exclude Programs");
   }
 
   @Override
@@ -326,10 +326,10 @@ public class ExcludeWizardStep extends AbstractWizardStep {
     
     rowInx += 2;
     panelBuilder.add(mProgramDurationCb = new JCheckBox(mDurationQuestion), CC.xy(2, rowInx));
-    panelBuilder.add(mDurationTooShort = new JRadioButton(mLocalizer.msg("programDuration.tooShort", "duration to short with:")), CC.xy(3, rowInx));
-    panelBuilder.add(mDurationTooLong = new JRadioButton(mLocalizer.msg("programDuration.tooLong", "duration to long with:")), CC.xy(3, ++rowInx));
+    panelBuilder.add(mDurationTooShort = new JRadioButton(LOCALIZER.msg("programDuration.tooShort", "duration to short with:")), CC.xy(3, rowInx));
+    panelBuilder.add(mDurationTooLong = new JRadioButton(LOCALIZER.msg("programDuration.tooLong", "duration to long with:")), CC.xy(3, ++rowInx));
 
-    final JLabel minutes = new JLabel(mLocalizer.msg("programDuration.minutes", "minutes"));
+    final JLabel minutes = new JLabel(LOCALIZER.msg("programDuration.minutes", "minutes"));
     JPanel duration = new JPanel(new FormLayout("default,2dlu,default:grow","fill:1dlu:grow,default,fill:1dlu:grow"));
     duration.add(mDurationValue = new JSpinner(), CC.xy(1, 2));
     duration.add(minutes, CC.xy(3, 2));
@@ -386,7 +386,7 @@ public class ExcludeWizardStep extends AbstractWizardStep {
     if (mMode == MODE_CREATE_DERIVED_FROM_PROGRAM && mProgram != null) {
       mTitleCb.setSelected(false);
 
-      mDoneBtnText = mLocalizer.msg("doneButton.toBlacklist","Remove this program now");
+      mDoneBtnText = LOCALIZER.msg("doneButton.toBlacklist","Remove this program now");
 
       mTitleTf.setText(mProgram.getTitle());
       
@@ -546,9 +546,9 @@ public class ExcludeWizardStep extends AbstractWizardStep {
 
     if(mMode == MODE_CREATE_DERIVED_FROM_PROGRAM && mProgram != null) {
       if(allowNext || mFavorite == null) {
-        mDoneBtnText = mLocalizer.msg("doneButton.exclusion","Create exclusion criteria now");
+        mDoneBtnText = LOCALIZER.msg("doneButton.exclusion","Create exclusion criteria now");
       } else {
-        mDoneBtnText = mLocalizer.msg("doneButton.toBlacklist","Only remove this program now");
+        mDoneBtnText = LOCALIZER.msg("doneButton.toBlacklist","Only remove this program now");
       }
 
       handler.changeDoneBtnText();
@@ -620,7 +620,7 @@ public class ExcludeWizardStep extends AbstractWizardStep {
       programFieldExclusion = new ProgramFieldExclusion(((ProgramFieldType)mProgramFieldChooser.getSelectedItem()).getTypeId(), mProgramFieldTextTf.getText());
     }
     
-    if (mDoneBtnText.compareTo(mLocalizer.msg("doneButton.toBlacklist","Remove this program now")) == 0) {
+    if (mDoneBtnText.compareTo(LOCALIZER.msg("doneButton.toBlacklist","Remove this program now")) == 0) {
       return "blacklist";
     } else {
       return new Exclusion(title, topic, channel, timeFrom, timeTo, weekOfDay, filterName, episodeTitle, category, programFieldExclusion, !mProgramDurationCb.isSelected() ? Exclusion.TYPE_DURATION_NONE : mDurationTooShort.isSelected() ? Exclusion.TYPE_DURATION_TOO_SHORT : Exclusion.TYPE_DURATION_TOO_LONG, (int)mDurationValue.getValue());

@@ -73,7 +73,7 @@ public abstract class AbstractPluginProxy implements PluginProxy, ContextMenuIf 
   public static final String DEFAULT_PLUGIN_ICON_NAME = "imgs/Jar16.gif";
 
   /** The localizer for this class. */
-  protected static final util.ui.Localizer mLocalizer = util.ui.Localizer
+  protected static final util.i18n.Localizer mLocalizer = util.i18n.Localizer
       .getLocalizerFor(AbstractPluginProxy.class);
 
   /**

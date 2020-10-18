@@ -39,6 +39,7 @@ import devplugin.Date;
 import devplugin.Program;
 import tvbrowser.core.Settings;
 import tvbrowser.core.plugin.PluginManagerImpl;
+import util.i18n.Localizer;
 import util.settings.PluginPictureSettings;
 import util.settings.ProgramPanelSettings;
 

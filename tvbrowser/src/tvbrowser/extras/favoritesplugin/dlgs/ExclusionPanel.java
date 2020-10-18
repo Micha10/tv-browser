@@ -43,7 +43,7 @@ import tvbrowser.extras.favoritesplugin.core.Exclusion;
 import tvbrowser.extras.favoritesplugin.core.Favorite;
 import tvbrowser.extras.favoritesplugin.wizards.ExcludeWizardStep;
 import tvbrowser.extras.favoritesplugin.wizards.WizardHandler;
-import util.ui.Localizer;
+import util.i18n.Localizer;
 import util.ui.TVBrowserIcons;
 import util.ui.UiUtilities;
 
@@ -51,7 +51,7 @@ import util.ui.UiUtilities;
  * A class with exclusion settings.
  */
 public class ExclusionPanel extends JPanel{
-  private static final Localizer mLocalizer = Localizer.getLocalizerFor(ExclusionPanel.class);
+  private static final Localizer LOCALIZER = Localizer.getLocalizerFor(ExclusionPanel.class);
   
   private JList<Exclusion> mExclusionsList;
   
@@ -121,9 +121,9 @@ public class ExclusionPanel extends JPanel{
     mEditExclusionBtn.setMargin(UiUtilities.ZERO_INSETS);
     mDeleteExclusionBtn.setMargin(UiUtilities.ZERO_INSETS);
 
-    mNewExclusionBtn.setToolTipText(mLocalizer.msg("tooltip.newExclusion", "New exclusion criteria"));
-    mEditExclusionBtn.setToolTipText(mLocalizer.msg("tooltip.editExclusion", "Edit exclusion criteria"));
-    mDeleteExclusionBtn.setToolTipText(mLocalizer.msg("tooltip.deleteExclusion", "Delete exclusion criteria"));
+    mNewExclusionBtn.setToolTipText(LOCALIZER.msg("tooltip.newExclusion", "New exclusion criteria"));
+    mEditExclusionBtn.setToolTipText(LOCALIZER.msg("tooltip.editExclusion", "Edit exclusion criteria"));
+    mDeleteExclusionBtn.setToolTipText(LOCALIZER.msg("tooltip.deleteExclusion", "Delete exclusion criteria"));
 
     add(mNewExclusionBtn, cc.xy(4, 1));
     add(mEditExclusionBtn, cc.xy(4, 3));

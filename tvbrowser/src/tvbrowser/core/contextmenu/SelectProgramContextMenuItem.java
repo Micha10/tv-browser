@@ -34,7 +34,7 @@ import devplugin.ActionMenu;
 import devplugin.ContextMenuIf;
 import devplugin.Program;
 import tvbrowser.ui.mainframe.MainFrame;
-import util.ui.Localizer;
+import util.i18n.Localizer;
 
 public class SelectProgramContextMenuItem implements ContextMenuIf {
   private static final Localizer mLocalizer = Localizer.getLocalizerFor(SelectProgramContextMenuItem.class);

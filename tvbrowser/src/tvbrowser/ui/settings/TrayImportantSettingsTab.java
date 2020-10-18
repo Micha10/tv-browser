@@ -20,7 +20,7 @@ import com.jgoodies.forms.layout.FormLayout;
 import devplugin.SettingsItem;
 import devplugin.SettingsTab;
 import tvbrowser.core.Settings;
-import util.ui.Localizer;
+import util.i18n.Localizer;
 import util.ui.MarkPriorityComboBoxRenderer;
 import util.ui.UiUtilities;
 
@@ -31,7 +31,7 @@ import util.ui.UiUtilities;
  *
  */
 public class TrayImportantSettingsTab implements SettingsTab {
-  private static final Localizer mLocalizer = TrayBaseSettingsTab.mLocalizer;
+  private static final Localizer LOCALIZER = TrayBaseSettingsTab.LOCALIZER;
   private static final int mMaxSizeTray = 30;
   private static final int mMaxSizeSubmenu = 40;
   
@@ -60,13 +60,13 @@ public class TrayImportantSettingsTab implements SettingsTab {
         "pref,pref,5dlu,pref,10dlu,pref,5dlu,pref,pref,pref,fill:pref:grow,pref"));
     builder.border(Borders.DIALOG);
     
-    mIsEnabled = new JCheckBox(mLocalizer.msg("importantEnabled","Show important programs"),Settings.propTrayImportantProgramsEnabled.getBoolean());
-    mIsEnabled.setToolTipText(mLocalizer.msg("importantToolTip","Important programs are all marked programs."));
+    mIsEnabled = new JCheckBox(LOCALIZER.msg("importantEnabled","Show important programs"),Settings.propTrayImportantProgramsEnabled.getBoolean());
+    mIsEnabled.setToolTipText(LOCALIZER.msg("importantToolTip","Important programs are all marked programs."));
     
     ButtonGroup bg = new ButtonGroup();
     
-    mShowInSubMenu = new JRadioButton(mLocalizer.msg("inSubMenu","in a sub menu"),Settings.propTrayImportantProgramsInSubMenu.getBoolean());
-    mShowInTray = new JRadioButton(mLocalizer.msg("inTray","in the tray menu"), !mShowInSubMenu.isSelected());
+    mShowInSubMenu = new JRadioButton(LOCALIZER.msg("inSubMenu","in a sub menu"),Settings.propTrayImportantProgramsInSubMenu.getBoolean());
+    mShowInTray = new JRadioButton(LOCALIZER.msg("inTray","in the tray menu"), !mShowInSubMenu.isSelected());
     
     bg.add(mShowInSubMenu);
     bg.add(mShowInTray);
@@ -75,23 +75,23 @@ public class TrayImportantSettingsTab implements SettingsTab {
     
     mSize = new JSpinner(new SpinnerNumberModel(Settings.propTrayImportantProgramsSize.getInt(), 1, maxSizeValue, 1));
     
-    mShowIconAndName = new JRadioButton(mLocalizer.msg("showIconName","Show channel icon and channel name"),Settings.propTrayImportantProgramsContainsName.getBoolean() && Settings.propTrayImportantProgramsContainsIcon.getBoolean());
-    mShowName = new JRadioButton(mLocalizer.msg("showName","Show channel name"),Settings.propTrayImportantProgramsContainsName.getBoolean() && !Settings.propTrayImportantProgramsContainsIcon.getBoolean());
-    mShowIcon = new JRadioButton(mLocalizer.msg("showIcon","Show channel icon"),!Settings.propTrayImportantProgramsContainsName.getBoolean() && Settings.propTrayImportantProgramsContainsIcon.getBoolean());
+    mShowIconAndName = new JRadioButton(LOCALIZER.msg("showIconName","Show channel icon and channel name"),Settings.propTrayImportantProgramsContainsName.getBoolean() && Settings.propTrayImportantProgramsContainsIcon.getBoolean());
+    mShowName = new JRadioButton(LOCALIZER.msg("showName","Show channel name"),Settings.propTrayImportantProgramsContainsName.getBoolean() && !Settings.propTrayImportantProgramsContainsIcon.getBoolean());
+    mShowIcon = new JRadioButton(LOCALIZER.msg("showIcon","Show channel icon"),!Settings.propTrayImportantProgramsContainsName.getBoolean() && Settings.propTrayImportantProgramsContainsIcon.getBoolean());
     
     ButtonGroup bg1 = new ButtonGroup();
     bg1.add(mShowIconAndName);
     bg1.add(mShowIcon);
     bg1.add(mShowName);
     
-    mShowSortNumber = new JCheckBox(mLocalizer.msg("showChannelNumber", "Show sort number"),Settings.propTrayImportantProgramsShowingSortNumber.getBoolean());
+    mShowSortNumber = new JCheckBox(LOCALIZER.msg("showChannelNumber", "Show sort number"),Settings.propTrayImportantProgramsShowingSortNumber.getBoolean());
     
-    mShowDate = new JCheckBox(mLocalizer.msg("showDate","Show date"),Settings.propTrayImportantProgramsContainsDate.getBoolean());
-    mShowTime = new JCheckBox(mLocalizer.msg("showTime","Show start time"),Settings.propTrayImportantProgramsContainsTime.getBoolean());
-    mShowToolTip = new JCheckBox(mLocalizer.msg("showToolTip","Show additional information of the program in a tool tip"),Settings.propTrayImportantProgramsContainsToolTip.getBoolean());
-    mShowToolTip.setToolTipText(mLocalizer.msg("toolTipTip","Tool tips are small helper to something, like this one."));
+    mShowDate = new JCheckBox(LOCALIZER.msg("showDate","Show date"),Settings.propTrayImportantProgramsContainsDate.getBoolean());
+    mShowTime = new JCheckBox(LOCALIZER.msg("showTime","Show start time"),Settings.propTrayImportantProgramsContainsTime.getBoolean());
+    mShowToolTip = new JCheckBox(LOCALIZER.msg("showToolTip","Show additional information of the program in a tool tip"),Settings.propTrayImportantProgramsContainsToolTip.getBoolean());
+    mShowToolTip.setToolTipText(LOCALIZER.msg("toolTipTip","Tool tips are small helper to something, like this one."));
         
-    mHelpLabel = UiUtilities.createHtmlHelpTextArea(mLocalizer.msg("help","The Tray is deactivated. To activate these settings activate the option <b>Tray activated</b> in the <a href=\"#link\">Tray Base settings</a>."), e -> {
+    mHelpLabel = UiUtilities.createHtmlHelpTextArea(LOCALIZER.msg("help","The Tray is deactivated. To activate these settings activate the option <b>Tray activated</b> in the <a href=\"#link\">Tray Base settings</a>."), e -> {
       if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
         SettingsDialog.getInstance().showSettingsTab(SettingsItem.TRAY);
       }
@@ -99,11 +99,11 @@ public class TrayImportantSettingsTab implements SettingsTab {
     
     JPanel priority = new JPanel(new FormLayout("pref,5dlu,pref","1dlu,pref"));
     
-    Localizer localizer = MarkingsSettingsTab.mLocalizer;
+    Localizer localizer = MarkingsSettingsTab.LOCALIZER;
     
     String[] colors = {localizer.msg("color.minPriority","1. Color (minimum priority)"),localizer.msg("color.lowerMediumPriority","2. Color (lower medium priority)"),localizer.msg("color.mediumPriority","3. Color (Medium priority)"),localizer.msg("color.higherMediumPriority","4. Color (higher medium priority)"),localizer.msg("color.maxPriority","5. Color (maximum priority)")};
     
-    mPriorityText = new JLabel(mLocalizer.msg("importantMarkPriority","Mark priority higher or the same like:"));
+    mPriorityText = new JLabel(LOCALIZER.msg("importantMarkPriority","Mark priority higher or the same like:"));
     
     mPriority = new JComboBox<>(colors);
     mPriority.setSelectedIndex(Settings.propTrayImportantProgramsPriority.getInt());
@@ -112,23 +112,23 @@ public class TrayImportantSettingsTab implements SettingsTab {
     priority.add(mPriorityText, CC.xy(1,2));
     priority.add(mPriority, CC.xy(3,2));
     
-    JPanel c = (JPanel) builder.addSeparator(mLocalizer.msg("important","Important programs"), CC.xyw(1,1,8));
+    JPanel c = (JPanel) builder.addSeparator(LOCALIZER.msg("important","Important programs"), CC.xyw(1,1,8));
     builder.add(mIsEnabled, CC.xyw(2,3,6));
     builder.add(mShowInTray, CC.xyw(3,4,5));
     builder.add(mShowInSubMenu, CC.xyw(3,5,5));
-    mSizeLabel = builder.addLabel(mLocalizer.msg("importantSize","Number of shown programs:"), CC.xy(3,6));
+    mSizeLabel = builder.addLabel(LOCALIZER.msg("importantSize","Number of shown programs:"), CC.xy(3,6));
     builder.add(mSize, CC.xy(5,6));
-    mSizeInfo = builder.addLabel(mLocalizer.msg("sizeInfo","(maximum: {0})",maxSizeValue), CC.xy(7,6));
+    mSizeInfo = builder.addLabel(LOCALIZER.msg("sizeInfo","(maximum: {0})",maxSizeValue), CC.xy(7,6));
     builder.add(priority, CC.xyw(3,7,5));
     
-    JPanel c1 = (JPanel) builder.addSeparator(mLocalizer.msg("iconNameSeparator","Channel icons/channel name"), CC.xyw(1,9,8));
+    JPanel c1 = (JPanel) builder.addSeparator(LOCALIZER.msg("iconNameSeparator","Channel icons/channel name"), CC.xyw(1,9,8));
     builder.add(mShowIconAndName, CC.xyw(2,11,6));
     builder.add(mShowIcon, CC.xyw(2,12,6));
     builder.add(mShowName, CC.xyw(2,13,6));
     
     builder.add(mShowSortNumber, CC.xyw(2,15,6));
     
-    JPanel c2 = (JPanel) builder.addSeparator(mLocalizer.msg("settings","Settings"), CC.xyw(1,17,8));
+    JPanel c2 = (JPanel) builder.addSeparator(LOCALIZER.msg("settings","Settings"), CC.xyw(1,17,8));
     builder.add(mShowDate, CC.xyw(2,19,6));
     builder.add(mShowTime, CC.xyw(2,20,6));
     builder.add(mShowToolTip, CC.xyw(2,21,6));
@@ -142,13 +142,13 @@ public class TrayImportantSettingsTab implements SettingsTab {
     
     mShowInSubMenu.addActionListener(e -> {
       mSize.setModel(new SpinnerNumberModel(((Integer)mSize.getValue()).intValue(), 1, mMaxSizeSubmenu, 1));
-      mSizeInfo.setText(mLocalizer.msg("sizeInfo","(maximum: {0})",mMaxSizeSubmenu));
+      mSizeInfo.setText(LOCALIZER.msg("sizeInfo","(maximum: {0})",mMaxSizeSubmenu));
     });
 
     mShowInTray.addActionListener(e -> {
       int value = ((Integer)mSize.getValue()).intValue();
       mSize.setModel(new SpinnerNumberModel(value > mMaxSizeTray ? mMaxSizeTray : value, 1, mMaxSizeTray, 1));
-      mSizeInfo.setText(mLocalizer.msg("sizeInfo","(maximum: {0})",mMaxSizeTray));
+      mSizeInfo.setText(LOCALIZER.msg("sizeInfo","(maximum: {0})",mMaxSizeTray));
     });
     
     mIsEnabled.addActionListener(e -> {
@@ -219,7 +219,7 @@ public class TrayImportantSettingsTab implements SettingsTab {
   }
 
   public String getTitle() {
-    return mLocalizer.msg("important","Important programs");
+    return LOCALIZER.msg("important","Important programs");
   }
   
   protected static void setTrayIsEnabled(boolean value) {

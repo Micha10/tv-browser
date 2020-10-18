@@ -52,7 +52,7 @@ import tvbrowser.extras.favoritesplugin.FavoritesPlugin;
 import tvbrowser.ui.filter.dlgs.SelectFilterDlg;
 import tvbrowser.ui.mainframe.MainFrame;
 import util.exc.TvBrowserException;
-import util.ui.Localizer;
+import util.i18n.Localizer;
 import util.ui.SearchFormSettings;
 import util.ui.UiUtilities;
 

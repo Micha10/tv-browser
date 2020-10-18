@@ -89,7 +89,7 @@ public class ProgramTable extends JPanel
     DragGestureListener, DragSourceListener, PluginStateListener, Scrollable,
     AutoScrollerAndClickKeyHandler.ProgramAutoScrollListener {
 
-  private static final util.ui.Localizer mLocalizer = util.ui.Localizer
+  private static final util.i18n.Localizer mLocalizer = util.i18n.Localizer
       .getLocalizerFor(ProgramTable.class);
 
   private int mColumnWidth;

@@ -83,7 +83,7 @@ public class Channel implements Comparable<Channel> {
   public static final int CATEGORY_PAYED_DATA_TV = 1 << 10;
 
   private static HashMap<Integer, String> categoryName;
-  private static final util.ui.Localizer mLocalizer = util.ui.Localizer
+  private static final util.i18n.Localizer mLocalizer = util.i18n.Localizer
       .getLocalizerFor(Channel.class);
   
   private String mDataServiceID;

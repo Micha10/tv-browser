@@ -93,7 +93,7 @@ import util.io.IOUtilities;
 import util.io.stream.ObjectInputStreamProcessor;
 import util.io.stream.ObjectOutputStreamProcessor;
 import util.io.stream.StreamUtilities;
-import util.ui.Localizer;
+import util.i18n.Localizer;
 import util.ui.TVBrowserIcons;
 import util.ui.UIThreadRunner;
 import util.ui.UiUtilities;
@@ -107,7 +107,7 @@ import util.ui.persona.Persona;
 public class ReminderPlugin {
 
   /** The localizer for this class. */
-  static Localizer LOCALIZER = util.ui.Localizer
+  static Localizer LOCALIZER = util.i18n.Localizer
       .getLocalizerFor(ReminderPlugin.class);
 
   private static KeyStroke STROKE_FRAME_REMINDERS_SHOW = null;

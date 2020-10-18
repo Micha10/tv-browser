@@ -49,7 +49,7 @@ import javax.swing.text.Document;
 import tvbrowser.TVBrowser;
 import util.ui.ImageIconEnhanced;
 import util.ui.ImageUtilities;
-import util.ui.Localizer;
+import util.i18n.Localizer;
 import util.ui.UiUtilities;
 import util.ui.WindowClosingIf;
 import util.ui.html.ExtendedHTMLDocument;
@@ -63,8 +63,8 @@ import util.ui.html.HTMLTextHelper;
  */
 public class AboutBox extends JDialog implements WindowClosingIf{
 
-  private static final util.ui.Localizer mLocalizer
-    = util.ui.Localizer.getLocalizerFor(AboutBox.class);
+  private static final util.i18n.Localizer mLocalizer
+    = util.i18n.Localizer.getLocalizerFor(AboutBox.class);
 
   public AboutBox(Frame parent) {
     super(parent,true);

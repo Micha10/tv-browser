@@ -33,7 +33,7 @@ import java.io.ObjectOutputStream;
 import tvbrowser.core.Settings;
 import util.io.stream.ObjectOutputStreamProcessor;
 import util.io.stream.StreamUtilities;
-import util.ui.Localizer;
+import util.i18n.Localizer;
 
 /**
  * Handles the global program configurations.

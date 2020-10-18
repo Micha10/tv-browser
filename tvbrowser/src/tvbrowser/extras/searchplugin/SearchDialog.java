@@ -48,7 +48,7 @@ import devplugin.PluginManager;
 import tvbrowser.core.Settings;
 import tvbrowser.ui.mainframe.MainFrame;
 import util.settings.PluginPictureSettings;
-import util.ui.Localizer;
+import util.i18n.Localizer;
 import util.ui.SearchForm;
 import util.ui.SearchFormSettings;
 import util.ui.SearchHelper;
@@ -64,8 +64,8 @@ import util.ui.WindowClosingIf;
 public class SearchDialog extends JDialog implements WindowClosingIf {
 
   /** The localizer of this class. */
-  private static final util.ui.Localizer mLocalizer
-    = util.ui.Localizer.getLocalizerFor(SearchDialog.class);
+  private static final util.i18n.Localizer mLocalizer
+    = util.i18n.Localizer.getLocalizerFor(SearchDialog.class);
 
   /** The search form to use for specifying the search criteria. */
   private SearchForm mSearchForm;

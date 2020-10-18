@@ -40,7 +40,7 @@ import util.ui.UiUtilities;
  */
 public class ColorButton extends JButton {
 
-  private static final util.ui.Localizer mLocalizer = util.ui.Localizer.getLocalizerFor(ColorButton.class);
+  private static final util.i18n.Localizer mLocalizer = util.i18n.Localizer.getLocalizerFor(ColorButton.class);
 
   public ColorButton(final ColorLabel lb) {
     super(mLocalizer.msg("Change", "Change"));

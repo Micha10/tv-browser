@@ -55,7 +55,7 @@ import util.ui.UiUtilities;
  * @since 2.2
  */
 class CheckNetworkConnection {
-  private static final util.ui.Localizer mLocalizer = util.ui.Localizer.getLocalizerFor(CheckNetworkConnection.class);
+  private static final util.i18n.Localizer mLocalizer = util.i18n.Localizer.getLocalizerFor(CheckNetworkConnection.class);
   
   private boolean mResult = false;
 

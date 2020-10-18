@@ -37,7 +37,7 @@ import javax.swing.JProgressBar;
 import javax.swing.UIManager;
 
 import tvbrowser.core.DateListener;
-import util.ui.Localizer;
+import util.i18n.Localizer;
 import devplugin.Date;
 import devplugin.ProgressMonitor;
 

@@ -46,7 +46,7 @@ public class ReminderListItem implements Comparable<ReminderListItem> {
   private static final String KEY_COMMENT = "comment";
 
   /** The localizer for this class. */
-  public static final util.ui.Localizer mLocalizer = util.ui.Localizer
+  public static final util.i18n.Localizer mLocalizer = util.i18n.Localizer
       .getLocalizerFor(ReminderListItem.class);
 
   private ProgramItem mProgramItem;

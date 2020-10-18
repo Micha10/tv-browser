@@ -51,7 +51,7 @@ import devplugin.SettingsTab;
 public class DirectoriesSettingsTab implements SettingsTab {
 
   /** The localizer for this class. */
-  private static final util.ui.Localizer mLocalizer = util.ui.Localizer.getLocalizerFor(DirectoriesSettingsTab.class);
+  private static final util.i18n.Localizer mLocalizer = util.i18n.Localizer.getLocalizerFor(DirectoriesSettingsTab.class);
 
   private util.ui.DirectoryChooserPanel mTVDataFolderPanel;
   

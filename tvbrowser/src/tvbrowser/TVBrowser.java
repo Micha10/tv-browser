@@ -141,7 +141,7 @@ import util.io.windows.registry.RegistryKey;
 import util.io.windows.registry.RegistryValue;
 import util.misc.OperatingSystem;
 import util.ui.ImageUtilities;
-import util.ui.Localizer;
+import util.i18n.Localizer;
 import util.ui.ScrollableJPanel;
 import util.ui.UIThreadRunner;
 import util.ui.UiUtilities;
@@ -169,16 +169,16 @@ public class TVBrowser {
     = Logger.getLogger(TVBrowser.class.getName());
 
   /** The localizer for this class. */
-  private static Localizer mLocalizer;
+  private static Localizer LOCALIZER;
 
-  private static String curLookAndFeel;
+  private static String CUR_LOOK_AND_FEEL;
   
   public static final ArrayList<Image> ICONS_WINDOW = new ArrayList<Image>(4);
 
-  private static final boolean mIsStable = false;
-  private static final int mMajorVersion = 4;
-  private static final int mMinorVersion = 21;
-  private static final int mSubMinorVersion = 52;
+  private static final boolean IS_STABLE = false;
+  private static final int MAJRO_VERSION = 4;
+  private static final int MINOR_VERSION = 21;
+  private static final int SUB_MINOR_VERSION = 52;
 
   /* If you want to change the version string, add it to the beginning of this array.
      We need the old version strings to import the settings.
@@ -249,7 +249,7 @@ public class TVBrowser {
     
     File nightlyValues = new File("NIGHTLY_VALUES");
 
-    if(!mIsStable && nightlyValues.isFile()) {
+    if(!IS_STABLE && nightlyValues.isFile()) {
       try {
         RandomAccessFile in = new RandomAccessFile(nightlyValues, "r");
 
@@ -266,7 +266,7 @@ public class TVBrowser {
   /** The current version. */
 
   private static final boolean mIsTransportable = new File("settings").isDirectory();
-  public static final devplugin.Version VERSION=new devplugin.Version(mMajorVersion,mMinorVersion,mSubMinorVersion,mIsStable,ALL_VERSIONS[0] + (mIsTransportable ? " transportable" : ""));
+  public static final devplugin.Version VERSION=new devplugin.Version(MAJRO_VERSION,MINOR_VERSION,SUB_MINOR_VERSION,IS_STABLE,ALL_VERSIONS[0] + (mIsTransportable ? " transportable" : ""));
 
   /** The title bar string. */
   public static final String MAINWINDOW_TITLE="TV-Browser "+VERSION.toString();
@@ -339,13 +339,13 @@ public class TVBrowser {
       e.printStackTrace();
     }
 
-    mLocalizer = util.ui.Localizer.getLocalizerFor(TVBrowser.class);
+    LOCALIZER = util.i18n.Localizer.getLocalizerFor(TVBrowser.class);
 
     // Check whether the TV-Browser was started in the right directory
     if ( !new File("imgs").exists()) {
       String msg = "Please start TV-Browser in the TV-Browser directory!";
-      if (mLocalizer != null) {
-        msg = mLocalizer.msg("error.2",
+      if (LOCALIZER != null) {
+        msg = LOCALIZER.msg("error.2",
           "Please start TV-Browser in the TV-Browser directory!");
       }
       JOptionPane.showMessageDialog(null, msg);
@@ -383,7 +383,7 @@ public class TVBrowser {
           //ignore
         }
 
-        JTextArea area = new JTextArea(mLocalizer.msg("error.noWriteRightsText","You are using the transportable version of TV-Browser but you have no writing rights in the settings directory:\n\n{0}'\n\nTV-Browser will be closed.",settingsDir.getAbsolutePath()));
+        JTextArea area = new JTextArea(LOCALIZER.msg("error.noWriteRightsText","You are using the transportable version of TV-Browser but you have no writing rights in the settings directory:\n\n{0}'\n\nTV-Browser will be closed.",settingsDir.getAbsolutePath()));
         area.setFont(new JLabel().getFont());
         area.setFont(area.getFont().deriveFont((float)14).deriveFont(Font.BOLD));
         area.setLineWrap(true);
@@ -393,7 +393,7 @@ public class TVBrowser {
         area.setBorder(null);
         area.setOpaque(false);
 
-        JOptionPane.showMessageDialog(null,area,mLocalizer.msg("error.noWriteRightsTitle","No write rights in settings directory"),JOptionPane.ERROR_MESSAGE);
+        JOptionPane.showMessageDialog(null,area,LOCALIZER.msg("error.noWriteRightsTitle","No write rights in settings directory"),JOptionPane.ERROR_MESSAGE);
         System.exit(1);
       }
     }
@@ -423,7 +423,7 @@ public class TVBrowser {
         logDir.mkdirs();
         mainLogger.addHandler(new FileLoggingHandler(logDir.getAbsolutePath()+"/tvbrowser.log", createFormatter()));
       } catch (IOException exc) {
-        String msg = mLocalizer.msg("error.4", "Can't create log file.");
+        String msg = LOCALIZER.msg("error.4", "Can't create log file.");
         ErrorHandler.handle(msg, exc);
       }
     }
@@ -444,7 +444,7 @@ public class TVBrowser {
      * ATTENTION: This has to be done before all Internet connections
      */
     updateProxySettings();
-
+System.out.println("LAST " + Settings.propDateOldSettingsCheckedLast.getDate());
     //Update plugin on version change
     if(Settings.propTVBrowserVersion.getVersion() != null && VERSION.compareTo(Settings.propTVBrowserVersion.getVersion()) > 0) {
       updateLookAndFeel();
@@ -464,7 +464,7 @@ public class TVBrowser {
 
     // refresh the localizers because we know the language now
     Localizer.emptyLocalizerCache();
-    mLocalizer = Localizer.getLocalizerFor(TVBrowser.class);
+    LOCALIZER = Localizer.getLocalizerFor(TVBrowser.class);
     ProgramInfo.resetLocalizer();
     ReminderPlugin.resetLocalizer();
     Date.resetLocalizer();
@@ -527,7 +527,7 @@ public class TVBrowser {
     SearchPlugin.getInstance();
 
     LOG.info("Loading TV listings service...");
-    splashRef.get().setMessage(mLocalizer.msg("startScreen.dataService", "Loading TV listings service..."));
+    splashRef.get().setMessage(LOCALIZER.msg("startScreen.dataService", "Loading TV listings service..."));
     
     TvDataServiceProxyManager.getInstance().init();
     
@@ -548,12 +548,12 @@ public class TVBrowser {
     
     if (!lookAndFeelInitialized) {
       LOG.info("Loading Look&Feel...");
-      splashRef.get().setMessage(mLocalizer.msg("startScreen.laf", "Loading look and feel..."));
+      splashRef.get().setMessage(LOCALIZER.msg("startScreen.laf", "Loading look and feel..."));
       updateLookAndFeel();
     }
     
     LOG.info("Loading plugins...");
-    splashRef.get().setMessage(mLocalizer.msg("startScreen.plugins", "Loading plugins..."));
+    splashRef.get().setMessage(LOCALIZER.msg("startScreen.plugins", "Loading plugins..."));
     
     try {
       PluginProxyManager.getInstance().init();
@@ -566,13 +566,13 @@ public class TVBrowser {
     // Mark pending markings
     PendingMarkings.markMapEntries();
     
-    splashRef.get().setMessage(mLocalizer.msg("startScreen.tvData", "Checking TV database..."));
+    splashRef.get().setMessage(LOCALIZER.msg("startScreen.tvData", "Checking TV database..."));
 
     LOG.info("Checking TV listings inventory...");
     TvDataBase.getInstance().checkTvDataInventory(TvDataBase.DEFAULT_DATA_LIFESPAN);
 
     LOG.info("Starting up...");
-    splashRef.get().setMessage(mLocalizer.msg("startScreen.ui", "Starting up..."));
+    splashRef.get().setMessage(LOCALIZER.msg("startScreen.ui", "Starting up..."));
     
     Toolkit.getDefaultToolkit().getSystemEventQueue().push(new TextComponentPopupEventQueue());
     
@@ -642,9 +642,9 @@ public class TVBrowser {
 	              if (i1 < 5000) {
 	                JOptionPane pane = new JOptionPane();
 	
-	                String cancel = mLocalizer.msg("registryCancel",
+	                String cancel = LOCALIZER.msg("registryCancel",
 	                    "Close TV-Browser");
-	                String dontDoIt = mLocalizer.msg("registryJumpOver",
+	                String dontDoIt = LOCALIZER.msg("registryJumpOver",
 	                    "Not this time");
 	
 	                pane.setOptions(new String[] {
@@ -653,12 +653,12 @@ public class TVBrowser {
 	                pane.setOptionType(JOptionPane.YES_NO_CANCEL_OPTION);
 	                pane.setMessageType(JOptionPane.WARNING_MESSAGE);
 	                pane
-	                    .setMessage(mLocalizer
+	                    .setMessage(LOCALIZER
 	                        .msg(
 	                            "registryWarning",
 	                            "The fast shutdown of Windows is activated.\nThe timeout to wait for before Windows is closing an application is too short,\nto give TV-Browser enough time to save all settings.\n\nThe setting hasn't the default value. It was changed by a tool or by you.\nTV-Browser will now try to change the timeout.\n\nIf you don't want to change this timeout select 'Not this time' or 'Close TV-Browser'."));
 	
-	                pane.setInitialValue(mLocalizer.msg("registryCancel",
+	                pane.setInitialValue(LOCALIZER.msg("registryCancel",
 	                    "Close TV-Browser"));
 	
 	                JDialog d = pane.createDialog(UiUtilities
@@ -683,14 +683,14 @@ public class TVBrowser {
 	                    JOptionPane
 	                        .showMessageDialog(
 	                            UiUtilities.getLastModalChildOf(mainFrame),
-	                            mLocalizer
+	                            LOCALIZER
 	                                .msg("registryChanged",
 	                                    "The timeout was changed successfully.\nPlease reboot Windows!"));
 	                  } catch (Exception registySetting) {
 	                    JOptionPane
 	                        .showMessageDialog(
 	                            UiUtilities.getLastModalChildOf(mainFrame),
-	                            mLocalizer
+	                            LOCALIZER
 	                                .msg(
 	                                    "registryNotChanged",
 	                                    "<html>The Registry value couldn't be changed. Maybe you haven't the right to do it.<br>If it is so contact you Administrator and let him do it for you.<br><br><b><Attention:/b> The following description is for experts. If you change or delete the wrong value in the Registry you could destroy your Windows installation.<br><br>To get no warning on TV-Browser start the Registry value <b>WaitToKillAppTimeout</b> in the Registry path<br><b>HKEY_CURRENT_USER\\Control Panel\\Desktop</b> have to be at least <b>5000</b> or the value for <b>AutoEndTasks</b> in the same path have to be <b>0</b>.</html>"),
@@ -758,11 +758,11 @@ public class TVBrowser {
             JOptionPane
                 .showMessageDialog(
                     UiUtilities.getLastModalChildOf(mainFrame),
-                    mLocalizer
+                    LOCALIZER
                         .msg(
                             "timeInfoText",
                             "The time range of the program table was corrected because the defined day was shorter than 24 hours.\n\nIf the program table should show less than 24h use a time filter for that. That time filter can be selected\nto be the default filter by selecting it in the filter settings and pressing on the button 'Default'."),
-                    mLocalizer.msg("timeInfoTitle", "Times corrected"),
+                    LOCALIZER.msg("timeInfoTitle", "Times corrected"),
                     JOptionPane.INFORMATION_MESSAGE);
             Settings.handleChangedSettings();
           }
@@ -987,11 +987,11 @@ public class TVBrowser {
     	  
     	  try {
           UIThreadRunner.invokeAndWait(() -> {
-            final JButton selectAll = new JButton(mLocalizer.msg("deleteOldSettingsSelectAll", "Select all"));
+            final JButton selectAll = new JButton(Localizer.getLocalization(Localizer.I18N_SELECT_ALL));
             selectAll.setEnabled(true);
-            final JButton clearSelection = new JButton(mLocalizer.msg("deleteOldSettingsClearSelection", "Clear selection"));
+            final JButton clearSelection = new JButton(Localizer.getLocalization(Localizer.I18N_CLEAR_SELECTION));
             clearSelection.setEnabled(false);
-            final JButton delete = new JButton(mLocalizer.msg("deleteOldSettingsDelete", "Delete selected settings"));
+            final JButton delete = new JButton(LOCALIZER.msg("deleteOldSettingsDelete", "Delete selected settings"));
             delete.setEnabled(false);
             delete.addActionListener(e -> {
               Container container = delete.getParent();
@@ -1055,7 +1055,7 @@ public class TVBrowser {
             
             
             final ArrayList<Object> message = new ArrayList<>();
-            message.add(mLocalizer.msg("deleteOldSettingsMessage", "TV-Browser has found settings of old versions of TV-Browser\nthat were not used for at least half a year.\n\nYou can select the versions of TV-Browser you no longer use,\nfor which the old setttings should be deleted now.\n\n"));
+            message.add(LOCALIZER.msg("deleteOldSettingsMessage", "TV-Browser has found settings of old versions of TV-Browser\nthat were not used for at least half a year.\n\nYou can select the versions of TV-Browser you no longer use,\nfor which the old setttings should be deleted now.\n\n"));
             message.add(scroll);
             message.add(buttons);
             
@@ -1064,7 +1064,7 @@ public class TVBrowser {
                 Localizer.getLocalization(Localizer.I18N_CANCEL)
             };
             
-            int option = DontShowAgainOptionBox.showOptionDialog(messageId, null, message.toArray(), mLocalizer.msg("deleteOldSettingsTitle", "TV-Browser: Delete old versions settings files"), JOptionPane.QUESTION_MESSAGE, JOptionPane.YES_NO_OPTION, options, options[1], null);
+            int option = DontShowAgainOptionBox.showOptionDialog(messageId, null, message.toArray(), LOCALIZER.msg("deleteOldSettingsTitle", "TV-Browser: Delete old versions settings files"), JOptionPane.QUESTION_MESSAGE, JOptionPane.YES_NO_OPTION, options, options[1], null);
             
             if(JOptionPane.YES_OPTION == option) {
               for(int i = 0; i < selection.length; i++) {
@@ -1330,14 +1330,14 @@ public class TVBrowser {
         int index = 0;
         
         if(!resultLockFile.mResult && port != Integer.MIN_VALUE) {
-          options[index++] = mLocalizer.msg("showTvBrowser", "Open running TV-Browser");
+          options[index++] = LOCALIZER.msg("showTvBrowser", "Open running TV-Browser");
         }
         
         options[index++] = Localizer.getLocalization(Localizer.I18N_CLOSE);
-        options[index] = mLocalizer.msg("startAnyway", "start anyway");
+        options[index] = LOCALIZER.msg("startAnyway", "start anyway");
         
-        int result = JOptionPane.showOptionDialog(null, mLocalizer.msg("alreadyRunning", "TV-Browser is already running"),
-            mLocalizer.msg("alreadyRunning", "TV-Browser is already running"), JOptionPane.DEFAULT_OPTION,
+        int result = JOptionPane.showOptionDialog(null, LOCALIZER.msg("alreadyRunning", "TV-Browser is already running"),
+            LOCALIZER.msg("alreadyRunning", "TV-Browser is already running"), JOptionPane.DEFAULT_OPTION,
             JOptionPane.WARNING_MESSAGE, null, options, options[0]);
         
         if (result == 0 && !resultLockFile.mResult && port != Integer.MIN_VALUE) {
@@ -1632,7 +1632,7 @@ public class TVBrowser {
               performAutomaticDownload();
           } else {
             mainFrame.getStatusBarLabel().setText(
-                mLocalizer.msg("downloadwait",
+                LOCALIZER.msg("downloadwait",
                     "Automatic download starts in {0} seconds.", seconds));
           }
           }
@@ -1811,42 +1811,42 @@ public class TVBrowser {
       }
     }
 
-    if (curLookAndFeel == null || !curLookAndFeel.equals(Settings.propLookAndFeel.getString())) {
+    if (CUR_LOOK_AND_FEEL == null || !CUR_LOOK_AND_FEEL.equals(Settings.propLookAndFeel.getString())) {
       try {
-        curLookAndFeel = Settings.propLookAndFeel.getString();
+        CUR_LOOK_AND_FEEL = Settings.propLookAndFeel.getString();
         // check if LnF is still available
-        boolean foundCurrent = lookAndFeelExists(curLookAndFeel);
+        boolean foundCurrent = lookAndFeelExists(CUR_LOOK_AND_FEEL);
         // reset look and feel?
         if (!foundCurrent) {
           if (JOptionPane
               .showConfirmDialog(
                   null,
-                  mLocalizer
+                  LOCALIZER
                       .msg(
                           "lnfMissing",
                           "The look and feel '{0}' is no longer available,\nso the default look and feel will be used.\n\nDo you want to set the look and feel option to the default look and feel?",
-                          curLookAndFeel),
-                  mLocalizer.msg("lnfMissing.title", "Look and feel missing"),
+                          CUR_LOOK_AND_FEEL),
+                  LOCALIZER.msg("lnfMissing.title", "Look and feel missing"),
                   JOptionPane.WARNING_MESSAGE | JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
             Settings.propLookAndFeel.resetToDefault();
-            curLookAndFeel = Settings.propLookAndFeel.getString();
+            CUR_LOOK_AND_FEEL = Settings.propLookAndFeel.getString();
             foundCurrent = true;
           }
         }
         if (foundCurrent) {
           UIThreadRunner.invokeAndWait(() -> {
             try {
-              UIManager.setLookAndFeel(curLookAndFeel);
+              UIManager.setLookAndFeel(CUR_LOOK_AND_FEEL);
             } catch (Exception e) {
               // TODO Auto-generated catch block
               e.printStackTrace();
             }
-            LOG.info("setting look and feel to " + curLookAndFeel);
+            LOG.info("setting look and feel to " + CUR_LOOK_AND_FEEL);
           });
         }
       } catch (Exception exc) {
         String msg =
-          mLocalizer.msg("error.1", "Unable to set look and feel.", exc);
+          LOCALIZER.msg("error.1", "Unable to set look and feel.", exc);
         ErrorHandler.handle(msg, exc);
       }
     }
@@ -1977,7 +1977,7 @@ public class TVBrowser {
    * @since 2.7
    */
   public static boolean isStable() {
-    return mIsStable;
+    return IS_STABLE;
   }
 
   /**

@@ -71,7 +71,7 @@ import tvbrowser.ui.settings.tablebackgroundstyles.UiTimeBlockBackgroundStyle;
 import tvbrowser.ui.settings.util.ColorButton;
 import tvbrowser.ui.settings.util.ColorLabel;
 import util.ui.CaretPositionCorrector;
-import util.ui.Localizer;
+import util.i18n.Localizer;
 import util.ui.UiUtilities;
 
 /**
@@ -80,7 +80,7 @@ import util.ui.UiUtilities;
  */
 public class ProgramTableSettingsTab implements SettingsTab, ActionListener {
 
-  private static final util.ui.Localizer mLocalizer = util.ui.Localizer.getLocalizerFor(ProgramTableSettingsTab.class);
+  private static final util.i18n.Localizer mLocalizer = util.i18n.Localizer.getLocalizerFor(ProgramTableSettingsTab.class);
 
   private JPanel mSettingsPn;
 
@@ -480,8 +480,8 @@ public class ProgramTableSettingsTab implements SettingsTab, ActionListener {
     mDark = new ColorButton(mDarkColorLb);
     mDark.setEnabled(mShowScrollHighlight.isSelected());
     
-    final JLabel mLightDesc = new JLabel(TrayBaseSettingsTab.mLocalizer.msg("progressLight", "Background color"));
-    final JLabel mDarkDesc = new JLabel(TrayBaseSettingsTab.mLocalizer.msg("progressDark", "Progress color"));
+    final JLabel mLightDesc = new JLabel(TrayBaseSettingsTab.LOCALIZER.msg("progressLight", "Background color"));
+    final JLabel mDarkDesc = new JLabel(TrayBaseSettingsTab.LOCALIZER.msg("progressDark", "Progress color"));
     
     mShowScrollHighlight.addItemListener(e -> {
       mLightColorLb.setEnabled(e.getStateChange() == ItemEvent.SELECTED);

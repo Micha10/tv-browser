@@ -51,6 +51,7 @@ import devplugin.Program;
 import devplugin.ProgramFilter;
 import tvbrowser.core.filters.FilterManagerImpl;
 import util.exc.TvBrowserException;
+import util.i18n.Localizer;
 import util.settings.ProgramPanelSettings;
 import util.ui.persona.Persona;
 import util.ui.persona.PersonaListener;

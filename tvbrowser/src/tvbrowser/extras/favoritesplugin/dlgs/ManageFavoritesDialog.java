@@ -51,8 +51,8 @@ import util.ui.WindowClosingIf;
 public class ManageFavoritesDialog extends JDialog implements WindowClosingIf{
 
   /** The localizer for this class. */
-  protected static final util.ui.Localizer mLocalizer
-    = util.ui.Localizer.getLocalizerFor(ManageFavoritesDialog.class);
+  protected static final util.i18n.Localizer mLocalizer
+    = util.i18n.Localizer.getLocalizerFor(ManageFavoritesDialog.class);
 
   private static ManageFavoritesDialog mInstance = null;
   

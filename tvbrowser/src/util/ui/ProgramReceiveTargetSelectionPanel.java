@@ -43,6 +43,8 @@ import com.jgoodies.forms.layout.FormLayout;
 import devplugin.ProgramReceiveIf;
 import devplugin.ProgramReceiveTarget;
 
+import util.i18n.Localizer;
+
 /**
  * A default panel component to select the receive
  * targets for sending programs to plugins.

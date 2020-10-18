@@ -88,7 +88,7 @@ import devplugin.SettingsItem;
 
 public class ToolBar extends JToolBar {
 
-  private static final util.ui.Localizer mLocalizer = util.ui.Localizer
+  private static final util.i18n.Localizer mLocalizer = util.i18n.Localizer
       .getLocalizerFor(ToolBar.class);
 
   private static final Logger mLog = java.util.logging.Logger
@@ -504,7 +504,7 @@ public class ToolBar extends JToolBar {
       }
       else if(name.startsWith("#scrollToChannel")) {
         configItemEnabled = true;
-        label = ChannelContextMenu.mLocalizer.ellipsisMsg("addChannels", "Add/Remove channels");
+        label = ChannelContextMenu.LOCALIZER.ellipsisMsg("addChannels", "Add/Remove channels");
       }
       else if (name.indexOf("##") != -1) {
     	String id = name.substring(0,name.indexOf("##"));

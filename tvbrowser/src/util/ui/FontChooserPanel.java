@@ -40,10 +40,12 @@ import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.FormLayout;
 
+import util.i18n.Localizer;
+
 public class FontChooserPanel extends JPanel {
 
   /** The localizer for this class. */
-  private static final util.ui.Localizer mLocalizer = util.ui.Localizer.getLocalizerFor(FontChooserPanel.class);
+  private static final Localizer LOCALIZER = Localizer.getLocalizerFor(FontChooserPanel.class);
 
   private JComboBox<String> mFontCB, mStyleCB;
 
@@ -56,10 +58,10 @@ public class FontChooserPanel extends JPanel {
   private static final String[] FONTNAMES = ge.getAvailableFontFamilyNames();
 
   private static final String[] FONTSTYLES = { 
-      mLocalizer.msg("plain", "plain"), 
-      mLocalizer.msg("bold", "bold"),
-      mLocalizer.msg("italic", "italic"),
-      mLocalizer.msg("bolditalic", "bold italic"),
+      LOCALIZER.msg("plain", "plain"), 
+      LOCALIZER.msg("bold", "bold"),
+      LOCALIZER.msg("italic", "italic"),
+      LOCALIZER.msg("bolditalic", "bold italic"),
       };
 
   private static final int FONTSIZE_MIN = 6;

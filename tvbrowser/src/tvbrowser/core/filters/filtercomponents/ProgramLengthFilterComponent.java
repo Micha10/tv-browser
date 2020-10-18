@@ -204,7 +204,7 @@ public class ProgramLengthFilterComponent extends AbstractFilterComponent {
   /**
    * Der Lokalizer
    */
-  private static final util.ui.Localizer mLocalizer = util.ui.Localizer
+  private static final util.i18n.Localizer mLocalizer = util.i18n.Localizer
       .getLocalizerFor(ProgramLengthFilterComponent.class);
 
   /** minimum length in minutes */

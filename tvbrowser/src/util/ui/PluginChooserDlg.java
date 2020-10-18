@@ -61,6 +61,7 @@ import devplugin.Plugin;
 import devplugin.ProgramReceiveIf;
 import devplugin.ProgramReceiveTarget;
 import tvbrowser.core.Settings;
+import util.i18n.Localizer;
 import util.ui.customizableitems.SelectableItem;
 import util.ui.customizableitems.SelectableItemList;
 
@@ -80,8 +81,8 @@ public class PluginChooserDlg extends JDialog implements WindowClosingIf {
   private ProgramReceiveTarget[] mCurrentTargets;
   private boolean mOkWasPressed;
 
-  private static final util.ui.Localizer LOCALIZER
-     = util.ui.Localizer.getLocalizerFor(PluginChooserDlg.class);
+  private static final Localizer LOCALIZER
+     = Localizer.getLocalizerFor(PluginChooserDlg.class);
 
   /**
    *

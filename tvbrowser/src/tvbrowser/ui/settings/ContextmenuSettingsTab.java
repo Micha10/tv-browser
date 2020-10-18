@@ -73,7 +73,7 @@ import tvbrowser.core.plugin.PluginStateAdapter;
 import tvbrowser.ui.settings.util.LineButton;
 import util.ui.FixedSizeIcon;
 import util.ui.LineComponent;
-import util.ui.Localizer;
+import util.i18n.Localizer;
 import util.ui.TVBrowserIcons;
 import util.ui.UiUtilities;
 import util.ui.WindowClosingIf;
@@ -93,7 +93,7 @@ public class ContextmenuSettingsTab implements devplugin.SettingsTab {
   /**
    * localizer of this class
    */
-  private static final util.ui.Localizer LOCALIZER = util.ui.Localizer
+  private static final util.i18n.Localizer LOCALIZER = util.i18n.Localizer
       .getLocalizerFor(ContextmenuSettingsTab.class);
 
   private int mSelectionWidth;

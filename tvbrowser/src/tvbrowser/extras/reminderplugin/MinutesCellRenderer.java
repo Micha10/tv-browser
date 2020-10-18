@@ -42,7 +42,7 @@ import com.jgoodies.forms.layout.FormLayout;
  * The cell renderer for the minutest column of the reminder list.
  */
 public class MinutesCellRenderer extends DefaultTableCellRenderer {
-  private static final util.ui.Localizer mLocalizer = util.ui.Localizer
+  private static final util.i18n.Localizer mLocalizer = util.i18n.Localizer
       .getLocalizerFor(MinutesCellRenderer.class);
 
   private JPanel mPanel;

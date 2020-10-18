@@ -44,7 +44,7 @@ import devplugin.ProgramFilter;
 import devplugin.ProgramInfoHelper;
 
 public class Exclusion implements Comparable<Exclusion> {
-  private static final util.ui.Localizer mLocalizer = util.ui.Localizer.getLocalizerFor(Exclusion.class);
+  private static final util.i18n.Localizer LOCALIZER = util.i18n.Localizer.getLocalizerFor(Exclusion.class);
   
   public static final int TYPE_DURATION_NONE = 0;
   public static final int TYPE_DURATION_TOO_SHORT = 1;
@@ -473,45 +473,45 @@ public class Exclusion implements Comparable<Exclusion> {
     String timeMsg = createTimeMessage(getTimeLowerBound(), getTimeUpperBound(), getDayOfWeek());
     
     if(mTitle != null) {
-      textValue.append(mLocalizer.msg("exclude.title","Exclude all programs with title '")).append(mTitle).append("'");
+      textValue.append(LOCALIZER.msg("exclude.title","Exclude all programs with title '")).append(mTitle).append("'");
     }
     if(mTitle != null && mTopic != null) {
-      textValue.append(" ").append(mLocalizer.msg("exclude.appendTopic","with topic '")).append(mTopic).append("'");
+      textValue.append(" ").append(LOCALIZER.msg("exclude.appendTopic","with topic '")).append(mTopic).append("'");
     }
     else if (mTopic != null) {
-      textValue.append(mLocalizer.msg("exclude.topic","Exclude all programs with topic '")).append(mTopic).append("'");
+      textValue.append(LOCALIZER.msg("exclude.topic","Exclude all programs with topic '")).append(mTopic).append("'");
     }
     if(mEpisodeTitle != null && mTopic != null && mTitle != null) {
-      textValue.append(" ").append(mLocalizer.msg("exclude.appendEpisodeTitle","Exclude all programs with episode '")).append(mEpisodeTitle).append("'");
+      textValue.append(" ").append(LOCALIZER.msg("exclude.appendEpisodeTitle","Exclude all programs with episode '")).append(mEpisodeTitle).append("'");
     }
     else if (mEpisodeTitle != null) {
-      textValue.append(mLocalizer.msg("exclude.episodeTitle","Exclude all programs with topic '")).append(mEpisodeTitle).append("'");
+      textValue.append(LOCALIZER.msg("exclude.episodeTitle","Exclude all programs with topic '")).append(mEpisodeTitle).append("'");
     }      
     if(filter != null && (mTitle != null || mTopic != null || mEpisodeTitle != null)) {
-      textValue.append(" ").append(mLocalizer.msg("exclude.appendFilter","of the filter '")).append(filter.getName()).append("'");
+      textValue.append(" ").append(LOCALIZER.msg("exclude.appendFilter","of the filter '")).append(filter.getName()).append("'");
     }
     else if(filter != null) {
-      textValue.append(mLocalizer.msg("exclude.filter","Exclude all programs of the filter '")).append(new WrapperFilter(filter).toString().replaceAll("</*html>", "")).append("'");
+      textValue.append(LOCALIZER.msg("exclude.filter","Exclude all programs of the filter '")).append(new WrapperFilter(filter).toString().replaceAll("</*html>", "")).append("'");
     }
     if(mChannel.getChannel() != null && (mTitle != null || mTopic != null || mEpisodeTitle != null || filter != null)) {
-      textValue.append(" ").append(mLocalizer.msg("exclude.appendChannel","on channel '")).append(mChannel.getChannel().getName()).append("'");
+      textValue.append(" ").append(LOCALIZER.msg("exclude.appendChannel","on channel '")).append(mChannel.getChannel().getName()).append("'");
     }
     else if(mChannel.getChannel() != null) {
-      textValue.append(mLocalizer.msg("exclude.channel","Exclude all programs on channel '")).append(mChannel.getChannel().getName()).append("'");
+      textValue.append(LOCALIZER.msg("exclude.channel","Exclude all programs on channel '")).append(mChannel.getChannel().getName()).append("'");
     }
     if(timeMsg != null && (mTitle != null || mTopic != null || mEpisodeTitle != null || filter != null || mChannel.getChannel() != null)) {
       textValue.append(" ").append(timeMsg);
     }
     else if(timeMsg != null) {
-      textValue.append(mLocalizer.msg("exclude.time","Exclude all programs ")).append(timeMsg);
+      textValue.append(LOCALIZER.msg("exclude.time","Exclude all programs ")).append(timeMsg);
     }
     
     if(mCategory != 0) {
       if(timeMsg != null || mTitle != null || mTopic != null || mEpisodeTitle != null || filter != null || mChannel.getChannel() != null) {
-        textValue.append(" ").append(mLocalizer.msg("exclude.appendCategory","with category '")).append(ProgramInfoHelper.getMessageForBit(mCategory)).append("'");
+        textValue.append(" ").append(LOCALIZER.msg("exclude.appendCategory","with category '")).append(ProgramInfoHelper.getMessageForBit(mCategory)).append("'");
       }
       else {
-        textValue.append(mLocalizer.msg("exclude.category","Exclude all programs with category '")).append(ProgramInfoHelper.getMessageForBit(mCategory)).append("'");
+        textValue.append(LOCALIZER.msg("exclude.category","Exclude all programs with category '")).append(ProgramInfoHelper.getMessageForBit(mCategory)).append("'");
       }
     }
     
@@ -519,24 +519,24 @@ public class Exclusion implements Comparable<Exclusion> {
       ProgramFieldType exclusion = mProgramFieldExclusion.getProgramFieldType();
       
       if(timeMsg != null || mTitle != null || mTopic != null || mEpisodeTitle != null || filter != null || mChannel.getChannel() != null || mCategory != 0) {
-        textValue.append(" ").append(mLocalizer.msg("exclude.append","with '"));
+        textValue.append(" ").append(LOCALIZER.msg("exclude.append","with '"));
       }
       else {
-        textValue.append(mLocalizer.msg("exclude.single","Exclude all programs with '"));
+        textValue.append(LOCALIZER.msg("exclude.single","Exclude all programs with '"));
       }
       
       textValue.append(exclusion.getLocalizedName()).append("'='").append(mProgramFieldExclusion.getProgramFieldText()).append("'");
     }
     
     if(textValue.length() < 1) {
-      textValue.append(mLocalizer.msg("exclude.invalid","<invalid>"));
+      textValue.append(LOCALIZER.msg("exclude.invalid","<invalid>"));
     }
     else {
-      if(mLocalizer.msg("exclude.appendix",".").length() > 1) {
+      if(LOCALIZER.msg("exclude.appendix",".").length() > 1) {
         textValue.append(" ");
       }
       
-      textValue.append(mLocalizer.msg("exclude.appendix","."));
+      textValue.append(LOCALIZER.msg("exclude.appendix","."));
     }
     
     textValue.append("</html>");
@@ -556,21 +556,21 @@ public class Exclusion implements Comparable<Exclusion> {
     if (dayOfWeek != Exclusion.DAYLIMIT_DAILY) {
       String dayStr = DayListCellRenderer.getDayString(dayOfWeek);
       if (lowBnd >= 0 && upBnd >= 0) {
-        return mLocalizer.msg("datetimestring.between", "on {0} between {1} and {2}", dayStr, lowTime, upTime);
+        return LOCALIZER.msg("datetimestring.between", "on {0} between {1} and {2}", dayStr, lowTime, upTime);
       } else if (lowBnd >= 0) {
-        return mLocalizer.msg("datetimestring.after", "on {0} after {1}", dayStr, lowTime);
+        return LOCALIZER.msg("datetimestring.after", "on {0} after {1}", dayStr, lowTime);
       } else if (upBnd >= 0) {
-        return mLocalizer.msg("datetimestring.before", "on {0} after {1}", dayStr, upTime);
+        return LOCALIZER.msg("datetimestring.before", "on {0} after {1}", dayStr, upTime);
       } else {
-        return mLocalizer.msg("datetimestring.on", "on {0}", dayStr);
+        return LOCALIZER.msg("datetimestring.on", "on {0}", dayStr);
       }
     } else {
       if (lowBnd >= 0 && upBnd >= 0) {
-        return mLocalizer.msg("timestring.between", "on {0} between {1} and {2}", lowTime, upTime);
+        return LOCALIZER.msg("timestring.between", "on {0} between {1} and {2}", lowTime, upTime);
       } else if (lowBnd >= 0) {
-        return mLocalizer.msg("timestring.after", "on {0} after {1}", lowTime);
+        return LOCALIZER.msg("timestring.after", "on {0} after {1}", lowTime);
       } else if (upBnd >= 0) {
-        return mLocalizer.msg("timestring.before", "on {0} after {1}", upTime);
+        return LOCALIZER.msg("timestring.before", "on {0} after {1}", upTime);
       } else {
         return null;
       }

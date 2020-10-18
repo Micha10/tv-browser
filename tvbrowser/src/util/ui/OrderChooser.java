@@ -44,6 +44,7 @@ import javax.swing.event.ListSelectionListener;
 
 import com.jgoodies.forms.layout.Sizes;
 
+import util.i18n.Localizer;
 import util.ui.customizableitems.SelectableItem;
 import util.ui.customizableitems.SelectableItemRenderer;
 import util.ui.customizableitems.SelectableItemRendererCenterComponentIf;
@@ -54,8 +55,8 @@ import util.ui.customizableitems.SelectableItemRendererCenterComponentIf;
  */
 public class OrderChooser<E> extends JPanel implements ListDropAction<SelectableItem<E>>{
 
-  private static final util.ui.Localizer mLocalizer
-    = util.ui.Localizer.getLocalizerFor(OrderChooser.class);
+  private static final Localizer LOCALIZER
+    = Localizer.getLocalizerFor(OrderChooser.class);
 
   /**
    * Der Bereich, in dem ein Mausklick als Selektion/Deselektion und nicht als
@@ -159,14 +160,14 @@ public class OrderChooser<E> extends JPanel implements ListDropAction<Selectable
     p1.add(mButtonPanel, BorderLayout.NORTH);
 
     mUpBt = new JButton(TVBrowserIcons.up(TVBrowserIcons.SIZE_LARGE));
-    mUpBt.setToolTipText(mLocalizer.msg("tooltip.up", "Move selected rows up"));
+    mUpBt.setToolTipText(LOCALIZER.msg("tooltip.up", "Move selected rows up"));
     mUpBt.addActionListener(e -> {
       UiUtilities.moveSelectedItems(mList,-1);
     });
     mButtonPanel.add(mUpBt);
 
     mDownBt = new JButton(TVBrowserIcons.down(TVBrowserIcons.SIZE_LARGE));
-    mDownBt.setToolTipText(mLocalizer.msg("tooltip.down", "Move selected rows down"));
+    mDownBt.setToolTipText(LOCALIZER.msg("tooltip.down", "Move selected rows down"));
     mDownBt.addActionListener(e -> {
       UiUtilities.moveSelectedItems(mList,1);
     });
@@ -174,15 +175,15 @@ public class OrderChooser<E> extends JPanel implements ListDropAction<Selectable
     
     p3 = new JPanel(new BorderLayout());
     
-    mSelectAllBt = new JButton(mLocalizer.msg("addAll", "Select all items"));
-    mSelectAllBt.setToolTipText(mLocalizer.msg("tooltip.all", "Select all items in the list."));
+    mSelectAllBt = new JButton(LOCALIZER.msg("addAll", "Select all items"));
+    mSelectAllBt.setToolTipText(LOCALIZER.msg("tooltip.all", "Select all items in the list."));
     mSelectAllBt.addActionListener(e -> {
       selectAll();
     });
     p3.add(mSelectAllBt, BorderLayout.WEST);
 
-    mDeSelectAllBt = new JButton(mLocalizer.msg("delAll", "Deselect all items"));
-    mDeSelectAllBt.setToolTipText(mLocalizer.msg("tooltip.none", "Deselect all items in the list."));
+    mDeSelectAllBt = new JButton(LOCALIZER.msg("delAll", "Deselect all items"));
+    mDeSelectAllBt.setToolTipText(LOCALIZER.msg("tooltip.none", "Deselect all items in the list."));
     mDeSelectAllBt.addActionListener(e -> {
       clearSelection();
     });

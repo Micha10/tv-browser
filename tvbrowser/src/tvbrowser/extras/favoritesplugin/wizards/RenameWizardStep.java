@@ -42,7 +42,7 @@ import com.jgoodies.forms.layout.FormLayout;
 
 public class RenameWizardStep extends AbstractWizardStep {
 
-  private static final util.ui.Localizer mLocalizer = util.ui.Localizer
+  private static final util.i18n.Localizer mLocalizer = util.i18n.Localizer
       .getLocalizerFor(RenameWizardStep.class);
 
   private JTextField mNameTf;

@@ -63,7 +63,7 @@ import tvbrowser.ui.mainframe.MainFrame;
 import util.settings.PluginPictureSettings;
 import util.settings.ProgramPanelSettings;
 import util.ui.CaretPositionCorrector;
-import util.ui.Localizer;
+import util.i18n.Localizer;
 import util.ui.MarkerChooserDlg;
 import util.ui.PluginsPictureSettingsPanel;
 import util.ui.UiUtilities;

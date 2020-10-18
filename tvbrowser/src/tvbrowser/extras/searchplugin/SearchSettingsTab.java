@@ -52,8 +52,8 @@ import util.ui.TVBrowserIcons;
 class SearchSettingsTab implements SettingsTab {
 
   /** The localizer of this class. */
-  private static final util.ui.Localizer mLocalizer
-    = util.ui.Localizer.getLocalizerFor(SearchSettingsTab.class);
+  private static final util.i18n.Localizer mLocalizer
+    = util.i18n.Localizer.getLocalizerFor(SearchSettingsTab.class);
 
   private JCheckBox mAlwaysExpertMode;
   private JList<SearchFormSettings> mSearchHistory;
@@ -81,7 +81,7 @@ class SearchSettingsTab implements SettingsTab {
     mSearchHistory = new JList<SearchFormSettings>(mListModel);
     
     final JButton delete = new JButton(TVBrowserIcons.delete(TVBrowserIcons.SIZE_SMALL));
-    delete.setToolTipText(util.ui.Localizer.getLocalization(util.ui.Localizer.I18N_DELETE));
+    delete.setToolTipText(util.i18n.Localizer.getLocalization(util.i18n.Localizer.I18N_DELETE));
     delete.setEnabled(false);
     delete.addActionListener(e -> {
       final int[] indicies = mSearchHistory.getSelectedIndices();

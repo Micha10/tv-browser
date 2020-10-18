@@ -50,11 +50,11 @@ import com.jgoodies.forms.layout.Sizes;
 import tvbrowser.TVBrowser;
 import tvbrowser.core.Settings;
 import util.io.NetworkUtilities;
-import util.ui.Localizer;
+import util.i18n.Localizer;
 import util.ui.UiUtilities;
 
 class NetworkCardPanel extends AbstractCardPanel {
-  private static final util.ui.Localizer mLocalizer = util.ui.Localizer.getLocalizerFor(NetworkCardPanel.class);
+  private static final util.i18n.Localizer mLocalizer = util.i18n.Localizer.getLocalizerFor(NetworkCardPanel.class);
 
   private JPanel mContent;
   private JLabel mHostLB;

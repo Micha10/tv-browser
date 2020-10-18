@@ -53,8 +53,8 @@ import util.ui.TabLayout;
 public class ProxySettingsTab implements devplugin.SettingsTab {
 
   /** The localizer for this class. */
-  private static final util.ui.Localizer mLocalizer
-    = util.ui.Localizer.getLocalizerFor(ProxySettingsTab.class);
+  private static final util.i18n.Localizer mLocalizer
+    = util.i18n.Localizer.getLocalizerFor(ProxySettingsTab.class);
   
   private ProxySettingsPanel mHttpProxySettingsPanel;
   private JPanel mSettingsPn;

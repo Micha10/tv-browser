@@ -42,8 +42,8 @@ import util.ui.TabLayout;
  */
 public class SingleImageBackgroundStyle implements TableBackgroundStyle {
 
-  private static final util.ui.Localizer mLocalizer
-    = util.ui.Localizer.getLocalizerFor(SingleImageBackgroundStyle.class);
+  private static final util.i18n.Localizer mLocalizer
+    = util.i18n.Localizer.getLocalizerFor(SingleImageBackgroundStyle.class);
 
   private JTextField mOneImageBackgroundTF;
 

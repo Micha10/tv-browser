@@ -9,7 +9,7 @@ import javax.swing.JPanel;
 import devplugin.Marker;
 import devplugin.Program;
 import tvbrowser.extras.favoritesplugin.FavoritesPlugin;
-import util.ui.Localizer;
+import util.i18n.Localizer;
 
 /**
  * This filter filters all programs that are marked as Favorites.

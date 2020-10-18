@@ -15,7 +15,7 @@ import javax.swing.JTextArea;
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 
-import util.ui.Localizer;
+import util.i18n.Localizer;
 
 /**
  * This dialog is shown when something is copied or imported.

@@ -53,6 +53,7 @@ import com.jgoodies.forms.layout.FormLayout;
 import devplugin.Date;
 import devplugin.Program;
 import tvbrowser.core.Settings;
+import util.i18n.Localizer;
 import util.settings.ProgramPanelSettings;
 
 /**

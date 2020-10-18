@@ -54,7 +54,7 @@ import tvbrowser.core.contextmenu.DoNothingContextMenuItem;
 import tvbrowser.core.plugin.PluginProxyManager;
 import util.program.CompoundedProgramFieldType;
 import util.programmouseevent.ProgramMouseEventHandler;
-import util.ui.Localizer;
+import util.i18n.Localizer;
 import util.ui.TextAreaIcon;
 import util.ui.UiUtilities;
 

@@ -9,7 +9,7 @@ import javax.swing.JPanel;
 import devplugin.Marker;
 import devplugin.Program;
 import tvbrowser.extras.reminderplugin.ReminderPlugin;
-import util.ui.Localizer;
+import util.i18n.Localizer;
 
 /**
  * This filter filters all programs that are marked by the Reminder

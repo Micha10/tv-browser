@@ -40,7 +40,7 @@ class SubscribeChannelCardPanel extends AbstractCardPanel {
 
   private JPanel mContent;
 
-  private static final util.ui.Localizer mLocalizer = util.ui.Localizer
+  private static final util.i18n.Localizer mLocalizer = util.i18n.Localizer
       .getLocalizerFor(SubscribeChannelCardPanel.class);
 
   public SubscribeChannelCardPanel(PrevNextButtons btns) {

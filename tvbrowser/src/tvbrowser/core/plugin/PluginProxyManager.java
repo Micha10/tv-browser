@@ -268,7 +268,7 @@ public class PluginProxyManager {
   private static final Logger mLog = Logger.getLogger(PluginProxyManager.class.getName());
 
   /** The localizer for this class. */
-  private static final util.ui.Localizer mLocalizer = util.ui.Localizer
+  private static final util.i18n.Localizer mLocalizer = util.i18n.Localizer
       .getLocalizerFor(PluginProxyManager.class);
 
   /** The singleton. */

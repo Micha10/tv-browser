@@ -31,7 +31,7 @@ import javax.swing.JComboBox;
 import javax.swing.JPanel;
 
 import tvbrowser.ui.settings.MarkingsSettingsTab;
-import util.ui.Localizer;
+import util.i18n.Localizer;
 import util.ui.MarkPriorityComboBoxRenderer;
 
 import com.jgoodies.forms.layout.CellConstraints;
@@ -48,7 +48,7 @@ import devplugin.Program;
 public class ProgramMarkingPriorityFilterComponent extends
     AbstractFilterComponent {
 
-  private static final Localizer mLocalizer = Localizer
+  private static final Localizer LOCALIZER = Localizer
       .getLocalizerFor(ProgramMarkingPriorityFilterComponent.class);
 
   private int mMarkPriority = Program.PRIORITY_MARK_MIN;
@@ -82,7 +82,7 @@ public class ProgramMarkingPriorityFilterComponent extends
     CellConstraints cc = new CellConstraints();
     JPanel p = new JPanel(new FormLayout("default", "pref"));
 
-    Localizer localizer = MarkingsSettingsTab.mLocalizer;
+    Localizer localizer = MarkingsSettingsTab.LOCALIZER;
     String[] values = {
         localizer.msg("color.minPriority", "1. Color (minimum priority)"),
         localizer.msg("color.lowerMediumPriority",
@@ -122,6 +122,6 @@ public class ProgramMarkingPriorityFilterComponent extends
 
   @Override
   public String toString() {
-    return mLocalizer.msg("name", "Marking priority");
+    return LOCALIZER.msg("name", "Marking priority");
   }
 }

@@ -62,8 +62,8 @@ public class SortableItemList<E> extends JPanel implements ActionListener, ListD
   protected DefaultListModel<E> mListModel;
   protected JPanel mBtnPanel;
   
-  public static final util.ui.Localizer mLocalizer
-      = util.ui.Localizer.getLocalizerFor(CustomizableItemsPanel.class);
+  public static final util.i18n.Localizer mLocalizer
+      = util.i18n.Localizer.getLocalizerFor(CustomizableItemsPanel.class);
 
   
   public SortableItemList() {

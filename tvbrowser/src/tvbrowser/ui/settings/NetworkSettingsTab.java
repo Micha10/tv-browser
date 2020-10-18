@@ -28,7 +28,7 @@ import devplugin.SettingsTab;
  * @since 2.5.1
  */
 public class NetworkSettingsTab implements SettingsTab {
-  private static final util.ui.Localizer mLocalizer = util.ui.Localizer
+  private static final util.i18n.Localizer mLocalizer = util.i18n.Localizer
   .getLocalizerFor(NetworkSettingsTab.class);
   
   private JSpinner mConnectionTimeout, mNetworkCheckTimeout;

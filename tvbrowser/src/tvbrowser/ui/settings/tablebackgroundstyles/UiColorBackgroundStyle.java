@@ -33,8 +33,8 @@ import javax.swing.JPanel;
  */
 public class UiColorBackgroundStyle implements TableBackgroundStyle {
 
-  private static final util.ui.Localizer mLocalizer
-    = util.ui.Localizer.getLocalizerFor(UiColorBackgroundStyle.class);
+  private static final util.i18n.Localizer mLocalizer
+    = util.i18n.Localizer.getLocalizerFor(UiColorBackgroundStyle.class);
 
   public UiColorBackgroundStyle() {
 

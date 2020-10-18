@@ -51,7 +51,7 @@ import tvbrowser.core.Settings;
 import tvbrowser.ui.mainframe.MainFrame;
 import util.settings.PluginPictureSettings;
 import util.ui.ChannelListCellRenderer;
-import util.ui.Localizer;
+import util.i18n.Localizer;
 import util.ui.SearchFormSettings;
 import util.ui.SearchHelper;
 import util.ui.UiUtilities;
@@ -65,7 +65,7 @@ class RepetitionDialog extends JDialog implements WindowClosingIf {
   /**
    * The localizer of this class.
    */
-  private static final util.ui.Localizer mLocalizer = util.ui.Localizer
+  private static final util.i18n.Localizer mLocalizer = util.i18n.Localizer
       .getLocalizerFor(RepetitionDialog.class);
 
   /**

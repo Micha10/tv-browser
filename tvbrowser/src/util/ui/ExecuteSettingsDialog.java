@@ -37,6 +37,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import util.i18n.Localizer;
 import util.paramhandler.ParamInputField;
 import util.paramhandler.ParamLibrary;
 
@@ -47,7 +48,7 @@ import util.paramhandler.ParamLibrary;
  */
 public class ExecuteSettingsDialog extends JDialog implements WindowClosingIf{
   /** Translation */
-  private static final util.ui.Localizer mLocalizer = util.ui.Localizer.getLocalizerFor(ExecuteSettingsDialog.class);
+  private static final Localizer LOCALIZER = Localizer.getLocalizerFor(ExecuteSettingsDialog.class);
   
   private String mExecParam;
   private String mExecFile;
@@ -100,7 +101,7 @@ public class ExecuteSettingsDialog extends JDialog implements WindowClosingIf{
    * Create the GUI
    */
   private void createGui() {
-    setTitle(mLocalizer.msg("execSettings", "Executable Settings"));
+    setTitle(LOCALIZER.msg("execSettings", "Executable Settings"));
     
     UiUtilities.registerForClosing(this);
     
@@ -124,14 +125,14 @@ public class ExecuteSettingsDialog extends JDialog implements WindowClosingIf{
     
     panel.add(filePanel, BorderLayout.NORTH);
     
-    filePanel.setBorder(BorderFactory.createTitledBorder(mLocalizer.msg("executionApp","Application")));
+    filePanel.setBorder(BorderFactory.createTitledBorder(LOCALIZER.msg("executionApp","Application")));
     
     if (mParamLibrary == null) {
       mParamLibrary = new ParamLibrary();
     }
     mParam = new ParamInputField(mParamLibrary, mExecParam, true);
     
-    mParam.setBorder(BorderFactory.createTitledBorder(mLocalizer.msg("parameters", "Parameters")));
+    mParam.setBorder(BorderFactory.createTitledBorder(LOCALIZER.msg("parameters", "Parameters")));
     
     panel.add(mParam, BorderLayout.CENTER);
     

@@ -41,7 +41,7 @@ import tvbrowser.ui.programtable.ProgramTable;
 import util.exc.ErrorHandler;
 import util.program.ProgramUtilities;
 import util.settings.PluginPictureSettings;
-import util.ui.Localizer;
+import util.i18n.Localizer;
 import util.ui.UIThreadRunner;
 import util.ui.UiUtilities;
 
@@ -59,7 +59,7 @@ import devplugin.Program;
  */
 public class ProgramInfo {
 
-  static Localizer mLocalizer = util.ui.Localizer
+  static Localizer mLocalizer = util.i18n.Localizer
       .getLocalizerFor(ProgramInfo.class);
 
   private static final String DATAFILE_PREFIX = "programinfo.ProgramInfo";

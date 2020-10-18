@@ -48,7 +48,7 @@ import com.jgoodies.forms.layout.Sizes;
 
 import tvbrowser.core.Settings;
 import util.misc.OperatingSystem;
-import util.ui.Localizer;
+import util.i18n.Localizer;
 import util.ui.UiUtilities;
 import util.ui.WindowClosingIf;
 
@@ -59,7 +59,7 @@ import util.ui.WindowClosingIf;
  */
 public class SkinLNFSettings extends JDialog implements WindowClosingIf {
   /** Translation */
-  private static final util.ui.Localizer mLocalizer = util.ui.Localizer.getLocalizerFor(SkinLNFSettings.class);
+  private static final util.i18n.Localizer mLocalizer = util.i18n.Localizer.getLocalizerFor(SkinLNFSettings.class);
   private JComboBox<String> mThemePack;
 
   /**

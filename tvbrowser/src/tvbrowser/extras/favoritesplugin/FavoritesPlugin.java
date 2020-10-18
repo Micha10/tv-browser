@@ -115,7 +115,7 @@ import tvbrowser.ui.mainframe.MainFrame;
 import tvdataservice.MutableChannelDayProgram;
 import util.exc.ErrorHandler;
 import util.exc.TvBrowserException;
-import util.ui.Localizer;
+import util.i18n.Localizer;
 import util.ui.NullProgressMonitor;
 import util.ui.ScrollableJPanel;
 import util.ui.TVBrowserIcons;
@@ -143,7 +143,7 @@ public class FavoritesPlugin {
   private static final String ICON_NAME = "emblem-favorite";
 
   /** The localizer for this class. */
-  public static final util.ui.Localizer LOCALIZER = util.ui.Localizer
+  public static final util.i18n.Localizer LOCALIZER = util.i18n.Localizer
           .getLocalizerFor(FavoritesPlugin.class);
 
   private static FavoritesPlugin mInstance;

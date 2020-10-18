@@ -44,7 +44,7 @@ import util.ui.persona.Persona;
 
 public class ContextMenu {
 
-  public static final util.ui.Localizer mLocalizer = util.ui.Localizer
+  public static final util.i18n.Localizer mLocalizer = util.i18n.Localizer
       .getLocalizerFor(ContextMenu.class);
 
   private JComponent mComponent;

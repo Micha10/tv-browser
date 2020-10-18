@@ -42,7 +42,7 @@ import util.ui.SearchFormSettings;
 
 public class KeywordFilterComponent extends AbstractFilterComponent {
 
-  private static final util.ui.Localizer mLocalizer = util.ui.Localizer
+  private static final util.i18n.Localizer mLocalizer = util.i18n.Localizer
       .getLocalizerFor(KeywordFilterComponent.class);
 
   private SearchForm mSearchForm;

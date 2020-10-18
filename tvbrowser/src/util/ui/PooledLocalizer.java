@@ -24,6 +24,7 @@ import util.misc.StringPool;
  * the same constant strings
  * 
  * @author bananeweizen
+ * @deprecated since 4.2.2 use {@link #util.i18n.PooledLocalizer} instead.
  * 
  */
 public class PooledLocalizer extends Localizer {

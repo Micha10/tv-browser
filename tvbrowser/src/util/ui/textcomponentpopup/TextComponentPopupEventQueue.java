@@ -21,7 +21,7 @@ import javax.swing.text.JTextComponent;
 
 import tvbrowser.core.icontheme.IconLoader;
 import tvbrowser.ui.mainframe.MainFrame;
-import util.ui.Localizer;
+import util.i18n.Localizer;
 import util.ui.TVBrowserIcons;
 
 /**
@@ -34,7 +34,7 @@ import util.ui.TVBrowserIcons;
  */
 public class TextComponentPopupEventQueue extends EventQueue {
 
-  private static final util.ui.Localizer mLocalizer = util.ui.Localizer
+  private static final util.i18n.Localizer mLocalizer = util.i18n.Localizer
       .getLocalizerFor(TextComponentPopupEventQueue.class);
 
   protected void dispatchEvent(AWTEvent event) {

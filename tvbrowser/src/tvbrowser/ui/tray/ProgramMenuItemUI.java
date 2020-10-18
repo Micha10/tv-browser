@@ -40,7 +40,7 @@ import javax.swing.plaf.basic.BasicMenuItemUI;
 import tvbrowser.core.Settings;
 import util.io.IOUtilities;
 import util.program.ProgramUtilities;
-import util.ui.Localizer;
+import util.i18n.Localizer;
 import util.ui.TextAreaIcon;
 import util.ui.UiUtilities;
 import devplugin.Date;
