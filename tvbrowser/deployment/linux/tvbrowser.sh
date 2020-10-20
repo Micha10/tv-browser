@@ -52,7 +52,7 @@ check_version()
     unset JAVA_TOOL_OPTIONS
   fi
 
-  JAVA_HEADER=`${JAVA_PROGRAM_DIR}java -version 2>&1 | head -n 1`
+  JAVA_HEADER=`${JAVA_PROGRAM_DIR}java -version 2>&1 | grep -v "_JAVA_OPTIONS" | head -n 1`
   JAVA_IMPL=`echo ${JAVA_HEADER} | cut -f1 -d' '`
   if [ "$JAVA_IMPL" = "java" ] ; then
     VERSION=`echo ${JAVA_HEADER} | sed "s/java version \"\(.*\)\"/\1/"`
