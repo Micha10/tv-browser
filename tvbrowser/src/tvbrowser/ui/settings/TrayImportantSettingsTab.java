@@ -99,9 +99,13 @@ public class TrayImportantSettingsTab implements SettingsTab {
     
     JPanel priority = new JPanel(new FormLayout("pref,5dlu,pref","1dlu,pref"));
     
-    Localizer localizer = MarkingsSettingsTab.LOCALIZER;
+    String txt = MarkingsSettingsTab.LOCALIZER.msg("color.colorPriority", "Color/priority");
     
-    String[] colors = {localizer.msg("color.minPriority","1. Color (minimum priority)"),localizer.msg("color.lowerMediumPriority","2. Color (lower medium priority)"),localizer.msg("color.mediumPriority","3. Color (Medium priority)"),localizer.msg("color.higherMediumPriority","4. Color (higher medium priority)"),localizer.msg("color.maxPriority","5. Color (maximum priority)")};
+    String[] colors = new String[Settings.getHighlightingPriorityMaximum()];
+    
+    for(int i = 0; i < colors.length; i++) {
+      colors[i] = (i+1)+". "+txt;
+    }
     
     mPriorityText = new JLabel(LOCALIZER.msg("importantMarkPriority","Mark priority higher or the same like:"));
     
