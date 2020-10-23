@@ -1707,6 +1707,10 @@ public class Settings {
   public static final ChoiceProperty propAutoDownloadType = new ChoiceProperty(
       mProp, "autodownload", "daily", new String[] { "startup", "daily",
           "every3days", "weekly", "never" });
+  
+  /**@since 4.2.2*/
+  public static final BooleanProperty propAutoUpdatePrimeTime = new BooleanProperty(
+      mProp, "autoUpdatePrimeTime", false);
 
   public static final IntProperty propAutoDownloadPeriod = new IntProperty(
       mProp, "autodownloadperiod", 0);
@@ -1719,6 +1723,10 @@ public class Settings {
 
   public static final DateProperty propLastDownloadDate = new DateProperty(
       mProp, "lastdownload", Date.getCurrentDate().addDays(-100));
+  
+  /**@since 4.2.2*/
+  public static final IntProperty propLastDownloadTime = new IntProperty(
+      mProp, "lastdownloadTime", 0);
 
   public static final FontProperty propProgramTitleFont = new DeferredFontProperty(
       mProp, "font.programtitle", DEFAULT_PROGRAMTITLEFONT);

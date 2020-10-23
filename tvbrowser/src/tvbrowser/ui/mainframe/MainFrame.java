@@ -1866,6 +1866,16 @@ public class MainFrame extends JFrame implements DateListener,DropTargetListener
         for(PluginCenterPanelWrapper wrapper : mCenterPanelWrapperList) {
           wrapper.timeEvent();
         }
+        
+        if ((mLastAutoUpdateRun + Settings.propDataServiceAutoUpdateTime.getInt() * 60000L) <= System.currentTimeMillis() && !TvDataUpdater.getInstance().isDownloading()) {
+          runAutoUpdate();
+        }
+        
+        if((Settings.propAutoDataDownloadEnabled.getBoolean() || Settings.propAutoUpdatePrimeTime.getBoolean()) && (mAutoDownloadTimer < IOUtilities.getMinutesAfterMidnight() || !date.equals(mCurrentDay) || Settings.propAutoUpdatePrimeTime.getBoolean()) && mAutoDownloadTimer != -1 && (downloadingThread == null || !downloadingThread.isAlive())) {
+          if(TVBrowser.handleAutomaticDownload()) {
+            mAutoDownloadTimer = -1;
+          }
+        }
       }
 
       if (onAirChanged) {
@@ -1887,16 +1897,7 @@ public class MainFrame extends JFrame implements DateListener,DropTargetListener
     if(mCenterPluginView != null) {
       mCenterPluginView.repaint();
     }
-
-    if ((mLastAutoUpdateRun + Settings.propDataServiceAutoUpdateTime.getInt() * 60000L) <= System.currentTimeMillis() && !TvDataUpdater.getInstance().isDownloading()) {
-      runAutoUpdate();
-    }
-
-    if(Settings.propAutoDataDownloadEnabled.getBoolean() && (mAutoDownloadTimer < IOUtilities.getMinutesAfterMidnight() || !date.equals(mCurrentDay)) && mAutoDownloadTimer != -1 && (downloadingThread == null || !downloadingThread.isAlive())) {
-      TVBrowser.handleAutomaticDownload();
-      mAutoDownloadTimer = -1;
-    }
-
+    
     if (date.equals(mCurrentDay)) {
       return;
     }
@@ -2244,6 +2245,7 @@ public class MainFrame extends JFrame implements DateListener,DropTargetListener
     mToolBar.updateUpdateButton(true);
     mMenuBar.showStopMenuItem();
     Settings.propLastDownloadDate.setDate(Date.getCurrentDate());
+    Settings.propLastDownloadTime.setInt(IOUtilities.getMinutesAfterMidnight());
   }
 
   private void onDownloadDone() {

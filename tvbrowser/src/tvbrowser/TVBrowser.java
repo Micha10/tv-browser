@@ -64,6 +64,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
@@ -98,10 +99,12 @@ import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.looks.LookUtils;
 
+import devplugin.Channel;
 import devplugin.Date;
 import devplugin.ProgramFieldType;
 import devplugin.Version;
 import tvbrowser.core.ChannelList;
+import tvbrowser.core.DummyChannel;
 import tvbrowser.core.PendingMarkings;
 import tvbrowser.core.PluginLoader;
 import tvbrowser.core.Settings;
@@ -123,6 +126,7 @@ import tvbrowser.ui.DontShowAgainOptionBox;
 import tvbrowser.ui.configassistant.TvBrowserPictureSettingsUpdateDialog;
 import tvbrowser.ui.mainframe.MainFrame;
 import tvbrowser.ui.mainframe.SoftwareUpdater;
+import tvbrowser.ui.mainframe.UpdateDlg;
 import tvbrowser.ui.splashscreen.DummySplash;
 import tvbrowser.ui.splashscreen.Splash;
 import tvbrowser.ui.splashscreen.SplashScreen;
@@ -135,13 +139,14 @@ import tvdataservice.MarkedProgramsMap;
 import util.browserlauncher.Launch;
 import util.exc.ErrorHandler;
 import util.exc.TvBrowserException;
+import util.i18n.Localizer;
 import util.io.IOUtilities;
 import util.io.Mirror;
 import util.io.windows.registry.RegistryKey;
 import util.io.windows.registry.RegistryValue;
+import util.misc.BooleanResult;
 import util.misc.OperatingSystem;
 import util.ui.ImageUtilities;
-import util.i18n.Localizer;
 import util.ui.ScrollableJPanel;
 import util.ui.UIThreadRunner;
 import util.ui.UiUtilities;
@@ -1602,15 +1607,12 @@ public class TVBrowser {
    * @return false, if no download got started
    */
   public static boolean handleAutomaticDownload() {
-    String autoDLType = Settings.propAutoDownloadType.getString();
+    final BooleanResult result = isAutomaticDownloadDateReached();
+    
     if ((ChannelList.getNumberOfSubscribedChannels() == 0)
-      || autoDLType.equals("never"))
+      || result.isAllFalse())
     {
       // Nothing to do
-      return false;
-    }
-
-    if (!isAutomaticDownloadDateReached()) { // dont update yet
       return false;
     }
 
@@ -1619,22 +1621,23 @@ public class TVBrowser {
       return true;
     }
 
-    if(Settings.propAutoDownloadWaitingEnabled.getBoolean() && Settings.propAutoDownloadWaitingTime.getShort() > 0) {
+    if((Settings.propAutoDownloadWaitingEnabled.getBoolean() && Settings.propAutoDownloadWaitingTime.getShort() > 0 || result.getResultForIndex(1))) {
       final long timerStart = Calendar.getInstance().getTimeInMillis();
       if(mAutoDownloadWaitingTimer == null) {
         mAutoDownloadWaitingTimer = new Timer(1000,
-          e -> {
+          e -> {try {
             int seconds = (int) ((Calendar.getInstance().getTimeInMillis() - timerStart) / 1000.0);
-            seconds = Settings.propAutoDownloadWaitingTime.getShort() - seconds;
+            seconds = (result.getResultForIndex(1) ? 40 : Settings.propAutoDownloadWaitingTime.getShort()) - seconds;
+            
             if (seconds <= 0) {
               mAutoDownloadWaitingTimer.stop();
               mainFrame.getStatusBarLabel().setText("");
-              performAutomaticDownload();
-          } else {
-            mainFrame.getStatusBarLabel().setText(
-                LOCALIZER.msg("downloadwait",
-                    "Automatic download starts in {0} seconds.", seconds));
-          }
+              performAutomaticDownload(result);
+            } else {
+              mainFrame.getStatusBarLabel().setText(
+                  LOCALIZER.msg("downloadwait",
+                      "Automatic download starts in {0} seconds.", seconds));
+            }}catch(Throwable t) {t.printStackTrace();}
           }
         );
         mAutoDownloadWaitingTimer.setRepeats(true);
@@ -1645,13 +1648,13 @@ public class TVBrowser {
       }
     }
     else {
-      return performAutomaticDownload();
+      return performAutomaticDownload(result);
     }
 
     return true;
   }
-
-  private static boolean isAutomaticDownloadDateReached() {
+  
+  private static BooleanResult isAutomaticDownloadDateReached() {
     String autoDLType = Settings.propAutoDownloadType.getString();
     final Date lastDownloadDate = Settings.propLastDownloadDate.getDate();
     Date today = Date.getCurrentDate();
@@ -1670,11 +1673,20 @@ public class TVBrowser {
     else { // "daily"
       nextDownloadDate=lastDownloadDate;
     }
-    return nextDownloadDate.getNumberOfDaysSince(today) <= 0;
+    
+    boolean download = !autoDLType.equals("never") && nextDownloadDate.getNumberOfDaysSince(today) <= 0;
+    boolean primeTime = Settings.propAutoUpdatePrimeTime.getBoolean();
+    
+    if(primeTime) {
+      int compare = Date.getCurrentDate().compareTo(Settings.propLastDownloadDate.getDate());
+      primeTime = (Math.random() > 0.8 || (IOUtilities.getMinutesAfterMidnight() >= 17*60+50 && IOUtilities.getMinutesAfterMidnight() <= 20*60+15)) && IOUtilities.getMinutesAfterMidnight() >= 60*17+30 && IOUtilities.getMinutesAfterMidnight() <= 60*20+15 && (compare > 0 || (compare == 0 && Settings.propLastDownloadTime.getInt() < 17*60+30));
+    }
+    
+    return new BooleanResult(download, primeTime);
   }
 
-  private static boolean performAutomaticDownload() {
-    if (isAutomaticDownloadDateReached()) {
+  private static boolean performAutomaticDownload(final BooleanResult result) {
+    if (result.getResultForIndex(0)) {
       if (Settings.propAskForAutoDownload.getBoolean()) {
         mainFrame.updateTvData();
       }
@@ -1682,7 +1694,7 @@ public class TVBrowser {
         String[] dataServiceIDs = Settings.propDataServicesForUpdate.getStringArray();
         TvDataServiceProxy[] proxies;
         if (dataServiceIDs == null) {
-          proxies = TvDataServiceProxyManager.getInstance().getDataServices();
+          proxies = UpdateDlg.getActiveDataServices();
         }
         else {
           proxies = TvDataServiceProxyManager.getInstance().getTvDataServices(dataServiceIDs);
@@ -1691,6 +1703,27 @@ public class TVBrowser {
           mainFrame.runUpdateThread(Settings.propAutoDownloadPeriod.getInt(), proxies, true);
         }
       }
+      return true;
+    }
+    else if(result.getResultForIndex(1)) {
+      HashSet<TvDataServiceProxy> dataServices = new HashSet<TvDataServiceProxy>();
+
+      Channel[] channels = Settings.propSubscribedChannels.getChannelArray();
+
+      for(Channel channel : channels) {
+        if(!(channel instanceof DummyChannel) && channel.getDataServiceProxy() != null && !dataServices.contains(channel.getDataServiceProxy())) {
+            dataServices.add(channel.getDataServiceProxy());
+        }
+      }
+      
+      if(!dataServices.isEmpty()) {
+        TvDataServiceProxy[] proxies = dataServices.toArray(new TvDataServiceProxy[0]);
+      
+        if(mainFrame.licenseForTvDataServicesWasAccepted(proxies)) {
+          mainFrame.runUpdateThread(Settings.propAutoDownloadPeriod.getInt(), proxies, true);
+        }
+      }
+      
       return true;
     }
     else {

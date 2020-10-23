@@ -267,7 +267,7 @@ public class UpdateDlg extends JDialog implements ActionListener, WindowClosingI
   /**
    * @return all TvDataServices that have subscribed Channels
    */
-  private TvDataServiceProxy[] getActiveDataServices() {
+  public static TvDataServiceProxy[] getActiveDataServices() {
     ArrayList<TvDataServiceProxy> services = new ArrayList<TvDataServiceProxy>();
 
     for (Channel channel : ChannelList.getSubscribedChannels()) {

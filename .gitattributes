@@ -1854,6 +1854,7 @@ tvbrowser-plugins/plugin-zattoo/src/main/resources/zattooplugin/icons/16x16/apps
 tvbrowser-plugins/plugin-zattoo/src/main/resources/zattooplugin/zattooplugin.properties -text
 tvbrowser-plugins/plugin-zattoo/src/main/resources/zattooplugin/zattooplugin_de.properties -text
 tvbrowser-plugins/pom.xml -text
+tvbrowser/.ant-targets-build.xml -text svneol=unset#text/plain
 tvbrowser/ChangeLog.txt -text
 tvbrowser/deployment/common/enwiki.url -text
 tvbrowser/deployment/common/hyphen/dehyphx.tex -text
@@ -2772,6 +2773,7 @@ tvbrowser/src/util/io/windows/registry/RegistryKey.java -text
 tvbrowser/src/util/io/windows/registry/RegistryValue.java -text
 tvbrowser/src/util/misc/AbstractXmlTvDataHandler.java -text
 tvbrowser/src/util/misc/AppleScriptRunner.java -text
+tvbrowser/src/util/misc/BooleanResult.java -text svneol=unset#text/plain
 tvbrowser/src/util/misc/ChangeTrackingProperties.java -text svneol=unset#text/plain
 tvbrowser/src/util/misc/HashCodeUtilities.java -text
 tvbrowser/src/util/misc/PropertyDefaults.java -text svneol=unset#text/plain

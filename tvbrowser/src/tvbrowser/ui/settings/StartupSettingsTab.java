@@ -68,7 +68,7 @@ public class StartupSettingsTab implements devplugin.SettingsTab {
   private static final DayPeriod VALUE_AUTO_CHANNEL_UPDATE_PERIOD_DEFAULT = new DayPeriod(14);
   
   /** The localizer for this class. */
-  private static final util.i18n.Localizer mLocalizer = util.i18n.Localizer
+  private static final util.i18n.Localizer LOCALIZER = util.i18n.Localizer
       .getLocalizerFor(StartupSettingsTab.class);
 
   private JPanel mSettingsPn;
@@ -81,11 +81,12 @@ public class StartupSettingsTab implements devplugin.SettingsTab {
 
   /* Refresh settings */
   private static final String[] AUTO_DOWNLOAD_MSG_ARR = new String[] {
-    mLocalizer.msg("autoDownload.daily", "Once a day"),
-    mLocalizer.msg("autoDownload.every3days", "Every three days"), mLocalizer.msg("autoDownload.weekly", "Weekly")
+    LOCALIZER.msg("autoDownload.daily", "Once a day"),
+    LOCALIZER.msg("autoDownload.every3days", "Every three days"), LOCALIZER.msg("autoDownload.weekly", "Weekly")
   };
 
   private JCheckBox mAutoDownload;
+  private JCheckBox mAutoDownloadPrimeTime;
   private JCheckBox mAutoChannelDownload;
   private JCheckBox mAutoJREUpdate;
 
@@ -129,16 +130,16 @@ public class StartupSettingsTab implements devplugin.SettingsTab {
     int y = 1;
 
     mSettingsPn.add(DefaultComponentFactory.getInstance().createSeparator(
-        mLocalizer.msg("title", "Startup")), cc.xyw(1, y++, 5));
+        LOCALIZER.msg("title", "Startup")), cc.xyw(1, y++, 5));
 
-    mMinimizeAfterStartUpChB = new JCheckBox(mLocalizer.msg(
+    mMinimizeAfterStartUpChB = new JCheckBox(LOCALIZER.msg(
         "minimizeAfterStartup", "Minimize main window after start up"),
         Settings.propMinimizeAfterStartup.getBoolean());
     mSettingsPn.add(mMinimizeAfterStartUpChB, cc.xy(2, ++y));
 
     y++;
 
-    mStartFullscreen = new JCheckBox(mLocalizer.msg(
+    mStartFullscreen = new JCheckBox(LOCALIZER.msg(
         "startFullscreen","Start in fullscreen mode"),
         Settings.propIsUsingFullscreen.getBoolean());
     mSettingsPn.add(mStartFullscreen, cc.xy(2,++y));
@@ -157,14 +158,14 @@ public class StartupSettingsTab implements devplugin.SettingsTab {
 
     y++;
 
-    mShowStartScreenChB = new JCheckBox(mLocalizer.msg("showStartScreen",
+    mShowStartScreenChB = new JCheckBox(LOCALIZER.msg("showStartScreen",
         "Show TV-Browser start screen during start up"), Settings.propStartScreenShow
         .getBoolean());
     mSettingsPn.add(mShowStartScreenChB, cc.xy(2, ++y));
     
     y++;
     
-    mServerForRestore = new JCheckBox(mLocalizer.msg("serverForRestore",
+    mServerForRestore = new JCheckBox(LOCALIZER.msg("serverForRestore",
         "Provide server port for restore running TV-Browser"), Settings.propServerRestoreEnabled.getBoolean());
     mSettingsPn.add(mServerForRestore, cc.xy(2, ++y));
 
@@ -196,7 +197,7 @@ public class StartupSettingsTab implements devplugin.SettingsTab {
           }
         }catch(FileNotFoundException fe) {}
 
-        mAutostartWithWindows = new JCheckBox(mLocalizer.msg("autostart","Start TV-Browser with Windows"),
+        mAutostartWithWindows = new JCheckBox(LOCALIZER.msg("autostart","Start TV-Browser with Windows"),
             mLinkFileFile.isFile());
 
         mSettingsPn.add(mAutostartWithWindows, cc.xy(2, y));
@@ -207,7 +208,7 @@ public class StartupSettingsTab implements devplugin.SettingsTab {
 
     mSettingsPn.add(createRefreshPanel(), cc.xyw(1,++y,5));
     
-    mAutoJREUpdate = new JCheckBox(mLocalizer.msg("autoJREUpdate","Search and download updates for TV-Browser JRE regularly"),Settings.propJreUpdateEnabled.getBoolean());
+    mAutoJREUpdate = new JCheckBox(LOCALIZER.msg("autoJREUpdate","Search and download updates for TV-Browser JRE regularly"),Settings.propJreUpdateEnabled.getBoolean());
     
     if(JREUpdater.hasTvBrowserJRE()) {
       layout.insertRow(++y, RowSpec.decode("5dlu"));
@@ -218,13 +219,13 @@ public class StartupSettingsTab implements devplugin.SettingsTab {
 
     y++;
 
-    String msg = mLocalizer.msg("onlyMinimizeWhenWindowClosing",
+    String msg = LOCALIZER.msg("onlyMinimizeWhenWindowClosing",
     "When closing the main window only minimize TV-Browser, don't quit.");
 
     mOnlyMinimizeWhenWindowClosingChB = new JCheckBox(msg, Settings.propOnlyMinimizeWhenWindowClosing.getBoolean());
-    mAskForExitConfirmation = new JCheckBox(mLocalizer.msg("askForExitConfirmation","Ask for confirmation on TV-Browser exit"), !Settings.propHiddenMessageBoxes.containsItem("MainFrame.askForExitConfirm"));
+    mAskForExitConfirmation = new JCheckBox(LOCALIZER.msg("askForExitConfirmation","Ask for confirmation on TV-Browser exit"), !Settings.propHiddenMessageBoxes.containsItem("MainFrame.askForExitConfirm"));
 
-    mSettingsPn.add(DefaultComponentFactory.getInstance().createSeparator(mLocalizer.msg("closing","Closing")), cc.xyw(1,++y,5));
+    mSettingsPn.add(DefaultComponentFactory.getInstance().createSeparator(LOCALIZER.msg("closing","Closing")), cc.xyw(1,++y,5));
 
     y++;
 
@@ -260,6 +261,8 @@ public class StartupSettingsTab implements devplugin.SettingsTab {
       Settings.propAutoChannelUpdatePeriod.setInt(VALUE_AUTO_CHANNEL_UPDATE_DISABLED);
     }
 
+    Settings.propAutoUpdatePrimeTime.setBoolean(mAutoDownloadPrimeTime.isSelected());
+    
     if(mAutostartWithWindows != null) {
         if (mAutostartWithWindows.isSelected()) {
           if(!mLinkFileFile.isFile()) {
@@ -271,7 +274,7 @@ public class StartupSettingsTab implements devplugin.SettingsTab {
               mAutostartWithWindows.setSelected(false);
               JOptionPane.showMessageDialog(
                   UiUtilities.getLastModalChildOf(MainFrame.getInstance()),
-                  mLocalizer.msg("creationError","Couldn't create autostart shortcut.\nMaybe your have not the right to write in the autostart directory."),
+                  LOCALIZER.msg("creationError","Couldn't create autostart shortcut.\nMaybe your have not the right to write in the autostart directory."),
                   Localizer.getLocalization(Localizer.I18N_ERROR), JOptionPane.ERROR_MESSAGE);
             }
           }
@@ -279,8 +282,8 @@ public class StartupSettingsTab implements devplugin.SettingsTab {
             mAutostartWithWindows.setSelected(true);
             JOptionPane.showMessageDialog(
                 UiUtilities.getLastModalChildOf(MainFrame.getInstance()),
-                mLocalizer.msg("deletionError","Couldn't delete autostart shortcut.\nMaybe your have not the right to write in the autostart directory."),
-                mLocalizer.msg("error","Error"), JOptionPane.ERROR_MESSAGE);
+                LOCALIZER.msg("deletionError","Couldn't delete autostart shortcut.\nMaybe your have not the right to write in the autostart directory."),
+                LOCALIZER.msg("error","Error"), JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -340,24 +343,24 @@ public class StartupSettingsTab implements devplugin.SettingsTab {
    * Returns the title of the tab-sheet.
    */
   public String getTitle() {
-    return mLocalizer.msg("general", "General");
+    return LOCALIZER.msg("general", "General");
   }
 
   private JPanel createRefreshPanel() {
     PanelBuilder refreshSettings = new PanelBuilder(new FormLayout("5dlu, 9dlu, default, 3dlu, default, fill:3dlu:grow, 3dlu",
-    "default, 5dlu, default, 3dlu, default, default, 3dlu, default, 5dlu, default, 3dlu, default,10dlu,default,3dlu,default"));
+    "default, 5dlu, default, 3dlu, default, default, 3dlu, default, default, 5dlu, default, 3dlu, default,10dlu,default,3dlu,default"));
 
     CellConstraints cc = new CellConstraints();
 
     int y = 1;
     
-    refreshSettings.addSeparator(mLocalizer.msg("titleRefresh", "Startup"), cc.xyw(
+    refreshSettings.addSeparator(LOCALIZER.msg("titleRefresh", "Startup"), cc.xyw(
         1, y, 6));
 
-    mAutoDownload = new JCheckBox(mLocalizer.msg("autoUpdate","Automatically update TV listings"));
+    mAutoDownload = new JCheckBox(LOCALIZER.msg("autoUpdate","Automatically update TV listings"));
 
-    mStartDownload = new JRadioButton(mLocalizer.msg("onStartUp", "Only on TV-Browser startup"));
-    mRecurrentDownload = new JRadioButton(mLocalizer.msg("recurrent","Recurrent"));
+    mStartDownload = new JRadioButton(LOCALIZER.msg("onStartUp", "Only on TV-Browser startup"));
+    mRecurrentDownload = new JRadioButton(LOCALIZER.msg("recurrent","Recurrent"));
 
     ButtonGroup bg = new ButtonGroup();
 
@@ -394,11 +397,11 @@ public class StartupSettingsTab implements devplugin.SettingsTab {
     mStartDownload.setEnabled(mAutoDownload.isSelected());
     mRecurrentDownload.setEnabled(mAutoDownload.isSelected());
 
-    mHowOften = new JLabel(mLocalizer.msg("autoDownload.howOften", "How often?"));
+    mHowOften = new JLabel(LOCALIZER.msg("autoDownload.howOften", "How often?"));
     panel.add(mHowOften, cc.xy(2, 1));
     panel.add(mAutoDownloadCombo, cc.xy(4, 1));
 
-    mAskBeforeDownloadRadio = new JRadioButton(mLocalizer.msg("autoDownload.ask", "Ask before downloading"));
+    mAskBeforeDownloadRadio = new JRadioButton(LOCALIZER.msg("autoDownload.ask", "Ask before downloading"));
     mAutoDownloadPeriodCB = new JComboBox<>(PeriodItem.getPeriodItems());
 
     int autoDLPeriod = Settings.propAutoDownloadPeriod.getInt();
@@ -407,7 +410,7 @@ public class StartupSettingsTab implements devplugin.SettingsTab {
 
     panel.add(mAskBeforeDownloadRadio, cc.xyw(2, 3, 3));
 
-    mAskTimeRadio = new JRadioButton(mLocalizer.msg("autoDownload.duration", "Automatically refresh for"));
+    mAskTimeRadio = new JRadioButton(LOCALIZER.msg("autoDownload.duration", "Automatically refresh for"));
     panel.add(mAskTimeRadio, cc.xy(2, 5));
     panel.add(mAutoDownloadPeriodCB, cc.xy(4, 5));
 
@@ -418,10 +421,10 @@ public class StartupSettingsTab implements devplugin.SettingsTab {
     mAskBeforeDownloadRadio.setSelected(Settings.propAskForAutoDownload.getBoolean());
     mAskTimeRadio.setSelected(!Settings.propAskForAutoDownload.getBoolean());
 
-    mAutoDownloadWaitingTime = new JCheckBox(mLocalizer.msg("autoDownload.waiting","Delay auto update for"),Settings.propAutoDownloadWaitingEnabled.getBoolean());
+    mAutoDownloadWaitingTime = new JCheckBox(LOCALIZER.msg("autoDownload.waiting","Delay auto update for"),Settings.propAutoDownloadWaitingEnabled.getBoolean());
     mAutoDownloadWaitingTimeSp = new JSpinner(new SpinnerNumberModel(
         Settings.propAutoDownloadWaitingTime.getShort(), 1, 300, 1));
-    mSecondsLabel = new JLabel(mLocalizer.msg("autoDownload.seconds","seconds"));
+    mSecondsLabel = new JLabel(LOCALIZER.msg("autoDownload.seconds","seconds"));
 
     mAutoDownload.addItemListener(e -> {
       setAutoDownloadEnabled(e.getStateChange() == ItemEvent.SELECTED);
@@ -449,16 +452,21 @@ public class StartupSettingsTab implements devplugin.SettingsTab {
 
     y += 2;
     
-    refreshSettings.add(panel, cc.xyw(3, y, 4));
+    refreshSettings.add(panel, cc.xyw(3, y++, 4));
+    
+    mAutoDownloadPrimeTime = new JCheckBox(LOCALIZER.msg("autoUpdatePrimeTime","Daily auto update prime time data in the evening"));
+    mAutoDownloadPrimeTime.setSelected(Settings.propAutoUpdatePrimeTime.getBoolean());
+    
+    refreshSettings.add(mAutoDownloadPrimeTime, cc.xyw(2, y, 5));
 
-    mDateCheck = new JCheckBox(mLocalizer.msg("checkDate", "Check date via NTP if data download fails"));
+    mDateCheck = new JCheckBox(LOCALIZER.msg("checkDate", "Check date via NTP if data download fails"));
     mDateCheck.setSelected(Settings.propNTPTimeCheck.getBoolean());
 
     y += 2;
     
     refreshSettings.add(mDateCheck, cc.xyw(2, y, 5));
 
-    mShowFinishDialog = new JCheckBox(mLocalizer.msg("showFinishDialog", "Show dialog when update is done"));
+    mShowFinishDialog = new JCheckBox(LOCALIZER.msg("showFinishDialog", "Show dialog when update is done"));
     mShowFinishDialog.setSelected(!Settings.propHiddenMessageBoxes.containsItem("downloadDone"));
 
     y += 2;
@@ -467,7 +475,7 @@ public class StartupSettingsTab implements devplugin.SettingsTab {
 
     setAutoDownloadEnabled(mAutoDownload.isSelected());
     
-    mAutoChannelDownload = new JCheckBox(mLocalizer.msg("autoChannelUpdate","Automatically update available channels"));
+    mAutoChannelDownload = new JCheckBox(LOCALIZER.msg("autoChannelUpdate","Automatically update available channels"));
     mAutoChannelDownloadPeriod = new WideComboBox<>();
     
     mAutoChannelDownloadPeriod.addItem(new DayPeriod(1));
@@ -583,7 +591,7 @@ public class StartupSettingsTab implements devplugin.SettingsTab {
     
     @Override
     public String toString() {
-      return mLocalizer.msg("autoChannelUpdate.every"+mDays+"days", "Every " + mDays + " days");
+      return LOCALIZER.msg("autoChannelUpdate.every"+mDays+"days", "Every " + mDays + " days");
     }
     
     @Override
