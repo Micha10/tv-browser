@@ -2773,7 +2773,7 @@ tvbrowser/src/util/io/windows/registry/RegistryKey.java -text
 tvbrowser/src/util/io/windows/registry/RegistryValue.java -text
 tvbrowser/src/util/misc/AbstractXmlTvDataHandler.java -text
 tvbrowser/src/util/misc/AppleScriptRunner.java -text
-tvbrowser/src/util/misc/BooleanResult.java -text svneol=unset#text/plain
+tvbrowser/src/util/misc/BooleanResult.java svneol=native#text/plain
 tvbrowser/src/util/misc/ChangeTrackingProperties.java -text svneol=unset#text/plain
 tvbrowser/src/util/misc/HashCodeUtilities.java -text
 tvbrowser/src/util/misc/PropertyDefaults.java -text svneol=unset#text/plain
