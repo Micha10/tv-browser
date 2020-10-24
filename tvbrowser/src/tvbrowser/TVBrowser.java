@@ -1468,7 +1468,7 @@ public class TVBrowser {
   private static void initializeAutomaticDownload() {
     if (!Settings.propShowAssistant.getBoolean()) {
       SwingUtilities.invokeLater(() -> {
-        boolean automaticDownloadStarted = handleAutomaticDownload();
+        boolean automaticDownloadStarted = handleAutomaticDownload(false);
 
         boolean dataAvailable = TvDataBase.getInstance().dataAvailable(new Date());
         if (!automaticDownloadStarted && (! dataAvailable) && (ChannelList.getNumberOfSubscribedChannels() > 0)) {
@@ -1606,8 +1606,8 @@ public class TVBrowser {
    * Starts an automatic download if required
    * @return false, if no download got started
    */
-  public static boolean handleAutomaticDownload() {
-    final BooleanResult result = isAutomaticDownloadDateReached();
+  public static boolean handleAutomaticDownload(boolean onlyPrimeTime) {
+    final BooleanResult result = isAutomaticDownloadDateReached(onlyPrimeTime);
     
     if ((ChannelList.getNumberOfSubscribedChannels() == 0)
       || result.isAllFalse())
@@ -1621,7 +1621,7 @@ public class TVBrowser {
       return true;
     }
 
-    if((Settings.propAutoDownloadWaitingEnabled.getBoolean() && Settings.propAutoDownloadWaitingTime.getShort() > 0 || result.getResultForIndex(1))) {
+    if((!onlyPrimeTime && (Settings.propAutoDownloadWaitingEnabled.getBoolean() && Settings.propAutoDownloadWaitingTime.getShort() > 0) || result.getResultForIndex(1))) {
       final long timerStart = Calendar.getInstance().getTimeInMillis();
       if(mAutoDownloadWaitingTimer == null) {
         mAutoDownloadWaitingTimer = new Timer(1000,
@@ -1647,14 +1647,14 @@ public class TVBrowser {
         mAutoDownloadWaitingTimer.restart();
       }
     }
-    else {
+    else if(!onlyPrimeTime) {
       return performAutomaticDownload(result);
     }
 
-    return true;
+    return result.getResultForIndex(0);
   }
   
-  private static BooleanResult isAutomaticDownloadDateReached() {
+  private static BooleanResult isAutomaticDownloadDateReached(boolean onlyPrimeTime) {
     String autoDLType = Settings.propAutoDownloadType.getString();
     final Date lastDownloadDate = Settings.propLastDownloadDate.getDate();
     Date today = Date.getCurrentDate();
@@ -1674,7 +1674,7 @@ public class TVBrowser {
       nextDownloadDate=lastDownloadDate;
     }
     
-    boolean download = !autoDLType.equals("never") && nextDownloadDate.getNumberOfDaysSince(today) <= 0;
+    boolean download = !onlyPrimeTime && !autoDLType.equals("never") && nextDownloadDate.getNumberOfDaysSince(today) <= 0;
     boolean primeTime = Settings.propAutoUpdatePrimeTime.getBoolean();
     
     if(primeTime) {
