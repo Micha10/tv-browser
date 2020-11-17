@@ -94,7 +94,7 @@ import util.ui.WindowClosingIf;
  * @author René Mach
  */
 public class SimpleMarkerPlugin extends Plugin {
-  private static final Version mVersion = new Version(3,30,1,true);
+  private static final Version mVersion = new Version(3,31,0,true);
 
   /** The localizer for this class. */
   private static final util.ui.Localizer mLocalizer = util.ui.Localizer.getLocalizerFor(SimpleMarkerPlugin.class);
@@ -364,6 +364,10 @@ public class SimpleMarkerPlugin extends Plugin {
   }
 
   public int getMarkPriorityForProgram(Program p) {
+    return getMarkPriorityMaxForProgram(p);
+  }
+  
+  public int getMarkPriorityMaxForProgram(Program p) {
     int priority = Program.NO_MARK_PRIORITY;
 
     if(p != null) {
@@ -379,6 +383,36 @@ public class SimpleMarkerPlugin extends Plugin {
     }
 
     return priority;
+  }
+  
+  public int[] getMarkPrioritiesForProgram(Program p) {
+    ArrayList<Integer> result = new ArrayList<Integer>();
+    if(p != null) {
+      String[] lists = mMarkListVector.getNamesOfListsContainingProgram(p);
+
+      for(String list : lists) {
+        int priority = mMarkListVector.getListForName(list).getMarkPriority();
+        
+        if(!result.contains(priority)) {
+          result.add(priority);
+        }
+      }
+    }
+    
+    if(result.isEmpty()) {
+      return new int[] {Program.NO_MARK_PRIORITY};
+    }
+    else {
+      int[] priorites = new int[result.size()];
+      
+      for(int i = 0; i < priorites.length; i++) {
+        priorites[i] = result.get(i);
+      }
+      
+      Arrays.sort(priorites);
+      
+      return priorites;
+    }
   }
   
   public void handleTvDataUpdateStarted() {
