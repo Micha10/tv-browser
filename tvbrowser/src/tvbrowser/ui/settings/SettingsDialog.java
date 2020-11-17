@@ -116,6 +116,11 @@ public class SettingsDialog implements WindowClosingIf {
   private static SettingsDialog mInstance;
 
   private JButton mHelpBt;
+  
+  private JButton mBack, mForward;
+  
+  private ArrayList<TreePath> mHistory;
+  private int mIndexHistoryCurrent;
 
   /**
    * Creates a new instance of SettingsDialog.
@@ -124,6 +129,8 @@ public class SettingsDialog implements WindowClosingIf {
    */
   public SettingsDialog(Window parent, String selectedTabId) {
     mInstance = this;
+    mHistory = new ArrayList<TreePath>();
+    mIndexHistoryCurrent = -1;
     mDialog = UiUtilities.createDialog(parent, true);
     String title = Localizer.getLocalization(Localizer.I18N_SETTINGS);
     // have the title explicitly specified for windows
@@ -195,7 +202,32 @@ public class SettingsDialog implements WindowClosingIf {
     });
 
     builder.addButton(mHelpBt);
-
+    
+    builder.addUnrelatedGap();
+    
+    mBack = new JButton(TVBrowserIcons.left(TVBrowserIcons.SIZE_LARGE));
+    mBack.setToolTipText(LOCALIZER.msg("tooltip.back", "Show previous settings in history"));
+    mBack.setEnabled(false);
+    mBack.addActionListener(e -> {
+      if(mHistory.size() > 0 && mIndexHistoryCurrent-1 >= 0 && mIndexHistoryCurrent-1 < mHistory.size()) {
+        TreePath n = mHistory.get(mIndexHistoryCurrent-1);
+        mSelectionTree.setSelectionPath(n);
+      }
+    });
+    
+    mForward = new JButton(TVBrowserIcons.right(TVBrowserIcons.SIZE_LARGE));
+    mForward.setToolTipText(LOCALIZER.msg("tooltip.forward", "Show next settings in history"));
+    mForward.setEnabled(false);
+    mForward.addActionListener(e -> {
+      if(mIndexHistoryCurrent != -1 && mIndexHistoryCurrent < mHistory.size()-1) {        
+        TreePath path = mHistory.get(mIndexHistoryCurrent+1);
+        mSelectionTree.setSelectionPath(path);
+      }
+    });
+    
+    builder.addFixed(mBack);
+    builder.addFixed(mForward);
+    
     JButton okBt = new JButton(Localizer.getLocalization(Localizer.I18N_OK));
     okBt.addActionListener(evt -> {
       try {
@@ -527,13 +559,52 @@ public class SettingsDialog implements WindowClosingIf {
       dialog.dispose();
     }
   }
-
+  
   private void showSettingsPanelForNode(SettingNode node) {
     String nodeId = node.getId();
     if (nodeId != null && nodeId.equalsIgnoreCase(SettingsItem.CHANNELS)) {
       waitForLoadedChannels();
     }
+    try {
+      
+    TreePath previous = null;
+    TreePath next = null;
     
+    if(mIndexHistoryCurrent >= 1 && mIndexHistoryCurrent-1 < mHistory.size()) {
+      previous = mHistory.get(mIndexHistoryCurrent-1);
+    }
+    
+    if(mIndexHistoryCurrent >= 0 && mIndexHistoryCurrent+1 < mHistory.size()-1) {
+      next = mHistory.get(mIndexHistoryCurrent+1);
+    }
+    
+    if(previous != null && previous.equals(mSelectionTree.getSelectionPath())) {
+      mIndexHistoryCurrent--;
+    }
+    else if(next != null && next.equals(mSelectionTree.getSelectionPath())) {
+      mIndexHistoryCurrent++;
+    }
+    else {
+      if(mIndexHistoryCurrent != -1) {
+        for(int i = mHistory.size()-1; i > mIndexHistoryCurrent; i--) {
+          mHistory.remove(i);
+        }
+      }
+      
+      TreePath path = mSelectionTree.getSelectionPath();
+      
+      if(path != null) {
+        mHistory.add(path);
+        mIndexHistoryCurrent++;
+      }
+    }
+    
+    mBack.setEnabled(mIndexHistoryCurrent > 0);
+    mForward.setEnabled(mIndexHistoryCurrent != -1 && mIndexHistoryCurrent < mHistory.size()-1);
+      
+    }catch(Throwable t) {
+      t.printStackTrace();
+    }
     JPanel pn = node.getSettingsPanel();
     
     if (pn != null) {
@@ -579,10 +650,11 @@ public class SettingsDialog implements WindowClosingIf {
 
   private void showSettingsPanelForSelectedNode() {
     mSettingsPn.removeAll();
-
+    
     TreePath selection = mSelectionTree.getSelectionPath();
     if (selection != null) {
       SettingNode node = (SettingNode) selection.getLastPathComponent();
+      mSelectionTree.scrollPathToVisible(selection);
       showSettingsPanelForNode(node);
     }
 
