@@ -34,6 +34,7 @@ import java.util.Hashtable;
 public class BooleanResult {
   private boolean[] mResultArr;
   private Hashtable<String, Integer> mResultNamesTable;
+  private Hashtable<Integer, String> mNamesResultTable;
   
   /**
    * @param values The boolean values for this result
@@ -41,6 +42,7 @@ public class BooleanResult {
   public BooleanResult(final boolean... values) {
     mResultArr = values;
     mResultNamesTable = new Hashtable<String, Integer>();
+    mNamesResultTable = new Hashtable<Integer, String>();
   }
   
   /**
@@ -50,9 +52,11 @@ public class BooleanResult {
    */
   public void setResultNames(final String... names) {
     mResultNamesTable.clear();
+    mNamesResultTable.clear();
     
     for(int i = 0; i < names.length; i++) {
       mResultNamesTable.put(names[i], i);
+      mNamesResultTable.put(i, names[i]);
     }
   }
   
@@ -150,7 +154,8 @@ public class BooleanResult {
   public String toString() {
     String result = "";
     for(int i = 0; i < mResultArr.length; i++) {
-      result+=i+":"+mResultArr[i]+",";
+      String name = mNamesResultTable.get(i);
+      result+=i+(name != null ? "["+name+"]" : "")+":"+mResultArr[i]+",";
     }
     
     return result;

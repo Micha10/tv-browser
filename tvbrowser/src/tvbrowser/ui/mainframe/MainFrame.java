@@ -1874,7 +1874,7 @@ public class MainFrame extends JFrame implements DateListener,DropTargetListener
         }
         
         if((Settings.propAutoDataDownloadEnabled.getBoolean() || Settings.propAutoUpdatePrimeTime.getBoolean()) && (mAutoDownloadTimer < IOUtilities.getMinutesAfterMidnight() || !date.equals(mCurrentDay) || Settings.propAutoUpdatePrimeTime.getBoolean()) && (mDownloadingThread == null || !mDownloadingThread.isAlive())) {
-          if(TVBrowser.handleAutomaticDownload(mAutoDownloadTimer == -1)) {
+          if(TVBrowser.handleAutomaticDownload(mAutoDownloadTimer)) {
             mAutoDownloadTimer = -1;
           }
         }
