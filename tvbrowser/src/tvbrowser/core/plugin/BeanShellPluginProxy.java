@@ -252,7 +252,7 @@ public class BeanShellPluginProxy extends AbstractPluginProxy {
     }
 
     @Override
-    protected int doGetMarkPriorityForProgram(Program p) {
+    protected int doGetMarkPriorityMaxForProgram(Program p) {
       // TODO Automatisch erstellter Methoden-Stub
       return Program.PRIORITY_MARK_MIN;
     }
@@ -358,5 +358,11 @@ public class BeanShellPluginProxy extends AbstractPluginProxy {
     public boolean receiveValues(String[] values, ProgramReceiveTarget receiveTarget) {
       // TODO Auto-generated method stub
       return false;
+    }
+
+    @Override
+    protected int[] doGetMarkPrioritiesForProgram(Program p) {
+      // TODO Auto-generated method stub
+      return null;
     }
  }

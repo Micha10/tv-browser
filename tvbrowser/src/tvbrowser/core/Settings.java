@@ -1800,6 +1800,13 @@ public class Settings {
   /** Used default mark priority for markings of plugins. */
   public static final IntProperty propProgramPanelUsedDefaultMarkPriority = new IntProperty(
       mProp, "programpanel.defaultMarkPriority", 0);
+
+  /**
+   * Flag to set highlighting to gradient instead of priority based coloring.
+   * @since 4.2.2
+   */
+  public static final BooleanProperty propProgramPanelGradientColorHighlighting = new BooleanProperty(
+      mProp, "programpanel.programPanelGradientColorHighlighting", true);
   
   /** Array with in representations of the highlighting colors for Programs 
    * @since 4.2.2 */

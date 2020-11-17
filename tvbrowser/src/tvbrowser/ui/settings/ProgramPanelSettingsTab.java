@@ -81,9 +81,9 @@ import util.ui.customizableitems.SelectableItemRendererCenterComponentIf;
  */
 public class ProgramPanelSettingsTab implements SettingsTab {
 
-  private static final Localizer mLocalizer = Localizer.getLocalizerFor(ProgramPanelSettingsTab.class);
+  private static final Localizer LOCALIZER = Localizer.getLocalizerFor(ProgramPanelSettingsTab.class);
 
-  private static final String PICTURE_ICON_NAME = mLocalizer.msg("hasPicure", "Has picture");
+  private static final String PICTURE_ICON_NAME = LOCALIZER.msg("hasPicure", "Has picture");
 
   private OrderChooser<IconPlugin> mIconPluginOCh;
   private OrderChooser<Object> mInfoTextOCh;
@@ -95,6 +95,7 @@ public class ProgramPanelSettingsTab implements SettingsTab {
 
   private JCheckBox mAllowProgramImportance;
   private JCheckBox mBorderForOnAirPrograms;
+  private JCheckBox mGradientHighlighting;
   
   private ArrayList<IconPlugin> mFormatIcons;
 
@@ -113,7 +114,7 @@ public class ProgramPanelSettingsTab implements SettingsTab {
     panel.addParagraph("");
     // icons
     panel.add(DefaultComponentFactory.getInstance()
-        .createSeparator(mLocalizer.msg("pluginIcons", "Plugin icons")), CC.xyw(1, panel.getRowCount(), 2));
+        .createSeparator(LOCALIZER.msg("pluginIcons", "Plugin icons")), CC.xyw(1, panel.getRowCount(), 2));
 
     IconPlugin[] allPluginArr = getAvailableIconPlugins();
     IconPlugin[] pluginOrderArr = getSelectedIconPlugins(allPluginArr, Settings.propProgramTableIconPlugins);
@@ -123,7 +124,7 @@ public class ProgramPanelSettingsTab implements SettingsTab {
     mIconPluginOChAlt = createIconPluginChooser(allPluginArr, pluginOrderArr);
     
     // info text
-    panel.add(DefaultComponentFactory.getInstance().createSeparator(mLocalizer.msg("infoText", "Info text")), CC
+    panel.add(DefaultComponentFactory.getInstance().createSeparator(LOCALIZER.msg("infoText", "Info text")), CC
         .xyw(4, panel.getRowCount(), 2));
     
     ProgramFieldType[] allTypeArr = getAvailableTypes();
@@ -138,7 +139,7 @@ public class ProgramPanelSettingsTab implements SettingsTab {
     mInfoTextOChAlt = new OrderChooser<>(typeOrderArr, allTypeArr);
 
     JButton addLineBreak = new JButton(IconLoader.getInstance().getIconFromTheme("actions", "add-line-break", TVBrowserIcons.SIZE_LARGE));
-    addLineBreak.setToolTipText(mLocalizer.msg("addLineBreakTooltip", "Adds line break"));
+    addLineBreak.setToolTipText(LOCALIZER.msg("addLineBreakTooltip", "Adds line break"));
     addLineBreak.addActionListener(e -> {
       mInfoTextOCh.addElement("\n",mInfoTextOCh.getSelectedIndex()+1,true);
     });
@@ -157,7 +158,7 @@ public class ProgramPanelSettingsTab implements SettingsTab {
       }
     }
     
-    mShowOriginalTitles = new JCheckBox(mLocalizer.msg("showOriginalTitles", "Show original title, if available, instead of title"), Settings.propProgramPanelShowOriginialTitles.getBoolean());
+    mShowOriginalTitles = new JCheckBox(LOCALIZER.msg("showOriginalTitles", "Show original title, if available, instead of title"), Settings.propProgramPanelShowOriginialTitles.getBoolean());
     
     JPanel filterPanel = new JPanel(new FormLayout("default","default"));
     JButton editFilter = new JButton("Filter editieren...");
@@ -174,8 +175,8 @@ public class ProgramPanelSettingsTab implements SettingsTab {
     
     panel.addRow("top:default");
     panel.addRow("default");
-    panel.add(UiUtilities.createHelpTextArea(mLocalizer.msg("pluginIcons.description", "")), CC.xywh(2, panel.getRowCount()-2, 1, 3));
-    panel.add(UiUtilities.createHelpTextArea(mLocalizer.msg("infoText.description", "")), CC.xy(4, panel.getRowCount()-2));
+    panel.add(UiUtilities.createHelpTextArea(LOCALIZER.msg("pluginIcons.description", "")), CC.xywh(2, panel.getRowCount()-2, 1, 3));
+    panel.add(UiUtilities.createHelpTextArea(LOCALIZER.msg("infoText.description", "")), CC.xy(4, panel.getRowCount()-2));
     panel.add(mShowOriginalTitles, CC.xy(4, panel.getRowCount()));
     
     panel.addRow("default");
@@ -195,17 +196,21 @@ public class ProgramPanelSettingsTab implements SettingsTab {
     panel.add(mIconPluginOChAlt, CC.xy(2, panel.getRowCount()));
     panel.add(mInfoTextOChAlt, CC.xy(4, panel.getRowCount()));
     
-    panel.addParagraph(mLocalizer.msg("Colors", "Colors"));
+    panel.addParagraph(LOCALIZER.msg("Colors", "Colors"));
 
     panel.addRow();
-    panel.add(mAllowProgramImportance = new JCheckBox(mLocalizer.msg("color.allowTransparency","Allow plugins to set the transparency of a program"),
+    panel.add(mGradientHighlighting = new JCheckBox(LOCALIZER.msg("color.programGradientHighlighting",
+        "Highlight programs with gradient colors"),Settings.propProgramPanelGradientColorHighlighting.getBoolean()), CC.xyw(2, panel.getRowCount(), 3));
+
+    panel.addRow();
+    panel.add(mAllowProgramImportance = new JCheckBox(LOCALIZER.msg("color.allowTransparency","Allow plugins to set the transparency of a program"),
         Settings.propProgramPanelAllowTransparency.getBoolean()), CC.xyw(2, panel.getRowCount() ,3));
     
     panel.addRow();
-    panel.add(mBorderForOnAirPrograms = new JCheckBox(mLocalizer.msg("color.programOnAirWithBorder",
+    panel.add(mBorderForOnAirPrograms = new JCheckBox(LOCALIZER.msg("color.programOnAirWithBorder",
         "Border for programs on air"), Settings.propProgramTableOnAirProgramsShowingBorder.getBoolean()), CC.xyw(2, panel.getRowCount(),
         3));
-
+    
     JPanel colors = new JPanel();
     Color programItemProgressColor = Settings.propProgramTableColorOnAirDark.getColor();
     Color programItemOnAirColor = Settings.propProgramTableColorOnAirLight.getColor();
@@ -219,18 +224,18 @@ public class ProgramPanelSettingsTab implements SettingsTab {
         "5dlu, default, 3dlu, default, 3dlu, default");
     colors.setLayout(formLayout);
 
-    colors.add(new JLabel(mLocalizer.msg("color.programOnAir", "Background color for programs on air")), CC.xy(1, 2));
+    colors.add(new JLabel(LOCALIZER.msg("color.programOnAir", "Background color for programs on air")), CC.xy(1, 2));
     colors.add(mProgramItemOnAirColorLb = new ColorLabel(programItemOnAirColor), CC.xy(3, 2));
     mProgramItemOnAirColorLb.setStandardColor(programItemDefaultOnAirColor);
     colors.add(new ColorButton(mProgramItemOnAirColorLb), CC.xy(5, 2));
 
-    colors.add(new JLabel(mLocalizer.msg("color.programProgress", "Progress bar for programs on air")), CC.xy(
+    colors.add(new JLabel(LOCALIZER.msg("color.programProgress", "Progress bar for programs on air")), CC.xy(
         1, 4));
     colors.add(mProgramItemProgressColorLb = new ColorLabel(programItemProgressColor), CC.xy(3, 4));
     mProgramItemProgressColorLb.setStandardColor(programItemDefaultProgressColor);
     colors.add(new ColorButton(mProgramItemProgressColorLb), CC.xy(5, 4));
 
-    colors.add(new JLabel(mLocalizer.msg("color.keyboardSelected", "Color for programs selected by keyboard")), CC.xy(1, 6));
+    colors.add(new JLabel(LOCALIZER.msg("color.keyboardSelected", "Color for programs selected by keyboard")), CC.xy(1, 6));
     colors.add(mProgramItemKeyboardSelectedLb = new ColorLabel(programItemKeyboardSelectedColor), CC.xy(3, 6));
     mProgramItemKeyboardSelectedLb.setStandardColor(programItemDefaultKeyboardSelectedColor);
     colors.add(new ColorButton(mProgramItemKeyboardSelectedLb), CC.xy(5, 6));
@@ -238,12 +243,12 @@ public class ProgramPanelSettingsTab implements SettingsTab {
     panel.addRow();
     panel.add(colors, CC.xyw(2, panel.getRowCount(), panel.getColumnCount() - 1));
     
-    panel.addParagraph(mLocalizer.msg("text", "Text"));
+    panel.addParagraph(LOCALIZER.msg("text", "Text"));
     panel.addRow();
-    panel.add(mHyphenator = new JCheckBox(mLocalizer.msg("hyphenation", "Use hyphenation"), Settings.propProgramPanelHyphenation.getBoolean()), CC.xyw(2, panel.getRowCount(), panel.getColumnCount() - 1));
-    panel.addParagraph(mLocalizer.msg("scrolling", "Scrolling"));
+    panel.add(mHyphenator = new JCheckBox(LOCALIZER.msg("hyphenation", "Use hyphenation"), Settings.propProgramPanelHyphenation.getBoolean()), CC.xyw(2, panel.getRowCount(), panel.getColumnCount() - 1));
+    panel.addParagraph(LOCALIZER.msg("scrolling", "Scrolling"));
     panel.addRow();
-    panel.add(mSmootherScrolling = new JCheckBox(mLocalizer.msg("scrolling.smoother", "Smoother scrolling in lists with programs"), Settings.propSmootherScrolling.getBoolean()), CC.xyw(2, panel.getRowCount(), panel.getColumnCount() - 1));
+    panel.add(mSmootherScrolling = new JCheckBox(LOCALIZER.msg("scrolling.smoother", "Smoother scrolling in lists with programs"), Settings.propSmootherScrolling.getBoolean()), CC.xyw(2, panel.getRowCount(), panel.getColumnCount() - 1));
     
     return panel.getPanel();
   }
@@ -336,7 +341,7 @@ public class ProgramPanelSettingsTab implements SettingsTab {
       String[] infoMessages = ProgramInfoHelper.getInfoIconMessages();
       for (int i = 0; i < infoIcons.length; i++) {
         if (infoIcons[i] != null) {
-          mFormatIcons.add(new IconPlugin(mLocalizer.msg("formatIcon", "Format: {0}", infoMessages[i]), infoIcons[i]));
+          mFormatIcons.add(new IconPlugin(LOCALIZER.msg("formatIcon", "Format: {0}", infoMessages[i]), infoIcons[i]));
         }
       }
     }
@@ -422,7 +427,8 @@ public class ProgramPanelSettingsTab implements SettingsTab {
     Settings.propProgramPanelShowOriginialTitles.setBoolean(mShowOriginalTitles.isSelected());
     
     Settings.propProgramTableOnAirProgramsShowingBorder.setBoolean(mBorderForOnAirPrograms.isSelected());
-
+    Settings.propProgramPanelGradientColorHighlighting.setBoolean(mGradientHighlighting.isSelected());
+    
     Settings.propProgramTableColorOnAirDark.setColor(mProgramItemProgressColorLb.getColor());
     Settings.propProgramTableColorOnAirLight.setColor(mProgramItemOnAirColorLb.getColor());
     Settings.propKeyboardSelectedColor.setColor(mProgramItemKeyboardSelectedLb.getColor());
@@ -442,7 +448,7 @@ public class ProgramPanelSettingsTab implements SettingsTab {
    * Returns the title of the tab-sheet.
    */
   public String getTitle() {
-    return mLocalizer.msg("title", "Program display");
+    return LOCALIZER.msg("title", "Program display");
   }
 
   private static class IconPlugin {
@@ -477,7 +483,7 @@ public class ProgramPanelSettingsTab implements SettingsTab {
         String[] infoMessages = ProgramInfoHelper.getInfoIconMessages();
         for (int i = 0; i < infoIcons.length; i++) {
           if (infoIcons[i] != null) {
-            if (mLocalizer.msg("formatIcon", "Format: {0}", infoMessages[i]).equals(mName)) {
+            if (LOCALIZER.msg("formatIcon", "Format: {0}", infoMessages[i]).equals(mName)) {
               return "FORMAT_" + i;
             }
           }

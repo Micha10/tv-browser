@@ -110,7 +110,7 @@ public class FavoritesPluginProxy extends AbstractInternalPluginProxy implements
   }
 
   public int getMarkPriorityForProgram(Program p) {
-    return getFavoritesInstance().getMarkPriority();
+    return getMarkPriorityMaxForProgram(p);
   }
 
   public Icon getIcon() {
@@ -210,5 +210,15 @@ public class FavoritesPluginProxy extends AbstractInternalPluginProxy implements
   @Override
   public void handleTvBrowserStartFinished() {
     FavoritesPlugin.getInstance().handleTvBrowserStartFinished();
+  }
+
+  @Override
+  public int getMarkPriorityMaxForProgram(Program p) {
+    return getFavoritesInstance().getMarkPriority();
+  }
+
+  @Override
+  public int[] getMarkPrioritiesForProgram(Program p) {
+    return new int[] {getMarkPriorityMaxForProgram(p)};
   }
 }

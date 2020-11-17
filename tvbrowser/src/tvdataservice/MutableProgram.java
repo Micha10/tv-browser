@@ -1067,9 +1067,29 @@ public class MutableProgram implements Program {
    *
    * @return The mark priority.
    * @since 2.5.1
+   * @deprecated since 4.2.2
    */
   public int getMarkPriority() {
-    return MarkedProgramsMap.getInstance().getMarkPriorityForProgram(this);
+    return MarkedProgramsMap.getInstance().getMarkPriorityMaxForProgram(this);
+  }
+
+  /**
+   * Gets the priority of the marking of this program.
+   *
+   * @return The mark priority.
+   * @since 4.2.2
+   */
+  public int getMarkPriorityMax() {
+    return MarkedProgramsMap.getInstance().getMarkPriorityMaxForProgram(this);
+  }
+  
+  /**
+   * Gets an array of all marking priorities of this program.
+   * @since 4.2.2
+   * @return An array with all marking priorities of this program.
+   */
+  public Integer[] getMarkPriorities() {
+    return MarkedProgramsMap.getInstance().getMarkPrioritesForProgram(this);
   }
 
   public boolean hasFieldValue(final ProgramFieldType type) {

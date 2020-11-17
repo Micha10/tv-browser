@@ -69,7 +69,7 @@ import util.exc.TvBrowserException;
  * @author Til Schneider, www.murfman.de
  */
 public abstract class AbstractPluginProxy implements PluginProxy, ContextMenuIf {
-
+  private static final int[] EMPTY = new int[0];
   public static final String DEFAULT_PLUGIN_ICON_NAME = "imgs/Jar16.gif";
 
   /** The localizer for this class. */
@@ -933,11 +933,27 @@ public abstract class AbstractPluginProxy implements PluginProxy, ContextMenuIf 
    * @param p The program to get the mark prioriy for.
    * @return The mark priority for the given program for this plugin.
    * @since 2.5.1
+   * @deprecated since 4.2.2
    */
   public int getMarkPriorityForProgram(Program p) {
+    return getMarkPriorityMaxForProgram(p);
+  }
+  
+  /**
+   * Gets the mark priority for the given program that this Plugin uses.
+   * <p>
+   * The mark priority can be {@link Program#NO_MARK_PRIORITY}, {@link Program#MIN_MARK_PRIORITY}, {@link Program#LOWER_MEDIUM_MARK_PRIORITY},
+   * {@link Program#MEDIUM_MARK_PRIORITY}, {@link Program#HIGHER_MEDIUM_MARK_PRIORITY} or
+   * {@link Program#MAX_MARK_PRIORITY}.
+   * <p>
+   * @param p The program to get the mark prioriy for.
+   * @return The mark priority for the given program for this plugin.
+   * @since 4.2.2
+   */
+  public int getMarkPriorityMaxForProgram(Program p) {
     try {
       assertActivatedState();
-      return doGetMarkPriorityForProgram(p);
+      return doGetMarkPriorityMaxForProgram(p);
     } catch (Throwable exc) {
       handlePluginException(exc);
     }
@@ -951,7 +967,26 @@ public abstract class AbstractPluginProxy implements PluginProxy, ContextMenuIf 
    * @param p The program to get the mark priority for.
    * @return The mark priority for the given program.
    */
-  protected abstract int doGetMarkPriorityForProgram(Program p);
+  protected abstract int doGetMarkPriorityMaxForProgram(Program p);
+  
+  public int[] getMarkPrioritiesForProgram(Program p) {
+    try {
+      assertActivatedState();
+      return doGetMarkPrioritiesForProgram(p);
+    } catch (Throwable exc) {
+      handlePluginException(exc);
+    }
+
+    return EMPTY;
+  }
+  
+  /**
+   * Really gets the mark priority for the given Program.
+   * <p>
+   * @param p The program to get the mark priority for.
+   * @return The mark priority for the given program.
+   */
+  protected abstract int[] doGetMarkPrioritiesForProgram(Program p);
 
   /**
    * Checks whether the plugin is activated. If it is not an error message is

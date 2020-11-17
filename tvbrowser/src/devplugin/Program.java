@@ -496,8 +496,24 @@ public interface Program {
    * 
    * @return The mark priority.
    * @since 2.5.1
+   * @deprecated since 4.2.2
    */
   public int getMarkPriority();
+
+  /**
+   * Gets the maximum priority of the marking of this program.
+   * 
+   * @return The maximum mark priority.
+   * @since 4.2.2
+   */
+  public int getMarkPriorityMax();
+  
+  /**
+  * Gets an array of all marking priorities of this program.
+  * @since 4.2.2
+  * @return An array with all marking priorities of this program.
+  */
+  public Integer[] getMarkPriorities();
   
   /**
    * checks if the given field has a non-<code>null</code> value. use this

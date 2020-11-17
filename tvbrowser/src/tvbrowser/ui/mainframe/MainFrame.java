@@ -91,6 +91,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 import java.util.TooManyListenersException;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
@@ -240,7 +241,7 @@ public class MainFrame extends JFrame implements DateListener,DropTargetListener
 
   private DefaultProgramTableModel mProgramTableModel;
 
-  private Thread downloadingThread;
+  private Thread mDownloadingThread;
 
   private JPanel jcontentPane;
 
@@ -1603,7 +1604,7 @@ public class MainFrame extends JFrame implements DateListener,DropTargetListener
 
   private void quit(boolean log, boolean export) {
     mTimer.stop(); // disable the update timer to avoid new update events
-    if (log && downloadingThread != null && downloadingThread.isAlive()) {    	
+    if (log && mDownloadingThread != null && mDownloadingThread.isAlive()) {    	
       final JDialog info = new JDialog(UiUtilities.getLastModalChildOf(this));
       info.setModalityType(ModalityType.DOCUMENT_MODAL);
       info.setUndecorated(true);
@@ -1618,9 +1619,9 @@ public class MainFrame extends JFrame implements DateListener,DropTargetListener
       info.setLocationRelativeTo(this);
 
       SwingUtilities.invokeLater(() -> {
-        if(downloadingThread != null && downloadingThread.isAlive()) {
+        if(mDownloadingThread != null && mDownloadingThread.isAlive()) {
           try {
-            downloadingThread.join();
+            mDownloadingThread.join();
           } catch (InterruptedException e) {
             e.printStackTrace();
           }
@@ -1792,7 +1793,8 @@ public class MainFrame extends JFrame implements DateListener,DropTargetListener
     try {
       int minutesAfterMidnight = IOUtilities.getMinutesAfterMidnight();
       boolean onAirChanged = false;
-      if (minutesAfterMidnight != mLastTimerMinutesAfterMidnight && (downloadingThread == null || !downloadingThread.isAlive())) {
+      
+      if (minutesAfterMidnight != mLastTimerMinutesAfterMidnight && (mDownloadingThread == null || !mDownloadingThread.isAlive())) {
         mLastTimerMinutesAfterMidnight = minutesAfterMidnight;
         Channel[] ch = ChannelList.getSubscribedChannels();
 
@@ -1871,7 +1873,7 @@ public class MainFrame extends JFrame implements DateListener,DropTargetListener
           runAutoUpdate();
         }
         
-        if((Settings.propAutoDataDownloadEnabled.getBoolean() || Settings.propAutoUpdatePrimeTime.getBoolean()) && (mAutoDownloadTimer < IOUtilities.getMinutesAfterMidnight() || !date.equals(mCurrentDay) || Settings.propAutoUpdatePrimeTime.getBoolean()) && (downloadingThread == null || !downloadingThread.isAlive())) {
+        if((Settings.propAutoDataDownloadEnabled.getBoolean() || Settings.propAutoUpdatePrimeTime.getBoolean()) && (mAutoDownloadTimer < IOUtilities.getMinutesAfterMidnight() || !date.equals(mCurrentDay) || Settings.propAutoUpdatePrimeTime.getBoolean()) && (mDownloadingThread == null || !mDownloadingThread.isAlive())) {
           if(TVBrowser.handleAutomaticDownload(mAutoDownloadTimer == -1)) {
             mAutoDownloadTimer = -1;
           }
@@ -1889,7 +1891,9 @@ public class MainFrame extends JFrame implements DateListener,DropTargetListener
           setProgramFilter(getProgramFilter());
         }
       }
-    }catch(Exception e) {}
+    }catch(Exception e) {
+      LOG.log(Level.WARNING, "ERROR HANDLING TIMER EVENT ", e);
+    }
 
     if (mPluginView != null) {
       mPluginView.repaint();
@@ -2482,43 +2486,60 @@ public class MainFrame extends JFrame implements DateListener,DropTargetListener
     }
   }
 
+  /**
+   * Gets if TV-Browser is currently updating data.
+   * 
+   * @return <code>true</code> if the data is currently updating.
+   * @since 4.2.2
+   */
+  public boolean isUpdatingData() {
+    return mDownloadingThread != null && mDownloadingThread.isAlive();
+  }
+  
   public void runUpdateThread(final int daysToDownload,
       final TvDataServiceProxy[] services, final boolean autoUpdate) {
-    downloadingThread = new Thread("TV data update") {
-      public void run() {
-        onDownloadStart();
-
-        final boolean scroll = !autoUpdate && !TvDataBase.getInstance().dataAvailable(Date.getCurrentDate())
-        && getProgramTableModel().getDate() != null
-        && getProgramTableModel().getDate().compareTo(Date.getCurrentDate()) == 0;
-
-        JProgressBar progressBar = mStatusBar.getProgressBar();
-        progressBar.setVisible(true);
-        try {
-          TvDataUpdater.getInstance().downloadTvData(daysToDownload, services,
-              progressBar, mStatusBar.getLabel());
-        } catch (Throwable t) {
-          String msg = LOCALIZER.msg("error.3", "An unexpected error occurred during update.");
-          ErrorHandler.handle(msg, t);
-        } finally {
-          SwingUtilities.invokeLater(() -> {
-            onDownloadDone();
-            newTvDataAvailable(scroll);
-            
-            if((Settings.propJreUpdateDateLast.getDate() == null || Settings.propJreUpdateDateLast.getDate().addDays(JREUpdater.INTERVAL).compareTo(Date.getCurrentDate()) <= 0)
-                && NetworkUtilities.checkConnection() && !JREUpdater.checkForUpdate(mStatusBar.getLabel())) {
-              checkForPluginUpdate();
-          	}
-            else if(!checkForPluginUpdate()) {
-              JREUpdater.handlePossibleUpdate();
-            }
-          });
+    if(mDownloadingThread == null || !mDownloadingThread.isAlive()) {
+      mDownloadingThread = new Thread("TV data update") {
+        public void run() {
+          onDownloadStart();
+  
+          final boolean scroll = !autoUpdate && !TvDataBase.getInstance().dataAvailable(Date.getCurrentDate())
+          && getProgramTableModel().getDate() != null
+          && getProgramTableModel().getDate().compareTo(Date.getCurrentDate()) == 0;
+  
+          JProgressBar progressBar = mStatusBar.getProgressBar();
+          progressBar.setVisible(true);
+          try {
+            TvDataUpdater.getInstance().downloadTvData(daysToDownload, services,
+                progressBar, mStatusBar.getLabel());
+          } catch (Throwable t) {
+            String msg = LOCALIZER.msg("error.3", "An unexpected error occurred during update.");
+            ErrorHandler.handle(msg, t);
+          } finally {
+            final Thread t = new Thread() {
+              @Override
+              public void run() {
+                SwingUtilities.invokeLater(() -> {
+                  onDownloadDone();
+                  newTvDataAvailable(scroll);
+                  
+                  if((Settings.propJreUpdateDateLast.getDate() == null || Settings.propJreUpdateDateLast.getDate().addDays(JREUpdater.INTERVAL).compareTo(Date.getCurrentDate()) <= 0)
+                      && NetworkUtilities.checkConnection() && !JREUpdater.checkForUpdate(mStatusBar.getLabel())) {
+                    checkForPluginUpdate();
+                	}
+                  else if(!checkForPluginUpdate()) {
+                    JREUpdater.handlePossibleUpdate();
+                  }
+                });
+              }
+            };
+            t.start();
+          }
         }
-
-      }
-    };
-    downloadingThread.setPriority(Thread.MIN_PRIORITY);
-    downloadingThread.start();
+      };
+      mDownloadingThread.setPriority(Thread.MIN_PRIORITY);
+      mDownloadingThread.start();
+    }
   }
 
   private boolean checkForPluginUpdate() {
@@ -2563,7 +2584,7 @@ public class MainFrame extends JFrame implements DateListener,DropTargetListener
     if (TvDataUpdater.getInstance().isDownloading()) {
       return;
     }
-    if (downloadingThread != null && downloadingThread.isAlive()) {
+    if (mDownloadingThread != null && mDownloadingThread.isAlive()) {
       return;
     }
     mIsAskingUpdate = true;

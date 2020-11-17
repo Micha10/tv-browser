@@ -68,7 +68,12 @@ public interface Marker {
    * @param p The program to check.
    * @return The mark priority for the given program.
    * @since 2.5.1 
+   * @deprecated since 4.2.2
    */
   public int getMarkPriorityForProgram(Program p);
+  
+  public int getMarkPriorityMaxForProgram(Program p);
+  
+  public int[] getMarkPrioritiesForProgram(Program p);
 
 }

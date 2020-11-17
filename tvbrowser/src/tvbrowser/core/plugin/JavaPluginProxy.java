@@ -652,14 +652,14 @@ public class JavaPluginProxy extends AbstractPluginProxy {
    * @param p The program to get the mark priority for.
    * @return The mark priority for the given program.
    */
-  protected int doGetMarkPriorityForProgram(Program p) {
+  protected int doGetMarkPriorityMaxForProgram(Program p) {
     UserFilter filter = GenericFilterMap.getInstance().getGenericPluginFilter(this, true);
     
     if(p != null && (accessControl(p.getChannel()) || (filter != null && !filter.accept(p)))) {
       return Program.PRIORITY_MARK_NONE;
     }
     
-    return mPlugin.getMarkPriorityForProgram(p);
+    return mPlugin.getMarkPriorityMaxForProgram(p);
   }
 
   public String getPluginFileName() {
@@ -823,5 +823,10 @@ public class JavaPluginProxy extends AbstractPluginProxy {
   @Override
   protected boolean doCanReceiveProgramsWithTarget() {
     return mPlugin.canReceiveProgramsWithTarget();
+  }
+
+  @Override
+  protected int[] doGetMarkPrioritiesForProgram(Program p) {
+    return mPlugin.getMarkPrioritiesForProgram(p);
   }
 }

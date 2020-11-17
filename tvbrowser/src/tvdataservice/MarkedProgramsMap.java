@@ -27,10 +27,12 @@ package tvdataservice;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -53,6 +55,7 @@ import util.program.ProgramUtilities;
  * @since 3.3.4
  */
 public class MarkedProgramsMap {
+  private static final Integer[] EMPTY = new Integer[0];
   private static MarkedProgramsMap mInstance;
   
   private final Map<String, MarkedHolder> mMarkedMap = Collections.synchronizedMap(new 
@@ -145,16 +148,30 @@ public class MarkedProgramsMap {
     }    
   }
   
-  int getMarkPriorityForProgram(Program p) {
+  int getMarkPriorityMaxForProgram(Program p) {
     synchronized (mMarkedMap) {
       MarkedHolder markedHolder = mMarkedMap.get(p.getUniqueID());
       
       if(markedHolder != null) {
-        return markedHolder.getMarkPriority();
+        return markedHolder.getMarkPriorityMax();
       }
     }
     
     return Program.PRIORITY_MARK_NONE;
+  }
+  
+  Integer[] getMarkPrioritesForProgram(Program p) {
+    Integer[] result = null;
+    
+    synchronized (mMarkedMap) {
+      MarkedHolder markedHolder = mMarkedMap.get(p.getUniqueID());
+      
+      if(markedHolder != null) {
+        result = markedHolder.getMarkPriorities();
+      }
+    }
+    
+    return result;
   }
   
   boolean validateMarkingForProgram(Program p) {
@@ -305,7 +322,7 @@ public class MarkedProgramsMap {
           dontAccept = !(Settings.propTrayFilterNot.getBoolean() || (Settings.propTrayFilterNotMarked.getBoolean() && p.getMarkerArr().length > 0));
         }
 
-        if((p.isOnAir() && !includeOnAirPrograms) || p.isExpired() || dontAccept || p.getMarkPriority() < markPriority) {
+        if((p.isOnAir() && !includeOnAirPrograms) || p.isExpired() || dontAccept || p.getMarkPriorityMax() < markPriority) {
           continue;
         }
         programs.add(p);
@@ -329,11 +346,13 @@ public class MarkedProgramsMap {
   }
   
   private static final class MarkedHolder {
-    private byte mMarkPriority;
+    private byte mMarkPriorityMax;
     private Program mCurrentProgramInstance;
     //private Marker[] mMarkerArr;
     private HashSet<String> mMarkerIDs;
     private HashSet<Marker> mMarkerSet;
+    private Hashtable<String, ArrayList<Integer>> mPriorityMap = new Hashtable<String, ArrayList<Integer>>(); 
+    private Integer[] mMarkPriorities;
     
     private static final Comparator<Marker> MARKER_COMPARTOR = new Comparator<Marker>() {
       public int compare(Marker o1, Marker o2) {
@@ -343,10 +362,11 @@ public class MarkedProgramsMap {
     
     MarkedHolder(Program prog) {
       mCurrentProgramInstance = prog;
-      mMarkPriority = Program.PRIORITY_MARK_NONE;
+      mMarkPriorityMax = Program.PRIORITY_MARK_NONE;
      // mMarkerArr = MutableProgram.EMPTY_MARKER_ARR;
       mMarkerIDs = new HashSet<String>(0);
       mMarkerSet = new HashSet<Marker>(0);
+      mMarkPriorities = EMPTY;
     }
     
     synchronized void addMarker(Marker marker) {
@@ -371,8 +391,10 @@ public class MarkedProgramsMap {
           return o1.getId().compareTo(o2.getId());
         }
       });*/
-
-      mMarkPriority = (byte) Math.max(mMarkPriority,marker.getMarkPriorityForProgram(mCurrentProgramInstance));
+      
+      handleMarkerPriorities(marker);
+      mMarkPriorities = fillMarkPriorities();
+      
     //  
    //   Marker[] newArr = new Marker[mMarkerArr.length + 1];
    //   newArr[newArr.length - 1] = marker;
@@ -389,20 +411,47 @@ public class MarkedProgramsMap {
         }
       }
       
+      
     //  mMarkerArr = newArr;
       
   //    mMarkPriority = Math.max(mMarkPriority, marker.getMarkPriorityForProgram(mCurrentProgramInstance));
     }
     
+    private synchronized void handleMarkerPriorities(Marker marker) {
+      int[] priorities = marker.getMarkPrioritiesForProgram(mCurrentProgramInstance);
+      
+      if(priorities == null || priorities.length == 0) {
+        priorities = new int[1];
+        priorities[0] = marker.getMarkPriorityMaxForProgram(mCurrentProgramInstance);
+      }
+      
+      Arrays.sort(priorities);
+      
+      mMarkPriorityMax = (byte) Math.max(mMarkPriorityMax,priorities[priorities.length-1]);
+      
+      ArrayList<Integer> list = mPriorityMap.get(marker.getId());
+      
+      if(list == null) {
+        list = new ArrayList<Integer>();
+        mPriorityMap.put(marker.getId(), list);
+      }
+      
+      for(int priority : priorities) {
+        if(!list.contains(priority)) {
+          list.add(priority);
+        }
+      }
+    }
+    
     synchronized boolean removeMarker(Marker marker) {
       HashSet<Marker> newSet = new HashSet<Marker>();
       
-      mMarkPriority = Program.PRIORITY_MARK_NONE;
+      mMarkPriorityMax = Program.PRIORITY_MARK_NONE;
       
       for(Marker test : mMarkerSet) {
         if(test != null && !test.getId().equals(marker.getId())) {
           newSet.add(test);
-          mMarkPriority = (byte)Math.max(mMarkPriority, test.getMarkPriorityForProgram(mCurrentProgramInstance));
+          mMarkPriorityMax = (byte)Math.max(mMarkPriorityMax, test.getMarkPriorityMaxForProgram(mCurrentProgramInstance));
           
           // remove from artificial plugin tree
           if (marker instanceof PluginProxy) {
@@ -415,8 +464,11 @@ public class MarkedProgramsMap {
       }
       
       mMarkerIDs.remove(marker.getId());
+      mPriorityMap.remove(marker.getId());
       mMarkerSet.clear();
       mMarkerSet = newSet;
+      
+      mMarkPriorities = fillMarkPriorities();
       
       return isEmpty();
     }
@@ -425,23 +477,50 @@ public class MarkedProgramsMap {
       mMarkerIDs.clear();
       mMarkerSet.clear();
       
-      mMarkPriority = Program.PRIORITY_MARK_NONE;
+      mMarkPriorityMax = Program.PRIORITY_MARK_NONE;
       
       for(Marker test : marker) {
         if(test != null) {
           mMarkerIDs.add(test.getId());
           mMarkerSet.add(test);
-          mMarkPriority = (byte)Math.max(mMarkPriority, test.getMarkPriorityForProgram(mCurrentProgramInstance));
+          handleMarkerPriorities(test);
         }
       }
+      
+      mMarkPriorities = fillMarkPriorities();
     }
     
     synchronized void setMarkPriority(int markPriority) {
-      mMarkPriority = (byte)markPriority;
+      mMarkPriorityMax = (byte)markPriority;
     }
     
-    int getMarkPriority() {
-      return mMarkPriority;
+    int getMarkPriorityMax() {
+      return mMarkPriorityMax;
+    }
+    
+    Integer[] getMarkPriorities() {
+      return mMarkPriorities;
+    }
+    
+    private Integer[] fillMarkPriorities() {
+      Collection<ArrayList<Integer>> values = mPriorityMap.values();
+      
+      ArrayList<Integer> result = new ArrayList<Integer>();
+      
+      if(values != null && !values.isEmpty()) {
+        values.forEach(value -> {
+          
+          for(Integer test : value) {
+            if(!result.contains(test)) {
+              result.add(test);
+            }
+          }
+        });
+      }
+      
+      Collections.sort(result);
+      
+      return result.toArray(new Integer[0]);
     }
     
     Marker[] getMarkerArr() {
@@ -457,13 +536,16 @@ public class MarkedProgramsMap {
     }
     
     synchronized void validateMarking() {
-      mMarkPriority = Program.PRIORITY_MARK_NONE;
-
+      mMarkPriorityMax = Program.PRIORITY_MARK_NONE;
+      mPriorityMap.clear();
+      
       for(Marker mark : mMarkerSet) {
         if(mark != null) {
-          mMarkPriority = (byte) Math.max(mMarkPriority,mark.getMarkPriorityForProgram(mCurrentProgramInstance));
+          handleMarkerPriorities(mark);
         }
       }
+      
+      mMarkPriorities = fillMarkPriorities();
     }
     
     Program getCurrentProgramInstance() {

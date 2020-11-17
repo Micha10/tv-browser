@@ -33,6 +33,7 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.LinearGradientPaint;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
@@ -884,23 +885,57 @@ private static Font getDynamicFontSize(Font font, int offset) {
 
     // If there are plugins that have marked the program -> paint the background
     Marker[] markedByPluginArr = mProgram.getMarkerArr();
-    if (markedByPluginArr.length != 0) {
-      Color c = Plugin.getPluginManager().getTvBrowserSettings().getColorForMarkingPriority(mProgram.getMarkPriority());
-
-      if(c == null) {
-        c = Settings.getHighlightingColorForPriority(0);
-      }
-
-      int alphaValue = (int)(c.getAlpha()*mProgramImportance/10.);
-
-      if(mProgram.isExpired()) {
-        grp.setColor(new Color(c.getRed(), c.getGreen(), c.getBlue(), (int)(alphaValue*6/10.)));
-      }
-      else {
-        grp.setColor(new Color(c.getRed(), c.getGreen(), c.getBlue(), alphaValue));
-      }
-
-      if(mProgram.getMarkPriority() > Program.PRIORITY_MARK_NONE) {
+    
+    if (markedByPluginArr.length != 0 && mProgram.getMarkPriorityMax() > Program.PRIORITY_MARK_NONE) {
+      Integer[] priorites = mProgram.getMarkPriorities();  
+      
+      if(priorites != null && priorites.length > 0) {
+        if(!Settings.propProgramPanelGradientColorHighlighting.getBoolean() || priorites.length <= 1) {
+          Color c = Plugin.getPluginManager().getTvBrowserSettings().getColorForMarkingPriority(mProgram.getMarkPriorityMax());
+    
+          if(c == null) {
+            c = Settings.getHighlightingColorForPriority(0);
+          }
+    
+          int alphaValue = (int)(c.getAlpha()*mProgramImportance/10.);
+    
+          if(mProgram.isExpired()) {
+            alphaValue = (int)(alphaValue*6/10.);
+          }
+          
+          grp.setColor(new Color(c.getRed(), c.getGreen(), c.getBlue(), alphaValue));
+        }
+        else {
+          Color[] colors = new Color[priorites.length];
+          float[] fractions = new float[priorites.length];
+          
+          float fraction = 1 / (float)(priorites.length-1);
+          fractions[0] = 0;
+          
+          for(int i = 0; i < colors.length; i++) {
+            if(i > 0) {
+              fractions[i] = fractions[i-1] + fraction;
+            }
+            
+            colors[i] = Plugin.getPluginManager().getTvBrowserSettings().getColorForMarkingPriority(priorites[i]);
+  
+            if(colors[i] == null) {
+              colors[i] = Settings.getHighlightingColorForPriority(0);
+            }
+  
+            int alphaValue = (int)(colors[i].getAlpha()*mProgramImportance/10.);
+  
+            if(mProgram.isExpired()) {
+               alphaValue = (int)(alphaValue*6/10.);
+            }
+            
+            colors[i] = new Color(colors[i].getRed(), colors[i].getGreen(), colors[i].getBlue(), alphaValue);
+          }
+          
+          LinearGradientPaint paint = new LinearGradientPaint(0, 0, width, 0, fractions, colors);
+          grp.setPaint(paint);
+        }
+        
         if(Settings.propProgramPanelWithMarkingsShowingBoder.getBoolean()) {
           grp.fill3DRect(0, 0, width, height, true);
         }

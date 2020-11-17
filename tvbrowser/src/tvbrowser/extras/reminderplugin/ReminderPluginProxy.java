@@ -107,7 +107,7 @@ public class ReminderPluginProxy extends AbstractInternalPluginProxy implements 
   }
 
   public int getMarkPriorityForProgram(Program p) {
-    return getReminderInstance().getMarkPriority();
+    return getMarkPriorityMaxForProgram(p);
   }
 
   public String getButtonActionDescription() {
@@ -165,5 +165,15 @@ public class ReminderPluginProxy extends AbstractInternalPluginProxy implements 
   @Override
   public void handleTvBrowserStartFinished() {
     ReminderPlugin.getInstance().handleTvBrowserStartFinished();
+  }
+
+  @Override
+  public int getMarkPriorityMaxForProgram(Program p) {
+    return getReminderInstance().getMarkPriority();
+  }
+
+  @Override
+  public int[] getMarkPrioritiesForProgram(Program p) {
+    return new int[] {getMarkPriorityMaxForProgram(p)};
   }
 }

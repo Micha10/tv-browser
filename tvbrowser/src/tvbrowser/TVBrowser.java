@@ -709,39 +709,7 @@ public class TVBrowser {
           } catch (Throwable registry) {
           }
         }
-
-        if (currentVersion != null
-            && currentVersion.compareTo(new Version(2, 71, false)) < 0) {
-          if (Settings.propProgramPanelMarkedMinPriorityColor.getColor()
-              .equals(
-                  Settings.propProgramPanelMarkedMinPriorityColor
-                      .getDefaultColor())) {
-            Settings.propProgramPanelMarkedMinPriorityColor
-                .setColor(new Color(255, 0, 0, 30));
-          }
-          if (Settings.propProgramPanelMarkedMediumPriorityColor.getColor()
-              .equals(
-                  Settings.propProgramPanelMarkedMediumPriorityColor
-                      .getDefaultColor())) {
-            Settings.propProgramPanelMarkedMediumPriorityColor
-                .setColor(new Color(140, 255, 0, 60));
-          }
-          if (Settings.propProgramPanelMarkedHigherMediumPriorityColor
-              .getColor().equals(
-                  Settings.propProgramPanelMarkedHigherMediumPriorityColor
-                      .getDefaultColor())) {
-            Settings.propProgramPanelMarkedHigherMediumPriorityColor
-                .setColor(new Color(255, 255, 0, 60));
-          }
-          if (Settings.propProgramPanelMarkedMaxPriorityColor.getColor()
-              .equals(
-                  Settings.propProgramPanelMarkedMaxPriorityColor
-                      .getDefaultColor())) {
-            Settings.propProgramPanelMarkedMaxPriorityColor
-                .setColor(new Color(255, 180, 0, 110));
-          }
-        }
-
+        
         // check if user should select picture settings
         if (currentVersion != null
             && currentVersion.compareTo(new Version(2, 22)) < 0) {
@@ -1621,7 +1589,7 @@ public class TVBrowser {
       return true;
     }
 
-    if((!onlyPrimeTime && (Settings.propAutoDownloadWaitingEnabled.getBoolean() && Settings.propAutoDownloadWaitingTime.getShort() > 0) || result.getResultForIndex(1))) {
+    if((!onlyPrimeTime && Settings.propAutoDownloadWaitingEnabled.getBoolean() && Settings.propAutoDownloadWaitingTime.getShort() > 0) || result.getResultForIndex(1)) {
       final long timerStart = Calendar.getInstance().getTimeInMillis();
       if(mAutoDownloadWaitingTimer == null) {
         mAutoDownloadWaitingTimer = new Timer(1000,
@@ -1633,6 +1601,9 @@ public class TVBrowser {
               mAutoDownloadWaitingTimer.stop();
               mainFrame.getStatusBarLabel().setText("");
               performAutomaticDownload(result);
+            } else if(mainFrame.isUpdatingData()){
+              mAutoDownloadWaitingTimer.stop();
+              mainFrame.getStatusBarLabel().setText("");
             } else {
               mainFrame.getStatusBarLabel().setText(
                   LOCALIZER.msg("downloadwait",
@@ -1679,58 +1650,62 @@ public class TVBrowser {
     
     if(primeTime) {
       int compare = Date.getCurrentDate().compareTo(Settings.propLastDownloadDate.getDate());
+      
       primeTime = (Math.random() > 0.8 || (IOUtilities.getMinutesAfterMidnight() >= 17*60+50 && IOUtilities.getMinutesAfterMidnight() <= 20*60+15)) && IOUtilities.getMinutesAfterMidnight() >= 60*17+30 && IOUtilities.getMinutesAfterMidnight() <= 60*20+15 && (compare > 0 || (compare == 0 && Settings.propLastDownloadTime.getInt() < 17*60+30));
     }
     
     return new BooleanResult(download, primeTime);
   }
 
-  private static boolean performAutomaticDownload(final BooleanResult result) {
-    if (result.getResultForIndex(0)) {
-      if (Settings.propAskForAutoDownload.getBoolean()) {
-        mainFrame.updateTvData();
-      }
-      else {
-        String[] dataServiceIDs = Settings.propDataServicesForUpdate.getStringArray();
-        TvDataServiceProxy[] proxies;
-        if (dataServiceIDs == null) {
-          proxies = UpdateDlg.getActiveDataServices();
+  private static boolean performAutomaticDownload(final BooleanResult resultInfo) {
+    boolean result = false;
+    
+    if(!mainFrame.isUpdatingData()) {
+      if (resultInfo.getResultForIndex(0)) {
+        if (Settings.propAskForAutoDownload.getBoolean()) {
+          mainFrame.updateTvData();
         }
         else {
-          proxies = TvDataServiceProxyManager.getInstance().getTvDataServices(dataServiceIDs);
+          String[] dataServiceIDs = Settings.propDataServicesForUpdate.getStringArray();
+          TvDataServiceProxy[] proxies;
+          if (dataServiceIDs == null) {
+            proxies = UpdateDlg.getActiveDataServices();
+          }
+          else {
+            proxies = TvDataServiceProxyManager.getInstance().getTvDataServices(dataServiceIDs);
+          }
+          if(mainFrame.licenseForTvDataServicesWasAccepted(proxies)) {
+            mainFrame.runUpdateThread(Settings.propAutoDownloadPeriod.getInt(), proxies, true);
+          }
         }
-        if(mainFrame.licenseForTvDataServicesWasAccepted(proxies)) {
-          mainFrame.runUpdateThread(Settings.propAutoDownloadPeriod.getInt(), proxies, true);
-        }
+        
+        result = true;
       }
-      return true;
-    }
-    else if(result.getResultForIndex(1)) {
-      HashSet<TvDataServiceProxy> dataServices = new HashSet<TvDataServiceProxy>();
-
-      Channel[] channels = Settings.propSubscribedChannels.getChannelArray();
-
-      for(Channel channel : channels) {
-        if(!(channel instanceof DummyChannel) && channel.getDataServiceProxy() != null && !dataServices.contains(channel.getDataServiceProxy())) {
-            dataServices.add(channel.getDataServiceProxy());
+      else if(resultInfo.getResultForIndex(1)) {
+        HashSet<TvDataServiceProxy> dataServices = new HashSet<TvDataServiceProxy>();
+  
+        Channel[] channels = Settings.propSubscribedChannels.getChannelArray();
+  
+        for(Channel channel : channels) {
+          if(!(channel instanceof DummyChannel) && channel.getDataServiceProxy() != null && !dataServices.contains(channel.getDataServiceProxy())) {
+              dataServices.add(channel.getDataServiceProxy());
+          }
         }
-      }
-      
-      if(!dataServices.isEmpty()) {
-        TvDataServiceProxy[] proxies = dataServices.toArray(new TvDataServiceProxy[0]);
-      
-        if(mainFrame.licenseForTvDataServicesWasAccepted(proxies)) {
-          mainFrame.runUpdateThread(Settings.propAutoDownloadPeriod.getInt(), proxies, true);
+        
+        if(!dataServices.isEmpty()) {
+          TvDataServiceProxy[] proxies = dataServices.toArray(new TvDataServiceProxy[0]);
+        
+          if(mainFrame.licenseForTvDataServicesWasAccepted(proxies)) {
+            mainFrame.runUpdateThread(Settings.propAutoDownloadPeriod.getInt(), proxies, true);
+          }
         }
+        
+        result = true;
       }
-      
-      return true;
     }
-    else {
-      return false;
-    }
+    
+    return result;
   }
-
 
   private static void updateLookAndFeel() {
     try {
