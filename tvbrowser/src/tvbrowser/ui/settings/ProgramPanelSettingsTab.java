@@ -133,6 +133,18 @@ public class ProgramPanelSettingsTab implements SettingsTab {
     
     mInfoTextOCh = new OrderChooser<>(typeOrderArr, allTypeArr);
 
+    for(int i = separators.length-1; i >= 0; i--) {
+      if(separators[i].replace(" ", "").length() > 0) {
+        String[] splitSeparators = separators[i].split(";#;");
+        
+        for(String sep : splitSeparators) {
+          if(!sep.equals(" - ")) {
+            mInfoTextOCh.addElement(sep, i+1, true);
+          }
+        }
+      }
+    }
+    
     typeOrderArr = Settings.propProgramInfoFieldsAlternative.getProgramFieldTypeArray();
     separators = Settings.propProgramInfoFieldsSeparatorsAlternative.getStringArray();
     
@@ -152,7 +164,7 @@ public class ProgramPanelSettingsTab implements SettingsTab {
         
         for(String sep : splitSeparators) {
           if(!sep.equals(" - ")) {
-            mInfoTextOCh.addElement(sep, i+1, true);
+            mInfoTextOChAlt.addElement(sep, i+1, true);
           }
         }
       }
