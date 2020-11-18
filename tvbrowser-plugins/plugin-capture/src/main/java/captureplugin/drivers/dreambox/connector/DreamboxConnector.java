@@ -89,7 +89,8 @@ public class DreamboxConnector {
       .getLocalizerFor(DreamboxConnector.class);
   // fishhead -------------------------
   /** get list of bouquets */
-  private final static String BOUQUET_LIST = "1:7:1:0:0:0:0:0:0:0:(type == 1) || (type == 17) || (type == 195) || (type == 25)FROM BOUQUET \"bouquets.tv\" ORDER BY bouquet";
+  // Radiohoerer: Support for radio bouquets added
+  private final static String[] BOUQUET_LIST = {"1:7:1:0:0:0:0:0:0:0:(type == 1) || (type == 17) || (type == 195) || (type == 25)FROM BOUQUET \"bouquets.tv\" ORDER BY bouquet", "1:7:1:0:0:0:0:0:0:0:(type == 1) || (type == 17) || (type == 195) || (type == 25)FROM BOUQUET \"bouquets.radio\" ORDER BY bouquet"};
   /** Config of the Dreambox */
   private DreamboxConfig mConfig;
 
@@ -116,7 +117,8 @@ public class DreamboxConnector {
     }
     try {
       final Calendar cal = new GregorianCalendar();
-      InputStream stream = openStreamForLocalUrl("/web/getservices?bRef=" + service);
+      // Radiohoerer: bRef replaced by sRef to support TV and radio bouquets; see https://dream.reichholf.net/e2web/#getservices
+      InputStream stream = openStreamForLocalUrl("/web/getservices?sRef=" + service);
       SAXParser saxParser = SAXParserFactory.newInstance().newSAXParser();
       DreamboxHandler handler = new DreamboxHandler();
       saxParser.parse(stream, handler);
@@ -190,20 +192,22 @@ public class DreamboxConnector {
   public Collection<DreamboxChannel> getChannels() {
     try {
       ArrayList<DreamboxChannel> allChannels = new ArrayList<DreamboxChannel>();
+      // Radiohoerer: All TV and radio bouquets are retrieved from the Dreambox
+      for (String ITEM : BOUQUET_LIST) {
+        TreeMap<String, String> bouquets = getServiceDataBouquets(URLEncoder.encode(ITEM, "UTF8"));
+        for (Entry<String, String> entry : bouquets.entrySet()) {
+          String key = entry.getKey();
+          String bouqetName = entry.getValue();
 
-      TreeMap<String, String> bouquets = getServiceDataBouquets(URLEncoder.encode(BOUQUET_LIST, "UTF8"));
-      for (Entry<String, String> entry : bouquets.entrySet()) {
-        String key = entry.getKey();
-        String bouqetName = entry.getValue();
+          TreeMap<String, String> map = getServiceData(URLEncoder.encode(key, "UTF8"));
 
-        TreeMap<String, String> map = getServiceData(URLEncoder.encode(key, "UTF8"));
-
-        for (Entry<String, String> mEntry : map.entrySet()) {
-          String mkey = mEntry.getKey();
-          allChannels.add(new DreamboxChannel(mkey, mEntry.getValue(), bouqetName));
+          for (Entry<String, String> mEntry : map.entrySet()) {
+            String mkey = mEntry.getKey();
+            allChannels.add(new DreamboxChannel(mkey, mEntry.getValue(), bouqetName));
+          }
         }
       }
-
+      
       return allChannels;
     } catch (Exception e) {
       mLog.log(Level.SEVERE, "Could not load channels for Dreambox: "+mConfig.getDreamboxAddress(), e);
