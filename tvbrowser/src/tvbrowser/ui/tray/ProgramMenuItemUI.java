@@ -41,6 +41,7 @@ import tvbrowser.core.Settings;
 import util.io.IOUtilities;
 import util.program.ProgramUtilities;
 import util.i18n.Localizer;
+import util.ui.ProgramPanel;
 import util.ui.TextAreaIcon;
 import util.ui.UiUtilities;
 import devplugin.Date;
@@ -95,8 +96,8 @@ public class ProgramMenuItemUI extends BasicMenuItemUI {
   protected void paintBackground(Graphics g, JMenuItem menuItem, Color bgColor) {
     boolean isOnAir = ProgramUtilities.isOnAir(mProgram);
     g.clearRect(0, 0, menuItem.getWidth(), menuItem.getHeight());
-
-    boolean isMarked = mProgram.getMarkPriority() > Program.PRIORITY_MARK_NONE;
+    
+    boolean isMarked = mProgram.getMarkPriorityMax() > Program.PRIORITY_MARK_NONE;
 
     if (menuItem.isArmed()) {
       g.setColor(bgColor);
@@ -127,13 +128,10 @@ public class ProgramMenuItemUI extends BasicMenuItemUI {
     }
 
     Color markedColor = Plugin.getPluginManager().getTvBrowserSettings().getColorForMarkingPriority(
-        mProgram.getMarkPriority());
+        mProgram.getMarkPriorityMax());
 
     if (isMarked) {
-      if (markedColor != null) {
-        g.setColor(markedColor);
-      }
-      g.fillRect(x, top, menuItem.getWidth(), bottom);
+      ProgramPanel.paintHighlighting((Graphics2D)g, x, top, menuItem.getWidth(),  bottom, mProgram.getMarkerArr(), mProgram, (byte)10);
     }
 
     if (isOnAir || mTime != -1) {
