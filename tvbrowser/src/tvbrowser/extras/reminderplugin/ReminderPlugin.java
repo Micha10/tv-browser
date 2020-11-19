@@ -153,6 +153,28 @@ public class ReminderPlugin {
     return STROKE_FRAME_REMINDERS_SHOW;
   }
   
+  void endPause() {
+    toggleTimer.putValue(Action.NAME, LOCALIZER.msg("stopTimer", "Pause Reminder"));
+    toggleTimer.putValue(Action.SHORT_DESCRIPTION, LOCALIZER.msg("stopTimerDesc", "Pause Reminder until reactivation"));
+    toggleTimer.putValue(ToolBar.ACTION_IS_SELECTED, Boolean.valueOf(false));
+    
+    MainFrame.getInstance().updateToolbar();
+  }
+  
+  private void startPause(int minutes) {
+    mReminderList.pauseReminder(minutes);
+    int time = IOUtilities.getMinutesAfterMidnight()+minutes;
+    
+    if(time >= 1440) {
+      time -= 1440;
+    }
+    
+    toggleTimer.putValue(Action.NAME, LOCALIZER.msg("endPause", "Paused until {0}. Continue Reminder now",IOUtilities.timeToString(time)));
+    toggleTimer.putValue(ToolBar.ACTION_IS_SELECTED, Boolean.valueOf(true));
+    
+    MainFrame.getInstance().updateToolbar();
+  }
+  
   private ReminderPlugin() {
     mInstance = this;
     
@@ -164,12 +186,12 @@ public class ReminderPlugin {
           
           if(mReminderList.isActive()) {
             putValue(Action.NAME, LOCALIZER.msg("stopTimer", "Pause Reminder"));
-            toggleTimer.putValue(Action.SHORT_DESCRIPTION, LOCALIZER.msg("stopTimerDesc", "Pause Reminder until reactivation"));
+            putValue(Action.SHORT_DESCRIPTION, LOCALIZER.msg("stopTimerDesc", "Pause Reminder until reactivation"));
             putValue(ToolBar.ACTION_IS_SELECTED, Boolean.valueOf(false));
           }
           else {
             putValue(Action.NAME, LOCALIZER.msg("continueTimer", "Continue Reminder"));
-            toggleTimer.putValue(Action.SHORT_DESCRIPTION, LOCALIZER.msg("continueTimer", "Continue Reminder"));
+            putValue(Action.SHORT_DESCRIPTION, LOCALIZER.msg("continueTimer", "Continue Reminder"));
             putValue(ToolBar.ACTION_IS_SELECTED, Boolean.valueOf(true));
           }
           
@@ -1040,14 +1062,50 @@ public class ReminderPlugin {
         "Reminds you of programs to not miss them."));
     actionShowCurrentReminders.putValue(Plugin.ACTION_ID_KEY, REMINDER_LIST_ACTION_ID);
     actionShowCurrentReminders.putValue(InternalPluginProxyIf.KEYBOARD_ACCELERATOR, getKeyStrokeFrameReminders());
-        
-    return new ActionMenu(getName(),IconLoader.getInstance().getIconFromTheme("apps", "appointment", 16), new Action[] {
+    
+    return new ActionMenu(getName(),IconLoader.getInstance().getIconFromTheme("apps", "appointment", 16), new Object[] {
         actionShowCurrentReminders,
         action,
-        toggleTimer
+        toggleTimer,
+        new ActionMenu(LOCALIZER.msg("pauseForTime", "Pause reminder for time period"),IconLoader.getInstance().getIconFromTheme("actions", "reminder-stop", 16), new Action[] {
+            createPauseAction(5),
+            createPauseAction(15),
+            createPauseAction(30),
+            createPauseAction(45),
+            createPauseAction(60),
+            createPauseAction(90),
+            createPauseAction(120),
+            createPauseAction(180)
+            })
     });
   }catch(Throwable t) {t.printStackTrace();}
   return null;
+  }
+  
+  private AbstractAction createPauseAction(final int minutes) {
+    final AbstractAction pause = new AbstractAction() {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        startPause(minutes);
+      }
+    };
+    
+    String timeUnit = LOCALIZER.msg("pauseTimerMinutes","minutes");
+    int value = minutes;
+    
+    if(minutes % 60 == 0 && minutes != 60) {
+      timeUnit = LOCALIZER.msg("pauseTimerHours","hours");
+      value /= 60;
+    }
+    
+    pause.putValue(Action.NAME, LOCALIZER.msg("pauseTimer", "Pause Reminder for {0} {1}", value, timeUnit));
+    pause.putValue(Action.SHORT_DESCRIPTION, LOCALIZER.msg("pauseTimerDesc", "Pause Reminder for {0} {1} until automatically reactivation", value, timeUnit));
+    
+    pause.putValue(Action.SMALL_ICON, IconLoader.getInstance().getIconFromTheme("actions", "reminder-stop", 16));
+    pause.putValue(Plugin.BIG_ICON, IconLoader.getInstance().getIconFromTheme("actions", "reminder-stop", 22));
+    
+    return pause;
+    
   }
 
   /**

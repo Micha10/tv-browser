@@ -35,6 +35,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 
+import javax.swing.Timer;
+
 import devplugin.Date;
 import devplugin.Plugin;
 import devplugin.Program;
@@ -54,6 +56,7 @@ public class ReminderList implements ActionListener {
   private ReminderTimerListener mListener = null;
 
   private javax.swing.Timer mTimer;
+  private javax.swing.Timer mPauseTimer;
 
   private ArrayList<ReminderListItem> mList;
 
@@ -384,8 +387,7 @@ public class ReminderList implements ActionListener {
   }
 
   private boolean isRemindEventRequired(Program prog, int remindMinutes, Date today) {
-
-    if (remindMinutes < ReminderListItem.MAX_FORWARD_REMINDER_TIME) {
+    if (remindMinutes < ReminderListItem.MAX_FORWARD_REMINDER_TIME || mPauseTimer != null && mPauseTimer.isRunning()) {
       return false;
     }
 
@@ -437,7 +439,28 @@ public class ReminderList implements ActionListener {
     }
   }
   
+  void pauseReminder(int minutes) {
+    if(mPauseTimer != null && mPauseTimer.isRunning()) {
+      mPauseTimer.stop();
+    }
+    
+    mPauseTimer = new Timer(minutes * 60000, e -> {
+      if(mTimer != null & !mTimer.isRunning()) {
+        startTimer();
+      }
+      ReminderPlugin.getInstance().endPause();
+      mPauseTimer = null;
+    });
+    mPauseTimer.setRepeats(false);
+    mPauseTimer.start();
+  }
+  
   void toggleTimer() {
+    if(mPauseTimer != null && mPauseTimer.isRunning()) {
+      mPauseTimer.stop();
+      return;
+    }
+    
     if(mTimer != null) {
       if(mTimer.isRunning()) {
         mTimer.stop();
