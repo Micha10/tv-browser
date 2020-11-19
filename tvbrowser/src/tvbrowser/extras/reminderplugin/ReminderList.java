@@ -33,13 +33,14 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 
-import tvbrowser.core.ChannelList;
-import util.io.IOUtilities;
 import devplugin.Date;
 import devplugin.Plugin;
 import devplugin.Program;
 import devplugin.ProgramItem;
+import tvbrowser.core.ChannelList;
+import util.io.IOUtilities;
 
 /**
  * TV-Browser
@@ -57,7 +58,7 @@ public class ReminderList implements ActionListener {
   private ArrayList<ReminderListItem> mList;
 
   /** List of Blocked Programs. These Programs don't trigger a reminder anymore */
-  private ArrayList<Program> mBlockedPrograms = new ArrayList<Program>();
+  private HashSet<String> mBlockedPrograms = new HashSet<String>();
 
   /**
    * only sort the list if necessary
@@ -169,7 +170,7 @@ public class ReminderList implements ActionListener {
    */
   public void addAndCheckBlocked(Program[] programs, int minutes) {
     for (Program program : programs) {
-      if (!contains(program) && !mBlockedPrograms.contains(program)
+      if (!contains(program) && !mBlockedPrograms.contains(program.getUniqueID())
               && (!program.isExpired())) {
         ReminderListItem item = new ReminderListItem(program, minutes);
 
@@ -410,7 +411,7 @@ public class ReminderList implements ActionListener {
    * @param prg Program to block
    */
   public void blockProgram(Program prg) {
-    mBlockedPrograms.add(prg);
+    mBlockedPrograms.add(prg.getUniqueID());
   }
 
   /**
@@ -420,7 +421,7 @@ public class ReminderList implements ActionListener {
    */
   public void unblockProgram(Program prg) {
     synchronized (mBlockedPrograms) {
-      mBlockedPrograms.remove(prg);
+      mBlockedPrograms.remove(prg.getUniqueID());
     }
   }
 
@@ -432,7 +433,7 @@ public class ReminderList implements ActionListener {
    */
   public boolean isBlocked(Program prg) {
     synchronized (mBlockedPrograms) {
-      return mBlockedPrograms.contains(prg);
+      return mBlockedPrograms.contains(prg.getUniqueID());
     }
   }
   
