@@ -70,6 +70,7 @@ import java.util.Locale;
 import java.util.TimeZone;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.logging.ConsoleHandler;
 import java.util.logging.Formatter;
 import java.util.logging.Handler;
 import java.util.logging.Level;
@@ -433,10 +434,15 @@ public class TVBrowser {
       }
     }
     else {
+      Handler handlerObj = new ConsoleHandler();
+      handlerObj.setLevel(Level.OFF);
+      mainLogger.addHandler(handlerObj);
+      
       // if no logging is configured, show WARNING or worse for normal usage, show everything for unstable versions
       if (TVBrowser.isStable()) {
         mainLogger.setLevel(Level.WARNING);
       }
+      mainLogger.setUseParentHandlers(false);
     }
 
     // log warning for OpenJDK users
