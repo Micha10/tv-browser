@@ -42,6 +42,8 @@ import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.io.Reader;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -982,6 +984,25 @@ private static Font getDynamicFontSize(Font font, int offset) {
     int y = mTitleIcon.getIconHeight() + mDescriptionIcon.getIconHeight()
         + mPictureAreaIcon.getIconHeight() + 18;
     y = Math.min(y, height - 1);
+    
+    if(markedByPluginArr.length > 0 && Settings.propProgramPanelGradientColorHighlighting.getBoolean()) {
+      Arrays.parallelSort(markedByPluginArr, new Comparator<Marker>() {
+        public int compare(Marker o1, Marker o2) {
+          int p1 = o1.getMarkPriorityMaxForProgram(mProgram);
+          int p2 = o2.getMarkPriorityMaxForProgram(mProgram);
+          
+          if(p1 < p2) {
+            return 1;
+          }
+          else if(p1 > p2) {
+            return -1;
+          }
+          
+          return 0;
+        };
+      });
+    }
+    
     for (Marker marker: markedByPluginArr) {
       Icon[] icons = marker.getMarkIcons(mProgram);
       if (icons != null) {
