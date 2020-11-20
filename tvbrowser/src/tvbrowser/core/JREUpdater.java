@@ -105,25 +105,29 @@ public class JREUpdater {
 					Settings.propJreUpdateDateLast.setDate(Date.getCurrentDate());
 					
 					final String currentVersion = System.getProperty("java.version");
-					final String[] cParts = currentVersion.split("\\.");
 					final String[] sParts = parts[0].trim().split("\\.");
+					String[] cParts = currentVersion.split("\\.");
+					
+					if(cParts.length < sParts.length) {
+						String[] newArr = new String[sParts.length];
+						System.arraycopy(cParts, 0, newArr, 0, cParts.length);
+						
+						for(int i = cParts.length; i < sParts.length; i++) {
+							newArr[i] = "0";
+						}
+						
+						cParts = newArr;
+					}
 					
 					boolean update = false;
-					boolean identical = true;
 					
 					for(int i = 0; i < Math.min(cParts.length, sParts.length); i++) {
 						if(Integer.parseInt(cParts[i]) < Integer.parseInt(sParts[i])) {
 							update = true;
-							identical = false;
 							break;
 						} else if(Integer.parseInt(cParts[i]) > Integer.parseInt(sParts[i])) {
-						  identical = false;
 							break;
 						}
-					}
-					
-					if(identical && sParts.length > cParts.length) {
-					  update = true;
 					}
 					
 					if(update) {
