@@ -109,14 +109,21 @@ public class JREUpdater {
 					final String[] sParts = parts[0].trim().split("\\.");
 					
 					boolean update = false;
+					boolean identical = true;
 					
 					for(int i = 0; i < Math.min(cParts.length, sParts.length); i++) {
 						if(Integer.parseInt(cParts[i]) < Integer.parseInt(sParts[i])) {
 							update = true;
+							identical = false;
 							break;
 						} else if(Integer.parseInt(cParts[i]) > Integer.parseInt(sParts[i])) {
+						  identical = false;
 							break;
 						}
+					}
+					
+					if(identical && sParts.length > cParts.length) {
+					  update = true;
 					}
 					
 					if(update) {
