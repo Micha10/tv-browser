@@ -92,7 +92,17 @@ public class ExecutionHandler {
   public ExecutionHandler(String[] parameterWithProgramPath) {
     this(parameterWithProgramPath, (File) null);
   }
-
+  
+  /**
+   * Creates an instance of this class.
+   * 
+   * @param dummy Dummy parameter for difference between array constructor.
+   * @param parameterWithProgramPath The parameter to parse to the application with the path to the program.
+   */
+  public static final ExecutionHandler create(String... parameterWithProgramPath) {
+    return new ExecutionHandler(parameterWithProgramPath);
+  }
+  
   /**
    * Creates an instance of this class.
    *
