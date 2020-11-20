@@ -60,7 +60,11 @@ import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
 
 import devplugin.SettingsTab;
+import tvbrowser.core.filters.FilterList;
+import tvbrowser.core.filters.GenericFilterMap;
+import tvbrowser.core.filters.UserFilter;
 import tvbrowser.core.icontheme.IconLoader;
+import tvbrowser.ui.filter.dlgs.EditFilterDlg;
 import tvbrowser.ui.mainframe.MainFrame;
 import util.misc.PropertyDefaults;
 import util.ui.DefaultMarkingPrioritySelectionPanel;
@@ -79,7 +83,7 @@ import util.ui.UiUtilities;
 public class ReminderSettingsTab implements SettingsTab {
 
   /** The localizer for this class. */
-  private static final util.i18n.Localizer mLocalizer
+  private static final util.i18n.Localizer LOCALIZER
       = util.i18n.Localizer.getLocalizerFor(ReminderSettingsTab.class);
 
   private Properties mSettings;
@@ -91,6 +95,8 @@ public class ReminderSettingsTab implements SettingsTab {
   private JCheckBox mFrameRemindersAutoResizeEnabled;
   private JRadioButton mFrameRemindersAutoResizeTypeTop;
   private JRadioButton mFrameRemindersAutoResizeTypeBottom;
+  
+  private JCheckBox mPrefilter;
   
   private JCheckBox mReminderWindowChB;
   
@@ -134,27 +140,28 @@ public class ReminderSettingsTab implements SettingsTab {
     propDefaults.setProperties(mSettings);
     
     FormLayout layout = new FormLayout("5dlu,pref,5dlu,pref,pref:grow,3dlu,pref,3dlu,pref,5dlu",
-        "default,5dlu,default,5dlu,default,1dlu,pref,1dlu,pref,1dlu,pref,10dlu," +
-        "pref,5dlu,pref,10dlu,pref,5dlu,pref,10dlu,pref,5dlu," +
+        "default,5dlu,default,5dlu,default,1dlu,default,1dlu,default,1dlu,default,10dlu," +
+        "default,5dlu,default,10dlu," +
+        "default,5dlu,default,10dlu,pref,5dlu,pref,10dlu,pref,5dlu," +
         "pref,10dlu,pref,5dlu,pref,3dlu,pref,3dlu,default,3dlu," +
-        "default,default,10dlu,default,5dlu,pref");
+        "default,default,10dlu,default,5dlu,default");
     layout.setColumnGroups(new int[][] {{7,9}});
     PanelBuilder pb = new PanelBuilder(layout, new ScrollableJPanel());
     pb.border(Borders.DIALOG);
 
     final String[] extArr = { ".wav", ".aif", ".rmf", ".au", ".mid" };
     String soundFName = propDefaults.getValueFromProperties(ReminderPropertyDefaults.KEY_SOUNDFILE);
-    String msg = mLocalizer.msg("soundFileFilter", "Sound file ({0})",
+    String msg = LOCALIZER.msg("soundFileFilter", "Sound file ({0})",
         "*" + StringUtils.join(extArr, ", *"));
     
-    mFrameRemindersChB = new JCheckBox(mLocalizer.msg("frameReminders", "Window with collected reminders"), propDefaults.getValueFromProperties(ReminderPropertyDefaults.KEY_FRAME_REMINDERS_SHOW).equalsIgnoreCase("true"));
-    mFrameRemindersToFrontOnAdd = new JCheckBox(mLocalizer.msg("frameRemindersToFrontOnAdd", "Show window at front, when reminder is added"), propDefaults.getValueFromProperties(ReminderPropertyDefaults.KEY_FRAME_REMINDERS_TO_FRONT_WHEN_REMINDER_ADDED).equals("true"));
-    mFrameRemindersCloseIfEmptry = new JCheckBox(mLocalizer.msg("frameRemindersCloseIfEmpty", "Close window automatically when last reminder is removed of it"), propDefaults.getValueFromProperties(ReminderPropertyDefaults.KEY_AUTO_CLOSE_FRAME_REMINDERS_IF_EMTPY).equals("true"));
+    mFrameRemindersChB = new JCheckBox(LOCALIZER.msg("frameReminders", "Window with collected reminders"), propDefaults.getValueFromProperties(ReminderPropertyDefaults.KEY_FRAME_REMINDERS_SHOW).equalsIgnoreCase("true"));
+    mFrameRemindersToFrontOnAdd = new JCheckBox(LOCALIZER.msg("frameRemindersToFrontOnAdd", "Show window at front, when reminder is added"), propDefaults.getValueFromProperties(ReminderPropertyDefaults.KEY_FRAME_REMINDERS_TO_FRONT_WHEN_REMINDER_ADDED).equals("true"));
+    mFrameRemindersCloseIfEmptry = new JCheckBox(LOCALIZER.msg("frameRemindersCloseIfEmpty", "Close window automatically when last reminder is removed of it"), propDefaults.getValueFromProperties(ReminderPropertyDefaults.KEY_AUTO_CLOSE_FRAME_REMINDERS_IF_EMTPY).equals("true"));
 
-    mFrameRemindersAutoResizeEnabled = new JCheckBox(mLocalizer.msg("autoResizeEnabled", "Automatically resize"), propDefaults.getValueFromProperties(ReminderPropertyDefaults.KEY_AUTO_RESIZE_ENABLED).equals("true"));
+    mFrameRemindersAutoResizeEnabled = new JCheckBox(LOCALIZER.msg("autoResizeEnabled", "Automatically resize"), propDefaults.getValueFromProperties(ReminderPropertyDefaults.KEY_AUTO_RESIZE_ENABLED).equals("true"));
     
-    mFrameRemindersAutoResizeTypeTop = new JRadioButton(mLocalizer.msg("autoResizeType.top", "Align to top of screen"), propDefaults.getValueFromProperties(ReminderPropertyDefaults.KEY_AUTO_RESIZE_TYPE).equals(ReminderPropertyDefaults.VALUE_AUTO_RESIZE_TYPE_TOP));
-    mFrameRemindersAutoResizeTypeBottom = new JRadioButton(mLocalizer.msg("autoResizeType.bottom", "Align to bottom of screen"), propDefaults.getValueFromProperties(ReminderPropertyDefaults.KEY_AUTO_RESIZE_TYPE).equals(ReminderPropertyDefaults.VALUE_AUTO_RESIZE_TYPE_BOTTOM));
+    mFrameRemindersAutoResizeTypeTop = new JRadioButton(LOCALIZER.msg("autoResizeType.top", "Align to top of screen"), propDefaults.getValueFromProperties(ReminderPropertyDefaults.KEY_AUTO_RESIZE_TYPE).equals(ReminderPropertyDefaults.VALUE_AUTO_RESIZE_TYPE_TOP));
+    mFrameRemindersAutoResizeTypeBottom = new JRadioButton(LOCALIZER.msg("autoResizeType.bottom", "Align to bottom of screen"), propDefaults.getValueFromProperties(ReminderPropertyDefaults.KEY_AUTO_RESIZE_TYPE).equals(ReminderPropertyDefaults.VALUE_AUTO_RESIZE_TYPE_BOTTOM));
     
     final ButtonGroup bg1 = new ButtonGroup();
     bg1.add(mFrameRemindersAutoResizeTypeTop);
@@ -174,13 +181,13 @@ public class ReminderSettingsTab implements SettingsTab {
     frameRemindersCfg.add(mFrameRemindersAutoResizeTypeTop, CC.xy(3, 9));
     frameRemindersCfg.add(mFrameRemindersAutoResizeTypeBottom, CC.xy(3, 11));
         
-    mReminderWindowChB = new JCheckBox(mLocalizer.msg("reminderWindow", "Single reminder window"), propDefaults.getValueFromProperties(ReminderPropertyDefaults.KEY_REMINDER_WINDOW_SHOW).equalsIgnoreCase("true"));
+    mReminderWindowChB = new JCheckBox(LOCALIZER.msg("reminderWindow", "Single reminder window"), propDefaults.getValueFromProperties(ReminderPropertyDefaults.KEY_REMINDER_WINDOW_SHOW).equalsIgnoreCase("true"));
     
     if(mFrameRemindersChB.isSelected() && mReminderWindowChB.isSelected()) {
       mReminderWindowChB.setSelected(false);
     }
     
-    mShowAlwaysOnTop = new JCheckBox(mLocalizer.msg("alwaysOnTop","Show always on top"), propDefaults.getValueFromProperties(ReminderPropertyDefaults.KEY_REMINDER_WINDOW_ALWAYS_ON_TOP).equalsIgnoreCase("true"));
+    mShowAlwaysOnTop = new JCheckBox(LOCALIZER.msg("alwaysOnTop","Show always on top"), propDefaults.getValueFromProperties(ReminderPropertyDefaults.KEY_REMINDER_WINDOW_ALWAYS_ON_TOP).equalsIgnoreCase("true"));
     mShowAlwaysOnTop.setEnabled(mReminderWindowChB.isSelected());
 
     JPanel reminderWindowCfg = new JPanel(new FormLayout("12dlu,default:grow","default,1dlu,default,1dlu,default,1dlu,default"));
@@ -217,13 +224,13 @@ public class ReminderSettingsTab implements SettingsTab {
       xPos += 2;
     }
 
-    final JLabel posLabel = new JLabel(mLocalizer.msg("positionOnScreen", "Position on screen"));
+    final JLabel posLabel = new JLabel(LOCALIZER.msg("positionOnScreen", "Position on screen"));
     posLabel.setEnabled(mReminderWindowChB.isSelected());
     
     reminderWindowCfg.add(posLabel, CC.xy(2,3));
     reminderWindowCfg.add(postionPanel, CC.xy(2,5));
     
-    mSoundFileChB = new FileCheckBox(mLocalizer.msg("playlingSound", "Play sound"), new File(soundFName), 0, false);
+    mSoundFileChB = new FileCheckBox(LOCALIZER.msg("playlingSound", "Play sound"), new File(soundFName), 0, false);
 
     JFileChooser soundChooser=new JFileChooser();
     soundChooser.setFileFilter(new ExtensionFileFilter(extArr, msg));
@@ -232,18 +239,38 @@ public class ReminderSettingsTab implements SettingsTab {
 
     mSoundFileChB.setSelected(mSettings.getProperty("usesound","false").equals("true"));
 
-    mBeep = new JCheckBox(mLocalizer.msg("beep", "Speaker sound"), mSettings.getProperty("usebeep","true").equalsIgnoreCase("true"));
+    mBeep = new JCheckBox(LOCALIZER.msg("beep", "Speaker sound"), mSettings.getProperty("usebeep","true").equalsIgnoreCase("true"));
 
     mExecFileStr = mSettings.getProperty("execfile", "");
     mExecParamStr = mSettings.getProperty("execparam", "");
 
-    final JButton soundTestBt = new JButton(mLocalizer.msg("test", "Test"));
+    final JButton soundTestBt = new JButton(LOCALIZER.msg("test", "Test"));
 
-    mExecChB = new JCheckBox(mLocalizer.msg("executeProgram", "Execute program"));
+    mExecChB = new JCheckBox(LOCALIZER.msg("executeProgram", "Execute program"));
     mExecChB.setSelected(mSettings.getProperty("useexec","false").equals("true"));
 
-    mExecFileDialogBtn = new JButton(mLocalizer.msg("executeConfig", "Configure"));
+    mExecFileDialogBtn = new JButton(LOCALIZER.msg("executeConfig", "Configure"));
     mExecFileDialogBtn.setEnabled(mExecChB.isSelected());
+    
+    mPrefilter = new JCheckBox(LOCALIZER.msg("prefilter", "Activated"), mSettings.getProperty("prefilter","false").equalsIgnoreCase("true"));
+    final JLabel helpPrefilter = new JLabel(LOCALIZER.msg("prefilter.help", "Reminders are only shown for programs that are accepted by the filter"));
+    
+    final JButton editFilter = new JButton(LOCALIZER.msg("editFilter", "Edit filter"));
+    editFilter.setEnabled(mPrefilter.isSelected());
+    editFilter.addActionListener(e -> {
+      final UserFilter filter = GenericFilterMap.getInstance().getGenericInternalFilter(GenericFilterMap.GENERIC_REMINDER_FILTER_NAME);
+      
+      final EditFilterDlg editFilter1 = new EditFilterDlg(UiUtilities.getLastModalChildOf(MainFrame.getInstance()), FilterList.getInstance(), filter, false);
+      
+      if(editFilter1.getOkWasPressed()) {
+        GenericFilterMap.getInstance().updateGenericInternalFilter(GenericFilterMap.GENERIC_REMINDER_FILTER_NAME, filter);
+      }
+    });
+    
+    mPrefilter.addItemListener(e -> {
+      editFilter.setEnabled(e.getStateChange() == ItemEvent.SELECTED);
+      helpPrefilter.setEnabled(editFilter.isEnabled());
+    });
     
     mPluginTargetSelectionPanel = new ProgramReceiveTargetSelectionPanel(MainFrame.getInstance(), ReminderPlugin.getInstance().getClientPluginsTargets(), null, ReminderPluginProxy.getInstance(), false, null);
     
@@ -259,13 +286,13 @@ public class ReminderSettingsTab implements SettingsTab {
       // ignore
     }
 
-    mCloseOnEnd = new JRadioButton(mLocalizer.msg("autoCloseReminderAtProgramEnd","Program end"), mSettings.getProperty("autoCloseBehaviour","onEnd").equals("onEnd"));
+    mCloseOnEnd = new JRadioButton(LOCALIZER.msg("autoCloseReminderAtProgramEnd","Program end"), mSettings.getProperty("autoCloseBehaviour","onEnd").equals("onEnd"));
     mCloseOnEnd.setEnabled(mReminderWindowChB.isSelected() || mFrameRemindersChB.isSelected());
 
-    mCloseNever = new JRadioButton(mLocalizer.msg("autoCloseNever","Never close"), mSettings.getProperty("autoCloseBehaviour","onEnd").equals("never"));
+    mCloseNever = new JRadioButton(LOCALIZER.msg("autoCloseNever","Never close"), mSettings.getProperty("autoCloseBehaviour","onEnd").equals("never"));
     mCloseNever.setEnabled(mReminderWindowChB.isSelected() || mFrameRemindersChB.isSelected());
 
-    mCloseOnTime = new JRadioButton(mLocalizer.ellipsisMsg("autoCloseAfterTime","After time"), mSettings.getProperty("autoCloseBehaviour","onEnd").equals("onTime"));
+    mCloseOnTime = new JRadioButton(LOCALIZER.ellipsisMsg("autoCloseAfterTime","After time"), mSettings.getProperty("autoCloseBehaviour","onEnd").equals("onTime"));
     mCloseOnTime.setEnabled(mReminderWindowChB.isSelected() || mFrameRemindersChB.isSelected());
 
     ButtonGroup bg = new ButtonGroup();
@@ -277,7 +304,7 @@ public class ReminderSettingsTab implements SettingsTab {
     mAutoCloseReminderTimeSp = new JSpinner(new SpinnerNumberModel(autoCloseReminderTime,autoCloseReminderTime < 5 ? 1 : 5,600,1));
     mAutoCloseReminderTimeSp.setEnabled(mCloseOnTime.isSelected() && (mReminderWindowChB.isSelected() || mFrameRemindersChB.isSelected()));
 
-    mShowTimeCounter = new JCheckBox(mLocalizer.msg("showTimeCounter","Show time counter"),mSettings.getProperty("showTimeCounter","false").compareTo("true") == 0);
+    mShowTimeCounter = new JCheckBox(LOCALIZER.msg("showTimeCounter","Show time counter"),mSettings.getProperty("showTimeCounter","false").compareTo("true") == 0);
     mShowTimeCounter.setEnabled(!mCloseNever.isSelected() && (mReminderWindowChB.isSelected() || mFrameRemindersChB.isSelected()));
 
     PanelBuilder autoClosePanel = new PanelBuilder(new FormLayout("12dlu,default,2dlu,default:grow","pref,2dlu,pref,2dlu,pref,2dlu,pref,10dlu,pref"));
@@ -286,7 +313,7 @@ public class ReminderSettingsTab implements SettingsTab {
     autoClosePanel.add(mCloseOnTime, CC.xyw(1,5,4));
     autoClosePanel.add(mAutoCloseReminderTimeSp, CC.xy(2,7));
 
-    final JLabel secondsLabel = autoClosePanel.addLabel(mLocalizer.msg("seconds", "seconds (0 = off)"), CC.xy(4,7));
+    final JLabel secondsLabel = autoClosePanel.addLabel(LOCALIZER.msg("seconds", "seconds (0 = off)"), CC.xy(4,7));
 
     autoClosePanel.add(mShowTimeCounter, CC.xyw(1,9,4));
 
@@ -310,50 +337,60 @@ public class ReminderSettingsTab implements SettingsTab {
       }
     }
 
-    mShowTimeSelectionDlg = new JCheckBox(mLocalizer.msg("showTimeSelectionDialog","Show time selection dialog"));
+    mShowTimeSelectionDlg = new JCheckBox(LOCALIZER.msg("showTimeSelectionDialog","Show time selection dialog"));
     mShowTimeSelectionDlg.setSelected(mSettings.getProperty("showTimeSelectionDialog","true").compareTo("true") == 0);
-    mShowRemovedDlg = new JCheckBox(mLocalizer.msg("showRemovedDialog","Show removed reminders after data update"));
+    mShowRemovedDlg = new JCheckBox(LOCALIZER.msg("showRemovedDialog","Show removed reminders after data update"));
     mShowRemovedDlg.setSelected(mSettings.getProperty("showRemovedDialog","true").compareTo("true") == 0);
-    mShowDateSeparators = new JCheckBox(mLocalizer.msg("showDateSeparators", "Show date separator in program list"));
+    mShowDateSeparators = new JCheckBox(LOCALIZER.msg("showDateSeparators", "Show date separator in program list"));
     mShowDateSeparators.setSelected(ReminderPlugin.getInstance().showDateSeparators());
-    mProvideTab = new JCheckBox(mLocalizer.msg("provideTab", "Provide tab in TV-Browser main window"));
+    mProvideTab = new JCheckBox(LOCALIZER.msg("provideTab", "Provide tab in TV-Browser main window"));
     mProvideTab.setSelected(mSettings.getProperty("provideTab","true").equals("true"));
 
-    pb.addSeparator(mLocalizer.msg("remindBy", "Remind me by"), CC.xyw(1,1,10));
+    int y = 1;
+    
+    pb.addSeparator(LOCALIZER.msg("remindBy", "Remind me by"), CC.xyw(1,y,10));
 
-    pb.add(frameRemindersCfg, CC.xyw(2,3,4));
-    pb.add(reminderWindowCfg, CC.xyw(2,5,4));
-    pb.add(mSoundFileChB, CC.xyw(2,7,4));
-    pb.add(mSoundFileChB.getButton(), CC.xy(7,7));
-    pb.add(soundTestBt, CC.xy(9,7));
-    pb.add(mBeep, CC.xy(2,9));
-    pb.add(mExecChB, CC.xyw(2,11,4));
-    pb.add(mExecFileDialogBtn, CC.xyw(7,11,3));
+    pb.add(frameRemindersCfg, CC.xyw(2,y += 2,4));
+    pb.add(reminderWindowCfg, CC.xyw(2,y += 2,4));
+    pb.add(mSoundFileChB, CC.xyw(2,y += 2,4));
+    pb.add(mSoundFileChB.getButton(), CC.xy(7,y));
+    pb.add(soundTestBt, CC.xy(9,y));
+    pb.add(mBeep, CC.xy(2,y += 2));
+    pb.add(mExecChB, CC.xyw(2,y += 2,4));
+    pb.add(mExecFileDialogBtn, CC.xyw(7,y,3));
 
-    pb.addSeparator(mLocalizer.msg("sendToPlugin", "Send reminded program to"), CC.xyw(1,13,10));
+    JPanel filter = new JPanel(new FormLayout("default,5dlu,default,0dlu:grow","default,2dlu,default"));
+    filter.add(mPrefilter, CC.xy(1, 1));
+    filter.add(editFilter, CC.xy(3, 1));
+    filter.add(helpPrefilter, CC.xyw(1, 3, 4));
+    
+    pb.addSeparator(LOCALIZER.msg("prefilterLabel", "Prefiltering of Reminders"), CC.xyw(1,y += 2,10));
+    pb.add(filter, CC.xyw(2, y+=2,9));
+    
+    pb.addSeparator(LOCALIZER.msg("sendToPlugin", "Send reminded program to"), CC.xyw(1,y += 2,10));
 
-    pb.add(mPluginTargetSelectionPanel, CC.xyw(1,15,10));
+    pb.add(mPluginTargetSelectionPanel, CC.xyw(1,y += 2,10));
 
-    final JLabel c = (JLabel) pb.addSeparator(mLocalizer.msg("autoCloseReminder", "Automatically close reminder"), CC.xyw(1,17,10)).getComponent(0);
+    final JLabel c = (JLabel) pb.addSeparator(LOCALIZER.msg("autoCloseReminder", "Automatically close reminder"), CC.xyw(1,y += 2,10)).getComponent(0);
     c.setEnabled(mReminderWindowChB.isSelected() || mFrameRemindersChB.isSelected());
 
-    pb.add(autoClosePanel.getPanel(), CC.xyw(2,19,5));
+    pb.add(autoClosePanel.getPanel(), CC.xyw(2,y += 2,5));
 
     JPanel reminderEntry = new JPanel(new FlowLayout(FlowLayout.LEADING,0,0));
     reminderEntry.add(mDefaultReminderEntryList);
 
-    pb.addSeparator(mLocalizer.msg("defaltReminderEntry","Default reminder time"), CC.xyw(1,21,10));
-    pb.add(reminderEntry, CC.xyw(2,23,4));
+    pb.addSeparator(LOCALIZER.msg("defaltReminderEntry","Default reminder time"), CC.xyw(1,y += 2,10));
+    pb.add(reminderEntry, CC.xyw(2,y += 2,4));
 
-    pb.addSeparator(mLocalizer.msg("miscSettings","Misc settings"), CC.xyw(1,25,10));
-    pb.add(mShowTimeSelectionDlg, CC.xyw(2,27,7));
-    pb.add(mShowRemovedDlg, CC.xyw(2,29,7));
-    pb.add(mShowDateSeparators, CC.xyw(2,31,7));
-    pb.add(mProvideTab, CC.xyw(2,33,7));
+    pb.addSeparator(LOCALIZER.msg("miscSettings","Misc settings"), CC.xyw(1,y += 2,10));
+    pb.add(mShowTimeSelectionDlg, CC.xyw(2,y += 2,7));
+    pb.add(mShowRemovedDlg, CC.xyw(2,y += 2,7));
+    pb.add(mShowDateSeparators, CC.xyw(2,y += 2,7));
+    pb.add(mProvideTab, CC.xyw(2,y += 2,7));
     
-    mScrollTimeToNext = new JRadioButton(mLocalizer.msg("timeButtonScrollNext", "Scroll to next occurence of time from shown programs onward"), Boolean.parseBoolean(propDefaults.getValueFromProperties(ReminderPropertyDefaults.KEY_SCROLL_TIME_TYPE_NEXT)));
-    mScrollTimeOnDay = new JRadioButton(mLocalizer.msg("timeButtonScrollDay", "Scroll to occurence of time on shown day in list"), !mScrollTimeToNext.isSelected());
-    final JLabel scrollTimeLabel = new JLabel(mLocalizer.msg("timeButtonBehaviour", "Time buttons behaviour:"));
+    mScrollTimeToNext = new JRadioButton(LOCALIZER.msg("timeButtonScrollNext", "Scroll to next occurence of time from shown programs onward"), Boolean.parseBoolean(propDefaults.getValueFromProperties(ReminderPropertyDefaults.KEY_SCROLL_TIME_TYPE_NEXT)));
+    mScrollTimeOnDay = new JRadioButton(LOCALIZER.msg("timeButtonScrollDay", "Scroll to occurence of time on shown day in list"), !mScrollTimeToNext.isSelected());
+    final JLabel scrollTimeLabel = new JLabel(LOCALIZER.msg("timeButtonBehaviour", "Time buttons behaviour:"));
     
     mScrollTimeToNext.setEnabled(mProvideTab.isSelected());
     mScrollTimeOnDay.setEnabled(mProvideTab.isSelected());
@@ -370,7 +407,7 @@ public class ReminderSettingsTab implements SettingsTab {
     timeButtonBehaviour.add(mScrollTimeToNext, CC.xy(2,4));
     timeButtonBehaviour.add(mScrollTimeOnDay, CC.xy(2,6));
     
-    pb.add(timeButtonBehaviour, CC.xyw(2, 34, 7));
+    pb.add(timeButtonBehaviour, CC.xyw(2, ++y, 7));
     
     mProvideTab.addItemListener(e -> {
       scrollTimeLabel.setEnabled(e.getStateChange() == ItemEvent.SELECTED);
@@ -378,9 +415,9 @@ public class ReminderSettingsTab implements SettingsTab {
       mScrollTimeOnDay.setEnabled(scrollTimeLabel.isEnabled());
     });
 
-    pb.addSeparator(DefaultMarkingPrioritySelectionPanel.getTitle(), CC.xyw(1,36,10));
-    pb.add(mMarkingsPanel = DefaultMarkingPrioritySelectionPanel.createPanel(ReminderPlugin.getInstance().getMarkPriority(),false,false),CC.xyw(2,38,9));
-
+    pb.addSeparator(DefaultMarkingPrioritySelectionPanel.getTitle(), CC.xyw(1,y+=2,10));
+    pb.add(mMarkingsPanel = DefaultMarkingPrioritySelectionPanel.createPanel(ReminderPlugin.getInstance().getMarkPriority(),false,false),CC.xyw(2,y+=2,9));
+    
     mFrameRemindersChB.addItemListener(e -> {
       if(e.getStateChange() == ItemEvent.SELECTED && mReminderWindowChB.isSelected()) {
         mReminderWindowChB.setSelected(false);
@@ -429,17 +466,17 @@ public class ReminderSettingsTab implements SettingsTab {
     });
 
     soundTestBt.addActionListener(evt -> {
-      if(evt.getActionCommand().compareTo(mLocalizer.msg("test", "Test")) == 0) {
+      if(evt.getActionCommand().compareTo(LOCALIZER.msg("test", "Test")) == 0) {
         mTestSound = ReminderPlugin.playSound(mSoundFileChB.getTextField().getText());
         if(mTestSound != null) {
-          soundTestBt.setText(mLocalizer.msg("stop", "Stop"));
+          soundTestBt.setText(LOCALIZER.msg("stop", "Stop"));
         }
         if(mTestSound != null) {
           if(mTestSound instanceof SourceDataLine) {
             ((SourceDataLine)mTestSound).addLineListener(new LineListener() {
               public void update(LineEvent event) {
                 if(event.getType() == Type.CLOSE || event.getType() == Type.STOP) {
-                  soundTestBt.setText(mLocalizer.msg("test", "Test"));
+                  soundTestBt.setText(LOCALIZER.msg("test", "Test"));
                 }
               }
             });
@@ -454,7 +491,7 @@ public class ReminderSettingsTab implements SettingsTab {
                   }catch(Exception ee) {}
                 }
 
-                soundTestBt.setText(mLocalizer.msg("test", "Test"));
+                soundTestBt.setText(LOCALIZER.msg("test", "Test"));
               }
             }.start();
           }
@@ -605,6 +642,8 @@ public class ReminderSettingsTab implements SettingsTab {
     mSettings.setProperty("usebeep", String.valueOf(mBeep.isSelected()));
     mSettings.setProperty("useexec", String.valueOf(mExecChB.isSelected()));
 
+    mSettings.setProperty("prefilter", String.valueOf(mPrefilter.isSelected() && !GenericFilterMap.getInstance().getGenericInternalFilter(GenericFilterMap.GENERIC_REMINDER_FILTER_NAME).getRule().isBlank()));
+    
     ReminderPlugin.getInstance().setClientPluginsTargets(mPluginTargetSelectionPanel.getCurrentSelection());
 
     mSettings.setProperty("autoCloseBehaviour", mCloseOnEnd.isSelected() ? "onEnd" : mCloseNever.isSelected() ? "never" : "onTime");
@@ -652,6 +691,6 @@ public class ReminderSettingsTab implements SettingsTab {
    * Returns the title of the tab-sheet.
    */
   public String getTitle() {
-    return mLocalizer.msg("tabName", "Reminder");
+    return LOCALIZER.msg("tabName", "Reminder");
   }
 }

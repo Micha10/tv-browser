@@ -14,6 +14,7 @@
  */
 package util.ui;
 
+import java.awt.Dimension;
 import java.util.ArrayList;
 
 import javax.swing.JComboBox;
@@ -25,6 +26,7 @@ import javax.swing.event.HyperlinkEvent;
 import com.jgoodies.forms.factories.Borders;
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
+import com.jgoodies.forms.layout.Sizes;
 
 import devplugin.SettingsItem;
 import tvbrowser.core.Settings;
@@ -153,8 +155,8 @@ public final class DefaultMarkingPrioritySelectionPanel extends JPanel {
           SettingsDialog.getInstance().showSettingsTab(SettingsItem.PROGRAMPANELMARKING);
         }
       });
-
-      pb.addGrowingRow();
+      mHelpLabel.setPreferredSize(new Dimension(200,Sizes.dialogUnitXAsPixel(30, mHelpLabel)));
+      
       pb.addRow();
 
       pb.add(mHelpLabel, cc.xyw(2, pb.getRowCount(), 4));

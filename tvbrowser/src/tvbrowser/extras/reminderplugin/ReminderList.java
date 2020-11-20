@@ -42,6 +42,7 @@ import devplugin.Plugin;
 import devplugin.Program;
 import devplugin.ProgramItem;
 import tvbrowser.core.ChannelList;
+import tvbrowser.core.filters.GenericFilterMap;
 import util.io.IOUtilities;
 
 /**
@@ -387,7 +388,10 @@ public class ReminderList implements ActionListener {
   }
 
   private boolean isRemindEventRequired(Program prog, int remindMinutes, Date today) {
-    if (remindMinutes < ReminderListItem.MAX_FORWARD_REMINDER_TIME || mPauseTimer != null && mPauseTimer.isRunning()) {
+    if (remindMinutes < ReminderListItem.MAX_FORWARD_REMINDER_TIME || 
+        mPauseTimer != null && mPauseTimer.isRunning() || 
+        (ReminderPlugin.getInstance().getSettings().getProperty("prefilter", "false").equals("true") &&
+            !GenericFilterMap.getInstance().getGenericInternalFilter(GenericFilterMap.GENERIC_REMINDER_FILTER_NAME).accept(prog))) {
       return false;
     }
 

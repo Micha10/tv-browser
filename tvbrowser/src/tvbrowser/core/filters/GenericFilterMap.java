@@ -52,6 +52,7 @@ public class GenericFilterMap {
   
   public static final String GENERIC_PICTURE_FILTER_NAME = "_picture";
   public static final String GENERIC_PROGRAM_PANEL_FILTER_NAME = "_programPanel";
+  public static final String GENERIC_REMINDER_FILTER_NAME = "_reminderPrefilter";
   
   private static GenericFilterMap INSTANCE;
   
@@ -110,6 +111,7 @@ public class GenericFilterMap {
       
       loadInternalGenericFilter(GENERIC_PICTURE_FILTER_NAME);
       loadInternalGenericFilter(GENERIC_PROGRAM_PANEL_FILTER_NAME);
+      loadInternalGenericFilter(GENERIC_REMINDER_FILTER_NAME);
     }catch(Throwable t) {t.printStackTrace();}
   }
   
