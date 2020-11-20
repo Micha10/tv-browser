@@ -111,7 +111,7 @@ public final class DefaultMarkingPrioritySelectionPanel extends JPanel {
    */
   private DefaultMarkingPrioritySelectionPanel(final int[] priority, final String[] label, final boolean showTitle, final boolean showHelpLabel, final boolean withDefaultDialogBorder) {
     CellConstraints cc = new CellConstraints();
-    FormLayout layout = new FormLayout("5dlu,pref,5dlu,pref,0dlu:grow");
+    FormLayout layout = new FormLayout("5dlu,default,5dlu,default,0dlu:grow");
     EnhancedPanelBuilder pb = new EnhancedPanelBuilder(layout,this);
 
     //how many selectors do we have to draw?
@@ -155,11 +155,10 @@ public final class DefaultMarkingPrioritySelectionPanel extends JPanel {
           SettingsDialog.getInstance().showSettingsTab(SettingsItem.PROGRAMPANELMARKING);
         }
       });
-      mHelpLabel.setPreferredSize(new Dimension(200,Sizes.dialogUnitXAsPixel(30, mHelpLabel)));
+      mHelpLabel.setMaximumSize(new Dimension(Sizes.dialogUnitXAsPixel(200, mHelpLabel), Sizes.dialogUnitXAsPixel(600, mHelpLabel)));
       
       pb.addRow();
-
-      pb.add(mHelpLabel, cc.xyw(2, pb.getRowCount(), 4));
+      pb.add(mHelpLabel, cc.xyw(2, pb.getRowCount(), 4));      
     }
   }
 

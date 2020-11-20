@@ -558,7 +558,7 @@ public class ReminderSettingsTab implements SettingsTab {
     mCloseOnTime.addItemListener(e -> {
       mShowTimeCounter.setEnabled(e.getStateChange() == ItemEvent.SELECTED);
     });
-
+    
     return pb.getPanel();
   }
 /*

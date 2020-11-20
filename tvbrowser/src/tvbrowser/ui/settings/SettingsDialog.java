@@ -85,9 +85,9 @@ import tvbrowser.ui.mainframe.MainFrame;
 import tvbrowser.ui.waiting.dlgs.SettingsWaitingDialog;
 import util.browserlauncher.Launch;
 import util.exc.ErrorHandler;
+import util.i18n.Localizer;
 import util.misc.OperatingSystem;
 import util.ui.ChannelLabel;
-import util.i18n.Localizer;
 import util.ui.SingleAndDoubleClickTreeUI;
 import util.ui.TVBrowserIcons;
 import util.ui.UiUtilities;
@@ -617,7 +617,7 @@ public class SettingsDialog implements WindowClosingIf {
         mHelpBt.setToolTipText(LOCALIZER.msg("noHelp", "No help available"));
         mHelpBt.setEnabled(false);
       }
-      JPanel scroll = new JPanel(new FormLayout("min:grow","fill:default:grow"));
+      final JPanel scroll = new JPanel(new FormLayout("200dlu:grow","fill:default:grow"));
       scroll.add(pn,new CellConstraints().xy(1, 1));
       
       final JScrollPane pane = new JScrollPane(scroll);
@@ -626,7 +626,6 @@ public class SettingsDialog implements WindowClosingIf {
       pane.getVerticalScrollBar().setUnitIncrement(50);
       
       scroll.addAncestorListener(new AncestorListener() {
-        
         @Override
         public void ancestorRemoved(AncestorEvent event) {}
         
@@ -635,9 +634,26 @@ public class SettingsDialog implements WindowClosingIf {
         
         @Override
         public void ancestorAdded(AncestorEvent event) {
-          SwingUtilities.invokeLater(() -> {
-            pane.getVerticalScrollBar().setValue(0);
-          });
+          if(pane.getVerticalScrollBar().isVisible()) {
+            SwingUtilities.invokeLater(() -> {
+              pane.getVerticalScrollBar().setValue(0);
+              
+              new Thread("WAIT FOR REFRESH") {
+                public void run() {
+                  try {
+                    Thread.sleep(1000);
+                  } catch (InterruptedException e) {
+                    e.printStackTrace();
+                  }
+                  
+                  SwingUtilities.invokeLater(() -> {
+                    scroll.revalidate();
+                    scroll.repaint();
+                  });
+                }
+              }.start();
+            });
+          }
         }
       });
       
