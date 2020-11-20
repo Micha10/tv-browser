@@ -330,22 +330,8 @@ public class MainFrame extends JFrame implements DateListener,DropTargetListener
   
   private Component mSelectedTab;
   
-  private static GraphicsConfiguration getGraphicsConfigurationForFrame() {
-	GraphicsConfiguration result = null; 
-	GraphicsEnvironment graphicsEnvironment = GraphicsEnvironment.getLocalGraphicsEnvironment();
-	
-	if (Settings.propScreenNumber.getInt() < graphicsEnvironment.getScreenDevices().length) {
-	  result = graphicsEnvironment.getScreenDevices()[Settings.propScreenNumber.getInt()].getDefaultConfiguration();
-	}
-	else {
-      result = graphicsEnvironment.getScreenDevices()[0].getDefaultConfiguration();
-	}
-	
-	return result;
-  }
-  
   private MainFrame() {
-    super(TVBrowser.MAINWINDOW_TITLE, getGraphicsConfigurationForFrame());
+    super(TVBrowser.MAINWINDOW_TITLE, IOUtilities.getGraphicsConfigurationForFrame());
     
     println("POS 1");
     setContentPane(new BackgroundPanel());

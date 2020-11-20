@@ -439,6 +439,7 @@ public class Settings {
 
         if(firstSettingsBackupFile.isFile() || secondSettingsBackupFile.isFile()) {
           Localizer localizer = Localizer.getLocalizerFor(Settings.class);
+          
           if(JOptionPane.showConfirmDialog(null,localizer.msg("settingBroken","Settings file broken.\nWould you like to load the backup file?\n\n(If you select No, the\ndefault settings are used)"),Localizer.getLocalization(Localizer.I18N_ERROR),JOptionPane.YES_NO_OPTION,JOptionPane.QUESTION_MESSAGE) == JOptionPane.OK_OPTION) {
             boolean loadSecondBackup = !firstSettingsBackupFile.isFile();
 
@@ -536,7 +537,11 @@ public class Settings {
           String title = MainFrame.LOCALIZER.msg("importInfoTitle","Import settings?");
           String msg = MainFrame.LOCALIZER.msg("importInfoMsg","TV-Browser has found settings for import.\nShould the settings be imported now?");
   
-          int answer = JOptionPane.showOptionDialog(null,msg,title,JOptionPane.YES_NO_CANCEL_OPTION,JOptionPane.WARNING_MESSAGE,null,options,options[0]);
+          JFrame parent = new JFrame("PARENT");
+          parent.setLocationRelativeTo(null);
+          System.out.println(parent.getGraphicsConfiguration());
+          
+          int answer = JOptionPane.showOptionDialog(parent,msg,title,JOptionPane.YES_NO_CANCEL_OPTION,JOptionPane.WARNING_MESSAGE,null,options,options[0]);
           
           if(answer == JOptionPane.CANCEL_OPTION) {
             oldDir = null;
@@ -2340,7 +2345,7 @@ public class Settings {
 	      mProp, "smootherScrolling", true);
   
   public static final IntProperty propScreenNumber = new IntProperty(
-	      mProp, "screenNumber", 0);
+	      mProp, "screenNumber", -1);
   
   /**
    * Hidden property for blocked filter components for Favorite usage.

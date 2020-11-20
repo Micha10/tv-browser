@@ -27,6 +27,8 @@
 package util.io;
 
 import java.awt.Graphics2D;
+import java.awt.GraphicsConfiguration;
+import java.awt.GraphicsEnvironment;
 import java.awt.image.BufferedImage;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -1357,5 +1359,24 @@ public class IOUtilities {
       for(String a : arr) {
         System.out.println(a);
       }
+    }
+    
+    /**
+     * Get the graphics configuration which is currently the best to use for new windows.
+     * @return The best usable graphics configuration
+     * @since 4.2.2
+     */
+    public static GraphicsConfiguration getGraphicsConfigurationForFrame() {
+      GraphicsConfiguration result = null; 
+      GraphicsEnvironment graphicsEnvironment = GraphicsEnvironment.getLocalGraphicsEnvironment();
+      
+      if (Settings.propScreenNumber.getInt() != -1 && Settings.propScreenNumber.getInt() < graphicsEnvironment.getScreenDevices().length) {
+        result = graphicsEnvironment.getScreenDevices()[Settings.propScreenNumber.getInt()].getDefaultConfiguration();
+      }
+      else {
+        result = graphicsEnvironment.getDefaultScreenDevice().getDefaultConfiguration();
+      }
+      
+      return result;
     }
 }
