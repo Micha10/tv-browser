@@ -391,6 +391,7 @@ public class ReminderList implements ActionListener {
     if (remindMinutes < ReminderListItem.MAX_FORWARD_REMINDER_TIME || 
         mPauseTimer != null && mPauseTimer.isRunning() || 
         (ReminderPlugin.getInstance().getSettings().getProperty("prefilter", "false").equals("true") &&
+            !GenericFilterMap.getInstance().getGenericInternalFilter(GenericFilterMap.GENERIC_REMINDER_FILTER_NAME).isBrokenPartially() &&
             !GenericFilterMap.getInstance().getGenericInternalFilter(GenericFilterMap.GENERIC_REMINDER_FILTER_NAME).accept(prog))) {
       return false;
     }
