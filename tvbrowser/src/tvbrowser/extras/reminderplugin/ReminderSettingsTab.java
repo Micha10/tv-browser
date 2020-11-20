@@ -254,6 +254,7 @@ public class ReminderSettingsTab implements SettingsTab {
     
     mPrefilter = new JCheckBox(LOCALIZER.msg("prefilter", "Activated"), mSettings.getProperty("prefilter","false").equalsIgnoreCase("true"));
     final JLabel helpPrefilter = new JLabel(LOCALIZER.msg("prefilter.help", "Reminders are only shown for programs that are accepted by the filter"));
+    helpPrefilter.setEnabled(mPrefilter.isSelected());
     
     final JButton editFilter = new JButton(LOCALIZER.msg("editFilter", "Edit filter"));
     editFilter.setEnabled(mPrefilter.isSelected());
