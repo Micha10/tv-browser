@@ -354,7 +354,7 @@ public class TVBrowser {
         msg = LOCALIZER.msg("error.2",
           "Please start TV-Browser in the TV-Browser directory!");
       }
-      JOptionPane.showMessageDialog(null, msg);
+      UiUtilities.showMessageDialogOnMouseScreen(msg, Localizer.getLocalization(Localizer.I18N_INFO),JOptionPane.INFORMATION_MESSAGE);
       System.exit(1);
     }
 
@@ -399,7 +399,7 @@ public class TVBrowser {
         area.setBorder(null);
         area.setOpaque(false);
 
-        JOptionPane.showMessageDialog(null,area,LOCALIZER.msg("error.noWriteRightsTitle","No write rights in settings directory"),JOptionPane.ERROR_MESSAGE);
+        UiUtilities.showMessageDialogOnMouseScreen(area,LOCALIZER.msg("error.noWriteRightsTitle","No write rights in settings directory"),JOptionPane.ERROR_MESSAGE);
         System.exit(1);
       }
     }
@@ -1315,7 +1315,7 @@ public class TVBrowser {
         options[index++] = Localizer.getLocalization(Localizer.I18N_CLOSE);
         options[index] = LOCALIZER.msg("startAnyway", "start anyway");
         
-        int result = JOptionPane.showOptionDialog(null, LOCALIZER.msg("alreadyRunning", "TV-Browser is already running"),
+        int result = UiUtilities.showOptionDialogOnMouseScreen(LOCALIZER.msg("alreadyRunning", "TV-Browser is already running"),
             LOCALIZER.msg("alreadyRunning", "TV-Browser is already running"), JOptionPane.DEFAULT_OPTION,
             JOptionPane.WARNING_MESSAGE, null, options, options[0]);
         

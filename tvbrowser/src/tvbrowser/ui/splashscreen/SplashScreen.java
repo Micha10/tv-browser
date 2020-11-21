@@ -27,6 +27,7 @@ package tvbrowser.ui.splashscreen;
 import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.Frame;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
@@ -83,10 +84,12 @@ public class SplashScreen implements Splash {
         }catch(IOException ioe) {}
       
       if(mImage != null) {
-        mSplashWindow = new JWindow() {
+        Frame parent = UiUtilities.getParentFrameOnMouseScreen();
+        mSplashWindow = new JWindow(parent.getGraphicsConfiguration()) {
           public void paint(Graphics g) {
             ((Graphics2D)g).setBackground(new Color(0,0,0,0));
             g.clearRect(0, 0, getWidth(), getHeight());
+            
             if (mImage != null) {
               g.drawImage(mImage, 0, 0, null);
             }
@@ -96,6 +99,8 @@ public class SplashScreen implements Splash {
         };
         mSplashWindow.setSize(mImage.getWidth(null),mImage.getHeight(null));
         mSplashWindow.setBackground(new Color(0,0,0,0));
+        mSplashWindow.setLocationRelativeTo(parent);
+        parent.dispose();
       }
     }
   }
@@ -209,7 +214,6 @@ public class SplashScreen implements Splash {
         mVersionY = getHeight() - 15;
         
         if(mSplashWindow != null) {
-          mSplashWindow.setLocationRelativeTo(null);
           mSplashWindow.setAlwaysOnTop(true);
           mSplashWindow.setVisible(true);
           SwingUtilities.invokeLater(() -> mSplashWindow.toFront());

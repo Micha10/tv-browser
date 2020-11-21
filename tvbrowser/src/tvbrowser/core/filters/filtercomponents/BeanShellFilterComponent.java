@@ -41,7 +41,9 @@ import devplugin.Plugin;
 import devplugin.Program;
 import devplugin.beanshell.BeanShellProgramFilterIf;
 import util.exc.ErrorHandler;
+import util.i18n.Localizer;
 import util.ui.LineNumberHeader;
+import util.ui.UiUtilities;
 import util.ui.beanshell.BeanShellEditor;
 
 /**
@@ -148,8 +150,7 @@ public class BeanShellFilterComponent extends AbstractFilterComponent {
     }
 
     if (!error) {
-      JOptionPane.showMessageDialog(null, mLocalizer.msg("SyntaxOK",
-          "Syntax is OK."));
+      UiUtilities.showMessageDialogOnMouseScreen(mLocalizer.msg("SyntaxOK","Syntax is OK."),Localizer.getLocalization(Localizer.I18N_INFO), JOptionPane.INFORMATION_MESSAGE);
     }
   }
 

@@ -1873,7 +1873,7 @@ public class MainFrame extends JFrame implements DateListener,DropTargetListener
         }
 
         // update filtered view if the "on air" condition changed for any program
-        if(!getProgramFilter().equals(FilterManagerImpl.getInstance().getDefaultFilter())) {
+        if(getProgramFilter() != null && !getProgramFilter().equals(FilterManagerImpl.getInstance().getDefaultFilter())) {
           setProgramFilter(getProgramFilter());
         }
       }

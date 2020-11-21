@@ -440,7 +440,7 @@ public class Settings {
         if(firstSettingsBackupFile.isFile() || secondSettingsBackupFile.isFile()) {
           Localizer localizer = Localizer.getLocalizerFor(Settings.class);
           
-          if(JOptionPane.showConfirmDialog(null,localizer.msg("settingBroken","Settings file broken.\nWould you like to load the backup file?\n\n(If you select No, the\ndefault settings are used)"),Localizer.getLocalization(Localizer.I18N_ERROR),JOptionPane.YES_NO_OPTION,JOptionPane.QUESTION_MESSAGE) == JOptionPane.OK_OPTION) {
+          if(UiUtilities.showConfirmDialogOnMouseScreen(localizer.msg("settingBroken","Settings file broken.\nWould you like to load the backup file?\n\n(If you select No, the\ndefault settings are used)"),Localizer.getLocalization(Localizer.I18N_ERROR),JOptionPane.YES_NO_OPTION,JOptionPane.QUESTION_MESSAGE) == JOptionPane.OK_OPTION) {
             boolean loadSecondBackup = !firstSettingsBackupFile.isFile();
 
             if(firstSettingsBackupFile.isFile()) {
@@ -537,11 +537,8 @@ public class Settings {
           String title = MainFrame.LOCALIZER.msg("importInfoTitle","Import settings?");
           String msg = MainFrame.LOCALIZER.msg("importInfoMsg","TV-Browser has found settings for import.\nShould the settings be imported now?");
   
-          JFrame parent = new JFrame("PARENT");
-          parent.setLocationRelativeTo(null);
-          System.out.println(parent.getGraphicsConfiguration());
           
-          int answer = JOptionPane.showOptionDialog(parent,msg,title,JOptionPane.YES_NO_CANCEL_OPTION,JOptionPane.WARNING_MESSAGE,null,options,options[0]);
+          int answer = UiUtilities.showOptionDialogOnMouseScreen(msg,title,JOptionPane.YES_NO_CANCEL_OPTION,JOptionPane.WARNING_MESSAGE,null,options,options[0]);
           
           if(answer == JOptionPane.CANCEL_OPTION) {
             oldDir = null;
@@ -566,8 +563,8 @@ public class Settings {
               MainFrame.LOCALIZER.msg("configureNew","Create new configuration")};
           String title = MainFrame.LOCALIZER.msg("importInfoTitle","Import settings?");
           String msg = MainFrame.LOCALIZER.msg("importInfoMsgTransportable","No settings were found on the system.\nDo you want to select the directory of another\ntransportable version for import of settings?");
-
-          if(JOptionPane.showOptionDialog(null,msg,title,JOptionPane.YES_NO_OPTION,JOptionPane.WARNING_MESSAGE,null,options,options[1]) == JOptionPane.YES_OPTION) {
+          
+          if(UiUtilities.showOptionDialogOnMouseScreen(msg,title,JOptionPane.YES_NO_OPTION,JOptionPane.WARNING_MESSAGE,null,options,options[1]) == JOptionPane.YES_OPTION) {
             oldDir = loadExternalSettings();
             
             if(oldDir != null) {
@@ -1010,7 +1007,7 @@ public class Settings {
         
         versions[0].setSelected(true);
         
-        JOptionPane.showMessageDialog(null, message, localizer.msg("selectImportDirectoryTitle", "TV-Browser - Select settings to import"), JOptionPane.QUESTION_MESSAGE);
+        UiUtilities.showMessageDialogOnMouseScreen(message, localizer.msg("selectImportDirectoryTitle", "TV-Browser - Select settings to import"), JOptionPane.QUESTION_MESSAGE);
         
         for(int i = 0; i < versions.length; i++) {
           if(versions[i].isSelected()) {
@@ -1030,7 +1027,7 @@ public class Settings {
   private static File loadExternalSettings() {
     String msg = MainFrame.LOCALIZER.msg("importTransportableInfo", "To import settings of another transportable version select the program\ndirectory of that other transportable version in the next setp.");
     String title = MainFrame.LOCALIZER.msg("importTransportableTitle", "Import settings from transportable version");
-    JOptionPane.showMessageDialog(null, msg, title, JOptionPane.INFORMATION_MESSAGE);
+    UiUtilities.showMessageDialogOnMouseScreen(msg, title, JOptionPane.INFORMATION_MESSAGE);
     
     JFileChooser chooseDir = new JFileChooser(System.getProperty("user.home"));
     chooseDir.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
@@ -1044,7 +1041,7 @@ public class Settings {
         String msg2 = MainFrame.LOCALIZER.msg("importTransportableError", "You've selected a directory that don't contains a transportable TV-Browser.\nWould you like to try again?");
         String title2 = MainFrame.LOCALIZER.msg("importTransportableErrorTitle", "Wrong directory selected");
         
-        if(JOptionPane.showConfirmDialog(null, msg2, title2, JOptionPane.YES_NO_OPTION) == JOptionPane.NO_OPTION) {
+        if(UiUtilities.showConfirmDialogOnMouseScreen(msg2, title2, JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) == JOptionPane.NO_OPTION) {
           selection = JFileChooser.CANCEL_OPTION;
           break;
         }

@@ -526,7 +526,7 @@ public class ChannelsSettingsTab implements SettingsTab, ListDropAction<Object> 
       plugin = PluginProxyManager.getInstance().getPluginForId("java.androidsync.AndroidSync");
       
       if(plugin == null) {
-        if(JOptionPane.showConfirmDialog(null, LOCALIZER.msg("syncInstallPluginMsg","You can synchronize your channels with the AndroidSync plugin, therefor it needs to be installed.\n\nDo you want to install the AndroidSync plugin now and synchronize the channels?"), LOCALIZER.msg("syncInstallPluginTitle","Install AndroidSync plugin?"), JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE) == JOptionPane.OK_OPTION) {
+        if(UiUtilities.showConfirmDialogOnMouseScreen(LOCALIZER.msg("syncInstallPluginMsg","You can synchronize your channels with the AndroidSync plugin, therefor it needs to be installed.\n\nDo you want to install the AndroidSync plugin now and synchronize the channels?"), LOCALIZER.msg("syncInstallPluginTitle","Install AndroidSync plugin?"), JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE) == JOptionPane.OK_OPTION) {
           File target = new File(Settings.propPluginsDirectory.getString(),"AndroidSync.jar");
           boolean error = false;
           
@@ -541,7 +541,7 @@ public class ChannelsSettingsTab implements SettingsTab, ListDropAction<Object> 
             loadSyncCommunication();
             
             if(!synchronizeChannels()) {
-              JOptionPane.showMessageDialog(null, LOCALIZER.msg("syncNotPossibleMsg", "Channels could not be synchronized.\n\nPlease select the channels manually"), LOCALIZER.msg("syncNotPossibleTitle", "Channels were not synchronized"), JOptionPane.ERROR_MESSAGE);
+              UiUtilities.showMessageDialogOnMouseScreen(LOCALIZER.msg("syncNotPossibleMsg", "Channels could not be synchronized.\n\nPlease select the channels manually"), LOCALIZER.msg("syncNotPossibleTitle", "Channels were not synchronized"), JOptionPane.ERROR_MESSAGE);
             }
           } catch (MalformedURLException e) {
             error = true;
@@ -552,21 +552,21 @@ public class ChannelsSettingsTab implements SettingsTab, ListDropAction<Object> 
           }
           
           if(error) {
-            JOptionPane.showMessageDialog(null, LOCALIZER.msg("syncNotInstalledMsg", "Plugin could not be installed.\n\nPlease select the channels manually"), LOCALIZER.msg("syncNotInstalledTitle", "AndroidSync could not be installed"), JOptionPane.ERROR_MESSAGE);
+            UiUtilities.showMessageDialogOnMouseScreen(LOCALIZER.msg("syncNotInstalledMsg", "Plugin could not be installed.\n\nPlease select the channels manually"), LOCALIZER.msg("syncNotInstalledTitle", "AndroidSync could not be installed"), JOptionPane.ERROR_MESSAGE);
           }
         }
       }
-      else if(!plugin.isActivated() && JOptionPane.showConfirmDialog(null, LOCALIZER.msg("syncActivateMsg", "You can synchronize your channels with the AndroidSync plugin, therefor it needs to be activated.\n\nDo you want to activate the AndroidSync plugin now?"), LOCALIZER.msg("syncActivateTitle", "Activate AndroidSync?"), JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE) == JOptionPane.OK_OPTION) {
+      else if(!plugin.isActivated() && UiUtilities.showConfirmDialogOnMouseScreen(LOCALIZER.msg("syncActivateMsg", "You can synchronize your channels with the AndroidSync plugin, therefor it needs to be activated.\n\nDo you want to activate the AndroidSync plugin now?"), LOCALIZER.msg("syncActivateTitle", "Activate AndroidSync?"), JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE) == JOptionPane.OK_OPTION) {
         try {
           PluginProxyManager.getInstance().activatePlugin(plugin);
           
           loadSyncCommunication();
           
           if(!synchronizeChannels()) {
-            JOptionPane.showMessageDialog(null, LOCALIZER.msg("syncNotPossibleMsg", "Channels could not be synchronized.\n\nPlease select the channels manually"), LOCALIZER.msg("syncNotPossibleTitle", "Channels were not synchronized"), JOptionPane.ERROR_MESSAGE);
+            UiUtilities.showMessageDialogOnMouseScreen(LOCALIZER.msg("syncNotPossibleMsg", "Channels could not be synchronized.\n\nPlease select the channels manually"), LOCALIZER.msg("syncNotPossibleTitle", "Channels were not synchronized"), JOptionPane.ERROR_MESSAGE);
           }
         } catch (TvBrowserException e) {
-          JOptionPane.showMessageDialog(null, LOCALIZER.msg("syncNotActivatedMsg", "Plugin could not be activated.\n\nPlease select the channels manually"), LOCALIZER.msg("syncNotActivatedTitle", "AndroidSync could not be activated"), JOptionPane.ERROR_MESSAGE);
+          UiUtilities.showMessageDialogOnMouseScreen(LOCALIZER.msg("syncNotActivatedMsg", "Plugin could not be activated.\n\nPlease select the channels manually"), LOCALIZER.msg("syncNotActivatedTitle", "AndroidSync could not be activated"), JOptionPane.ERROR_MESSAGE);
         }
       }
     }
@@ -655,7 +655,7 @@ public class ChannelsSettingsTab implements SettingsTab, ListDropAction<Object> 
         }
         
         if(!channelList.isEmpty() && importChannels(channelList.toArray(new String[channelList.size()]))) {
-          JOptionPane.showMessageDialog(null, LOCALIZER.msg("synched", "Channels were successfully synchronized."), LOCALIZER.msg("importSuccess", "Channels were imported successfully."), JOptionPane.INFORMATION_MESSAGE);
+          UiUtilities.showMessageDialogOnMouseScreen(LOCALIZER.msg("synched", "Channels were successfully synchronized."), LOCALIZER.msg("importSuccess", "Channels were imported successfully."), JOptionPane.INFORMATION_MESSAGE);
         }
       }
     }
@@ -803,7 +803,7 @@ public class ChannelsSettingsTab implements SettingsTab, ListDropAction<Object> 
             methodResult = importChannels((String[])result);
             
             if(methodResult) {
-              JOptionPane.showMessageDialog(null, LOCALIZER.msg("synched", "Channels were successfully synchronized."), LOCALIZER.msg("syncSuccess", "Synchronization success"), JOptionPane.INFORMATION_MESSAGE);
+              UiUtilities.showMessageDialogOnMouseScreen(LOCALIZER.msg("synched", "Channels were successfully synchronized."), LOCALIZER.msg("syncSuccess", "Synchronization success"), JOptionPane.INFORMATION_MESSAGE);
             }
           }
         } catch (SecurityException e1) {
@@ -1434,7 +1434,7 @@ public class ChannelsSettingsTab implements SettingsTab, ListDropAction<Object> 
    */
   private void refreshChannelList() {
     if (!NetworkUtilities.checkConnection()) {
-      JOptionPane.showMessageDialog(null,
+      UiUtilities.showMessageDialogOnMouseScreen(
           LOCALIZER.msg("noConnection.message", "No connection to the Internet established.\n\nThe channel list can only be updated if a connection\nto the Internet is available."),
           LOCALIZER.msg("noConnection.title", "No connection!"),
           JOptionPane.ERROR_MESSAGE);

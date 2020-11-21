@@ -30,6 +30,7 @@ import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 
 import tvbrowser.core.Settings;
+import util.ui.UiUtilities;
 
 /**
  * A helper class to show option dialogs
@@ -87,7 +88,7 @@ public class DontShowAgainOptionBox {
     
     shownObjects.add(askAgain);
     
-    int result = JOptionPane.showOptionDialog(parent, shownObjects.toArray(), title, optionType, messageType, null, options, initialValue);
+    int result = UiUtilities.showOptionDialogOnBestScreen(parent, shownObjects.toArray(), title, optionType, messageType, null, options, initialValue);
 
     if (askAgain.isSelected()) {
       Settings.propHiddenMessageBoxes.addItem(messageBoxId);

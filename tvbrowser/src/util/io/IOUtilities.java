@@ -28,7 +28,9 @@ package util.io;
 
 import java.awt.Graphics2D;
 import java.awt.GraphicsConfiguration;
+import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
+import java.awt.MouseInfo;
 import java.awt.image.BufferedImage;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -1374,7 +1376,9 @@ public class IOUtilities {
         result = graphicsEnvironment.getScreenDevices()[Settings.propScreenNumber.getInt()].getDefaultConfiguration();
       }
       else {
-        result = graphicsEnvironment.getDefaultScreenDevice().getDefaultConfiguration();
+        GraphicsDevice d = MouseInfo.getPointerInfo().getDevice();
+        
+        result = d != null ? d.getDefaultConfiguration() : graphicsEnvironment.getDefaultScreenDevice().getDefaultConfiguration();
       }
       
       return result;

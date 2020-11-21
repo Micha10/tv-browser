@@ -222,7 +222,7 @@ public class TvDataUpdater {
         if (!result && !mMessageShown ) {
           mMessageShown = true;
           try {
-            UIThreadRunner.invokeAndWait(() -> JOptionPane.showMessageDialog(null,
+            UIThreadRunner.invokeAndWait(() -> UiUtilities.showMessageDialogOnMouseScreen(
                 mLocalizer.msg("noConnectionMessage", "No connection!"),
                 mLocalizer.msg("noConnectionTitle", "No connection!"),
                 JOptionPane.ERROR_MESSAGE));

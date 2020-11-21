@@ -41,6 +41,7 @@ import java.awt.Graphics2D;
 import java.awt.GraphicsConfiguration;
 import java.awt.GraphicsEnvironment;
 import java.awt.Insets;
+import java.awt.MouseInfo;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
@@ -1445,5 +1446,114 @@ public class UiUtilities {
       });
 
     }
+  }
+  
+  /**
+   * @return The frame with a graphics configuration of the screen the mouse is currently visible
+   * @since 4.2.2
+   */
+  public static Frame getParentFrameOnMouseScreen() {
+    GraphicsConfiguration c = MouseInfo.getPointerInfo().getDevice().getDefaultConfiguration();
+    
+    Frame parent = null;
+    
+    if(c != null) {
+      parent = new Frame(c);
+    }
+    else {
+      parent = new Frame();
+    }
+    
+    parent.setLocationRelativeTo(null);
+    
+    return parent;
+  }
+  
+  /**
+   * Shows an JOptionPane message dialog on the screen the mouse pointer is currently visible.
+   * 
+   * @param message The message to show.
+   * @param title The title of the dialog.
+   * @param messageType The JOptionPane messageType.
+   */
+  public static void showMessageDialogOnMouseScreen(Object message, String title, int messageType) {
+    final Frame parent = getParentFrameOnMouseScreen();
+    
+    JOptionPane.showMessageDialog(parent, message, title, messageType);
+    
+    parent.dispose();
+  }
+  
+  /**
+   * Shows an JOptionPane confirm dialog on the screen the mouse pointer is currently visible.
+   * 
+   * @param message The message to show.
+   * @param title The title of the dialog.
+   * @param optionType The JOptionPane optionType.
+   * @param messageType The JOptionPane messageType.
+   * @return The return value of the option dialog
+   * @since 4.2.2
+   */
+  public static int showConfirmDialogOnMouseScreen(Object message, String title, int optionType, int messageType) {
+    final Frame parent = getParentFrameOnMouseScreen();
+    
+    int result = JOptionPane.showConfirmDialog(parent, message, title, optionType, messageType);
+    
+    parent.dispose();
+    
+    return result;
+  }
+  
+  /**
+   * Shows an JOptionPane option dialog on the screen the parent component is residing or
+   * if parent is <code>null</code> on the screen the mouse pointer is currently visible on.
+   * 
+   * @param message The message to show.
+   * @param title The title of the dialog.
+   * @param optionType The JOptionPane optionType.
+   * @param messageType The JOptionPane messageType.
+   * @param icon The icon for the dialog.
+   * @param options The options to choose from.
+   * @param initialValue The selected option at first displaying the dialog.
+   * @return The return value of the option dialog
+   * @since 4.2.2
+   */
+  public static int showOptionDialogOnBestScreen(Component parent, Object message, String title, int optionType, int messageType, Icon icon, Object[] options, Object initialValue) {
+    Component p = parent;
+    
+    if(p == null) {
+      p = getParentFrameOnMouseScreen();
+    }
+    
+    int result = JOptionPane.showOptionDialog(p, message, title, optionType, messageType, icon, options, initialValue);
+    
+    if(parent == null && p instanceof Frame) {
+      ((Frame)p).dispose();
+    }
+    
+    return result;
+  }
+  
+  /**
+   * Shows an JOptionPane option dialog on the screen the mouse pointer is currently visible.
+   * 
+   * @param message The message to show.
+   * @param title The title of the dialog.
+   * @param optionType The JOptionPane optionType.
+   * @param messageType The JOptionPane messageType.
+   * @param icon The icon for the dialog.
+   * @param options The options to choose from.
+   * @param initialValue The selected option at first displaying the dialog.
+   * @return The return value of the option dialog
+   * @since 4.2.2
+   */
+  public static int showOptionDialogOnMouseScreen(Object message, String title, int optionType, int messageType, Icon icon, Object[] options, Object initialValue) {
+    final Frame parent = getParentFrameOnMouseScreen();
+    
+    int result = JOptionPane.showOptionDialog(parent, message, title, optionType, messageType, icon, options, initialValue);
+    
+    parent.dispose();
+    
+    return result;
   }
 }
