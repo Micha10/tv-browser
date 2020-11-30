@@ -48,6 +48,7 @@ import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingUtilities;
 import javax.swing.event.TableModelEvent;
@@ -81,8 +82,8 @@ import tvbrowser.ui.update.SoftwareUpdateDlg.FilterItem;
 import util.browserlauncher.Launch;
 import util.exc.ErrorHandler;
 import util.exc.TvBrowserException;
-import util.ui.ImageIconEnhanced;
 import util.i18n.Localizer;
+import util.ui.ImageIconEnhanced;
 import util.ui.TVBrowserIcons;
 import util.ui.UiUtilities;
 
@@ -109,6 +110,7 @@ public class PluginSettingsTab implements devplugin.SettingsTab, TableModelListe
   private JCheckBox mAutoUpdates;
   private JButton mConfigure;
   private JComboBox<FilterItem> mFilterBox;
+  private JTextField mFilterName;
   
   /**
    * Creates an instance of this class.
@@ -141,7 +143,7 @@ public class PluginSettingsTab implements devplugin.SettingsTab, TableModelListe
 
     contentPanel.add(mAutoUpdates, cc.xy(1,1));
     
-    JPanel categorySelection = new JPanel(new FormLayout("default,3dlu,default:grow","default"));
+    JPanel categorySelection = new JPanel(new FormLayout("default,3dlu,default:grow","default,2dlu,default"));
     
     JLabel filterLabel = new JLabel(SoftwareUpdateDlg.LOCALIZER.msg("filterLabel","Show only Plugins with the following category:"));
     mFilterBox = new JComboBox<FilterItem>();
@@ -149,8 +151,16 @@ public class PluginSettingsTab implements devplugin.SettingsTab, TableModelListe
       populatePluginList();
     });
 
+    JLabel nameFilterLabel = new JLabel(SoftwareUpdateDlg.LOCALIZER.msg("nameFilterLabel","Show only Plugins with the following text:"));
+    mFilterName = new JTextField();
+    mFilterName.addCaretListener(e -> {
+      populatePluginList();
+    });
+    
     categorySelection.add(filterLabel, cc.xy(1,1));
     categorySelection.add(mFilterBox, cc.xy(3,1));
+    categorySelection.add(nameFilterLabel, cc.xy(1,3));
+    categorySelection.add(mFilterName, cc.xy(3,3));
     
     contentPanel.add(categorySelection,cc.xyw(1,3,2));
     
@@ -591,6 +601,7 @@ public class PluginSettingsTab implements devplugin.SettingsTab, TableModelListe
     
     Object test = mFilterBox.getSelectedItem();
     FilterItem filterItem = null;
+    String filterName = mFilterName.getText().strip().toLowerCase();
     
     if(test == null) {
       filterItem = new FilterItem("all");
@@ -607,7 +618,7 @@ public class PluginSettingsTab implements devplugin.SettingsTab, TableModelListe
     Arrays.sort(internalPluginProxies, new InternalPluginProxyIf.Comparator());
     
     for (InternalPluginProxyIf internalPluginProxy : internalPluginProxies) {
-      if(filterItem.accept(internalPluginProxy)) {
+      if(filterItem.accept(internalPluginProxy) && internalPluginProxy.getName().toLowerCase().contains(filterName)) {
         mTableModel.addRow(new Object[]{true, internalPluginProxy});
         
         if(mFilterBox.getItemCount() < 1) {
@@ -644,7 +655,7 @@ public class PluginSettingsTab implements devplugin.SettingsTab, TableModelListe
     Arrays.sort(infoArr, new PluginAndDataServiceComparator());
     
     for (InfoIf info : infoArr) {
-      if(filterItem.accept(info)) {
+      if(filterItem.accept(info) && info.getInfo().getName().toLowerCase().contains(filterName)) {
         mTableModel.addRow(new Object[]{(info instanceof PluginProxy) ? ((PluginProxy)info).isActivated() : true, info});
         
         if(mFilterBox.getItemCount() < 1) {
