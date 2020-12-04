@@ -25,6 +25,8 @@ package util.ui;
 
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.awt.event.ItemEvent;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -268,6 +270,14 @@ public class FilterableProgramListPanel extends JPanel implements FilterChangeLi
     mProgramListScrollPane.setBorder(null);
     
     add(mProgramListScrollPane, CC.xyw(1, y, 7));
+    
+    addComponentListener(new ComponentAdapter() {
+      @Override
+      public void componentResized(ComponentEvent e) {
+        filterPrograms(((WrapperFilter)mProgramFilterBox.getSelectedItem()).getFilter());
+        removeComponentListener(this);
+      }
+    });
   }
   
   private void fillProgramFilterBox(int startType, ProgramFilter startFilter) {
@@ -359,7 +369,6 @@ public class FilterableProgramListPanel extends JPanel implements FilterChangeLi
   private void filterPrograms(ProgramFilter filter, boolean fromTitleFilter) {
     if(mAllPrograms != null) {
       mProgramListModel.clear();
-
       DefaultListModel<Object> model = new DefaultListModel<>();
       
       ArrayList<ProgramFilter> titleFilterValues = new ArrayList<ProgramFilter>();
@@ -426,8 +435,6 @@ public class FilterableProgramListPanel extends JPanel implements FilterChangeLi
         }
       }
     }
-    
-    mProgramList.repaint();
   }
   
   /**

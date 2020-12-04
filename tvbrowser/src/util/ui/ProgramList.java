@@ -490,13 +490,16 @@ public class ProgramList extends JList<Object> implements ChangeListener,
   }
   
   public void setModel(final ListModel<Object> model) {
+    mSeparatorsCreated = false;
+    super.setModel(model);
+    mPrograms.clear();
+    
     for(int i = 0; i < model.getSize(); i++) {
       if(model.getElementAt(i) instanceof Program) {
+        mPrograms.add((Program)model.getElementAt(i));
         ((Program)model.getElementAt(i)).addChangeListener(this);
       }
     }
-    mSeparatorsCreated = false;
-    super.setModel(model);
   }
   
   /**
