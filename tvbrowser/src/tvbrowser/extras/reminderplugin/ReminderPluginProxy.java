@@ -106,7 +106,8 @@ public class ReminderPluginProxy extends AbstractInternalPluginProxy implements 
     return new Icon[] {getMarkIcon()};
   }
 
-  public int getMarkPriorityForProgram(Program p) {
+  @Override
+  @Deprecated public int getMarkPriorityForProgram(Program p) {
     return getMarkPriorityMaxForProgram(p);
   }
 
@@ -134,7 +135,8 @@ public class ReminderPluginProxy extends AbstractInternalPluginProxy implements 
     return ReminderPlugin.getInstance().getButtonAction();
   }
 
-  public boolean receiveValues(String[] values,
+  @Override
+  @Deprecated public boolean receiveValues(String[] values,
       ProgramReceiveTarget receiveTarget) {
     return false;
   }

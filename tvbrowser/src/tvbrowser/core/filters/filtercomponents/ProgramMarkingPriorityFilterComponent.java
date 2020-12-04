@@ -75,7 +75,7 @@ public class ProgramMarkingPriorityFilterComponent extends
   }
 
   public boolean accept(Program program) {
-    return program.getMarkPriority() == mMarkPriority;
+    return program.getMarkPriorityMax() == mMarkPriority;
   }
 
   public JPanel getSettingsPanel() {

@@ -27,7 +27,7 @@ import util.misc.StringPool;
  * @deprecated since 4.2.2 use {@link #util.i18n.PooledLocalizer} instead.
  * 
  */
-public class PooledLocalizer extends Localizer {
+@Deprecated public class PooledLocalizer extends Localizer {
   
   private PooledLocalizer(Class<?> clazz) {
     super(clazz);

@@ -240,6 +240,7 @@ public class MutableProgram implements Program {
       mListenerList = new Vector<ChangeListener>(1);
     }
     if (!mListenerList.contains(listener)) {
+    //  System.err.println("addChangeListener " + listener + " " + this);
       mListenerList.add(listener);
     }
   }

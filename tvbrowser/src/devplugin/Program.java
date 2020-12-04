@@ -198,13 +198,13 @@ public interface Program {
   public static final int PRIORITY_MARK_NONE = -1;
   public static final int PRIORITY_MARK_MIN = 0;
   /** @deprecated since 4.2.2 use {@link #getHighlightingPriorityMaximum()} instead */
-  public static final int PRIORITY_MARK_MEDIUM_LOWER = 1;
+  @Deprecated public static final int PRIORITY_MARK_MEDIUM_LOWER = 1;
   /** @deprecated since 4.2.2 use {@link #getHighlightingPriorityMaximum()} instead */
-  public static final int PRIORITY_MARK_MEDIUM = 2;
+  @Deprecated public static final int PRIORITY_MARK_MEDIUM = 2;
   /** @deprecated since 4.2.2 use {@link #getHighlightingPriorityMaximum()} instead */
-  public static final int PRIORITY_MARK_MEDIUM_HIGHER = 3;
+  @Deprecated public static final int PRIORITY_MARK_MEDIUM_HIGHER = 3;
   /** @deprecated since 4.2.2 use {@link #getHighlightingPriorityMaximum()} instead */
-  public static final int PRIORITY_MARK_MAX = 4;
+  @Deprecated public static final int PRIORITY_MARK_MAX = 4;
   
   /**
    * @return The current maximum highlighting priority
@@ -498,7 +498,7 @@ public interface Program {
    * @since 2.5.1
    * @deprecated since 4.2.2
    */
-  public int getMarkPriority();
+  @Deprecated public int getMarkPriority();
 
   /**
    * Gets the maximum priority of the marking of this program.

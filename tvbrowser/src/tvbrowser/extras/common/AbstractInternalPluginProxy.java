@@ -41,12 +41,12 @@ public abstract class AbstractInternalPluginProxy implements InternalPluginProxy
   }
   
   @Override
-  public boolean receivePrograms(Program[] programArr, ProgramReceiveTarget receiveTarget) {
+  @Deprecated public boolean receivePrograms(Program[] programArr, ProgramReceiveTarget receiveTarget) {
     return false;
   }
   
   @Override
-  public boolean receiveValues(String[] values, ProgramReceiveTarget receiveTarget) {
+  @Deprecated public boolean receiveValues(String[] values, ProgramReceiveTarget receiveTarget) {
     return false;
   }
   

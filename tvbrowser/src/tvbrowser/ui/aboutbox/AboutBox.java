@@ -35,7 +35,6 @@ import java.awt.Toolkit;
 import java.awt.datatransfer.StringSelection;
 
 import javax.swing.BorderFactory;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JEditorPane;
@@ -47,9 +46,9 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 
 import tvbrowser.TVBrowser;
+import util.i18n.Localizer;
 import util.ui.ImageIconEnhanced;
 import util.ui.ImageUtilities;
-import util.i18n.Localizer;
 import util.ui.UiUtilities;
 import util.ui.WindowClosingIf;
 import util.ui.html.ExtendedHTMLDocument;

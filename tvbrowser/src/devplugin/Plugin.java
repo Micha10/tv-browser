@@ -853,7 +853,7 @@ abstract public class Plugin implements Marker, ContextMenuIf, ProgramReceiveIf 
   /**
    * @deprecated since 4.2.2 use {@link #receivePrograms(int, Program[], ProgramReceiveTarget)} instead.
    */
-  public boolean receivePrograms(Program[] programArr, ProgramReceiveTarget receiveTarget) {
+  @Deprecated public boolean receivePrograms(Program[] programArr, ProgramReceiveTarget receiveTarget) {
     return false;
   }
 
@@ -889,7 +889,7 @@ abstract public class Plugin implements Marker, ContextMenuIf, ProgramReceiveIf 
    * @since 2.7
    * @deprecated since 4.2.2 use {@link #receiveValues(int, String[], ProgramReceiveTarget)} instead
    */
-  public boolean receiveValues(String[] values, ProgramReceiveTarget receiveTarget) {
+  @Deprecated public boolean receiveValues(String[] values, ProgramReceiveTarget receiveTarget) {
     return false;
   }
 
@@ -956,7 +956,7 @@ abstract public class Plugin implements Marker, ContextMenuIf, ProgramReceiveIf 
    * @since 2.5.1
    * @deprecated since 4.2.2 use {@link #getMarkPriorityMaxForProgram(Program)} instead.
    */
-  public int getMarkPriorityForProgram(Program p) {
+  @Deprecated public int getMarkPriorityForProgram(Program p) {
     return Settings.propProgramPanelUsedDefaultMarkPriority.getInt();
   }
   

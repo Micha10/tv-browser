@@ -784,6 +784,7 @@ public class TVBrowser {
         
         if(currentVersion != null
             && currentVersion.compareTo(new Version(4,21,51,false)) < 0) {
+          @SuppressWarnings("deprecation")
           int[] colors = {
               Settings.propProgramPanelMarkedMinPriorityColor.getColor().getRGB(),
               Settings.propProgramPanelMarkedLowerMediumPriorityColor.getColor().getRGB(),

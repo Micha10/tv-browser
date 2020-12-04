@@ -713,13 +713,13 @@ public class SystemTray {
               }
             }
             else if (p.getMarkerArr().length > 0
-                && p.getMarkPriority() >= Settings.propTrayImportantProgramsPriority.getInt()) {
+                && p.getMarkPriorityMax() >= Settings.propTrayImportantProgramsPriority.getInt()) {
               additional.add(new ProgramMenuItem(p, ProgramMenuItem.ON_TIME_TYPE, time, -1));
               
               if(it.hasNext()) {
                 Program test = it.next();
                 
-                if(test.getMarkerArr().length > 0 && test.getMarkPriority() >= Settings.propTrayImportantProgramsPriority.getInt()) {
+                if(test.getMarkerArr().length > 0 && test.getMarkPriorityMax() >= Settings.propTrayImportantProgramsPriority.getInt()) {
                   additionalNext.add(new ProgramMenuItem(test, ProgramMenuItem.AFTER_TYPE, time, -1));
                 }
               }
@@ -727,7 +727,7 @@ public class SystemTray {
                 try {
                   Program test = ProgramUtilities.getJointProgramIteratorFor(currentDate.addDays(day+1),ch).next();
                   
-                  if(test.getMarkerArr().length > 0 && test.getMarkPriority() >= Settings.propTrayImportantProgramsPriority.getInt()) {
+                  if(test.getMarkerArr().length > 0 && test.getMarkPriorityMax() >= Settings.propTrayImportantProgramsPriority.getInt()) {
                     additionalNext.add(new ProgramMenuItem(test, ProgramMenuItem.AFTER_TYPE, time, -1));
                   }
                 }catch(Exception ee) {}
@@ -760,13 +760,13 @@ public class SystemTray {
                   }
                 }
                 else if (p.getMarkerArr().length > 0
-                    && p.getMarkPriority() >= Settings.propTrayImportantProgramsPriority.getInt()) {
+                    && p.getMarkPriorityMax() >= Settings.propTrayImportantProgramsPriority.getInt()) {
                   additional.add(new ProgramMenuItem(p, ProgramMenuItem.ON_TIME_TYPE, time, -1));
                   
                   if(it.hasNext()) {
                     Program test = it.next();
                     
-                    if(test.getMarkerArr().length > 0 && test.getMarkPriority() >= Settings.propTrayImportantProgramsPriority.getInt()) {
+                    if(test.getMarkerArr().length > 0 && test.getMarkPriorityMax() >= Settings.propTrayImportantProgramsPriority.getInt()) {
                       additionalNext.add(new ProgramMenuItem(test, ProgramMenuItem.AFTER_TYPE, time, -1));
                     }
                   }
@@ -774,7 +774,7 @@ public class SystemTray {
                     try {
                       Program test = ProgramUtilities.getJointProgramIteratorFor(currentDate.addDays(day+1),ch).next();
                       
-                      if(test.getMarkerArr().length > 0 && test.getMarkPriority() >= Settings.propTrayImportantProgramsPriority.getInt()) {
+                      if(test.getMarkerArr().length > 0 && test.getMarkPriorityMax() >= Settings.propTrayImportantProgramsPriority.getInt()) {
                         additionalNext.add(new ProgramMenuItem(test, ProgramMenuItem.AFTER_TYPE, time, -1));
                       }
                     }catch(Exception ee) {}
@@ -917,7 +917,7 @@ public class SystemTray {
       listStandard.set(getIndexOfChannel(program.getChannel()),new ProgramMenuItem(program, menuItemType, -1, -1));
     }
     else if (program.getMarkerArr().length > 0
-        && program.getMarkPriority() >= Settings.propTrayImportantProgramsPriority.getInt()) {
+        && program.getMarkPriorityMax() >= Settings.propTrayImportantProgramsPriority.getInt()) {
       listAdditional.add(new ProgramMenuItem(program, menuItemType, -1, -1));
     }
   }

@@ -108,8 +108,9 @@ public class FavoritesPluginProxy extends AbstractInternalPluginProxy implements
       return mMarkIconArr;
     }
   }
-
-  public int getMarkPriorityForProgram(Program p) {
+  
+  @Override
+  @Deprecated public int getMarkPriorityForProgram(Program p) {
     return getMarkPriorityMaxForProgram(p);
   }
 

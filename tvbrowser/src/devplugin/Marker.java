@@ -70,7 +70,7 @@ public interface Marker {
    * @since 2.5.1 
    * @deprecated since 4.2.2
    */
-  public int getMarkPriorityForProgram(Program p);
+  @Deprecated public int getMarkPriorityForProgram(Program p);
   
   public int getMarkPriorityMaxForProgram(Program p);
   

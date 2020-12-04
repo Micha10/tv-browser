@@ -28,18 +28,7 @@ package tvbrowser.ui.mainframe.macosx;
 
 import java.awt.Desktop;
 import java.awt.Toolkit;
-import java.awt.desktop.AboutEvent;
-import java.awt.desktop.AboutHandler;
-import java.awt.desktop.QuitEvent;
-import java.awt.desktop.QuitHandler;
-import java.awt.desktop.QuitResponse;
-import java.awt.desktop.SystemEventListener;
 import java.awt.event.KeyEvent;
-import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.Method;
-import java.lang.reflect.Proxy;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.swing.JLabel;
 import javax.swing.JMenu;
@@ -52,7 +41,7 @@ import tvbrowser.ui.mainframe.MenuBar;
 //import com.apple.eawt.*;
 
 public class MacOSXMenuBar extends MenuBar {
-  private final static Logger LOGGER = Logger.getLogger(MacOSXMenuBar.class.getName());
+  //private final static Logger LOGGER = Logger.getLogger(MacOSXMenuBar.class.getName());
 
   public MacOSXMenuBar(MainFrame mainFrame, JLabel label) {
     super(mainFrame, label);

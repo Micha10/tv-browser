@@ -29,16 +29,15 @@ package tvbrowser.ui.configassistant;
 import java.awt.BorderLayout;
 
 import javax.swing.BorderFactory;
-import javax.swing.ImageIcon;
 import javax.swing.JEditorPane;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import util.ui.ImageIconEnhanced;
-import util.ui.UiUtilities;
-
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
+
+import util.ui.ImageIconEnhanced;
+import util.ui.UiUtilities;
 
 /**
  * Welcome-Card of the Wizard

@@ -34,7 +34,6 @@ import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.Properties;
 import java.util.logging.Logger;
 
 import tvbrowser.TVBrowser;

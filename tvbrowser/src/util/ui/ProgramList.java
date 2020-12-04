@@ -69,6 +69,7 @@ public class ProgramList extends JList<Object> implements ChangeListener,
     ListDataListener, PluginStateListener, 
     ProgramKeyAndContextMenuListener, AutoScrollerAndClickKeyHandler.ProgramAutoScrollListener {
   private final static Localizer LOCALIZER = Localizer.getLocalizerFor(ProgramList.class);
+  private final static int STATE_CHANGE_GAP = 500;
   
   /** Key for separator list entry */
   public final static String DATE_SEPARATOR = "DATE_SEPARATOR";
@@ -81,6 +82,7 @@ public class ProgramList extends JList<Object> implements ChangeListener,
   private JPopupMenu mPopupMenu;
   private AutoScrollerAndClickKeyHandler mAutoScroller;
   private boolean mHandleClicks = false;
+  private long mLastStateChange = 0;
 
   /**
    * Creates the JList and adds the default MouseListeners (PopUpBox)
@@ -340,9 +342,12 @@ public class ProgramList extends JList<Object> implements ChangeListener,
       }
     }
   }
-
+  
   public void stateChanged(ChangeEvent e) {
-    repaint();
+    if(System.currentTimeMillis() - STATE_CHANGE_GAP > mLastStateChange) {
+      mLastStateChange = System.currentTimeMillis();
+      repaint();
+    }
   }
 
   public void contentsChanged(ListDataEvent e) {
@@ -484,7 +489,12 @@ public class ProgramList extends JList<Object> implements ChangeListener,
     }
   }
   
-  public void setModel(ListModel<Object> model) {
+  public void setModel(final ListModel<Object> model) {
+    for(int i = 0; i < model.getSize(); i++) {
+      if(model.getElementAt(i) instanceof Program) {
+        ((Program)model.getElementAt(i)).addChangeListener(this);
+      }
+    }
     mSeparatorsCreated = false;
     super.setModel(model);
   }

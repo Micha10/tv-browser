@@ -27,7 +27,6 @@
 package tvbrowser.ui.filter.dlgs;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
