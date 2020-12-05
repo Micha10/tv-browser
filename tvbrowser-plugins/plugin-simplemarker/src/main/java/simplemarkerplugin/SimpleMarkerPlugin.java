@@ -94,7 +94,7 @@ import util.ui.WindowClosingIf;
  * @author René Mach
  */
 public class SimpleMarkerPlugin extends Plugin {
-  private static final Version mVersion = new Version(3,31,0,true);
+  private static final Version mVersion = new Version(3,31,1,true);
 
   /** The localizer for this class. */
   private static final util.ui.Localizer mLocalizer = util.ui.Localizer.getLocalizerFor(SimpleMarkerPlugin.class);
@@ -319,7 +319,7 @@ public class SimpleMarkerPlugin extends Plugin {
     boolean added = false;
     
     for (Program p : programs) {
-      if(type == 0 || type == 1) {
+      if(type == 0 || type == 1 || type == 3) {
         added = targetList.addProgram(p) || added;
       }
       else if(type == 2) {

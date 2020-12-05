@@ -24,6 +24,7 @@ package simplemarkerplugin;
 import java.util.Vector;
 
 import devplugin.Program;
+import devplugin.ProgramReceiveIf;
 import devplugin.ProgramReceiveTarget;
 
 /**
@@ -156,7 +157,10 @@ public class MarkListsVector extends Vector<MarkList> {
    */
   protected MarkList getMarkListForTarget(ProgramReceiveTarget target) {
     for(int i = 0; i < size(); i++) {
-      if(get(i).getReceiveTarget().equals(target)) {
+      ProgramReceiveTarget check = get(i).getReceiveTarget();
+      ProgramReceiveIf receiveIf = check.getReceifeIfForIdOfTarget();
+      
+      if(target.isReceiveTargetWithIdOfProgramReceiveIf(receiveIf, check.getTargetId())) {
         return get(i);
       }
     }

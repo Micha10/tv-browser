@@ -216,6 +216,9 @@ public class MarkList extends Vector<Program> {
     if(version >= 9) {
       mEventType = in.readInt();
     }
+    else {
+      mEventType = 0;
+    }
   }
 
   public void setActionId(int actionId) {
