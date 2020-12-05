@@ -37,7 +37,6 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
-import java.awt.GraphicsConfiguration;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.awt.Insets;
@@ -196,12 +195,12 @@ import tvbrowser.ui.update.SoftwareUpdateItem;
 import util.browserlauncher.Launch;
 import util.exc.ErrorHandler;
 import util.exc.TvBrowserException;
+import util.i18n.Localizer;
 import util.io.IOUtilities;
 import util.io.NetworkUtilities;
 import util.misc.OperatingSystem;
 import util.programkeyevent.ProgramKeyEventHandler;
 import util.settings.ContextMenuMouseActionSetting;
-import util.i18n.Localizer;
 import util.ui.TVBrowserIcons;
 import util.ui.UIThreadRunner;
 import util.ui.UiUtilities;
@@ -2305,7 +2304,7 @@ public class MainFrame extends JFrame implements DateListener,DropTargetListener
   private void checkFilterInfoPanel() {
     ProgramFilter filter = mProgramTableModel.getProgramFilter();
     
-    if(!TvDataBase.getInstance().dataAvailable(mProgramTableModel.getDate()) && mProgramTableModel.getAvailableChannelCount() > 0) {
+    if(!TvDataBase.getInstance().dataAvailable(mProgramTableModel.getDate()) && mProgramTableModel.getAvailableChannelCount() > 0 && Settings.propAutoDownloadType.getString().equals("never")) {
       mScrollPaneWrapper.showInfoPanel(ProgramTableScrollPaneWrapper.INFO_NO_DATA,null);
     }
     else if(filter != null && !filter.equals(FilterManagerImpl.getInstance().getAllFilter()) && mProgramTableModel.getColumnCount() == 0 && mProgramTableModel.getAvailableChannelCount() > 0) {
@@ -2859,7 +2858,7 @@ public class MainFrame extends JFrame implements DateListener,DropTargetListener
   }
 
   public void askForDataUpdateNoDataAvailable() {
-    if(mProgramTableModel.getAvailableChannelCount() > 0) {
+    if(mProgramTableModel.getAvailableChannelCount() > 0 && Settings.propAutoDownloadType.equals("never")) {
       askForDataUpdate(LOCALIZER.msg("askforupdatedlg.noData",
         "No TV data for todays program available."));
     }

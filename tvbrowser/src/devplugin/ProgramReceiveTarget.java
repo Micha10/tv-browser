@@ -207,8 +207,15 @@ public final class ProgramReceiveTarget implements Comparable<ProgramReceiveTarg
     if(version >= 2) {
       mUsedEventType = in.readInt();
     }
+    else {
+      mUsedEventType = TYPE_EVENT_UNDIFINED;
+    }
+    
     if(version >= 3) {
       mSupportedEventType = in.readInt();
+    }
+    else {
+      mSupportedEventType = TYPE_EVENT_UNDIFINED;
     }
   }
 
