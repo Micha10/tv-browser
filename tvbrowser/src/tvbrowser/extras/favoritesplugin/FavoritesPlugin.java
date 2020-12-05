@@ -868,7 +868,7 @@ public class FavoritesPlugin {
     for(ReceiveTargetItem target : targets) {
       int type = target.getReceiveTarget().getEventType();
       
-      if(type != ProgramReceiveTarget.TYPE_EVENT_REMOVED && !target.getReceiveTarget().receivePrograms(type,target.getPrograms())) {
+      if(type != ProgramReceiveTarget.TYPE_EVENT_REMOVED && !target.getReceiveTarget().receivePrograms(ProgramReceiveTarget.TYPE_EVENT_ADDED,target.getPrograms())) {
         Favorite[] favs =FavoriteTreeModel.getInstance().getFavoritesContainingReceiveTarget(target.getReceiveTarget());
 
         for(Favorite fav : favs) {
