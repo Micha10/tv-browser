@@ -7,6 +7,10 @@ import devplugin.Program;
 public class RememberedProgramsList<E> extends ArrayList<E> {
   @Override
   public boolean contains(Object o) {
+    return containsObject(o);
+  }
+  
+  public boolean containsObject(Object o) {
     if(o instanceof Program) {
       for(int i = 0; i < size(); i++) {
         if(get(i).equals(o)) {

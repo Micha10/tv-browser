@@ -62,7 +62,7 @@ import util.ui.WindowClosingIf;
 
 public class RememberMe extends Plugin {
   public static final int DEFAULT_DAY_COUNT = 14; 
-  private static final Version mVersion = new Version(0,19,4,true);
+  private static final Version mVersion = new Version(0,20,0,true);
   static final Localizer mLocalizer = Localizer.getLocalizerFor(RememberMe.class);
   private static final String TARGET_ID = "###REMEMBERME###";
   
@@ -239,7 +239,7 @@ public class RememberMe extends Plugin {
     };
     
     synchronized (mRememberedPrograms) {
-      if(mRememberedPrograms.contains(program)) {
+      if(mRememberedPrograms.containsObject(program)) {
         action = new ContextMenuAction(mLocalizer.msg("forgetMe", "Forget me now!"),createImageIcon(getMarkIconFromTheme())) {
           public void actionPerformed(ActionEvent e) {
             synchronized (mRememberedPrograms) {
@@ -319,7 +319,6 @@ public class RememberMe extends Plugin {
         }
       }
     });
-    mTimer.start();
     
     SwingUtilities.invokeLater(new Runnable() {
       @Override
@@ -327,7 +326,6 @@ public class RememberMe extends Plugin {
         mCenterPanelWrapper = UiCompat.createPersonaBackgroundPanel();
         
         mCenterPanelWrapper.addAncestorListener(new AncestorListener() {
-          
           @Override
           public void ancestorRemoved(AncestorEvent e) {
             if(mTimer != null) {
@@ -342,15 +340,22 @@ public class RememberMe extends Plugin {
           public void ancestorAdded(AncestorEvent e) {
             if(mMangePanel != null) {
               mMangePanel.updatePanel(RememberMe.this);
+              mTimer.setInitialDelay(61000-(int)(System.currentTimeMillis() % 60000));
               mTimer.start();
             }
           }
         });
         
         mWrapper = new PluginCenterPanelWrapper() {
+          private RemeberMePanel mPanel;
+          
           @Override
           public PluginCenterPanel[] getCenterPanels() {
-            return new PluginCenterPanel[] {new RemeberMePanel()};
+            if(mPanel == null) {
+              mPanel = new RemeberMePanel();
+            }
+            
+            return new PluginCenterPanel[] {mPanel};
           }
         };
         
@@ -365,7 +370,7 @@ public class RememberMe extends Plugin {
     
     if(mMangePanel != null) {
       mCenterPanelWrapper.remove(mMangePanel);
-      PersonaCompat.getInstance().registerPersonaListener(mMangePanel);
+      PersonaCompat.getInstance().removePersonaListener(mMangePanel);
     }
     
     mMangePanel = null;
