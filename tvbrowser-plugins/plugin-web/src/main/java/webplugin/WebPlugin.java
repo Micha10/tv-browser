@@ -67,7 +67,7 @@ import util.ui.UiUtilities;
  * A User can configure his favorite Search-Engines and search for the given Movie
  */
 public class WebPlugin extends Plugin {
-  private static final Version VERSION = new Version(3,19);
+  private static final Version VERSION = new Version(3,20);
 
   private static final Logger LOGGER = java.util.logging.Logger
   .getLogger(WebPlugin.class.getName());
@@ -310,7 +310,7 @@ public class WebPlugin extends Plugin {
 */
         }
         
-        if (address != null && address.getUrl().equals(SITE_VOD)) {
+        if (address != null && address.getUrl() != null && address.getUrl().equals(SITE_VOD)) {
           try {
             Field mediathekLink = ProgramFieldType.class.getDeclaredField("VOD_LINK");
             String link = program.getTextField((ProgramFieldType)mediathekLink.get(null));
@@ -333,7 +333,7 @@ public class WebPlugin extends Plugin {
           }
         }
         
-        if (address != null && address.isActive()) {
+        if (address != null && address.getUrl() != null && address.isActive()) {
           // create items for a possible sub menu
           if (address.getUrl().contains(WEBSEARCH_ALL) && listActors == null) {
             findSearchItems(program);
