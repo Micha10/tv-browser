@@ -8,10 +8,14 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashSet;
 import java.util.Properties;
 import java.util.TimeZone;
 
 public class DataCheck {
+  private static Calendar START = Calendar.getInstance(TimeZone.getTimeZone("CET"));
+  private static Calendar END = Calendar.getInstance(TimeZone.getTimeZone("CET"));
+  
   public static void main(String[] args) {
     final Properties p = new Properties();
     
@@ -43,7 +47,15 @@ public class DataCheck {
           while((line = read.readLine()) != null) {
             final Channel test = new Channel(group,line);
             
-            if(!p.containsKey(test.getUniqueId())) {
+            if(p.containsKey(test.getUniqueId())) {
+              String value = p.getProperty(test.getUniqueId()).trim();
+              
+              if(!value.isEmpty()) {
+                list.add(test);
+                test.addIgnoreDays(value);
+              }
+            }
+            else {
               list.add(test);
             }
           }
@@ -84,6 +96,7 @@ public class DataCheck {
     private String mCountry;
     private String mId;
     private String mName;
+    private HashSet<String> mIgnoreDays;
     
     public Channel(final String group, final String line) {
       String[] parts = line.split(";");
@@ -92,6 +105,37 @@ public class DataCheck {
       mCountry = parts[0];
       mId = parts[2];
       mName = parts[3];
+      mIgnoreDays = new HashSet<String>();
+    }
+    
+    public void addIgnoreDays(String prop) {
+      final String[] parts = prop.split(";");
+      
+      for(String part : parts) {
+        if(part.contains("-")) {
+          final String[] days = part.split("-");
+          
+          String[] date = days[0].split("_");
+          
+          START.set(Calendar.YEAR, Integer.parseInt(date[0]));
+          START.set(Calendar.MONTH, Integer.parseInt(date[1])-1);
+          START.set(Calendar.DAY_OF_MONTH, Integer.parseInt(date[2]));
+          
+          date = days[1].split("_");
+          
+          END.set(Calendar.YEAR, Integer.parseInt(date[0]));
+          END.set(Calendar.MONTH, Integer.parseInt(date[1])-1);
+          END.set(Calendar.DAY_OF_MONTH, Integer.parseInt(date[2]));
+          
+          while(START.compareTo(END) <= 0) {
+            mIgnoreDays.add(START.get(Calendar.YEAR)+"-"+String.format("%02d", START.get(Calendar.MONTH)+1)+"-"+START.get(Calendar.DAY_OF_MONTH));
+            START.add(Calendar.DAY_OF_YEAR, 1);
+          }
+        }
+        else {
+          mIgnoreDays.add(part.replace("_", "-"));
+        }
+      }
     }
     
     public String getUniqueId() {
@@ -102,6 +146,11 @@ public class DataCheck {
       StringBuilder b = new StringBuilder();
       
       b.append(cal.get(Calendar.YEAR)).append("-").append(String.format("%02d", cal.get(Calendar.MONTH)+1)).append("-").append(String.format("%02d", cal.get(Calendar.DAY_OF_MONTH)));
+      
+      if(mIgnoreDays.contains(b.toString())) {
+        return true;
+      }
+      
       b.append("_").append(mCountry).append("_").append(mId).append("_base_full.prog.gz");
       
       File f = new File("prepared/"+b.toString());
