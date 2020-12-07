@@ -2483,7 +2483,7 @@ public class MainFrame extends JFrame implements DateListener,DropTargetListener
   
   public void runUpdateThread(final int daysToDownload,
       final TvDataServiceProxy[] services, final boolean autoUpdate) {
-    if(mDownloadingThread == null || !mDownloadingThread.isAlive()) {
+    if(!isUpdatingData()) {
       mDownloadingThread = new Thread("TV data update") {
         public void run() {
           onDownloadStart();
@@ -2501,7 +2501,7 @@ public class MainFrame extends JFrame implements DateListener,DropTargetListener
             String msg = LOCALIZER.msg("error.3", "An unexpected error occurred during update.");
             ErrorHandler.handle(msg, t);
           } finally {
-            final Thread t = new Thread() {
+            final Thread t = new Thread("HANDLING UPDATIN DATA") {
               @Override
               public void run() {
                 SwingUtilities.invokeLater(() -> {
@@ -2563,7 +2563,8 @@ public class MainFrame extends JFrame implements DateListener,DropTargetListener
    * @param reason The reason for initiating the download
    */
   synchronized public void updateTvData(final int numberOfDays, final String reason) {
-    if (mIsAskingUpdate) {
+    System.out.println("updateTvData");
+    if (mIsAskingUpdate || isUpdatingData() || TVBrowser.isWaitingForUpdateStart()) {
       return;
     }
     if (TvDataUpdater.getInstance().isDownloading()) {

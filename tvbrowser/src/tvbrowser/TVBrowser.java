@@ -37,6 +37,8 @@ import java.awt.Insets;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.WindowAdapter;
@@ -1444,8 +1446,8 @@ public class TVBrowser {
   private static void initializeAutomaticDownload() {
     if (!Settings.propShowAssistant.getBoolean()) {
       SwingUtilities.invokeLater(() -> {
-        boolean automaticDownloadStarted = handleAutomaticDownload(-1);
-
+        boolean automaticDownloadStarted = handleAutomaticDownload(0);
+        
         boolean dataAvailable = TvDataBase.getInstance().dataAvailable(new Date());
         if (!automaticDownloadStarted && (! dataAvailable) && (ChannelList.getNumberOfSubscribedChannels() > 0)) {
           mainFrame.askForDataUpdateNoDataAvailable();
@@ -1601,23 +1603,33 @@ public class TVBrowser {
       final long timerStart = Calendar.getInstance().getTimeInMillis();
       if(mAutoDownloadWaitingTimer == null) {
         mAutoDownloadWaitingTimer = new Timer(1000,
-          e -> {try {
-            int seconds = (int) ((Calendar.getInstance().getTimeInMillis() - timerStart) / 1000.0);
-            seconds = (result.getResultForIndex(1) ? 40 : Settings.propAutoDownloadWaitingTime.getShort()) - seconds;
-            
-            if (seconds <= 0) {
-              mAutoDownloadWaitingTimer.stop();
-              mainFrame.getStatusBarLabel().setText("");
-              performAutomaticDownload(result);
-            } else if(mainFrame.isUpdatingData()){
-              mAutoDownloadWaitingTimer.stop();
-              mainFrame.getStatusBarLabel().setText("");
-            } else {
-              mainFrame.getStatusBarLabel().setText(
-                  LOCALIZER.msg("downloadwait",
-                      "Automatic download starts in {0} seconds.", seconds));
-            }}catch(Throwable t) {t.printStackTrace();}
-          }
+            new ActionListener() {
+              private boolean mIsProcessing = false;
+              @Override
+              public void actionPerformed(ActionEvent e) {
+                if(!mIsProcessing) {
+                  mIsProcessing = true;
+                  try {
+                    int seconds = (int) ((Calendar.getInstance().getTimeInMillis() - timerStart) / 1000.0);
+                    seconds = (result.getResultForIndex(1) ? 40 : Settings.propAutoDownloadWaitingTime.getShort()) - seconds;
+                    
+                    if (seconds <= 0) {
+                      mAutoDownloadWaitingTimer.stop();
+                      mainFrame.getStatusBarLabel().setText("");
+                      performAutomaticDownload(result);
+                    } else if(mainFrame.isUpdatingData()){
+                      mAutoDownloadWaitingTimer.stop();
+                      mainFrame.getStatusBarLabel().setText("");
+                    } else {
+                      mainFrame.getStatusBarLabel().setText(
+                          LOCALIZER.msg("downloadwait",
+                              "Automatic download starts in {0} seconds.", seconds));
+                    }
+                  }catch(Throwable t) {t.printStackTrace();}
+                  mIsProcessing = false;
+                }
+              }
+            }
         );
         mAutoDownloadWaitingTimer.setRepeats(true);
         mAutoDownloadWaitingTimer.start();
@@ -1633,11 +1645,15 @@ public class TVBrowser {
     return result.getResultForIndex(0) && !result.getResultForIndex(1);
   }
   
+  public static boolean isWaitingForUpdateStart() {
+    return mAutoDownloadWaitingTimer != null && mAutoDownloadWaitingTimer.isRunning();
+  }
+  
   private static BooleanResult isAutomaticDownloadDateReached(int autoDownloadTime) {
     String autoDLType = Settings.propAutoDownloadType.getString();
     final Date lastDownloadDate = Settings.propLastDownloadDate.getDate();
     Date today = Date.getCurrentDate();
-
+    
     Date nextDownloadDate;
 
     if (autoDLType.equals("daily")) {
