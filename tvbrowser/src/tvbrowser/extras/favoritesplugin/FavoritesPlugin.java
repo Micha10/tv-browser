@@ -329,6 +329,10 @@ public class FavoritesPlugin {
       public void tvDataUpdateFinished() {
         // only update the favorites if new data was downloaded
         if (TvDataUpdater.getInstance().tvDataWasChanged()) {
+          if(mMangePanel != null) {
+            mMangePanel.invalidate();
+            mMangePanel.repaint();
+          }
           if(!mSendPluginsTable.isEmpty()) {
             sendToPlugins();
           }

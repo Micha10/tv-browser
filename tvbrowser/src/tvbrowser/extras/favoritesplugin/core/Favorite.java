@@ -456,7 +456,7 @@ public abstract class Favorite {
     return !(mBlackList != null && mBlackList.contains(prog)) && mPrograms.contains(prog);
   }
 
-  private Program[] filterByLimitations(Program[] progArr) {
+  private Program[] filterByLimitations(Program... progArr) {
     Exclusion[] globalExclusions = FavoritesPlugin.getInstance().getGlobalExclusions();
     Exclusion[] exclusions = new Exclusion[getExclusions().length + globalExclusions.length];
 
@@ -917,6 +917,23 @@ public abstract class Favorite {
     return channelArr;
   }
 
+  private boolean isLimitedByChannel(final Program p) {
+    boolean result = false;
+    
+    if(getLimitationConfiguration().isLimitedByChannel()) {
+      Channel[] chs = getLimitationConfiguration().getChannels();
+      
+      for(Channel ch : chs) {
+        if(ch.equals(p.getChannel())) {
+          result = true;
+          break;
+        }
+      }
+    }
+    
+    return result;
+  }
+  
   /**
    * Checks if this program matches the favorite.
    * if it does, it will be added to the favorite.
@@ -926,7 +943,7 @@ public abstract class Favorite {
    * @throws TvBrowserException Exception during search
    */
   public void tryToMatch(Program p) throws TvBrowserException {try {
-    if (matches(p) && filterByLimitations(new Program[] {p}).length > 0 && (!getLimitationConfiguration().isLimitedByChannel() || Arrays.asList(getChannels()).contains(p.getChannel()))) {
+    if (matches(p) && filterByLimitations(p).length > 0 && !isLimitedByChannel(p)) {
       boolean wasOnBlackList = false;
 
       if(mBlackList == null) {
@@ -961,13 +978,13 @@ public abstract class Favorite {
           }
         }
       }
-
+      
       if(!wasOnBlackList) {
         synchronized(mPrograms) {
           boolean newFound = false;
 
           int pos = mPrograms.indexOf(p);
-
+          
           ReminderInfo info = null;
 
           if (pos >= 0) {
@@ -995,7 +1012,7 @@ public abstract class Favorite {
               wasOnList = true;
             }
           }
-
+          
           if(pos < 0 && !wasOnList) {
             mPrograms.add(p);
             markProgram(p,mDefaultReminderMinutes);
@@ -1007,7 +1024,7 @@ public abstract class Favorite {
               newFound = true;
             }
           }
-
+          
           if (newFound) {
             ProgramReceiveTarget[] pluginArr = getForwardPlugins();
             FavoritesPlugin.getInstance().addProgramsForSending(pluginArr, mNewPrograms.toArray(new Program[0]));
