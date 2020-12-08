@@ -2563,7 +2563,6 @@ public class MainFrame extends JFrame implements DateListener,DropTargetListener
    * @param reason The reason for initiating the download
    */
   synchronized public void updateTvData(final int numberOfDays, final String reason) {
-    System.out.println("updateTvData");
     if (mIsAskingUpdate || isUpdatingData() || TVBrowser.isWaitingForUpdateStart()) {
       return;
     }

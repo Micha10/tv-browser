@@ -72,8 +72,11 @@ public interface Marker {
    */
   @Deprecated public int getMarkPriorityForProgram(Program p);
   
-  public int getMarkPriorityMaxForProgram(Program p);
+  default public int getMarkPriorityMaxForProgram(Program p) {
+    return getMarkPriorityForProgram(p);
+  }
   
-  public int[] getMarkPrioritiesForProgram(Program p);
-
+  default public int[] getMarkPrioritiesForProgram(Program p) {
+    return new int[] {getMarkPriorityForProgram(p)};
+  }
 }
