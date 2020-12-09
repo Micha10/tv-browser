@@ -56,7 +56,7 @@ import devplugin.ProgramFieldType;
 public class TvDataBase {
 
   /** The logger for this class. */
-  private static final Logger mLog = Logger
+  private static final Logger LOG = Logger
       .getLogger(TvDataBase.class.getName());
 
   private static final String INVENTORY_FILE = "tv-data-inventory.dat";
@@ -113,7 +113,7 @@ public class TvDataBase {
       try {
         mTvDataInventory.readData(file);
       } catch (Exception exc) {
-        mLog.log(Level.WARNING, "Loading TV data inventory failed", exc);
+        LOG.log(Level.WARNING, "Loading TV data inventory failed", exc);
       }
     }
   }
@@ -174,7 +174,7 @@ public class TvDataBase {
         Channel channel = getChannelFromFileName(key, channelArr, channelIdArr);
         if ((channel != null) && (date != null)) {
           if(date.compareTo(cutoff) >= 0) {
-            mLog.info("Day program was deleted by third party: " + date + " on "
+            LOG.info("Day program was deleted by third party: " + date + " on "
                 + channel.getName());
           }
           
@@ -220,7 +220,7 @@ public class TvDataBase {
             }
 
             // Inform the listeners
-            mLog.info("Day program was changed by third party: " + date + " on "
+            LOG.info("Day program was changed by third party: " + date + " on "
                 + channel.getName());
             //ChannelDayProgram newDayProg = getDayProgram(date, channel, false);
             OnDemandDayProgramFile newDayProg = getCacheEntry(date, channel, true, false);
@@ -273,14 +273,14 @@ public class TvDataBase {
 
   public void close(boolean log) {
     if (log) {
-      mLog.info("Closing TV data base");
+      LOG.info("Closing TV data base");
     }
     try {
       File file = new File(Settings.getUserSettingsDirName(), INVENTORY_FILE);
       mTvDataInventory.writeData(file);
     } catch (Exception exc) {
       if (log) {
-        mLog.log(Level.WARNING, "Closing database failed", exc);
+        LOG.log(Level.WARNING, "Closing database failed", exc);
       }
     }
   }
@@ -412,7 +412,7 @@ public class TvDataBase {
       if (restoredBackup) {
         msg += " The old version was restored.";
       }
-      mLog.log(Level.WARNING, msg, exc);
+      LOG.log(Level.WARNING, msg, exc);
     }
   }
 
@@ -591,7 +591,7 @@ public class TvDataBase {
     boolean verbose = Settings.propVerboseLogging.getBoolean();
     
     if(verbose) {
-      mLog.info(new java.util.Date(System.currentTimeMillis()) + ": CorrectDayProgramFile " + date + " " + channel);
+      LOG.info(new java.util.Date(System.currentTimeMillis()) + ": CorrectDayProgramFile " + date + " " + channel);
     }
     
     File file = getDayProgramFile(date, channel);
@@ -619,14 +619,14 @@ public class TvDataBase {
       mCurrentAddedDayProgram = checkProg.getDayProgram();
 
       if(verbose) {
-        mLog.info(new java.util.Date(System.currentTimeMillis()) + ": START calculate missing length");
+        LOG.info(new java.util.Date(System.currentTimeMillis()) + ": START calculate missing length");
       }
       
       boolean somethingChanged = calculateMissingLengths(mCurrentAddedDayProgram);
       
       if(verbose) {
-        mLog.info(new java.util.Date(System.currentTimeMillis()) + ": END calculate missing length");
-        mLog.info(new java.util.Date(System.currentTimeMillis()) + ": FIRE DAY PROGRAM ADDED");
+        LOG.info(new java.util.Date(System.currentTimeMillis()) + ": END calculate missing length");
+        LOG.info(new java.util.Date(System.currentTimeMillis()) + ": FIRE DAY PROGRAM ADDED");
       }
       
       // fire day program added to give plugins a chance to change programs
@@ -645,7 +645,7 @@ public class TvDataBase {
       }*/
       
       if(verbose) {
-        mLog.info(new java.util.Date(System.currentTimeMillis()) + ": SOMETHING CHANGED: " + somethingChanged);
+        LOG.info(new java.util.Date(System.currentTimeMillis()) + ": SOMETHING CHANGED: " + somethingChanged);
       }
       
       if (mCurrentAddedDayProgram.getAndResetChangedByPluginState() || somethingChanged) {
@@ -710,7 +710,7 @@ public class TvDataBase {
         }*/
       }
     } catch (Exception exc) {
-      mLog.log(Level.WARNING, "Loading program for " + channel + " from "
+      LOG.log(Level.WARNING, "Loading program for " + channel + " from "
           + date + " failed. The file will be deleted...", exc);
 
       file.delete();
@@ -735,7 +735,7 @@ public class TvDataBase {
 
       return progFile;
     } catch (Exception exc) {
-      mLog.log(Level.WARNING, "Loading program for " + channel + " from "
+      LOG.log(Level.WARNING, "Loading program for " + channel + " from "
           + date + " failed. The file will be deleted...", exc);
 
       file.delete();
@@ -847,7 +847,11 @@ public class TvDataBase {
     synchronized (mListenerList) {
       for (int i = 0; i < mListenerList.size(); i++) {
         TvDataBaseListener lst = mListenerList.get(i);
-        lst.dayProgramAdded(prog);
+        try {
+          lst.dayProgramAdded(prog);
+        }catch(Throwable t) {
+          LOG.severe("ERROR calling dayProgramAdded(MutableChannelDayProgram) on Listener: " + lst);
+        }
       }
     }
   }
@@ -856,7 +860,11 @@ public class TvDataBase {
     synchronized (mListenerList) {
       for (int i = 0; i < mListenerList.size(); i++) {
         TvDataBaseListener lst = mListenerList.get(i);
-        lst.dayProgramTouched(removedDayProgram,addedDayProgram);
+        try {
+          lst.dayProgramTouched(removedDayProgram,addedDayProgram);
+        }catch(Throwable t) {
+          LOG.severe("ERROR calling dayProgramTouched on Listener: " + lst);
+        }
       }
     }
   }
@@ -865,7 +873,11 @@ public class TvDataBase {
     synchronized (mListenerList) {
       for (int i = 0; i < mListenerList.size(); i++) {
         TvDataBaseListener lst = mListenerList.get(i);
-        lst.dayProgramAdded(prog);
+        try {
+          lst.dayProgramAdded(prog);
+        }catch(Throwable t) {
+          LOG.severe("ERROR calling fireDayProgramAdded(ChannelDayProgram) on Listener: " + lst);
+        }
       }
     }
   }
@@ -874,7 +886,11 @@ public class TvDataBase {
     synchronized (mListenerList) {
       for (int i = 0; i < mListenerList.size(); i++) {
         TvDataBaseListener lst = mListenerList.get(i);
-        lst.dayProgramDeleted(prog);
+        try {
+          lst.dayProgramDeleted(prog);
+        }catch(Throwable t) {
+          LOG.severe("ERROR calling fireDayProgramDeleted on Listener: " + lst);
+        }
       }
     }
   }
@@ -1088,7 +1104,7 @@ public class TvDataBase {
       ChannelDayKey key = keys.nextElement();
       
       if(verbose) {
-        mLog.info(new java.util.Date(System.currentTimeMillis()) + ": SEND TO PLUGINS " + key);
+        LOG.info(new java.util.Date(System.currentTimeMillis()) + ": SEND TO PLUGINS " + key);
       }
       
       UpdateData updateData = mSendToTvDataListener.remove(key);
