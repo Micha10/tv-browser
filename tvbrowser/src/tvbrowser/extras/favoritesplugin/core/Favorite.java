@@ -918,14 +918,14 @@ public abstract class Favorite {
   }
 
   private boolean isLimitedByChannel(final Program p) {
-    boolean result = false;
+    boolean result = getLimitationConfiguration().isLimitedByChannel();
     
-    if(getLimitationConfiguration().isLimitedByChannel()) {
+    if(result) {
       Channel[] chs = getLimitationConfiguration().getChannels();
       
       for(Channel ch : chs) {
         if(ch.equals(p.getChannel())) {
-          result = true;
+          result = false;
           break;
         }
       }
