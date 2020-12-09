@@ -82,7 +82,7 @@ public class LimitationConfiguration {
         }
       }
       
-      mChannelArr = list.toArray(new Channel[list.size()]);
+      mChannelArr = list.toArray(new Channel[0]);
     }
 
     mDayLimit = in.readInt();
@@ -137,10 +137,21 @@ public class LimitationConfiguration {
     mIsLimitedByChannel = true;
   }
 
+  /**
+   * Gets the channels that are acceptable.
+   * 
+   * @return The channels results are limited to or <code>null</code>
+   * if there is no channel limitation.
+   */
   public Channel[] getChannels() {
     return mChannelArr;
   }
 
+  /**
+   * Gets if only programs on certain channels are to be accepted.
+   * 
+   * @return <code>true</code> if results are limited by channels.
+   */
   public boolean isLimitedByChannel() {
     return mIsLimitedByChannel;
   }
