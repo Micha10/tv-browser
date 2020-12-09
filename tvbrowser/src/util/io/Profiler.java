@@ -34,7 +34,7 @@ import java.util.logging.Logger;
  * @author Til Schneider, www.murfman.de
  * @deprecated since 3.0
  */
-@Deprecated
+@Deprecated(since="3.0")
 public class Profiler {
 
   /** The logger for this class. */

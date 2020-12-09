@@ -142,7 +142,7 @@ public class ContextMenuManager {
       return mContextMenuLeftSingleClickTable.get(cleanModifierEx);
     }
     else if(SwingUtilities.isMiddleMouseButton(e)) {
-      return mContextMenuMiddleSingleClickTable.get(cleanModifierEx & ~MouseEvent.ALT_DOWN_MASK);
+      return mContextMenuMiddleSingleClickTable.get(cleanModifierEx);
     }
     
     return null;

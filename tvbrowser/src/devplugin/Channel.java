@@ -666,7 +666,7 @@ public class Channel implements Comparable<Channel> {
    * @return The country of this channel.
    * @deprecated since 3.2.1 use {@link #getBaseCountry()} instead.
    */
-  @Deprecated public String getCountry() {
+  @Deprecated(since="3.2.1") public String getCountry() {
     return getBaseCountry();
   }
   

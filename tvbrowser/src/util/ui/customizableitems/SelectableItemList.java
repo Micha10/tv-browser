@@ -276,7 +276,7 @@ public class SelectableItemList<E> extends JPanel implements ListSelectionListen
    * @return Current selected Items in the List
    * @deprecated since 3.4.5 use {@link #getListSelectionList()} instead
    */
-  @Deprecated public Object[] getListSelection() {
+  @Deprecated(since="3.4.5") public Object[] getListSelection() {
     final List<SelectableItem<E>> list = mList.getSelectedValuesList();
     
     Object[] items = new Object[list.size()];
@@ -343,7 +343,7 @@ public class SelectableItemList<E> extends JPanel implements ListSelectionListen
    * @return The selected Objects
    * @deprecated since 3.4.5 use {@link #getSelectionList()} instead.
    */
-  @Deprecated public Object[] getSelection() {
+  @Deprecated(since="3.4.5") public Object[] getSelection() {
     final List<E> selection = mListModel.getSelectionList();
     return selection.toArray();
   }

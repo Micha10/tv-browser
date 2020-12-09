@@ -1032,7 +1032,7 @@ public class SystemTray {
    * @param pluginsMenu
    * @param plugins
    */
-  @Deprecated
+  @Deprecated(since="way before 4.2.2")
   private static void updatePluginsMenu(JMenu pluginsMenu, PluginProxy[] plugins) {
     pluginsMenu.removeAll();
 

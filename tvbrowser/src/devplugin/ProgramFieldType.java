@@ -83,28 +83,28 @@ public class ProgramFieldType {
    * unknown field format, should not occur
    * @deprecated since 3.4.5, use {@link #FORMAT_UNKNOWN}
    */
-  @Deprecated public static final int UNKNOWN_FORMAT = FORMAT_UNKNOWN;
+  @Deprecated(since="3.4.5") public static final int UNKNOWN_FORMAT = FORMAT_UNKNOWN;
   
   /**
    * program field format for binary fields (like pictures)
    * @deprecated since 3.4.5, use {@link #FORMAT_BINARY}
    */
-  @Deprecated public static final int BINARY_FORMAT = FORMAT_BINARY;
+  @Deprecated(since="3.4.5") public static final int BINARY_FORMAT = FORMAT_BINARY;
   /**
    * program field format for strings
    * @deprecated since 3.4.5, use {@link #FORMAT_TEXT}
    */
-  @Deprecated public static final int TEXT_FORMAT = FORMAT_TEXT;
+  @Deprecated(since="3.4.5") public static final int TEXT_FORMAT = FORMAT_TEXT;
   /**
    * program field format for numbers
    * @deprecated since 3.4.5, use {@link #FORMAT_INT}
    */
-  @Deprecated public static final int INT_FORMAT = FORMAT_INT;
+  @Deprecated(since="3.4.5") public static final int INT_FORMAT = FORMAT_INT;
   /**
    * program field format for times (in numbers after midnight)
    * @deprecated since 3.4.5, use {@link #FORMAT_TIME}
    */
-  @Deprecated public static final int TIME_FORMAT = FORMAT_TIME;
+  @Deprecated(since="3.4.5") public static final int TIME_FORMAT = FORMAT_TIME;
   
   /**
    * number of Object fields (TEXT and BINARY format)

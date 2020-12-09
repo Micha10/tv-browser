@@ -811,12 +811,12 @@ public class JavaPluginProxy extends AbstractPluginProxy {
   }
 
   @Override
-  @Deprecated public boolean receivePrograms(Program[] programArr, ProgramReceiveTarget receiveTarget) {
+  @Deprecated(since="4.2.2") public boolean receivePrograms(Program[] programArr, ProgramReceiveTarget receiveTarget) {
     return doReceivePrograms(ProgramReceiveTarget.TYPE_EVENT_UNDIFINED, programArr, receiveTarget);
   }
 
   @Override
-  @Deprecated public boolean receiveValues(String[] values, ProgramReceiveTarget receiveTarget) {
+  @Deprecated(since="4.2.2") public boolean receiveValues(String[] values, ProgramReceiveTarget receiveTarget) {
     return doReceiveValues(ProgramReceiveTarget.TYPE_EVENT_UNDIFINED, values, receiveTarget);
   }
 

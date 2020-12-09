@@ -50,7 +50,7 @@ import java.util.Locale;
  * @author Til Schneider, www.murfman.de
  * @deprecated since 4.2.2 use {@link #util.i18n.Localizer} instead.
  */
-@Deprecated public class Localizer {
+@Deprecated(since="4.2.2") public class Localizer {
   /** Contains for a Class (key) a Localizer (value). */
   private static final HashMap<Class<?>, Localizer> mLocalizerCache = new HashMap<Class<?>, Localizer>();
   

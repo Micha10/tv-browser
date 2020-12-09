@@ -37,7 +37,7 @@ import devplugin.ProgramFilter;
  * @since 2.2
  * @deprecated since 3.3.4 use {@link MarkedProgramsMap} instead.
  */
-@Deprecated public class MarkedProgramsList {
+@Deprecated(since="3.4.4") public class MarkedProgramsList {
 
   private static MarkedProgramsList mInstance;
 
@@ -49,7 +49,7 @@ import devplugin.ProgramFilter;
    * @return The instance of this class.
    * @deprecated since 3.3.4 use {@link MarkedProgramsMap#getInstance()} instead.
    */
-  @Deprecated public static synchronized MarkedProgramsList getInstance() {
+  @Deprecated(since="3.4.4") public static synchronized MarkedProgramsList getInstance() {
     if(mInstance == null) {
       new MarkedProgramsList();
     }
@@ -60,7 +60,7 @@ import devplugin.ProgramFilter;
    * @return The marked programs.
    * @deprecated since 3.3.4 use {@link MarkedProgramsMap#getMarkedPrograms()} instead.
    */
-  @Deprecated public Program[] getMarkedPrograms() {
+  @Deprecated(since="3.4.4") public Program[] getMarkedPrograms() {
     return MarkedProgramsMap.getInstance().getMarkedPrograms();
   }
 
@@ -72,7 +72,7 @@ import devplugin.ProgramFilter;
    * @return The time sorted programs for the tray.
    * @deprecated since 3.3.4 use {@link MarkedProgramsMap#getTimeSortedProgramsForTray(ProgramFilter, int, int, boolean)}
    */
-  @Deprecated public Program[] getTimeSortedProgramsForTray(ProgramFilter filter, int markPriority, int numberOfPrograms, boolean includeOnAirPrograms) {
+  @Deprecated(since="3.4.4") public Program[] getTimeSortedProgramsForTray(ProgramFilter filter, int markPriority, int numberOfPrograms, boolean includeOnAirPrograms) {
     return MarkedProgramsMap.getInstance().getTimeSortedProgramsForTray(filter, markPriority, numberOfPrograms, includeOnAirPrograms);
   }
 
@@ -86,7 +86,7 @@ import devplugin.ProgramFilter;
    * @return The time sorted programs for the tray.
    * @deprecated since 3.3.4 use {@link MarkedProgramsMap#getTimeSortedProgramsForTray(ProgramFilter, int, int, boolean, boolean, ArrayList)} instead.
    */
-  @Deprecated public Program[] getTimeSortedProgramsForTray(ProgramFilter filter, int markPriority, int numberOfPrograms, boolean includeOnAirPrograms, boolean useTrayFilterSettings, ArrayList<Program> excludePrograms) {
+  @Deprecated(since="3.4.4")public Program[] getTimeSortedProgramsForTray(ProgramFilter filter, int markPriority, int numberOfPrograms, boolean includeOnAirPrograms, boolean useTrayFilterSettings, ArrayList<Program> excludePrograms) {
     return MarkedProgramsMap.getInstance().getTimeSortedProgramsForTray(filter, markPriority, numberOfPrograms, includeOnAirPrograms, useTrayFilterSettings, excludePrograms);
   }
 
@@ -94,5 +94,5 @@ import devplugin.ProgramFilter;
    * Does nothing anymore.
    * @deprecated since 3.3.4 use {@link MarkedProgramsMap#revalidatePrograms()} instead.
    */
-  @Deprecated public void revalidatePrograms() {}
+  @Deprecated(since="3.4.4") public void revalidatePrograms() {}
 }

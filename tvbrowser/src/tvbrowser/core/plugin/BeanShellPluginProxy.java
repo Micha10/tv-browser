@@ -349,13 +349,13 @@ public class BeanShellPluginProxy extends AbstractPluginProxy {
     }
 
     @Override
-    @Deprecated public boolean receivePrograms(Program[] programArr, ProgramReceiveTarget receiveTarget) {
+    @Deprecated(since="4.2.2") public boolean receivePrograms(Program[] programArr, ProgramReceiveTarget receiveTarget) {
       // TODO Auto-generated method stub
       return false;
     }
 
     @Override
-    @Deprecated public boolean receiveValues(String[] values, ProgramReceiveTarget receiveTarget) {
+    @Deprecated(since="4.2.2") public boolean receiveValues(String[] values, ProgramReceiveTarget receiveTarget) {
       // TODO Auto-generated method stub
       return false;
     }

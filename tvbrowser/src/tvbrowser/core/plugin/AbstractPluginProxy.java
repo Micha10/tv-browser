@@ -935,7 +935,7 @@ public abstract class AbstractPluginProxy implements PluginProxy, ContextMenuIf 
    * @since 2.5.1
    * @deprecated since 4.2.2
    */
-  @Deprecated public int getMarkPriorityForProgram(Program p) {
+  @Deprecated(since="4.2.2") public int getMarkPriorityForProgram(Program p) {
     return getMarkPriorityMaxForProgram(p);
   }
   

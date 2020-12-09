@@ -329,7 +329,7 @@ public final class ProgramReceiveTarget implements Comparable<ProgramReceiveTarg
    * @since 3.0
    * @deprecated since 4.2.2 use {@link #receivePrograms(int, Program[])} instead.
    */
-  @Deprecated public void receivePrograms(Program[] programs) {
+  @Deprecated(since="4.2.2") public void receivePrograms(Program[] programs) {
     receivePrograms(TYPE_EVENT_UNDIFINED, programs);
   }
   

@@ -107,7 +107,7 @@ public class ReminderPluginProxy extends AbstractInternalPluginProxy implements 
   }
 
   @Override
-  @Deprecated public int getMarkPriorityForProgram(Program p) {
+  @Deprecated(since="4.2.2") public int getMarkPriorityForProgram(Program p) {
     return getMarkPriorityMaxForProgram(p);
   }
 
@@ -136,7 +136,7 @@ public class ReminderPluginProxy extends AbstractInternalPluginProxy implements 
   }
 
   @Override
-  @Deprecated public boolean receiveValues(String[] values,
+  @Deprecated(since="4.2.2") public boolean receiveValues(String[] values,
       ProgramReceiveTarget receiveTarget) {
     return false;
   }

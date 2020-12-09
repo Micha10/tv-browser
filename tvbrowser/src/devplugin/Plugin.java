@@ -76,19 +76,19 @@ abstract public class Plugin implements Marker, ContextMenuIf, ProgramReceiveIf 
   public static final String CATEGORY_OTHER = "misc";
   
   /** @deprecated since 3.4.4 use {@link #CATEGORY_ALL} instead */
-  @Deprecated public static final String ALL_CATEGORY = CATEGORY_ALL;
+  @Deprecated(since="3.4.4") public static final String ALL_CATEGORY = CATEGORY_ALL;
   /** @deprecated since 3.4.4 use {@link #CATEGORY_REMOTE_CONTROL_SOFTWARE} instead */
-  @Deprecated public static final String REMOTE_CONTROL_SOFTWARE_CATEGORY = CATEGORY_REMOTE_CONTROL_SOFTWARE;
+  @Deprecated(since="3.4.4") public static final String REMOTE_CONTROL_SOFTWARE_CATEGORY = CATEGORY_REMOTE_CONTROL_SOFTWARE;
   /** @deprecated since 3.4.4 use {@link #CATEGORY_REMOTE_CONTROL_HARDWARE} instead */
-  @Deprecated public static final String REMOTE_CONTROL_HARDWARE_CATEGORY = CATEGORY_REMOTE_CONTROL_HARDWARE;
+  @Deprecated(since="3.4.4") public static final String REMOTE_CONTROL_HARDWARE_CATEGORY = CATEGORY_REMOTE_CONTROL_HARDWARE;
   /** @deprecated since 3.4.4 use {@link #CATEGORY_ADDITONAL_DATA_SERVICE_SOFTWARE} instead */
-  @Deprecated public static final String ADDITONAL_DATA_SERVICE_SOFTWARE_CATEGORY = CATEGORY_ADDITONAL_DATA_SERVICE_SOFTWARE;
+  @Deprecated(since="3.4.4") public static final String ADDITONAL_DATA_SERVICE_SOFTWARE_CATEGORY = CATEGORY_ADDITONAL_DATA_SERVICE_SOFTWARE;
   /** @deprecated since 3.4.4 use {@link #CATEGORY_ADDITONAL_DATA_SERVICE_HARDWARE} instead */
-  @Deprecated public static final String ADDITONAL_DATA_SERVICE_HARDWARE_CATEGORY = CATEGORY_ADDITONAL_DATA_SERVICE_HARDWARE;
+  @Deprecated(since="3.4.4") public static final String ADDITONAL_DATA_SERVICE_HARDWARE_CATEGORY = CATEGORY_ADDITONAL_DATA_SERVICE_HARDWARE;
   /** @deprecated since 3.4.4 use {@link #CATEGORY_RATINGS} instead */
-  @Deprecated public static final String RATINGS_CATEGORY = CATEGORY_RATINGS;
+  @Deprecated(since="3.4.4") public static final String RATINGS_CATEGORY = CATEGORY_RATINGS;
   /** @deprecated since 3.4.4 use {@link #CATEGORY_OTHER} instead */
-  @Deprecated public static final String OTHER_CATEGORY = CATEGORY_OTHER;
+  @Deprecated(since="3.4.4") public static final String OTHER_CATEGORY = CATEGORY_OTHER;
 
   /**
    * logger for this class.
@@ -853,7 +853,7 @@ abstract public class Plugin implements Marker, ContextMenuIf, ProgramReceiveIf 
   /**
    * @deprecated since 4.2.2 use {@link #receivePrograms(int, Program[], ProgramReceiveTarget)} instead.
    */
-  @Deprecated public boolean receivePrograms(Program[] programArr, ProgramReceiveTarget receiveTarget) {
+  @Deprecated(since="4.2.2") public boolean receivePrograms(Program[] programArr, ProgramReceiveTarget receiveTarget) {
     return false;
   }
 
@@ -889,7 +889,7 @@ abstract public class Plugin implements Marker, ContextMenuIf, ProgramReceiveIf 
    * @since 2.7
    * @deprecated since 4.2.2 use {@link #receiveValues(int, String[], ProgramReceiveTarget)} instead
    */
-  @Deprecated public boolean receiveValues(String[] values, ProgramReceiveTarget receiveTarget) {
+  @Deprecated(since="4.2.2") public boolean receiveValues(String[] values, ProgramReceiveTarget receiveTarget) {
     return false;
   }
 
@@ -956,7 +956,7 @@ abstract public class Plugin implements Marker, ContextMenuIf, ProgramReceiveIf 
    * @since 2.5.1
    * @deprecated since 4.2.2 use {@link #getMarkPriorityMaxForProgram(Program)} instead.
    */
-  @Deprecated public int getMarkPriorityForProgram(Program p) {
+  @Deprecated(since="4.2.2") public int getMarkPriorityForProgram(Program p) {
     return Settings.propProgramPanelUsedDefaultMarkPriority.getInt();
   }
   
@@ -1107,7 +1107,7 @@ abstract public class Plugin implements Marker, ContextMenuIf, ProgramReceiveIf 
    * @deprecated since 3.3.3
    * Use {@link #handleTvDataUpdateStarted(Date)} instead
    */
-  @Deprecated public void handleTvDataUpdateStarted() {
+  @Deprecated(since="3.3.3") public void handleTvDataUpdateStarted() {
     
   }
   

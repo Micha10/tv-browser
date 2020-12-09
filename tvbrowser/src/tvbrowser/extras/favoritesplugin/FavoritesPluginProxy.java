@@ -110,7 +110,7 @@ public class FavoritesPluginProxy extends AbstractInternalPluginProxy implements
   }
   
   @Override
-  @Deprecated public int getMarkPriorityForProgram(Program p) {
+  @Deprecated(since="4.2.2") public int getMarkPriorityForProgram(Program p) {
     return getMarkPriorityMaxForProgram(p);
   }
 

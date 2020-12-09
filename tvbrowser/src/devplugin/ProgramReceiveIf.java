@@ -56,7 +56,7 @@ public interface ProgramReceiveIf extends Comparable<ProgramReceiveIf> {
    * @since 2.5
    * @deprecated since 4.2.2
    */
-  @Deprecated public boolean receivePrograms(Program[] programArr, ProgramReceiveTarget receiveTarget);
+  @Deprecated(since="4.2.2") public boolean receivePrograms(Program[] programArr, ProgramReceiveTarget receiveTarget);
 
   /**
    * Method called when programs are send to this plugin.
@@ -97,7 +97,7 @@ public interface ProgramReceiveIf extends Comparable<ProgramReceiveIf> {
    * @since 2.7
    * @deprecated since 4.2.2
    */
-  @Deprecated public boolean receiveValues(String[] values, ProgramReceiveTarget receiveTarget);
+  @Deprecated(since="4.2.2") public boolean receiveValues(String[] values, ProgramReceiveTarget receiveTarget);
   
   /**
    * Receives a list of Strings from another plugin with a target.

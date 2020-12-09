@@ -1070,7 +1070,7 @@ public class MutableProgram implements Program {
    * @since 2.5.1
    * @deprecated since 4.2.2
    */
-  public int getMarkPriority() {
+   @Deprecated(since="4.2.2") public int getMarkPriority() {
     return MarkedProgramsMap.getInstance().getMarkPriorityMaxForProgram(this);
   }
 

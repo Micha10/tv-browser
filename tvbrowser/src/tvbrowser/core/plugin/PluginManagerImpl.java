@@ -674,12 +674,12 @@ public class PluginManagerImpl implements PluginManager {
   }
   
   /** @deprecated since 3.3.1 Use {@link util.programmouseevent.ProgramMouseEventHandler} and/or {@link util.programkeyevent.ProgramKeyEventHandler} instead. */
-  @Deprecated public void handleProgramSingleClick(Program program) {
+  @Deprecated(since="3.3.1") public void handleProgramSingleClick(Program program) {
     handleProgramSingleClick(program, null);
   }
   
   /** @deprecated since 3.3.1 Use {@link util.programmouseevent.ProgramMouseEventHandler} and/or {@link util.programkeyevent.ProgramKeyEventHandler} instead. */
-  @Deprecated public void handleProgramSingleClick(Program program, ContextMenuIf caller) {
+  @Deprecated(since="3.3.1") public void handleProgramSingleClick(Program program, ContextMenuIf caller) {
     ContextMenuMouseActionSetting[] leftSingleSetting = Settings.propLeftSingleClickIfArray.getContextMenuMouseActionArray();
     
     if (program == null || leftSingleSetting == null || leftSingleSetting.length == 0) {
@@ -707,7 +707,7 @@ public class PluginManagerImpl implements PluginManager {
   }
 
   /** @deprecated since 3.3.1 Use {@link util.programmouseevent.ProgramMouseEventHandler} and/or {@link util.programkeyevent.ProgramKeyEventHandler} instead. */
-  @Deprecated public void handleProgramSingleCtrlClick(Program program, ContextMenuIf caller) {
+  @Deprecated(since="3.3.1") public void handleProgramSingleCtrlClick(Program program, ContextMenuIf caller) {
     ContextMenuMouseActionSetting[] leftSingleSetting = Settings.propLeftSingleClickIfArray.getContextMenuMouseActionArray();
     
     if (program == null || leftSingleSetting == null || leftSingleSetting.length < 2) {
@@ -746,7 +746,7 @@ public class PluginManagerImpl implements PluginManager {
    * @since 1.1
    * @deprecated since 3.3.1 Use {@link util.programmouseevent.ProgramMouseEventHandler} and/or {@link util.programkeyevent.ProgramKeyEventHandler} instead.
    */
-  @Deprecated public void handleProgramDoubleClick(Program program) {
+  @Deprecated(since="3.3.1") public void handleProgramDoubleClick(Program program) {
     handleProgramDoubleClick(program, null);
   }
 
@@ -761,7 +761,7 @@ public class PluginManagerImpl implements PluginManager {
    * @since 1.1
    * @deprecated since 3.3.1 Use {@link util.programmouseevent.ProgramMouseEventHandler} and/or {@link util.programkeyevent.ProgramKeyEventHandler} instead.
    */
-  @Deprecated public void handleProgramDoubleClick(Program program, ContextMenuIf caller) {
+  @Deprecated(since="3.3.1") public void handleProgramDoubleClick(Program program, ContextMenuIf caller) {
     ContextMenuMouseActionSetting[] leftDoubleSetting = Settings.propLeftDoubleClickIfArray.getContextMenuMouseActionArray();
     
     if (program == null || leftDoubleSetting == null || leftDoubleSetting.length == 0) {
@@ -801,7 +801,7 @@ public class PluginManagerImpl implements PluginManager {
    * @since 1.1
    * @deprecated since 3.3.1 Use {@link util.programmouseevent.ProgramMouseEventHandler} and/or {@link util.programkeyevent.ProgramKeyEventHandler} instead.
    */
-  @Deprecated public void handleProgramMiddleClick(Program program) {
+  @Deprecated(since="3.3.1") public void handleProgramMiddleClick(Program program) {
     handleProgramMiddleClick(program, null);
   }
 
@@ -817,7 +817,7 @@ public class PluginManagerImpl implements PluginManager {
    * @since 1.1
    * @deprecated since 3.3.1 Use {@link util.programmouseevent.ProgramMouseEventHandler} and/or {@link util.programkeyevent.ProgramKeyEventHandler} instead.
    */
-  @Deprecated public void handleProgramMiddleClick(Program program, ContextMenuIf caller) {
+  @Deprecated(since="3.3.1") public void handleProgramMiddleClick(Program program, ContextMenuIf caller) {
     ContextMenuMouseActionSetting[] middleLeftSetting = Settings.propMiddleSingleClickIfArray.getContextMenuMouseActionArray();
     
     if (program == null || middleLeftSetting == null || middleLeftSetting.length == 0) {
@@ -856,7 +856,7 @@ public class PluginManagerImpl implements PluginManager {
    * @since 3.0
    * @deprecated since 3.3.1 Use {@link util.programmouseevent.ProgramMouseEventHandler} and/or {@link util.programkeyevent.ProgramKeyEventHandler} instead.
    */
-  @Deprecated public void handleProgramMiddleDoubleClick(Program program) {
+  @Deprecated(since="3.3.1") public void handleProgramMiddleDoubleClick(Program program) {
     handleProgramMiddleDoubleClick(program, null);
   }
   
@@ -871,7 +871,7 @@ public class PluginManagerImpl implements PluginManager {
    * @since 3.0
    * @deprecated since 3.3.1 Use {@link util.programmouseevent.ProgramMouseEventHandler} and/or {@link util.programkeyevent.ProgramKeyEventHandler} instead.
    */
-  @Deprecated public void handleProgramMiddleDoubleClick(Program program, ContextMenuIf caller) {
+  @Deprecated(since="3.3.1") public void handleProgramMiddleDoubleClick(Program program, ContextMenuIf caller) {
     ContextMenuMouseActionSetting[] middleDoubleSetting = Settings.propMiddleDoubleClickIfArray.getContextMenuMouseActionArray();
     
     if (program == null || middleDoubleSetting == null || middleDoubleSetting.length == 0) {

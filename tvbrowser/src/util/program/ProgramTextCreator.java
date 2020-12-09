@@ -98,7 +98,7 @@ public class ProgramTextCreator {
    * @return The HTML String.
    * @deprecated since 3.4.5 use {@link #createInfoText(Program, ExtendedHTMLDocument, Configuration)} instead.
    */
-  @Deprecated public static String createInfoText(Program prog, ExtendedHTMLDocument doc,
+  @Deprecated(since="3.4.5") public static String createInfoText(Program prog, ExtendedHTMLDocument doc,
       Object[] fieldArr, Font tFont, Font bFont, boolean showImage, boolean showHelpLinks) {
     return createInfoText(prog,doc,fieldArr,tFont,bFont,new ProgramPanelSettings(showImage ? ProgramPanelSettings.SHOW_PICTURES_EVER : ProgramPanelSettings.SHOW_PICTURES_NEVER, -1, -1, false, true, 10),showHelpLinks, 100);
   }
@@ -124,7 +124,7 @@ public class ProgramTextCreator {
    * @since 2.2.2
    * @deprecated since 3.4.5 use {@link #createInfoText(Program, ExtendedHTMLDocument, Configuration)} instead.
    */
-  @Deprecated public static String createInfoText(Program prog, ExtendedHTMLDocument doc,
+  @Deprecated(since="3.4.5") public static String createInfoText(Program prog, ExtendedHTMLDocument doc,
       Object[] fieldArr, Font tFont, Font bFont, ProgramPanelSettings settings,
       boolean showHelpLinks, int zoom) {
     return createInfoText(prog,doc,fieldArr,tFont,bFont,settings,showHelpLinks, zoom, true);
@@ -151,7 +151,7 @@ public class ProgramTextCreator {
    * @since 2.6
    * @deprecated since 3.4.5 use {@link #createInfoText(Program, ExtendedHTMLDocument, Configuration)} instead.
    */
-  @Deprecated public static String createInfoText(Program prog, ExtendedHTMLDocument doc,
+  @Deprecated(since="3.4.5") public static String createInfoText(Program prog, ExtendedHTMLDocument doc,
       Object[] fieldArr, Font tFont, Font bFont, PluginPictureSettings settings,
       boolean showHelpLinks, int zoom) {
     return createInfoText(prog,doc,fieldArr,tFont,bFont,new ProgramPanelSettings(settings,false),showHelpLinks, zoom, true);
@@ -179,7 +179,7 @@ public class ProgramTextCreator {
    * @since 2.5.3
    * @deprecated since 3.4.5 use {@link #createInfoText(Program, ExtendedHTMLDocument, Configuration)} instead.
    */
-  @Deprecated public static String createInfoText(Program prog, ExtendedHTMLDocument doc,
+  @Deprecated(since="3.4.5") public static String createInfoText(Program prog, ExtendedHTMLDocument doc,
       Object[] fieldArr, Font tFont, Font bFont, ProgramPanelSettings settings,
       boolean showHelpLinks, int zoom, boolean showPluginIcons) {
     return createInfoText(prog, doc, fieldArr, tFont, bFont, settings,
@@ -211,7 +211,7 @@ public class ProgramTextCreator {
   * @since 3.0
    * @deprecated since 3.4.5 use {@link #createInfoText(Program, ExtendedHTMLDocument, Configuration)} instead.
   */
-  @Deprecated public static String createInfoText(Program prog, ExtendedHTMLDocument doc,
+  @Deprecated(since="3.4.5") public static String createInfoText(Program prog, ExtendedHTMLDocument doc,
      Object[] fieldArr, Font tFont, Font bFont, ProgramPanelSettings settings,
      boolean showHelpLinks, int zoom, boolean showPluginIcons,
      boolean showPersonLinks) {
@@ -244,7 +244,7 @@ public class ProgramTextCreator {
    * @since 3.1
    * @deprecated since 3.4.5 use {@link #createInfoText(Program, ExtendedHTMLDocument, Configuration)} instead.
    */
-  @Deprecated public static String createInfoText(Program prog, ExtendedHTMLDocument doc,
+  @Deprecated(since="3.4.5") public static String createInfoText(Program prog, ExtendedHTMLDocument doc,
       Object[] fieldArr, Font tFont, Font bFont, ProgramPanelSettings settings,
       boolean showHelpLinks, int zoom, boolean showPluginIcons,
       boolean showPersonLinks, boolean useThemeColors) {
