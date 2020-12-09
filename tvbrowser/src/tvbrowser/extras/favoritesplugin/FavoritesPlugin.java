@@ -315,6 +315,10 @@ public class FavoritesPlugin {
 
     TvDataUpdater.getInstance().addTvDataUpdateListener(new TvDataUpdateListener() {
       public void tvDataUpdateStarted(devplugin.Date until) {
+        if(mThreadPool == null) {
+          mThreadPool = Executors.newFixedThreadPool(Math.max(Runtime.getRuntime().availableProcessors(),3));
+        }
+        
         mHasRightToSave = false;
         mSendPluginsTable.clear();
         
