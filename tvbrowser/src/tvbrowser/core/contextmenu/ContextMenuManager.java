@@ -142,7 +142,14 @@ public class ContextMenuManager {
       return mContextMenuLeftSingleClickTable.get(cleanModifierEx);
     }
     else if(SwingUtilities.isMiddleMouseButton(e)) {
-      return mContextMenuMiddleSingleClickTable.get(cleanModifierEx);
+      ContextMenuAction c = mContextMenuMiddleSingleClickTable.get(cleanModifierEx);
+      
+      if(c == null) {
+        // on middle mouse button ALT is always down, so remove ALT from modifiers
+        c = mContextMenuMiddleSingleClickTable.get(cleanModifierEx & ~MouseEvent.ALT_DOWN_MASK);
+      }
+      
+      return c;
     }
     
     return null;
@@ -189,7 +196,14 @@ public class ContextMenuManager {
       return mContextMenuLeftDoubleClickTable.get(cleanModifierEx);
     }
     else if(SwingUtilities.isMiddleMouseButton(e)) {
-      return mContextMenuMiddleDoubleClickTable.get(cleanModifierEx & ~MouseEvent.ALT_DOWN_MASK);
+      ContextMenuAction c = mContextMenuMiddleDoubleClickTable.get(cleanModifierEx);
+      
+      if(c == null) {
+        // on middle mouse button ALT is always down, so remove ALT from modifiers
+        c = mContextMenuMiddleDoubleClickTable.get(cleanModifierEx & ~MouseEvent.ALT_DOWN_MASK);
+      }
+      
+      return c;
     }
     
     return null;
