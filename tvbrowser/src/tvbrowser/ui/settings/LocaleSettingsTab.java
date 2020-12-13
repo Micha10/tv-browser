@@ -264,7 +264,7 @@ public class LocaleSettingsTab implements devplugin.SettingsTab {
     mInfoArea.setForeground(Color.RED);
     mInfoArea.setVisible(mSomethingChanged);
 
-    mRestartButton = new JButton(LookAndFeelSettingsTab.mLocalizer.msg("restart", "Restart now"));
+    mRestartButton = new JButton(LookAndFeelSettingsTab.LOCALIZER.msg("restart", "Restart now"));
     mRestartButton.setVisible(mSomethingChanged);
     mRestartButton.addActionListener(e -> {
       mSettingsDialog.saveSettings();

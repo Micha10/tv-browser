@@ -81,7 +81,7 @@ import util.ui.customizableitems.SelectableItemRendererCenterComponentIf;
  */
 public class ProgramPanelSettingsTab implements SettingsTab {
 
-  private static final Localizer LOCALIZER = Localizer.getLocalizerFor(ProgramPanelSettingsTab.class);
+  public static final Localizer LOCALIZER = Localizer.getLocalizerFor(ProgramPanelSettingsTab.class);
 
   private static final String PICTURE_ICON_NAME = LOCALIZER.msg("hasPicure", "Has picture");
 

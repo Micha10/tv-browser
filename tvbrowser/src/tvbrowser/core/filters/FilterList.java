@@ -308,12 +308,7 @@ public class FilterList {
     
     return false;
   }
-
-  public void setProgramFilterArr(ProgramFilter[] filterArr) {
-    //TODO
-    //mFilterArr = filterArr;
-  }
-
+  
   public void addProgramFilter(ProgramFilter filter) {    
     mFilterTreeModel.addFilter(filter);
 

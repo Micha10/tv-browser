@@ -68,7 +68,7 @@ public class StartupSettingsTab implements devplugin.SettingsTab {
   private static final DayPeriod VALUE_AUTO_CHANNEL_UPDATE_PERIOD_DEFAULT = new DayPeriod(14);
   
   /** The localizer for this class. */
-  private static final util.i18n.Localizer LOCALIZER = util.i18n.Localizer
+  public static final util.i18n.Localizer LOCALIZER = util.i18n.Localizer
       .getLocalizerFor(StartupSettingsTab.class);
 
   private JPanel mSettingsPn;
@@ -354,7 +354,7 @@ public class StartupSettingsTab implements devplugin.SettingsTab {
 
     int y = 1;
     
-    refreshSettings.addSeparator(LOCALIZER.msg("titleRefresh", "Startup"), cc.xyw(
+    refreshSettings.addSeparator(LOCALIZER.msg("titleRefresh", "Refresh"), cc.xyw(
         1, y, 6));
 
     mAutoDownload = new JCheckBox(LOCALIZER.msg("autoUpdate","Automatically update TV listings"));

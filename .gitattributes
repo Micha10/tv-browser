@@ -2349,6 +2349,8 @@ tvbrowser/src/imgs/columns_early.jpg -text
 tvbrowser/src/imgs/columns_edge.jpg -text
 tvbrowser/src/imgs/columns_evening.jpg -text
 tvbrowser/src/imgs/columns_midday.jpg -text
+tvbrowser/src/imgs/gradient-color.png -text
+tvbrowser/src/imgs/single-color.png -text
 tvbrowser/src/imgs/splash.png -text
 tvbrowser/src/imgs/systray.ico -text
 tvbrowser/src/imgs/time_block_gray.png -text

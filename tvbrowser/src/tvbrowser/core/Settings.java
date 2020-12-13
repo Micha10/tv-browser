@@ -242,8 +242,9 @@ public class Settings {
 
       if(mCopyToSystem) {
         try {
-          final CopyWaitingDlg waiting = new CopyWaitingDlg(new JFrame(), CopyWaitingDlg.EXPORT_SETTINGS_MSG);
-
+          final JFrame f = new JFrame(IOUtilities.getGraphicsConfigurationForFrame());
+          final CopyWaitingDlg waiting = new CopyWaitingDlg(f, CopyWaitingDlg.EXPORT_SETTINGS_MSG);
+          
           mLog.info("Copy settings and TV data from TV-Browser transportable to system");
 
           mShowWaiting = true;
@@ -265,7 +266,8 @@ public class Settings {
               }catch(Exception e) {}
 
               mShowWaiting = false;
-              waiting.setVisible(false);
+              waiting.dispose();
+              f.dispose();
             }
           };
           copyDataThread.start();

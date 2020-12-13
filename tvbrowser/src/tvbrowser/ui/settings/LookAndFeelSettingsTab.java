@@ -68,7 +68,7 @@ import util.ui.persona.PersonaInfo;
 
 public final class LookAndFeelSettingsTab implements SettingsTab {
 
-  static final util.i18n.Localizer mLocalizer = util.i18n.Localizer.getLocalizerFor(LookAndFeelSettingsTab.class);
+  public static final util.i18n.Localizer LOCALIZER = util.i18n.Localizer.getLocalizerFor(LookAndFeelSettingsTab.class);
 
   private JComboBox<LookAndFeelObj> mLfComboBox;
 
@@ -146,12 +146,12 @@ public final class LookAndFeelSettingsTab implements SettingsTab {
     mSettingsPn.setBorder(Borders.DIALOG);
 
     layout.appendRow(RowSpec.decode("pref"));
-    mSettingsPn.add(DefaultComponentFactory.getInstance().createSeparator(mLocalizer.msg("lookAndFeel", "Look and Feel")), CC.xyw(1, 1, 7));
+    mSettingsPn.add(DefaultComponentFactory.getInstance().createSeparator(LOCALIZER.msg("lookAndFeel", "Look and Feel")), CC.xyw(1, 1, 7));
 
     layout.appendRow(RowSpec.decode("5dlu"));
     layout.appendRow(RowSpec.decode("pref"));
 
-    mSettingsPn.add(new JLabel(mLocalizer.msg("channelPosition", "Channel list position") +":"), CC.xy(2, 3));
+    mSettingsPn.add(new JLabel(LOCALIZER.msg("channelPosition", "Channel list position") +":"), CC.xy(2, 3));
 
     mPluginViewPosition = new JComboBox<>(new String[] {Localizer.getLocalization(Localizer.I18N_LEFT),Localizer.getLocalization(Localizer.I18N_RIGHT)});
 
@@ -171,12 +171,12 @@ public final class LookAndFeelSettingsTab implements SettingsTab {
     layout.appendRow(RowSpec.decode("5dlu"));
     layout.appendRow(RowSpec.decode("pref"));
 
-    mSettingsPn.add(new JLabel(mLocalizer.msg("dateFormat", "Layout of Datelist")+":"), CC.xy(2, 5));
+    mSettingsPn.add(new JLabel(LOCALIZER.msg("dateFormat", "Layout of Datelist")+":"), CC.xy(2, 5));
 
     mDateLayout = new JComboBox<>(new String[] {
-            mLocalizer.msg("dateFormat.datelist", "List"),
-            mLocalizer.msg("dateFormat.calendarTable", "Calendar (Table)"),
-            mLocalizer.msg("dateFormat.calendarButtons", "Calendar (Buttons)")
+            LOCALIZER.msg("dateFormat.datelist", "List"),
+            LOCALIZER.msg("dateFormat.calendarTable", "Calendar (Table)"),
+            LOCALIZER.msg("dateFormat.calendarButtons", "Calendar (Buttons)")
     });
 
     mDateLayout.setSelectedIndex(Settings.propViewDateLayout.getInt());
@@ -190,7 +190,7 @@ public final class LookAndFeelSettingsTab implements SettingsTab {
     layout.appendRow(RowSpec.decode("5dlu"));
     layout.appendRow(RowSpec.decode("pref"));
 
-    mSettingsPn.add(new JLabel(mLocalizer.msg("theme", "Theme") +":"), CC.xy(2, 7));
+    mSettingsPn.add(new JLabel(LOCALIZER.msg("theme", "Theme") +":"), CC.xy(2, 7));
 
     LookAndFeelObj[] lfObjects = getLookAndFeelObjs();
     Arrays.sort(lfObjects);
@@ -209,7 +209,7 @@ public final class LookAndFeelSettingsTab implements SettingsTab {
 
     mSettingsPn.add(mLfComboBox, CC.xy(4, 7));
 
-    mConfigBtn = new JButton(mLocalizer.msg("config", "Config"));
+    mConfigBtn = new JButton(LOCALIZER.msg("config", "Config"));
     mConfigBtn.addActionListener(e -> {
       configTheme();
     });
@@ -219,13 +219,13 @@ public final class LookAndFeelSettingsTab implements SettingsTab {
     layout.appendRow(RowSpec.decode("3dlu"));
     layout.appendRow(RowSpec.decode("pref"));
     
-    mSettingsPn.add(new JLabel(mLocalizer.msg("persona", "Persona") + ":"), CC.xy(2, 9));
+    mSettingsPn.add(new JLabel(LOCALIZER.msg("persona", "Persona") + ":"), CC.xy(2, 9));
     
     PersonaInfo[] installedPersonas = Persona.getInstance().getInstalledPersonas();
     
     mPersonaSelection = new JComboBox<>(installedPersonas);
     
-    final LinkButton personaDetails = new LinkButton(mLocalizer.msg("personaDetails","Persona details"),
+    final LinkButton personaDetails = new LinkButton(LOCALIZER.msg("personaDetails","Persona details"),
     "https://www.tvbrowser.org/");
     
     for(PersonaInfo info : installedPersonas) {
@@ -268,7 +268,7 @@ public final class LookAndFeelSettingsTab implements SettingsTab {
     layout.appendRow(RowSpec.decode("3dlu"));
     layout.appendRow(RowSpec.decode("pref"));
 
-    mSettingsPn.add(new JLabel(mLocalizer.msg("icons", "Icons") + ":"), CC.xy(2, 11));
+    mSettingsPn.add(new JLabel(LOCALIZER.msg("icons", "Icons") + ":"), CC.xy(2, 11));
 
     mIconThemes = new JComboBox<>();
     mIconThemes.setRenderer(new CustomComboBoxRenderer(mIconThemes.getRenderer()) {
@@ -285,7 +285,7 @@ public final class LookAndFeelSettingsTab implements SettingsTab {
     
     fillThemeBox();
 
-    JButton downloadThemes = new JButton(mLocalizer.msg("downloadMore", "Download more"));
+    JButton downloadThemes = new JButton(LOCALIZER.msg("downloadMore", "Download more"));
     downloadThemes.addActionListener(e -> {
       downloadIcons(ThemeDownloadDlg.THEME_ICON_TYPE);
     });
@@ -296,12 +296,12 @@ public final class LookAndFeelSettingsTab implements SettingsTab {
     layout.appendRow(RowSpec.decode("3dlu"));
     layout.appendRow(RowSpec.decode("pref"));
     
-    mSettingsPn.add(new JLabel(mLocalizer.msg("infoIcons", "Program info icons") + ":"), CC.xy(2, 13));
+    mSettingsPn.add(new JLabel(LOCALIZER.msg("infoIcons", "Program info icons") + ":"), CC.xy(2, 13));
         
     mInfoIconThemes = new JComboBox<>();
     fillInfoThemeBox();
     
-    JButton downloadInfoThemes = new JButton(mLocalizer.msg("downloadMore", "Download more"));
+    JButton downloadInfoThemes = new JButton(LOCALIZER.msg("downloadMore", "Download more"));
     downloadInfoThemes.addActionListener(e -> {
       downloadIcons(ThemeDownloadDlg.INFO_ICON_TYPE);
     });
@@ -312,11 +312,11 @@ public final class LookAndFeelSettingsTab implements SettingsTab {
     layout.appendRow(RowSpec.decode("fill:3dlu:grow"));
     layout.appendRow(RowSpec.decode("pref"));
 
-    mRestartMessage = UiUtilities.createHelpTextArea(mLocalizer.msg("restartNote", "Please Restart"));
+    mRestartMessage = UiUtilities.createHelpTextArea(LOCALIZER.msg("restartNote", "Please Restart"));
     mRestartMessage.setForeground(Color.RED);
     mRestartMessage.setVisible(mSomethingChanged);
     
-    mRestartButton = new JButton(mLocalizer.msg("restart", "Restart now"));
+    mRestartButton = new JButton(LOCALIZER.msg("restart", "Restart now"));
     mRestartButton.setVisible(mSomethingChanged);
     mRestartButton.addActionListener(e -> {
       mSettingsDialog.saveSettings();
@@ -354,7 +354,7 @@ public final class LookAndFeelSettingsTab implements SettingsTab {
   }
   
   private void downloadIcons(int type) {
-    if(JOptionPane.showConfirmDialog(UiUtilities.getLastModalChildOf(MainFrame.getInstance()), mLocalizer.msg("downloadMessage", "To download more icons an Internet connection is needed.\nDo you want to load the list with the available icons now?"), Localizer.getLocalization(Localizer.I18N_INFO), JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+    if(JOptionPane.showConfirmDialog(UiUtilities.getLastModalChildOf(MainFrame.getInstance()), LOCALIZER.msg("downloadMessage", "To download more icons an Internet connection is needed.\nDo you want to load the list with the available icons now?"), Localizer.getLocalization(Localizer.I18N_INFO), JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
       ThemeDownloadDlg themeDlg = new ThemeDownloadDlg(UiUtilities.getLastModalChildOf(MainFrame.getInstance()),type);
       themeDlg.setVisible(true);
       
@@ -503,6 +503,6 @@ public final class LookAndFeelSettingsTab implements SettingsTab {
   }
 
   public String getTitle() {
-    return mLocalizer.msg("graphical", "Graphical settings");
+    return LOCALIZER.msg("graphical", "Graphical settings");
   }
 }
