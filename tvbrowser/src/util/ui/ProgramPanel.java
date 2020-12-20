@@ -1508,6 +1508,8 @@ private static Font getDynamicFontSize(Font font, int offset) {
       
         Color l = c;
         Color r = c;
+        int lAlpha = alphaValue;
+        int rAlpha = alphaValue;
         
         if(gradient) {
           Color[] colors = new Color[priorites.length];
@@ -1527,11 +1529,23 @@ private static Font getDynamicFontSize(Font font, int offset) {
               colors[i] = Settings.getHighlightingColorForPriority(0);
             }
             
-            colors[i] = new Color(colors[i].getRed(), colors[i].getGreen(), colors[i].getBlue(), alphaValue);
+            int alphaValue1 = (int)(colors[i].getAlpha()*programImportance/10.);
+            
+            if(program.isExpired()) {
+              alphaValue1 = (int)(alphaValue1*6/10.);
+            }
+            
+            if(i == 0) {
+              rAlpha = alphaValue1;
+              r = colors[0];
+            }
+            else if(i == colors.length-1) {
+              lAlpha = alphaValue1;
+              l = colors[i];
+            }
+            
+            colors[i] = new Color(colors[i].getRed(), colors[i].getGreen(), colors[i].getBlue(), alphaValue1);
           }
-          
-          l = colors[colors.length-1];
-          r = colors[0];
           
           LinearGradientPaint paint = new LinearGradientPaint(x, y, width, y, fractions, colors);
           grp.setPaint(paint);
@@ -1542,8 +1556,8 @@ private static Font getDynamicFontSize(Font font, int offset) {
           r = new Color(r.getRGB()).brighter();
           
           grp.fillRect(x+1, y+1, width-2, height-2);
-          l = new Color(l.getRed(),l.getGreen(),l.getBlue(),Math.min(255,alphaValue*3));
-          r = new Color(r.getRed(),r.getGreen(),r.getBlue(),Math.min(255,alphaValue*3));
+          l = new Color(l.getRed(),l.getGreen(),l.getBlue(),Math.min(255,lAlpha*3));
+          r = new Color(r.getRed(),r.getGreen(),r.getBlue(),Math.min(255,rAlpha*3));
           
           grp.setColor(l);
           grp.drawLine(x, y, width, y);
