@@ -53,6 +53,7 @@ import java.io.RandomAccessFile;
 import java.io.StringWriter;
 import java.lang.management.ManagementFactory;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.net.Authenticator;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
@@ -80,9 +81,7 @@ import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 import java.util.zip.GZIPInputStream;
 
-import javax.imageio.ImageIO;
 import javax.swing.BoxLayout;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JDialog;
@@ -108,6 +107,7 @@ import com.jgoodies.looks.LookUtils;
 
 import devplugin.Channel;
 import devplugin.Date;
+import devplugin.Program;
 import devplugin.ProgramFieldType;
 import devplugin.Version;
 import tvbrowser.core.ChannelList;
@@ -119,6 +119,7 @@ import tvbrowser.core.TvDataBase;
 import tvbrowser.core.TvDataUpdater;
 import tvbrowser.core.filters.FilterComponentList;
 import tvbrowser.core.filters.GenericFilterMap;
+import tvbrowser.core.plugin.PluginManagerImpl;
 import tvbrowser.core.plugin.PluginProxy;
 import tvbrowser.core.plugin.PluginProxyManager;
 import tvbrowser.core.plugin.programformating.GlobalPluginProgramFormatingManager;
@@ -126,8 +127,11 @@ import tvbrowser.core.tvdataservice.TvDataServiceProxy;
 import tvbrowser.core.tvdataservice.TvDataServiceProxyManager;
 import tvbrowser.extras.common.InternalPluginProxyIf;
 import tvbrowser.extras.common.InternalPluginProxyList;
+import tvbrowser.extras.favoritesplugin.FavoritesPlugin;
+import tvbrowser.extras.favoritesplugin.FavoritesPluginProxy;
 import tvbrowser.extras.programinfo.ProgramInfo;
 import tvbrowser.extras.reminderplugin.ReminderPlugin;
+import tvbrowser.extras.reminderplugin.ReminderPluginProxy;
 import tvbrowser.extras.searchplugin.SearchPlugin;
 import tvbrowser.ui.DontShowAgainOptionBox;
 import tvbrowser.ui.configassistant.TvBrowserPictureSettingsUpdateDialog;
@@ -159,6 +163,7 @@ import util.misc.BooleanResult;
 import util.misc.OperatingSystem;
 import util.ui.EnhancedPanelBuilder;
 import util.ui.ImageUtilities;
+import util.ui.ProgramPanel;
 import util.ui.ScrollableJPanel;
 import util.ui.UIThreadRunner;
 import util.ui.UiUtilities;
@@ -737,68 +742,78 @@ public class TVBrowser {
             && currentVersion.compareTo(new Version(2, 51, true)) < 0) {
           Settings.propAcceptedLicenseArrForServiceIds
               .setStringArray(new String[0]);
-        } else if(currentVersion != null
-            && currentVersion.compareTo(new Version(4, 21, 96, false)) < 0) {
-          File singleColor = new File("imgs"+File.separator+"single-color.png");
-          File gradientColor = new File("imgs"+File.separator+"gradient-color.png");
+        } else if(currentVersion != null && currentVersion.compareTo(new Version(4, 21, 96, false)) < 0) {
+          final String refresh = StartupSettingsTab.LOCALIZER.msg("titleRefresh", "Refresh");
           
-          if(singleColor.isFile() && gradientColor.isFile()) {
-            try {
-              final ImageIcon sColor = new ImageIcon(ImageIO.read(singleColor));
-              final ImageIcon gColor = new ImageIcon(ImageIO.read(gradientColor));
-              
-              final String refresh = StartupSettingsTab.LOCALIZER.msg("titleRefresh", "Refresh");
-              
-              JCheckBox gradient = new JCheckBox(ProgramPanelSettingsTab.LOCALIZER.msg("color.programGradientHighlighting",
-                  "Highlight programs with gradient colors"), Settings.propProgramPanelGradientColorHighlighting.getBoolean());
-              JCheckBox update = new JCheckBox(LOCALIZER.msg("update.primeTimeActivate","Activate prime time update"), Settings.propAutoUpdatePrimeTime.getBoolean());
-              
-              EnhancedPanelBuilder pb = new EnhancedPanelBuilder("5dlu,10dlu,default,default:grow");
-              pb.addRow("default",false);
-              pb.addSeparator(refresh, CC.xyw(1, pb.getRowCount(), 4));
-              pb.addRow("5dlu",false);
-              pb.addRow("default",false);
-              pb.add(UiUtilities.createHtmlHelpTextArea(LOCALIZER.msg("update.primeTimeUpdate","Independent of the configuration of the automatically data update, TV-Browser 4.2.2 provides the option to activate an automatically data update of the prime time (after 6 pm). If activated TV-Browser will download the data for today and tomorrow each day right before the prime time. You can configure this options under <b><i>{0}, {1}</i></b>&nbsp;&nbsp;or directly here.",StartupSettingsTab.LOCALIZER.msg("general","General settings"), refresh)), CC.xyw(2, pb.getRowCount(), 3));
-              pb.addRow();
-              pb.add(update, CC.xyw(2, pb.getRowCount(), 3));
-              pb.addRow("10dlu",false);
-              pb.addRow(false);
-              pb.addSeparator(MarkingsSettingsTab.LOCALIZER.msg("title","Highlighting"), CC.xyw(1, pb.getRowCount(), 4));              
-              
-              pb.addRow("5dlu",false);
-              pb.addRow("default",false);
-              pb.add(UiUtilities.createHtmlHelpTextArea(LOCALIZER.msg("update.gradientColors","Since TV-Browser 4.2.2 programs can be highlighted by more than one color at the same time. This is done by showing a color. The previous highlighting with only the color of the highest priority is still available and can be configured right here or anytime under <b><i>{0}->{1}, {2}</i></b>.",LookAndFeelSettingsTab.LOCALIZER.msg("graphical","Graphical settings"),ProgramPanelSettingsTab.LOCALIZER.msg("title","Program display"),ProgramPanelSettingsTab.LOCALIZER.msg("Colors", "Colors"))), CC.xyw(2, pb.getRowCount(), 3));
-              pb.addRow("5dlu",false);
-              pb.addRow("default",false);
-              pb.add(gradient, CC.xyw(2, pb.getRowCount(), 3));
-              pb.addRow("5dlu",false);
-              pb.addRow("default",false);
-              
-              final JLabel example = (JLabel)pb.add(new JLabel(gradient.isSelected() ? gColor : sColor), CC.xy(3, pb.getRowCount()));
-
-              gradient.addItemListener(new ItemListener() {
-                @Override
-                public void itemStateChanged(ItemEvent e) {
-                  if(e.getStateChange() == ItemEvent.SELECTED) {
-                    example.setIcon(gColor);
-                  }
-                  else {
-                    example.setIcon(sColor);
-                  }
-                }
-              });
-              
-              pb.getPanel().setBorder(Borders.DIALOG);
-              pb.getPanel().setPreferredSize(new Dimension(Sizes.dialogUnitXAsPixel(450, pb.getPanel()), Sizes.dialogUnitYAsPixel(210, pb.getPanel())));
-              
-              UiUtilities.showMessageDialogOnMouseScreen(pb.getPanel(), LOCALIZER.msg("update.title","Changed functionality with TV-Browser {0}","4.2.2"), JOptionPane.PLAIN_MESSAGE);
-              
-              Settings.propProgramPanelGradientColorHighlighting.setBoolean(gradient.isSelected());
-              Settings.propAutoUpdatePrimeTime.setBoolean(update.isSelected());
-            } catch (IOException e) {
-              // ignore
-            }
-          }
+          JCheckBox gradient = new JCheckBox(ProgramPanelSettingsTab.LOCALIZER.msg("color.programGradientHighlighting",
+              "Highlight programs with gradient colors"), Settings.propProgramPanelGradientColorHighlighting.getBoolean());
+          JCheckBox update = new JCheckBox(LOCALIZER.msg("update.primeTimeActivate","Activate prime time update"), Settings.propAutoUpdatePrimeTime.getBoolean());
+          
+          EnhancedPanelBuilder pb = new EnhancedPanelBuilder("5dlu,10dlu,default,default:grow");
+          pb.addRow("default",false);
+          pb.addSeparator(refresh, CC.xyw(1, pb.getRowCount(), 4));
+          pb.addRow("5dlu",false);
+          pb.addRow("default",false);
+          pb.add(UiUtilities.createHtmlHelpTextArea(LOCALIZER.msg("update.primeTimeUpdate","Independent of the configuration of the automatically data update, TV-Browser 4.2.2 provides the option to activate an automatically data update of the prime time (after 6 pm). If activated TV-Browser will download the data for today and tomorrow each day right before the prime time. You can configure this options under <b><i>{0}, {1}</i></b>&nbsp;&nbsp;or directly here.",StartupSettingsTab.LOCALIZER.msg("general","General settings"), refresh)), CC.xyw(2, pb.getRowCount(), 3));
+          pb.addRow();
+          pb.add(update, CC.xyw(2, pb.getRowCount(), 3));
+          pb.addRow("10dlu",false);
+          pb.addRow(false);
+          pb.addSeparator(MarkingsSettingsTab.LOCALIZER.msg("title","Highlighting"), CC.xyw(1, pb.getRowCount(), 4));              
+          
+          pb.addRow("5dlu",false);
+          pb.addRow("default",false);
+          pb.add(UiUtilities.createHtmlHelpTextArea(LOCALIZER.msg("update.gradientColors","Since TV-Browser 4.2.2 programs can be highlighted by more than one color at the same time. This is done by showing a color. The previous highlighting with only the color of the highest priority is still available and can be configured right here or anytime under <b><i>{0}->{1}, {2}</i></b>.",LookAndFeelSettingsTab.LOCALIZER.msg("graphical","Graphical settings"),ProgramPanelSettingsTab.LOCALIZER.msg("title","Program display"),ProgramPanelSettingsTab.LOCALIZER.msg("Colors", "Colors"))), CC.xyw(2, pb.getRowCount(), 3));
+          pb.addRow("5dlu",false);
+          pb.addRow("default",false);
+          pb.add(gradient, CC.xyw(2, pb.getRowCount(), 3));
+          pb.addRow("5dlu",false);
+          pb.addRow("default",false);
+          
+          int fMarkPriorityOld = FavoritesPluginProxy.getInstance().getMarkPriorityMaxForProgram(null);
+          int rMarkPriorityOld = ReminderPluginProxy.getInstance().getMarkPriorityMaxForProgram(null);
+          
+          Method fSetMarkPriority = null;
+          Method rSetMarkPriority = null;
+          
+          try {
+            fSetMarkPriority = FavoritesPlugin.class.getDeclaredMethod("setMarkPriority",int.class);
+            rSetMarkPriority = ReminderPlugin.class.getDeclaredMethod("setMarkPriority",int.class);
+            fSetMarkPriority.setAccessible(true);
+            rSetMarkPriority.setAccessible(true);
+            fSetMarkPriority.invoke(FavoritesPlugin.getInstance(), 4);
+            rSetMarkPriority.invoke(ReminderPlugin.getInstance(), Program.PRIORITY_MARK_MIN);
+          } catch (NoSuchMethodException | SecurityException | IllegalAccessException | 
+              IllegalArgumentException | InvocationTargetException e1) {} 
+          final ProgramPanel p = new ProgramPanel(PluginManagerImpl.getInstance().getExampleProgram());
+          pb.add(p, CC.xy(3, pb.getRowCount()));
+          
+          p.getProgram().mark(FavoritesPluginProxy.getInstance());
+          p.getProgram().mark(ReminderPluginProxy.getInstance());
+          
+          gradient.addItemListener(e -> {
+            Settings.propProgramPanelGradientColorHighlighting.setBoolean(ItemEvent.SELECTED == e.getStateChange());
+            p.repaint();
+          });
+          
+          pb.getPanel().setBorder(Borders.DIALOG);
+          pb.getPanel().setPreferredSize(new Dimension(Sizes.dialogUnitXAsPixel(450, pb.getPanel()), Sizes.dialogUnitYAsPixel(210, pb.getPanel())));
+          
+          UiUtilities.showMessageDialogOnMouseScreen(pb.getPanel(), LOCALIZER.msg("update.title","Changed functionality with TV-Browser {0}","4.2.2"), JOptionPane.PLAIN_MESSAGE);
+          
+          if(fSetMarkPriority != null && rSetMarkPriority != null)
+          try {
+            fSetMarkPriority.invoke(FavoritesPlugin.getInstance(), fMarkPriorityOld);
+            rSetMarkPriority.invoke(ReminderPlugin.getInstance(), rMarkPriorityOld);
+            fSetMarkPriority.setAccessible(false);
+            rSetMarkPriority.setAccessible(false);
+          } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e1) {}
+          
+          p.getProgram().unmark(FavoritesPluginProxy.getInstance());
+          p.getProgram().unmark(ReminderPluginProxy.getInstance());
+          
+          Settings.propProgramPanelGradientColorHighlighting.setBoolean(gradient.isSelected());
+          Settings.propAutoUpdatePrimeTime.setBoolean(update.isSelected());
         }
 
         if (currentVersion != null

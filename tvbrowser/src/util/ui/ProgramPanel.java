@@ -1490,22 +1490,26 @@ private static Font getDynamicFontSize(Font font, int offset) {
       Integer[] priorites = program.getMarkPriorities();  
       
       if(priorites != null && priorites.length > 0) {
-        if(!Settings.propProgramPanelGradientColorHighlighting.getBoolean() || priorites.length <= 1) {
-          Color c = Plugin.getPluginManager().getTvBrowserSettings().getColorForMarkingPriority(program.getMarkPriorityMax());
-    
-          if(c == null) {
-            c = Settings.getHighlightingColorForPriority(0);
-          }
-    
-          int alphaValue = (int)(c.getAlpha()*programImportance/10.);
-    
-          if(program.isExpired()) {
-            alphaValue = (int)(alphaValue*6/10.);
-          }
-          
-          grp.setColor(new Color(c.getRed(), c.getGreen(), c.getBlue(), alphaValue));
+        boolean gradient = Settings.propProgramPanelGradientColorHighlighting.getBoolean() && priorites.length > 1;
+        
+        Color c = Plugin.getPluginManager().getTvBrowserSettings().getColorForMarkingPriority(program.getMarkPriorityMax());
+  
+        if(c == null) {
+          c = Settings.getHighlightingColorForPriority(0);
         }
-        else {
+  
+        int alphaValue = (int)(c.getAlpha()*programImportance/10.);
+  
+        if(program.isExpired()) {
+          alphaValue = (int)(alphaValue*6/10.);
+        }
+        
+        grp.setColor(new Color(c.getRed(), c.getGreen(), c.getBlue(), alphaValue));
+      
+        Color l = c;
+        Color r = c;
+        
+        if(gradient) {
           Color[] colors = new Color[priorites.length];
           float[] fractions = new float[priorites.length];
           
@@ -1522,26 +1526,38 @@ private static Font getDynamicFontSize(Font font, int offset) {
             if(colors[i] == null) {
               colors[i] = Settings.getHighlightingColorForPriority(0);
             }
-  
-            int alphaValue = (int)(colors[i].getAlpha()*programImportance/10.);
-  
-            if(program.isExpired()) {
-               alphaValue = (int)(alphaValue*6/10.);
-            }
             
             colors[i] = new Color(colors[i].getRed(), colors[i].getGreen(), colors[i].getBlue(), alphaValue);
           }
+          
+          l = colors[colors.length-1];
+          r = colors[0];
           
           LinearGradientPaint paint = new LinearGradientPaint(x, y, width, y, fractions, colors);
           grp.setPaint(paint);
         }
         
         if(Settings.propProgramPanelWithMarkingsShowingBoder.getBoolean()) {
-          grp.fill3DRect(x, y, width, height, true);
+          l = new Color(l.getRGB()).darker();
+          r = new Color(r.getRGB()).brighter();
+          
+          grp.fillRect(x+1, y+1, width-2, height-2);
+          l = new Color(l.getRed(),l.getGreen(),l.getBlue(),Math.min(255,alphaValue*3));
+          r = new Color(r.getRed(),r.getGreen(),r.getBlue(),Math.min(255,alphaValue*3));
+          
+          grp.setColor(l);
+          grp.drawLine(x, y, width, y);
+          grp.drawLine(x, y+1, x, height);
+          
+          grp.setColor(r);
+          grp.drawLine(width-1, y+1, width-1, height);
+          grp.drawLine(x+1, height-1, width-2, height-1);
         }
         else {
           grp.fillRect(x, y, width, height);
         }
+        
+        grp.setPaint(null);
       }
     }
   }
