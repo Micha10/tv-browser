@@ -128,7 +128,7 @@ public class DataCheck {
           END.set(Calendar.DAY_OF_MONTH, Integer.parseInt(date[2]));
           
           while(START.compareTo(END) <= 0) {
-            mIgnoreDays.add(START.get(Calendar.YEAR)+"-"+String.format("%02d", START.get(Calendar.MONTH)+1)+"-"+START.get(Calendar.DAY_OF_MONTH));
+            mIgnoreDays.add(START.get(Calendar.YEAR)+"-"+String.format("%02d", START.get(Calendar.MONTH)+1)+"-"+String.format("%02d",START.get(Calendar.DAY_OF_MONTH)));
             START.add(Calendar.DAY_OF_YEAR, 1);
           }
         }
