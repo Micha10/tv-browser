@@ -197,10 +197,10 @@ public class TVBrowser {
   
   public static final ArrayList<Image> ICONS_WINDOW = new ArrayList<Image>(4);
 
-  private static final boolean IS_STABLE = true;
+  private static final boolean IS_STABLE = false;
   private static final int MAJRO_VERSION = 4;
   private static final int MINOR_VERSION = 22;
-  private static final int SUB_MINOR_VERSION = 0;
+  private static final int SUB_MINOR_VERSION = 50;
 
   /* If you want to change the version string, add it to the beginning of this array.
      We need the old version strings to import the settings.
@@ -214,17 +214,10 @@ public class TVBrowser {
   */
   /** The string array with the names of the earlier versions. */
   private static final String[] ALL_VERSIONS = new String[] {
-      "4.2.2",
-		  "4.2.1.96 RC1",
-		  "4.2.1.95 Beta1",
-		  "4.2.1.52 SVN",
-		  "4.2.1.51 SVN",
-		  "4.2.1.50 SVN",
-		  "4.2.1",
-		  "4.2.0.97 RC1",
-		  "4.2.0.51 SVN",
-		  "4.2.0.50 SVN",
-		  "4.2", "4.0.9.98 RC3", "4.0.9.98 RC2", "4.0.9.97 RC1", "4.0.9.96 Beta2", "4.0.9.95 Beta1", "4.0.1.50 SVN",
+      "4.2.2.50 SVN",
+          "4.2.2", "4.2.1.96 RC1", "4.2.1.95 Beta1", "4.2.1.52 SVN", "4.2.1.51 SVN", "4.2.1.50 SVN", 
+          "4.2.1", "4.2.0.97 RC1", "4.2.0.51 SVN", "4.2.0.50 SVN",
+		      "4.2", "4.0.9.98 RC3", "4.0.9.98 RC2", "4.0.9.97 RC1", "4.0.9.96 Beta2", "4.0.9.95 Beta1", "4.0.1.50 SVN",
           "4.0.1", "4.0.0.97 RC1", "4.0.0.96 Beta2", "4.0.0.95 Beta1", "4.0.0.50 SVN",
           "4", "3.4.4.98 RC3", "3.4.4.97 RC2", "3.4.4.95 Beta1", "3.4.4.50 SVN",
           "3.4.4", "3.4.3.96 RC1", "3.4.3.95 Beta1", "3.4.3.52 SVN", "3.4.3.51 SVN", "3.4.3.50 SVN",
