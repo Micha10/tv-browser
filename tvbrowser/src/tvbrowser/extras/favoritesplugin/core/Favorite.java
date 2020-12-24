@@ -645,7 +645,6 @@ public abstract class Favorite {
     if (inx1 < p1.length) {
       // remove (p1[inx1]..p1[p1.length-1])
       for (int i=inx1; i<p1.length; i++) {
-        System.out.println("r2 " + p1[i]);
         unmarkProgram(p1[i]);
       }
     }
