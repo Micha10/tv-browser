@@ -56,7 +56,7 @@ import util.io.IOUtilities;
  * @author Til Schneider, www.murfman.de
  */
 public class NewsPlugin extends Plugin {
-  private static final Version mVersion = new Version(3,16);
+  private static final Version mVersion = new Version(3,17);
 
   /** The localizer used by this class. */
   private static final util.ui.Localizer mLocalizer = util.ui.Localizer

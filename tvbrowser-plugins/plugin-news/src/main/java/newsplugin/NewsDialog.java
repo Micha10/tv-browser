@@ -34,6 +34,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.DateFormat;
 import java.util.ArrayList;
@@ -184,6 +185,14 @@ public class NewsDialog implements WindowClosingIf {
         if (evt.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
           URL url = evt.getURL();
           if (url != null) {
+            if(url.toString().startsWith("index.php")) {
+              try {
+                url = new URL("https://www.tvbrowser.org/"+url.toString());
+              } catch (MalformedURLException e) {
+                // Ignore
+              }
+            }
+            
             Launch.openURL(url.toString());
           }
         }
