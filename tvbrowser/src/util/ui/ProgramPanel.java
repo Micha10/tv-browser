@@ -593,7 +593,7 @@ private static Font getDynamicFontSize(Font font, int offset) {
     int additionalHeight = Settings.propProgramPanelUsesExtraSpaceForMarkIcons.getBoolean() && program.getMarkerArr().length > 0 ? 16 : 0;
 
     if (maxHeight != -1) {
-      maxDescLines = (maxHeight - titleHeight - mPictureAreaIcon.getIconHeight() - additionalHeight - V_GAP) / mNormalFont.getSize();
+      maxDescLines = (maxHeight - titleHeight - mPictureAreaIcon.getIconHeight() - additionalHeight - V_GAP) / (mNormalFont.getSize() + getLineGap(mNormalFont));
     }
 
     if (programChanged
@@ -620,7 +620,6 @@ private static Font getDynamicFontSize(Font font, int offset) {
 
       int height = titleHeight + descHeight + mPictureAreaIcon.getIconHeight() + additionalHeight + V_GAP;
       
-      // Calculate the height
       mHeight = (mChannelLabel != null ? Math.max(height, mChannelLabel.getPreferredSize().height) : height);
       setPreferredSize(new Dimension(WIDTH_TOTAL, mHeight));
 
