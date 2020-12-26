@@ -594,7 +594,7 @@
         package="tvbrowser"
         section="utils"
         depends="openjdk-11-jre | default-jre"
-  	    recommends="openjdk-7-jre">
+  	    recommends="openjdk-11-jre">
 
         <version upstream="${tvbrowser.version}"/>
         <maintainer name="TV-Browser team" email="dev@tvbrowser.org"/>
