@@ -1314,21 +1314,24 @@ public class TVBrowser {
     }
   }
   
-  private static String[] readLockFileContent(final File lockFile) { 
-    String[] readLines = null;
-    final ArrayList<String> readList = new ArrayList<String>();
-    
-    try(RandomAccessFile in = new RandomAccessFile(lockFile,"r")) {
-      String line = null;
-      
-      while((line = in.readLine()) != null) {
-        readList.add(line);
-      }
-    }catch(Exception ioe) {ioe.printStackTrace();}
-    
-    if(!readList.isEmpty()) {
-      readLines = readList.toArray(new String[0]);
-    }
+  private static String[] readLockFileContent(final File lockInfo) {
+	String[] readLines = null;
+	
+	if(lockInfo.isFile()) {
+	    final ArrayList<String> readList = new ArrayList<String>();
+	    
+	    try(RandomAccessFile in = new RandomAccessFile(lockInfo,"r")) {
+	      String line = null;
+	      
+	      while((line = in.readLine()) != null) {
+	        readList.add(line);
+	      }
+	    }catch(Exception ioe) {ioe.printStackTrace();}
+	    
+	    if(!readList.isEmpty()) {
+	      readLines = readList.toArray(new String[0]);
+	    }
+	}
     
     return readLines;
   }
@@ -1345,6 +1348,7 @@ public class TVBrowser {
     }
 
     File lockFile = new File(dir, file);
+    File lockInfo = new File(dir, file+"_info");
     
     if(lockFile.exists()) {
       try {
@@ -1352,12 +1356,12 @@ public class TVBrowser {
         lockTarget.set(lockFileAccess.get().getChannel().tryLock());
 
         if(lockTarget.get() == null) {
-          return new LockFileResult(false, readLockFileContent(lockFile));
+          return new LockFileResult(false, readLockFileContent(lockInfo));
         }
         
-        writeLinesToLogFile(lockFileAccess.get(), lines);
+        writeLinesToLogFile(lockInfo, lines);
       }catch(Exception e) {e.printStackTrace();
-        return new LockFileResult(false, readLockFileContent(lockFile));
+        return new LockFileResult(false, readLockFileContent(lockInfo));
       }
     }
     else {
@@ -1365,7 +1369,7 @@ public class TVBrowser {
         lockFile.createNewFile();
         lockFileAccess.set(new RandomAccessFile(lockFile.toString(),"rw"));
         lockTarget.set(lockFileAccess.get().getChannel().tryLock());
-        writeLinesToLogFile(lockFileAccess.get(), lines);
+        writeLinesToLogFile(lockInfo, lines);
       }catch(Exception e){
         if(e instanceof IOException) {
           LOG.log(Level.WARNING, e.getLocalizedMessage(), e);
@@ -1376,9 +1380,9 @@ public class TVBrowser {
     return new LockFileResult(true, null);
   }
   
-  private static void writeLinesToLogFile(final RandomAccessFile fileLockAccess, final String[] lines) {
-    if(lines != null) {
-      try {
+  private static void writeLinesToLogFile(final File lockInfo, final String[] lines) {
+    if(lines != null && lines.length > 0) {
+      try (RandomAccessFile fileLockAccess = new RandomAccessFile(lockInfo, "rw")) {
         for(final String line : lines) {
           fileLockAccess.writeBytes(line+"\n");
         }
@@ -1389,6 +1393,7 @@ public class TVBrowser {
   private static void deleteLockFile(final RandomAccessFile fileLockAccess, final FileLock fileLock,final String file) {
     String dir = Settings.getUserDirectoryName();
     File lockFile = new File(dir, file);
+    File lockInfo = new File(dir, file+"_info");
 
     if(lockFile.isFile()) {
       try {
@@ -1406,6 +1411,10 @@ public class TVBrowser {
       if(!lockFile.delete()) {
         lockFile.deleteOnExit();
       }
+    }
+    
+    if(lockInfo.isFile() && !lockInfo.delete()) {
+    	lockInfo.deleteOnExit();
     }
   }
 

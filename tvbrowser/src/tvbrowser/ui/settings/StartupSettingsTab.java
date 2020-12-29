@@ -74,7 +74,7 @@ public class StartupSettingsTab implements devplugin.SettingsTab {
   private JPanel mSettingsPn;
 
   private JCheckBox mShowStartScreenChB, mMinimizeAfterStartUpChB, mStartFullscreen,
-      mAutostartWithWindows, mServerForRestore;
+      mAutostartWithWindows, mServerForRestore, mProtocolHandler;
   
   private File mLinkFileFile;
   private LinkFile mLinkFile;
@@ -121,7 +121,7 @@ public class StartupSettingsTab implements devplugin.SettingsTab {
   public JPanel createSettingsPanel() {
     FormLayout layout = new FormLayout(
         "5dlu, default, 3dlu, default, fill:3dlu:grow, 3dlu",
-        "default, 5dlu, default, 1dlu, default, 1dlu, default, 1dlu, default, 10dlu, default, 10dlu, default, 5dlu, default, default");
+        "default, 5dlu, default, 1dlu, default, 1dlu, default, 1dlu, default, 1dlu, default, 10dlu, default, 10dlu, default, 5dlu, default, default");
     mSettingsPn = new JPanel(layout);
     mSettingsPn.setBorder(Borders.DIALOG);
 
@@ -168,7 +168,15 @@ public class StartupSettingsTab implements devplugin.SettingsTab {
     mServerForRestore = new JCheckBox(LOCALIZER.msg("serverForRestore",
         "Provide server port for restore running TV-Browser"), Settings.propServerRestoreEnabled.getBoolean());
     mSettingsPn.add(mServerForRestore, cc.xy(2, ++y));
-
+    
+    mProtocolHandler = new JCheckBox(LOCALIZER.msg("protocolHandler", "Allow handling of tvb:// protocol messages"), Settings.propCanReceiveProtocolMessages.getBoolean() && mServerForRestore.isSelected());
+    mProtocolHandler.setEnabled(mServerForRestore.isEnabled());
+    mSettingsPn.add(mProtocolHandler, cc.xy(2, y+=2));
+    
+    mServerForRestore.addItemListener(e -> {
+    	mProtocolHandler.setEnabled(ItemEvent.SELECTED == e.getStateChange());
+    });
+    
     if (System.getProperty("os.name").toLowerCase().startsWith("windows") && !TVBrowser.isTransportable()) {
       layout.insertRow(++y, RowSpec.decode("1dlu"));
       layout.insertRow(++y, RowSpec.decode("pref"));
@@ -252,6 +260,7 @@ public class StartupSettingsTab implements devplugin.SettingsTab {
     Settings.propStartScreenShow.setBoolean(mShowStartScreenChB.isSelected());
     Settings.propIsUsingFullscreen.setBoolean(mStartFullscreen.isSelected());
     Settings.propServerRestoreEnabled.setBoolean(mServerForRestore.isSelected());
+    Settings.propCanReceiveProtocolMessages.setBoolean(mServerForRestore.isSelected() && mProtocolHandler.isSelected());
     TVBrowser.updateLockGlobalToggle();
     
     if(mAutoChannelDownload.isSelected()) {

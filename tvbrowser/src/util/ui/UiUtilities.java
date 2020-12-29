@@ -48,6 +48,8 @@ import java.awt.RenderingHints;
 import java.awt.Toolkit;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -1495,14 +1497,75 @@ public class UiUtilities {
    * @since 4.2.2
    */
   public static int showConfirmDialogOnMouseScreen(Object message, String title, int optionType, int messageType) {
+    return showConfirmDialogOnMouseScreen(message, title, optionType, messageType, false);
+  }
+
+  /**
+   * Shows an JOptionPane confirm dialog on the screen the mouse pointer is currently visible.
+   * 
+   * @param message The message to show.
+   * @param title The title of the dialog.
+   * @param optionType The JOptionPane optionType.
+   * @param messageType The JOptionPane messageType.
+   * @param toFront If the opened dialog should be put to front
+   * @return The return value of the option dialog
+   * @since 4.2.3
+   */
+  public static int showConfirmDialogOnMouseScreen(Object message, String title, int optionType, int messageType, boolean toFront) {
     final Frame parent = getParentFrameOnMouseScreen();
     
-    int result = JOptionPane.showConfirmDialog(parent, message, title, optionType, messageType);
+    JOptionPane pane = new JOptionPane(message, messageType, optionType);
+    final JDialog d = pane.createDialog(parent, title);
     
+    if(d.isAlwaysOnTopSupported()) {
+    	d.setAlwaysOnTop(true);
+    }
+    
+    d.setModalityType(ModalityType.APPLICATION_MODAL);
+    d.addComponentListener(new ComponentListener() {
+		
+		@Override
+		public void componentShown(ComponentEvent e) {
+			// TODO Auto-generated method stub
+			System.out.println("HIER");
+			SwingUtilities.invokeLater(new Runnable() {
+				
+				@Override
+				public void run() {
+					  d.toFront();
+					  d.requestFocus();
+				}
+			});
+			
+		}
+		
+		@Override
+		public void componentResized(ComponentEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+		
+		@Override
+		public void componentMoved(ComponentEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+		
+		@Override
+		public void componentHidden(ComponentEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+	});
+    
+    d.setVisible(true);
+    
+    int result = (Integer)pane.getValue();
     parent.dispose();
     
     return result;
   }
+
   
   /**
    * Shows an JOptionPane option dialog on the screen the parent component is residing or

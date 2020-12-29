@@ -2297,12 +2297,17 @@ public class MainFrame extends JFrame implements DateListener,DropTargetListener
    */
   public void handleProtocolMessage(final String message) {
     System.out.println("handleProtocolMessage " + message);
-    
+    try {
+		Thread.sleep(500);
+	} catch (InterruptedException e1) {
+		// TODO Auto-generated catch block
+		e1.printStackTrace();
+	}
     if(Settings.propCanReceiveProtocolMessages.getBoolean() && message != null && message.startsWith("tvb://")) {
       String[] parts = message.substring(6).strip().split("/");
       if(parts.length > 1) {
         if(PROTOCOL_MESSAGE_CONFIG.equalsIgnoreCase(parts[0]) && parts[1].contains("=")) {
-          if(JOptionPane.YES_OPTION == UiUtilities.showConfirmDialogOnMouseScreen(LOCALIZER.msg("receive.config.msg","TV-Browser received changes of settings.\nIf you haven't triggered the change, please cancel it now!\n\nDo you want to apply the changed settings?"), LOCALIZER.msg("receive.config.title","Apply settings change?"), JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE)) {
+          if(JOptionPane.YES_OPTION == UiUtilities.showConfirmDialogOnMouseScreen(LOCALIZER.msg("receive.config.msg","TV-Browser received changes of settings.\nIf you haven't triggered the change, please cancel it now!\n\nDo you want to apply the changed settings?"), LOCALIZER.msg("receive.config.title","Apply settings change?"), JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, true)) {
             try {
               String[] props = parts[1].split(";");
               
@@ -2385,6 +2390,13 @@ public class MainFrame extends JFrame implements DateListener,DropTargetListener
               // TODO Auto-generated catch block
               e.printStackTrace();
             }
+            
+            try {
+				Settings.storeSettings(true);
+			} catch (TvBrowserException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
           }
         }
         else if(PROTOCOL_MESSAGE_PLUGIN.equalsIgnoreCase(parts[0]) && parts.length >= 3) {
@@ -2395,27 +2407,48 @@ public class MainFrame extends JFrame implements DateListener,DropTargetListener
             PluginProxy p = PluginProxyManager.getInstance().getPluginForId("java."+values[0].toLowerCase()+"."+values[0]);
             System.out.println("P " +p);
             if(p != null) {
-              PluginProxy a = PluginProxyManager.getInstance().getActivatedPluginForId(p.getId());
-              
-              if(a == null && (values[1].equals("true") || values[1].equals("1"))) {
-                if(JOptionPane.YES_OPTION == UiUtilities.showConfirmDialogOnMouseScreen(LOCALIZER.msg("receive.plugin.enable.msg","TV-Browser received the activation of the plugin '{0}'.\n\nDo you wan't to activate the plugin '{0}' now?"),LOCALIZER.msg("receive.plugin.ensable.title","Activate plugin '{0}'?"), JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE)) {
+              if(!p.isActivated() && (values[1].equals("true") || values[1].equals("1"))) {
+                if(JOptionPane.YES_OPTION == UiUtilities.showConfirmDialogOnMouseScreen(LOCALIZER.msg("receive.plugin.enable.msg","TV-Browser received the activation of the plugin '{0}'.\n\nDo you wan't to activate the plugin '{0}' now?", p.getInfo().getName()),LOCALIZER.msg("receive.plugin.ensable.title","Activate plugin '{0}'?", p.getInfo().getName()), JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE)) {
                   try {
-                    PluginProxyManager.getInstance().activatePlugin(p);
+                	  PluginProxyManager.getInstance().activatePlugin(p, true);
+                      try {
+                        PluginProxyManager.getInstance().fireTvBrowserStartFinished(p);
+                      }catch(Throwable t) {
+                        /* Catch all possible not catched errors that occur in the plugin mehtod*/
+                        LOG.log(Level.WARNING, "A not catched error occured in 'fireTvBrowserStartFinishedThread' of Plugin '" + p +"'.", t);
+                      }
                   } catch (TvBrowserException e) {
                     e.printStackTrace();
                   }
+                  
+                  MainFrame.getInstance().getToolbar().updatePluginButtons();
+                  MainFrame.getInstance().updatePluginsMenu();
                 }
               }
-              else if(a != null && (values[1].equals("false") || values[1].equals("0"))) {
-                if(JOptionPane.YES_OPTION == UiUtilities.showConfirmDialogOnMouseScreen(LOCALIZER.msg("receive.plugin.disable.msg","TV-Browser received the deactivation of the plugin '{0}'.\n\nDo you wan't to deactivate the plugin '{0}' now?"),LOCALIZER.msg("receive.plugin.disable.title","Dectivate plugin '{0}'?"), JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE)) {
+              else if(p.isActivated() && (values[1].equals("false") || values[1].equals("0"))) {
+                if(JOptionPane.YES_OPTION == UiUtilities.showConfirmDialogOnMouseScreen(LOCALIZER.msg("receive.plugin.disable.msg","TV-Browser received the deactivation of the plugin '{0}'.\n\nDo you wan't to deactivate the plugin '{0}' now?", p.getInfo().getName()),LOCALIZER.msg("receive.plugin.disable.title","Dectivate plugin '{0}'?", p.getInfo().getName()), JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE)) {
                   try {
                     PluginProxyManager.getInstance().deactivatePlugin(p);
                   } catch (TvBrowserException e) {
                     e.printStackTrace();
                   }
+                  
+                  MainFrame.getInstance().getToolbar().updatePluginButtons();
+                  MainFrame.getInstance().updatePluginsMenu();
                 }
               }
             }
+            
+            // Update the settings
+            String[] deactivatedPlugins = PluginProxyManager.getInstance().getDeactivatedPluginIds();
+            Settings.propDeactivatedPlugins.setStringArray(deactivatedPlugins);
+
+            try {
+            	Settings.storeSettings(true);
+			} catch (TvBrowserException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
           }
           else if(PROTOCOL_MESSAGE_CONFIG.equals(parts[1]) && parts.length == 4) {
             PluginProxy a = PluginProxyManager.getInstance().getActivatedPluginForId("java."+parts[2].toLowerCase()+"."+parts[2]);
