@@ -201,4 +201,10 @@ public interface TvBrowserSettings {
    * @since 4.1
    */
   public String getDataDirectory();
+  
+  /**
+   * @return If TV-Browser is allowed to handle tvb:// protocol events
+   * @since 4.2.3
+   */
+  public boolean getCanReceiveProtocolMessages();
 }

@@ -1055,6 +1055,11 @@ public class PluginManagerImpl implements PluginManager {
       public String getDataDirectory() {
         return Settings.propTVDataDirectory.getString();
       }
+
+      @Override
+      public boolean getCanReceiveProtocolMessages() {
+        return Settings.propCanReceiveProtocolMessages.getBoolean();
+      }
     };
   }
 

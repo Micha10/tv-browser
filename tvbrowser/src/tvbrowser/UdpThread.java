@@ -17,7 +17,7 @@ import tvbrowser.ui.tray.SystemTray;
 public final class UdpThread extends Thread {
   private DatagramSocket mSocket;
   private boolean mRun;
-  private byte[] buf = new byte[8];
+  private byte[] buf = new byte[1024];
   private SystemTray mTray;
   private int mState;
   
@@ -67,22 +67,27 @@ public final class UdpThread extends Thread {
         mSocket.receive(packet);
         InetAddress address = packet.getAddress();
         int port = packet.getPort();
-        packet = new DatagramPacket(buf, buf.length, address, port);
+        packet = new DatagramPacket(buf, Math.min(buf.length, packet.getLength()), address, port);
         String received = new String(packet.getData(), 0, packet.getLength());
         
-        if (address.equals(InetAddress.getByName("localhost")) && received.equals("open_tvb")) {
-          if(mTray != null && mTray.isTrayUsed()) {
-            mTray.show();
+        if (address.equals(InetAddress.getByName("localhost"))) {
+          if(received.equals("open_tvb")) {
+            if(mTray != null && mTray.isTrayUsed()) {
+              mTray.show();
+            }
+            else if(((MainFrame.getInstance().getExtendedState() & Frame.ICONIFIED) == Frame.ICONIFIED)) {
+              SwingUtilities.invokeLater(() -> {
+                MainFrame.getInstance().showFromTray(mState);
+              });
+              
+              MainFrame.getInstance().toFront();
+            }
+            else {
+              MainFrame.getInstance().toFront();
+            }
           }
-          else if(((MainFrame.getInstance().getExtendedState() & Frame.ICONIFIED) == Frame.ICONIFIED)) {
-            SwingUtilities.invokeLater(() -> {
-              MainFrame.getInstance().showFromTray(mState);
-            });
-            
-            MainFrame.getInstance().toFront();
-          }
-          else {
-            MainFrame.getInstance().toFront();
+          else if(received.startsWith("tvb://")) {
+            MainFrame.getInstance().handleProtocolMessage(received);
           }
         }
       } catch (IOException e) {}

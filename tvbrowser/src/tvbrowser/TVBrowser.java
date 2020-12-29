@@ -343,6 +343,8 @@ public class TVBrowser {
    */
   private static String[] RESTART_CMD = null;
   
+  private static String mProtocolMessage = null;
+  
   /**
    * Entry point of the application
    * @param args The arguments given in the command line.
@@ -427,8 +429,33 @@ public class TVBrowser {
     }
     
     if (!createLockFile(mLockFile,mLock,".lock").mResult) {
+      LockFileResult resultLockFile = createLockGlobalToggle();
+      int port = Integer.MIN_VALUE;
+      
+      if(mProtocolMessage != null) {
+        if(resultLockFile.mLines != null && resultLockFile.mLines.length == 1) {
+          try {
+            port = Integer.parseInt(resultLockFile.mLines[0]);
+          }catch(NumberFormatException nfe) {}
+        }
+        
+        if (!resultLockFile.mResult && port != Integer.MIN_VALUE) {
+          try(DatagramSocket socket = new DatagramSocket()) {
+            byte[] buf = mProtocolMessage.getBytes();
+            
+            DatagramPacket packet = new DatagramPacket(buf, buf.length, InetAddress.getByName("localhost"), port);
+            socket.send(packet);
+            System.exit(0);
+          } catch (Exception e) {e.printStackTrace();
+            System.exit(-1);
+          }
+        }
+        
+        System.exit(-1);
+      }
+      
       updateLookAndFeel();
-      showTVBrowserIsAlreadyRunningMessageBox(createLockGlobalToggle());
+      showTVBrowserIsAlreadyRunningMessageBox(resultLockFile);
     }
     else {
       createLockGlobalToggle();
@@ -645,6 +672,8 @@ public class TVBrowser {
 
           ChannelList.completeChannelLoading();
           initializeAutomaticDownload();
+          
+          mainFrame.handleProtocolMessage(mProtocolMessage);
         }
       }.start();
       SwingUtilities.invokeLater(() -> {
@@ -1211,6 +1240,7 @@ public class TVBrowser {
   private static void parseCommandline(String[] args) {
     showUsage(args);
     for (String argument : args) {
+      System.out.println("ARG " + argument);
       if (argument.equalsIgnoreCase("-help") || argument.equalsIgnoreCase("-h")) {
         System.exit(0);
       } else if (argument.equalsIgnoreCase("-minimized") || argument.equalsIgnoreCase("-m")) {
@@ -1221,6 +1251,8 @@ public class TVBrowser {
         mFullscreen = true;
       } else if (argument.equalsIgnoreCase("-safemode") || argument.equalsIgnoreCase("-s")) {
         mSafeMode = true;
+      } else if (argument.startsWith("tvb://")) {
+        mProtocolMessage = argument;
       } else if (argument.startsWith("-D")) {
         if (argument.indexOf("=") >= 2) {
           String key = argument.substring(2, argument.indexOf("="));
@@ -1409,7 +1441,7 @@ public class TVBrowser {
             byte[] buf = "open_tvb".getBytes();
             DatagramPacket packet = new DatagramPacket(buf, buf.length, InetAddress.getByName("localhost"), port);
             socket.send(packet);
-            System.exit(-1);
+            System.exit(0);
           } catch (Exception e) {e.printStackTrace();
             System.exit(-1);
           }

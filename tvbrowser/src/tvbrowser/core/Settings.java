@@ -2356,6 +2356,13 @@ public class Settings {
       mProp, "favoriteBlockedFilterComponents", new String[] {"tvbrowser.core.filters.filtercomponents.BeanShellFilterComponent","tvbrowser.core.filters.filtercomponents.ProgramMarkingPriorityFilterComponent","tvbrowser.core.filters.filtercomponents.ReminderFilterComponent","tvbrowser.core.filters.filtercomponents.PluginFilterComponent"});
   
   /**
+   * Property to allow handling of tvb:// protocol events. 
+   * 
+   * @since 4.2.3
+   */
+  public static final BooleanProperty propCanReceiveProtocolMessages = new BooleanProperty(mProp, "canReceiveProtocolMessages", true);
+  
+  /**
    * TV-Browser JRE update package path.
    * <p>
    * @since 4.1

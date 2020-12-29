@@ -506,10 +506,11 @@
         toFile="${tvbrowser-linux.runtime.dir}/tvbrowser.desktop"
         name="TV-Browser"
         icon="imgs/tvbrowser128.png"
-        exec="tvbrowser.sh"
+        exec="tvbrowser.sh %u"
   		tryExec="tvbrowser.sh"
         categories="Video;AudioVideo;TV"
-    	  type="Application"
+    	type="Application"
+  		MimeType="x-scheme-handler/tvb;"
     >
     	<name lang="de" value="${programname}"/>
     	<genericName value="Digital TV Guide"/>
@@ -526,10 +527,11 @@
         toFile="${tvbrowser-linux.runtime.dir}/tvbrowser.desktop"
         name="${programname}"
         icon="/usr/share/tvbrowser/imgs/tvbrowser128.png"
-        exec="tvbrowser"
+        exec="tvbrowser %u"
         categories="Video;AudioVideo;TV"
     	  type="Application"
   			comment="Easy to use TV Guide - written in Java"
+  		MimeType="x-scheme-handler/tvb;"
     >
     	<name lang="de" value="${programname}"/>
     	<genericName value="Digital TV Guide"/>
@@ -593,6 +595,8 @@
         todir="${public.dir}"
         package="tvbrowser"
         section="utils"
+		postinst="${deployment.dir}/linux/shell-scripts/postinst"
+		prerm="${deployment.dir}/linux/shell-scripts/prerm"
         depends="openjdk-11-jre | default-jre"
   	    recommends="openjdk-11-jre">
 
@@ -633,6 +637,8 @@
   		destination="${public.dir}"
         name="tvbrowser"
   		version="${tvbrowser.version}"
+		postInstallScript="${deployment.dir}/shell-scripts/postinst"
+		preUninstallScript="${deployment.dir}/shell-scripts/prerm"
   		group="Java">
 
   	    <zipfileset  dir="${tvbrowser-linux.runtime.dir}" prefix="/usr/share/tvbrowser">

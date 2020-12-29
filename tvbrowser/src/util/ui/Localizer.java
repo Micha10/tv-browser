@@ -151,7 +151,7 @@ import java.util.Locale;
    * @return a localized message.
    */
   public String msg(final String key, final String defaultMsg, final Object arg1) {
-    return mLocalizer.ellipsisMsg(key, defaultMsg, arg1);
+    return mLocalizer.msg(key, defaultMsg, arg1);
   }
 
 
