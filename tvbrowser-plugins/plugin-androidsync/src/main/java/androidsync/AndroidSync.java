@@ -106,7 +106,7 @@ import util.ui.customizableitems.SelectableItemList;
  * @author René Mach
  */
 public class AndroidSync extends Plugin {
-  private static final Localizer mLocalizer = Localizer.getLocalizerFor(AndroidSync.class);
+  private static final Localizer LOCALIZER = Localizer.getLocalizerFor(AndroidSync.class);
   
   private static final String URL_BASE = "https://www.tvbrowser-app.de/";
   
@@ -131,7 +131,7 @@ public class AndroidSync extends Plugin {
   private static final String PLUGIN_TYPE = "PLUGIN_TYPE";
   private static final String FILTER_TYPE = "FILTER_TYPE";
   
-  private static final Version mVersion = new Version(0, 26, 0, true);
+  private static final Version mVersion = new Version(0, 27, 0, true);
   private final String CrLf = "\r\n";
   private Properties mProperties;
   
@@ -199,7 +199,7 @@ public class AndroidSync extends Plugin {
     if(!hasCredentials()) {
       if(ignoreShown || mProperties.getProperty(KEY_SHOWN_DIALOG_CREDENTIALS, "false").equals("false")) {
         String[] options = {
-            mLocalizer.msg("enterNow", "Save user data"),
+            LOCALIZER.msg("enterNow", "Save user data"),
             Localizer.getLocalization(Localizer.I18N_CANCEL)
         };
         
@@ -209,7 +209,7 @@ public class AndroidSync extends Plugin {
           
           UserPanel userPanel = new UserPanel(mProperties.getProperty(KEY_CAR,""), mProperties.getProperty(KEY_BICYCLE,""), true);
           
-          int selected = JOptionPane.showOptionDialog(w, new Object[] {mLocalizer.msg("notSetup", "No user data found for synchronization of TV-Browser for Android.\n\nDo you want to enter them now or do you want to create new user data (Internet access needed)?\n"), userPanel}, getInfo().getName() + ": " + mLocalizer.msg("notSetupTitle", "No user data found"), JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, createImageIcon("apps", "android_robot", 22), options, options[0]);
+          int selected = JOptionPane.showOptionDialog(w, new Object[] {LOCALIZER.msg("notSetup", "No user data found for synchronization of TV-Browser for Android.\n\nDo you want to enter them now or do you want to create new user data (Internet access needed)?\n"), userPanel}, getInfo().getName() + ": " + LOCALIZER.msg("notSetupTitle", "No user data found"), JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, createImageIcon("apps", "android_robot", 22), options, options[0]);
           
           if(selected == JOptionPane.OK_OPTION) {
             mProperties.put(KEY_CAR, userPanel.getCar());
@@ -244,7 +244,7 @@ public class AndroidSync extends Plugin {
     if(mShowChannelInfo) {
       //Window w = UiUtilities.getLastModalChildOf(getParentFrame());
       
-      int selected = JOptionPane.showConfirmDialog(null, mLocalizer.msg("channelChangeMessage", "The subscribed channel list was changed.\n\nDo you want to upload the new channel list to the TV-Browser server?"), getInfo().getName() + ": " + mLocalizer.msg("channelChangeTitle", "Channels changed"), JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+      int selected = JOptionPane.showConfirmDialog(null, LOCALIZER.msg("channelChangeMessage", "The subscribed channel list was changed.\n\nDo you want to upload the new channel list to the TV-Browser server?"), getInfo().getName() + ": " + LOCALIZER.msg("channelChangeTitle", "Channels changed"), JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
       
       if(selected == JOptionPane.YES_OPTION) {
         upload(CHANNEL_UP_SYNC_ADDRESS, true);
@@ -260,11 +260,11 @@ public class AndroidSync extends Plugin {
   
   @Override
   public PluginInfo getInfo() {
-    return new PluginInfo(AndroidSync.class, "Android Sync", mLocalizer.msg("description", "Exports highlighted programs of selected Plugins/Filter and subscribed channels to the TV-Browser server to make them available for TV-Browser for Android"), "René Mach");
+    return new PluginInfo(AndroidSync.class, "Android Sync", LOCALIZER.msg("description", "Exports highlighted programs of selected Plugins/Filter and subscribed channels to the TV-Browser server to make them available for TV-Browser for Android"), "René Mach");
   }
   @Override
   public ActionMenu getButtonAction() {
-    ContextMenuAction action = new ContextMenuAction(mLocalizer.msg("syncAndroid", "Export my highlighted/filtered programs to TV-Browser server"),createImageIcon("actions","export-programs",16));
+    ContextMenuAction action = new ContextMenuAction(LOCALIZER.msg("syncAndroid", "Export my highlighted/filtered programs to TV-Browser server"),createImageIcon("actions","export-programs",16));
     action.setActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
@@ -277,7 +277,7 @@ public class AndroidSync extends Plugin {
     });
     action.putValue(Plugin.BIG_ICON, createImageIcon("actions","export-programs",22));
     
-    ContextMenuAction backSync = new ContextMenuAction(mLocalizer.msg("syncBack", "Get synchronized programs from Android app"),createImageIcon("actions","export-programs",16));
+    ContextMenuAction backSync = new ContextMenuAction(LOCALIZER.msg("syncBack", "Get synchronized programs from Android app"),createImageIcon("actions","export-programs",16));
     backSync.setActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
@@ -290,7 +290,7 @@ public class AndroidSync extends Plugin {
     });
     backSync.putValue(Plugin.BIG_ICON, createImageIcon("actions","export-programs",22));
     
-    ContextMenuAction channels = new ContextMenuAction(mLocalizer.msg("syncChannels", "Export my subscribed EPGfree/EPGdonate channels to TV-Browser server"),createImageIcon("actions","export-channels",16));
+    ContextMenuAction channels = new ContextMenuAction(LOCALIZER.msg("syncChannels", "Export my subscribed EPGfree/EPGdonate channels to TV-Browser server"),createImageIcon("actions","export-channels",16));
     channels.setActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
@@ -303,7 +303,7 @@ public class AndroidSync extends Plugin {
     });
     channels.putValue(Plugin.BIG_ICON, createImageIcon("actions","export-channels",22));
     
-    ContextMenuAction remindersUp = new ContextMenuAction(mLocalizer.msg("syncUpReminders", "Export my Reminders to TV-Browser server"),createImageIcon("apps",
+    ContextMenuAction remindersUp = new ContextMenuAction(LOCALIZER.msg("syncUpReminders", "Export my Reminders to TV-Browser server"),createImageIcon("apps",
           "appointment", 16));
     remindersUp.setActionListener(new ActionListener() {
       @Override
@@ -317,7 +317,7 @@ public class AndroidSync extends Plugin {
     });
     remindersUp.putValue(Plugin.BIG_ICON, createImageIcon("apps","appointment",22));
     
-    ContextMenuAction remindersBack = new ContextMenuAction(mLocalizer.msg("syncBackReminders", "Get Reminders from the Android app"),createImageIcon("apps",
+    ContextMenuAction remindersBack = new ContextMenuAction(LOCALIZER.msg("syncBackReminders", "Get Reminders from the Android app"),createImageIcon("apps",
         "appointment-new", 16));
     remindersBack.setActionListener(new ActionListener() {
       @Override
@@ -408,7 +408,7 @@ public class AndroidSync extends Plugin {
         
         for(Object selected : selection) {
           if(selected instanceof String) {
-            if(selected.equals(mLocalizer.msg("favorites", "Favorites"))) {
+            if(selected.equals(LOCALIZER.msg("favorites", "Favorites"))) {
               internal.append("favoritesplugin.FavoritesPlugin");
             }
           }
@@ -434,20 +434,20 @@ public class AndroidSync extends Plugin {
           SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
-              JOptionPane.showMessageDialog(UiUtilities.getLastModalChildOf(getParentFrame()), mLocalizer.msg("noLoginMessage", "The entered credentials of AndroidSync could not be validated.\n\nThis may indicate that you entered them wrong. It also might be possible that the server was not reachable for a short time.\n\nPlease check the entered credentials."), mLocalizer.msg("noLoginTitle", "AndroidSync: Credentials could not be validated"), JOptionPane.WARNING_MESSAGE);
+              JOptionPane.showMessageDialog(UiUtilities.getLastModalChildOf(getParentFrame()), LOCALIZER.msg("noLoginMessage", "The entered credentials of AndroidSync could not be validated.\n\nThis may indicate that you entered them wrong. It also might be possible that the server was not reachable for a short time.\n\nPlease check the entered credentials."), LOCALIZER.msg("noLoginTitle", "AndroidSync: Credentials could not be validated"), JOptionPane.WARNING_MESSAGE);
             }
           });
         }
         else if(mProperties.getProperty(KEY_CAR,"").trim().length() > 0 && mProperties.getProperty(KEY_BICYCLE,"").trim().length() > 0 &&
             (!oldCar.equals(mProperties.getProperty(KEY_CAR,"")) || !oldBicycle.equals(mProperties.getProperty(KEY_BICYCLE,"")))) {
           String[] options = new String[] {
-              mLocalizer.msg("optionExport", "Export channels"),
-              mLocalizer.msg("optionNotNow", "Not now")
+              LOCALIZER.msg("optionExport", "Export channels"),
+              LOCALIZER.msg("optionNotNow", "Not now")
               };
           
           int selectedOption = JOptionPane.showOptionDialog(UiUtilities.getLastModalChildOf(getParentFrame()), 
-              mLocalizer.msg("userPasswordChanged", "You have changed the user name or the password\nDo you wish to update the stored channel data on the server?"),
-              mLocalizer.msg("userPasswordChangedTitle", "Synchronize channels?"),
+              LOCALIZER.msg("userPasswordChanged", "You have changed the user name or the password\nDo you wish to update the stored channel data on the server?"),
+              LOCALIZER.msg("userPasswordChangedTitle", "Synchronize channels?"),
               JOptionPane.YES_NO_OPTION,
               JOptionPane.QUESTION_MESSAGE,null,options,options[0]);
           
@@ -485,10 +485,10 @@ public class AndroidSync extends Plugin {
         ArrayList<Object> allPlugins = new ArrayList<Object>();
         
         if(mProperties.getProperty(SELECTED_INTERNAL_PLUGINS, "favoritesplugin.FavoritesPlugin").contains("favoritesplugin.FavoritesPlugin")) {
-          selectedPlugins.add(mLocalizer.msg("favorites", "Favorites"));
+          selectedPlugins.add(LOCALIZER.msg("favorites", "Favorites"));
         }
         
-        allPlugins.add(mLocalizer.msg("favorites", "Favorites"));
+        allPlugins.add(LOCALIZER.msg("favorites", "Favorites"));
         //allPlugins.add(mLocalizer.msg("reminders", "Reminders"));
         
         PluginAccess[] activatedPlugins = getPluginManager().getActivatedPlugins();
@@ -519,10 +519,10 @@ public class AndroidSync extends Plugin {
           }
         }
         
-        mSynchroReminders = new JCheckBox(mLocalizer.msg("synchronizeReminder", "Synchronize Reminder automatically"), mProperties.getProperty(SYNCHRONIZE_REMINDER,"true").equals("true"));
-        mSynchroHighlighted = new JCheckBox(mLocalizer.msg("synchronizeHighlighted", "Synchronize highlighted programs automatically"), mProperties.getProperty(SYNCHRONIZE_HIGHLIGHTED,"true").equals("true"));
-        mPluginType = new JRadioButton(mLocalizer.msg("pluginType","Hightlighted programs of Plugins"));
-        mFilterType = new JRadioButton(mLocalizer.msg("filterType","Accepted programs of Filter"));
+        mSynchroReminders = new JCheckBox(LOCALIZER.msg("synchronizeReminder", "Synchronize Reminder automatically"), mProperties.getProperty(SYNCHRONIZE_REMINDER,"true").equals("true"));
+        mSynchroHighlighted = new JCheckBox(LOCALIZER.msg("synchronizeHighlighted", "Synchronize highlighted programs automatically"), mProperties.getProperty(SYNCHRONIZE_HIGHLIGHTED,"true").equals("true"));
+        mPluginType = new JRadioButton(LOCALIZER.msg("pluginType","Hightlighted programs of Plugins"));
+        mFilterType = new JRadioButton(LOCALIZER.msg("filterType","Accepted programs of Filter"));
         
         ButtonGroup type = new ButtonGroup();
         type.add(mPluginType);
@@ -544,7 +544,7 @@ public class AndroidSync extends Plugin {
         
         pb.add(mUserPanel = new UserPanel(mProperties.getProperty(KEY_CAR,""), mProperties.getProperty(KEY_BICYCLE,""), true), CC.xyw(2, 1, 4));
         
-        pb.addSeparator(mLocalizer.msg("exportPlugins", "Export programs of"), CC.xyw(1, 3, 5));
+        pb.addSeparator(LOCALIZER.msg("exportPlugins", "Export programs of"), CC.xyw(1, 3, 5));
         pb.add(mSynchroReminders, CC.xyw(2, 5, 4));
         pb.add(mSynchroHighlighted, CC.xyw(2, 6, 4));
         pb.add(mPluginType, CC.xyw(2, 8, 4));
@@ -784,40 +784,76 @@ public class AndroidSync extends Plugin {
     else if(address.equals(CHANNEL_UP_SYNC_ADDRESS)) {
       ArrayList<Channel> notUpdateChannels = new ArrayList<Channel>();
       StringBuilder channels = new StringBuilder();
+      StringBuilder channelsClean = new StringBuilder();
       
       Channel[] subscribed = getPluginManager().getSubscribedChannels();
       
+      int maxSortNumber = -1;
+      
+      boolean unsorted = false;
+      
       for(Channel ch : subscribed) {System.out.println(ch.getDataServicePackageName() + " " + ch.getUniqueId());
-        if(ch.getDataServicePackageName().equals("tvbrowserdataservice")) {System.out.println(ch.getGroup().getId());
-          channels.append("1:");
-          channels.append(ch.getGroup().getId());
+        if(ch.getDataServicePackageName().equals("tvbrowserdataservice") || ch.getDataServicePackageName().equals("epgdonatedata")) {
+          if(ch.getDataServicePackageName().equals("tvbrowserdataservice")) {System.out.println(ch.getGroup().getId());
+            channels.append("1:");
+            channels.append(ch.getGroup().getId());
+            channelsClean.append("1:");
+            channelsClean.append(ch.getGroup().getId());
+          }
+          else if(ch.getDataServicePackageName().equals("epgdonatedata")) {
+            channels.append("2");
+            channelsClean.append("2");
+          }
+          
           channels.append(":");
           channels.append(ch.getId());
+          channelsClean.append(":");
+          channelsClean.append(ch.getId());
           
           String sortNumber = getSortNumber(ch);
           
           if(sortNumber != null) {
+            if(!unsorted) {
+              try {
+                int number = Integer.parseInt(sortNumber);
+                maxSortNumber = Math.max(maxSortNumber, number);
+                
+                if(maxSortNumber > number) {
+                  unsorted = true;
+                }
+              }catch(NumberFormatException nfe) {}
+            }
+            
             channels.append(":");
             channels.append(sortNumber);
           }
           
           channels.append("\n");
-        }
-        else if(ch.getDataServicePackageName().equals("epgdonatedata")) {
-          channels.append("2:");
-          channels.append(ch.getId());
-          
-          String sortNumber = getSortNumber(ch);
-          
-          if(sortNumber != null) {
-            channels.append(":");
-            channels.append(sortNumber);
-          }
-          
-          channels.append("\n");
+          channelsClean.append("\n");
         }
         else {
           notUpdateChannels.add(ch);
+        }
+      }
+      
+      if(unsorted) {
+        final ButtonGroup bg = new ButtonGroup();
+        
+        final JRadioButton withoutSortNumber = new JRadioButton(LOCALIZER.msg("syncChannels.sort.order","Use channels order for sorting"), true);
+        final JRadioButton withSortNumber = new JRadioButton(LOCALIZER.msg("syncChannels.sort.number","Use sort numbers for sorting"));
+        bg.add(withoutSortNumber);
+        bg.add(withSortNumber);
+        
+        Object[] message = {
+            LOCALIZER.msg("syncChannels.sort.msg","ATTENTION: The entered sort numbers are not in order of the channels.\nWhen the sort numbers are exported the order of the channels in the Android app\nwill match the order of the sort numbers and not the order of the channels.\n\nHow should the channels be exported?"),
+            withoutSortNumber,
+            withSortNumber
+        };
+        
+        JOptionPane.showMessageDialog(UiUtilities.getLastModalChildOf(getParentFrame()), message, LOCALIZER.msg("syncChannels.sort.title","How to export channels?"), JOptionPane.QUESTION_MESSAGE);
+        
+        if(withoutSortNumber.isSelected()) {
+          channels = channelsClean;
         }
       }
       
@@ -1053,9 +1089,9 @@ public class AndroidSync extends Plugin {
     if(showUserdataInput && (car.trim().length() == 0 || bicycle.trim().length() == 0)) {
       final UserPanel userPanel = new UserPanel(car, bicycle, false);
       
-      Object[] message = new Object[] {mLocalizer.msg("userDataInfo", "To use the synchronization, you must enter your user data first.\n"),userPanel};
+      Object[] message = new Object[] {LOCALIZER.msg("userDataInfo", "To use the synchronization, you must enter your user data first.\n"),userPanel};
       
-      if(JOptionPane.showConfirmDialog(UiUtilities.getLastModalChildOf(getParentFrame()), message, mLocalizer.msg("noUserData", "AndroidSync: User data missing"), JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE) == JOptionPane.OK_OPTION) {
+      if(JOptionPane.showConfirmDialog(UiUtilities.getLastModalChildOf(getParentFrame()), message, LOCALIZER.msg("noUserData", "AndroidSync: User data missing"), JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE) == JOptionPane.OK_OPTION) {
         car = userPanel.getCar();
         bicycle = userPanel.getBicycle();
         
@@ -1224,11 +1260,11 @@ public class AndroidSync extends Plugin {
               ReminderPlugin.getInstance().addPrograms(newReminders.toArray(new Program[newReminders.size()]));
               
               if(info) {
-                JOptionPane.showMessageDialog(getParentFrame(), mLocalizer.msg("successBackReminder", "Successfully updated Reminders."), mLocalizer.msg("successTitle", "Success"), JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(getParentFrame(), LOCALIZER.msg("successBackReminder", "Successfully updated Reminders."), LOCALIZER.msg("successTitle", "Success"), JOptionPane.INFORMATION_MESSAGE);
               }
             }
             else if(!backSync && info) {
-              JOptionPane.showMessageDialog(getParentFrame(), mLocalizer.msg("noBackReminder", " No new Reminders were found."), mLocalizer.msg("successTitle", "Success"), JOptionPane.INFORMATION_MESSAGE);
+              JOptionPane.showMessageDialog(getParentFrame(), LOCALIZER.msg("noBackReminder", " No new Reminders were found."), LOCALIZER.msg("successTitle", "Success"), JOptionPane.INFORMATION_MESSAGE);
             }
           }
           
@@ -1337,13 +1373,13 @@ public class AndroidSync extends Plugin {
 
           System.out.println("DONE");
 
-          Object message = mLocalizer.msg("success", "The data were send successfully.");
-          String title = mLocalizer.msg("successTitle", "Success");
+          Object message = LOCALIZER.msg("success", "The data were send successfully.");
+          String title = LOCALIZER.msg("successTitle", "Success");
           
           if(address != null && address.equals(CHANNEL_UP_SYNC_ADDRESS)) {
             if(mNotSynchronizedChannels != null) {
-              title = mLocalizer.msg("partlySuccessTitle", "Not all channels were synchronized");
-              message = mLocalizer.msg("partlySuccessMessage", "The following channel could not be\nsynchronized, because the data plugins\nof that channels are not supported\nin the TV-Browser Android app:");
+              title = LOCALIZER.msg("partlySuccessTitle", "Not all channels were synchronized");
+              message = LOCALIZER.msg("partlySuccessMessage", "The following channel could not be\nsynchronized, because the data plugins\nof that channels are not supported\nin the TV-Browser Android app:");
               
               DefaultListModel model =  new DefaultListModel();
               
@@ -1370,7 +1406,7 @@ public class AndroidSync extends Plugin {
               JScrollPane pane = new JScrollPane(notSynchronized);
               pane.setPreferredSize(new Dimension(100,100));
               
-              message = new Object[] {message, pane, mLocalizer.msg("partlySuccessDataService", "These channels are provided by\nthe following data-plugins:") , plugins.toString().split(";")};
+              message = new Object[] {message, pane, LOCALIZER.msg("partlySuccessDataService", "These channels are provided by\nthe following data-plugins:") , plugins.toString().split(";")};
             }
             
             mUsedChannelArr = getPluginManager().getSubscribedChannels();
@@ -1393,11 +1429,11 @@ public class AndroidSync extends Plugin {
         }
         if(info) {
           switch (response) {
-            case 404: JOptionPane.showMessageDialog(getParentFrame(), mLocalizer.msg("userError", "Username or password were not accepted. Please check them."), mLocalizer.msg("serverError", "Error in server connection"), JOptionPane.ERROR_MESSAGE);break;
-            case 415: JOptionPane.showMessageDialog(getParentFrame(), mLocalizer.msg("wrongFileError", "Server didn't accepted upload data. This should not happen. Please contact TV-Browser team."), mLocalizer.msg("serverError", "Error in server connection"), JOptionPane.ERROR_MESSAGE);break;
-            case 500: JOptionPane.showMessageDialog(getParentFrame(), mLocalizer.msg("serverFileError", "Server could not store data. Please try again, if this continues please contact TV-Browser team."), mLocalizer.msg("serverError", "Error in server connection"), JOptionPane.ERROR_MESSAGE);break;
+            case 404: JOptionPane.showMessageDialog(getParentFrame(), LOCALIZER.msg("userError", "Username or password were not accepted. Please check them."), LOCALIZER.msg("serverError", "Error in server connection"), JOptionPane.ERROR_MESSAGE);break;
+            case 415: JOptionPane.showMessageDialog(getParentFrame(), LOCALIZER.msg("wrongFileError", "Server didn't accepted upload data. This should not happen. Please contact TV-Browser team."), LOCALIZER.msg("serverError", "Error in server connection"), JOptionPane.ERROR_MESSAGE);break;
+            case 500: JOptionPane.showMessageDialog(getParentFrame(), LOCALIZER.msg("serverFileError", "Server could not store data. Please try again, if this continues please contact TV-Browser team."), LOCALIZER.msg("serverError", "Error in server connection"), JOptionPane.ERROR_MESSAGE);break;
             
-            default: JOptionPane.showMessageDialog(getParentFrame(), mLocalizer.msg("unknowError", "Something went wrong with the connection to the server. Reason unknown."), mLocalizer.msg("serverError", "Error in server connection"), JOptionPane.ERROR_MESSAGE);break;
+            default: JOptionPane.showMessageDialog(getParentFrame(), LOCALIZER.msg("unknowError", "Something went wrong with the connection to the server. Reason unknown."), LOCALIZER.msg("serverError", "Error in server connection"), JOptionPane.ERROR_MESSAGE);break;
           }
         }
           e.printStackTrace();
@@ -1422,9 +1458,9 @@ public class AndroidSync extends Plugin {
     else {
       final UserPanel userPanel = new UserPanel(car, bicycle, false);
       
-      Object[] message = new Object[] {mLocalizer.msg("userDataInfo", "To use the synchronization, you must enter your user data first.\n"),userPanel};
+      Object[] message = new Object[] {LOCALIZER.msg("userDataInfo", "To use the synchronization, you must enter your user data first.\n"),userPanel};
       
-      if(JOptionPane.showConfirmDialog(UiUtilities.getLastModalChildOf(getParentFrame()), message, mLocalizer.msg("noUserData", "AndroidSync: User data missing"), JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE) == JOptionPane.OK_OPTION) {
+      if(JOptionPane.showConfirmDialog(UiUtilities.getLastModalChildOf(getParentFrame()), message, LOCALIZER.msg("noUserData", "AndroidSync: User data missing"), JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE) == JOptionPane.OK_OPTION) {
         car = userPanel.getCar();
         bicycle = userPanel.getBicycle();
         
@@ -1464,17 +1500,17 @@ public class AndroidSync extends Plugin {
       
       pb.addRow(false);
       
-      pb.addLabel(mLocalizer.msg("car", "User name:"), CC.xy(2, pb.getRowCount()));
+      pb.addLabel(LOCALIZER.msg("car", "User name:"), CC.xy(2, pb.getRowCount()));
       pb.add(mCar, CC.xy(4, pb.getRowCount()));
       
       pb.addRow("1dlu", false);
       pb.addRow(false);
       
-      pb.addLabel(mLocalizer.msg("bicycle", "Password:"), CC.xy(2, pb.getRowCount()));
+      pb.addLabel(LOCALIZER.msg("bicycle", "Password:"), CC.xy(2, pb.getRowCount()));
       pb.add(mBicycle, CC.xy(4, pb.getRowCount()));
       
       if(showCreationLink) {
-        JEditorPane linkToWeb = UiUtilities.createHtmlHelpTextArea(mLocalizer.msg("createUserData", "<html>Create new user account: <a href=\"https://www.tvbrowser-app.de/index.php?id=createaccount\">https://www.tvbrowser-app.de/index.php?id=createaccount</a></html>"));
+        JEditorPane linkToWeb = UiUtilities.createHtmlHelpTextArea(LOCALIZER.msg("createUserData", "<html>Create new user account: <a href=\"https://www.tvbrowser-app.de/index.php?id=createaccount\">https://www.tvbrowser-app.de/index.php?id=createaccount</a></html>"));
         
         pb.addRow("3dlu",false);
         pb.addRow(false);
