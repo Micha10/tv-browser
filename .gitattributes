@@ -1869,9 +1869,14 @@ tvbrowser/deployment/linux/tvbrowser -text
 tvbrowser/deployment/linux/tvbrowser.appdata.xml -text svneol=unset#text/plain
 tvbrowser/deployment/linux/tvbrowser.sh eol=lf
 tvbrowser/deployment/macosx/jarbundler-2.0.0.jar -text
+tvbrowser/deployment/macosx/tvb_ptc.icns -text
+tvbrowser/deployment/macosx/tvb_ptc_logo.svg -text
 tvbrowser/deployment/macosx/tvbdmg.png -text
+tvbrowser/deployment/macosx/tvbdmg1.png -text
+tvbrowser/deployment/macosx/tvbdmg1.xcf -text
 tvbrowser/deployment/macosx/tvbrowser-transportable-mac.command -text
 tvbrowser/deployment/macosx/tvbrowser.dmg -text
+tvbrowser/deployment/macosx/tvbrowser.json -text
 tvbrowser/deployment/macosx/tvbrowser.psd -text
 tvbrowser/deployment/macosx7/appbundler-1.0ea.jar -text
 tvbrowser/deployment/packer.txt -text

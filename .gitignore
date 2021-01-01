@@ -455,6 +455,7 @@ tvbrowser/.project
 tvbrowser/.settings
 tvbrowser/bin
 tvbrowser/classes
+tvbrowser/doc
 tvbrowser/images/themes/tango/16x16/actions/Makefile
 tvbrowser/images/themes/tango/16x16/actions/Makefile.in
 tvbrowser/images/themes/tango/16x16/apps/Makefile

@@ -1,0 +1,16 @@
+{
+  "title": "TV-Browser",
+  "icon": "tvbrowser.icns",
+  "background": "tvbdmg1.png",
+  "window": {
+       "position": { "x": 200, "y": 200 },
+       "size": { "width": 650, "height": 480 }
+  },
+  "contents": [
+    { "x": 470, "y": 210, "type": "link", "path": "/Applications" },
+    { "x": 0, "y": 80, "type": "file", "path": "LICENSE.txt" },
+    { "x": 0, "y": 200, "type": "file", "path": "Readme.rtf" },
+    { "x": 145, "y": 125, "type": "file", "path": "TV-Browser Protocol.app" },
+    { "x": 250, "y": 222, "type": "file", "path": "TV-Browser.app" }
+  ]
+}
