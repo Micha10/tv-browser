@@ -2335,6 +2335,7 @@ tvbrowser/src/devplugin/ProgramReceiveTarget.java -text
 tvbrowser/src/devplugin/ProgressMonitorExtended.java -text svneol=unset#text/plain
 tvbrowser/src/devplugin/TabListener.java -text svneol=unset#text/plain
 tvbrowser/src/devplugin/ToolTipIcon.java -text svneol=unset#text/plain
+tvbrowser/src/devplugin/TvBrowserSettingsImpl.java -text svneol=unset#text/plain
 tvbrowser/src/devplugin/UniqueIdNameGenericValue.java -text svneol=unset#text/plain
 tvbrowser/src/devplugin/devplugin_cs.properties -text svneol=unset#text/plain
 tvbrowser/src/devplugin/devplugin_da.properties -text

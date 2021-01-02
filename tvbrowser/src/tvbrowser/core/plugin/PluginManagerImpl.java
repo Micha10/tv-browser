@@ -25,7 +25,6 @@
  */
 package tvbrowser.core.plugin;
 
-import java.awt.Color;
 import java.awt.TrayIcon.MessageType;
 import java.awt.event.ActionEvent;
 import java.text.ParseException;
@@ -43,7 +42,6 @@ import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
-import javax.swing.UIManager;
 
 import devplugin.ActionMenu;
 import devplugin.Channel;
@@ -63,6 +61,7 @@ import devplugin.ProgramSearcher;
 import devplugin.ProgressMonitorExtended;
 import devplugin.ThemeIcon;
 import devplugin.TvBrowserSettings;
+import devplugin.TvBrowserSettingsImpl;
 import devplugin.Version;
 import tvbrowser.TVBrowser;
 import tvbrowser.core.ChannelList;
@@ -81,7 +80,6 @@ import tvbrowser.core.tvdataservice.TvDataServiceProxyManager;
 import tvbrowser.extras.reminderplugin.ReminderPluginProxy;
 import tvbrowser.ui.mainframe.MainFrame;
 import tvbrowser.ui.settings.SettingsDialog;
-import tvbrowser.ui.settings.StartupSettingsTab;
 import tvdataservice.MarkedProgramsMap;
 import tvdataservice.MutableProgram;
 import util.exc.TvBrowserException;
@@ -167,11 +165,18 @@ public class PluginManagerImpl implements PluginManager {
   private static PluginManagerImpl mInstance;
   
   private boolean mTvBrowserStartFinished = false;
+  private TvBrowserSettingsImpl mTvBrowserSettings;
 
   /**
    * Creates a new instance of PluginManagerImpl.
    */
   private PluginManagerImpl() {
+    try {
+      mTvBrowserSettings = new TvBrowserSettingsImpl(this);
+    } catch (IllegalAccessException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
   }
 
   /**
@@ -939,128 +944,7 @@ public class PluginManagerImpl implements PluginManager {
    * @return Some settings a plugin may need.
    */
   public TvBrowserSettings getTvBrowserSettings() {
-    return new TvBrowserSettings(){
-      public String getTvBrowserUserHome() {
-        return Settings.getUserSettingsDirName();
-      }
-
-      public int[] getTimeButtonTimes() {
-        return Settings.propTimeButtons.getIntArray();
-      }
-
-      public Date getLastDownloadDate() {
-        return Settings.propLastDownloadDate.getDate();
-      }
-      
-      public int getDefaultNetworkConnectionTimeout(){
-        return Settings.propDefaultNetworkConnectionTimeout.getInt();
-      }
-      
-      public Color getColorForMarkingPriority(int priority) {
-        Color result = null;
-        
-        if(priority > Settings.getHighlightingPriorityMaximum()) {
-          priority = Settings.getHighlightingPriorityMaximum();
-        }
-        
-        if(priority == Program.PRIORITY_MARK_NONE) {
-          result = new Color(255,255,255,0);
-        }
-        else if(priority > Program.PRIORITY_MARK_NONE) {
-          result = Settings.getHighlightingColorForPriority(priority);
-        }
-        
-        return result;
-      }
-      
-      public int getProgramTableEndOfDay() {
-        return Settings.propProgramTableEndOfDay.getInt();
-      }
-
-      public int getProgramTableStartOfDay() {
-        return Settings.propProgramTableStartOfDay.getInt();
-      }
-      
-      public Color getProgramPanelOnAirLightColor() {
-        return Settings.propProgramTableColorOnAirLight.getColor();
-      }
-      
-      public Color getProgramPanelOnAirDarkColor() {
-        return Settings.propProgramTableColorOnAirDark.getColor();
-      }
-
-      public boolean isMarkingBorderPainted() {
-        return Settings.propProgramPanelWithMarkingsShowingBoder.getBoolean();
-      }
-
-      public boolean isUsingExtraSpaceForMarkIcons() {
-        return Settings.propProgramPanelUsesExtraSpaceForMarkIcons.getBoolean();
-      }
-
-      public short getAutoDownloadWaitingTime() {
-        return Settings.propAutoDownloadWaitingTime.getShort();
-      }
-
-      @Override
-      public Color getProgramTableMouseOverColor() {
-        return Settings.propProgramTableMouseOver.getBoolean() ? Settings.propProgramTableMouseOverColor.getColor() : null;
-      }
-      
-      @Override
-      public Color getProgramTableForegroundColor() {
-        return Settings.propTableBackgroundStyle.getString().contains("ui") ? UIManager.getColor("List.foreground") : Settings.propProgramPanelForegroundColor.getColor();
-      }
-      
-      @Override
-      public Color getProgramPanelSelectionColor() {
-        return Settings.propKeyboardSelectedColor.getColor();
-      }
-
-      @Override
-      public String getTimePattern() {
-        return Settings.getTimePattern();
-      }
-
-      @Override
-      public boolean isChannelUpdateActivated() {
-        return Settings.propAutoChannelUpdatePeriod.getInt() > StartupSettingsTab.VALUE_AUTO_CHANNEL_UPDATE_DISABLED;
-      }
-
-      @Override
-      public Color getScrollColorTimeLight() {
-        return Settings.propScrollToTimeProgramsLightBackground.getColor();
-      }
-
-      @Override
-      public Color getScrollColorTimeDark() {
-        return Settings.propScrollToTimeProgramsDarkBackground.getColor();
-      }
-
-      @Override
-      public Color getScrollColorChannel() {
-        return Settings.propScrollToChannelProgramsBackground.getColor();
-      }
-
-      @Override
-      public boolean isScrollToTimeHighlightActivated() {
-        return Settings.propScrollToTimeMarkingActivated.getBoolean();
-      }
-
-      @Override
-      public boolean isScrollToChannelHighlightActivated() {
-        return Settings.propScrollToChannnelMarkingActivated.getBoolean();
-      }
-
-      @Override
-      public String getDataDirectory() {
-        return Settings.propTVDataDirectory.getString();
-      }
-
-      @Override
-      public boolean getCanReceiveProtocolMessages() {
-        return Settings.propCanReceiveProtocolMessages.getBoolean();
-      }
-    };
+    return mTvBrowserSettings;
   }
 
   /**
