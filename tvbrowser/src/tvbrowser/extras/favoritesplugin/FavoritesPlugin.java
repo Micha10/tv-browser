@@ -1254,7 +1254,7 @@ public class FavoritesPlugin {
         exclusionArr[mExclusions.length] = (Exclusion)exclusion;
 
         setGlobalExclusions(exclusionArr, true);
-      }else {
+      } else {
         if(exclusion instanceof Exclusion) {
           fav.addExclusion((Exclusion)exclusion);
         }
@@ -1508,6 +1508,7 @@ public class FavoritesPlugin {
             // ignore
           }
         }
+        saveFavorites();
       }
     }.start();
   }

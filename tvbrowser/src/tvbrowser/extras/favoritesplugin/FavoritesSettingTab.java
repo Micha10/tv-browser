@@ -320,8 +320,9 @@ public class FavoritesSettingTab implements SettingsTab {
     if(mExclusionPanel.wasChanged()) {
       FavoritesPlugin.getInstance().setGlobalExclusions(mExclusionPanel.getExclusions(),mExclusionPanel.wasAdded() && !mExclusionPanel.wasEditedOrDeleted());
     }
-
-    FavoritesPlugin.getInstance().saveFavorites();
+    else {
+      FavoritesPlugin.getInstance().saveFavorites();
+    }
   }
 
   /**
