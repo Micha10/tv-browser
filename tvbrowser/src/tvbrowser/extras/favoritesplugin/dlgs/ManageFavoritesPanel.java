@@ -810,7 +810,7 @@ public class ManageFavoritesPanel extends TabListenerPanel implements ListDropAc
   }
   
   public void scrollInProgramListToIndex(final int index) {
-    mProgramListPanel.scrollToIndexWithoutDateSeparators(index);
+    mProgramListPanel.scrollToIndex(index);
   }
 
   private void enableButtons(boolean enabled) {
