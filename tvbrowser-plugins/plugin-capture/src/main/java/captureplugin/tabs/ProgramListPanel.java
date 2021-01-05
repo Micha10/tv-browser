@@ -40,26 +40,26 @@ import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
-import javax.swing.SwingUtilities;
 
+import captureplugin.CapturePlugin;
+import captureplugin.CapturePluginData;
+import captureplugin.drivers.DeviceIf;
+import captureplugin.utils.ProgramTimeComparator;
+import devplugin.Program;
+import util.programmouseevent.ProgramMouseAndContextMenuListener;
+import util.programmouseevent.ProgramMouseEventHandler;
 import util.settings.PluginPictureSettings;
 import util.ui.Localizer;
 import util.ui.ProgramTableCellRenderer;
 import util.ui.TVBrowserIcons;
 import util.ui.UiUtilities;
-import captureplugin.CapturePlugin;
-import captureplugin.CapturePluginData;
-import captureplugin.drivers.DeviceIf;
-import captureplugin.utils.ProgramTimeComparator;
-import devplugin.Plugin;
-import devplugin.Program;
 
 /**
  * Panel with List of Recordings
  *
  * @author bodum
  */
-public class ProgramListPanel extends JPanel {
+public class ProgramListPanel extends JPanel implements ProgramMouseAndContextMenuListener {
     /** Translator */
     private static final Localizer mLocalizer = Localizer.getLocalizerFor(ProgramListPanel.class);
 
@@ -113,112 +113,27 @@ public class ProgramListPanel extends JPanel {
         setLayout(new BorderLayout());
 
         mProgramTable = new JTable(mProgramTableModel);
-
         mProgramTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         mProgramTable.getColumnModel().getColumn(0).setCellRenderer(new DeviceTableCellRenderer());
+        mProgramTable.getColumnModel().getColumn(0).setPreferredWidth(mData.getWidthProgramTableColum1());
         mProgramTable.getColumnModel().getColumn(1).setCellRenderer(new ProgramTableCellRenderer(new PluginPictureSettings(PluginPictureSettings.ALL_PLUGINS_SETTINGS_TYPE)));
+        mProgramTable.getColumnModel().getColumn(1).setPreferredWidth(mData.getWidthProgramTableColum2());
+        mProgramTable.getTableHeader().addMouseListener(new MouseAdapter() {
+          @Override
+          public void mouseReleased(MouseEvent e) {
+            if(mProgramTable.getColumnCount() == 2) {
+              mData.setWidthProgramTableColum1(mProgramTable.getColumnModel().getColumn(0).getWidth());
+              mData.setWidthProgramTableColum2(mProgramTable.getColumnModel().getColumn(1).getWidth());
+              CapturePlugin.getInstance().save();
+            }
+          }
+        });
         
         if (CapturePlugin.getInstance().getCapturePluginData().getDevices().size() < 2) {
           mProgramTable.getColumnModel().removeColumn(mProgramTable.getColumnModel().getColumn(0));
         }
 
-        mProgramTable.addMouseListener(new MouseAdapter() {
-            private Thread mLeftSingleClickThread;
-            private boolean mPerformingSingleClick = false;
-            
-            private Thread mMiddleSingleClickThread;
-            private boolean mPerformingSingleMiddleClick = false;
-          
-            public void mousePressed(MouseEvent evt) {
-              if (evt.isPopupTrigger()) {
-                showPopup(evt);
-              }
-            }
-
-            public void mouseReleased(MouseEvent evt) {
-              if (evt.isPopupTrigger()) {
-                showPopup(evt);
-              }
-            }
-
-            public void mouseClicked(final MouseEvent e) {
-                int column = mProgramTable.columnAtPoint(e.getPoint());
-                if (column != 1) {
-                    return;
-                }
-                
-                if (SwingUtilities.isLeftMouseButton(e) && (e.getClickCount() == 1) && e.getModifiersEx() == 0) {
-                  mLeftSingleClickThread = new Thread("Single left click") {
-                    public void run() {
-                      try {
-                        mPerformingSingleClick = false;
-                        sleep(Plugin.SINGLE_CLICK_WAITING_TIME);
-                        mPerformingSingleClick = true;
-
-                        int row = mProgramTable.rowAtPoint(e.getPoint());
-                        mProgramTable.changeSelection(row, 0, false, false);
-                        Program p = (Program) mProgramTableModel.getValueAt(row, 1);
-
-                        devplugin.Plugin.getPluginManager().handleProgramSingleClick(p, CapturePlugin.getInstance());
-                        mPerformingSingleClick = false;
-                      } catch (InterruptedException e) { // ignore
-                      }
-                    }
-                  };
-                  
-                  mLeftSingleClickThread.setPriority(Thread.MIN_PRIORITY);
-                  mLeftSingleClickThread.start();
-                }
-                else if (SwingUtilities.isLeftMouseButton(e) && (e.getClickCount() == 2) && e.getModifiersEx() == 0) {
-                    if(!mPerformingSingleClick && mLeftSingleClickThread != null && mLeftSingleClickThread.isAlive()) {
-                      mLeftSingleClickThread.interrupt();
-                    }
-                    
-                    if(!mPerformingSingleClick) {
-                      int row = mProgramTable.rowAtPoint(e.getPoint());
-                      mProgramTable.changeSelection(row, 0, false, false);
-                      Program p = (Program) mProgramTableModel.getValueAt(row, 1);
-  
-                      devplugin.Plugin.getPluginManager().handleProgramDoubleClick(p, CapturePlugin.getInstance());
-                    }
-                }
-                else if (SwingUtilities.isMiddleMouseButton(e) && (e.getClickCount() == 1)) {
-                  mMiddleSingleClickThread = new Thread("Single middle click") {
-                    public void run() {
-                      try {
-                        mPerformingSingleMiddleClick = false;
-                        sleep(Plugin.SINGLE_CLICK_WAITING_TIME);
-                        mPerformingSingleMiddleClick = true;
-
-                        int row = mProgramTable.rowAtPoint(e.getPoint());
-                        mProgramTable.changeSelection(row, 0, false, false);
-                        Program p = (Program) mProgramTableModel.getValueAt(row, 1);
-
-                        devplugin.Plugin.getPluginManager().handleProgramMiddleClick(p, CapturePlugin.getInstance());
-                        mPerformingSingleMiddleClick = false;
-                      } catch (InterruptedException e) { // ignore
-                      }
-                    }
-                  };
-                  
-                  mMiddleSingleClickThread.setPriority(Thread.MIN_PRIORITY);
-                  mMiddleSingleClickThread.start();
-                }
-                else if (SwingUtilities.isMiddleMouseButton(e) && (e.getClickCount() == 2)) {
-                    if(!mPerformingSingleMiddleClick && mMiddleSingleClickThread != null && mMiddleSingleClickThread.isAlive()) {
-                      mMiddleSingleClickThread.interrupt();
-                    }
-                    
-                    if(!mPerformingSingleMiddleClick) {
-                      int row = mProgramTable.rowAtPoint(e.getPoint());
-                      mProgramTable.changeSelection(row, 0, false, false);
-                      Program p = (Program) mProgramTableModel.getValueAt(row, 1);
-  
-                      devplugin.Plugin.getPluginManager().handleProgramMiddleDoubleClick(p, CapturePlugin.getInstance());
-                    }
-                }
-              }
-        });
+        mProgramTable.addMouseListener(new ProgramMouseEventHandler(this, CapturePlugin.getInstance()));
 
         JScrollPane scroll = new JScrollPane(mProgramTable);
 
@@ -280,6 +195,24 @@ public class ProgramListPanel extends JPanel {
            createListData();
        }
 
+    }
+
+    @Override
+    public Program getProgramForMouseEvent(MouseEvent e) {
+      int row = mProgramTable.rowAtPoint(e.getPoint());
+      //mProgramTable.changeSelection(row, 0, false, false);
+      
+      return (Program)mProgramTable.getValueAt(row, 1);
+    }
+
+    @Override
+    public void mouseEventActionFinished() {
+      
+    }
+
+    @Override
+    public void showContextMenu(MouseEvent e) {
+      showPopup(e);
     }
 
 }

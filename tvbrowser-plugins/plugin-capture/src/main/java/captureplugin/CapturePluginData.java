@@ -48,6 +48,9 @@ public final class CapturePluginData implements Cloneable {
     
     private boolean mShowAdditionalCommandsOnTop = false;
     
+    private int mWidthProgramTableColum1 = 200;
+    private int mWidthProgramTableColum2 = 400;
+    
     /**
      * All Devices
      */
@@ -85,7 +88,7 @@ public final class CapturePluginData implements Cloneable {
      * @throws IOException problems while writing
      */
     public void writeData(ObjectOutputStream out) throws IOException {
-        out.writeInt(5);
+        out.writeInt(6);
         
         out.writeInt(mMarkPriority);
         out.writeInt(mPriorityMarkingMulti);
@@ -101,6 +104,9 @@ public final class CapturePluginData implements Cloneable {
             out.writeObject(dev.getName());
             out.writeObject(writer.writeDevice(dev));
         }
+        
+        out.writeInt(mWidthProgramTableColum1);
+        out.writeInt(mWidthProgramTableColum2);
     }
 
     /**
@@ -152,6 +158,10 @@ public final class CapturePluginData implements Cloneable {
             
         }
         
+        if(version > 5) {
+          mWidthProgramTableColum1 = in.readInt();
+          mWidthProgramTableColum2 = in.readInt();
+        }
     }
 
     /**
@@ -239,5 +249,21 @@ public final class CapturePluginData implements Cloneable {
      */
     public void setShowAdditionalCommandsOnTop(boolean value) {
       mShowAdditionalCommandsOnTop = value;
+    }
+    
+    public int getWidthProgramTableColum1() {
+      return mWidthProgramTableColum1;
+    }
+    
+    public void setWidthProgramTableColum1(int width) {
+      mWidthProgramTableColum1 = width;
+    }
+    
+    public int getWidthProgramTableColum2() {
+      return mWidthProgramTableColum2;
+    }
+    
+    public void setWidthProgramTableColum2(int width) {
+      mWidthProgramTableColum2 = width;
     }
 }
