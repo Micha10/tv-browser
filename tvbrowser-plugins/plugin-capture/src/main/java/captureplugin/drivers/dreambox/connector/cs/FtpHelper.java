@@ -161,45 +161,53 @@ public class FtpHelper implements FTPCommunicationListener {
         }
       } else if (cmd.equalsIgnoreCase("GET")) {
         // GET file
-        try {
+    	ByteArrayOutputStream out = null;
+        
+    	try {
           mClient.setType(FTPClient.TYPE_BINARY);
           String filename = new String(args[1].getBytes(ENCODING));
-          
-          try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
-            final AtomicBoolean completed = new AtomicBoolean(false);
+          out = new ByteArrayOutputStream();
+          final AtomicBoolean completed = new AtomicBoolean(false);
             
-            mClient.download(filename, out, 0, new FTPDataTransferListener() {
-              @Override
-              public void transferred(int arg0) {}
-              
-              @Override
-              public void started() {}
-              
-              @Override
-              public void failed() {}
-              
-              @Override
-              public void completed() {
-                completed.set(true);
-              }
-              
-              @Override
-              public void aborted() {}
-            });
-            
-            if(completed.get()) {
-              s = new String(out.toByteArray(),ENCODING);
-            }
-          }
+	        mClient.download(filename, out, 0, new FTPDataTransferListener() {
+	          @Override
+	          public void transferred(int arg0) {}
+	          
+	          @Override
+	          public void started() {}
+	          
+	          @Override
+	          public void failed() {}
+	          
+	          @Override
+	          public void completed() {
+	            completed.set(true);
+	          }
+	          
+	          @Override
+	          public void aborted() {}
+	        });
+	        
+	        if(completed.get()) {
+	          s = new String(out.toByteArray(),ENCODING);
+	        }
         }catch(Exception e) {
           mLog.log(Level.SEVERE, "Could not download file from server: " + args[1], e);
-        }
+        }finally {
+			if(out != null){
+				try {
+					out.close();
+				}catch(IOException ioe) {}
+			}
+		}
       } else if (cmd.equalsIgnoreCase("PUT")) {
         // PUT file
         mClient.setType(FTPClient.TYPE_BINARY);
+        ByteArrayInputStream in = null;
+        
         try {
           String filename = new String(args[1].getBytes(ENCODING));
-          try(ByteArrayInputStream in = new ByteArrayInputStream(args[2].getBytes(ENCODING))) {
+          in = new ByteArrayInputStream(args[2].getBytes(ENCODING));
             final AtomicBoolean complete = new AtomicBoolean(false);
             
             mClient.upload(filename, in, 0, 0, new FTPDataTransferListener() {
@@ -220,9 +228,14 @@ public class FtpHelper implements FTPCommunicationListener {
               @Override
               public void aborted() {}
             });
-          }
         }catch(Exception e) {
           mLog.log(Level.SEVERE, "Could not upload file: " + args[1], e);
+        }finally {
+        	if(in != null) {
+        		try {
+        			in.close();
+        		}catch(IOException ioe) {}
+        	}
         }
       } else {
         mLog.warning("unkown command : " + cmd);
