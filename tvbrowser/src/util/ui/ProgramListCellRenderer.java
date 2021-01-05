@@ -30,7 +30,6 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
-import java.awt.Insets;
 import java.util.HashSet;
 
 import javax.swing.AbstractListModel;
@@ -110,10 +109,12 @@ public class ProgramListCellRenderer extends DefaultListCellRenderer {
 
   private JPanel mMainPanel;
   private JLabel mHeaderLb;
+  private JPanel mCenterPanel;
   private ProgramPanel mProgramPanel;
   private HashSet<Program> mProgramSet = new HashSet<Program>();
   private JPanel mDateSeparator;
   private JLabel mDateLabel;
+  private boolean mShowDateSeparators;
 
   /**
    * Creates a new instance of ProgramListCellRenderer
@@ -131,6 +132,19 @@ public class ProgramListCellRenderer extends DefaultListCellRenderer {
    * @since 2.2.2
    */
   public ProgramListCellRenderer(ProgramPanelSettings settings) {
+    this(settings,false);
+  }
+  
+  /**
+   * Creates a new instance of ProgramListCellRenderer
+   *
+   * @param settings
+   *          The settings for the program panel.
+   * @param showDateSeparators <code>true</code> if the date separators should be shown, <code>false</code>
+   * if not.
+   * @since 4.2.3
+   */
+  public ProgramListCellRenderer(ProgramPanelSettings settings, boolean showDateSeparators) {
     SECOND_ROW_COLOR = UIManager.getColor("List.foreground");
     SECOND_ROW_COLOR = new Color(SECOND_ROW_COLOR.getRed(),SECOND_ROW_COLOR.getGreen(),SECOND_ROW_COLOR.getBlue(),30);
     
@@ -143,18 +157,20 @@ public class ProgramListCellRenderer extends DefaultListCellRenderer {
     FIRST_ROW_COLOR_EXPIRED = UIManager.getColor("List.background");
     FIRST_ROW_COLOR_EXPIRED = new Color(FIRST_ROW_COLOR_EXPIRED.getRed(),FIRST_ROW_COLOR_EXPIRED.getGreen(),FIRST_ROW_COLOR_EXPIRED.getBlue(),15);
 
-    initializeSettings(settings);
+    initializeSettings(settings,showDateSeparators);
   }
 
-  private void initializeSettings(ProgramPanelSettings settings) {
+  private void initializeSettings(ProgramPanelSettings settings, boolean showDateSeparators) {
     mMainPanel = new JPanel(new BorderLayout());
     mMainPanel.setOpaque(true);
 
     mHeaderLb = new JLabel();
-    mMainPanel.add(mHeaderLb, BorderLayout.NORTH);
-    
     mProgramPanel = new ProgramPanel(settings);
-    mMainPanel.add(mProgramPanel, BorderLayout.CENTER);
+    
+    mCenterPanel = new JPanel(new BorderLayout());
+    mCenterPanel.setOpaque(true);
+    mCenterPanel.add(mHeaderLb, BorderLayout.NORTH);
+    mCenterPanel.add(mProgramPanel, BorderLayout.CENTER);
     
     Settings.addFontChangeListener(e -> {
       mProgramPanel.forceRepaint();
@@ -167,6 +183,21 @@ public class ProgramListCellRenderer extends DefaultListCellRenderer {
     mDateLabel.setFont(mDateLabel.getFont().deriveFont(mDateLabel.getFont().getSize2D() + 4).deriveFont(Font.BOLD));
     
     mDateSeparator.add(mDateLabel, new CellConstraints().xy(2, 2));
+    mShowDateSeparators = showDateSeparators;
+    
+    mMainPanel.add(mDateSeparator, BorderLayout.NORTH);
+    mMainPanel.add(mCenterPanel, BorderLayout.CENTER);
+  }
+  
+  /**
+   * Set if the list should show date separators
+   * 
+   * @param show <code>true</code> if the date separators should be shown, <code>false</code>
+   * if not.
+   * @since 4.2.3
+   */
+  public void setShowDateSeparators(boolean show) {
+    mShowDateSeparators = show;
   }
 
   /**
@@ -199,9 +230,22 @@ public class ProgramListCellRenderer extends DefaultListCellRenderer {
     if (value != null && value instanceof Program) {
       Program program = (Program) value;
       
-      Insets borderInsets = label.getBorder().getBorderInsets(label);
+      boolean addDateSeparator = false;
       
-      mProgramPanel.setWidth(list.getWidth() - borderInsets.left - borderInsets.right);
+      if(mShowDateSeparators) {
+        Date d = program.getDate();
+        
+        if(index == 0) {
+          addDateSeparator = true;
+        }
+        else {
+          Object test = list.getModel().getElementAt(index-1);
+          
+          addDateSeparator = (test instanceof Program && d.compareTo(((Program) test).getDate()) >= 1);
+        }
+      }
+      
+      mProgramPanel.setWidth(list.getWidth());
       mProgramPanel.setProgram(program);
       mProgramPanel.setPaintExpiredProgramsPale(!isSelected);
       mProgramPanel.setBackground(label.getBackground());
@@ -246,35 +290,30 @@ public class ProgramListCellRenderer extends DefaultListCellRenderer {
       }
       
       if (isSelected) {
-        mMainPanel.setBackground(Settings.propKeyboardSelectedColor.getColor());
-      //  mMainPanel.setForeground(label.getForeground());
+        mCenterPanel.setBackground(Settings.propKeyboardSelectedColor.getColor());
       }
       else {
-        mMainPanel.setBackground(label.getBackground());
+        mCenterPanel.setBackground(label.getBackground());
       }
 
-      mMainPanel.setEnabled(label.isEnabled());
-      mMainPanel.setBorder(label.getBorder());
+      mCenterPanel.setEnabled(label.isEnabled());
 
       if ((!isSelected) && program.getMarkPriorityMax() < Program.PRIORITY_MARK_MIN) {
         if(((index & 1) == 1)) {
-          mMainPanel.setBackground(program.isExpired() ? SECOND_ROW_COLOR_EXPIRED : SECOND_ROW_COLOR);
+          mCenterPanel.setBackground(program.isExpired() ? SECOND_ROW_COLOR_EXPIRED : SECOND_ROW_COLOR);
         }
         else {
-          mMainPanel.setBackground(program.isExpired() ? FIRST_ROW_COLOR_EXPIRED : FIRST_ROW_COLOR);
+          mCenterPanel.setBackground(program.isExpired() ? FIRST_ROW_COLOR_EXPIRED : FIRST_ROW_COLOR);
         }
       }
 
-      return mMainPanel;
-    }
-    else if(value instanceof String && list.getModel().getSize() > index +1) {
-      Object nextValue = list.getModel().getElementAt(index + 1);
+      mDateSeparator.setVisible(addDateSeparator);
       
-      if(nextValue instanceof Program && list.getModel().getSize() > index + 1) {
-        mDateLabel.setText(((Program)nextValue).getDateString());
-        
-        return mDateSeparator;
+      if(addDateSeparator) {
+        mDateLabel.setText(program.getDateString());
       }
+      
+      return mMainPanel;
     }
     
     return label;

@@ -207,9 +207,112 @@ public abstract class AbstractSearcher implements ProgramSearcher {
     return search(fieldArr, startDate, nrDays, channels, sortByStartTime, progress, null);
   }
   
-  public synchronized Program[] search(ProgramFieldType[] fieldArr, Date startDate,
+  
+  @Deprecated(since="4.2.3") public synchronized Program[] search(ProgramFieldType[] fieldArr, Date startDate,
                           int nrDays, Channel[] channels, boolean sortByStartTime, ProgressMonitor progress, final DefaultListModel<Object> listModel)
   {
+    mKeepSearching = true;
+    
+    // Should we search in all channels?
+    if (channels == null) {
+      channels = Settings.propSubscribedChannels.getChannelArray();
+    }
+
+    if (nrDays < 0) {
+      // Search complete data, beginning yesterday to 4 weeks into the future
+      startDate = Date.getCurrentDate().addDays(-1);
+      nrDays = TvDataBase.getInstance().getMaxSupportedDate().getNumberOfDaysSince(startDate);
+    }
+
+    // Perform the actual search
+    ArrayList<Program> hitList = new ArrayList<Program>();
+    int lastDayWithData = 0;
+    if (progress != null) {
+      progress.setMaximum(channels.length*(nrDays+1));
+    }
+    for (int day = 0; day <= nrDays; day++) {
+      if(!mKeepSearching) {
+        break;
+      }
+      
+      for (int channelIdx = 0; channelIdx < channels.length; channelIdx++) {
+        if(!mKeepSearching) {
+          break;
+        }
+        
+        if (progress != null) {
+          progress.setValue(day * channels.length + channelIdx);
+        }
+        Channel channel = channels[channelIdx];
+        if (channel != null) {
+            ChannelDayProgram dayProg = TvDataBase.getInstance().getDayProgram(startDate, channel);
+            if (dayProg != null) {
+              // This day has data -> remember it
+              lastDayWithData = day;
+
+              // Search this day program
+              for (int i = 0; i < dayProg.getProgramCount(); i++) {
+                if(!mKeepSearching) {
+                  break;
+                }
+                
+                final Program prog = dayProg.getProgramAt(i);
+                
+                if (matches(prog, fieldArr)) {
+                  if(listModel != null) {
+                      SwingUtilities.invokeLater(() -> {
+                        if(mKeepSearching) {
+                          int insertIndex = 0;
+    
+                          for(int index = 0; index < listModel.getSize(); index++) {
+                            Program p = (Program)listModel.get(index);
+    
+                            if(ProgramUtilities.getProgramComparator().compare(p,prog) < 0) {
+                              insertIndex = index+1;
+                            }
+                          }
+    
+                          listModel.add(insertIndex,prog);
+                        }
+                      });
+                  }
+
+                  hitList.add(prog);
+                }
+              }
+            }
+        }
+      }
+
+      // Give up if we did not find data for the last 10 days
+      if ((day - lastDayWithData) > 10) {
+        break;
+      }
+
+      // The next day
+      startDate = startDate.addDays(1);
+    }
+        
+    // Convert the list into an array
+    Program[] hitArr = new Program[hitList.size()];
+    hitList.toArray(hitArr);
+
+    // Sort the array if wanted
+    if (sortByStartTime) {
+      Arrays.sort(hitArr, getStartTimeComparator());
+    }
+
+    if (progress != null) {
+      progress.setValue(0);
+      progress.setMessage("");
+    }
+
+    // return the result
+    return hitArr;
+  }
+  
+  public Program[] search(ProgramFieldType[] fieldArr, Date startDate,
+      int nrDays, Channel[] channels, boolean sortByStartTime, DefaultListModel<Program> listModel, ProgressMonitor progress) {
     mKeepSearching = true;
     
     // Should we search in all channels?

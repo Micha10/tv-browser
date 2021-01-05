@@ -120,9 +120,39 @@ public interface ProgramSearcher {
    *          The list model the found programs should be stored in.
    * @return The matching programs.
    * @since 2.7
+   * @deprecated since 4.2.3
    */
-  public Program[] search(ProgramFieldType[] fieldArr, Date startDate,
+  @Deprecated(since="4.2.3") public Program[] search(ProgramFieldType[] fieldArr, Date startDate,
       int nrDays, Channel[] channels, boolean sortByStartTime, ProgressMonitor progress, DefaultListModel<Object> listModel);
+
+  /**
+   * Searches the TV data base for programs that match the criteria of this
+   * searcher.
+   * 
+   * @param fieldArr
+   *          The fields to search in
+   * @param startDate
+   *          The date to start the search.
+   * @param nrDays
+   *          The number of days to include after the start date. If this value
+   *          is negative, then all days are searched (beginning with yesterday)
+   *          and the startDate parameter is ignored.
+   * @param channels
+   *          The channels to search in. If this is <code>null</code>, then all
+   *          subscribed channels are searched.
+   * @param sortByStartTime
+   *          Should the results be sorted by the start time? If not, the
+   *          results will be grouped by date and channel and the search will be
+   *          faster.
+   * @param listModel
+   *          The list model the found programs should be stored in.
+   * @param progress
+   *          progressMonitor for showing the search progress
+   * @return The matching programs.
+   * @since 4.2.3
+   */
+   public Program[] search(ProgramFieldType[] fieldArr, Date startDate,
+      int nrDays, Channel[] channels, boolean sortByStartTime, DefaultListModel<Program> listModel, ProgressMonitor progress);
 
   /**
    * Stops the seach if the searcher supports it.

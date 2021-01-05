@@ -31,11 +31,9 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
-import javax.swing.DefaultListModel;
 import javax.swing.JList;
 import javax.swing.JPopupMenu;
 import javax.swing.ListModel;
@@ -65,7 +63,7 @@ import util.settings.ProgramPanelSettings;
 /**
  * This Class extends a JList for showing Programs
  */
-public class ProgramList extends JList<Object> implements ChangeListener,
+public class ProgramList extends JList<Program> implements ChangeListener,
     ListDataListener, PluginStateListener, 
     ProgramKeyAndContextMenuListener, AutoScrollerAndClickKeyHandler.ProgramAutoScrollListener {
   private final static Localizer LOCALIZER = Localizer.getLocalizerFor(ProgramList.class);
@@ -75,7 +73,6 @@ public class ProgramList extends JList<Object> implements ChangeListener,
   public final static String DATE_SEPARATOR = "DATE_SEPARATOR";
 
   private Vector<Program> mPrograms = new Vector<Program>();
-  private boolean mSeparatorsCreated = false;
   
   private ContextMenuIf mCaller;
   private ProgramKeyEventHandler mKeyEventHandler;
@@ -83,6 +80,7 @@ public class ProgramList extends JList<Object> implements ChangeListener,
   private AutoScrollerAndClickKeyHandler mAutoScroller;
   private boolean mHandleClicks = false;
   private long mLastStateChange = 0;
+  private ProgramListCellRenderer mListCellRenderer;
 
   /**
    * Creates the JList and adds the default MouseListeners (PopUpBox)
@@ -112,9 +110,8 @@ public class ProgramList extends JList<Object> implements ChangeListener,
    * @param programs
    *          Model with Programs to show
    */
-  public ProgramList(ListModel<Object> programs) {
-    this(programs, new PluginPictureSettings(
-        PluginPictureSettings.ALL_PLUGINS_SETTINGS_TYPE));
+  public ProgramList(ListModel<Program> programs) {
+    this(programs, new PluginPictureSettings(PluginPictureSettings.ALL_PLUGINS_SETTINGS_TYPE));
   }
   
   /**
@@ -134,7 +131,8 @@ public class ProgramList extends JList<Object> implements ChangeListener,
   }
 
   private void initialize(ProgramPanelSettings settings) {
-    setCellRenderer(new ProgramListCellRenderer(settings));
+    mListCellRenderer = new ProgramListCellRenderer(settings); 
+    setCellRenderer(mListCellRenderer);
     setToolTipText("");
     UiUtilities.addKeyRotation(this);
     
@@ -166,7 +164,7 @@ public class ProgramList extends JList<Object> implements ChangeListener,
    * 
    * @since 2.2.2
    */
-  public ProgramList(ListModel<Object> programs, ProgramPanelSettings settings) {
+  public ProgramList(ListModel<Program> programs, ProgramPanelSettings settings) {
     super(programs);
     programs.addListDataListener(this);
     initialize(settings);
@@ -182,8 +180,7 @@ public class ProgramList extends JList<Object> implements ChangeListener,
    * 
    * @since 2.6
    */
-  public ProgramList(Vector<Program> programVector,
-      PluginPictureSettings settings) {
+  public ProgramList(Vector<Program> programVector, PluginPictureSettings settings) {
     this(programVector, new ProgramPanelSettings(settings, false));
   }
 
@@ -211,7 +208,7 @@ public class ProgramList extends JList<Object> implements ChangeListener,
    * 
    * @since 2.6
    */
-  public ProgramList(ListModel<Object> programs, PluginPictureSettings settings) {
+  public ProgramList(ListModel<Program> programs, PluginPictureSettings settings) {
     this(programs, new ProgramPanelSettings(settings, false));
   }
   
@@ -255,14 +252,14 @@ public class ProgramList extends JList<Object> implements ChangeListener,
   }
 
   private void addToPrograms() {
-    ListModel<Object> list = getModel();
+    ListModel<Program> list = getModel();
     
     synchronized (list) {
       addToPrograms(0, list.getSize() - 1, list);
     }
   }
 
-  private void addToPrograms(int indexFirst, int indexLast, ListModel<Object> list) {
+  private void addToPrograms(int indexFirst, int indexLast, ListModel<Program> list) {
     if(list.getSize() > indexLast) {
       for (int i = indexFirst; i <= indexLast; i++) {
         Object element = list.getElementAt(i);
@@ -356,7 +353,7 @@ public class ProgramList extends JList<Object> implements ChangeListener,
   }
 
   public void intervalAdded(ListDataEvent e) {
-    ListModel<Object> list = getModel();
+    ListModel<Program> list = getModel();
     
     synchronized (list) {
       addToPrograms(e.getIndex0(), e.getIndex1(), list);
@@ -372,32 +369,19 @@ public class ProgramList extends JList<Object> implements ChangeListener,
    * @since 2.2
    */
   public Program[] getSelectedPrograms() {
-    List<Object> o = getSelectedValuesList();
+    List<Program> o = getSelectedValuesList();
 
     if (o == null || o.size() == 0) {
       return null;
     }
 
-    if(mSeparatorsCreated) {
-      ArrayList<Program> progs = new ArrayList<Program>(o.size());
-      
-      for(Object p : o) {
-        if(p instanceof Program) {
-          progs.add((Program)p);
-        }
-      }
-      
-      return progs.toArray(new Program[progs.size()]);
+    Program[] p = new Program[o.size()];
+    
+    for (int i = 0; i < o.size(); i++) {
+      p[i] = (Program) o.get(i);
     }
-    else {
-      Program[] p = new Program[o.size()];
-      
-      for (int i = 0; i < o.size(); i++) {
-        p[i] = (Program) o.get(i);
-      }
-  
-      return p;
-    }
+
+    return p;
   }
   
   public void pluginActivated(PluginProxy plugin) {
@@ -450,6 +434,18 @@ public class ProgramList extends JList<Object> implements ChangeListener,
     return null;
   }
   
+  /**
+   * Set if the list should show date separators
+   * 
+   * @param show <code>true</code> if the date separators should be shown, <code>false</code>
+   * if not.
+   * @since 4.2.3
+   */
+  public void setShowDateSeparators(boolean show) {
+    mListCellRenderer.setShowDateSeparators(show);
+    invalidate();
+    repaint();
+  }
   
   /**
    * Adds date separators to this list.
@@ -457,9 +453,11 @@ public class ProgramList extends JList<Object> implements ChangeListener,
    * <p>
    * @throws TvBrowserException Thrown if used ListModel is not {@link javax.swing.DefaultListModel} or a child class of it.
    * @since 3.2.2
+   * @deprecated since 4.2.3 Use {@link #setShowDateSeparators(boolean)} instead once after creation of a ProgramList.
    */
-  public void addDateSeparators() throws TvBrowserException {
-    if(getModel() instanceof DefaultListModel) {
+  @Deprecated(since="4.2.3") public void addDateSeparators() throws TvBrowserException {
+    setShowDateSeparators(true);
+  /*  if(getModel() instanceof DefaultListModel) {
       mSeparatorsCreated = true;
       
       DefaultListModel<Object> newModel = new DefaultListModel<>();
@@ -486,11 +484,11 @@ public class ProgramList extends JList<Object> implements ChangeListener,
     }
     else {
       throw new TvBrowserException(ProgramList.class, "unsupportedListModel", "Used ListModel not supported.");
-    }
+    }*/
   }
   
-  public void setModel(final ListModel<Object> model) {
-    mSeparatorsCreated = false;
+  public void setModel(final ListModel<Program> model) {
+    //mSeparatorsCreated = false;
     super.setModel(model);
     mPrograms.clear();
     
@@ -513,7 +511,7 @@ public class ProgramList extends JList<Object> implements ChangeListener,
       Object test = super.getModel().getElementAt(i);
       
       if(test instanceof Program && date.compareTo(((Program)test).getDate()) == 0) {
-        Point p = indexToLocation(i-(mSeparatorsCreated ? 1 : 0));
+        Point p = indexToLocation(i/*-(mSeparatorsCreated ? 1 : 0)*/);
         
         if(getVisibleRect() != null) {
           super.scrollRectToVisible(new Rectangle(p.x,p.y,1,getVisibleRect().height));
@@ -558,7 +556,7 @@ public class ProgramList extends JList<Object> implements ChangeListener,
         Point scrollPoint = null;
         
         if(down && ((Program)o).getStartTime() == time) {
-          if(i > 0 && (getModel().getElementAt(i) instanceof String) ) {
+          if(i > 0) {
             scrollPoint = indexToLocation(i);
           }
           else {
@@ -576,7 +574,7 @@ public class ProgramList extends JList<Object> implements ChangeListener,
             if(prog.getDate().compareTo(current) == 0) {
               if((down ? startTime < time : startTime >= time)) {
                 if(scrollPoint == null) {
-                  if(i > 0 && (getModel().getElementAt(i-1) instanceof String) || startTime > time) {
+                  if(i > 0 || startTime > time) {
                     scrollPoint = indexToLocation(i - 1);
                   }
                   else {
@@ -586,7 +584,7 @@ public class ProgramList extends JList<Object> implements ChangeListener,
                 break;
               }
               else if(down && startTime == time) {
-                if(i > 0 && getModel().getElementAt(i-1) instanceof String) {
+                if(i > 0) {
                   scrollPoint = indexToLocation(i - 1);
                   break;
                 }
@@ -687,7 +685,7 @@ public class ProgramList extends JList<Object> implements ChangeListener,
             if(prog.getDate().compareTo(current) >= 0 && startTime >= time) {
               Point p = indexToLocation(i);
               
-              if(i > 0 && (getModel().getElementAt(i-1) instanceof String) || startTime > time) {
+              if(i > 0 || startTime > time) {
                 p = indexToLocation(i - 1);
               }
               
@@ -729,7 +727,7 @@ public class ProgramList extends JList<Object> implements ChangeListener,
           Object test = super.getModel().getElementAt(i);
           
           if(test instanceof Program && current.compareTo(((Program)test).getDate()) < 0) {
-            Point p = indexToLocation(i-(mSeparatorsCreated ? 1 : 0));
+            Point p = indexToLocation(i/*-(mSeparatorsCreated ? 1 : 0)*/);
             
             if(getVisibleRect() != null) {
               super.scrollRectToVisible(new Rectangle(p.x,p.y,1,getVisibleRect().height));
@@ -785,15 +783,16 @@ public class ProgramList extends JList<Object> implements ChangeListener,
    * @param index The old index of the row.
    * @return The new index or the given index if no separators were added.
    * @since 3.2.2
+   * @deprecated since 4.2.3
    */
-  public int getNewIndexForOldIndex(int index) {
-    if(mSeparatorsCreated) {
+  @Deprecated(since="4.2.3") public int getNewIndexForOldIndex(int index) {
+    /*if(mSeparatorsCreated) {
       for(int i = 0; i < Math.min(index,mPrograms.size()); i++) {
         if(getModel().getElementAt(i) instanceof String) {
           index++;
         }
       }
-    }
+    }*/
     
     return index;
   }
@@ -948,18 +947,18 @@ public class ProgramList extends JList<Object> implements ChangeListener,
   
   @Override
 	public int getScrollableUnitIncrement(Rectangle visibleRect, int orientation, int direction) {
-	  if(Settings.propSmootherScrolling.getBoolean()) {
-		int increment = super.getScrollableUnitIncrement(visibleRect, orientation, direction);
-		int valueDefault = 10;
-		  
-		if(increment >= visibleRect.height) {
-		  valueDefault = Math.max(valueDefault, 10 + increment - visibleRect.height);
-		}
-		    
-		return Math.min(increment,valueDefault);
+    if(Settings.propSmootherScrolling.getBoolean()) {
+  		int increment = super.getScrollableUnitIncrement(visibleRect, orientation, direction);
+  		int valueDefault = 10;
+  		  
+  		if(increment >= visibleRect.height) {
+  		  valueDefault = Math.max(valueDefault, 10 + increment - visibleRect.height);
+  		}
+  		
+  		return Math.min(increment,valueDefault);
 	  }
 	  else {
-		return super.getScrollableUnitIncrement(visibleRect, orientation, direction);
+	    return super.getScrollableUnitIncrement(visibleRect, orientation, direction);
 	  }
 	}
 }

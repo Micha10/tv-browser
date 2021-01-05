@@ -80,7 +80,7 @@ public class ProgramRangeSelectionPanel extends JPanel {
       }
     };
     
-    DefaultListModel<Object> model = new DefaultListModel<>();
+    DefaultListModel<Program> model = new DefaultListModel<>();
     
     mProgramList = new ProgramList(model);
     mProgramList.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);

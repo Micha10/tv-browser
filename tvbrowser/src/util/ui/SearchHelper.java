@@ -84,7 +84,7 @@ public class SearchHelper {
   /** Instance of the Helper */
   private static SearchHelper mInstance;
 
-  private DefaultListModel<Object> mListModel;
+  private DefaultListModel<Program> mListModel;
 
   private ProgressMonitor mProgressMonitor;
 
@@ -199,7 +199,7 @@ public class SearchHelper {
         }
 
         Program[] programArr = mSearcher.search(searcherSettings.getFieldTypes(), startDate, searcherSettings
-            .getNrDays(), searcherSettings.getChannels(), true, mProgressMonitor != null ? mProgressMonitor : progressMonitor, mListModel);
+            .getNrDays(), searcherSettings.getChannels(), true, mListModel, mProgressMonitor != null ? mProgressMonitor : progressMonitor);
 
         comp.setCursor(cursor);
         if (programArr.length == 0) {

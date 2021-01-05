@@ -52,7 +52,6 @@ import devplugin.FilterChangeListenerV2;
 import devplugin.Program;
 import devplugin.ProgramFilter;
 import tvbrowser.core.filters.FilterManagerImpl;
-import util.exc.TvBrowserException;
 import util.i18n.Localizer;
 import util.settings.ProgramPanelSettings;
 import util.ui.persona.Persona;
@@ -85,7 +84,7 @@ public class FilterableProgramListPanel extends JPanel implements FilterChangeLi
   
   private ProgramList mProgramList;
   private JScrollPane mProgramListScrollPane;
-  private DefaultListModel<Object> mProgramListModel;
+  private DefaultListModel<Program> mProgramListModel;
   
   private JLabel mProgramFilterLabel;
   private WideComboBox<WrapperFilter> mProgramFilterBox;
@@ -98,8 +97,6 @@ public class FilterableProgramListPanel extends JPanel implements FilterChangeLi
   private Program[] mAllPrograms;
   
   private static final Program[] EMPTY_PROGRAM_ARR = new Program[0];
-  
-  private boolean mShowDateSeparators;
   
   private int mType;
   private int mTypeStart;
@@ -135,7 +132,7 @@ public class FilterableProgramListPanel extends JPanel implements FilterChangeLi
     
     mProgramListModel = new DefaultListModel<>();
     mProgramList = new ProgramList(mProgramListModel, progPanelSettings);
-    mShowDateSeparators = showDateSeparators;
+    mProgramList.setShowDateSeparators(showDateSeparators);
     
     FilterManagerImpl.getInstance().registerFilterChangeListener(this);
     FilterManagerImpl.getInstance().registerChannelFilterChangeListener(this);
@@ -150,9 +147,7 @@ public class FilterableProgramListPanel extends JPanel implements FilterChangeLi
    * @param showDateSeparators <code>true</code> to show the date separators in the list, <code>false</code> otherwise.
    */
   public void setShowDateSeparators(boolean showDateSeparators) {
-    mShowDateSeparators = showDateSeparators;
-    
-    setPrograms(mAllPrograms);
+    mProgramList.setShowDateSeparators(showDateSeparators);
   }
   
   /**
@@ -369,7 +364,7 @@ public class FilterableProgramListPanel extends JPanel implements FilterChangeLi
   private void filterPrograms(ProgramFilter filter, boolean fromTitleFilter) {
     if(mAllPrograms != null) {
       mProgramListModel.clear();
-      DefaultListModel<Object> model = new DefaultListModel<>();
+      DefaultListModel<Program> model = new DefaultListModel<>();
       
       ArrayList<ProgramFilter> titleFilterValues = new ArrayList<ProgramFilter>();
       HashMap<String, String> titleMap = new HashMap<String, String>();
@@ -426,14 +421,6 @@ public class FilterableProgramListPanel extends JPanel implements FilterChangeLi
       if(mNumberLabel != null) {
         mNumberLabel.setText(LOCALIZER.msg("numberOfPrograms", "Number of shown programs: {0}", mProgramListModel.size()));
       }
-      
-      if(mShowDateSeparators) {
-        try {
-          mProgramList.addDateSeparators();
-        } catch (TvBrowserException e) {
-          // ignore
-        }
-      }
     }
   }
   
@@ -466,7 +453,7 @@ public class FilterableProgramListPanel extends JPanel implements FilterChangeLi
         Object test = mProgramListModel.getElementAt(i);
         
         if(test instanceof Program && !((Program)test).isExpired()) {
-          scrollToIndexWithoutDateSeparators(i);
+          scrollToIndex(i);
           break;
         }
       }catch(Throwable t) {t.printStackTrace();}
@@ -497,9 +484,10 @@ public class FilterableProgramListPanel extends JPanel implements FilterChangeLi
    * ATTENTION: Date separators are not counted, so don't include them in the index.
    * 
    * @param index The index to scroll to (date separators excluded).
+   * @deprecated since 4.2.3 use {@link #scrollToIndex(int)} instead
    */
-  public void scrollToIndexWithoutDateSeparators(final int index) {
-    scrollToIndex(mProgramList.getNewIndexForOldIndex(index));
+  @Deprecated(since="4.2.3") public void scrollToIndexWithoutDateSeparators(final int index) {
+    scrollToIndex(index);
   }
 
   @Override
