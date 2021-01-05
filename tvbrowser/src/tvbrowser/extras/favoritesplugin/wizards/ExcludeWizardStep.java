@@ -487,6 +487,7 @@ public class ExcludeWizardStep extends AbstractWizardStep {
     mTimeCb.addItemListener(buttonUpdate);
     mDayCb.addItemListener(buttonUpdate);
     mProgramFieldCb.addItemListener(buttonUpdate);
+    mProgramDurationCb.addItemListener(buttonUpdate);
   }catch(Throwable t) {
     t.printStackTrace();
   }
@@ -530,6 +531,10 @@ public class ExcludeWizardStep extends AbstractWizardStep {
     
     if(mProgramFieldCb.isSelected()) {
       allowNext = allowNext || !mProgramFieldTextTf.getText().trim().isEmpty();
+    }
+    
+    if(mProgramDurationCb.isSelected()) {
+      allowNext = allowNext || mDurationTooShort.isSelected() || mDurationTooLong.isSelected();
     }
 
     mTitleTf.setEnabled(mTitleCb.isSelected());
@@ -620,10 +625,21 @@ public class ExcludeWizardStep extends AbstractWizardStep {
       programFieldExclusion = new ProgramFieldExclusion(((ProgramFieldType)mProgramFieldChooser.getSelectedItem()).getTypeId(), mProgramFieldTextTf.getText());
     }
     
+    int typeDuration = Exclusion.TYPE_DURATION_NONE;
+    
+    if(mProgramDurationCb.isSelected()) {
+      if(mDurationTooShort.isSelected()) {
+        typeDuration = Exclusion.TYPE_DURATION_TOO_SHORT;
+      }
+      else if(mDurationTooLong.isSelected()) {
+        typeDuration = Exclusion.TYPE_DURATION_TOO_LONG;
+      }
+    }
+    
     if (mDoneBtnText.compareTo(LOCALIZER.msg("doneButton.toBlacklist","Remove this program now")) == 0) {
       return "blacklist";
     } else {
-      return new Exclusion(title, topic, channel, timeFrom, timeTo, weekOfDay, filterName, episodeTitle, category, programFieldExclusion, !mProgramDurationCb.isSelected() ? Exclusion.TYPE_DURATION_NONE : mDurationTooShort.isSelected() ? Exclusion.TYPE_DURATION_TOO_SHORT : Exclusion.TYPE_DURATION_TOO_LONG, (int)mDurationValue.getValue());
+      return new Exclusion(title, topic, channel, timeFrom, timeTo, weekOfDay, filterName, episodeTitle, category, programFieldExclusion, typeDuration, (int)mDurationValue.getValue());
     }
 
   }

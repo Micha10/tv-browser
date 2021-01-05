@@ -163,7 +163,7 @@ public class ProgramTableCellRenderer extends DefaultTableCellRenderer {
             //mMainPanel.setForeground(label.getForeground());
             
             mMainPanel.setEnabled(label.isEnabled());
-            mMainPanel.setBorder(label.getBorder());
+          //  mMainPanel.setBorder(label.getBorder());
 
             if (table.getRowHeight(row) != mMainPanel.getPreferredSize().height && !PluginManagerImpl.getInstance().getExampleProgram().equals((Program)value)) {
               table.setRowHeight(row, mMainPanel.getPreferredSize().height);

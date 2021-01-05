@@ -515,10 +515,27 @@ public class Exclusion implements Comparable<Exclusion> {
       }
     }
     
+    if(mTypeDuration != TYPE_DURATION_NONE) {
+      if(timeMsg != null || mTitle != null || mTopic != null || mEpisodeTitle != null || filter != null || mChannel.getChannel() != null || mCategory != 0) {
+        textValue.append(" ").append(LOCALIZER.msg("exclude.append","with '"));
+      }
+      else {
+        textValue.append(LOCALIZER.msg("exclude.single","Exclude all programs with '"));
+      }
+      
+      if(mTypeDuration == TYPE_DURATION_TOO_SHORT) {
+        textValue.append(LOCALIZER.msg("exclude.duration.tooShort","duration shorter than {0} minutes'", mDuration));
+      }
+      else if(mTypeDuration == TYPE_DURATION_TOO_LONG) {
+        textValue.append(LOCALIZER.msg("exclude.duration.tooLong","duration longer than {0} minutes'", mDuration));
+      }
+    }
+    
+    
     if(mProgramFieldExclusion != null) {
       ProgramFieldType exclusion = mProgramFieldExclusion.getProgramFieldType();
       
-      if(timeMsg != null || mTitle != null || mTopic != null || mEpisodeTitle != null || filter != null || mChannel.getChannel() != null || mCategory != 0) {
+      if(timeMsg != null || mTitle != null || mTopic != null || mEpisodeTitle != null || filter != null || mChannel.getChannel() != null || mCategory != 0 || mTypeDuration != TYPE_DURATION_NONE) {
         textValue.append(" ").append(LOCALIZER.msg("exclude.append","with '"));
       }
       else {
@@ -528,6 +545,7 @@ public class Exclusion implements Comparable<Exclusion> {
       textValue.append(exclusion.getLocalizedName()).append("'='").append(mProgramFieldExclusion.getProgramFieldText()).append("'");
     }
     
+   
     if(textValue.length() < 1) {
       textValue.append(LOCALIZER.msg("exclude.invalid","<invalid>"));
     }

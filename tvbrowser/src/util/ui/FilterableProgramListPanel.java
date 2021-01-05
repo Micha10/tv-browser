@@ -145,6 +145,7 @@ public class FilterableProgramListPanel extends JPanel implements FilterChangeLi
    * Sets if date separators should be shown in the list.
    * <p>
    * @param showDateSeparators <code>true</code> to show the date separators in the list, <code>false</code> otherwise.
+   * @since 4.2.3
    */
   public void setShowDateSeparators(boolean showDateSeparators) {
     mProgramList.setShowDateSeparators(showDateSeparators);
