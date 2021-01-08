@@ -120,6 +120,8 @@ import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 import javax.swing.UIManager;
 import javax.swing.WindowConstants;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.plaf.TabbedPaneUI;
 import javax.swing.plaf.basic.BasicTabbedPaneUI;
 
@@ -338,6 +340,9 @@ public class MainFrame extends JFrame implements DateListener,DropTargetListener
   
   private Component mSelectedTab;
   
+  private Thread mTabChangeEventThread;
+  private int mTabChangeEventCounter;
+  
   private MainFrame() {
     super(TVBrowser.MAINWINDOW_TITLE, IOUtilities.getGraphicsConfigurationForFrame());
     
@@ -475,36 +480,57 @@ public class MainFrame extends JFrame implements DateListener,DropTargetListener
       mScrollPaneWrapper.showInfoPanel(ProgramTableScrollPaneWrapper.INFO_NO_CHANNELS_SUBSCRIBED, null);
     }
     println("POS 3");
-    mCenterTabPane = new JTabbedPane();
-    mCenterTabPane.addChangeListener(e -> {
-      final Component focusOwner = getMostRecentFocusOwner();
-      
-      SwingUtilities.invokeLater(() -> {
-        if(mSelectedTab != null) {
-          ((TabListener)mSelectedTab).tabHidden(focusOwner);
-        }
+    
+    final ChangeListener tabChangeListener = new ChangeListener() {
+      @Override
+      public synchronized void stateChanged(ChangeEvent e) {
+        mTabChangeEventCounter = 0;
         
-        if(mCenterTabPane.getSelectedIndex() != -1) {
-          mSelectedTab = mCenterTabPane.getComponent(mCenterTabPane.getSelectedIndex());
-          
-          if(mSelectedTab instanceof JPanel && !(mSelectedTab instanceof TabListener)) {
-            if(((JPanel) mSelectedTab).getComponentCount() == 1) {
-              mSelectedTab = ((JPanel) mSelectedTab).getComponent(0);
-            }
-          }
-          
-          if(mSelectedTab instanceof TabListener) {
-            ((TabListener) mSelectedTab).tabShown();
-          }
-          else {
-            mSelectedTab = null;
-          }
+        if(mTabChangeEventThread == null || !mTabChangeEventThread.isAlive()) {
+          mTabChangeEventThread = new Thread("TAB CHANGE EVENT WAITING THREAD") {
+            public void run() {
+              while(mTabChangeEventCounter++ < 20) {
+                try {
+                  Thread.sleep(10);
+                } catch (InterruptedException e) {}
+              }
+              
+              final Component focusOwner = getMostRecentFocusOwner();
+              
+              SwingUtilities.invokeLater(() -> {
+                if(mSelectedTab != null) {
+                  ((TabListener)mSelectedTab).tabHidden(focusOwner);
+                }
+                
+                if(mCenterTabPane.getSelectedIndex() != -1) {
+                  mSelectedTab = mCenterTabPane.getComponent(mCenterTabPane.getSelectedIndex());
+                  
+                  if(mSelectedTab instanceof JPanel && !(mSelectedTab instanceof TabListener)) {
+                    if(((JPanel) mSelectedTab).getComponentCount() == 1) {
+                      mSelectedTab = ((JPanel) mSelectedTab).getComponent(0);
+                    }
+                  }
+                  
+                  if(mSelectedTab instanceof TabListener) {
+                    ((TabListener) mSelectedTab).tabShown();
+                  }
+                  else {
+                    mSelectedTab = null;
+                  }
+                }
+                else {
+                  mSelectedTab = null;
+                }  
+              });
+            };
+          };
+          mTabChangeEventThread.start();
         }
-        else {
-          mSelectedTab = null;
-        }  
-      });
-    });
+      }
+    };
+    
+    mCenterTabPane = new JTabbedPane();
+    mCenterTabPane.addChangeListener(tabChangeListener);
     mCenterTabPane.addMouseWheelListener(e -> {
       if(e.getWheelRotation() > 0) {
         scrollThroughTabs(DIRECTION_RIGHT);
@@ -1739,6 +1765,16 @@ public class MainFrame extends JFrame implements DateListener,DropTargetListener
         mRootNode.update();
       }
     });
+    
+    SwingUtilities.invokeLater(() -> {
+      final ChangeEvent che = new ChangeEvent(mCenterTabPane);
+      final ChangeListener[] listeners = mCenterTabPane.getChangeListeners();
+      
+      for(ChangeListener l : listeners) {
+        l.stateChanged(che);
+      }
+      
+    });
   }
 
   private void runAutoUpdate() {
@@ -2296,13 +2332,13 @@ public class MainFrame extends JFrame implements DateListener,DropTargetListener
    * @since 4.2.3
    */
   public void handleProtocolMessage(final String message) {
-    System.out.println("handleProtocolMessage " + message);
     try {
-		Thread.sleep(500);
-	} catch (InterruptedException e1) {
-		// TODO Auto-generated catch block
-		e1.printStackTrace();
-	}
+  		Thread.sleep(500);
+  	} catch (InterruptedException e1) {
+  		// TODO Auto-generated catch block
+  		e1.printStackTrace();
+  	}
+    
     if(Settings.propCanReceiveProtocolMessages.getBoolean() && message != null && message.startsWith("tvb://")) {
       String[] parts = message.substring(6).strip().split("/");
       if(parts.length > 1) {
@@ -2405,7 +2441,7 @@ public class MainFrame extends JFrame implements DateListener,DropTargetListener
             String[] values = parts[2].split("=");
             
             PluginProxy p = PluginProxyManager.getInstance().getPluginForId("java."+values[0].toLowerCase()+"."+values[0]);
-            System.out.println("P " +p);
+            
             if(p != null) {
               if(!p.isActivated() && (values[1].equals("true") || values[1].equals("1"))) {
                 if(JOptionPane.YES_OPTION == UiUtilities.showConfirmDialogOnMouseScreen(LOCALIZER.msg("receive.plugin.enable.msg","TV-Browser received the activation of the plugin '{0}'.\n\nDo you wan't to activate the plugin '{0}' now?", p.getInfo().getName()),LOCALIZER.msg("receive.plugin.enable.title","Activate plugin '{0}'?", p.getInfo().getName()), JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE)) {

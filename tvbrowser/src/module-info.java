@@ -31,6 +31,7 @@ module tvbrowser {
 	exports tvbrowser;
 	exports tvbrowser.core.contextmenu;
 	exports util.ui;
+	opens util.ui;
 	exports util.ui.beanshell;
 	exports util.ui.customizableitems;
 	exports util.ui.findasyoutype;
