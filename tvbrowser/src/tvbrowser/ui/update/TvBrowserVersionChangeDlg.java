@@ -100,7 +100,7 @@ public class TvBrowserVersionChangeDlg extends JDialog implements WindowClosingI
           }
         },UIManager.getColor("EditorPane.background"));
     
-    pane.setPreferredSize(new Dimension(400,Sizes.dialogUnitXAsPixel(160, pane)));
+    pane.setPreferredSize(new Dimension(Sizes.dialogUnitXAsPixel(420, pane),Sizes.dialogUnitYAsPixel(200, pane)));
     
     pane.setBackground(UIManager.getColor("EditorPane.background"));
     pane.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createMatteBorder(0,0,1,0,Color.darkGray),Borders.createEmptyBorder("0dlu,10dlu,0dlu,10dlu")));
@@ -135,7 +135,7 @@ public class TvBrowserVersionChangeDlg extends JDialog implements WindowClosingI
         }
         
         mCloseTvBrowser = false;
-      } catch (IOException e1) {
+      } catch (Exception e1) {
       }
       
       close();
