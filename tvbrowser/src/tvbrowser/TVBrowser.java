@@ -2277,6 +2277,7 @@ public class TVBrowser {
         Version obligartoryUpdate = new Version(3,21,51,false);
         
         TvBrowserVersionChangeDlg versionChange = new TvBrowserVersionChangeDlg(Settings.propTVBrowserVersion.getVersion(),obligartoryUpdate);
+        versionChange.setIconImages(ICONS_WINDOW);
         versionChange.pack();
         versionChange.setLocationRelativeTo(null);
         versionChange.setVisible(true);

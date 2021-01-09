@@ -97,6 +97,7 @@ import javax.swing.filechooser.FileFilter;
 import org.apache.commons.lang3.StringUtils;
 
 import devplugin.Program;
+import tvbrowser.TVBrowser;
 import tvbrowser.core.contextmenu.ContextMenuManager;
 import tvbrowser.core.plugin.PluginManagerImpl;
 import tvbrowser.ui.mainframe.MainFrame;
@@ -1466,6 +1467,7 @@ public class UiUtilities {
       parent = new Frame();
     }
     
+    parent.setIconImages(TVBrowser.ICONS_WINDOW);
     parent.setLocationRelativeTo(null);
     
     return parent;
