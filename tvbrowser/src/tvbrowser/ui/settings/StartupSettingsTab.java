@@ -166,11 +166,11 @@ public class StartupSettingsTab implements devplugin.SettingsTab {
     y++;
     
     mServerForRestore = new JCheckBox(LOCALIZER.msg("serverForRestore",
-        "Provide server port for restore running TV-Browser"), Settings.propServerRestoreEnabled.getBoolean());
+        "Provide server port for restore running TV-Browser/handling protocol messages"), Settings.propServerRestoreEnabled.getBoolean());
     mSettingsPn.add(mServerForRestore, cc.xy(2, ++y));
     
     mProtocolHandler = new JCheckBox(LOCALIZER.msg("protocolHandler", "Allow handling of tvb:// protocol messages"), Settings.propCanReceiveProtocolMessages.getBoolean() && mServerForRestore.isSelected());
-    mProtocolHandler.setEnabled(mServerForRestore.isEnabled());
+    mProtocolHandler.setEnabled(mServerForRestore.isSelected());
     mSettingsPn.add(mProtocolHandler, cc.xy(2, y+=2));
     
     mServerForRestore.addItemListener(e -> {
