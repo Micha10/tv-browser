@@ -237,9 +237,13 @@ public class RawDataProcessor {
     }
 
   public void storeVersions() {
+    mLog.info("Store versions file to " + mVersionPropFile.getAbsolutePath());
+    
     try(FileOutputStream out = new FileOutputStream(mVersionPropFile)) {
       mVersionProp.store(out, "");
-    }catch(IOException ioe) {}
+    }catch(IOException ioe) {
+      
+    }
   }
 
   private void processRawFile(DayProgramFile rawProg, Date date,
