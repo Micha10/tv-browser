@@ -170,19 +170,8 @@ public class PrimaryDataManager {
         Field f = mChannelListArr[i].getClass().getDeclaredField("mGroup");
         f.setAccessible(true);
         group = ((ChannelGroup)f.get(mChannelListArr[i])).getName();
-      } catch (NoSuchFieldException e) {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
-      } catch (SecurityException e) {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
-      } catch (IllegalArgumentException e) {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
-      } catch (IllegalAccessException e) {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
-      }
+      } catch (Exception e) {
+      } 
 		  mLog.info("Process raw data for " + group);
 		  
       mRawDataProcessor.processRawDataDir(mRawDir, mPreparedDir, mWorkDir, mChannelListArr[i]);
