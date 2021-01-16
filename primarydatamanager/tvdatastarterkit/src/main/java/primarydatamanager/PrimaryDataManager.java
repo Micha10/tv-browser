@@ -634,8 +634,10 @@ public class PrimaryDataManager {
 				groupNames.toArray(groupNamesArr);
         manager.setGroupNames(groupNamesArr);
 
+        mLog.info("Start update of raw data");
         manager.updateRawDataDir();
-
+        mLog.info("Update of raw data done");
+        
         manager.deleteLockFile();
 
         // Exit with error code 2 if some day programs were put into quarantine
