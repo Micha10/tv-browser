@@ -165,15 +165,6 @@ public class PrimaryDataManager {
     mLog.info("RAW DATA CHANNEL LIST ARRAY " + mChannelListArr.length);
     // Process the new raw data
 		for (int i=0; i<mChannelListArr.length; i++) {
-		  String group = mChannelListArr[i].toString();
-		  try {
-        Field f = mChannelListArr[i].getClass().getDeclaredField("mGroup");
-        f.setAccessible(true);
-        group = ((ChannelGroup)f.get(mChannelListArr[i])).getName();
-      } catch (Exception e) {
-      } 
-		  mLog.info("Process raw data for " + group);
-		  
       mRawDataProcessor.processRawDataDir(mRawDir, mPreparedDir, mWorkDir, mChannelListArr[i]);
     }
 		
