@@ -647,7 +647,7 @@ public class PrimaryDataManager {
         }
       }
       catch (PreparationException exc) {
-        exc.printStackTrace();
+        mLog.log(Level.SEVERE, "Error processing raw data", exc);
         System.exit(1);
       }
     }
