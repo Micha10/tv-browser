@@ -58,7 +58,7 @@ import devplugin.ProgramFieldType;
  */
 public class ProgramField implements Cloneable {
 
-    private static final Logger mLog
+    private static final Logger LOG
             = Logger.getLogger(ProgramField.class.getName());
 
     private static final String TEXT_CHARSET = "UTF-8";
@@ -208,7 +208,7 @@ public class ProgramField implements Cloneable {
 
                 newdata = out.toByteArray();
             } else {
-                mLog.severe("No JPEG-Exporter found. Image is not stored in Data");
+                LOG.severe("No JPEG-Exporter found. Image is not stored in Data");
             }
 
         } catch (IOException e) {
@@ -299,7 +299,7 @@ public class ProgramField implements Cloneable {
         }
         catch (UnsupportedEncodingException exc) {
             // This will never happen, because UTF-8 is always supported
-            mLog.log(Level.SEVERE, "Charset " + TEXT_CHARSET + " is not supported", exc);
+            LOG.log(Level.SEVERE, "Charset " + TEXT_CHARSET + " is not supported", exc);
 
             return null;
         }
@@ -314,7 +314,7 @@ public class ProgramField implements Cloneable {
         }
         catch (UnsupportedEncodingException exc) {
             // This will never happen, because UTF-8 is always supported
-            mLog.log(Level.SEVERE, "Charset " + TEXT_CHARSET + " is not supported", exc);
+            LOG.log(Level.SEVERE, "Charset " + TEXT_CHARSET + " is not supported", exc);
         }
     }
 
