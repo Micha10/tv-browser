@@ -770,13 +770,14 @@ public class RawDataProcessor {
     DayProgramFile newUpdateFile = createUpdateFile(lastProg, newProg);
 
     // Save the update file
-    int vCheck = version-1;
+    int vCheck = version;
     
     do {
       String newUpdateFileName = DayProgramFile.getProgramFileName(date, country,
-        channel, level, vCheck--);
+        channel, level, --vCheck);
       file = new File(targetDir, newUpdateFileName);
       
+      mLog.info("    "+newUpdateFileName+" " + version);
       if(file.isFile() || vCheck <= 0) {
         break;
       }
