@@ -331,7 +331,10 @@ public class RawDataProcessor {
         // We don't have an old program file
         // -> Create a new complete file if we have data now
         if (newLevelProgArr[i].getProgramFrameCount() != 0) {
-          mVersionProp.setProperty(levelFileNameArr[i], String.valueOf(newLevelProgArr[i].getVersion()));
+          if(!quarantine) {
+            mVersionProp.setProperty(levelFileNameArr[i], String.valueOf(newLevelProgArr[i].getVersion()));
+          }
+          
           File file = new File(targetDir, levelFileNameArr[i]);
           try {
             newLevelProgArr[i].writeToFile(file);
@@ -364,7 +367,7 @@ public class RawDataProcessor {
         } else {
           // Something changed -> Create an update
           createUpdate(levelProgArr[i], newLevelProgArr[i], date, country,
-                       channel, level, preparedDir, targetDir);
+                       channel, level, preparedDir, targetDir, quarantine);
 
           mLog.finest("Updated day program file to version "
             + (levelProgArr[i].getVersion() + 1) + ": " + levelFileNameArr[i]);
@@ -747,7 +750,7 @@ public class RawDataProcessor {
 
   private void createUpdate(DayProgramFile lastProg, DayProgramFile newProg,
     Date date, String country, String channel, String level, File preparedDir,
-    File targetDir)
+    File targetDir, boolean quarantine)
     throws PreparationException
   {
     String completeFilename = DayProgramFile.getProgramFileName(date, country, channel, level);
@@ -758,7 +761,10 @@ public class RawDataProcessor {
     File file = new File(targetDir, completeFilename);
     try {
       newProg.writeToFile(file);
-      mVersionProp.setProperty(completeFilename, String.valueOf(version));
+      
+      if(!quarantine) {
+        mVersionProp.setProperty(completeFilename, String.valueOf(version));
+      }
     }
     catch (Exception exc) {
       throw new PreparationException("Writing complete file failed: "
