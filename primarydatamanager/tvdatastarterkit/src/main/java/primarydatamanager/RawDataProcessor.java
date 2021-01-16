@@ -26,10 +26,17 @@
 package primarydatamanager;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Enumeration;
 import java.util.HashSet;
+import java.util.Properties;
 import java.util.logging.Logger;
 
+import devplugin.Channel;
+import devplugin.Date;
+import devplugin.ProgramFieldType;
 import tvbrowserdataservice.file.ChannelList;
 import tvbrowserdataservice.file.DayProgramFile;
 import tvbrowserdataservice.file.ProgramField;
@@ -37,9 +44,6 @@ import tvbrowserdataservice.file.ProgramFrame;
 import tvdataservice.MutableProgram;
 import util.io.FileFormatException;
 import util.io.IOUtilities;
-import devplugin.Channel;
-import devplugin.Date;
-import devplugin.ProgramFieldType;
 
 /**
  * Compares the new raw data with the last prepared data and creates update
@@ -72,9 +76,42 @@ public class RawDataProcessor {
 
   private int mQuarantineCount;
 
+  private Properties mVersionProp;
+  
+  private File mVersionPropFile;
 
   public RawDataProcessor() {
     mDeadlineDay = new Date().addDays(-2);
+    
+    mVersionPropFile = new File("data_version.prop");
+    mVersionProp = new Properties();
+    
+    if(mVersionPropFile.isFile()) {
+      try(FileInputStream in = new FileInputStream(mVersionPropFile)) {
+        mVersionProp.load(in);
+        
+        Enumeration<Object> keys = mVersionProp.keys();
+        final long cutoff = mDeadlineDay.getValue();
+        
+        while(keys.hasMoreElements()) {
+          Object key = keys.nextElement();
+          
+          if(key instanceof String && ((String) key).contains("_")) {
+            String[] parts = ((String)key).split("_");
+            
+            if(parts[0].contains("-")) {
+              try {
+                final long value = Long.parseLong(parts[0])*10000+Long.parseLong(parts[1])*100+Long.parseLong(parts[2]);
+                
+                if(value < cutoff) {
+                  mVersionProp.remove(key);
+                }
+              }catch(NumberFormatException nfe) {}
+            }
+          }
+        }
+      }catch(IOException ioe) {}
+    }
   }
 
 
@@ -198,6 +235,11 @@ public class RawDataProcessor {
         return false;
     }
 
+  public void storeVersions() {
+    try(FileOutputStream out = new FileOutputStream(mVersionPropFile)) {
+      mVersionProp.store(out, "");
+    }catch(IOException ioe) {}
+  }
 
   private void processRawFile(DayProgramFile rawProg, Date date,
     String country, String channel, File preparedDir, File workDir)
@@ -284,6 +326,7 @@ public class RawDataProcessor {
         // We don't have an old program file
         // -> Create a new complete file if we have data now
         if (newLevelProgArr[i].getProgramFrameCount() != 0) {
+          mVersionProp.setProperty(levelFileNameArr[i], String.valueOf(newLevelProgArr[i].getVersion()));
           File file = new File(targetDir, levelFileNameArr[i]);
           try {
             newLevelProgArr[i].writeToFile(file);
@@ -702,12 +745,15 @@ public class RawDataProcessor {
     File targetDir)
     throws PreparationException
   {
-    newProg.setVersion(lastProg.getVersion() + 1);
-    String completeFilename = DayProgramFile.getProgramFileName(date, country,
-      channel, level);
+    String completeFilename = DayProgramFile.getProgramFileName(date, country, channel, level);
+    int version = Math.max(lastProg.getVersion() + 1,Integer.parseInt(completeFilename)+1);
+    
+    newProg.setVersion(version);
+    
     File file = new File(targetDir, completeFilename);
     try {
       newProg.writeToFile(file);
+      mVersionProp.setProperty(completeFilename, String.valueOf(version));
     }
     catch (Exception exc) {
       throw new PreparationException("Writing complete file failed: "
@@ -720,7 +766,7 @@ public class RawDataProcessor {
 
     // Save the update file
     String newUpdateFileName = DayProgramFile.getProgramFileName(date, country,
-      channel, level, lastProg.getVersion());
+      channel, level, version-1);
     file = new File(targetDir, newUpdateFileName);
     try {
       newUpdateFile.writeToFile(file);

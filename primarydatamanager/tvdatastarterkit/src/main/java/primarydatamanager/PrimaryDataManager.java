@@ -166,7 +166,9 @@ public class PrimaryDataManager {
 		for (int i=0; i<mGroupNameArr.length; i++) {
       mRawDataProcessor.processRawDataDir(mRawDir, mPreparedDir, mWorkDir, mChannelListArr[i]);
     }
-
+		
+		mRawDataProcessor.storeVersions();
+		
     // Create a summary files
     createSummaryFile();
     createGroupFiles();
