@@ -36,8 +36,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.RandomAccessFile;
+import java.lang.reflect.Field;
 import java.nio.channels.FileLock;
-import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.StringTokenizer;
@@ -49,6 +49,8 @@ import java.util.zip.GZIPOutputStream;
 
 import org.apache.commons.lang3.StringUtils;
 
+import devplugin.ChannelGroup;
+import devplugin.Date;
 import primarydatamanager.primarydataservice.PrimaryDataService;
 import tvbrowserdataservice.file.ChannelList;
 import tvbrowserdataservice.file.DayProgramFile;
@@ -57,8 +59,6 @@ import util.io.FileFormatException;
 import util.io.IOUtilities;
 import util.io.Mirror;
 import util.io.VerySimpleFormatter;
-import devplugin.ChannelGroup;
-import devplugin.Date;
 
 /**
  *
@@ -128,7 +128,7 @@ public class PrimaryDataManager {
   }
 
 
-  public void updateRawDataDir() throws PreparationException {
+  public void updateRawDataDir() throws PreparationException {try {
     // Delete the old work directory
     try {
       IOUtilities.deleteDirectory(mWorkDir);
@@ -162,9 +162,29 @@ public class PrimaryDataManager {
     // Update the mirror lists
     updateMirrorList();
 
+    mLog.info("RAW DATA CHANNEL LIST ARRAY " + mChannelListArr.length);
     // Process the new raw data
 		for (int i=0; i<mChannelListArr.length; i++) {
-		  mLog.info("Process raw data for " + mChannelListArr[i]);
+		  String group = mChannelListArr[i].toString();
+		  try {
+        Field f = mChannelListArr[i].getClass().getDeclaredField("mGroup");
+        f.setAccessible(true);
+        group = ((ChannelGroup)f.get(mChannelListArr[i])).getName();
+      } catch (NoSuchFieldException e) {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+      } catch (SecurityException e) {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+      } catch (IllegalArgumentException e) {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+      } catch (IllegalAccessException e) {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+      }
+		  mLog.info("Process raw data for " + group);
+		  
       mRawDataProcessor.processRawDataDir(mRawDir, mPreparedDir, mWorkDir, mChannelListArr[i]);
     }
 		
@@ -225,6 +245,9 @@ public class PrimaryDataManager {
       }
 
     }
+  }catch(Throwable t) {
+    mLog.log(Level.SEVERE,"ERROR",t);
+  }
   }
 
 
