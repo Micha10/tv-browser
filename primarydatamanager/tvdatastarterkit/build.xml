@@ -330,8 +330,8 @@
            deprecation="true"
            srcdir="tvdatakit/java"
     	     encoding="UTF-8"
-           target="1.6"
-           source="1.6">
+           target="1.8"
+           source="1.8">
       <classpath>
         <fileset dir="${tvdatatools.runtime.dir}">
           <include name="PrimaryDataManager.jar"/>
@@ -382,7 +382,7 @@
   <target name="test" depends="make-default">
 	<echo>${ant.version}. JUnit4 tests will only work with Ant>=1.7</echo>
   	<mkdir dir="${test.classes.dir}"/>
-    <javac destdir="${test.classes.dir}" debug="${debug}" deprecation="true" encoding="UTF-8" target="1.6" source="1.6">
+    <javac destdir="${test.classes.dir}" debug="${debug}" deprecation="true" encoding="UTF-8" target="1.8" source="1.8">
       <src>
         <path path="${test.src.dir}"/>
       </src>
