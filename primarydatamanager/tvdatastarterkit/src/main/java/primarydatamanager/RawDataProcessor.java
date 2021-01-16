@@ -751,7 +751,7 @@ public class RawDataProcessor {
     throws PreparationException
   {
     String completeFilename = DayProgramFile.getProgramFileName(date, country, channel, level);
-    int version = Math.max(lastProg.getVersion() + 1,Integer.parseInt(completeFilename)+1);
+    int version = Math.max(lastProg.getVersion() + 1,Integer.parseInt(mVersionProp.getProperty(completeFilename,"0"))+1);
     
     newProg.setVersion(version);
     
