@@ -85,6 +85,7 @@ public class RawDataProcessor {
     
     mVersionPropFile = new File("data_version.prop");
     mVersionProp = new Properties();
+    mLog.info("Version properties: "+mVersionPropFile.getAbsolutePath());
     
     if(mVersionPropFile.isFile()) {
       try(FileInputStream in = new FileInputStream(mVersionPropFile)) {
