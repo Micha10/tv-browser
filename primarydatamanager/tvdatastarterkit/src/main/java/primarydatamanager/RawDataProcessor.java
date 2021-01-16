@@ -770,16 +770,25 @@ public class RawDataProcessor {
     DayProgramFile newUpdateFile = createUpdateFile(lastProg, newProg);
 
     // Save the update file
-    String newUpdateFileName = DayProgramFile.getProgramFileName(date, country,
-      channel, level, version-1);
-    file = new File(targetDir, newUpdateFileName);
-    try {
-      newUpdateFile.writeToFile(file);
-    }
-    catch (Exception exc) {
-      throw new PreparationException("Writing new update file failed: "
-        + file.getAbsolutePath(), exc);
-    }
+    int vCheck = version-1;
+    
+    do {
+      String newUpdateFileName = DayProgramFile.getProgramFileName(date, country,
+        channel, level, vCheck--);
+      file = new File(targetDir, newUpdateFileName);
+      
+      if(file.isFile() || vCheck <= 0) {
+        break;
+      }
+      
+      try {
+        newUpdateFile.writeToFile(file);
+      }
+      catch (Exception exc) {
+        throw new PreparationException("Writing new update file failed: "
+          + file.getAbsolutePath(), exc);
+      }
+    }while(true);
 
     // Update the other update files
     updateOldUpdateFiles(newUpdateFile, date, country, channel, level,
