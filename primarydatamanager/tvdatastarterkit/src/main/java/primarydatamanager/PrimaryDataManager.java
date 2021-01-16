@@ -163,7 +163,8 @@ public class PrimaryDataManager {
     updateMirrorList();
 
     // Process the new raw data
-		for (int i=0; i<mGroupNameArr.length; i++) {
+		for (int i=0; i<mChannelListArr.length; i++) {
+		  mLog.info("Process raw data for " + mChannelListArr[i]);
       mRawDataProcessor.processRawDataDir(mRawDir, mPreparedDir, mWorkDir, mChannelListArr[i]);
     }
 		
