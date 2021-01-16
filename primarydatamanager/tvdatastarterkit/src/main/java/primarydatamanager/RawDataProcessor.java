@@ -795,7 +795,7 @@ public class RawDataProcessor {
         throw new PreparationException("Writing new update file failed: "
           + file.getAbsolutePath(), exc);
       }
-    }while(true);
+    }while(!quarantine);
 
     // Update the other update files
     updateOldUpdateFiles(newUpdateFile, date, country, channel, level,
