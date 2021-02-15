@@ -137,6 +137,7 @@ import devplugin.FilterChangeListenerV2;
 import devplugin.Plugin;
 import devplugin.PluginCenterPanel;
 import devplugin.PluginCenterPanelWrapper;
+import devplugin.PluginManager;
 import devplugin.Program;
 import devplugin.ProgramFilter;
 import devplugin.ProgramReceiveTarget;
@@ -2324,6 +2325,8 @@ public class MainFrame extends JFrame implements DateListener,DropTargetListener
   private static final String PROTOCOL_MESSAGE_CONFIG = "config";
   private static final String PROTOCOL_MESSAGE_PLUGIN = "plugin";
   private static final String PROTOCOL_MESSAGE_ENABLE = "enable";
+  private static final String PROTOCOL_MESSAGE_SHOW = "show";
+  private static final String PROTOCOL_MESSAGE_SETTINGS = "settings";
   
   /**
    * Handles tvb:// protocol messages
@@ -2428,11 +2431,18 @@ public class MainFrame extends JFrame implements DateListener,DropTargetListener
             }
             
             try {
-				Settings.storeSettings(true);
-			} catch (TvBrowserException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+      				Settings.storeSettings(true);
+      			} catch (TvBrowserException e) {
+      				// TODO Auto-generated catch block
+      				e.printStackTrace();
+      			}
+          }
+        }
+        else if(PROTOCOL_MESSAGE_SHOW.equalsIgnoreCase(parts[0]) && parts.length == 2 && parts[1].contains("=")) {
+          final String[] values = parts[1].split("=");
+          
+          if(values[0].equals(PROTOCOL_MESSAGE_SETTINGS)) {
+            PluginManagerImpl.getInstance().showSettings("#"+values[1]);
           }
         }
         else if(PROTOCOL_MESSAGE_PLUGIN.equalsIgnoreCase(parts[0]) && parts.length >= 3) {

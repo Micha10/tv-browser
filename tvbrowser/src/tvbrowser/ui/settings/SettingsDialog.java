@@ -377,74 +377,56 @@ public class SettingsDialog implements WindowClosingIf {
     //SettingNode node;
 
     icon = TVBrowserIcons.preferences(TVBrowserIcons.SIZE_SMALL);
-    SettingNode root = new SettingNode(new DefaultSettingsTab(Localizer
-        .getLocalization(Localizer.I18N_SETTINGS), icon));
+    SettingNode root = new SettingNode(new DefaultSettingsTab(Localizer.getLocalization(Localizer.I18N_SETTINGS), icon), SettingsItem.I18N);
 
-    SettingNode generalSettings = new SettingNode(new StartupSettingsTab(),
-        SettingsItem.STARTUP);
+    SettingNode generalSettings = new SettingNode(new StartupSettingsTab(),SettingsItem.STARTUP);
     root.add(generalSettings);
 
-    SettingNode graphicalSettings = new SettingNode(new LookAndFeelSettingsTab(this),
-        SettingsItem.LOOKANDFEEL);
+    SettingNode graphicalSettings = new SettingNode(new LookAndFeelSettingsTab(this),SettingsItem.LOOKANDFEEL);
     root.add(graphicalSettings);
 
-    SettingNode technicalSettings = new SettingNode(new DefaultSettingsTab(
-        LOCALIZER.msg("technical", "Technical"), null));
+    SettingNode technicalSettings = new SettingNode(new DefaultSettingsTab(LOCALIZER.msg("technical", "Technical"), null),SettingsItem.TECHNICAL);
     root.add(technicalSettings);
 
     if (TVBrowser.isUsingSystemTray()) {
-      SettingNode traySettings = new SettingNode(new TrayBaseSettingsTab(),
-          SettingsItem.TRAY);
+      SettingNode traySettings = new SettingNode(new TrayBaseSettingsTab(),SettingsItem.TRAY);
       root.add(traySettings);
 
-      traySettings.add(new SettingNode(new TrayImportantSettingsTab()));
-      traySettings.add(new SettingNode(new TrayNowSettingsTab()));
-      traySettings.add(new SettingNode(new TraySoonSettingsTab()));
-      traySettings.add(new SettingNode(new TrayOnTimeSettingsTab(),
-          SettingsItem.TRAYONTIMEPROGRAMS));
-      traySettings.add(new SettingNode(new TrayProgramsChannelsSettingsTab()));
+      traySettings.add(new SettingNode(new TrayImportantSettingsTab(),SettingsItem.TRAY_IMPORTANT));
+      traySettings.add(new SettingNode(new TrayNowSettingsTab(),SettingsItem.TRAY_NOW));
+      traySettings.add(new SettingNode(new TraySoonSettingsTab(),SettingsItem.TRAY_SOON));
+      traySettings.add(new SettingNode(new TrayOnTimeSettingsTab(),SettingsItem.TRAY_ONTIME));
+      traySettings.add(new SettingNode(new TrayProgramsChannelsSettingsTab(),SettingsItem.TRAY_CHANNELS));
     }
 
-    generalSettings.add(new SettingNode(new ChannelsSettingsTab(),
-        SettingsItem.CHANNELS));
-    generalSettings.add(new SettingNode(new DataPluginPostProcessingOrderSettingsTab(),
-        SettingsItem.DATA_PLUGIN_POST_PROCESSING));
-    generalSettings.add(new SettingNode(new LocaleSettingsTab(this)));
-    generalSettings.add(new SettingNode(new ContextmenuSettingsTab(),
-        SettingsItem.CONTEXTMENU));
+    generalSettings.add(new SettingNode(new ChannelsSettingsTab(),SettingsItem.CHANNELS));
+    generalSettings.add(new SettingNode(new DataPluginPostProcessingOrderSettingsTab(),SettingsItem.DATA_PLUGIN_POST_PROCESSING));
+    generalSettings.add(new SettingNode(new LocaleSettingsTab(this),SettingsItem.LOCALE));
+    generalSettings.add(new SettingNode(new ContextmenuSettingsTab(),SettingsItem.CONTEXTMENU));
     generalSettings.add(new SettingNode(new MouseSettingsTab(), SettingsItem.MOUSE));
-    generalSettings.add(new SettingNode(new GenericPluginFilterSettingsTab()));
-    generalSettings.add(new SettingNode(new GlobalPluginProgramFormatingSettings(),
-        SettingsItem.PLUGINPROGRAMFORMAT));
-    generalSettings.add(new SettingNode(new ButtonsSettingsTab(),
-        SettingsItem.TIMEBUTTONS));
+    generalSettings.add(new SettingNode(new GenericPluginFilterSettingsTab(),SettingsItem.GENERIC_PLUGIN_FILTER));
+    generalSettings.add(new SettingNode(new GlobalPluginProgramFormatingSettings(),SettingsItem.PLUGINPROGRAMFORMAT));
+    generalSettings.add(new SettingNode(new ButtonsSettingsTab(),SettingsItem.TIMEBUTTONS));
 
-    graphicalSettings.add(new SettingNode(new PictureSettingsTab(this),
-        SettingsItem.PICTURES));
-    graphicalSettings.add(new SettingNode(new CenterPanelSettingsTab(),
-        SettingsItem.CENTERPANELSETUP));    
-    graphicalSettings.add(new SettingNode(new ProgramTableSettingsTab(),
-        SettingsItem.PROGRAMTABLELOOK));
-    graphicalSettings.add(new SettingNode(
-        new ProgramPanelSettingsTab(), SettingsItem.PROGRAMPANELLOOK));
-    graphicalSettings.add(new SettingNode(new ChannelIconAndNameSettingsTab(this)));
-    graphicalSettings.add(new SettingNode(new MarkingsSettingsTab(),
-        SettingsItem.PROGRAMPANELMARKING));
-    graphicalSettings.add(new SettingNode(new FontsSettingsTab()));
+    graphicalSettings.add(new SettingNode(new PictureSettingsTab(this),SettingsItem.PICTURES));
+    graphicalSettings.add(new SettingNode(new CenterPanelSettingsTab(),SettingsItem.CENTERPANELSETUP));    
+    graphicalSettings.add(new SettingNode(new ProgramTableSettingsTab(),SettingsItem.PROGRAMTABLELOOK));
+    graphicalSettings.add(new SettingNode(new ProgramPanelSettingsTab(), SettingsItem.PROGRAMPANELLOOK));
+    graphicalSettings.add(new SettingNode(new ChannelIconAndNameSettingsTab(this),SettingsItem.CHANNEL_ICON_NAME));
+    graphicalSettings.add(new SettingNode(new MarkingsSettingsTab(),SettingsItem.PROGRAMPANELMARKING));
+    graphicalSettings.add(new SettingNode(new FontsSettingsTab(),SettingsItem.FONTS));
 
-    technicalSettings.add(new SettingNode(new NetworkSettingsTab()));
-    technicalSettings.add(new SettingNode(new ProxySettingsTab()));
+    technicalSettings.add(new SettingNode(new NetworkSettingsTab(),SettingsItem.NETWORK));
+    technicalSettings.add(new SettingNode(new ProxySettingsTab(),SettingsItem.PROXY));
 
     if (!TVBrowser.isTransportable()) {
-      technicalSettings.add(new SettingNode(new DirectoriesSettingsTab()));
+      technicalSettings.add(new SettingNode(new DirectoriesSettingsTab(),SettingsItem.DIRECTORIES));
     }
 
-    technicalSettings.add(new SettingNode(new WebbrowserSettingsTab(),
-        SettingsItem.WEBBROWSER));
+    technicalSettings.add(new SettingNode(new WebbrowserSettingsTab(),SettingsItem.WEBBROWSER));
 
     // Plugins
-    mPluginSettingsNode = new SettingNode(new PluginSettingsTab(this),
-        SettingsItem.PLUGINS);
+    mPluginSettingsNode = new SettingNode(new PluginSettingsTab(this),SettingsItem.PLUGINS);
     root.add(mPluginSettingsNode);
 
     createPluginTreeItems(false);

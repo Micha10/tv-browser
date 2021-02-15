@@ -40,7 +40,6 @@ public class SettingsItem {
 
   public static final String TIMEBUTTONS = "#timebuttons";
   public static final String PLUGINS = "#plugins";
-  public static final String TRAY = "#tray";
   public static final String STARTUP = "#startup";
   public static final String PROGRAMINFO = "#programinfo";
   public static final String REMINDER = "#reminder";
@@ -52,6 +51,25 @@ public class SettingsItem {
   public static final String CONTEXTMENU = "#contextmenu";
   public static final String LOOKANDFEEL = "#lookandfeel";
   public static final String PLUGINPROGRAMFORMAT = "#pluginprogramformat";
+  
+  /** @since 4.2.3 */
+  public static final String I18N = "#i18n";
+  /** @since 4.2.3 */
+  public static final String TECHNICAL = "#technical";
+  /** @since 4.2.3 */
+  public static final String LOCALE = "#local";
+  /** @since 4.2.3 */
+  public static final String GENERIC_PLUGIN_FILTER = "#genericPluginFilter";
+  /** @since 4.2.3 */
+  public static final String CHANNEL_ICON_NAME = "#channelIconName";
+  /** @since 4.2.3 */
+  public static final String FONTS = "#fonts";
+  /** @since 4.2.3 */
+  public static final String NETWORK = "#network";
+  /** @since 4.2.3 */
+  public static final String PROXY = "#proxy";
+  /** @since 4.2.3 */
+  public static final String DIRECTORIES = "#directories";
 
   public static final String PROGRAMPANELLOOK = "#programpanellook";
   public static final String PROGRAMPANELMARKING = "#programpanelmarking";
@@ -59,7 +77,21 @@ public class SettingsItem {
   public static final String CENTERPANELSETUP = "#centerpanelsetup";
   
   public static final String PICTURES = "#pictures";
-  public static final String TRAYONTIMEPROGRAMS = "#trayOnTime";
+  
+  public static final String TRAY = "#tray";
+  /** @since 4.2.3 */
+  public static final String TRAY_CHANNELS = "#trayChannels";
+  /** @since 4.2.3 */
+  public static final String TRAY_IMPORTANT = "#trayImportant";
+  /** @since 4.2.3 */
+  public static final String TRAY_NOW = "#trayNow";
+  /** @since 4.2.3 */
+  public static final String TRAY_ONTIME = "#trayOnTime";
+  /** @since 4.2.3 */
+  public static final String TRAY_SOON = "#traySoon";
+  
+  /**@deprecated since 4.2.3 use {@link #TRAY_ONTIME} instead*/
+  @Deprecated(since="4.2.3") public static final String TRAYONTIMEPROGRAMS = TRAY_ONTIME;
   
   public static final String MOUSE = "#mouse";
 
