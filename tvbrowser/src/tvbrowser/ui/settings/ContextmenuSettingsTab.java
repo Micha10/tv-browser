@@ -31,6 +31,7 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -43,6 +44,7 @@ import javax.swing.Icon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JDialog;
+import javax.swing.JEditorPane;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
@@ -50,6 +52,8 @@ import javax.swing.JRootPane;
 import javax.swing.JScrollPane;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
+import javax.swing.event.HyperlinkEvent;
+import javax.swing.event.HyperlinkListener;
 
 import com.jgoodies.forms.builder.PanelBuilder;
 import com.jgoodies.forms.factories.Borders;
@@ -61,11 +65,13 @@ import devplugin.ActionMenu;
 import devplugin.ContextMenuIf;
 import devplugin.Plugin;
 import devplugin.Program;
+import devplugin.SettingsItem;
 import tvbrowser.core.Settings;
 import tvbrowser.core.contextmenu.ConfigMenuItem;
 import tvbrowser.core.contextmenu.ContextMenuManager;
 import tvbrowser.core.contextmenu.LeaveFullScreenMenuItem;
 import tvbrowser.core.contextmenu.SeparatorMenuItem;
+import tvbrowser.core.filters.GenericFilterMap;
 import tvbrowser.core.plugin.PluginManagerImpl;
 import tvbrowser.core.plugin.PluginProxy;
 import tvbrowser.core.plugin.PluginProxyManager;
@@ -104,21 +110,26 @@ public class ContextmenuSettingsTab implements devplugin.SettingsTab {
   public JPanel createSettingsPanel() {
     mEditableMenus = new ArrayList<>();
     mDisabledSubMenusMap = ContextMenuManager.getDisabledSubMenuMap();
+    JEditorPane genericFilterLink = UiUtilities.createHtmlHelpTextArea(LOCALIZER.msg("genericFilterLink","<html>* <a href=\"\">Highlighting filter</a> activated for context menu filtering</html>"), new HyperlinkListener() {
+      @Override
+      public void hyperlinkUpdate(HyperlinkEvent e) {
+        if(e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
+          PluginManagerImpl.getInstance().showSettings(SettingsItem.GENERIC_PLUGIN_FILTER);
+        }
+      }
+    });
     
     createList();
 
     PanelBuilder contentPanel = new PanelBuilder(new FormLayout("5dlu, pref, 3dlu, pref, fill:pref:grow, 3dlu",
-        "pref, 5dlu, pref, 3dlu, fill:pref:grow"));
+        "pref, 5dlu, pref, 3dlu, fill:pref:grow, 2dlu, default"));
     contentPanel.border(Borders.DIALOG);
-
-    CellConstraints cc = new CellConstraints();
-    contentPanel.addSeparator(LOCALIZER.msg("title", "Title"), cc.xyw(1,
-        1, 6));
-
-    contentPanel.add(UiUtilities.createHelpTextArea(LOCALIZER.msg("ItemOrder", "Item Order:")), cc.xyw(2, 3, 4));
-
-    contentPanel.add(mList, cc.xyw(2, 5, 4));
-
+    
+    contentPanel.addSeparator(LOCALIZER.msg("title", "Title"), CC.xyw(1, 1, 6));
+    contentPanel.add(UiUtilities.createHelpTextArea(LOCALIZER.msg("ItemOrder", "Item Order:")), CC.xyw(2, 3, 4));
+    contentPanel.add(mList, CC.xyw(2, 5, 4));
+    contentPanel.add(genericFilterLink, CC.xyw(2, 7, 4));
+    
     fillListbox();
 
     return contentPanel.getPanel();
@@ -530,10 +541,18 @@ public class ContextmenuSettingsTab implements devplugin.SettingsTab {
           }
         }
 
+        PluginProxy proxy = PluginProxyManager.getInstance().getActivatedPluginForId(menuIf.getId());
+        
+        if(proxy != null) {
+          if(GenericFilterMap.getInstance().getGenericPluginFilter(proxy, true) != null) {
+            text.append("*");
+          }
+        }
+                
         mItemLabel.setIcon(icon);
         mItemLabel.setText(text.toString());
         mItemLabel.setForeground(label.getForeground());
-
+        
         mItemSelected.setSelected(!mDeactivatedItems.contains(value));
 
         mItemPanel.setBackground(label.getBackground());
