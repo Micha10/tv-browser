@@ -137,7 +137,6 @@ import devplugin.FilterChangeListenerV2;
 import devplugin.Plugin;
 import devplugin.PluginCenterPanel;
 import devplugin.PluginCenterPanelWrapper;
-import devplugin.PluginManager;
 import devplugin.Program;
 import devplugin.ProgramFilter;
 import devplugin.ProgramReceiveTarget;

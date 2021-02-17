@@ -27,11 +27,11 @@
 package tvbrowser.ui.settings;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -58,7 +58,6 @@ import javax.swing.event.HyperlinkListener;
 import com.jgoodies.forms.builder.PanelBuilder;
 import com.jgoodies.forms.factories.Borders;
 import com.jgoodies.forms.factories.CC;
-import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 
 import devplugin.ActionMenu;
@@ -77,9 +76,9 @@ import tvbrowser.core.plugin.PluginProxy;
 import tvbrowser.core.plugin.PluginProxyManager;
 import tvbrowser.core.plugin.PluginStateAdapter;
 import tvbrowser.ui.settings.util.LineButton;
+import util.i18n.Localizer;
 import util.ui.FixedSizeIcon;
 import util.ui.LineComponent;
-import util.i18n.Localizer;
 import util.ui.TVBrowserIcons;
 import util.ui.UiUtilities;
 import util.ui.WindowClosingIf;
@@ -110,7 +109,7 @@ public class ContextmenuSettingsTab implements devplugin.SettingsTab {
   public JPanel createSettingsPanel() {
     mEditableMenus = new ArrayList<>();
     mDisabledSubMenusMap = ContextMenuManager.getDisabledSubMenuMap();
-    JEditorPane genericFilterLink = UiUtilities.createHtmlHelpTextArea(LOCALIZER.msg("genericFilterLink","<html>* <a href=\"\">Highlighting filter</a> activated for context menu filtering</html>"), new HyperlinkListener() {
+    JEditorPane genericFilterLink = UiUtilities.createHtmlHelpTextArea(LOCALIZER.msg("genericFilterLink","<html><span style=\"color:red\">*</span> <a href=\"\">Highlighting filter</a> activated for context menu filtering</html>"), new HyperlinkListener() {
       @Override
       public void hyperlinkUpdate(HyperlinkEvent e) {
         if(e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
@@ -468,17 +467,24 @@ public class ContextmenuSettingsTab implements devplugin.SettingsTab {
   class ContextMenuCellRenderer extends DefaultListCellRenderer {
     private JCheckBox mItemSelected;
     private JLabel mItemLabel;
+    private JLabel mInfoLabel;
     private JPanel mItemPanel;
-
+    
     public ContextMenuCellRenderer() {
       mItemSelected = new JCheckBox();
       mItemSelected.setOpaque(false);
       mSelectionWidth = mItemSelected.getPreferredSize().width;
 
       mItemLabel = new JLabel();
-      mItemPanel = new JPanel(new BorderLayout());
-      mItemPanel.add(mItemSelected, BorderLayout.WEST);
-      mItemPanel.add(mItemLabel, BorderLayout.CENTER);
+      
+      mInfoLabel = new JLabel("*");
+      mInfoLabel.setForeground(Color.red);
+      mInfoLabel.setVisible(false);
+      
+      mItemPanel = new JPanel(new FormLayout("default,default,default","default"));
+      mItemPanel.add(mItemSelected, CC.xy(1, 1));
+      mItemPanel.add(mItemLabel, CC.xy(2, 1));
+      mItemPanel.add(mInfoLabel, CC.xy(3, 1));
     }
 
     @Override
@@ -543,10 +549,13 @@ public class ContextmenuSettingsTab implements devplugin.SettingsTab {
 
         PluginProxy proxy = PluginProxyManager.getInstance().getActivatedPluginForId(menuIf.getId());
         
-        if(proxy != null) {
-          if(GenericFilterMap.getInstance().getGenericPluginFilter(proxy, true) != null) {
-            text.append("*");
-          }
+        mInfoLabel.setVisible(proxy != null && GenericFilterMap.getInstance().getGenericPluginFilter(proxy, true) != null);
+        
+        if(cellHasFocus) {
+          mInfoLabel.setForeground(label.getForeground());
+        }
+        else {
+          mInfoLabel.setForeground(Color.red);
         }
                 
         mItemLabel.setIcon(icon);

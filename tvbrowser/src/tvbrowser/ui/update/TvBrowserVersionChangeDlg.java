@@ -27,7 +27,6 @@ package tvbrowser.ui.update;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.io.IOException;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;

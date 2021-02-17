@@ -737,10 +737,6 @@ public class SettingsDialog implements WindowClosingIf {
       mSettingsTab = settingsTab;
     }
 
-    public SettingNode(SettingsTab settingsTab) {
-      this(settingsTab, null);
-    }
-
     public String getId() {
       return mId;
     }

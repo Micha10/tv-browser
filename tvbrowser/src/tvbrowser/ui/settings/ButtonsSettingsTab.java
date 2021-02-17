@@ -98,7 +98,7 @@ public class ButtonsSettingsTab implements SettingsTab {
     if(TVBrowser.isUsingSystemTray()) {
       JEditorPane helpLabel = UiUtilities.createHtmlHelpTextArea(mLocalizer.msg("info","The times of the  buttons are also used for the '<a href=\"#link\">{0}</a>' in the tray menu.", TrayOnTimeSettingsTab.getName()), e -> {
         if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
-          Plugin.getPluginManager().showSettings(SettingsItem.TRAYONTIMEPROGRAMS);
+          Plugin.getPluginManager().showSettings(SettingsItem.TRAY_ONTIME);
         }
       });
       
