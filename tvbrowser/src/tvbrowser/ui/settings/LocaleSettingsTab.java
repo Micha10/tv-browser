@@ -27,7 +27,6 @@
 package tvbrowser.ui.settings;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -58,7 +57,6 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JRootPane;
 import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
 
 import com.jgoodies.forms.builder.PanelBuilder;
 import com.jgoodies.forms.factories.Borders;
@@ -67,14 +65,13 @@ import com.jgoodies.forms.factories.DefaultComponentFactory;
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 
-import tvbrowser.TVBrowser;
 import tvbrowser.core.PluginLoader;
 import tvbrowser.core.Settings;
 import tvbrowser.core.icontheme.IconLoader;
 import tvbrowser.ui.mainframe.MainFrame;
+import util.i18n.Localizer;
 import util.io.IOUtilities;
 import util.ui.CustomComboBoxRenderer;
-import util.i18n.Localizer;
 import util.ui.UiUtilities;
 import util.ui.WindowClosingIf;
 import util.ui.customizableitems.SelectableItem;
@@ -101,24 +98,17 @@ public class LocaleSettingsTab implements devplugin.SettingsTab {
 
   private JRadioButton mTwentyfourHourFormat;
   
-  private JTextArea mInfoArea;
+  private static boolean SOMETHING_CHANGED = false;
 
-  private static boolean mSomethingChanged = false;
-
-  private static int mStartLanguageIndex;
-  private static int mStartTimeZoneIndex;
-  private static boolean mTwelveHourFormatIsSelected;
-  private static int mFirstDayOfWeekIndex;
-  
-  private SettingsDialog mSettingsDialog;
-  private JButton mRestartButton;
+  private static int START_LANGUAGE_INDEX;
+  private static int START_TIME_ZONE_INDEX;
+  private static boolean TWELVE_HOUR_FORMAT_IS_SELECTED;
+  private static int FIRST_DAY_OF_WEEK_INDEX;
   
   /**
    * Creates a new instance of ProxySettingsTab.
-   * @param settingsDialog The settings dialog.
    */
-  public LocaleSettingsTab(SettingsDialog settingsDialog) {
-    mSettingsDialog = settingsDialog;
+  public LocaleSettingsTab() {
   }
 
   /**
@@ -260,32 +250,21 @@ public class LocaleSettingsTab implements devplugin.SettingsTab {
     mSettingsPn.add(new JLabel(mLocalizer.msg("firstDayOfWeek", "First day of week")+":"), CC.xy(2,17));
     mSettingsPn.add(mFirstDayOfWeek, CC.xyw(4,17,3));
 
-    mInfoArea = UiUtilities.createHelpTextArea(mLocalizer.msg("restartNote", "Please Restart"));
-    mInfoArea.setForeground(Color.RED);
-    mInfoArea.setVisible(mSomethingChanged);
-
-    mRestartButton = new JButton(LookAndFeelSettingsTab.LOCALIZER.msg("restart", "Restart now"));
-    mRestartButton.setVisible(mSomethingChanged);
-    mRestartButton.addActionListener(e -> {
-      mSettingsDialog.saveSettings();
-      TVBrowser.addRestart();
-      MainFrame.getInstance().quit();
-    });
-    
-    if(!mSomethingChanged) {
-      mStartLanguageIndex = mLanguageCB.getSelectedIndex();
-      mStartTimeZoneIndex = mTimezoneCB.getSelectedIndex();
-      mTwelveHourFormatIsSelected = mTwelveHourFormat.isSelected();
-      mFirstDayOfWeekIndex = mFirstDayOfWeek.getSelectedIndex();
+    if(!SOMETHING_CHANGED) {
+      START_LANGUAGE_INDEX = mLanguageCB.getSelectedIndex();
+      START_TIME_ZONE_INDEX = mTimezoneCB.getSelectedIndex();
+      TWELVE_HOUR_FORMAT_IS_SELECTED = mTwelveHourFormat.isSelected();
+      FIRST_DAY_OF_WEEK_INDEX = mFirstDayOfWeek.getSelectedIndex();
     }
 
     ItemListener itemListener= e -> {
-      mInfoArea.setVisible(mLanguageCB.getSelectedIndex() != mStartLanguageIndex ||
-          mTimezoneCB.getSelectedIndex() != mStartTimeZoneIndex ||
-          (mTwelveHourFormatIsSelected && !mTwelveHourFormat.isSelected() ||
-              !mTwelveHourFormatIsSelected && !mTwentyfourHourFormat.isSelected() ||
-              mFirstDayOfWeek.getSelectedIndex() != mFirstDayOfWeekIndex));
-      mRestartButton.setVisible(mInfoArea.isVisible());
+      SOMETHING_CHANGED = mLanguageCB.getSelectedIndex() != START_LANGUAGE_INDEX ||
+          mTimezoneCB.getSelectedIndex() != START_TIME_ZONE_INDEX ||
+          (TWELVE_HOUR_FORMAT_IS_SELECTED && !mTwelveHourFormat.isSelected() ||
+              !TWELVE_HOUR_FORMAT_IS_SELECTED && !mTwentyfourHourFormat.isSelected() ||
+              mFirstDayOfWeek.getSelectedIndex() != FIRST_DAY_OF_WEEK_INDEX);
+      Settings.setRestartInfo(LocaleSettingsTab.class.getCanonicalName(), SOMETHING_CHANGED);
+      
     };
 
     mLanguageCB.addItemListener(itemListener);
@@ -293,13 +272,6 @@ public class LocaleSettingsTab implements devplugin.SettingsTab {
     mTwelveHourFormat.addItemListener(itemListener);
     mTwentyfourHourFormat.addItemListener(itemListener);
     mFirstDayOfWeek.addItemListener(itemListener);
-
-    JPanel restart = new JPanel(new FormLayout("default:grow,5dlu,default","default"));
-    
-    restart.add(mInfoArea, CC.xy(1, 1));
-    restart.add(mRestartButton, CC.xy(3, 1));
-    
-    mSettingsPn.add(restart, CC.xyw(1, 19, 7));
 
     return mSettingsPn;
   }
@@ -322,11 +294,9 @@ public class LocaleSettingsTab implements devplugin.SettingsTab {
     }
 
     Settings.propTwelveHourFormat.setBoolean(mTwelveHourFormat.isSelected());
-
-    mSomethingChanged = mInfoArea.isVisible();
-
+    
     // remove all plugin proxies as their cached plugin description needs to adapt to the new locale
-    if (mSomethingChanged) {
+    if (SOMETHING_CHANGED) {
       PluginLoader.getInstance().deleteAllPluginProxies();
     }
     

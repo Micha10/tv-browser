@@ -18,7 +18,6 @@
  */
 package tvbrowser.ui.settings;
 
-import java.awt.Color;
 import java.awt.Window;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
@@ -36,7 +35,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JSpinner;
-import javax.swing.JTextArea;
 import javax.swing.SpinnerDateModel;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.event.HyperlinkEvent;
@@ -51,7 +49,6 @@ import devplugin.Marker;
 import devplugin.Plugin;
 import devplugin.PluginAccess;
 import devplugin.SettingsItem;
-import tvbrowser.TVBrowser;
 import tvbrowser.core.Settings;
 import tvbrowser.core.filters.FilterList;
 import tvbrowser.core.filters.GenericFilterMap;
@@ -60,10 +57,10 @@ import tvbrowser.extras.favoritesplugin.FavoritesPluginProxy;
 import tvbrowser.extras.reminderplugin.ReminderPluginProxy;
 import tvbrowser.ui.filter.dlgs.EditFilterDlg;
 import tvbrowser.ui.mainframe.MainFrame;
+import util.i18n.Localizer;
 import util.settings.PluginPictureSettings;
 import util.settings.ProgramPanelSettings;
 import util.ui.CaretPositionCorrector;
-import util.i18n.Localizer;
 import util.ui.MarkerChooserDlg;
 import util.ui.PluginsPictureSettingsPanel;
 import util.ui.UiUtilities;
@@ -94,18 +91,11 @@ public class PictureSettingsTab extends AbstractSettingsTab {
   private JSpinner mDescriptionLines;
 
   private JLabel mDescriptionLabel;
-
-  private JTextArea mRestartMessage;
-  
-  private JButton mRestartButton;
-  
-  private SettingsDialog mSettingsDialog;
   
   private static int PLUGIN_PICTURE_SELECTION_ORIGINAL = -1;
   private long mLastPluginSelectionHandling = 0;
   
-  public PictureSettingsTab(SettingsDialog settingsDialog) {
-    mSettingsDialog = settingsDialog;
+  public PictureSettingsTab() {
   }
 
   public JPanel createSettingsPanel() {
@@ -307,26 +297,11 @@ public class PictureSettingsTab extends AbstractSettingsTab {
         PLUGIN_PICTURE_SELECTION_ORIGINAL = mPluginsPictureSettings.getSettings().getType();
       }
       
-      mRestartMessage = UiUtilities.createHelpTextArea(mLocalizer.msg("restartNote", "Please Restart"));
-      mRestartMessage.setForeground(Color.RED);
-      mRestartMessage.setVisible(PLUGIN_PICTURE_SELECTION_ORIGINAL != mPluginsPictureSettings.getSettings().getType());
-      
-      mRestartButton = new JButton(mLocalizer.msg("restart", "Restart now"));
-      mRestartButton.setVisible(PLUGIN_PICTURE_SELECTION_ORIGINAL != mPluginsPictureSettings.getSettings().getType());
-      mRestartButton.addActionListener(e -> {
-        mSettingsDialog.saveSettings();
-        TVBrowser.addRestart();
-        MainFrame.getInstance().quit();
-      });
-      
       mPluginsPictureSettings.addChangeListener(e -> {
-        mRestartMessage.setVisible(PLUGIN_PICTURE_SELECTION_ORIGINAL != mPluginsPictureSettings.getSettings().getType());
-        mRestartButton.setVisible(PLUGIN_PICTURE_SELECTION_ORIGINAL != mPluginsPictureSettings.getSettings().getType());
+        Settings.setRestartInfo(PictureSettingsTab.class.getCanonicalName(), PLUGIN_PICTURE_SELECTION_ORIGINAL != mPluginsPictureSettings.getSettings().getType());
       });
       
       y+=3;
-      pb.add(mRestartMessage, CC.xyw(1, y, 8));
-      pb.add(mRestartButton, CC.xy(9, y));
       
       mShowPicturesInTimeRange.addItemListener(e -> {
         mPictureStartTime.setEnabled(mShowPicturesInTimeRange.isSelected());

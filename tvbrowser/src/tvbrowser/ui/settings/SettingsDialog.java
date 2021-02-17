@@ -26,6 +26,7 @@
 package tvbrowser.ui.settings;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -51,6 +52,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.event.AncestorEvent;
 import javax.swing.event.AncestorListener;
+import javax.swing.event.ChangeListener;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -62,6 +64,7 @@ import javax.swing.tree.TreeSelectionModel;
 
 import com.jgoodies.forms.builder.ButtonBarBuilder;
 import com.jgoodies.forms.factories.Borders;
+import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 
@@ -121,7 +124,30 @@ public class SettingsDialog implements WindowClosingIf {
   
   private ArrayList<TreePath> mHistory;
   private int mIndexHistoryCurrent;
+  private ChangeListener mRestartListener;
 
+  public static JPanel getRestartPanel() {
+    final JLabel restartLb = new JLabel(LOCALIZER.msg("restartNote", "For changes to take effect TV-Browser has to be restarted."));
+    restartLb.setForeground(Color.red);
+    
+    final JButton restartBtn = new JButton(LOCALIZER.msg("restart", "Restart now"));
+    restartBtn.addActionListener(e -> {
+      if(mInstance != null) {
+        mInstance.saveSettings();
+      }
+      TVBrowser.addRestart();
+      MainFrame.getInstance().quit();
+    });
+    
+    final JPanel restart = new JPanel(new FormLayout("default:grow,3dlu,default","default"));
+    restart.setBorder(Borders.createEmptyBorder("5dlu,5dlu,0dlu,5dlu"));
+    restart.setVisible(Settings.isRestartNeeded());
+    restart.add(restartLb, CC.xy(1, 1));
+    restart.add(restartBtn, CC.xy(3, 1));
+    
+    return restart;
+  }
+  
   /**
    * Creates a new instance of SettingsDialog.
    * @param parent The parent window.
@@ -190,9 +216,22 @@ public class SettingsDialog implements WindowClosingIf {
     for (int i = 1; i <= categoryCount; i++) {
       mSelectionTree.collapseRow(i);
     }
-
+    
     mSettingsPn = new JPanel(new BorderLayout());
-    splitPane.setRightComponent(mSettingsPn);
+    
+    JPanel restart = getRestartPanel();
+    
+    mRestartListener = e -> {
+      restart.setVisible(Settings.isRestartNeeded());
+    };
+    
+    Settings.addRestartInfoListener(mRestartListener);
+    
+    JPanel right = new JPanel(new BorderLayout());
+    right.add(mSettingsPn, BorderLayout.CENTER);
+    right.add(restart, BorderLayout.SOUTH);
+    
+    splitPane.setRightComponent(right);
 
     ButtonBarBuilder builder = new ButtonBarBuilder();
 
@@ -291,11 +330,9 @@ public class SettingsDialog implements WindowClosingIf {
 
     mDialog.addWindowListener(new WindowAdapter() {
       public void windowClosing(WindowEvent e) {
-        Settings.propSettingsDialogDividerLocation.setInt(splitPane
-            .getDividerLocation());
-      }
-
-      public void windowClosed(WindowEvent e) {
+        System.out.println("hier");
+        Settings.removeRestartInfoListener(mRestartListener);
+        ChannelLabel.clearIconCache();
         Settings.propSettingsDialogDividerLocation.setInt(splitPane
             .getDividerLocation());
         mInstance = null;
@@ -382,7 +419,7 @@ public class SettingsDialog implements WindowClosingIf {
     SettingNode generalSettings = new SettingNode(new StartupSettingsTab(),SettingsItem.STARTUP);
     root.add(generalSettings);
 
-    SettingNode graphicalSettings = new SettingNode(new LookAndFeelSettingsTab(this),SettingsItem.LOOKANDFEEL);
+    SettingNode graphicalSettings = new SettingNode(new LookAndFeelSettingsTab(),SettingsItem.LOOKANDFEEL);
     root.add(graphicalSettings);
 
     SettingNode technicalSettings = new SettingNode(new DefaultSettingsTab(LOCALIZER.msg("technical", "Technical"), null),SettingsItem.TECHNICAL);
@@ -401,18 +438,18 @@ public class SettingsDialog implements WindowClosingIf {
 
     generalSettings.add(new SettingNode(new ChannelsSettingsTab(),SettingsItem.CHANNELS));
     generalSettings.add(new SettingNode(new DataPluginPostProcessingOrderSettingsTab(),SettingsItem.DATA_PLUGIN_POST_PROCESSING));
-    generalSettings.add(new SettingNode(new LocaleSettingsTab(this),SettingsItem.LOCALE));
+    generalSettings.add(new SettingNode(new LocaleSettingsTab(),SettingsItem.LOCALE));
     generalSettings.add(new SettingNode(new ContextmenuSettingsTab(),SettingsItem.CONTEXTMENU));
     generalSettings.add(new SettingNode(new MouseSettingsTab(), SettingsItem.MOUSE));
     generalSettings.add(new SettingNode(new GenericPluginFilterSettingsTab(),SettingsItem.GENERIC_PLUGIN_FILTER));
     generalSettings.add(new SettingNode(new GlobalPluginProgramFormatingSettings(),SettingsItem.PLUGINPROGRAMFORMAT));
     generalSettings.add(new SettingNode(new ButtonsSettingsTab(),SettingsItem.TIMEBUTTONS));
 
-    graphicalSettings.add(new SettingNode(new PictureSettingsTab(this),SettingsItem.PICTURES));
+    graphicalSettings.add(new SettingNode(new PictureSettingsTab(),SettingsItem.PICTURES));
     graphicalSettings.add(new SettingNode(new CenterPanelSettingsTab(),SettingsItem.CENTERPANELSETUP));    
     graphicalSettings.add(new SettingNode(new ProgramTableSettingsTab(),SettingsItem.PROGRAMTABLELOOK));
     graphicalSettings.add(new SettingNode(new ProgramPanelSettingsTab(), SettingsItem.PROGRAMPANELLOOK));
-    graphicalSettings.add(new SettingNode(new ChannelIconAndNameSettingsTab(this),SettingsItem.CHANNEL_ICON_NAME));
+    graphicalSettings.add(new SettingNode(new ChannelIconAndNameSettingsTab(),SettingsItem.CHANNEL_ICON_NAME));
     graphicalSettings.add(new SettingNode(new MarkingsSettingsTab(),SettingsItem.PROGRAMPANELMARKING));
     graphicalSettings.add(new SettingNode(new FontsSettingsTab(),SettingsItem.FONTS));
 
@@ -426,7 +463,7 @@ public class SettingsDialog implements WindowClosingIf {
     technicalSettings.add(new SettingNode(new WebbrowserSettingsTab(),SettingsItem.WEBBROWSER));
 
     // Plugins
-    mPluginSettingsNode = new SettingNode(new PluginSettingsTab(this),SettingsItem.PLUGINS);
+    mPluginSettingsNode = new SettingNode(new PluginSettingsTab(),SettingsItem.PLUGINS);
     root.add(mPluginSettingsNode);
 
     createPluginTreeItems(false);
@@ -873,7 +910,6 @@ public class SettingsDialog implements WindowClosingIf {
 
   public void close() {
     mDialog.dispose();
-    ChannelLabel.clearIconCache();
   }
 
   public JRootPane getRootPane() {

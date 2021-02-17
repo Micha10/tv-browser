@@ -88,6 +88,7 @@ import tvbrowser.ui.settings.BlockedPluginArrayProperty;
 import tvbrowser.ui.waiting.dlgs.CopyWaitingDlg;
 import util.browserlauncher.Launch;
 import util.exc.TvBrowserException;
+import util.i18n.Localizer;
 import util.io.IOUtilities;
 import util.io.stream.InputStreamProcessor;
 import util.io.stream.ObjectInputStreamProcessor;
@@ -118,7 +119,6 @@ import util.settings.StringProperty;
 import util.settings.VariableIntProperty;
 import util.settings.VersionProperty;
 import util.settings.WindowSetting;
-import util.i18n.Localizer;
 import util.ui.UiUtilities;
 import util.ui.persona.Persona;
 import util.ui.view.SplitViewProperty;
@@ -140,7 +140,35 @@ public class Settings {
   public static final String INFO_ID = "info.id";
   public static final String PICTURE_ID = "picture.id";
   private static final short INFO_DIALOG_WAITING_TIME = 1500;
+  
+  private static final HashMap<String, Boolean> RESTART_MAP = new HashMap<String, Boolean>();
+  private static final ArrayList<ChangeListener> RESTART_LISTENERS = new ArrayList<ChangeListener>();
 
+  public static void addRestartInfoListener(final ChangeListener cl) {
+    RESTART_LISTENERS.add(cl);
+  }
+  
+  public static void removeRestartInfoListener(final ChangeListener cl) {
+    RESTART_LISTENERS.remove(cl);
+  }
+  
+  public static void setRestartInfo(final String source, final boolean needsRestart) {
+    if(needsRestart) {
+      RESTART_MAP.put(source, true);
+    }
+    else {
+      RESTART_MAP.remove(source);
+    }
+    
+    for(ChangeListener cl : RESTART_LISTENERS) {
+      cl.stateChanged(new ChangeEvent(source));
+    }
+  }
+  
+  public static boolean isRestartNeeded() {
+    return !RESTART_MAP.isEmpty();
+  }
+  
   private static final Logger mLog = Logger
       .getLogger(Settings.class.getName());
 

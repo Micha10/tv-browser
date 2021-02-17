@@ -125,6 +125,7 @@ import javax.swing.event.ChangeListener;
 import javax.swing.plaf.TabbedPaneUI;
 import javax.swing.plaf.basic.BasicTabbedPaneUI;
 
+import com.jgoodies.forms.factories.Borders;
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.Sizes;
@@ -461,7 +462,18 @@ public class MainFrame extends JFrame implements DateListener,DropTargetListener
     addKeyListener(mGlobalFindAsYouTypeKeyListener);
     mTimeChooserPanel = new TimeChooserPanel(this,mGlobalFindAsYouTypeKeyListener);
 
-    centerPanel.add(mFilterPanel, BorderLayout.NORTH);
+    final JPanel restart = SettingsDialog.getRestartPanel();
+    restart.setBorder(Borders.createEmptyBorder("2dlu,2dlu,2dlu,2dlu"));
+    restart.setVisible(Settings.isRestartNeeded());
+    Settings.addRestartInfoListener(e -> {
+      restart.setVisible(Settings.isRestartNeeded());
+    });
+    
+    JPanel top = new JPanel(new BorderLayout());
+    top.add(restart, BorderLayout.NORTH);
+    top.add(mFilterPanel, BorderLayout.SOUTH);
+    
+    centerPanel.add(top, BorderLayout.NORTH);
     
     Channel[] channelArr = ChannelList.getSubscribedChannels();
     int startOfDay = Settings.propProgramTableStartOfDay.getInt();

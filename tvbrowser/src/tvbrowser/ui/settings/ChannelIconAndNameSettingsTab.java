@@ -23,22 +23,14 @@
  */
 package tvbrowser.ui.settings;
 
-import java.awt.Color;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 
 import javax.swing.ButtonGroup;
 import javax.swing.Icon;
-import javax.swing.JButton;
 import javax.swing.JCheckBox;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
-
-import tvbrowser.TVBrowser;
-import tvbrowser.core.Settings;
-import tvbrowser.ui.mainframe.MainFrame;
-import util.settings.ProgramPanelSettings;
 
 import com.jgoodies.forms.builder.PanelBuilder;
 import com.jgoodies.forms.factories.Borders;
@@ -46,6 +38,8 @@ import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
 
 import devplugin.SettingsTab;
+import tvbrowser.core.Settings;
+import util.settings.ProgramPanelSettings;
 
 /**
  * Settings for the icon and name values in
@@ -74,10 +68,7 @@ public class ChannelIconAndNameSettingsTab implements SettingsTab {
   
   private static int INDEX_ICONS_PROGRAM_PANEL = -1;
   
-  private SettingsDialog mDialogSettings;
-  
-  public ChannelIconAndNameSettingsTab(SettingsDialog dialogSettings) {
-    mDialogSettings = dialogSettings;
+  public ChannelIconAndNameSettingsTab() {
   }
   
   /**
@@ -141,26 +132,11 @@ public class ChannelIconAndNameSettingsTab implements SettingsTab {
     channelLists.add(mShowIconAndNameInChannelLists);
     channelLists.add(mShowOnlyIconInChannelLists);
     channelLists.add(mShowOnlyNameInChannelLists);
-
-    final JLabel restartInfo = new JLabel(mLocalizer.msg("restartNote", "For the changes to take effect TV-Browser has to be restarted."));
-    restartInfo.setForeground(Color.red);
-    restartInfo.setVisible(INDEX_ICONS_PROGRAM_PANEL != Settings.propShowChannelLogoForProgramPanel.getInt());
-
-    final JButton restart = new JButton(mLocalizer.msg("restart", "Restart now"));
-    restart.setVisible(restartInfo.isVisible());
-    restart.addActionListener(e -> {
-      mDialogSettings.saveSettings();
-      TVBrowser.addRestart();
-      MainFrame.getInstance().quit();
-    });
+    
     
     final ItemListener pluginProgramPanelLogoListener = e -> {
       if(e.getStateChange() == ItemEvent.SELECTED) {
-        boolean showRestart = (mShowIconInProgramPanelPlugins.equals(e.getItem()) && INDEX_ICONS_PROGRAM_PANEL != ProgramPanelSettings.SHOW_CHANNEL_LOGO_PLUGINS_CONTROL)
-            || (mShowIconInProgramPanelNever.equals(e.getItem()) && INDEX_ICONS_PROGRAM_PANEL != ProgramPanelSettings.SHOW_CHANNEL_LOGO_NEVER);
-        
-        restartInfo.setVisible(showRestart);
-        restart.setVisible(showRestart);
+        Settings.setRestartInfo(ChannelIconAndNameSettingsTab.class.getCanonicalName(), (mShowIconInProgramPanelPlugins.equals(e.getItem()) && INDEX_ICONS_PROGRAM_PANEL != ProgramPanelSettings.SHOW_CHANNEL_LOGO_PLUGINS_CONTROL) || (mShowIconInProgramPanelNever.equals(e.getItem()) && INDEX_ICONS_PROGRAM_PANEL != ProgramPanelSettings.SHOW_CHANNEL_LOGO_NEVER));
       }
     };
     
@@ -168,9 +144,6 @@ public class ChannelIconAndNameSettingsTab implements SettingsTab {
     mShowIconInProgramPanelPlugins.addItemListener(pluginProgramPanelLogoListener);
     
     y++;
-    
-    pb.add(restartInfo, CC.xyw(1, y, 2));
-    pb.add(restart, CC.xy(3, y));
     
     return pb.getPanel();
   }

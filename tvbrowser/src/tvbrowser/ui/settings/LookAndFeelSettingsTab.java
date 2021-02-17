@@ -25,7 +25,6 @@
  */
 package tvbrowser.ui.settings;
 
-import java.awt.Color;
 import java.awt.Component;
 import java.io.File;
 import java.util.Arrays;
@@ -38,7 +37,6 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JTextArea;
 import javax.swing.UIManager;
 
 import com.jgoodies.forms.factories.Borders;
@@ -48,7 +46,6 @@ import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.RowSpec;
 
 import devplugin.SettingsTab;
-import tvbrowser.TVBrowser;
 import tvbrowser.core.Settings;
 import tvbrowser.core.icontheme.IconLoader;
 import tvbrowser.core.icontheme.IconTheme;
@@ -59,9 +56,9 @@ import tvbrowser.core.icontheme.ThemeDownloadItem;
 import tvbrowser.ui.mainframe.MainFrame;
 import tvbrowser.ui.settings.looksSettings.JGoodiesLNFSettings;
 import tvbrowser.ui.settings.looksSettings.SkinLNFSettings;
+import util.i18n.Localizer;
 import util.ui.CustomComboBoxRenderer;
 import util.ui.LinkButton;
-import util.i18n.Localizer;
 import util.ui.UiUtilities;
 import util.ui.persona.Persona;
 import util.ui.persona.PersonaInfo;
@@ -85,22 +82,16 @@ public final class LookAndFeelSettingsTab implements SettingsTab {
   private JComboBox<Object> mPersonaSelection;
   
   private JComboBox<InfoIconTheme> mInfoIconThemes;
-
-  private JTextArea mRestartMessage;
   
-  private JButton mRestartButton;
+  private static int START_LOOK_AND_FEEL_INDEX = -1;
+  private static int START_ICON_INDEX;
+  private static int START_PLUGIN_VIEW_POSITION_INDEX;
+  private static int START_INFO_ICON_THEME_INDEX;
 
-  private int mStartLookAndIndex;
-  private int mStartIconIndex;
-  private int mStartPluginViewPositionIndex;
-  private int mStartInfoIconThemeIndex;
+  private static String JOODIES_START_THEME;
+  private static boolean JGOODIES_START_SHADOW;
 
-  private String mJGoodiesStartTheme;
-  private boolean mJGoodiesStartShadow;
-
-  private String mSkinLFStartTheme;
-
-  private boolean mSomethingChanged = false;
+  private static String SKIN_LF_START_THEME;
   
   private static class LookAndFeelObj implements Comparable<LookAndFeelObj> {
     private UIManager.LookAndFeelInfo info;
@@ -132,12 +123,8 @@ public final class LookAndFeelSettingsTab implements SettingsTab {
 
     return result;
   }
-
-  private SettingsDialog mSettingsDialog;
   
-  public LookAndFeelSettingsTab(SettingsDialog dialog) {
-    mSettingsDialog = dialog;
-  }
+  public LookAndFeelSettingsTab() {}
   
   public JPanel createSettingsPanel() {
     FormLayout layout = new FormLayout("5dlu, pref, 3dlu, fill:default:grow, 3dlu, pref, 5dlu", "");
@@ -311,33 +298,15 @@ public final class LookAndFeelSettingsTab implements SettingsTab {
     
     layout.appendRow(RowSpec.decode("fill:3dlu:grow"));
     layout.appendRow(RowSpec.decode("pref"));
-
-    mRestartMessage = UiUtilities.createHelpTextArea(LOCALIZER.msg("restartNote", "Please Restart"));
-    mRestartMessage.setForeground(Color.RED);
-    mRestartMessage.setVisible(mSomethingChanged);
     
-    mRestartButton = new JButton(LOCALIZER.msg("restart", "Restart now"));
-    mRestartButton.setVisible(mSomethingChanged);
-    mRestartButton.addActionListener(e -> {
-      mSettingsDialog.saveSettings();
-      TVBrowser.addRestart();
-      MainFrame.getInstance().quit();
-    });
-    
-    mSettingsPn.add(mRestartMessage, CC.xyw(1, 15, 4));
-    
-    if(TVBrowser.restartEnabled()) {
-      mSettingsPn.add(mRestartButton, CC.xy(6, 15));
-    }
-
-    if(!mSomethingChanged) {
-      mStartLookAndIndex = mLfComboBox.getSelectedIndex();
-      mStartIconIndex = mIconThemes.getSelectedIndex();
-      mStartPluginViewPositionIndex = mPluginViewPosition.getSelectedIndex();
-      mJGoodiesStartTheme = Settings.propJGoodiesTheme.getString();
-      mJGoodiesStartShadow = Settings.propJGoodiesShadow.getBoolean();
-      mSkinLFStartTheme = Settings.propSkinLFThemepack.getString();
-      mStartInfoIconThemeIndex = mInfoIconThemes.getSelectedIndex();
+    if(START_LOOK_AND_FEEL_INDEX == -1) {
+      START_LOOK_AND_FEEL_INDEX = mLfComboBox.getSelectedIndex();
+      START_ICON_INDEX = mIconThemes.getSelectedIndex();
+      START_PLUGIN_VIEW_POSITION_INDEX = mPluginViewPosition.getSelectedIndex();
+      JOODIES_START_THEME = Settings.propJGoodiesTheme.getString();
+      JGOODIES_START_SHADOW = Settings.propJGoodiesShadow.getBoolean();
+      SKIN_LF_START_THEME = Settings.propSkinLFThemepack.getString();
+      START_INFO_ICON_THEME_INDEX = mInfoIconThemes.getSelectedIndex();
     }
 
     mIconThemes.addActionListener(e -> {
@@ -382,7 +351,7 @@ public final class LookAndFeelSettingsTab implements SettingsTab {
     String startIconID = null;
 
     if(mInfoIconThemes.getSelectedIndex() != -1) {
-      startIconID = ((InfoIconTheme)mInfoIconThemes.getItemAt(mStartInfoIconThemeIndex)).getID();
+      startIconID = ((InfoIconTheme)mInfoIconThemes.getItemAt(START_INFO_ICON_THEME_INDEX)).getID();
       currentInfoIconTheme = ((InfoIconTheme)mInfoIconThemes.getSelectedItem()).getID();
     }
     
@@ -392,7 +361,7 @@ public final class LookAndFeelSettingsTab implements SettingsTab {
       mInfoIconThemes.addItem(infoIconThemes[i]);
       
       if(startIconID != null && startIconID.equals(infoIconThemes[i].getID())) {
-        mStartInfoIconThemeIndex = i;
+        START_INFO_ICON_THEME_INDEX = i;
       }
       
       if(infoIconThemes[i].getID().equals(currentInfoIconTheme)) {
@@ -406,7 +375,7 @@ public final class LookAndFeelSettingsTab implements SettingsTab {
     String selectedName = Settings.propIcontheme.getString();
     
     if(mIconThemes.getSelectedIndex() != -1) {
-      startIconName = "icons/" + ((IconTheme)mIconThemes.getItemAt(mStartIconIndex)).getBase().getName();
+      startIconName = "icons/" + ((IconTheme)mIconThemes.getItemAt(START_ICON_INDEX)).getBase().getName();
       selectedName = "icons/" + ((IconTheme)mIconThemes.getSelectedItem()).getBase().getName();
     }
     
@@ -420,7 +389,7 @@ public final class LookAndFeelSettingsTab implements SettingsTab {
       mIconThemes.addItem(available[i]);
       
       if(startIconName != null && ("icons/" + available[i].getBase().getName()).equals(startIconName)) {
-        mStartIconIndex = i;
+        START_ICON_INDEX = i;
       }
     }
         
@@ -438,15 +407,14 @@ public final class LookAndFeelSettingsTab implements SettingsTab {
   }
 
   private void updateRestartMessage() {
-    mRestartMessage.setVisible(
-        mLfComboBox.getSelectedIndex() != mStartLookAndIndex ||
-        mIconThemes.getSelectedIndex() != mStartIconIndex ||
-        mJGoodiesStartTheme.compareTo(Settings.propJGoodiesTheme.getString()) != 0 ||
-        mJGoodiesStartShadow != Settings.propJGoodiesShadow.getBoolean() ||
-        mSkinLFStartTheme.compareTo(Settings.propSkinLFThemepack.getString()) != 0 ||
-        mPluginViewPosition.getSelectedIndex() != mStartPluginViewPositionIndex ||
-        mStartInfoIconThemeIndex != mInfoIconThemes.getSelectedIndex());
-    mRestartButton.setVisible(mRestartMessage.isVisible());
+    Settings.setRestartInfo(LocaleSettingsTab.class.getCanonicalName(), 
+        mLfComboBox.getSelectedIndex() != START_LOOK_AND_FEEL_INDEX ||
+        mIconThemes.getSelectedIndex() != START_ICON_INDEX ||
+        JOODIES_START_THEME.compareTo(Settings.propJGoodiesTheme.getString()) != 0 ||
+        JGOODIES_START_SHADOW != Settings.propJGoodiesShadow.getBoolean() ||
+        SKIN_LF_START_THEME.compareTo(Settings.propSkinLFThemepack.getString()) != 0 ||
+        mPluginViewPosition.getSelectedIndex() != START_PLUGIN_VIEW_POSITION_INDEX ||
+        START_INFO_ICON_THEME_INDEX != mInfoIconThemes.getSelectedIndex());
   }
 
   void configTheme() {
@@ -482,7 +450,6 @@ public final class LookAndFeelSettingsTab implements SettingsTab {
     IconTheme theme = (IconTheme) mIconThemes.getSelectedItem();
     Settings.propIcontheme.setString("icons/" + theme.getBase().getName());
 
-    mSomethingChanged = mRestartMessage.isVisible();
 
     Settings.propPluginViewIsLeft.setBoolean(mPluginViewPosition.getSelectedIndex() == 1);
     Settings.propViewDateLayout.setInt(mDateLayout.getSelectedIndex());
