@@ -76,6 +76,7 @@ import tvbrowser.core.tvdataservice.TvDataServiceProxy;
 import tvbrowser.core.tvdataservice.TvDataServiceProxyManager;
 import tvbrowser.extras.common.InternalPluginProxyIf;
 import tvbrowser.extras.common.InternalPluginProxyList;
+import tvbrowser.ui.DontShowAgainOptionBox;
 import tvbrowser.ui.mainframe.MainFrame;
 import tvbrowser.ui.update.SoftwareUpdateDlg;
 import tvbrowser.ui.update.SoftwareUpdateDlg.FilterItem;
@@ -95,7 +96,7 @@ import util.ui.UiUtilities;
 
 public class PluginSettingsTab implements devplugin.SettingsTab, TableModelListener {
   /** Localizer */
-  private static final util.i18n.Localizer mLocalizer = util.i18n.Localizer.getLocalizerFor(PluginSettingsTab.class);
+  private static final util.i18n.Localizer LOCALIZER = util.i18n.Localizer.getLocalizerFor(PluginSettingsTab.class);
   /** Logger */
   private static final Logger mLog = Logger.getLogger(PluginSettingsTab.class.getName());
   /** List of Plugins */
@@ -127,7 +128,7 @@ public class PluginSettingsTab implements devplugin.SettingsTab, TableModelListe
     
     CellConstraints cc = new CellConstraints();
     
-    JButton update = new JButton(mLocalizer.msg("updateInstallPlugin", "Update/Install Plugins"), IconLoader.getInstance().getIconFromTheme("actions", "web-search", 16));
+    JButton update = new JButton(LOCALIZER.msg("updateInstallPlugin", "Update/Install Plugins"), IconLoader.getInstance().getIconFromTheme("actions", "web-search", 16));
     
     update.addActionListener(e -> {
       MainFrame.getInstance().showUpdatePluginsDlg(false);
@@ -135,7 +136,7 @@ public class PluginSettingsTab implements devplugin.SettingsTab, TableModelListe
 
     contentPanel.add(update, cc.xy(2,1));
     
-    mAutoUpdates = new JCheckBox(mLocalizer.msg("autoUpdates","Find plugin updates automatically"), Settings.propAutoUpdatePlugins.getBoolean());
+    mAutoUpdates = new JCheckBox(LOCALIZER.msg("autoUpdates","Find plugin updates automatically"), Settings.propAutoUpdatePlugins.getBoolean());
     mAutoUpdates.addItemListener(e -> {
       Settings.propAutoUpdatePlugins.setBoolean(e.getStateChange() == ItemEvent.SELECTED);
     });
@@ -186,7 +187,7 @@ public class PluginSettingsTab implements devplugin.SettingsTab, TableModelListe
       
     };
     mTableModel.setColumnCount(2);
-    mTableModel.setColumnIdentifiers(new String[] {mLocalizer.msg("active","Active"),mLocalizer.msg("plugin","Plugin")});
+    mTableModel.setColumnIdentifiers(new String[] {LOCALIZER.msg("active","Active"),LOCALIZER.msg("plugin","Plugin")});
 
     mTable = new JTable(mTableModel);
     mTable.getTableHeader().setReorderingAllowed(false);
@@ -273,7 +274,7 @@ public class PluginSettingsTab implements devplugin.SettingsTab, TableModelListe
     
     ButtonBarBuilder builder = new ButtonBarBuilder();
 
-    mInfo = new JButton(mLocalizer.msg("info","Info"), IconLoader.getInstance().getIconFromTheme("status", "dialog-information", 16));
+    mInfo = new JButton(LOCALIZER.msg("info","Info"), IconLoader.getInstance().getIconFromTheme("status", "dialog-information", 16));
     mInfo.addActionListener(e -> {
       Object selection = getSelection();
       
@@ -288,7 +289,7 @@ public class PluginSettingsTab implements devplugin.SettingsTab, TableModelListe
       }
     });
     
-    mConfigure = new JButton(mLocalizer.msg("configure", "Configure"), TVBrowserIcons.preferences(TVBrowserIcons.SIZE_SMALL));
+    mConfigure = new JButton(LOCALIZER.msg("configure", "Configure"), TVBrowserIcons.preferences(TVBrowserIcons.SIZE_SMALL));
     mConfigure.addActionListener(e -> {
       Object selection = getSelection();
       
@@ -349,14 +350,14 @@ public class PluginSettingsTab implements devplugin.SettingsTab, TableModelListe
     
     //configure
     JMenuItem configureMI;
-    configureMI = new JMenuItem(mLocalizer.msg("configure", ""),TVBrowserIcons.preferences(TVBrowserIcons.SIZE_SMALL));
+    configureMI = new JMenuItem(LOCALIZER.msg("configure", ""),TVBrowserIcons.preferences(TVBrowserIcons.SIZE_SMALL));
     configureMI.addActionListener(e -> {
       mSettingsDialog.showSettingsTab(plugin.getSettingsId());
     });
     menu.add(configureMI);
     
     //help
-    JMenuItem helpMI = new JMenuItem(mLocalizer.msg("pluginHelp","Online help"), IconLoader.getInstance().getIconFromTheme("apps", "help-browser", 16));
+    JMenuItem helpMI = new JMenuItem(LOCALIZER.msg("pluginHelp","Online help"), IconLoader.getInstance().getIconFromTheme("apps", "help-browser", 16));
     helpMI.addActionListener(e -> {
       String url = PluginInfo.getHelpUrl(plugin.getId());
       Launch.openURL(url);
@@ -370,7 +371,7 @@ public class PluginSettingsTab implements devplugin.SettingsTab, TableModelListe
     JPopupMenu menu = new JPopupMenu();
     
     //info
-    JMenuItem infoMI = new JMenuItem(mLocalizer.msg("info","Info"), IconLoader.getInstance().getIconFromTheme("status", "dialog-information", 16));
+    JMenuItem infoMI = new JMenuItem(LOCALIZER.msg("info","Info"), IconLoader.getInstance().getIconFromTheme("status", "dialog-information", 16));
     infoMI.setFont(infoMI.getFont().deriveFont(Font.BOLD));
     infoMI.addActionListener(e -> {
       if(plugin instanceof PluginProxy) {
@@ -384,7 +385,7 @@ public class PluginSettingsTab implements devplugin.SettingsTab, TableModelListe
 
     //configure
     JMenuItem configureMI;
-   	configureMI = new JMenuItem(mLocalizer.msg("configure", ""),TVBrowserIcons.preferences(TVBrowserIcons.SIZE_SMALL));
+   	configureMI = new JMenuItem(LOCALIZER.msg("configure", "Configure"),TVBrowserIcons.preferences(TVBrowserIcons.SIZE_SMALL));
    	configureMI.addActionListener(e -> {
       if(plugin instanceof PluginProxy) {
         configurePlugin((PluginProxy)plugin);
@@ -399,10 +400,10 @@ public class PluginSettingsTab implements devplugin.SettingsTab, TableModelListe
       //activate
       JMenuItem enableMI;
       if (((PluginProxy)plugin).isActivated()) {
-        enableMI = new JMenuItem(mLocalizer.msg("deactivate", ""),IconLoader.getInstance().getIconFromTheme("actions", "process-stop", 16));
+        enableMI = new JMenuItem(LOCALIZER.msg("deactivate", "Deactivate"),IconLoader.getInstance().getIconFromTheme("actions", "process-stop", 16));
       }
       else {
-        enableMI = new JMenuItem(mLocalizer.msg("activate", ""), TVBrowserIcons.refresh(TVBrowserIcons.SIZE_SMALL));
+        enableMI = new JMenuItem(LOCALIZER.msg("activate", "Activate"), TVBrowserIcons.refresh(TVBrowserIcons.SIZE_SMALL));
         enableMI.setEnabled(!Settings.propBlockedPluginArray.isBlocked((PluginProxy)plugin));
       }
       enableMI.addActionListener(e -> {
@@ -412,11 +413,31 @@ public class PluginSettingsTab implements devplugin.SettingsTab, TableModelListe
         }
       });
       menu.add(enableMI);
+      
+      JMenuItem reset;
+      
+      if(Settings.propPluginResetIds.containsItem(plugin.getId())) {
+        reset = new JMenuItem(LOCALIZER.msg("unreset", "Don't reset settings"), TVBrowserIcons.redo(TVBrowserIcons.SIZE_SMALL));
+        reset.addActionListener(e -> {
+          Settings.propPluginResetIds.removeItem(plugin.getId());
+          Settings.setRestartInfo(plugin.getId(), false);
+        });
+      }
+      else {
+        reset = new JMenuItem(LOCALIZER.msg("reset", "Reset settings"), TVBrowserIcons.reset(TVBrowserIcons.SIZE_SMALL));
+        reset.addActionListener(e -> {
+          DontShowAgainOptionBox.showOptionDialog("pluginSettingsResetMsg", UiUtilities.getLastModalChildOf(MainFrame.getInstance()), LOCALIZER.msg("resetInfo", "The settings of '{0}' will be reset when you restart TV-Browser.\n\nNOTE: TV-Browser will only delete the settings that are handled by it.\nShould '{0}' handle settings by itself the settings will not be reset.",plugin.getInfo().getName()));
+          Settings.propPluginResetIds.addItem(plugin.getId());
+          Settings.setRestartInfo(plugin.getId(), true);
+        });
+      }
+      
+      menu.add(reset);
     }
     
     if(plugin instanceof PluginProxy || plugin instanceof TvDataServiceProxy) {
       //delete
-      JMenuItem deleteMI = new JMenuItem(mLocalizer.msg("remove","Remove"),  TVBrowserIcons.delete(TVBrowserIcons.SIZE_SMALL));
+      JMenuItem deleteMI = new JMenuItem(LOCALIZER.msg("remove","Remove"),  TVBrowserIcons.delete(TVBrowserIcons.SIZE_SMALL));
       deleteMI.addActionListener(e -> {
         if(plugin instanceof PluginProxy) {
           removePlugin((PluginProxy)plugin);
@@ -437,7 +458,7 @@ public class PluginSettingsTab implements devplugin.SettingsTab, TableModelListe
     }
     
     //help
-    JMenuItem helpMI = new JMenuItem(mLocalizer.msg("pluginHelp","Online help"), IconLoader.getInstance().getIconFromTheme("apps", "help-browser", 16));
+    JMenuItem helpMI = new JMenuItem(LOCALIZER.msg("pluginHelp","Online help"), IconLoader.getInstance().getIconFromTheme("apps", "help-browser", 16));
     helpMI.addActionListener(e -> {
       String url = PluginInfo.getHelpUrl(plugin.getId());
       Launch.openURL(url);
@@ -446,7 +467,7 @@ public class PluginSettingsTab implements devplugin.SettingsTab, TableModelListe
     
     menu.addSeparator();
 
-    JMenuItem refreshMI = new JMenuItem(mLocalizer.msg("updateInstallPlugin", "Update/Install Plugins"), IconLoader.getInstance().getIconFromTheme("actions", "web-search", 16));
+    JMenuItem refreshMI = new JMenuItem(LOCALIZER.msg("updateInstallPlugin", "Update/Install Plugins"), IconLoader.getInstance().getIconFromTheme("actions", "web-search", 16));
     refreshMI.addActionListener(e -> {
       MainFrame.getInstance().showUpdatePluginsDlg(false);
     });
@@ -462,15 +483,15 @@ public class PluginSettingsTab implements devplugin.SettingsTab, TableModelListe
     if (plugin == null) {
       return;
     }
-    String text = mLocalizer.msg("deletePlugin","Really delete the Plugin \"{0}\" ?",plugin.toString());
+    String text = LOCALIZER.msg("deletePlugin","Really delete the Plugin \"{0}\" ?",plugin.toString());
       
     int result = JOptionPane.showConfirmDialog(mSettingsDialog.getDialog(), text, Localizer.getLocalization(Localizer.I18N_DELETE)+"?", JOptionPane.YES_NO_OPTION);
     if (result == JOptionPane.YES_OPTION) {
         
       if (PluginLoader.getInstance().deletePlugin(plugin)) {
-        JOptionPane.showMessageDialog(mSettingsDialog.getDialog(), mLocalizer.msg("successfully","Deletion was succesfully"));
+        JOptionPane.showMessageDialog(mSettingsDialog.getDialog(), LOCALIZER.msg("successfully","Deletion was succesfully"));
       } else {
-        JOptionPane.showMessageDialog(mSettingsDialog.getDialog(), mLocalizer.msg("failed","Deletion failed"));
+        JOptionPane.showMessageDialog(mSettingsDialog.getDialog(), LOCALIZER.msg("failed","Deletion failed"));
       }
         
       populatePluginList();
@@ -499,19 +520,19 @@ public class PluginSettingsTab implements devplugin.SettingsTab, TableModelListe
     }
     
     // show message depending on whether channels will be removed
-    String text = mLocalizer.msg("deleteService","Really delete the data service \"{0}\"?",service.getInfo().getName());
+    String text = LOCALIZER.msg("deleteService","Really delete the data service \"{0}\"?",service.getInfo().getName());
     if (channelCount > 0) {
-      text = mLocalizer.msg("deleteServiceCount","Really delete the data service \"{0}\"?\nThis will remove {1} of your subscribed channels.",service.getInfo().getName(), channelCount);
+      text = LOCALIZER.msg("deleteServiceCount","Really delete the data service \"{0}\"?\nThis will remove {1} of your subscribed channels.",service.getInfo().getName(), channelCount);
     }
     int result = JOptionPane.showConfirmDialog(mSettingsDialog.getDialog(), text, Localizer.getLocalization(Localizer.I18N_DELETE)+"?", JOptionPane.YES_NO_OPTION);
       
     if (result == JOptionPane.YES_OPTION) {
       if (PluginLoader.getInstance().deleteDataService(service)) {
-        JOptionPane.showMessageDialog(mSettingsDialog.getDialog(), mLocalizer.msg("dataservice.successfully","Deletion was succesfully"));
+        JOptionPane.showMessageDialog(mSettingsDialog.getDialog(), LOCALIZER.msg("dataservice.successfully","Deletion was succesfully"));
         
         ChannelsSettingsTab.saveChannels(keepChannels.toArray(new Channel[keepChannels.size()]), false);
       } else {
-        JOptionPane.showMessageDialog(mSettingsDialog.getDialog(), mLocalizer.msg("failed","Deletion failed"));
+        JOptionPane.showMessageDialog(mSettingsDialog.getDialog(), LOCALIZER.msg("failed","Deletion failed"));
       }
         
       populatePluginList();
@@ -556,8 +577,8 @@ public class PluginSettingsTab implements devplugin.SettingsTab, TableModelListe
    */
   private void showInfoDialog(InternalPluginProxyIf plugin) {
     JOptionPane.showMessageDialog(UiUtilities.getLastModalChildOf(MainFrame
-        .getInstance()), mLocalizer.msg("internalPlugin",
-        "This is an internal plugin which cannot be disabled."), mLocalizer
+        .getInstance()), LOCALIZER.msg("internalPlugin",
+        "This is an internal plugin which cannot be disabled."), LOCALIZER
         .msg("internalPluginTitle", "Internal plugin"),
         JOptionPane.INFORMATION_MESSAGE);
   }
@@ -782,7 +803,7 @@ public class PluginSettingsTab implements devplugin.SettingsTab, TableModelListe
   }
 
   public String getTitle() {
-    return mLocalizer.msg("plugins", "Plugins");
+    return LOCALIZER.msg("plugins", "Plugins");
   }
 
   public void tableChanged(TableModelEvent e) {

@@ -1994,6 +1994,7 @@ tvbrowser/images/themes/CrystalClear/16x16/actions/edit-copy.png -text
 tvbrowser/images/themes/CrystalClear/16x16/actions/edit-delete.png -text
 tvbrowser/images/themes/CrystalClear/16x16/actions/edit-find.png -text
 tvbrowser/images/themes/CrystalClear/16x16/actions/edit-paste.png -text
+tvbrowser/images/themes/CrystalClear/16x16/actions/edit-redo.png -text
 tvbrowser/images/themes/CrystalClear/16x16/actions/edit-undo.png -text
 tvbrowser/images/themes/CrystalClear/16x16/actions/folder-new.png -text
 tvbrowser/images/themes/CrystalClear/16x16/actions/format-justify-fill.png -text
@@ -2073,6 +2074,7 @@ tvbrowser/images/themes/CrystalClear/22x22/actions/edit-copy.png -text
 tvbrowser/images/themes/CrystalClear/22x22/actions/edit-delete.png -text
 tvbrowser/images/themes/CrystalClear/22x22/actions/edit-find.png -text
 tvbrowser/images/themes/CrystalClear/22x22/actions/edit-paste.png -text
+tvbrowser/images/themes/CrystalClear/22x22/actions/edit-redo.png -text
 tvbrowser/images/themes/CrystalClear/22x22/actions/edit-undo.png -text
 tvbrowser/images/themes/CrystalClear/22x22/actions/folder-new.png -text
 tvbrowser/images/themes/CrystalClear/22x22/actions/format-justify-fill.png -text
@@ -2153,6 +2155,7 @@ tvbrowser/images/themes/tango/16x16/actions/edit-copy.png -text
 tvbrowser/images/themes/tango/16x16/actions/edit-delete.png -text
 tvbrowser/images/themes/tango/16x16/actions/edit-find.png -text
 tvbrowser/images/themes/tango/16x16/actions/edit-paste.png -text
+tvbrowser/images/themes/tango/16x16/actions/edit-redo.png -text
 tvbrowser/images/themes/tango/16x16/actions/edit-undo.png -text
 tvbrowser/images/themes/tango/16x16/actions/folder-new.png -text
 tvbrowser/images/themes/tango/16x16/actions/format-justify-fill.png -text
@@ -2232,6 +2235,7 @@ tvbrowser/images/themes/tango/22x22/actions/edit-copy.png -text
 tvbrowser/images/themes/tango/22x22/actions/edit-delete.png -text
 tvbrowser/images/themes/tango/22x22/actions/edit-find.png -text
 tvbrowser/images/themes/tango/22x22/actions/edit-paste.png -text
+tvbrowser/images/themes/tango/22x22/actions/edit-redo.png -text
 tvbrowser/images/themes/tango/22x22/actions/edit-undo.png -text
 tvbrowser/images/themes/tango/22x22/actions/folder-new.png -text
 tvbrowser/images/themes/tango/22x22/actions/format-justify-fill.png -text

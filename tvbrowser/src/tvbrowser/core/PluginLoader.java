@@ -50,6 +50,10 @@ import javax.swing.ImageIcon;
 
 import org.apache.commons.lang3.StringUtils;
 
+import devplugin.ActionMenu;
+import devplugin.Plugin;
+import devplugin.PluginInfo;
+import devplugin.Version;
 import tvbrowser.core.plugin.AbstractPluginProxy;
 import tvbrowser.core.plugin.BeanShellPluginProxy;
 import tvbrowser.core.plugin.JavaPluginProxy;
@@ -63,10 +67,6 @@ import tvbrowser.core.tvdataservice.TvDataServiceProxyManager;
 import util.exc.ErrorHandler;
 import util.exc.TvBrowserException;
 import util.io.IOUtilities;
-import devplugin.ActionMenu;
-import devplugin.Plugin;
-import devplugin.PluginInfo;
-import devplugin.Version;
 
 /**
  * The PluginLoader loads all plugins and assigns each plugin to
@@ -81,7 +81,7 @@ public class PluginLoader {
 	private static final String PLUGIN_INSTALL_EXTENSION = ".inst";
 
   /** The logger for this class */
-  private static final Logger mLog
+  private static final Logger LOG
       = Logger.getLogger(PluginLoader.class.getName());
 
   private static PluginLoader mInstance;
@@ -152,7 +152,7 @@ public class PluginLoader {
 
       // Rename the file, so the PluginLoader will install it later
       if (!file.renameTo(oldFile)) {
-        mLog.warning("Installing pending plugin failed: " + fileName);
+        LOG.warning("Installing pending plugin failed: " + fileName);
       }
 
       mNewInstalledPlugins.add(oldFileName);
@@ -162,7 +162,7 @@ public class PluginLoader {
   private PluginProxy loadProxy(File proxyFile) {
     String lcFileName = proxyFile.getName().toLowerCase();
     if (!lcFileName.endsWith(".proxy")) {
-      mLog.warning("not a valid proxy file "+proxyFile.getAbsolutePath());
+      LOG.warning("not a valid proxy file "+proxyFile.getAbsolutePath());
       return null;
     }
     if (proxyFile.canRead()) {
@@ -190,7 +190,7 @@ public class PluginLoader {
     Object plugin = null;
     String lcFileName = pluginFile.getName().toLowerCase();
     if (mSuccessfullyLoadedPluginFiles.contains(lcFileName)) {
-      mLog.warning("cannot load plugin "+pluginFile.getAbsolutePath()+" - already loaded");
+      LOG.warning("cannot load plugin "+pluginFile.getAbsolutePath()+" - already loaded");
       return null;
     }
 
@@ -202,7 +202,7 @@ public class PluginLoader {
         plugin = loadBeanShellPlugin(pluginFile);
       }
       else {
-        mLog.warning("Unknown plugin type: " + pluginFile.getAbsolutePath());
+        LOG.warning("Unknown plugin type: " + pluginFile.getAbsolutePath());
       }
 
       if (plugin instanceof Plugin) {
@@ -275,10 +275,10 @@ public class PluginLoader {
         }
         
         mSuccessfullyLoadedPluginFiles.add(lcFileName);
-        mLog.info("Loaded plugin "+pluginFile.getAbsolutePath() + (version != null ? " - " + version : ""));
+        LOG.info("Loaded plugin "+pluginFile.getAbsolutePath() + (version != null ? " - " + version : ""));
       }
     }catch (Throwable thr) {
-      mLog.log(Level.WARNING, "Loading plugin file failed: "
+      LOG.log(Level.WARNING, "Loading plugin file failed: "
           + pluginFile.getAbsolutePath(), thr);
       thr.printStackTrace();
     }
@@ -439,10 +439,10 @@ public class PluginLoader {
             PluginProxy proxy = loadProxy(proxyFile);
             if (proxy != null) {
               loadedProxies.add(proxy);
-              mLog.info("Loaded plugin proxy " + proxyFile);
+              LOG.info("Loaded plugin proxy " + proxyFile);
             }
             else {
-              mLog.warning("Failed loading plugin proxy " + proxyFile);
+              LOG.warning("Failed loading plugin proxy " + proxyFile);
             }
           }
         }
@@ -503,7 +503,7 @@ public class PluginLoader {
     if ((files != null) && (files.length > 0)) {
       for (String file : files) {
         try {
-          mLog.info("Deleting " + file);
+          LOG.info("Deleting " + file);
           new File(file).delete();
         } catch (Exception e) {
           e.printStackTrace();
@@ -511,6 +511,31 @@ public class PluginLoader {
       }
 
       Settings.propDeleteFilesAtStart.setStringArray(new String[0]);
+    }
+    
+    String[] pluginReset = Settings.propPluginResetIds.getStringArray();
+    
+    if(pluginReset != null && pluginReset.length > 0) {
+      File userDirectory = new File(Settings.getUserSettingsDirName());
+      
+      if(userDirectory.exists()) {
+        for(String p : pluginReset) {
+          File[] toDeletes = {
+              new File(userDirectory,p+".dat"),
+              new File(userDirectory,p+".dat_old"),
+              new File(userDirectory,p+".prop")
+          };
+          
+          for(File toDelete : toDeletes) {
+            if(toDelete.isFile()) {
+              LOG.info("Deleting " + toDelete);
+              toDelete.delete();
+            }
+          }
+        }
+      }
+      
+      Settings.propPluginResetIds.setStringArray(new String[0]);
     }
 
 
@@ -520,7 +545,7 @@ public class PluginLoader {
     boolean success = true;
     if (!f.exists()) {
       if (!f.mkdirs()) {
-        mLog.warning("Could not create plugins folder "+f.getAbsolutePath());
+        LOG.warning("Could not create plugins folder "+f.getAbsolutePath());
         success = false;
       }
     }
@@ -580,7 +605,7 @@ public class PluginLoader {
       } catch (Exception e) {
       }
       if (version1 == null || version1.toString().equals("0.0.0.0")) {
-        mLog.warning("Did not load plugin " + pluginName + ", version is too old.");
+        LOG.warning("Did not load plugin " + pluginName + ", version is too old.");
         return null;
       }
 
@@ -805,7 +830,7 @@ public class PluginLoader {
           availablePlugins.add(baseInfo);
         }
         
-        mLog.info("Could not load base info for plugin file '" + plugin.getAbsolutePath() + "'. Use default version instead.");
+        LOG.info("Could not load base info for plugin file '" + plugin.getAbsolutePath() + "'. Use default version instead.");
       }
     }
   }

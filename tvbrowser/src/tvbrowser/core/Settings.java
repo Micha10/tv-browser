@@ -2413,6 +2413,13 @@ public class Settings {
   public static final BooleanProperty propServerRestoreEnabled = new BooleanProperty(mProp, "serverRestoreEnabled", true);
   
   /**
+   * Ids of plugins which settings should be reset on next startup.
+   * <p>
+   * @since 4.2.3
+   */
+  public static final StringArrayProperty propPluginResetIds = new StringArrayProperty(mProp, "propPluginReset", null);
+  
+  /**
    * Sets the window position and size for the given window with the values of
    * the given id.
    *
