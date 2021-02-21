@@ -357,6 +357,7 @@ abstract public class Plugin implements Marker, ContextMenuIf, ProgramReceiveIf 
    * initial state after first installation.
    * <p>
    * @param userDirectory The settings directory of TV-Browser.
+   * @since 4.2.3
    */
   public static void resetData(final File userDirectory) {
     
