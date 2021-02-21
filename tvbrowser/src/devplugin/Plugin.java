@@ -348,6 +348,19 @@ abstract public class Plugin implements Marker, ContextMenuIf, ProgramReceiveIf 
   public static Version getVersion() {
     return new Version(0, 0);
   }
+  
+  /**
+   * Called when the data of the plugin was reset.
+   * A plugin should override this method if it handles
+   * data outside of the TV-Browser provided system to
+   * remove all of the data to reset the plugin to the
+   * initial state after first installation.
+   * <p>
+   * @param userDirectory The settings directory of TV-Browser.
+   */
+  public static void resetData(final File userDirectory) {
+    
+  }
 
   /**
    * Gets the meta information about the plugin.

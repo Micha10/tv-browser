@@ -98,6 +98,8 @@ public class PluginLoader {
   private ArrayList<String> mNewInstalledPlugins = new ArrayList<String>();
   
   private boolean mShowMouseInfo;
+  
+  private HashSet<String> mResetPlugins = new HashSet<String>();
 
   private PluginLoader() {
     mSuccessfullyLoadedPluginFiles = new HashSet<String>();
@@ -528,6 +530,7 @@ public class PluginLoader {
           
           for(File toDelete : toDeletes) {
             if(toDelete.isFile()) {
+              mResetPlugins.add(p);
               LOG.info("Deleting " + toDelete);
               toDelete.delete();
             }
@@ -594,10 +597,20 @@ public class PluginLoader {
     }
 
     boolean isBlockedDataService = false;
-
+    
     // Create a plugin instance
     try {
+      final String pluginKey = "java." + pluginName.toLowerCase() + "." + pluginName;
       Class<?> pluginClass = classLoader.loadClass(pluginName.toLowerCase() + "." + pluginName);
+      
+      if(mResetPlugins.contains(pluginKey)) {
+        Method resetData = pluginClass.getMethod("resetData", File.class);
+        
+        try {
+          resetData.invoke(pluginClass,new File(Settings.getUserSettingsDirName()));
+        }catch(Exception e) {}
+      }
+      
       Method getVersion = pluginClass.getMethod("getVersion");
       Version version1 = null;
       try {
@@ -614,7 +627,7 @@ public class PluginLoader {
         version1 = (Version)getVersion.invoke(pluginClass);
 
         if(pluginClass.getSuperclass().equals(devplugin.AbstractTvDataService.class)) {
-          isBlockedDataService = Settings.propBlockedPluginArray.isBlocked("java." + pluginName.toLowerCase() + "." + pluginName, version1);
+          isBlockedDataService = Settings.propBlockedPluginArray.isBlocked(pluginKey, version1);
         }
       }
 
