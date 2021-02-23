@@ -554,6 +554,9 @@ public class ProgramUtilities {
     if (field.contains("\n")) {
       items = field.split("\n|( und | and | \\& )");
     }
+    else if (field.contains("<br>")) {
+      items = field.split("<br>|,|( und | and | \\& )");
+    }
     else if (field.contains(",")) {
       items = field.split(",|( und | and | \\& )");
     }

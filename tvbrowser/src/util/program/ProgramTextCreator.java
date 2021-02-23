@@ -964,9 +964,11 @@ public class ProgramTextCreator {
         if (fieldType == ProgramFieldType.SHORT_DESCRIPTION_TYPE) {
           text = removeMultipleLineBreaksFromDescription(text);
         }
-
+        else if(fieldType == ProgramFieldType.ADDITIONAL_PERSONS_TYPE) {
+          text = text.replace("\n", "<br>");
+        }
         // Lazily add short description, but only if it differs from description
-        if (fieldType == ProgramFieldType.DESCRIPTION_TYPE) {
+        else if (fieldType == ProgramFieldType.DESCRIPTION_TYPE) {
           String description = removeMultipleLineBreaksFromDescription(prog.getDescription());
           text = description;
 
@@ -992,6 +994,7 @@ public class ProgramTextCreator {
           text = HTMLTextHelper.convertTextToHtml(text, createLinks);
           // scan for moderation in beginning of description
           String[] lines = text.split("<br>");
+          
           String[] tags = { "von und mit", "pr\00E4entiert von", "mit", "film von",
               "moderation", "zu gast" };
           for (int i = 0; i < 2; i++) {
@@ -1153,6 +1156,20 @@ public class ProgramTextCreator {
               text = text.replace(persons[i], link);
             }
           }
+        }
+        
+        if(ProgramFieldType.ADDITIONAL_PERSONS_TYPE == fieldType) {
+          String[] parts = text.split("<br>|\n");
+          
+          for(String part : parts) {
+            if(part.contains(":")) {
+              part = part.substring(0, part.indexOf(":")+1);
+              
+              text = text.replace(part, "<span style=\"font-weight:bold;color:"+HTMLTextHelper.getCssRgbColorEntry(infoColor)+"\">"+part+"</span>");
+            }
+          }
+          
+          
         }
         buffer.append(text);
       }
