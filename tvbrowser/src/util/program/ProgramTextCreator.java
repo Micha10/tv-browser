@@ -1135,6 +1135,10 @@ public class ProgramTextCreator {
               continue;
             }
             
+            if(persons[i].contains(":")) {
+              persons[i] = persons[i].substring(persons[i].indexOf(":")+1).trim();
+            }
+            
             // a name shall not have more name parts
             if (persons[i].trim().split(" ").length <= 3) {
               String person = persons[i].replace("\t", " ");
