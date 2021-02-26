@@ -305,6 +305,8 @@ public class SoftwareUpdateDlg extends JDialog implements ActionListener, ListSe
         selectedDataServices.add("RadioTimesDataService");
         selectedDataServices.add("SweDBTvDataService");
       }
+      
+      selectedDataServices.add("EPGplusDataService");
     }
     
     ArrayList<SoftwareUpdateItem> mItemList = new ArrayList<SoftwareUpdateItem>();
