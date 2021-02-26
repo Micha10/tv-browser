@@ -463,7 +463,7 @@ public class SettingsDialog implements WindowClosingIf {
     technicalSettings.add(new SettingNode(new WebbrowserSettingsTab(),SettingsItem.WEBBROWSER));
 
     // Plugins
-    mPluginSettingsNode = new SettingNode(new PluginSettingsTab(),SettingsItem.PLUGINS);
+    mPluginSettingsNode = new SettingNode(new PluginSettingsTab(this),SettingsItem.PLUGINS);
     root.add(mPluginSettingsNode);
 
     createPluginTreeItems(false);

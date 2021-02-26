@@ -118,7 +118,8 @@ public class PluginSettingsTab implements devplugin.SettingsTab, TableModelListe
    * 
    * @param settingsDialog The TV-Browser settings dialog.
    */
-  public PluginSettingsTab() {
+  public PluginSettingsTab(final SettingsDialog settingsDialog) {
+    mSettingsDialog = settingsDialog;
   }
 
   public JPanel createSettingsPanel() {
