@@ -40,6 +40,7 @@ import util.io.ExecutionHandler;
 public class RegistryKey {
 	public static final String HKEY_LOCAL_MACHINE = "HKLM";
 	public static final String HKEY_CURRENT_USER = "HKCU";
+	public static final String HKEY_CLASS_ROOT = "HKCR";
 	
 	private String mKey;
 	private String mPath;
@@ -83,8 +84,11 @@ public class RegistryKey {
 		cmdList.add(mRegTool.getAbsolutePath());
 		cmdList.add("query");
 		cmdList.add(mKey + "\\" + mPath);
-		cmdList.add("/v");
-		cmdList.add(key);
+		
+		if(!key.isBlank()) {
+  		cmdList.add("/v");
+  		cmdList.add(key);
+		}
 		
 		final ExecutionHandler handler = new ExecutionHandler(cmdList.toArray(new String[0]));
 		
@@ -98,7 +102,7 @@ public class RegistryKey {
 			int pos = 0;
 			
 			while(m.find(pos)) {
-				if(key.equals(m.group(1))) {
+				if(key.equals(m.group(1)) || key.isBlank()) {
 					if("REG_DWORD".equals(m.group(2))) {
 						result = new RegistryValue(key, RegistryValue.TYPE_REG_DWORD, String.valueOf(Long.parseLong(m.group(3).trim().replace("0x", ""), 16)));
 					}

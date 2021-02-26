@@ -203,6 +203,9 @@ import util.exc.TvBrowserException;
 import util.i18n.Localizer;
 import util.io.IOUtilities;
 import util.io.NetworkUtilities;
+import util.io.windows.registry.RegistryEditor;
+import util.io.windows.registry.RegistryKey;
+import util.io.windows.registry.RegistryValue;
 import util.misc.OperatingSystem;
 import util.programkeyevent.ProgramKeyEventHandler;
 import util.settings.BooleanProperty;
@@ -214,6 +217,7 @@ import util.settings.IntArrayProperty;
 import util.settings.IntProperty;
 import util.settings.StringArrayProperty;
 import util.settings.StringProperty;
+import util.ui.DontShowAgainMessageBox;
 import util.ui.TVBrowserIcons;
 import util.ui.UIThreadRunner;
 import util.ui.UiUtilities;
@@ -1787,6 +1791,39 @@ public class MainFrame extends JFrame implements DateListener,DropTargetListener
       }
       
     });
+    
+    if(Settings.propCanReceiveProtocolMessages.getBoolean()) {
+      if(Launch.getOs() == Launch.OS_WINDOWS) {
+        RegistryKey rKey = new RegistryKey(RegistryKey.HKEY_CLASS_ROOT, "tvb\\shell\\open\\command");
+        RegistryValue v = rKey.getValue("");
+        File exe = new File(TVBrowser.isTransportable() ? "tvbrowser-transportable.exe" : "tvbrowser.exe");
+        
+        if((v == null || !v.getData().contains(exe.getAbsolutePath()))) {
+          if(DontShowAgainOptionBox.showOptionDialog("tvbProtocolWrongTarget", UiUtilities.getParentFrameOnMouseScreen(), "Das Empfangen von Protokollnachrichten mit tvb:\\ ist aktiviert.\nDas Protokoll existiert in Windows aber nicht oder verweist auf eine anderen TV-Browser.\n\nMöchten Sie das Protokoll jetzt in Windows anlegen (dazu werden Administratorrechte benötigt)?", "tvb:\\-Protokoll fehlt", JOptionPane.QUESTION_MESSAGE, JOptionPane.YES_NO_CANCEL_OPTION) == JOptionPane.YES_OPTION) {
+            RegistryEditor ed = RegistryEditor.create();
+            
+            ed.setValue("HKEY_CLASSES_ROOT\\tvb", new RegistryValue("", RegistryValue.TYPE_REG_SZ, "URL:tvb Protocol"));
+            ed.setValue("HKEY_CLASSES_ROOT\\tvb", new RegistryValue("URL Protocol", RegistryValue.TYPE_REG_SZ, ""));
+            ed.setValue("HKEY_CLASSES_ROOT\\tvb\\DefaultIcon", new RegistryValue("", RegistryValue.TYPE_REG_SZ, "\""+exe.getAbsolutePath()+"\""));
+            ed.setValue("HKEY_CLASSES_ROOT\\tvb\\shell\\open\\command", new RegistryValue("", RegistryValue.TYPE_REG_SZ, "\""+exe.getAbsolutePath()+"\" \"%1\""));
+            
+            ed.commit("addTvbProtocolToRegistry");
+          }
+          else {
+            Settings.propCanReceiveProtocolMessages.setBoolean(false);
+            try {
+              Settings.storeSettings(true);
+            } catch (TvBrowserException e) {
+              // TODO Auto-generated catch block
+              e.printStackTrace();
+            }
+          }
+        }
+      }
+    }
+    
+/*
+    System.exit(0);*/
   }
 
   private void runAutoUpdate() {

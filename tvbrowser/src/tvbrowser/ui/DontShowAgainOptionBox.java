@@ -133,6 +133,24 @@ public class DontShowAgainOptionBox {
       String message, String title, int messageType) {
     return showOptionDialog(messageBoxId, parent, message, title, messageType, JOptionPane.DEFAULT_OPTION, null, null, null);
   }
+  
+  /**
+   * Creates an option dialog with JOptionPane.
+   * <p>
+   * @param messageBoxId The id for this message box.
+   * @param parent The praent component of this dialog.
+   * @param message The message to show the user.
+   * @param title The title of the option dialog.
+   * @param messageType The message type of the option dialog, value are {#javax.swing.JOptionPane.ERROR_MESSAGE}, {#javax.swing.JOptionPane.INFORMATION_MESSAGE}, {#javax.swing.JOptionPane.WARNING_MESSAGE}.
+   * @param optionType The option type of the option dialog, values are {@link JOptionPane#YES_OPTION}, {@link JOptionPane#YES_NO_OPTION}, {@link JOptionPane#YES_NO_CANCEL_OPTION}, {@link JOptionPane#OK_OPTION},
+   *                   {@link JOptionPane#OK_CANCEL_OPTION}, {@link JOptionPane#DEFAULT_OPTION}.
+   *
+   * @return The result of the option dialog, values are the possible values for optionType.
+   * @since 4.2.3
+   */
+  public static int showOptionDialog(String messageBoxId, Component parent, String message, String title, int messageType, int optionType) {
+    return showOptionDialog(messageBoxId, parent, message, title, messageType, optionType, null, null, null);
+  }
 
   /**
    * Creates an option dialog with JOptionPane.

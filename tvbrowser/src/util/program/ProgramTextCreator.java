@@ -964,7 +964,7 @@ public class ProgramTextCreator {
         if (fieldType == ProgramFieldType.SHORT_DESCRIPTION_TYPE) {
           text = removeMultipleLineBreaksFromDescription(text);
         }
-        else if(fieldType == ProgramFieldType.ADDITIONAL_PERSONS_TYPE) {
+        else if(fieldType == ProgramFieldType.ADDITIONAL_PERSONS_TYPE && text != null) {
           text = text.replace("\n", "<br>");
         }
         // Lazily add short description, but only if it differs from description
