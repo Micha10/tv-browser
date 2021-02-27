@@ -217,7 +217,6 @@ import util.settings.IntArrayProperty;
 import util.settings.IntProperty;
 import util.settings.StringArrayProperty;
 import util.settings.StringProperty;
-import util.ui.DontShowAgainMessageBox;
 import util.ui.TVBrowserIcons;
 import util.ui.UIThreadRunner;
 import util.ui.UiUtilities;
@@ -2539,18 +2538,23 @@ public class MainFrame extends JFrame implements DateListener,DropTargetListener
 
             try {
             	Settings.storeSettings(true);
-			} catch (TvBrowserException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+      			} catch (TvBrowserException e) {
+      				// TODO Auto-generated catch block
+      				e.printStackTrace();
+      			}
           }
           else if(PROTOCOL_MESSAGE_CONFIG.equals(parts[1]) && parts.length == 4) {
             PluginProxy a = PluginProxyManager.getInstance().getActivatedPluginForId("java."+parts[2].toLowerCase()+"."+parts[2]);
             
             if(a != null) {
-              String[] values = parts[3].split(";");
+              a.receiveValues(ProgramReceiveTarget.TYPE_EVENT_UNDIFINED, parts[3].split(";"), null);
+            }
+            else {
+              TvDataServiceProxy[] ps = TvDataServiceProxyManager.getInstance().getTvDataServices(new String[] {parts[2].toLowerCase()+"."+parts[2]});
               
-              a.receiveValues(ProgramReceiveTarget.TYPE_EVENT_UNDIFINED, values, null);
+              if(ps.length == 1 && ps[0].getId().equals(parts[2].toLowerCase()+"."+parts[2])) {
+                ps[0].receiveProtocolMessage(parts[3].split(";"));
+              }
             }
           }
         }

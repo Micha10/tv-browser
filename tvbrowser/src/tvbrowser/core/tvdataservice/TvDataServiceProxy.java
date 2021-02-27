@@ -30,10 +30,6 @@ import java.awt.Frame;
 import java.io.File;
 import java.util.Properties;
 
-import tvbrowser.core.plugin.ButtonActionIf;
-import tvdataservice.SettingsPanel;
-import tvdataservice.TvDataUpdateManager;
-import util.exc.TvBrowserException;
 import devplugin.Channel;
 import devplugin.ChannelGroup;
 import devplugin.ContextMenuIf;
@@ -41,6 +37,10 @@ import devplugin.Date;
 import devplugin.InfoIf;
 import devplugin.PluginInfo;
 import devplugin.ProgressMonitor;
+import tvbrowser.core.plugin.ButtonActionIf;
+import tvdataservice.SettingsPanel;
+import tvdataservice.TvDataUpdateManager;
+import util.exc.TvBrowserException;
 
 
 public interface TvDataServiceProxy extends ContextMenuIf, ButtonActionIf, InfoIf {
@@ -211,4 +211,12 @@ public interface TvDataServiceProxy extends ContextMenuIf, ButtonActionIf, InfoI
    * @since 3.0.2
    */
   public SettingsPanel getAuthenticationPanel();
+  
+  /**
+   * Called when a tvb:// protocol message was send to this data service.
+   * <p>
+   * @param values The value array received by TV-Browser.
+   * @since 4.2.3
+   */
+  public void receiveProtocolMessage(String[] values);
 }

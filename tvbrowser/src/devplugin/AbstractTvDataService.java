@@ -330,4 +330,14 @@ public abstract class AbstractTvDataService {
   public SettingsPanel getAuthenticationPanel() {
     return null;
   }
+  
+  /**
+   * Called when a tvb:// protocol message was send to this data service.
+   * <p>
+   * @param values The value array received by TV-Browser.
+   * @since 4.2.3
+   */
+  public void receiveProtocolMessage(String[] values) {
+    
+  }
 }

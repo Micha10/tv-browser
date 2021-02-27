@@ -300,6 +300,9 @@ public class DefaultTvDataServiceProxy extends AbstractTvDataServiceProxy {
   public SettingsPanel getAuthenticationPanel() {
     return mTvDataService.getAuthenticationPanel();
   }
-  
-  
+
+  @Override
+  public void receiveProtocolMessage(String[] values) {
+    mTvDataService.receiveProtocolMessage(values);
+  }
 }
