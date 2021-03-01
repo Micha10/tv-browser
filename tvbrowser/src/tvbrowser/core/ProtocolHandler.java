@@ -89,14 +89,37 @@ public class ProtocolHandler {
     
     if(mIsEnabled) {
       if(Launch.getOs() == Launch.OS_LINUX) {
-        File baseDir = new File("");
+        final File mime = new File(System.getProperty("user.home")+"/.config/mimeapps.list");
+        String handler = null;
+        
+        if(mime.isFile()) {
+          try(BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(mime), "UTF-8"))) {
+            String line = null;
+            
+            while((line = in.readLine()) != null) {
+              if(line.startsWith("x-scheme-handler/tvb")) {
+                handler = line.substring(line.indexOf("=")+1);
+                break;
+              }
+            }
+          }catch(IOException ioe) {
+            ioe.printStackTrace();
+          }
+        }
+        
+        final File baseDir = new File("");
         final File start = new File(baseDir.getAbsolutePath(),"/tvbrowser"+(TVBrowser.isTransportable() ? "-transportable":"")+".sh");
-        final File target = new File(System.getProperty("user.home")+"/.local/share/applications/tvbrowserWebstart.desktop");
         
-        boolean ask = !target.isFile();
+        File source = new File(System.getProperty("user.home")+"/.local/share/applications/tvbrowserWebstart.desktop");
+        boolean ask = !source.isFile();
         
-        if(target.isFile()) {
-          try(BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(target), "UTF-8"))) {
+        if(handler.equals("tvbrowser.desktop")) {
+          source = null;
+          ask = !baseDir.getAbsolutePath().startsWith("/usr/share/tvbrowser");
+        }
+        
+        if(source != null && source.isFile()) {
+          try(BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(source), "UTF-8"))) {
             String line = null;
             
             while((line = in.readLine()) != null) {
@@ -110,9 +133,8 @@ public class ProtocolHandler {
           }
         }
         
-        
         if(ask) {
-          if(!target.isFile() || DontShowAgainOptionBox.showOptionDialog("tvbProtocolWrongTarget", UiUtilities.getParentFrameOnMouseScreen(), LOCALIZER.msg("error.linux.msg", "Receiving protocol message with tvb:\\ is activated.\nProtocol message make it easier to configure TV-Browser.\nBut the protocol leads to another TV-Browser.\n\nShould the protocol instead lead to this TV-Browser?\n(The protocol messages are deactivted for this TV-Browser if not.)"), LOCALIZER.msg("error.linux.title", "tvb:\\\\-Protokoll leads to another TV-Browser"), JOptionPane.QUESTION_MESSAGE, JOptionPane.YES_NO_CANCEL_OPTION) == JOptionPane.YES_OPTION) {
+          if(source == null || !source.isFile() || DontShowAgainOptionBox.showOptionDialog("tvbProtocolWrongTarget", UiUtilities.getParentFrameOnMouseScreen(), LOCALIZER.msg("error.linux.msg", "Receiving protocol message with tvb:\\ is activated.\nProtocol message make it easier to configure TV-Browser.\nBut the protocol leads to another TV-Browser.\n\nShould the protocol instead lead to this TV-Browser?\n(The protocol messages are deactivted for this TV-Browser if not.)"), LOCALIZER.msg("error.linux.title", "tvb:\\\\-Protokoll leads to another TV-Browser"), JOptionPane.QUESTION_MESSAGE, JOptionPane.YES_NO_CANCEL_OPTION) == JOptionPane.YES_OPTION) {
             enable();
           }
           else {
@@ -363,15 +385,28 @@ public class ProtocolHandler {
   
   private void enable() {
     if(Launch.getOs() == Launch.OS_LINUX) {
-      final File target = new File(System.getProperty("user.home")+"/.local/share/applications/tvbrowserWebstart.desktop");
+      File test = new File(System.getProperty("user.home")+"/.local/share/applications/tvbrowserWebstart.desktop");
       
-      if(target.isFile()) {
-        target.delete();
+      if(test.isFile()) {
+        test.delete();
       }
       
-      createDesktopFile(target, "TV-Browser Webstart", true);
+      File target = new File("/usr/share/applications/tvbrowser.desktop");
+      File baseDir = new File("");
+      String name = "tvbrowser.desktop";
       
-      ExecutionHandler h = ExecutionHandler.create("/usr/bin/xdg-mime","default","tvbrowserWebstart.desktop","x-scheme-handler/tvb");
+      if(!target.isFile() || !baseDir.getAbsolutePath().equals("/usr/share/tvbrowser")) {
+        target = test;
+        
+        if(target.isFile()) {
+          target.delete();
+        }
+        
+        createDesktopFile(target, "TV-Browser Webstart", true);
+        name = "tvbrowserWebstart.desktop";
+      }
+      
+      ExecutionHandler h = ExecutionHandler.create("/usr/bin/xdg-mime","default",name,"x-scheme-handler/tvb");
       try {
         h.execute();
       } catch (IOException e) {
@@ -451,9 +486,9 @@ public class ProtocolHandler {
       out.write("Exec="+baseDir.getAbsolutePath()+"/tvbrowser"+(TVBrowser.isTransportable() ? "-transportable":"")+".sh %u\n");
       out.write("Comment=Themeable and easy to use TV Guide - written in Java\n");
       
-      if(isMimeHandler) {
+      /*if(isMimeHandler) {
         out.write("MimeType=x-scheme-handler/tvb;\n");
-      }
+      }*/
       
       out.write("Name[de]="+name+"\n");
       out.write("GenericName=Digital TV Guide\n");
