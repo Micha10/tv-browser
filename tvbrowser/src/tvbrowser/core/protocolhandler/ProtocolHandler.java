@@ -113,7 +113,7 @@ public class ProtocolHandler {
         
         File source = new File(System.getProperty("user.home")+"/.local/share/applications/tvbrowserWebstart.desktop");
         boolean ask = !source.isFile();
-        System.out.println(baseDir.getAbsolutePath());
+        
         if(handler.equals("tvbrowser.desktop")) {
           source = null;
           ask = !baseDir.getAbsolutePath().startsWith("/usr/share/tvbrowser");
