@@ -118,6 +118,12 @@ public class ProtocolHandler {
           else {
             Settings.propCanReceiveProtocolMessages.setBoolean(false);
             mIsEnabled = false;
+            try {
+              Settings.storeSettings(true);
+            } catch (TvBrowserException e) {
+              // TODO Auto-generated catch block
+              e.printStackTrace();
+            }
           }
         }
       }
@@ -133,6 +139,7 @@ public class ProtocolHandler {
         }
         else {
           Settings.propCanReceiveProtocolMessages.setBoolean(false);
+          mIsEnabled = false;
           try {
             Settings.storeSettings(true);
           } catch (TvBrowserException e) {
@@ -140,6 +147,13 @@ public class ProtocolHandler {
             e.printStackTrace();
           }
         }
+      }
+    }
+    else if(Launch.getOs() == Launch.OS_MAC && !TVBrowser.isTransportable()) {
+      File tvbprotocol = new File("/Applications/TV-Browser Protocol.app");
+      
+      if(!tvbprotocol.isFile()) {
+        DontShowAgainOptionBox.showOptionDialog("tvbProtocolMissing", UiUtilities.getParentFrameOnMouseScreen(), LOCALIZER.msg("error.mac.msg", "Receiving protocol message with tvb:\\ is activated.\nProtocol message make it easier to configure TV-Browser.\nBut the protocol app is missing.\n\nPlease make sure to also install the TV-Browser Protocol app from the DMG with TV-Browser."), LOCALIZER.msg("error.mac.title", "tvb:\\ protocol app missing"), JOptionPane.QUESTION_MESSAGE, JOptionPane.OK_OPTION);
       }
     }
   }
@@ -345,8 +359,6 @@ public class ProtocolHandler {
     else if(!mIsEnabled && Settings.propCanReceiveProtocolMessages.getBoolean()) {
       enable();
     }
-    
-    mIsEnabled = Settings.propCanReceiveProtocolMessages.getBoolean();
   }
   
   private void enable() {
@@ -386,6 +398,8 @@ public class ProtocolHandler {
       
       ed.commit("addTvbProtocolToRegistry");
     }
+    
+    mIsEnabled = true;
   }
   
   private void disable() {
@@ -411,8 +425,7 @@ public class ProtocolHandler {
         // TODO Auto-generated catch block
         e.printStackTrace();
       }
-    } 
-    
+    }
     else if(Launch.getOs() == Launch.OS_WINDOWS) {
       if(DontShowAgainOptionBox.showOptionDialog("tvbProtocolDeleteTarget", UiUtilities.getParentFrameOnMouseScreen(), LOCALIZER.msg("disable.msg", "The receiving of protocol message via tvb:\\ was deactivated.\n\nDo you want to remove the tvb:\\ protocol from your Windows system (Administrator rights needed)?"), LOCALIZER.msg("disable.title", "Remove tvb:\\ protocol from Windows?"), JOptionPane.QUESTION_MESSAGE, JOptionPane.YES_NO_CANCEL_OPTION) == JOptionPane.YES_OPTION) {
         RegistryEditor ed = RegistryEditor.create();
@@ -421,6 +434,8 @@ public class ProtocolHandler {
         ed.commit("removeTvbProtocolToRegistry");
       }
     }
+    
+    mIsEnabled = false;
   }
   
   public static void createDesktopFile(final File target, final String name, final boolean isMimeHandler) {
