@@ -1,6 +1,0 @@
-#!/bin/sh
-
-sed '/x-scheme-handler\/tvb=/d' /usr/share/applications/defaults.list
-/usr/bin/update-desktop-database/update-desktop-database
-
-exit 0

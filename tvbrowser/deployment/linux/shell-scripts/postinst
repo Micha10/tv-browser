@@ -1,7 +1,0 @@
-#!/bin/sh
-
-sed -i '/^x-scheme-handler\/tvb=/d' /usr/share/applications/defaults.list
-echo 'x-scheme-handler/tvb=tvbrowser.desktop' >> /usr/share/applications/defaults.list
-/usr/bin/update-desktop-database/update-desktop-database
-
-exit 0

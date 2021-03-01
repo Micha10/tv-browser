@@ -1863,8 +1863,6 @@ tvbrowser/deployment/common/wiki.url -text svneol=unset#application/octet-stream
 tvbrowser/deployment/linux.properties eol=lf
 tvbrowser/deployment/linux/ant-deb-task/ant-deb-0.0.1.jar -text
 tvbrowser/deployment/linux/redline-rpm/redline-1.1.9.jar -text
-tvbrowser/deployment/linux/shell-scripts/postinst -text
-tvbrowser/deployment/linux/shell-scripts/prerm -text
 tvbrowser/deployment/linux/tvbrowser -text
 tvbrowser/deployment/linux/tvbrowser.appdata.xml -text svneol=unset#text/plain
 tvbrowser/deployment/linux/tvbrowser.sh eol=lf
