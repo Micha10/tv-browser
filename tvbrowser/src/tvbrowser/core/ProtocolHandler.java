@@ -1,0 +1,449 @@
+/*
+ * TV-Browser
+ * Copyright (C) 2021 TV-Browser-Team (dev@tvbrowser.org)
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ *
+ * SVN information:
+ *     $Date: 2021-02-26 20:06:41 +0100 (Fr, 26 Feb 2021) $
+ *   $Author: ds10 $
+ * $Revision: 9250 $
+ */
+package tvbrowser.core;
+
+import java.awt.Color;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.lang.reflect.Field;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import javax.swing.JOptionPane;
+
+import devplugin.ProgramReceiveTarget;
+import tvbrowser.TVBrowser;
+import tvbrowser.core.plugin.PluginManagerImpl;
+import tvbrowser.core.plugin.PluginProxy;
+import tvbrowser.core.plugin.PluginProxyManager;
+import tvbrowser.core.tvdataservice.TvDataServiceProxy;
+import tvbrowser.core.tvdataservice.TvDataServiceProxyManager;
+import tvbrowser.ui.DontShowAgainOptionBox;
+import tvbrowser.ui.mainframe.MainFrame;
+import util.browserlauncher.Launch;
+import util.exc.TvBrowserException;
+import util.i18n.Localizer;
+import util.io.ExecutionHandler;
+import util.io.windows.registry.RegistryEditor;
+import util.io.windows.registry.RegistryKey;
+import util.io.windows.registry.RegistryValue;
+import util.settings.BooleanProperty;
+import util.settings.ByteProperty;
+import util.settings.ChoiceProperty;
+import util.settings.ColorProperty;
+import util.settings.IntArrayProperty;
+import util.settings.IntProperty;
+import util.settings.StringArrayProperty;
+import util.settings.StringProperty;
+import util.ui.UiUtilities;
+
+/**
+ * Handler for protocol message with tvb:\\
+ * 
+ * @author René Mach
+ * @since 4.2.3
+ */
+public class ProtocolHandler {
+  private static final String PROTOCOL_MESSAGE_CONFIG = "config";
+  private static final String PROTOCOL_MESSAGE_PLUGIN = "plugin";
+  private static final String PROTOCOL_MESSAGE_ENABLE = "enable";
+  private static final String PROTOCOL_MESSAGE_SHOW = "show";
+  private static final String PROTOCOL_MESSAGE_SETTINGS = "settings";
+
+  private static final Localizer LOCALIZER = Localizer.getLocalizerFor(ProtocolHandler.class);
+  private static final Logger LOG = Logger.getLogger(ProtocolHandler.class.getName());
+  
+  private static ProtocolHandler INSTANCE;
+  private boolean mIsEnabled;
+  
+  private ProtocolHandler() {
+    INSTANCE = this;
+    mIsEnabled = Settings.propCanReceiveProtocolMessages.getBoolean();
+    
+    if(mIsEnabled) {
+      if(Launch.getOs() == Launch.OS_LINUX) {
+        File baseDir = new File("");
+        final File start = new File(baseDir.getAbsolutePath(),"/tvbrowser"+(TVBrowser.isTransportable() ? "-transportable":"")+".sh");
+        final File target = new File(System.getProperty("user.home")+"/.local/share/applications/tvbrowserWebstart.desktop");
+        
+        boolean ask = !target.isFile();
+        
+        if(target.isFile()) {
+          try(BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(target), "UTF-8"))) {
+            String line = null;
+            
+            while((line = in.readLine()) != null) {
+              if(line.startsWith("Exec")) {
+                ask = !line.contains(start.getAbsolutePath());
+                break;
+              }
+            }
+          }catch(IOException ioe) {
+            ioe.printStackTrace();
+          }
+        }
+        
+        if(ask) {
+          if(!target.isFile() || DontShowAgainOptionBox.showOptionDialog("tvbProtocolWrongTarget", UiUtilities.getParentFrameOnMouseScreen(), "Das Empfangen von Protokollnachrichten mit tvb:\\ ist aktiviert.\nProtokollnachrichten vereinfachen z.B. die Einstellung TV-Browser.\nDas Protokoll verweist aber auf einen anderen TV-Browser.\n\nMöchten Sie das Protokoll jetzt auf diesen TV-Browser verweisen lassen?\n(Falls nicht werden die Protokollnachrichten für diesen TV-Browser deaktiviert.)", "tvb:\\-Protokoll verweist auf anderen TV-Browser", JOptionPane.QUESTION_MESSAGE, JOptionPane.YES_NO_CANCEL_OPTION) == JOptionPane.YES_OPTION) {
+            enable();
+          }
+          else {
+            Settings.propCanReceiveProtocolMessages.setBoolean(false);
+            mIsEnabled = false;
+          }
+        }
+      }
+    }
+    else if(Launch.getOs() == Launch.OS_WINDOWS) {
+      
+    }
+  }
+  
+  public static synchronized ProtocolHandler getInstance() {
+    if(INSTANCE == null) {
+      new ProtocolHandler();
+    }
+    
+    return INSTANCE;
+  }
+  
+  /**
+   * Handles tvb:// protocol messages
+   * 
+   * @param message The tvb:// protocol message to handle
+   */
+  public void handleMessage(final String message) {
+    try {
+      Thread.sleep(500);
+    } catch (InterruptedException e1) {
+      // TODO Auto-generated catch block
+      e1.printStackTrace();
+    }
+    
+    if(Settings.propCanReceiveProtocolMessages.getBoolean() && message != null && message.startsWith("tvb://")) {
+      String[] parts = message.substring(6).strip().split("/");
+      if(parts.length > 1) {
+        if(PROTOCOL_MESSAGE_CONFIG.equalsIgnoreCase(parts[0]) && parts[1].contains("=")) {
+          if(JOptionPane.YES_OPTION == UiUtilities.showConfirmDialogOnMouseScreen(LOCALIZER.msg("receive.config.msg","TV-Browser received changes of settings.\nIf you haven't triggered the change, please cancel it now!\n\nDo you want to apply the changed settings?"), LOCALIZER.msg("receive.config.title","Apply settings change?"), JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, true)) {
+            try {
+              String[] props = parts[1].split(";");
+              
+              for(String prop : props) {
+                String[] nameValue = prop.split("=");
+                
+                if(!nameValue[0].equals("CanReceiveProtocolMessages")) {
+                  Field f = Settings.class.getDeclaredField("prop"+nameValue[0]);
+                  Object p = f.get(null);
+                  
+                  if(p instanceof BooleanProperty) {
+                    if(nameValue[1].equals("true") || nameValue[1].equals("false") || nameValue[1].equals("1") || nameValue[1].equals("0")) {
+                      ((BooleanProperty) p).setBoolean(nameValue[1].equals("true") || nameValue[1].equals("1"));
+                    }
+                  }
+                  else if(p instanceof IntProperty) {
+                    try {
+                      int value = Integer.parseInt(nameValue[1]);
+                      
+                      ((IntProperty) p).setInt(value);
+                    }catch(NumberFormatException nfe) {
+                      nfe.printStackTrace();
+                    }
+                  }
+                  else if(p instanceof IntArrayProperty) {
+                    try {
+                      String[] values = nameValue[1].split(",");
+                      int[] arr = new int[values.length];
+                      
+                      for(int i = 0; i < arr.length; i++) {
+                        arr[i] = Integer.parseInt(values[i]);
+                      }
+                      
+                      ((IntArrayProperty) p).setIntArray(arr);
+                    }catch(NumberFormatException nfe) {
+                      nfe.printStackTrace();
+                    }
+                  }
+                  else if(p instanceof ByteProperty) {
+                    try {
+                      byte value = Byte.parseByte(nameValue[1]);
+                      
+                      ((ByteProperty) p).setByte(value);
+                    }catch(NumberFormatException nfe) {
+                      nfe.printStackTrace();
+                    }
+                  }
+                  else if(p instanceof StringProperty) {
+                    ((StringProperty) p).setString(nameValue[1]);
+                  }
+                  else if(p instanceof StringArrayProperty) {
+                    ((StringArrayProperty) p).setStringArray(nameValue[1].split(","));
+                  }
+                  else if(p instanceof ChoiceProperty) {
+                    if(((ChoiceProperty) p).isAllowed(nameValue[1])) {
+                      ((ChoiceProperty) p).setString(nameValue[1]);
+                    }
+                  }
+                  else if(p instanceof ColorProperty) {
+                    try {
+                      String[] values = nameValue[1].split(",");
+                      Color c = null;
+                      
+                      if(values.length == 3) {
+                        c = new Color(Integer.parseInt(values[0]),Integer.parseInt(values[1]),Integer.parseInt(values[2]));
+                      } else if(values.length == 4) {
+                        c = new Color(Integer.parseInt(values[0]),Integer.parseInt(values[1]),Integer.parseInt(values[2]),Integer.parseInt(values[3]));
+                      }
+                      
+                      if(c != null) {
+                        ((ColorProperty) p).setColor(c);
+                      }
+                    }catch(NumberFormatException nfe) {
+                      nfe.printStackTrace();
+                    }
+                  }
+                }
+              }
+            } catch (Exception e) {
+              // TODO Auto-generated catch block
+              e.printStackTrace();
+            }
+            
+            try {
+              Settings.storeSettings(true);
+            } catch (TvBrowserException e) {
+              // TODO Auto-generated catch block
+              e.printStackTrace();
+            }
+          }
+        }
+        else if(PROTOCOL_MESSAGE_SHOW.equalsIgnoreCase(parts[0]) && parts.length == 2 && parts[1].contains("=")) {
+          final String[] values = parts[1].split("=");
+          
+          if(values[0].equals(PROTOCOL_MESSAGE_SETTINGS)) {
+            PluginManagerImpl.getInstance().showSettings("#"+values[1]);
+          }
+        }
+        else if(PROTOCOL_MESSAGE_PLUGIN.equalsIgnoreCase(parts[0]) && parts.length >= 3) {
+          if(PROTOCOL_MESSAGE_ENABLE.contentEquals(parts[1]) && parts.length == 3 && parts[2].contains("=")) {
+            //"NewsPlugin"
+            String[] values = parts[2].split("=");
+            
+            PluginProxy p = PluginProxyManager.getInstance().getPluginForId("java."+values[0].toLowerCase()+"."+values[0]);
+            
+            if(p != null) {
+              if(!p.isActivated() && (values[1].equals("true") || values[1].equals("1"))) {
+                if(JOptionPane.YES_OPTION == UiUtilities.showConfirmDialogOnMouseScreen(LOCALIZER.msg("receive.plugin.enable.msg","TV-Browser received the activation of the plugin '{0}'.\n\nDo you wan't to activate the plugin '{0}' now?", p.getInfo().getName()),LOCALIZER.msg("receive.plugin.enable.title","Activate plugin '{0}'?", p.getInfo().getName()), JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE)) {
+                  try {
+                    PluginProxyManager.getInstance().activatePlugin(p, true);
+                      try {
+                        PluginProxyManager.getInstance().fireTvBrowserStartFinished(p);
+                      }catch(Throwable t) {
+                        /* Catch all possible not catched errors that occur in the plugin mehtod*/
+                        LOG.log(Level.WARNING, "A not catched error occured in 'fireTvBrowserStartFinishedThread' of Plugin '" + p +"'.", t);
+                      }
+                  } catch (TvBrowserException e) {
+                    e.printStackTrace();
+                  }
+                  
+                  MainFrame.getInstance().getToolbar().updatePluginButtons();
+                  MainFrame.getInstance().updatePluginsMenu();
+                }
+              }
+              else if(p.isActivated() && (values[1].equals("false") || values[1].equals("0"))) {
+                if(JOptionPane.YES_OPTION == UiUtilities.showConfirmDialogOnMouseScreen(LOCALIZER.msg("receive.plugin.disable.msg","TV-Browser received the deactivation of the plugin '{0}'.\n\nDo you wan't to deactivate the plugin '{0}' now?", p.getInfo().getName()),LOCALIZER.msg("receive.plugin.disable.title","Dectivate plugin '{0}'?", p.getInfo().getName()), JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE)) {
+                  try {
+                    PluginProxyManager.getInstance().deactivatePlugin(p);
+                  } catch (TvBrowserException e) {
+                    e.printStackTrace();
+                  }
+                  
+                  MainFrame.getInstance().getToolbar().updatePluginButtons();
+                  MainFrame.getInstance().updatePluginsMenu();
+                }
+              }
+            }
+            
+            // Update the settings
+            String[] deactivatedPlugins = PluginProxyManager.getInstance().getDeactivatedPluginIds();
+            Settings.propDeactivatedPlugins.setStringArray(deactivatedPlugins);
+
+            try {
+              Settings.storeSettings(true);
+            } catch (TvBrowserException e) {
+              // TODO Auto-generated catch block
+              e.printStackTrace();
+            }
+          }
+          else if(PROTOCOL_MESSAGE_CONFIG.equals(parts[1]) && parts.length == 4) {
+            PluginProxy a = PluginProxyManager.getInstance().getActivatedPluginForId("java."+parts[2].toLowerCase()+"."+parts[2]);
+            
+            if(a != null) {
+              a.receiveValues(ProgramReceiveTarget.TYPE_EVENT_UNDIFINED, parts[3].split(";"), null);
+            }
+            else {
+              TvDataServiceProxy[] ps = TvDataServiceProxyManager.getInstance().getTvDataServices(new String[] {parts[2].toLowerCase()+"."+parts[2]});
+              
+              if(ps.length == 1 && ps[0].getId().equals(parts[2].toLowerCase()+"."+parts[2])) {
+                ps[0].receiveProtocolMessage(parts[3].split(";"));
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  
+  public void handleSettingsChanged() {
+    if(mIsEnabled && !Settings.propCanReceiveProtocolMessages.getBoolean()) {
+      disable();
+    }
+    else if(!mIsEnabled && Settings.propCanReceiveProtocolMessages.getBoolean()) {
+      enable();
+    }
+    
+    mIsEnabled = Settings.propCanReceiveProtocolMessages.getBoolean();
+  }
+  
+  private void enable() {
+    if(Launch.getOs() == Launch.OS_LINUX) {
+      final File target = new File(System.getProperty("user.home")+"/.local/share/applications/tvbrowserWebstart.desktop");
+      
+      if(target.isFile()) {
+        target.delete();
+      }
+      
+      createDesktopFile(target, "TV-Browser Webstart", true);
+      
+      ExecutionHandler h = ExecutionHandler.create("/usr/bin/xdg-mime","default","tvbrowserWebstart.desktop","x-scheme-handler/tvb");
+      try {
+        h.execute();
+      } catch (IOException e) {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+      }
+      
+      h = ExecutionHandler.create("/usr/bin/xdg-desktop-menu","forceupdate");
+      try {
+        h.execute();
+      } catch (IOException e) {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+      }
+    }
+    else if(Launch.getOs() == Launch.OS_WINDOWS) {
+      RegistryKey rKey = new RegistryKey(RegistryKey.HKEY_CLASS_ROOT, "tvb\\shell\\open\\command");
+      RegistryValue v = rKey.getValue("");
+      File exe = new File(TVBrowser.isTransportable() ? "tvbrowser-transportable.exe" : "tvbrowser.exe");
+      
+      if((v == null || !v.getData().contains(exe.getAbsolutePath()))) {
+        if(DontShowAgainOptionBox.showOptionDialog("tvbProtocolWrongTarget", UiUtilities.getParentFrameOnMouseScreen(), "Das Empfangen von Protokollnachrichten mit tvb:\\ ist aktiviert.\nDas Protokoll existiert in Windows aber nicht oder verweist auf eine anderen TV-Browser.\n\nMöchten Sie das Protokoll jetzt in Windows anlegen (dazu werden Administratorrechte benötigt)?", "tvb:\\-Protokoll fehlt", JOptionPane.QUESTION_MESSAGE, JOptionPane.YES_NO_CANCEL_OPTION) == JOptionPane.YES_OPTION) {
+          RegistryEditor ed = RegistryEditor.create();
+          
+          ed.setValue("HKEY_CLASSES_ROOT\\tvb", new RegistryValue("", RegistryValue.TYPE_REG_SZ, "URL:tvb Protocol"));
+          ed.setValue("HKEY_CLASSES_ROOT\\tvb", new RegistryValue("URL Protocol", RegistryValue.TYPE_REG_SZ, ""));
+          ed.setValue("HKEY_CLASSES_ROOT\\tvb\\DefaultIcon", new RegistryValue("", RegistryValue.TYPE_REG_SZ, "\""+exe.getAbsolutePath()+"\""));
+          ed.setValue("HKEY_CLASSES_ROOT\\tvb\\shell\\open\\command", new RegistryValue("", RegistryValue.TYPE_REG_SZ, "\""+exe.getAbsolutePath()+"\" \"%1\""));
+          
+          ed.commit("addTvbProtocolToRegistry");
+        }
+        else {
+          Settings.propCanReceiveProtocolMessages.setBoolean(false);
+          try {
+            Settings.storeSettings(true);
+          } catch (TvBrowserException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+          }
+        }
+      }
+    }
+  }
+  
+  private void disable() {
+    if(Launch.getOs() == Launch.OS_LINUX) {
+      final File target = new File(System.getProperty("user.home")+"/.local/share/applications/tvbrowserWebstart.desktop");
+      
+      if(target.isFile()) {
+        target.delete();
+      }
+      
+      ExecutionHandler h = ExecutionHandler.create("/usr/bin/sed","-i","/x-scheme-handler\\/tvb=/d",System.getProperty("user.home")+"/.config/mimeapps.list");
+      try {
+        h.execute();
+      } catch (IOException e) {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+      }
+      
+      h = ExecutionHandler.create("/usr/bin/xdg-desktop-menu","forceupdate");
+      try {
+        h.execute();
+      } catch (IOException e) {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+      }
+    } 
+    else if(Launch.getOs() == Launch.OS_WINDOWS) {
+      if(DontShowAgainOptionBox.showOptionDialog("tvbProtocolDeleteTarget", UiUtilities.getParentFrameOnMouseScreen(), "Das Empfangen von Protokollnachrichten mit tvb:\\ wurde deaktiviert.\n\nMöchten Sie das Protokoll aus Windows entferne (dazu werden Administratorrechte benötigt)?", "tvb:\\-Protokoll aus Windows entfernen?", JOptionPane.QUESTION_MESSAGE, JOptionPane.YES_NO_CANCEL_OPTION) == JOptionPane.YES_OPTION) {
+        RegistryEditor ed = RegistryEditor.create();
+        
+        ed.setValue("-HKEY_CLASSES_ROOT\\tvb", null);
+        ed.commit("removeTvbProtocolToRegistry");
+      }
+    }
+  }
+  
+  public static void createDesktopFile(final File target, final String name, final boolean isMimeHandler) {
+    final File baseDir = new File("");
+    
+    try(BufferedWriter out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(target), "UTF-8"))) {
+      out.write("[Desktop Entry]\n");
+      out.write("Version=1.0\n");
+      out.write("Type=Application\n");
+      out.write("Terminal=false\n");
+      out.write("Name="+name+"\n");
+      out.write("Icon="+baseDir.getAbsolutePath()+"/imgs/tvbrowser128.png\n");
+      out.write("Exec="+baseDir.getAbsolutePath()+"/tvbrowser"+(TVBrowser.isTransportable() ? "-transportable":"")+".sh %u\n");
+      out.write("Comment=Themeable and easy to use TV Guide - written in Java\n");
+      
+      if(isMimeHandler) {
+        out.write("MimeType=x-scheme-handler/tvb;\n");
+      }
+      
+      out.write("Name[de]="+name+"\n");
+      out.write("GenericName=Digital TV Guide\n");
+      out.write("GenericName[de]=Digitale TV-Zeitschrift\n");
+      out.write("Comment[de]=Anpassbare und einfach zu benutzende TV-Zeitschrift - geschrieben in Java\n");
+      out.write("StartupWMClass=tvbrowser-TVBrowser\n");
+    }catch(IOException ioe) {
+      ioe.printStackTrace();
+    }
+  }
+}

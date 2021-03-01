@@ -114,6 +114,7 @@ import tvbrowser.core.ChannelList;
 import tvbrowser.core.DummyChannel;
 import tvbrowser.core.PendingMarkings;
 import tvbrowser.core.PluginLoader;
+import tvbrowser.core.ProtocolHandler;
 import tvbrowser.core.Settings;
 import tvbrowser.core.TvDataBase;
 import tvbrowser.core.TvDataUpdater;
@@ -675,7 +676,7 @@ public class TVBrowser {
           ChannelList.completeChannelLoading();
           initializeAutomaticDownload();
           
-          mainFrame.handleProtocolMessage(mProtocolMessage);
+          ProtocolHandler.getInstance().handleMessage(mProtocolMessage);
         }
       }.start();
       SwingUtilities.invokeLater(() -> {

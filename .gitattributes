@@ -2376,6 +2376,7 @@ tvbrowser/src/tvbrowser/UdpThread.java -text svneol=unset#text/plain
 tvbrowser/src/tvbrowser/core/DummyChannel.java -text
 tvbrowser/src/tvbrowser/core/DuplicateChannelNameCounter.java -text
 tvbrowser/src/tvbrowser/core/PendingMarkings.java -text svneol=unset#text/plain
+tvbrowser/src/tvbrowser/core/ProtocolHandler.java -text svneol=unset#text/plain
 tvbrowser/src/tvbrowser/core/contextmenu/LeaveFullScreenMenuItem.java -text
 tvbrowser/src/tvbrowser/core/contextmenu/SelectProgramContextMenuItem.java -text
 tvbrowser/src/tvbrowser/core/contextmenu/contextmenu_cs.properties -text svneol=unset#text/plain

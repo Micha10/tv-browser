@@ -1277,6 +1277,9 @@ public class Settings {
       MainFrame.getInstance().setShowDatelist(true, true); // set date list visible (and save), otherwise the setting has no effect on restart
     }
 
+    if(mProp.hasChanged(propCanReceiveProtocolMessages)) {
+      ProtocolHandler.getInstance().handleSettingsChanged();
+    }
 
     mProp.clearChanges();
 

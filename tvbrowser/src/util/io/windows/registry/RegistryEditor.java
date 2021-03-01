@@ -70,7 +70,9 @@ public class RegistryEditor {
       }
     }
     
-    list.add(value);
+    if(value != null) {
+      list.add(value);
+    }
   }
   
   public void commit() {

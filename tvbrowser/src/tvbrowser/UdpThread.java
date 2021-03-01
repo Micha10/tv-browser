@@ -11,6 +11,7 @@ import java.net.SocketException;
 
 import javax.swing.SwingUtilities;
 
+import tvbrowser.core.ProtocolHandler;
 import tvbrowser.ui.mainframe.MainFrame;
 import tvbrowser.ui.tray.SystemTray;
 
@@ -87,7 +88,7 @@ public final class UdpThread extends Thread {
             }
           }
           else if(received.startsWith("tvb://")) {
-            MainFrame.getInstance().handleProtocolMessage(received);
+            ProtocolHandler.getInstance().handleMessage(received);
           }
         }
       } catch (IOException e) {}

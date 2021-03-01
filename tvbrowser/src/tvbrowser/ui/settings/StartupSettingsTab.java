@@ -54,6 +54,7 @@ import tvbrowser.core.icontheme.IconLoader;
 import tvbrowser.ui.mainframe.MainFrame;
 import tvbrowser.ui.mainframe.PeriodItem;
 import util.io.windows.registry.RegistryKey;
+import util.browserlauncher.Launch;
 import util.i18n.Localizer;
 import util.ui.UiUtilities;
 import util.ui.WideComboBox;
@@ -169,9 +170,11 @@ public class StartupSettingsTab implements devplugin.SettingsTab {
         "Provide server port for restore running TV-Browser/handling protocol messages"), Settings.propServerRestoreEnabled.getBoolean());
     mSettingsPn.add(mServerForRestore, cc.xy(2, ++y));
     
-    mProtocolHandler = new JCheckBox(LOCALIZER.msg("protocolHandler", "Allow handling of tvb:// protocol messages"), Settings.propCanReceiveProtocolMessages.getBoolean() && mServerForRestore.isSelected());
-    mProtocolHandler.setEnabled(mServerForRestore.isSelected());
-    mSettingsPn.add(mProtocolHandler, cc.xy(2, y+=2));
+    if(!TVBrowser.isTransportable() || Launch.getOs() != Launch.OS_MAC) {
+      mProtocolHandler = new JCheckBox(LOCALIZER.msg("protocolHandler", "Allow handling of tvb:// protocol messages"), Settings.propCanReceiveProtocolMessages.getBoolean() && mServerForRestore.isSelected());
+      mProtocolHandler.setEnabled(mServerForRestore.isSelected());
+      mSettingsPn.add(mProtocolHandler, cc.xy(2, y+=2));
+    }
     
     mServerForRestore.addItemListener(e -> {
     	mProtocolHandler.setEnabled(ItemEvent.SELECTED == e.getStateChange());
