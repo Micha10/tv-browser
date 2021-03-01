@@ -11,7 +11,7 @@ import java.net.SocketException;
 
 import javax.swing.SwingUtilities;
 
-import tvbrowser.core.ProtocolHandler;
+import tvbrowser.core.protocolhandler.ProtocolHandler;
 import tvbrowser.ui.mainframe.MainFrame;
 import tvbrowser.ui.tray.SystemTray;
 

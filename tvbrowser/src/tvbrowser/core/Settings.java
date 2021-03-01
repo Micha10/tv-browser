@@ -75,6 +75,7 @@ import tvbrowser.core.filters.UserFilter;
 import tvbrowser.core.filters.filtercomponents.SingleChannelFilterComponent;
 import tvbrowser.core.plugin.DefaultSettings;
 import tvbrowser.core.plugin.PluginProxyManager;
+import tvbrowser.core.protocolhandler.ProtocolHandler;
 import tvbrowser.core.settings.DeferredFontProperty;
 import tvbrowser.core.settings.JGoodiesThemeProperty;
 import tvbrowser.core.tvdataservice.TvDataServiceProxyManager;

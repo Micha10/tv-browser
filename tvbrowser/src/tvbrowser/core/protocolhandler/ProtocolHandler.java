@@ -21,7 +21,7 @@
  *   $Author$
  * $Revision$
  */
-package tvbrowser.core;
+package tvbrowser.core.protocolhandler;
 
 import java.awt.Color;
 import java.io.BufferedReader;
@@ -40,6 +40,7 @@ import javax.swing.JOptionPane;
 
 import devplugin.ProgramReceiveTarget;
 import tvbrowser.TVBrowser;
+import tvbrowser.core.Settings;
 import tvbrowser.core.plugin.PluginManagerImpl;
 import tvbrowser.core.plugin.PluginProxy;
 import tvbrowser.core.plugin.PluginProxyManager;
@@ -112,7 +113,7 @@ public class ProtocolHandler {
         
         File source = new File(System.getProperty("user.home")+"/.local/share/applications/tvbrowserWebstart.desktop");
         boolean ask = !source.isFile();
-        
+        System.out.println(baseDir.getAbsolutePath());
         if(handler.equals("tvbrowser.desktop")) {
           source = null;
           ask = !baseDir.getAbsolutePath().startsWith("/usr/share/tvbrowser");
@@ -133,8 +134,12 @@ public class ProtocolHandler {
           }
         }
         
+        if(source == null) {
+          source = new File("/usr/share/tvbrowser/tvbrowser.sh");
+        }
+        
         if(ask) {
-          if(source == null || !source.isFile() || DontShowAgainOptionBox.showOptionDialog("tvbProtocolWrongTarget", UiUtilities.getParentFrameOnMouseScreen(), LOCALIZER.msg("error.linux.msg", "Receiving protocol message with tvb:\\ is activated.\nProtocol message make it easier to configure TV-Browser.\nBut the protocol leads to another TV-Browser.\n\nShould the protocol instead lead to this TV-Browser?\n(The protocol messages are deactivted for this TV-Browser if not.)"), LOCALIZER.msg("error.linux.title", "tvb:\\\\-Protokoll leads to another TV-Browser"), JOptionPane.QUESTION_MESSAGE, JOptionPane.YES_NO_CANCEL_OPTION) == JOptionPane.YES_OPTION) {
+          if(!source.isFile() || DontShowAgainOptionBox.showOptionDialog("tvbProtocolWrongTarget", UiUtilities.getParentFrameOnMouseScreen(), LOCALIZER.msg("error.linux.msg", "Receiving protocol message with tvb:\\ is activated.\nProtocol message make it easier to configure TV-Browser.\nBut the protocol leads to another TV-Browser.\n\nShould the protocol instead lead to this TV-Browser?\n(The protocol messages are deactivted for this TV-Browser if not.)"), LOCALIZER.msg("error.linux.title", "tvb:\\\\-Protokoll leads to another TV-Browser"), JOptionPane.QUESTION_MESSAGE, JOptionPane.YES_NO_CANCEL_OPTION) == JOptionPane.YES_OPTION) {
             enable();
           }
           else {
