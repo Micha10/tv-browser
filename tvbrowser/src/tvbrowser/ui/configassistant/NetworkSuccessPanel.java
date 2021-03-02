@@ -27,6 +27,7 @@ package tvbrowser.ui.configassistant;
 
 import java.awt.BorderLayout;
 
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import tvbrowser.TVBrowser;
@@ -78,27 +79,34 @@ class NetworkSuccessPanel extends AbstractCardPanel {
       TVBrowser.loadDataServicesAtStartup();
     }
     
-    mAuthentication.createPanel();
+    boolean result = TvDataServiceProxyManager.getInstance().getDataServices().length >= 1;
     
-    if(!mAuthentication.isNeeded()) {
-      final ProgressWindow win=new ProgressWindow(MainFrame.getInstance());  
+    if(result) {
+      mAuthentication.createPanel();
       
-      win.run(new Progress(){
-        public void run() {
-          ChannelGroupManager.getInstance().checkForAvailableGroupsAndChannels(win);
-        }
-      });
-      
-      ChannelList.reload();
-      ChannelList.initSubscribedChannels();
+      if(!mAuthentication.isNeeded()) {
+        final ProgressWindow win=new ProgressWindow(MainFrame.getInstance());  
+        
+        win.run(new Progress(){
+          public void run() {
+            ChannelGroupManager.getInstance().checkForAvailableGroupsAndChannels(win);
+          }
+        });
+        
+        ChannelList.reload();
+        ChannelList.initSubscribedChannels();
+      }
+      else {
+        mCardPanel.add(mAuthentication.getPanel(), mAuthentication.toString());
+        setNext(mAuthentication);
+        mAuthentication.setNext(mSubscribeChannelPanel);
+      }
     }
     else {
-      mCardPanel.add(mAuthentication.getPanel(), mAuthentication.toString());
-      setNext(mAuthentication);
-      mAuthentication.setNext(mSubscribeChannelPanel);
+      UiUtilities.showMessageDialogOnMouseScreen(mLocalizer.msg("noDataService.msg", "No data plugin was installed.\nYou will need to install at least\none data plugin for TV-Browser to work.\n\nGoing back to previous step."), mLocalizer.msg("noDataService.title", "No data plugin installed."), JOptionPane.INFORMATION_MESSAGE);
     }
     
-    return true;
+    return result;
   }
   
 }
