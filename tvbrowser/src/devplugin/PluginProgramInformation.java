@@ -17,9 +17,9 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  * SVN information:
- *     $Date: 2020-12-09 10:42:31 +0100 (Mi, 09 Dez 2020) $
- *   $Author: ds10 $
- * $Revision: 9189 $
+ *     $Date$
+ *   $Author$
+ * $Revision$
  */
 package devplugin;
 
