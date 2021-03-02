@@ -165,11 +165,38 @@ public class RegistryKey {
     try {
       handler.execute(true);
       handler.getProcess().waitFor();
-      result = !handler.getOutput().contains("Error:");
+      result = handler.getProcess().exitValue() != 0;
     }catch(Throwable t) {
       t.printStackTrace();
     }
 	  
     return result;
+	}
+	
+	/**
+	 * Deletes the key and all values below it
+	 * <p>
+	 * @return <code>true</code> if the key was deleted, <code>false</code> otherwise.
+	 * @since 4.2.3
+	 */
+	public boolean delete() {
+	  boolean result = false;
+	  
+	  final ArrayList<String> cmdList = new ArrayList<>();
+    cmdList.add(mRegTool.getAbsolutePath());
+    cmdList.add("delete");
+    cmdList.add(mKey + "\\" + mPath);
+    cmdList.add("/f");
+	  
+    final ExecutionHandler handler = new ExecutionHandler(cmdList.toArray(new String[0]));
+    try {
+      handler.execute(true);
+      handler.getProcess().waitFor();
+      result = handler.getProcess().exitValue() != 0;
+    }catch(Throwable t) {
+      t.printStackTrace();
+    }
+    
+	  return result;
 	}
 }

@@ -388,10 +388,6 @@ Section "$(STD_SECTION_NAME)" SEC_STANDARD
     # Remember the selected start menu folder in registry
     WriteRegStr HKLM "Software\TV-Browser" "Start Menu Folder" $STARTMENU_FOLDER
     WriteRegStr HKLM "Software\${PROG_NAME}${VERSION}" "Start Menu Folder" $STARTMENU_FOLDER
-    # Create tvb protocol 
-    WriteRegStr HKCR "tvb" "" "URL:tvb Protocol"
-    WriteRegStr HKCR "tvb" "URL Protocol" ""
-    WriteRegStr HKCR "tvb\shell\open\command" "" '"$INSTDIR\tvbrowser.exe" "%1"'
     
     WriteRegExpandStr \
       HKLM \
@@ -663,7 +659,6 @@ Section "Uninstall"
   isnotadmin:
   StrCmp $1 "Power" isadmin isnotpower
   isadmin:
-    DeleteRegKey HKCR "tvb"
     ReadRegStr $8 HKLM "Software\${PROG_NAME}${VERSION}" "Start Menu Folder"
     IfErrors noDeleteStartMenu
     DeleteRegKey \

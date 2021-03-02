@@ -52,7 +52,6 @@ import util.browserlauncher.Launch;
 import util.exc.TvBrowserException;
 import util.i18n.Localizer;
 import util.io.ExecutionHandler;
-import util.io.windows.registry.RegistryEditor;
 import util.io.windows.registry.RegistryKey;
 import util.io.windows.registry.RegistryValue;
 import util.settings.BooleanProperty;
@@ -140,7 +139,7 @@ public class ProtocolHandler {
         
         if(ask) {
           if(!source.isFile() || DontShowAgainOptionBox.showOptionDialog("tvbProtocolWrongTarget", UiUtilities.getParentFrameOnMouseScreen(), LOCALIZER.msg("error.linux.msg", "Receiving protocol message with tvb:\\ is activated.\nProtocol message make it easier to configure TV-Browser.\nBut the protocol leads to another TV-Browser.\n\nShould the protocol instead lead to this TV-Browser?\n(The protocol messages are deactivted for this TV-Browser if not.)"), LOCALIZER.msg("error.linux.title", "tvb:\\\\-Protokoll leads to another TV-Browser"), JOptionPane.QUESTION_MESSAGE, JOptionPane.YES_NO_CANCEL_OPTION) == JOptionPane.YES_OPTION) {
-            enable();
+            enable(false);
           }
           else {
             Settings.propCanReceiveProtocolMessages.setBoolean(false);
@@ -154,33 +153,15 @@ public class ProtocolHandler {
           }
         }
       }
-    }
-    else if(Launch.getOs() == Launch.OS_WINDOWS) {
-      RegistryKey rKey = new RegistryKey(RegistryKey.HKEY_CLASS_ROOT, "tvb\\shell\\open\\command");
-      RegistryValue v = rKey.getValue("");
-      File exe = new File(TVBrowser.isTransportable() ? "tvbrowser-transportable.exe" : "tvbrowser.exe");
-      
-      if((v == null || !v.getData().contains(exe.getAbsolutePath()))) {
-        if(DontShowAgainOptionBox.showOptionDialog("tvbProtocolWrongTarget", UiUtilities.getParentFrameOnMouseScreen(), LOCALIZER.msg("error.win.msg", "Receiving protocol message with tvb:\\ is activated.\nProtocol message make it easier to configure TV-Browser.\nBut the protocol doesn't exists in Windows or leads to another TV-Browser.\n\nShould the protocol be created in Windows now to lead to this TV-Browser (Administrator rights are needed for this)?\n(The protocol messages are deactivted for this TV-Browser if not.)"), LOCALIZER.msg("error.win.title", "tvb:\\ protocol error"), JOptionPane.QUESTION_MESSAGE, JOptionPane.YES_NO_CANCEL_OPTION) == JOptionPane.YES_OPTION) {
-          enable();
-        }
-        else {
-          Settings.propCanReceiveProtocolMessages.setBoolean(false);
-          mIsEnabled = false;
-          try {
-            Settings.storeSettings(true);
-          } catch (TvBrowserException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-          }
-        }
+      else if(Launch.getOs() == Launch.OS_WINDOWS) {
+        checkWindows();
       }
-    }
-    else if(Launch.getOs() == Launch.OS_MAC && !TVBrowser.isTransportable()) {
-      File tvbprotocol = new File("/Applications/TV-Browser Protocol.app");
-      
-      if(!tvbprotocol.isFile()) {
-        DontShowAgainOptionBox.showOptionDialog("tvbProtocolMissing", UiUtilities.getParentFrameOnMouseScreen(), LOCALIZER.msg("error.mac.msg", "Receiving protocol message with tvb:\\ is activated.\nProtocol message make it easier to configure TV-Browser.\nBut the protocol app is missing.\n\nPlease make sure to also install the TV-Browser Protocol app from the DMG with TV-Browser."), LOCALIZER.msg("error.mac.title", "tvb:\\ protocol app missing"), JOptionPane.QUESTION_MESSAGE, JOptionPane.OK_OPTION);
+      else if(Launch.getOs() == Launch.OS_MAC && !TVBrowser.isTransportable()) {
+        File tvbprotocol = new File("/Applications/TV-Browser Protocol.app");
+        
+        if(!tvbprotocol.isFile()) {
+          DontShowAgainOptionBox.showOptionDialog("tvbProtocolMissing", UiUtilities.getParentFrameOnMouseScreen(), LOCALIZER.msg("error.mac.msg", "Receiving protocol message with tvb:\\ is activated.\nProtocol message make it easier to configure TV-Browser.\nBut the protocol app is missing.\n\nPlease make sure to also install the TV-Browser Protocol app from the DMG with TV-Browser."), LOCALIZER.msg("error.mac.title", "tvb:\\ protocol app missing"), JOptionPane.QUESTION_MESSAGE, JOptionPane.OK_OPTION);
+        }
       }
     }
   }
@@ -381,14 +362,36 @@ public class ProtocolHandler {
   
   public void handleSettingsChanged() {
     if(mIsEnabled && !Settings.propCanReceiveProtocolMessages.getBoolean()) {
-      disable();
+      disable(true);
     }
     else if(!mIsEnabled && Settings.propCanReceiveProtocolMessages.getBoolean()) {
-      enable();
+      enable(true);
     }
   }
   
-  private void enable() {
+  private void checkWindows() {
+    RegistryKey rKey = new RegistryKey(RegistryKey.HKEY_CURRENT_USER, "SOFTWARE\\classes\\tvb\\shell\\open\\command");
+    RegistryValue v = rKey.getValue("");
+    File exe = new File(TVBrowser.isTransportable() ? "tvbrowser-transportable.exe" : "tvbrowser.exe");
+    
+    if((v == null || !v.getData().contains(exe.getAbsolutePath()))) {
+      if(DontShowAgainOptionBox.showOptionDialog("tvbProtocolWrongTarget", UiUtilities.getParentFrameOnMouseScreen(), LOCALIZER.msg("error.win.msg", "Receiving protocol message with tvb:\\ is activated.\nProtocol message make it easier to configure TV-Browser.\nBut the protocol doesn't exists in Windows or leads to another TV-Browser.\n\nShould the protocol be created in Windows now to lead to this TV-Browser (Administrator rights are needed for this)?\n(The protocol messages are deactivted for this TV-Browser if not.)"), LOCALIZER.msg("error.win.title", "tvb:\\ protocol error"), JOptionPane.QUESTION_MESSAGE, JOptionPane.YES_NO_CANCEL_OPTION) == JOptionPane.YES_OPTION) {
+        enableWindows();
+      }
+      else {
+        Settings.propCanReceiveProtocolMessages.setBoolean(false);
+        mIsEnabled = false;
+        try {
+          Settings.storeSettings(true);
+        } catch (TvBrowserException e) {
+          // TODO Auto-generated catch block
+          e.printStackTrace();
+        }
+      }
+    }
+  }
+  
+  private void enable(boolean fromSettings) {
     if(Launch.getOs() == Launch.OS_LINUX) {
       File test = new File(System.getProperty("user.home")+"/.local/share/applications/tvbrowserWebstart.desktop");
       
@@ -428,21 +431,26 @@ public class ProtocolHandler {
       }
     }
     else if(Launch.getOs() == Launch.OS_WINDOWS) {
-      File exe = new File(TVBrowser.isTransportable() ? "tvbrowser-transportable.exe" : "tvbrowser.exe");
-      RegistryEditor ed = RegistryEditor.create();
-      
-      ed.setValue("HKEY_CLASSES_ROOT\\tvb", new RegistryValue("", RegistryValue.TYPE_REG_SZ, "URL:tvb Protocol"));
-      ed.setValue("HKEY_CLASSES_ROOT\\tvb", new RegistryValue("URL Protocol", RegistryValue.TYPE_REG_SZ, ""));
-      ed.setValue("HKEY_CLASSES_ROOT\\tvb\\DefaultIcon", new RegistryValue("", RegistryValue.TYPE_REG_SZ, "\""+exe.getAbsolutePath()+"\""));
-      ed.setValue("HKEY_CLASSES_ROOT\\tvb\\shell\\open\\command", new RegistryValue("", RegistryValue.TYPE_REG_SZ, "\""+exe.getAbsolutePath()+"\" \"%1\""));
-      
-      ed.commit("addTvbProtocolToRegistry");
+      enableWindows();
     }
     
     mIsEnabled = true;
   }
   
-  private void disable() {
+  private void enableWindows() {
+    File exe = new File(TVBrowser.isTransportable() ? "tvbrowser-transportable.exe" : "tvbrowser.exe");
+    RegistryKey key = new RegistryKey(RegistryKey.HKEY_CURRENT_USER, "SOFTWARE\\Classes\\tvb");
+    key.setValue(new RegistryValue("\"\"", RegistryValue.TYPE_REG_SZ, "URL:tvb Protocol"));
+    key.setValue(new RegistryValue("URL Protocol", RegistryValue.TYPE_REG_SZ, "\"\""));
+    
+    key = new RegistryKey(RegistryKey.HKEY_CURRENT_USER, "SOFTWARE\\Classes\\tvb\\DefaultIcon");
+    key.setValue(new RegistryValue("\"\"", RegistryValue.TYPE_REG_SZ, "\\\""+exe.getAbsolutePath()+"\\\""));
+    
+    key = new RegistryKey(RegistryKey.HKEY_CURRENT_USER, "SOFTWARE\\Classes\\tvb\\shell\\open\\command");
+    key.setValue(new RegistryValue("\"\"", RegistryValue.TYPE_REG_SZ, "\\\""+exe.getAbsolutePath()+"\\\" \\\"%1\\\""));
+  }
+  
+  private void disable(boolean fromSettings) {
     if(Launch.getOs() == Launch.OS_LINUX) {
       final File target = new File(System.getProperty("user.home")+"/.local/share/applications/tvbrowserWebstart.desktop");
       
@@ -467,12 +475,8 @@ public class ProtocolHandler {
       }
     }
     else if(Launch.getOs() == Launch.OS_WINDOWS) {
-      if(DontShowAgainOptionBox.showOptionDialog("tvbProtocolDeleteTarget", UiUtilities.getParentFrameOnMouseScreen(), LOCALIZER.msg("disable.msg", "The receiving of protocol message via tvb:\\ was deactivated.\n\nDo you want to remove the tvb:\\ protocol from your Windows system (Administrator rights needed)?"), LOCALIZER.msg("disable.title", "Remove tvb:\\ protocol from Windows?"), JOptionPane.QUESTION_MESSAGE, JOptionPane.YES_NO_CANCEL_OPTION) == JOptionPane.YES_OPTION) {
-        RegistryEditor ed = RegistryEditor.create();
-        
-        ed.setValue("-HKEY_CLASSES_ROOT\\tvb", null);
-        ed.commit("removeTvbProtocolToRegistry");
-      }
+      RegistryKey key = new RegistryKey(RegistryKey.HKEY_CURRENT_USER, "SOFTWARE\\Classes\\tvb");
+      key.delete();
     }
     
     mIsEnabled = false;
