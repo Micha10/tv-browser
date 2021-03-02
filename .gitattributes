@@ -2328,6 +2328,7 @@ tvbrowser/src/devplugin/FilterManager.java -text
 tvbrowser/src/devplugin/PluginCenterPanel.java -text
 tvbrowser/src/devplugin/PluginCenterPanelWrapper.java -text
 tvbrowser/src/devplugin/PluginCommunication.java -text
+tvbrowser/src/devplugin/PluginProgramInformation.java -text svneol=unset#text/plain
 tvbrowser/src/devplugin/PluginsFilterComponent.java -text
 tvbrowser/src/devplugin/PluginsProgramFilter.java -text
 tvbrowser/src/devplugin/ProgramInfo.java -text svneol=unset#text/plain

@@ -23,6 +23,7 @@ import devplugin.Plugin;
 import devplugin.PluginCenterPanelWrapper;
 import devplugin.PluginCommunication;
 import devplugin.PluginInfo;
+import devplugin.PluginProgramInformation;
 import devplugin.PluginTreeNode;
 import devplugin.PluginsFilterComponent;
 import devplugin.PluginsProgramFilter;
@@ -362,6 +363,12 @@ public class BeanShellPluginProxy extends AbstractPluginProxy {
 
     @Override
     protected int[] doGetMarkPrioritiesForProgram(Program p) {
+      // TODO Auto-generated method stub
+      return null;
+    }
+
+    @Override
+    public PluginProgramInformation doGetProgramInformation(Program p, String informationKey) {
       // TODO Auto-generated method stub
       return null;
     }

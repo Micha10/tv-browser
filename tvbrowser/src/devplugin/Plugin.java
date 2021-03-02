@@ -1172,4 +1172,19 @@ abstract public class Plugin implements Marker, ContextMenuIf, ProgramReceiveIf 
   public ProgramInfo[] getAddtionalProgramInfoForProgram(Program p, String uniqueId) {
     return null;
   }
+  
+  /**
+   * Gets key-value based information about an plugin like a rating or any other kind of
+   * information about the given program.
+   * <p>
+   * @param p The program to get the info for.
+   * @param informationKey The key of the information to get or <code>null</code> if
+   *        all information about the program should be returned.
+   * @return The program information for the given key or <code>null</code> if no information
+   *         about the program exists in this plugin.
+   * @since 4.2.3
+   */
+  public PluginProgramInformation getProgramInformation(Program p, String informationKey) {
+    return null;
+  }
 }

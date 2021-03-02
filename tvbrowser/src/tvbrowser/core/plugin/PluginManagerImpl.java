@@ -35,6 +35,7 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.TimeZone;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.swing.Action;
@@ -52,6 +53,7 @@ import devplugin.FilterManager;
 import devplugin.Plugin;
 import devplugin.PluginAccess;
 import devplugin.PluginManager;
+import devplugin.PluginProgramInformation;
 import devplugin.Program;
 import devplugin.ProgramFieldType;
 import devplugin.ProgramRatingIf;
@@ -138,7 +140,7 @@ public class PluginManagerImpl implements PluginManager {
   private Program mExampleProgram;
 
    /** The logger for this class */
-  private static final Logger mLog
+  private static final Logger LOG
     = Logger.getLogger(PluginManagerImpl.class.getName());
 
   /**
@@ -162,7 +164,7 @@ public class PluginManagerImpl implements PluginManager {
     }
   };
 
-  private static PluginManagerImpl mInstance;
+  private static PluginManagerImpl INSTANCE;
   
   private boolean mTvBrowserStartFinished = false;
   private TvBrowserSettingsImpl mTvBrowserSettings;
@@ -189,10 +191,10 @@ public class PluginManagerImpl implements PluginManager {
    * @return The instance of this class.
    */
   public static PluginManager getInstance() {
-    if (mInstance == null) {
-      mInstance = new PluginManagerImpl();
+    if (INSTANCE == null) {
+      INSTANCE = new PluginManagerImpl();
     }
-    return mInstance;
+    return INSTANCE;
   }
   
   private boolean checkChannelAccess(Channel ch) {
@@ -231,11 +233,11 @@ public class PluginManagerImpl implements PluginManager {
           return prog;
         }
         else if(date.compareTo(cutoff) >= 0) {
-          mLog.warning("could not find program with id '"+progID+"' (date: "+date+")");
+          LOG.warning("could not find program with id '"+progID+"' (date: "+date+")");
         }
       }
       else if(date.compareTo(cutoff) >= 0) {
-        mLog.warning("day program not found: "+progID+"; "+date);
+        LOG.warning("day program not found: "+progID+"; "+date);
       }
     }
 
@@ -308,7 +310,7 @@ public class PluginManagerImpl implements PluginManager {
       
       return db.getDayProgram(date, ch);
     }else{
-      mLog.warning("channel for program '"+progID+"' not found or not a subscribed channel");
+      LOG.warning("channel for program '"+progID+"' not found or not a subscribed channel");
     }
 
     return null;
@@ -333,11 +335,11 @@ public class PluginManagerImpl implements PluginManager {
           return progs;
         }
         else {
-          mLog.warning("could not find program with id '"+progID+"' (date: "+date+")");
+          LOG.warning("could not find program with id '"+progID+"' (date: "+date+")");
         }
       }
       else {
-        mLog.warning("day program not found: "+progID+"; "+date);
+        LOG.warning("day program not found: "+progID+"; "+date);
       }
     }
 
@@ -374,7 +376,7 @@ public class PluginManagerImpl implements PluginManager {
       cal.setTimeInMillis(date.getTime());
       progDate = new Date(cal);
     } catch (ParseException e) {
-      mLog.severe("Couldn't parse date from unique ID");
+      LOG.severe("Couldn't parse date from unique ID");
       return null;
     }
     
@@ -1248,5 +1250,41 @@ public class PluginManagerImpl implements PluginManager {
   @Override
   public JMenuItem getPluginContextMenu(Program program, String id) {
     return ContextMenuManager.getInstance().getPluginContextMenu(program, id);
+  }
+
+  @Override
+  public PluginProgramInformation[] getProgramInformation(String informationKey, Program program) {
+    ArrayList<PluginProgramInformation> result = new ArrayList<PluginProgramInformation>();
+    PluginAccess[] plugins = getActivatedPlugins();
+    
+    for(PluginAccess plugin : plugins) {
+      try {
+        PluginProgramInformation info = plugin.getProgramInformation(program, informationKey);
+        
+        if(info != null) {
+          result.add(info);
+        }
+      }catch(Throwable t) {
+        LOG.log(Level.WARNING, "Plugin with ID '"+plugin.getId()+"' caused error at getting ProgramInformation.",t);
+      }
+    }
+    
+    return result.toArray(new PluginProgramInformation[0]);
+  }
+
+  @Override
+  public PluginProgramInformation getProgramInformationForPlugin(String pluginId, String informationKey, Program program) {
+    PluginAccess plugin = getActivatedPluginForId(pluginId);
+    PluginProgramInformation info = null;
+    
+    if(plugin != null) {
+      try {
+        info = plugin.getProgramInformation(program, informationKey);
+      }catch(Throwable t) {
+        LOG.log(Level.WARNING, "Plugin with ID '"+plugin.getId()+"' caused error at getting ProgramInformation.",t);
+      }
+    }
+    
+    return info;
   }
 }

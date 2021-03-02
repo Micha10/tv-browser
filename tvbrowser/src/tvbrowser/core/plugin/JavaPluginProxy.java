@@ -52,6 +52,7 @@ import devplugin.Plugin;
 import devplugin.PluginCenterPanelWrapper;
 import devplugin.PluginCommunication;
 import devplugin.PluginInfo;
+import devplugin.PluginProgramInformation;
 import devplugin.PluginTreeNode;
 import devplugin.PluginsFilterComponent;
 import devplugin.PluginsProgramFilter;
@@ -828,5 +829,10 @@ public class JavaPluginProxy extends AbstractPluginProxy {
   @Override
   protected int[] doGetMarkPrioritiesForProgram(Program p) {
     return mPlugin.getMarkPrioritiesForProgram(p);
+  }
+
+  @Override
+  public PluginProgramInformation doGetProgramInformation(Program p, String informationKey) {
+    return mPlugin.getProgramInformation(p, informationKey);
   }
 }

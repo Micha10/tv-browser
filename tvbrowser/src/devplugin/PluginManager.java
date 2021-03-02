@@ -591,4 +591,29 @@ public interface PluginManager {
    * @since 3.4.2
    */
   public ProgressMonitorExtended createProgressMonitor();
+  
+  /**
+   * Gets the program information of all plugins for given program.
+   * <p>
+   * @param informationKey The key for the information to get or <code>null</code>
+   *        if all program information regardless of key should be returned.
+   * @param program The program to get the information for.
+   * @return The program information for given key or an empty array if no program information
+   *         with the given key exists for any activated plugin.
+   * @since 4.2.3
+   */
+  public PluginProgramInformation[] getProgramInformation(final String informationKey, final Program program);
+  
+  /**
+   * Gets the program information of the activated plugin with the given pluginId for given program.
+   * <p>
+   * @param pluginId The id of the plugin to get the information from.
+   * @param informationKey The key for the information to get or <code>null</code>
+   *        if all program information regardless of key should be returned. 
+   * @param program The program to get the information for.
+   * @return The program information for given key or <code>null</code> if no program information
+   *         with the given key exists or the plugin doesn't exists or is not activated.
+   * @since 4.2.3
+   */
+  public PluginProgramInformation getProgramInformationForPlugin(final String pluginId, final String informationKey, final Program program);
 }
