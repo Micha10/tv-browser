@@ -68,6 +68,7 @@ import javax.swing.Icon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
+import javax.swing.JEditorPane;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JList;
@@ -84,10 +85,22 @@ import javax.swing.event.AncestorEvent;
 import javax.swing.event.AncestorListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+import com.jgoodies.forms.factories.CC;
+import com.jgoodies.forms.factories.DefaultComponentFactory;
+import com.jgoodies.forms.layout.CellConstraints;
+import com.jgoodies.forms.layout.FormLayout;
+import com.jgoodies.forms.layout.Sizes;
+
+import devplugin.Channel;
+import devplugin.PluginAccess;
+import devplugin.PluginCommunication;
+import devplugin.SettingsItem;
+import devplugin.SettingsTab;
 import tvbrowser.core.ChannelList;
 import tvbrowser.core.DummyChannel;
 import tvbrowser.core.PluginLoader;
@@ -110,6 +123,7 @@ import tvbrowser.ui.settings.channel.FilteredChannelListCellRenderer;
 import tvbrowser.ui.settings.channel.MultiChannelConfigDlg;
 import tvbrowser.ui.settings.util.LineButton;
 import util.exc.TvBrowserException;
+import util.i18n.Localizer;
 import util.io.IOUtilities;
 import util.io.NetworkUtilities;
 import util.ui.ChannelContextMenu;
@@ -118,23 +132,11 @@ import util.ui.DragAndDropMouseListener;
 import util.ui.LinkButton;
 import util.ui.ListDragAndDropHandler;
 import util.ui.ListDropAction;
-import util.i18n.Localizer;
 import util.ui.TVBrowserIcons;
 import util.ui.UiUtilities;
 import util.ui.customizableitems.SortableItemList;
 import util.ui.progress.Progress;
 import util.ui.progress.ProgressWindow;
-
-import com.jgoodies.forms.factories.CC;
-import com.jgoodies.forms.factories.DefaultComponentFactory;
-import com.jgoodies.forms.layout.CellConstraints;
-import com.jgoodies.forms.layout.FormLayout;
-import com.jgoodies.forms.layout.Sizes;
-
-import devplugin.Channel;
-import devplugin.PluginAccess;
-import devplugin.PluginCommunication;
-import devplugin.SettingsTab;
 
 /**
  * This Class represents the Channel-Settings-Tab
@@ -239,272 +241,285 @@ public class ChannelsSettingsTab implements SettingsTab, ListDropAction<Object> 
    * @return the SettingsPanel
    */
   public JPanel createSettingsPanel() {
-    mChannelListModel = new ChannelListModel();
-    final JPanel panel = new JPanel(new BorderLayout());
-
-    JPanel northPn = new JPanel(new GridLayout(1, 2));
-    JPanel centerPn = new JPanel(new GridLayout(1, 2));
-    JPanel southPn = new JPanel(new BorderLayout());
-    southPn.setBorder(BorderFactory.createEmptyBorder(5, 0, 5, 0));
-
-    panel.add(northPn, BorderLayout.NORTH);
-    panel.add(centerPn, BorderLayout.CENTER);
-    panel.add(southPn, BorderLayout.SOUTH);
-
-    mAvailableSeparator = DefaultComponentFactory.getInstance()
-        .createSeparator(
-            LOCALIZER.msg("availableChannels", "Available channels") + ":");
-    mAvailableSeparator.setBorder(BorderFactory.createEmptyBorder(5, 0, 5, 5));
-
-    mSubscribedSeparator = DefaultComponentFactory.getInstance()
-        .createSeparator(
-            LOCALIZER.msg("subscribedChannels", "Subscribed channels") + ":");
-    mSubscribedSeparator.setBorder(BorderFactory.createEmptyBorder(5, 0, 5, 5));
-
-    northPn.add(mAvailableSeparator, BorderLayout.NORTH);
-    northPn.add(mSubscribedSeparator, BorderLayout.NORTH);
-
-    // left list box
-    JPanel listBoxPnLeft = new JPanel(new BorderLayout());
-    mAllChannels = new ChannelJList(new DefaultListModel<Object>());
-    mAllChannels.setCellRenderer(new ChannelListCellRenderer(true, true, true, true, false, true));
-
-    listBoxPnLeft.add(new JScrollPane(mAllChannels), BorderLayout.CENTER);
+    final JPanel result = new JPanel(new BorderLayout());
     
-    centerPn.add(listBoxPnLeft);
-
-    mRightButton = new JButton(TVBrowserIcons.right(TVBrowserIcons.SIZE_LARGE));
-
-    mRightButton.addActionListener(e -> {
-      moveChannelsToRight();
-    });
-
-    mLeftButton = new JButton(TVBrowserIcons.left(TVBrowserIcons.SIZE_LARGE));
-
-    mLeftButton.addActionListener(e -> {
-      moveChannelsToLeft();
-    });
-    
-    mButtonAddSeparator = new LineButton();
-    mButtonAddSeparator.setToolTipText(LOCALIZER.msg("addSeparator", "Add separator"));
-    mButtonAddSeparator.addActionListener(e -> {
-      int index = mSubscribedChannels.getSelectedIndex()+1;
-      Object test = mSubscribedChannels.getSelectedValue();
+    if(TvDataServiceProxyManager.getInstance().getDataServices().length >= 1) {
+      mChannelListModel = new ChannelListModel();
+      final JPanel panel = new JPanel(new BorderLayout());
+  
+      JPanel northPn = new JPanel(new GridLayout(1, 2));
+      JPanel centerPn = new JPanel(new GridLayout(1, 2));
+      JPanel southPn = new JPanel(new BorderLayout());
+      southPn.setBorder(BorderFactory.createEmptyBorder(5, 0, 5, 0));
+  
+      panel.add(northPn, BorderLayout.NORTH);
+      panel.add(centerPn, BorderLayout.CENTER);
+      panel.add(southPn, BorderLayout.SOUTH);
+  
+      mAvailableSeparator = DefaultComponentFactory.getInstance()
+          .createSeparator(
+              LOCALIZER.msg("availableChannels", "Available channels") + ":");
+      mAvailableSeparator.setBorder(BorderFactory.createEmptyBorder(5, 0, 5, 5));
+  
+      mSubscribedSeparator = DefaultComponentFactory.getInstance()
+          .createSeparator(
+              LOCALIZER.msg("subscribedChannels", "Subscribed channels") + ":");
+      mSubscribedSeparator.setBorder(BorderFactory.createEmptyBorder(5, 0, 5, 5));
+  
+      northPn.add(mAvailableSeparator, BorderLayout.NORTH);
+      northPn.add(mSubscribedSeparator, BorderLayout.NORTH);
+  
+      // left list box
+      JPanel listBoxPnLeft = new JPanel(new BorderLayout());
+      mAllChannels = new ChannelJList(new DefaultListModel<Object>());
+      mAllChannels.setCellRenderer(new ChannelListCellRenderer(true, true, true, true, false, true));
+  
+      listBoxPnLeft.add(new JScrollPane(mAllChannels), BorderLayout.CENTER);
       
-      if(test instanceof Channel && ((Channel) test).getJointChannel() != null) {
-        index++;
-      }
+      centerPn.add(listBoxPnLeft);
+  
+      mRightButton = new JButton(TVBrowserIcons.right(TVBrowserIcons.SIZE_LARGE));
+  
+      mRightButton.addActionListener(e -> {
+        moveChannelsToRight();
+      });
+  
+      mLeftButton = new JButton(TVBrowserIcons.left(TVBrowserIcons.SIZE_LARGE));
+  
+      mLeftButton.addActionListener(e -> {
+        moveChannelsToLeft();
+      });
       
-      ((DefaultListModel<Object>)mSubscribedChannels.getModel()).insertElementAt(Channel.SEPARATOR,index);
-    });
-    
-    mButtonAddSeparator.setSize(TVBrowserIcons.SIZE_LARGE, TVBrowserIcons.SIZE_LARGE);
-    
-    (new DragSource()).createDefaultDragGestureRecognizer(mButtonAddSeparator,
-        DnDConstants.ACTION_MOVE, new DragGestureListener() {
-          @Override
-          public void dragGestureRecognized(DragGestureEvent dge) {            
-            dge.startDrag(null, new StringSelection(Channel.SEPARATOR));
-            dge.getComponent().dispatchEvent(new MouseEvent(dge.getComponent(), MouseEvent.MOUSE_EXITED, System.currentTimeMillis(), 0, 0, 0, 0, false, MouseEvent.NOBUTTON));
-          }
-        });
-    
-    mButtonDeleteSeparator = new JButton(TVBrowserIcons.delete(TVBrowserIcons.SIZE_LARGE));
-    mButtonDeleteSeparator.setToolTipText(LOCALIZER.msg("deleteSeparator", "Delete selected separator"));
-    mButtonDeleteSeparator.addActionListener(e -> {
-      int index = mSubscribedChannels.getSelectedIndex();
+      mButtonAddSeparator = new LineButton();
+      mButtonAddSeparator.setToolTipText(LOCALIZER.msg("addSeparator", "Add separator"));
+      mButtonAddSeparator.addActionListener(e -> {
+        int index = mSubscribedChannels.getSelectedIndex()+1;
+        Object test = mSubscribedChannels.getSelectedValue();
+        
+        if(test instanceof Channel && ((Channel) test).getJointChannel() != null) {
+          index++;
+        }
+        
+        ((DefaultListModel<Object>)mSubscribedChannels.getModel()).insertElementAt(Channel.SEPARATOR,index);
+      });
       
-      ((DefaultListModel<Object>)mSubscribedChannels.getModel()).remove(index);
+      mButtonAddSeparator.setSize(TVBrowserIcons.SIZE_LARGE, TVBrowserIcons.SIZE_LARGE);
+      
+      (new DragSource()).createDefaultDragGestureRecognizer(mButtonAddSeparator,
+          DnDConstants.ACTION_MOVE, new DragGestureListener() {
+            @Override
+            public void dragGestureRecognized(DragGestureEvent dge) {            
+              dge.startDrag(null, new StringSelection(Channel.SEPARATOR));
+              dge.getComponent().dispatchEvent(new MouseEvent(dge.getComponent(), MouseEvent.MOUSE_EXITED, System.currentTimeMillis(), 0, 0, 0, 0, false, MouseEvent.NOBUTTON));
+            }
+          });
+      
+      mButtonDeleteSeparator = new JButton(TVBrowserIcons.delete(TVBrowserIcons.SIZE_LARGE));
+      mButtonDeleteSeparator.setToolTipText(LOCALIZER.msg("deleteSeparator", "Delete selected separator"));
+      mButtonDeleteSeparator.addActionListener(e -> {
+        int index = mSubscribedChannels.getSelectedIndex();
+        
+        ((DefaultListModel<Object>)mSubscribedChannels.getModel()).remove(index);
+        mButtonDeleteSeparator.setEnabled(false);
+        
+        if(index < mSubscribedChannels.getModel().getSize()) {
+          mSubscribedChannels.setSelectedIndex(index);
+        }
+      });
+      
       mButtonDeleteSeparator.setEnabled(false);
       
-      if(index < mSubscribedChannels.getModel().getSize()) {
-        mSubscribedChannels.setSelectedIndex(index);
-      }
-    });
-    
-    mButtonDeleteSeparator.setEnabled(false);
-    
-    JPanel btnPanel = createButtonPn(mRightButton, mLeftButton, mButtonAddSeparator, mButtonDeleteSeparator);
-    btnPanel.setBorder(BorderFactory.createEmptyBorder(0, Sizes
-        .dialogUnitXAsPixel(3, btnPanel), 0, Sizes.dialogUnitXAsPixel(3,
-        btnPanel)));
-    listBoxPnLeft.add(btnPanel, BorderLayout.EAST);
-
-    // right list box
-    JPanel listBoxPnRight = new JPanel(new BorderLayout());
-    SortableItemList<Object> channelList = new SortableItemList<>(new ChannelJList());
-
-    mSubscribedChannels = channelList.getList();
-    mFilter = new ChannelFilter();
-    mSubscribedChannels.setCellRenderer(new FilteredChannelListCellRenderer(mFilter));
-    
-    // Register DnD on the lists.
-    mDnDHandler = new ListDragAndDropHandler(mAllChannels, mSubscribedChannels, this, false, true);
-    mDnDHandler.setPaintCueLine(false, true);
-
-    // Register the listener for DnD on the lists.
-    new DragAndDropMouseListener<Object>(mAllChannels, mSubscribedChannels, this,
-        mDnDHandler);
-    mSubscribedChannelListener = new DragAndDropMouseListener<Object>(
-        mSubscribedChannels, mAllChannels, this, mDnDHandler);
-    
-    restoreForPopup();
-    
-    mImExportChannels = new JButton(LOCALIZER.msg("imExportChannels", "Export/import channels"));
-    mImExportChannels.addActionListener(e -> {
-      showImExportSelection();
-    });
-    
-    loadSyncCommunication();
-    
-    listBoxPnRight.add(mImExportChannels, BorderLayout.NORTH);
-    
-    listBoxPnRight.add(new JScrollPane(mSubscribedChannels),
-        BorderLayout.CENTER);
-
-    final JButton setSortNumbers = new JButton(LOCALIZER.msg("setSortNumbers", "Set sort numbers"));
-    setSortNumbers.setEnabled(false);
-    
-    setSortNumbers.addActionListener(e -> {
-      setSortNumbers();
-    });
-    
-    final JButton configureChannels = new JButton(LOCALIZER.msg(
-        "configSelectedChannels", "Configure selected channels"));
-    configureChannels.setEnabled(false);
-
-    configureChannels.addActionListener(e -> {
-      configChannels();
-    });
-    
-    mSubscribedChannels.addListSelectionListener(e -> {
-      if (mSubscribedChannels.getSelectedValuesList().size() > 0 && !(mSubscribedChannels.getSelectedValue() instanceof DummyChannel) && !(mSubscribedChannels.getSelectedValue() instanceof String)) {
-        configureChannels.setEnabled(true);
-        setSortNumbers.setEnabled(true);
-        mButtonDeleteSeparator.setEnabled(false);
-      } else {
-        configureChannels.setEnabled(false);
-        setSortNumbers.setEnabled(false);
-        
-        if(mSubscribedChannels.getSelectedValue() instanceof String) {
-          mButtonDeleteSeparator.setEnabled(true);
-        }
-      }
-    });
-
-    // use INSERT key on left side to move selected channels to active channel
-    // list
-    mAllChannels.addKeyListener(new KeyAdapter() {
-      public void keyPressed(KeyEvent e) {
-        if (e.getKeyCode() == KeyEvent.VK_INSERT) {
-          moveChannelsToRight();
-        }
-      }
-    });
-
-    // use DELETE key on right side to remove selected channels
-    mSubscribedChannels.addKeyListener(new KeyAdapter() {
-      public void keyPressed(KeyEvent e) {
-        if (e.getKeyCode() == KeyEvent.VK_DELETE) {
-          moveChannelsToLeft();
-        }
-      }
-    });
-
-    JPanel btnPanel2 = createButtonPn(channelList.getTopButton(), channelList
-        .getUpButton(), channelList.getDownButton(), channelList
-        .getBottomButton());
-    btnPanel2.setBorder(BorderFactory.createEmptyBorder(0, Sizes
-        .dialogUnitXAsPixel(3, btnPanel2), 0, 0));
-    listBoxPnRight.add(btnPanel2, BorderLayout.EAST);
-
-    centerPn.add(listBoxPnRight);
-
-    final JPanel result = new JPanel(new BorderLayout());
-    result.addComponentListener(new ComponentAdapter() {
-
-      @Override
-      public void componentHidden(ComponentEvent e) {
-        if (e.getComponent() == result) {
-          mRefreshListTimer = null;
-        }
-      }
-
-    });
-
-    result.add(createFilterPanel(), BorderLayout.NORTH);
-
-    result.add(panel, BorderLayout.CENTER);
-
-    LinkButton urlLabel = new LinkButton(
-        LOCALIZER
-            .msg(
-                "addMoreChannels",
-                "You want to add your own channels? Click here!"),
-        LOCALIZER.msg("addMoreChannelsUrl",
-            "http://enwiki.tvbrowser.org/index.php/Available_stations"));
-
-    JPanel buttonsPanel = new JPanel(new BorderLayout());
-
-    // buttonsPanel.add(pn2, BorderLayout.EAST);
-    buttonsPanel.add(urlLabel, BorderLayout.SOUTH);
-
-    result.add(buttonsPanel, BorderLayout.SOUTH);
-
-    JButton refreshList = new JButton(LOCALIZER.msg("updateChannelList",
-        "Update channel list"), TVBrowserIcons.refresh(TVBrowserIcons.SIZE_SMALL));
-
-    refreshList.addActionListener(e -> {
-      refreshChannelList();
-    });
-
-    southPn.add(refreshList, BorderLayout.WEST);
-    
-    JPanel buttons = new JPanel(new FormLayout("default,3dlu,default","default"));
-    buttons.add(setSortNumbers, CC.xy(1, 1));
-    buttons.add(configureChannels, CC.xy(3, 1));
-    
-    southPn.add(buttons, BorderLayout.EAST);
-
-    mListUpdating = true;
-    updateFilterPanel();
-    fillSubscribedChannelsListBox();
-    fillAvailableChannelsListBox();
-    mListUpdating = false;
-
-    panel.addAncestorListener(new AncestorListener() {
-      public void ancestorRemoved(AncestorEvent event) {
-        Settings.propSelectedChannelCategoryIndex.setByte((byte)mCategoryCB.getSelectedIndex());
-        String country = "";
-        if (mCountryCB.getSelectedIndex() >= 0) {
-          Object object = ((FilterItem)mCountryCB.getSelectedItem()).getValue();
-          if (object != null) {
-            country = object.toString();
-          }
-        }
-        Settings.propSelectedChannelCountry.setString(country);
-      }
-
-      public void ancestorAdded(AncestorEvent event) {
-        if (!mInitChannelsAsked && mChannelListModel.getAvailableChannels().length == 0){
-          mInitChannelsAsked = true;
-          int ret = JOptionPane.showConfirmDialog(result,
-              LOCALIZER.msg("loadChannelsQuestion", "Should I download the channel list?"),
-              LOCALIZER.msg("loadChannelsTitle", "No channels found"),
-              JOptionPane.YES_NO_OPTION);
-          if (ret == JOptionPane.YES_OPTION) {
-            refreshChannelList();
-          }
-        }
-      }
-
-      public void ancestorMoved(AncestorEvent event) {}
-    });
-
-    if(mIsWizard) {
-      SwingUtilities.invokeLater(() -> {
-        askForSynchronization(mSyncCommunication == null);
+      JPanel btnPanel = createButtonPn(mRightButton, mLeftButton, mButtonAddSeparator, mButtonDeleteSeparator);
+      btnPanel.setBorder(BorderFactory.createEmptyBorder(0, Sizes
+          .dialogUnitXAsPixel(3, btnPanel), 0, Sizes.dialogUnitXAsPixel(3,
+          btnPanel)));
+      listBoxPnLeft.add(btnPanel, BorderLayout.EAST);
+  
+      // right list box
+      JPanel listBoxPnRight = new JPanel(new BorderLayout());
+      SortableItemList<Object> channelList = new SortableItemList<>(new ChannelJList());
+  
+      mSubscribedChannels = channelList.getList();
+      mFilter = new ChannelFilter();
+      mSubscribedChannels.setCellRenderer(new FilteredChannelListCellRenderer(mFilter));
+      
+      // Register DnD on the lists.
+      mDnDHandler = new ListDragAndDropHandler(mAllChannels, mSubscribedChannels, this, false, true);
+      mDnDHandler.setPaintCueLine(false, true);
+  
+      // Register the listener for DnD on the lists.
+      new DragAndDropMouseListener<Object>(mAllChannels, mSubscribedChannels, this,
+          mDnDHandler);
+      mSubscribedChannelListener = new DragAndDropMouseListener<Object>(
+          mSubscribedChannels, mAllChannels, this, mDnDHandler);
+      
+      restoreForPopup();
+      
+      mImExportChannels = new JButton(LOCALIZER.msg("imExportChannels", "Export/import channels"));
+      mImExportChannels.addActionListener(e -> {
+        showImExportSelection();
       });
+      
+      loadSyncCommunication();
+      
+      listBoxPnRight.add(mImExportChannels, BorderLayout.NORTH);
+      
+      listBoxPnRight.add(new JScrollPane(mSubscribedChannels),
+          BorderLayout.CENTER);
+  
+      final JButton setSortNumbers = new JButton(LOCALIZER.msg("setSortNumbers", "Set sort numbers"));
+      setSortNumbers.setEnabled(false);
+      
+      setSortNumbers.addActionListener(e -> {
+        setSortNumbers();
+      });
+      
+      final JButton configureChannels = new JButton(LOCALIZER.msg(
+          "configSelectedChannels", "Configure selected channels"));
+      configureChannels.setEnabled(false);
+  
+      configureChannels.addActionListener(e -> {
+        configChannels();
+      });
+      
+      mSubscribedChannels.addListSelectionListener(e -> {
+        if (mSubscribedChannels.getSelectedValuesList().size() > 0 && !(mSubscribedChannels.getSelectedValue() instanceof DummyChannel) && !(mSubscribedChannels.getSelectedValue() instanceof String)) {
+          configureChannels.setEnabled(true);
+          setSortNumbers.setEnabled(true);
+          mButtonDeleteSeparator.setEnabled(false);
+        } else {
+          configureChannels.setEnabled(false);
+          setSortNumbers.setEnabled(false);
+          
+          if(mSubscribedChannels.getSelectedValue() instanceof String) {
+            mButtonDeleteSeparator.setEnabled(true);
+          }
+        }
+      });
+  
+      // use INSERT key on left side to move selected channels to active channel
+      // list
+      mAllChannels.addKeyListener(new KeyAdapter() {
+        public void keyPressed(KeyEvent e) {
+          if (e.getKeyCode() == KeyEvent.VK_INSERT) {
+            moveChannelsToRight();
+          }
+        }
+      });
+  
+      // use DELETE key on right side to remove selected channels
+      mSubscribedChannels.addKeyListener(new KeyAdapter() {
+        public void keyPressed(KeyEvent e) {
+          if (e.getKeyCode() == KeyEvent.VK_DELETE) {
+            moveChannelsToLeft();
+          }
+        }
+      });
+  
+      JPanel btnPanel2 = createButtonPn(channelList.getTopButton(), channelList
+          .getUpButton(), channelList.getDownButton(), channelList
+          .getBottomButton());
+      btnPanel2.setBorder(BorderFactory.createEmptyBorder(0, Sizes
+          .dialogUnitXAsPixel(3, btnPanel2), 0, 0));
+      listBoxPnRight.add(btnPanel2, BorderLayout.EAST);
+  
+      centerPn.add(listBoxPnRight);
+  
+      
+      result.addComponentListener(new ComponentAdapter() {
+  
+        @Override
+        public void componentHidden(ComponentEvent e) {
+          if (e.getComponent() == result) {
+            mRefreshListTimer = null;
+          }
+        }
+  
+      });
+  
+      result.add(createFilterPanel(), BorderLayout.NORTH);
+  
+      result.add(panel, BorderLayout.CENTER);
+  
+      LinkButton urlLabel = new LinkButton(
+          LOCALIZER
+              .msg(
+                  "addMoreChannels",
+                  "You want to add your own channels? Click here!"),
+          LOCALIZER.msg("addMoreChannelsUrl",
+              "http://enwiki.tvbrowser.org/index.php/Available_stations"));
+  
+      JPanel buttonsPanel = new JPanel(new BorderLayout());
+  
+      // buttonsPanel.add(pn2, BorderLayout.EAST);
+      buttonsPanel.add(urlLabel, BorderLayout.SOUTH);
+  
+      result.add(buttonsPanel, BorderLayout.SOUTH);
+  
+      JButton refreshList = new JButton(LOCALIZER.msg("updateChannelList",
+          "Update channel list"), TVBrowserIcons.refresh(TVBrowserIcons.SIZE_SMALL));
+  
+      refreshList.addActionListener(e -> {
+        refreshChannelList();
+      });
+  
+      southPn.add(refreshList, BorderLayout.WEST);
+      
+      JPanel buttons = new JPanel(new FormLayout("default,3dlu,default","default"));
+      buttons.add(setSortNumbers, CC.xy(1, 1));
+      buttons.add(configureChannels, CC.xy(3, 1));
+      
+      southPn.add(buttons, BorderLayout.EAST);
+  
+      mListUpdating = true;
+      updateFilterPanel();
+      fillSubscribedChannelsListBox();
+      fillAvailableChannelsListBox();
+      mListUpdating = false;
+  
+      panel.addAncestorListener(new AncestorListener() {
+        public void ancestorRemoved(AncestorEvent event) {
+          Settings.propSelectedChannelCategoryIndex.setByte((byte)mCategoryCB.getSelectedIndex());
+          String country = "";
+          if (mCountryCB.getSelectedIndex() >= 0) {
+            Object object = ((FilterItem)mCountryCB.getSelectedItem()).getValue();
+            if (object != null) {
+              country = object.toString();
+            }
+          }
+          Settings.propSelectedChannelCountry.setString(country);
+        }
+  
+        public void ancestorAdded(AncestorEvent event) {
+          if (!mInitChannelsAsked && mChannelListModel.getAvailableChannels().length == 0){
+            mInitChannelsAsked = true;
+            int ret = JOptionPane.showConfirmDialog(result,
+                LOCALIZER.msg("loadChannelsQuestion", "Should I download the channel list?"),
+                LOCALIZER.msg("loadChannelsTitle", "No channels found"),
+                JOptionPane.YES_NO_OPTION);
+            if (ret == JOptionPane.YES_OPTION) {
+              refreshChannelList();
+            }
+          }
+        }
+  
+        public void ancestorMoved(AncestorEvent event) {}
+      });
+  
+      if(mIsWizard) {
+        SwingUtilities.invokeLater(() -> {
+          askForSynchronization(mSyncCommunication == null);
+        });
+      }
+    }
+    else {
+      JEditorPane pane = UiUtilities.createHtmlHelpTextArea(LOCALIZER.msg("noDataPlugins", "<html>You need to <a href=\"#plugins\">install</a> at least one data plugin before you can configure the channels.</html>"), e -> {
+        if(e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
+          SettingsDialog.getInstance().showSettingsTab(SettingsItem.PLUGINS);
+        }
+      });
+      
+      result.add(pane, BorderLayout.CENTER);
     }
     
     result.setBorder(BorderFactory.createEmptyBorder(9, 9, 9, 9));
@@ -1400,6 +1415,18 @@ public class ChannelsSettingsTab implements SettingsTab, ListDropAction<Object> 
     if (mAllChannels.getModel().getSize() == 0) {
       ((DefaultListModel<Object>) mAllChannels.getModel()).addElement(LOCALIZER.msg(
           "noChannelFound", "No Channel Found"));
+      if(mCountryCB.getSelectedIndex() == 0 && mCategoryCB.getSelectedIndex() <= 1 &&
+          mPluginCB.getSelectedIndex() > 0 && mChannelName.getText().isBlank()) {
+        SwingUtilities.invokeLater(() -> {
+           int ret = JOptionPane.showConfirmDialog(UiUtilities.getLastModalChildOf(MainFrame.getInstance()),
+               LOCALIZER.msg("loadChannelsQuestion", "Should I download the channel list?"),
+               LOCALIZER.msg("loadChannelsTitle", "No channels found"),
+               JOptionPane.YES_NO_OPTION);
+           if (ret == JOptionPane.YES_OPTION) {
+             refreshChannelList();
+           }
+         });
+       }
     }
     else {
       Object newSelection = availableChannelArr[0];
