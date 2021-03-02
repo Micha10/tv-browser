@@ -24,9 +24,12 @@
 package tvbrowser.ui.settings;
 
 import java.awt.event.ItemEvent;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.RandomAccessFile;
 
 import javax.swing.ButtonGroup;
@@ -51,6 +54,7 @@ import tvbrowser.TVBrowser;
 import tvbrowser.core.JREUpdater;
 import tvbrowser.core.Settings;
 import tvbrowser.core.icontheme.IconLoader;
+import tvbrowser.core.protocolhandler.ProtocolHandler;
 import tvbrowser.ui.mainframe.MainFrame;
 import tvbrowser.ui.mainframe.PeriodItem;
 import util.io.windows.registry.RegistryKey;
@@ -75,7 +79,7 @@ public class StartupSettingsTab implements devplugin.SettingsTab {
   private JPanel mSettingsPn;
 
   private JCheckBox mShowStartScreenChB, mMinimizeAfterStartUpChB, mStartFullscreen,
-      mAutostartWithWindows, mServerForRestore, mProtocolHandler;
+      mAutostart, mServerForRestore, mProtocolHandler;
   
   private File mLinkFileFile;
   private LinkFile mLinkFile;
@@ -180,7 +184,7 @@ public class StartupSettingsTab implements devplugin.SettingsTab {
     	mProtocolHandler.setEnabled(ItemEvent.SELECTED == e.getStateChange());
     });
     
-    if (System.getProperty("os.name").toLowerCase().startsWith("windows") && !TVBrowser.isTransportable()) {
+    if (Launch.getOs() == Launch.OS_WINDOWS && !TVBrowser.isTransportable()) {
       layout.insertRow(++y, RowSpec.decode("1dlu"));
       layout.insertRow(++y, RowSpec.decode("pref"));
 
@@ -200,7 +204,7 @@ public class StartupSettingsTab implements devplugin.SettingsTab {
           if(mLinkFileFile.isFile()) {
             try {
               if (!mLinkFile.hasTarget((new File("tvbrowser.exe")).getAbsoluteFile())) {
-                createLink(mLinkFile);
+                createLink();
               }
             }catch(Exception linkException) {
               mLinkFileFile.delete();
@@ -208,11 +212,47 @@ public class StartupSettingsTab implements devplugin.SettingsTab {
           }
         }catch(FileNotFoundException fe) {}
 
-        mAutostartWithWindows = new JCheckBox(LOCALIZER.msg("autostart","Start TV-Browser with Windows"),
+        mAutostart = new JCheckBox(LOCALIZER.msg("autostart","Start TV-Browser with Windows"),
             mLinkFileFile.isFile());
 
-        mSettingsPn.add(mAutostartWithWindows, cc.xy(2, y));
+        mSettingsPn.add(mAutostart, cc.xy(2, y));
       } catch (Throwable e) {e.printStackTrace();}
+    }
+    else if(Launch.getOs() == Launch.OS_LINUX && !TVBrowser.isTransportable()) {
+      layout.insertRow(++y, RowSpec.decode("1dlu"));
+      layout.insertRow(++y, RowSpec.decode("pref"));
+      
+      mLinkFileFile = new File(System.getProperty("user.home")+"/.config/autostart/tvbrowser.desktop");
+      
+      if(mLinkFileFile.isFile()) {
+        File starter = new File("");
+        starter = new File(starter.getAbsolutePath(),"tvbrowser.sh");
+        
+        try(BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(mLinkFileFile), "UTF-8"))) {
+          String line = null;
+          
+          while((line = in.readLine()) != null) {
+            if(line.startsWith("Exec")) {
+              line = line.substring(line.indexOf("=")+1);
+              
+              if((line.startsWith("/") && !line.startsWith(starter.getAbsolutePath())) || (starter.equals("/usr/share/tvbrowser/tvbrowser.sh") && line.startsWith("tvbrowser"))) {
+                try {
+                  createLink();
+                } catch (Exception e1) {
+                  // TODO Auto-generated catch block
+                  e1.printStackTrace();
+                }
+              }
+              
+              break;
+            }
+          }
+        }catch(IOException ioe) {}
+      }
+      
+      mAutostart = new JCheckBox(LOCALIZER.msg("autostartLinux","Start TV-Browser after login"), mLinkFileFile.isFile());
+
+      mSettingsPn.add(mAutostart, cc.xy(2, y));
     }
 
     y++;
@@ -246,11 +286,16 @@ public class StartupSettingsTab implements devplugin.SettingsTab {
     return mSettingsPn;
   }
 
-  private void createLink(LinkFile link) throws Exception {
-    File tvb = new File("tvbrowser.exe");
-
-    if(tvb.getAbsoluteFile().isFile()) {
-      mLinkFile = new LinkFile(mLinkFileFile, tvb, new File(tvb.getAbsoluteFile().getParent() + "\\imgs\\desktop.ico"),0);
+  private void createLink() throws Exception {
+    if(Launch.getOs() == Launch.OS_LINUX) {
+      ProtocolHandler.createDesktopFile(mLinkFileFile, "TV-Browser", false);
+    }
+    else if(Launch.getOs() == Launch.OS_WINDOWS) {
+      File tvb = new File("tvbrowser.exe");
+  
+      if(tvb.getAbsoluteFile().isFile()) {
+        mLinkFile = new LinkFile(mLinkFileFile, tvb, new File(tvb.getAbsoluteFile().getParent() + "\\imgs\\desktop.ico"),0);
+      }
     }
   }
 
@@ -275,15 +320,15 @@ public class StartupSettingsTab implements devplugin.SettingsTab {
 
     Settings.propAutoUpdatePrimeTime.setBoolean(mAutoDownloadPrimeTime.isSelected());
     
-    if(mAutostartWithWindows != null) {
-        if (mAutostartWithWindows.isSelected()) {
+    if(mAutostart != null) {
+        if (mAutostart.isSelected()) {
           if(!mLinkFileFile.isFile()) {
             try {
-              createLink(mLinkFile);
+              createLink();
             } catch (Exception createLink) {}
 
             if (!mLinkFileFile.isFile()) {
-              mAutostartWithWindows.setSelected(false);
+              mAutostart.setSelected(false);
               JOptionPane.showMessageDialog(
                   UiUtilities.getLastModalChildOf(MainFrame.getInstance()),
                   LOCALIZER.msg("creationError","Couldn't create autostart shortcut.\nMaybe your have not the right to write in the autostart directory."),
@@ -291,7 +336,7 @@ public class StartupSettingsTab implements devplugin.SettingsTab {
             }
           }
         } else if (mLinkFileFile.isFile() && !mLinkFileFile.delete()) {
-            mAutostartWithWindows.setSelected(true);
+            mAutostart.setSelected(true);
             JOptionPane.showMessageDialog(
                 UiUtilities.getLastModalChildOf(MainFrame.getInstance()),
                 LOCALIZER.msg("deletionError","Couldn't delete autostart shortcut.\nMaybe your have not the right to write in the autostart directory."),
