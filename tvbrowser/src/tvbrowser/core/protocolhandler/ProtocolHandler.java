@@ -37,6 +37,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 
 import devplugin.ProgramReceiveTarget;
 import tvbrowser.TVBrowser;
@@ -302,7 +303,7 @@ public class ProtocolHandler {
     final String[] values = parts[1].split("=");
     
     if(values[0].equals(PROTOCOL_MESSAGE_SETTINGS)) {
-      PluginManagerImpl.getInstance().showSettings("#"+values[1]);
+      SwingUtilities.invokeLater(() -> PluginManagerImpl.getInstance().showSettings((values[1].contains(".") ? "" : "#")+values[1]));
     }
   }
   
@@ -515,7 +516,7 @@ public class ProtocolHandler {
       out.write("Icon="+baseDir.getAbsolutePath()+"/imgs/tvbrowser128.png\n");
       out.write("Exec="+baseDir.getAbsolutePath()+"/tvbrowser"+(TVBrowser.isTransportable() ? "-transportable":"")+".sh %u\n");
       out.write("Comment=Themeable and easy to use TV Guide - written in Java\n");
-      
+      out.write("Categories=Video;AudioVideo;TV\n");
       /*if(isMimeHandler) {
         out.write("MimeType=x-scheme-handler/tvb;\n");
       }*/

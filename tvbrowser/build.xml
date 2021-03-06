@@ -510,8 +510,7 @@
   		tryExec="tvbrowser.sh"
         categories="Video;AudioVideo;TV"
     	type="Application"
-  		MimeType="x-scheme-handler/tvb;"
-    >
+  	>
     	<name lang="de" value="${programname}"/>
     	<genericName value="Digital TV Guide"/>
     	<genericName lang="de" value="Digitale TV-Zeitschrift"/>
