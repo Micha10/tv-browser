@@ -218,7 +218,7 @@ public class ParamLibrary {
       return removeNull(program.getTextField(ProgramFieldType.ACTOR_LIST_TYPE));
     } else {
       try {
-        Field f = ProgramFieldType.class.getDeclaredField(key.toUpperCase()+"_TYPE");
+        Field f = ProgramFieldType.class.getDeclaredField(key.toUpperCase());
         f.setAccessible(true);
         ProgramFieldType value = (ProgramFieldType)f.get(null);
         
