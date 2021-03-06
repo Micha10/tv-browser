@@ -188,174 +188,195 @@ public class ProtocolHandler {
     }
     
     if(Settings.propCanReceiveProtocolMessages.getBoolean() && message != null && message.startsWith("tvb://")) {
-      String[] parts = message.substring(6).strip().split("/");
+      final String[] parts = message.substring(6).strip().split("/");
+      
       if(parts.length > 1) {
         if(PROTOCOL_MESSAGE_CONFIG.equalsIgnoreCase(parts[0]) && parts[1].contains("=")) {
-          if(JOptionPane.YES_OPTION == UiUtilities.showConfirmDialogOnMouseScreen(LOCALIZER.msg("receive.config.msg","TV-Browser received changes of settings.\nIf you haven't triggered the change, please cancel it now!\n\nDo you want to apply the changed settings?"), LOCALIZER.msg("receive.config.title","Apply settings change?"), JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, true)) {
-            try {
-              String[] props = parts[1].split(";");
-              
-              for(String prop : props) {
-                String[] nameValue = prop.split("=");
-                
-                if(!nameValue[0].equals("CanReceiveProtocolMessages")) {
-                  Field f = Settings.class.getDeclaredField("prop"+nameValue[0]);
-                  Object p = f.get(null);
-                  
-                  if(p instanceof BooleanProperty) {
-                    if(nameValue[1].equals("true") || nameValue[1].equals("false") || nameValue[1].equals("1") || nameValue[1].equals("0")) {
-                      ((BooleanProperty) p).setBoolean(nameValue[1].equals("true") || nameValue[1].equals("1"));
-                    }
-                  }
-                  else if(p instanceof IntProperty) {
-                    try {
-                      int value = Integer.parseInt(nameValue[1]);
-                      
-                      ((IntProperty) p).setInt(value);
-                    }catch(NumberFormatException nfe) {
-                      nfe.printStackTrace();
-                    }
-                  }
-                  else if(p instanceof IntArrayProperty) {
-                    try {
-                      String[] values = nameValue[1].split(",");
-                      int[] arr = new int[values.length];
-                      
-                      for(int i = 0; i < arr.length; i++) {
-                        arr[i] = Integer.parseInt(values[i]);
-                      }
-                      
-                      ((IntArrayProperty) p).setIntArray(arr);
-                    }catch(NumberFormatException nfe) {
-                      nfe.printStackTrace();
-                    }
-                  }
-                  else if(p instanceof ByteProperty) {
-                    try {
-                      byte value = Byte.parseByte(nameValue[1]);
-                      
-                      ((ByteProperty) p).setByte(value);
-                    }catch(NumberFormatException nfe) {
-                      nfe.printStackTrace();
-                    }
-                  }
-                  else if(p instanceof StringProperty) {
-                    ((StringProperty) p).setString(nameValue[1]);
-                  }
-                  else if(p instanceof StringArrayProperty) {
-                    ((StringArrayProperty) p).setStringArray(nameValue[1].split(","));
-                  }
-                  else if(p instanceof ChoiceProperty) {
-                    if(((ChoiceProperty) p).isAllowed(nameValue[1])) {
-                      ((ChoiceProperty) p).setString(nameValue[1]);
-                    }
-                  }
-                  else if(p instanceof ColorProperty) {
-                    try {
-                      String[] values = nameValue[1].split(",");
-                      Color c = null;
-                      
-                      if(values.length == 3) {
-                        c = new Color(Integer.parseInt(values[0]),Integer.parseInt(values[1]),Integer.parseInt(values[2]));
-                      } else if(values.length == 4) {
-                        c = new Color(Integer.parseInt(values[0]),Integer.parseInt(values[1]),Integer.parseInt(values[2]),Integer.parseInt(values[3]));
-                      }
-                      
-                      if(c != null) {
-                        ((ColorProperty) p).setColor(c);
-                      }
-                    }catch(NumberFormatException nfe) {
-                      nfe.printStackTrace();
-                    }
-                  }
-                }
-              }
-            } catch (Exception e) {
-              // TODO Auto-generated catch block
-              e.printStackTrace();
-            }
-            
-            try {
-              Settings.storeSettings(true);
-            } catch (TvBrowserException e) {
-              // TODO Auto-generated catch block
-              e.printStackTrace();
-            }
-          }
+          configMessage(parts);
         }
         else if(PROTOCOL_MESSAGE_SHOW.equalsIgnoreCase(parts[0]) && parts.length == 2 && parts[1].contains("=")) {
-          final String[] values = parts[1].split("=");
-          
-          if(values[0].equals(PROTOCOL_MESSAGE_SETTINGS)) {
-            PluginManagerImpl.getInstance().showSettings("#"+values[1]);
-          }
+          showMessage(parts);
         }
         else if(PROTOCOL_MESSAGE_PLUGIN.equalsIgnoreCase(parts[0]) && parts.length >= 3) {
-          if(PROTOCOL_MESSAGE_ENABLE.contentEquals(parts[1]) && parts.length == 3 && parts[2].contains("=")) {
-            //"NewsPlugin"
-            String[] values = parts[2].split("=");
+          pluginMessage(parts);
+        }
+      }
+    }
+  }
+  
+  private void configMessage(String[] parts) {
+    if(JOptionPane.YES_OPTION == UiUtilities.showConfirmDialogOnMouseScreen(LOCALIZER.msg("receive.config.msg","TV-Browser received changes of settings.\nIf you haven't triggered the change, please cancel it now!\n\nDo you want to apply the changed settings?"), LOCALIZER.msg("receive.config.title","Apply settings change?"), JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, true)) {
+      try {
+        String[] props = parts[1].split(";");
+        
+        for(String prop : props) {
+          String[] nameValue = prop.split("=");
+          
+          if(!nameValue[0].equals("CanReceiveProtocolMessages") && !nameValue[0].equals("ServerRestoreEnabled")) {
+            Field f = Settings.class.getDeclaredField("prop"+nameValue[0]);
+            Object p = f.get(null);
             
-            PluginProxy p = PluginProxyManager.getInstance().getPluginForId("java."+values[0].toLowerCase()+"."+values[0]);
-            
-            if(p != null) {
-              if(!p.isActivated() && (values[1].equals("true") || values[1].equals("1"))) {
-                if(JOptionPane.YES_OPTION == UiUtilities.showConfirmDialogOnMouseScreen(LOCALIZER.msg("receive.plugin.enable.msg","TV-Browser received the activation of the plugin '{0}'.\n\nDo you wan't to activate the plugin '{0}' now?", p.getInfo().getName()),LOCALIZER.msg("receive.plugin.enable.title","Activate plugin '{0}'?", p.getInfo().getName()), JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE)) {
-                  try {
-                    PluginProxyManager.getInstance().activatePlugin(p, true);
-                      try {
-                        PluginProxyManager.getInstance().fireTvBrowserStartFinished(p);
-                      }catch(Throwable t) {
-                        /* Catch all possible not catched errors that occur in the plugin mehtod*/
-                        LOG.log(Level.WARNING, "A not catched error occured in 'fireTvBrowserStartFinishedThread' of Plugin '" + p +"'.", t);
-                      }
-                  } catch (TvBrowserException e) {
-                    e.printStackTrace();
-                  }
-                  
-                  MainFrame.getInstance().getToolbar().updatePluginButtons();
-                  MainFrame.getInstance().updatePluginsMenu();
-                }
-              }
-              else if(p.isActivated() && (values[1].equals("false") || values[1].equals("0"))) {
-                if(JOptionPane.YES_OPTION == UiUtilities.showConfirmDialogOnMouseScreen(LOCALIZER.msg("receive.plugin.disable.msg","TV-Browser received the deactivation of the plugin '{0}'.\n\nDo you wan't to deactivate the plugin '{0}' now?", p.getInfo().getName()),LOCALIZER.msg("receive.plugin.disable.title","Dectivate plugin '{0}'?", p.getInfo().getName()), JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE)) {
-                  try {
-                    PluginProxyManager.getInstance().deactivatePlugin(p);
-                  } catch (TvBrowserException e) {
-                    e.printStackTrace();
-                  }
-                  
-                  MainFrame.getInstance().getToolbar().updatePluginButtons();
-                  MainFrame.getInstance().updatePluginsMenu();
-                }
+            if(p instanceof BooleanProperty) {
+              if(nameValue[1].equals("true") || nameValue[1].equals("false") || nameValue[1].equals("1") || nameValue[1].equals("0")) {
+                ((BooleanProperty) p).setBoolean(nameValue[1].equals("true") || nameValue[1].equals("1"));
               }
             }
-            
-            // Update the settings
-            String[] deactivatedPlugins = PluginProxyManager.getInstance().getDeactivatedPluginIds();
-            Settings.propDeactivatedPlugins.setStringArray(deactivatedPlugins);
-
-            try {
-              Settings.storeSettings(true);
-            } catch (TvBrowserException e) {
-              // TODO Auto-generated catch block
-              e.printStackTrace();
+            else if(p instanceof IntProperty) {
+              try {
+                int value = Integer.parseInt(nameValue[1]);
+                
+                ((IntProperty) p).setInt(value);
+              }catch(NumberFormatException nfe) {
+                nfe.printStackTrace();
+              }
             }
-          }
-          else if(PROTOCOL_MESSAGE_CONFIG.equals(parts[1]) && parts.length == 4) {
-            PluginProxy a = PluginProxyManager.getInstance().getActivatedPluginForId("java."+parts[2].toLowerCase()+"."+parts[2]);
-            
-            if(a != null) {
-              a.receiveValues(ProgramReceiveTarget.TYPE_EVENT_UNDIFINED, parts[3].split(";"), null);
+            else if(p instanceof IntArrayProperty) {
+              try {
+                String[] values = nameValue[1].split(",");
+                int[] arr = new int[values.length];
+                
+                for(int i = 0; i < arr.length; i++) {
+                  arr[i] = Integer.parseInt(values[i]);
+                }
+                
+                ((IntArrayProperty) p).setIntArray(arr);
+              }catch(NumberFormatException nfe) {
+                nfe.printStackTrace();
+              }
             }
-            else {
-              TvDataServiceProxy[] ps = TvDataServiceProxyManager.getInstance().getTvDataServices(new String[] {parts[2].toLowerCase()+"."+parts[2]});
-              
-              if(ps.length == 1 && ps[0].getId().equals(parts[2].toLowerCase()+"."+parts[2])) {
-                ps[0].receiveProtocolMessage(parts[3].split(";"));
+            else if(p instanceof ByteProperty) {
+              try {
+                byte value = Byte.parseByte(nameValue[1]);
+                
+                ((ByteProperty) p).setByte(value);
+              }catch(NumberFormatException nfe) {
+                nfe.printStackTrace();
+              }
+            }
+            else if(p instanceof StringProperty) {
+              ((StringProperty) p).setString(nameValue[1]);
+            }
+            else if(p instanceof StringArrayProperty) {
+              ((StringArrayProperty) p).setStringArray(nameValue[1].split(","));
+            }
+            else if(p instanceof ChoiceProperty) {
+              if(((ChoiceProperty) p).isAllowed(nameValue[1])) {
+                ((ChoiceProperty) p).setString(nameValue[1]);
+              }
+            }
+            else if(p instanceof ColorProperty) {
+              try {
+                String[] values = nameValue[1].split(",");
+                Color c = null;
+                
+                if(values.length == 3) {
+                  c = new Color(Integer.parseInt(values[0]),Integer.parseInt(values[1]),Integer.parseInt(values[2]));
+                } else if(values.length == 4) {
+                  c = new Color(Integer.parseInt(values[0]),Integer.parseInt(values[1]),Integer.parseInt(values[2]),Integer.parseInt(values[3]));
+                }
+                
+                if(c != null) {
+                  ((ColorProperty) p).setColor(c);
+                }
+              }catch(NumberFormatException nfe) {
+                nfe.printStackTrace();
               }
             }
           }
         }
+      } catch (Exception e) {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+      }
+      
+      try {
+        Settings.storeSettings(true);
+      } catch (TvBrowserException e) {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+      }
+    }
+  }
+  
+  private void showMessage(String[] parts) {
+    final String[] values = parts[1].split("=");
+    
+    if(values[0].equals(PROTOCOL_MESSAGE_SETTINGS)) {
+      PluginManagerImpl.getInstance().showSettings("#"+values[1]);
+    }
+  }
+  
+  private void pluginMessage(String[] parts) {
+    if(PROTOCOL_MESSAGE_ENABLE.contentEquals(parts[1]) && parts.length == 3 && parts[2].contains("=")) {
+      pluginEnableMessage(parts);
+    }
+    else if(PROTOCOL_MESSAGE_CONFIG.equals(parts[1]) && parts.length == 4) {
+      pluginConfigMessage(parts);
+    }
+  }
+  
+  private void pluginEnableMessage(String[] parts) {
+  //"NewsPlugin"
+    String[] values = parts[2].split("=");
+    
+    PluginProxy p = PluginProxyManager.getInstance().getPluginForId("java."+values[0].toLowerCase()+"."+values[0]);
+    
+    if(p != null) {
+      if(!p.isActivated() && (values[1].equals("true") || values[1].equals("1"))) {
+        if(JOptionPane.YES_OPTION == UiUtilities.showConfirmDialogOnMouseScreen(LOCALIZER.msg("receive.plugin.enable.msg","TV-Browser received the activation of the plugin '{0}'.\n\nDo you wan't to activate the plugin '{0}' now?", p.getInfo().getName()),LOCALIZER.msg("receive.plugin.enable.title","Activate plugin '{0}'?", p.getInfo().getName()), JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE)) {
+          try {
+            PluginProxyManager.getInstance().activatePlugin(p, true);
+              try {
+                PluginProxyManager.getInstance().fireTvBrowserStartFinished(p);
+              }catch(Throwable t) {
+                /* Catch all possible not catched errors that occur in the plugin mehtod*/
+                LOG.log(Level.WARNING, "A not catched error occured in 'fireTvBrowserStartFinishedThread' of Plugin '" + p +"'.", t);
+              }
+          } catch (TvBrowserException e) {
+            e.printStackTrace();
+          }
+          
+          MainFrame.getInstance().getToolbar().updatePluginButtons();
+          MainFrame.getInstance().updatePluginsMenu();
+        }
+      }
+      else if(p.isActivated() && (values[1].equals("false") || values[1].equals("0"))) {
+        if(JOptionPane.YES_OPTION == UiUtilities.showConfirmDialogOnMouseScreen(LOCALIZER.msg("receive.plugin.disable.msg","TV-Browser received the deactivation of the plugin '{0}'.\n\nDo you wan't to deactivate the plugin '{0}' now?", p.getInfo().getName()),LOCALIZER.msg("receive.plugin.disable.title","Dectivate plugin '{0}'?", p.getInfo().getName()), JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE)) {
+          try {
+            PluginProxyManager.getInstance().deactivatePlugin(p);
+          } catch (TvBrowserException e) {
+            e.printStackTrace();
+          }
+          
+          MainFrame.getInstance().getToolbar().updatePluginButtons();
+          MainFrame.getInstance().updatePluginsMenu();
+        }
+      }
+    }
+    
+    // Update the settings
+    String[] deactivatedPlugins = PluginProxyManager.getInstance().getDeactivatedPluginIds();
+    Settings.propDeactivatedPlugins.setStringArray(deactivatedPlugins);
+
+    try {
+      Settings.storeSettings(true);
+    } catch (TvBrowserException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+  }
+  
+  private void pluginConfigMessage(String[] parts) {
+    PluginProxy a = PluginProxyManager.getInstance().getActivatedPluginForId("java."+parts[2].toLowerCase()+"."+parts[2]);
+    
+    if(a != null) {
+      a.receiveValues(ProgramReceiveTarget.TYPE_EVENT_UNDIFINED, parts[3].split(";"), null);
+    }
+    else {
+      TvDataServiceProxy[] ps = TvDataServiceProxyManager.getInstance().getTvDataServices(new String[] {parts[2].toLowerCase()+"."+parts[2]});
+      
+      if(ps.length == 1 && ps[0].getId().equals(parts[2].toLowerCase()+"."+parts[2])) {
+        ps[0].receiveProtocolMessage(parts[3].split(";"));
       }
     }
   }
