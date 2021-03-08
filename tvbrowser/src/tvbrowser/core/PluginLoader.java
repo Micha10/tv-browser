@@ -92,6 +92,7 @@ public class PluginLoader {
   private HashSet<String> mSuccessfullyLoadedPluginFiles;
 
   private HashMap<Object, File> mDeleteablePlugin;
+  private HashMap<Object, File> mUndeleteablePlugin;
 
   private ArrayList<PluginProxy> loadedProxies;
 
@@ -104,6 +105,7 @@ public class PluginLoader {
   private PluginLoader() {
     mSuccessfullyLoadedPluginFiles = new HashSet<String>();
     mDeleteablePlugin = new HashMap<Object, File>();
+    mUndeleteablePlugin = new HashMap<Object, File>();
     mShowMouseInfo = false;
   }
 
@@ -171,10 +173,15 @@ public class PluginLoader {
       JavaPluginProxy proxy = readPluginProxy(proxyFile);
       if (proxy != null) {
         PluginProxyManager.getInstance().registerPlugin(proxy);
+        File pluginFile = new File(proxy.getPluginFileName());
+        
         if (new File(proxy.getPluginFileName()).getParentFile().equals(new File(Settings.propPluginsDirectory.getString()))) {
-          File pluginFile = new File(proxy.getPluginFileName());
           mDeleteablePlugin.put(proxy, pluginFile);
         }
+        else {
+          mUndeleteablePlugin.put(proxy, pluginFile);
+        }
+        
         return proxy;
       }
     }
@@ -244,6 +251,9 @@ public class PluginLoader {
         if (deleteable) {
           mDeleteablePlugin.put(javaplugin, pluginFile);
         }
+        else {
+          mUndeleteablePlugin.put(javaplugin, pluginFile);
+        }
 
         saveProxyInfo(pluginFile, javaplugin);
       }
@@ -252,12 +262,18 @@ public class PluginLoader {
         if (deleteable) {
           mDeleteablePlugin.put(plugin, pluginFile);
         }
+        else {
+          mUndeleteablePlugin.put(plugin, pluginFile);
+        }
       }
       else if (plugin instanceof devplugin.AbstractTvDataService) {
         TvDataServiceProxy proxy = new DefaultTvDataServiceProxy((devplugin.AbstractTvDataService)plugin);
         TvDataServiceProxyManager.getInstance().registerTvDataService(proxy);
         if (deleteable) {
           mDeleteablePlugin.put(proxy, pluginFile);
+        }
+        else {
+          mUndeleteablePlugin.put(proxy, pluginFile);
         }
       }
 
@@ -706,26 +722,32 @@ public class PluginLoader {
       mDeleteablePlugin.remove(plugin);
       return true;
     }
+    
     return false;
   }
-
+  
   /**
-   * Is a Plugin deleteable ?
-   * @param plugin Plugin that should be deleted
-   * @return true if deleteable
+   * Gets the file of an undeletable plugin.
+   * <p>
+   * @param plugin The plugin proxy to get the file for.
+   * @return The file of the undeletable plugin or <code>null</code>
+   *         if the plugin is deletetable
+   * @since 4.2.2
    */
-  public boolean isPluginDeletable(PluginProxy plugin) {
-    return mDeleteablePlugin.containsKey(plugin);
+  public File getUndeletablePluginFile(PluginProxy plugin) {
+    return mUndeleteablePlugin.get(plugin);
   }
-
+  
   /**
-   * Is a data service deleteable ?
-   * @param service Data service that should be deleted
-   * @return true if deleteable
-   * @since 2.7
+   * Gets the file of an undeletable data service.
+   * <p>
+   * @param service The data service to get the file for.
+   * @return The file of the undeletable data service or <code>null</code>
+   *         if the data service is deletetable
+   * @since 4.2.2
    */
-  public boolean isDataServiceDeletable(TvDataServiceProxy service) {
-    return mDeleteablePlugin.containsKey(service);
+  public File getUndeletableDataServiceFile(TvDataServiceProxy service) {
+    return mUndeleteablePlugin.get(service);
   }
 
   /**

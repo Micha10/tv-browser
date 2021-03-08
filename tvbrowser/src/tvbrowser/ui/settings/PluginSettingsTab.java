@@ -31,6 +31,7 @@ import java.awt.Font;
 import java.awt.event.ItemEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.logging.Level;
@@ -448,13 +449,6 @@ public class PluginSettingsTab implements devplugin.SettingsTab, TableModelListe
         }
       });
       
-      if(plugin instanceof PluginProxy) {
-        deleteMI.setEnabled(PluginLoader.getInstance().isPluginDeletable((PluginProxy)plugin));
-      }
-      else if(plugin instanceof TvDataServiceProxy) {
-        deleteMI.setEnabled(PluginLoader.getInstance().isDataServiceDeletable((TvDataServiceProxy)plugin));
-      }
-      
       menu.add(deleteMI);
     }
     
@@ -484,20 +478,28 @@ public class PluginSettingsTab implements devplugin.SettingsTab, TableModelListe
     if (plugin == null) {
       return;
     }
-    String text = LOCALIZER.msg("deletePlugin","Really delete the Plugin \"{0}\" ?",plugin.toString());
-      
-    int result = JOptionPane.showConfirmDialog(mSettingsDialog.getDialog(), text, Localizer.getLocalization(Localizer.I18N_DELETE)+"?", JOptionPane.YES_NO_OPTION);
-    if (result == JOptionPane.YES_OPTION) {
+    
+    final File undeletable = PluginLoader.getInstance().getUndeletablePluginFile(plugin);
+    
+    if(undeletable != null) {
+      JOptionPane.showMessageDialog(mSettingsDialog.getDialog(), LOCALIZER.msg("noaccess","The plugin '{0}' is installed outside of user space.\nTo delete the plugin close TV-Browser and (ask the\nadministrator to) delete  the file:\n\n'{1}'",plugin.getInfo().getName(),undeletable.getAbsolutePath()));
+    }
+    else {
+      String text = LOCALIZER.msg("deletePlugin","Really delete the Plugin \"{0}\" ?",plugin.toString());
         
-      if (PluginLoader.getInstance().deletePlugin(plugin)) {
-        JOptionPane.showMessageDialog(mSettingsDialog.getDialog(), LOCALIZER.msg("successfully","Deletion was succesfully"));
-      } else {
-        JOptionPane.showMessageDialog(mSettingsDialog.getDialog(), LOCALIZER.msg("failed","Deletion failed"));
+      int result = JOptionPane.showConfirmDialog(mSettingsDialog.getDialog(), text, Localizer.getLocalization(Localizer.I18N_DELETE)+"?", JOptionPane.YES_NO_OPTION);
+      if (result == JOptionPane.YES_OPTION) {
+          
+        if (PluginLoader.getInstance().deletePlugin(plugin)) {
+          JOptionPane.showMessageDialog(mSettingsDialog.getDialog(), LOCALIZER.msg("successfully","Deletion was succesfully"));
+        } else {
+          JOptionPane.showMessageDialog(mSettingsDialog.getDialog(), LOCALIZER.msg("failed","Deletion failed"));
+        }
+          
+        populatePluginList();
+        mSettingsDialog.createPluginTreeItems();
+        mTable.setRowSelectionInterval(0, 0);
       }
-        
-      populatePluginList();
-      mSettingsDialog.createPluginTreeItems();
-      mTable.setRowSelectionInterval(0, 0);
     }
   }
   
@@ -505,6 +507,8 @@ public class PluginSettingsTab implements devplugin.SettingsTab, TableModelListe
     if (service == null) {
       return;
     }
+
+    final File undeletable = PluginLoader.getInstance().getUndeletableDataServiceFile(service);
     
     // count the removed channels
     int channelCount = 0;
@@ -520,24 +524,37 @@ public class PluginSettingsTab implements devplugin.SettingsTab, TableModelListe
       }
     }
     
-    // show message depending on whether channels will be removed
-    String text = LOCALIZER.msg("deleteService","Really delete the data service \"{0}\"?",service.getInfo().getName());
-    if (channelCount > 0) {
-      text = LOCALIZER.msg("deleteServiceCount","Really delete the data service \"{0}\"?\nThis will remove {1} of your subscribed channels.",service.getInfo().getName(), channelCount);
-    }
-    int result = JOptionPane.showConfirmDialog(mSettingsDialog.getDialog(), text, Localizer.getLocalization(Localizer.I18N_DELETE)+"?", JOptionPane.YES_NO_OPTION);
+    
+    if(undeletable != null) {
+      String text = LOCALIZER.msg("noaccess","The plugin '{0}' is installed outside of user space.\nTo delete the plugin close TV-Browser and (ask the\nadministrator to) delete  the file:\n\n'{1}'",service.getInfo().getName(),undeletable.getAbsolutePath());
       
-    if (result == JOptionPane.YES_OPTION) {
-      if (PluginLoader.getInstance().deleteDataService(service)) {
-        JOptionPane.showMessageDialog(mSettingsDialog.getDialog(), LOCALIZER.msg("dataservice.successfully","Deletion was succesfully"));
-        
-        ChannelsSettingsTab.saveChannels(keepChannels.toArray(new Channel[keepChannels.size()]), false);
-      } else {
-        JOptionPane.showMessageDialog(mSettingsDialog.getDialog(), LOCALIZER.msg("failed","Deletion failed"));
+      if (channelCount > 0) {
+        text += LOCALIZER.msg("noaccess.channels","\n\nNOTE: If you delete the plugin '{0}' it will remove {1} of your subscribed channels.",service.getInfo().getName(),channelCount);
       }
+      
+      JOptionPane.showMessageDialog(mSettingsDialog.getDialog(), text);
+    }
+    else {
+      // show message depending on whether channels will be removed
+      String text = LOCALIZER.msg("deleteService","Really delete the data plugin \"{0}\"?",service.getInfo().getName());
+      if (channelCount > 0) {
+        text = LOCALIZER.msg("deleteServiceCount","Really delete the data plugin \"{0}\"?\nThis will remove {1} of your subscribed channels.",service.getInfo().getName(), channelCount);
+      }
+     
+      int result = JOptionPane.showConfirmDialog(mSettingsDialog.getDialog(), text, Localizer.getLocalization(Localizer.I18N_DELETE)+"?", JOptionPane.YES_NO_OPTION);
         
-      populatePluginList();
-      mTable.setRowSelectionInterval(0, 0);
+      if (result == JOptionPane.YES_OPTION) {
+        if (PluginLoader.getInstance().deleteDataService(service)) {
+          JOptionPane.showMessageDialog(mSettingsDialog.getDialog(), LOCALIZER.msg("dataservice.successfully","Deletion was succesfully"));
+          
+          ChannelsSettingsTab.saveChannels(keepChannels.toArray(new Channel[keepChannels.size()]), false);
+        } else {
+          JOptionPane.showMessageDialog(mSettingsDialog.getDialog(), LOCALIZER.msg("failed","Deletion failed"));
+        }
+          
+        populatePluginList();
+        mTable.setRowSelectionInterval(0, 0);
+      }
     }
   }
 
@@ -755,8 +772,7 @@ public class PluginSettingsTab implements devplugin.SettingsTab, TableModelListe
     }
 
     mInfo.setEnabled(plugin != null && (plugin instanceof PluginProxy || plugin instanceof TvDataServiceProxy));
-    mRemove.setEnabled(plugin != null && ((plugin instanceof PluginProxy && PluginLoader.getInstance().isPluginDeletable((PluginProxy)plugin)) ||
-        (plugin instanceof TvDataServiceProxy && PluginLoader.getInstance().isDataServiceDeletable((TvDataServiceProxy)plugin))));
+    mRemove.setEnabled(plugin != null && (plugin instanceof PluginProxy || plugin instanceof TvDataServiceProxy));
     mConfigure.setEnabled(plugin != null);
   }
 
