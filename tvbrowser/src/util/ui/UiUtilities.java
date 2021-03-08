@@ -1529,7 +1529,6 @@ public class UiUtilities {
 		@Override
 		public void componentShown(ComponentEvent e) {
 			// TODO Auto-generated method stub
-			System.out.println("HIER");
 			SwingUtilities.invokeLater(new Runnable() {
 				
 				@Override
