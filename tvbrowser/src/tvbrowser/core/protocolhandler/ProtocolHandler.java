@@ -75,6 +75,7 @@ public class ProtocolHandler {
   private static final String ESCAPE_SLASH = "|||";
   private static final String ESCAPE_SEMICOLON = ":::";
   private static final String ESCAPE_COMMA = "%%%";
+  private static final String ESCAPE_QUOTE = "§§§";
   
   private static final String MESSAGE_CONFIG = "config";
   private static final String MESSAGE_PLUGIN = "plugin";
@@ -261,19 +262,19 @@ public class ProtocolHandler {
               }
             }
             else if(p instanceof StringProperty) {
-              ((StringProperty) p).setString(value.replace(ESCAPE_SEMICOLON, ";").replace(ESCAPE_COMMA, ",").replace(ESCAPE_SLASH, "/"));
+              ((StringProperty) p).setString(value.replace(ESCAPE_SEMICOLON, ";").replace(ESCAPE_COMMA, ",").replace(ESCAPE_SLASH, "/").replace(ESCAPE_QUOTE, "\""));
             }
             else if(p instanceof StringArrayProperty) {
               String[] temp = value.split(",");
               
               for(int i = 0; i < temp.length; i++) {
-                temp[i] = temp[i].replace(ESCAPE_SEMICOLON, ";").replace(ESCAPE_COMMA, ",").replace(ESCAPE_SLASH, "/");
+                temp[i] = temp[i].replace(ESCAPE_SEMICOLON, ";").replace(ESCAPE_COMMA, ",").replace(ESCAPE_SLASH, "/").replace(ESCAPE_QUOTE, "\"");
               }
               
               ((StringArrayProperty) p).setStringArray(temp);
             }
             else if(p instanceof ChoiceProperty) {
-              String v = value.replace(ESCAPE_SEMICOLON, ";").replace(ESCAPE_COMMA, ",").replace(ESCAPE_SLASH, "/");
+              String v = value.replace(ESCAPE_SEMICOLON, ";").replace(ESCAPE_COMMA, ",").replace(ESCAPE_SLASH, "/").replace(ESCAPE_QUOTE, "\"");
               
               if(((ChoiceProperty) p).isAllowed(v)) {
                 ((ChoiceProperty) p).setString(v);
@@ -321,7 +322,7 @@ public class ProtocolHandler {
       SwingUtilities.invokeLater(() -> PluginManagerImpl.getInstance().showSettings((value.contains(".") ? "" : "#")+value));
     }
     else if(name.equals(MESSAGE_PLUGIN_UPDATE)) {
-      MainFrame.getInstance().showUpdatePluginsDlg(false,value.replace(ESCAPE_SEMICOLON, ";").replace(ESCAPE_COMMA, ",").replace(ESCAPE_SLASH, "/"));
+      MainFrame.getInstance().showUpdatePluginsDlg(false,value.replace(ESCAPE_SEMICOLON, ";").replace(ESCAPE_COMMA, ",").replace(ESCAPE_SLASH, "/").replace(ESCAPE_QUOTE, "\""));
     }
   }
   
