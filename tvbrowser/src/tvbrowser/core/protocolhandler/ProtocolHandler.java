@@ -216,29 +216,30 @@ public class ProtocolHandler {
         String[] props = parts[1].split(";");
         
         for(String prop : props) {
-          String[] nameValue = prop.split("=");
+          String name = prop.substring(0,prop.indexOf("="));
           
-          if(!nameValue[0].equals("CanReceiveProtocolMessages") && !nameValue[0].equals("ServerRestoreEnabled")) {
-            Field f = Settings.class.getDeclaredField("prop"+nameValue[0]);
+          if(!name.equals("CanReceiveProtocolMessages") && !name.equals("ServerRestoreEnabled")) {
+            Field f = Settings.class.getDeclaredField("prop"+name);
             Object p = f.get(null);
+            String value = prop.substring(prop.indexOf("=")+1);
             
             if(p instanceof BooleanProperty) {
-              if(nameValue[1].equals("true") || nameValue[1].equals("false") || nameValue[1].equals("1") || nameValue[1].equals("0")) {
-                ((BooleanProperty) p).setBoolean(nameValue[1].equals("true") || nameValue[1].equals("1"));
+              if(value.equals("true") || value.equals("false") || value.equals("1") || value.equals("0")) {
+                ((BooleanProperty) p).setBoolean(value.equals("true") || value.equals("1"));
               }
             }
             else if(p instanceof IntProperty) {
               try {
-                int value = Integer.parseInt(nameValue[1]);
+                int v = Integer.parseInt(value);
                 
-                ((IntProperty) p).setInt(value);
+                ((IntProperty) p).setInt(v);
               }catch(NumberFormatException nfe) {
                 nfe.printStackTrace();
               }
             }
             else if(p instanceof IntArrayProperty) {
               try {
-                String[] values = nameValue[1].split(",");
+                String[] values = value.split(",");
                 int[] arr = new int[values.length];
                 
                 for(int i = 0; i < arr.length; i++) {
@@ -252,18 +253,18 @@ public class ProtocolHandler {
             }
             else if(p instanceof ByteProperty) {
               try {
-                byte value = Byte.parseByte(nameValue[1]);
+                byte v = Byte.parseByte(value);
                 
-                ((ByteProperty) p).setByte(value);
+                ((ByteProperty) p).setByte(v);
               }catch(NumberFormatException nfe) {
                 nfe.printStackTrace();
               }
             }
             else if(p instanceof StringProperty) {
-              ((StringProperty) p).setString(nameValue[1].replace(ESCAPE_SEMICOLON, ";").replace(ESCAPE_COMMA, ",").replace(ESCAPE_SLASH, "/"));
+              ((StringProperty) p).setString(value.replace(ESCAPE_SEMICOLON, ";").replace(ESCAPE_COMMA, ",").replace(ESCAPE_SLASH, "/"));
             }
             else if(p instanceof StringArrayProperty) {
-              String[] temp = nameValue[1].split(",");
+              String[] temp = value.split(",");
               
               for(int i = 0; i < temp.length; i++) {
                 temp[i] = temp[i].replace(ESCAPE_SEMICOLON, ";").replace(ESCAPE_COMMA, ",").replace(ESCAPE_SLASH, "/");
@@ -272,7 +273,7 @@ public class ProtocolHandler {
               ((StringArrayProperty) p).setStringArray(temp);
             }
             else if(p instanceof ChoiceProperty) {
-              String v = nameValue[1].replace(ESCAPE_SEMICOLON, ";").replace(ESCAPE_COMMA, ",").replace(ESCAPE_SLASH, "/");;
+              String v = value.replace(ESCAPE_SEMICOLON, ";").replace(ESCAPE_COMMA, ",").replace(ESCAPE_SLASH, "/");
               
               if(((ChoiceProperty) p).isAllowed(v)) {
                 ((ChoiceProperty) p).setString(v);
@@ -280,7 +281,7 @@ public class ProtocolHandler {
             }
             else if(p instanceof ColorProperty) {
               try {
-                String[] values = nameValue[1].split(",");
+                String[] values = value.split(",");
                 Color c = null;
                 
                 if(values.length == 3) {
@@ -313,13 +314,14 @@ public class ProtocolHandler {
   }
   
   private void showMessage(String[] parts) {
-    final String[] values = parts[1].split("=");
+    String name = parts[1].substring(0,parts[1].indexOf("="));
+    String value = parts[1].substring(parts[1].indexOf("=")+1);
     
-    if(values[0].equals(MESSAGE_SETTINGS)) {
-      SwingUtilities.invokeLater(() -> PluginManagerImpl.getInstance().showSettings((values[1].contains(".") ? "" : "#")+values[1]));
+    if(name.equals(MESSAGE_SETTINGS)) {
+      SwingUtilities.invokeLater(() -> PluginManagerImpl.getInstance().showSettings((value.contains(".") ? "" : "#")+value));
     }
-    else if(values[0].equals(MESSAGE_PLUGIN_UPDATE)) {
-      MainFrame.getInstance().showUpdatePluginsDlg(false,values[1]);
+    else if(name.equals(MESSAGE_PLUGIN_UPDATE)) {
+      MainFrame.getInstance().showUpdatePluginsDlg(false,value.replace(ESCAPE_SEMICOLON, ";").replace(ESCAPE_COMMA, ",").replace(ESCAPE_SLASH, "/"));
     }
   }
   
