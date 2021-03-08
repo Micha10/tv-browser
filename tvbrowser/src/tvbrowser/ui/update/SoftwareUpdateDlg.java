@@ -144,11 +144,27 @@ public class SoftwareUpdateDlg extends JDialog implements ActionListener, ListSe
    */
   public SoftwareUpdateDlg(Window parent, String downloadUrl,
       int dialogType, SoftwareUpdateItem[] itemArr, boolean isVersionChange, Version oldTvbVersion) {
+    this(parent,downloadUrl,dialogType,itemArr,isVersionChange,oldTvbVersion,null);
+  }
+  /**
+   * Creates an instance of this class.
+   * <p>
+   * @param parent The parent dialog.
+   * @param downloadUrl The url to download the data from.
+   * @param dialogType The type of the dialog.
+   * @param itemArr The array with the available update items.
+   * @param isVersionChange If this dialog is shown for a TV-Browser version change.
+   * @param oldTvbVersion Version that is updated from.
+   * @param search The search string for the text filter. 
+   */
+  public SoftwareUpdateDlg(Window parent, String downloadUrl,
+      int dialogType, SoftwareUpdateItem[] itemArr, boolean isVersionChange, Version oldTvbVersion,
+      String search) {
     super(parent,ModalityType.DOCUMENT_MODAL);
     mDialogType = dialogType;
     mIsVersionChange = isVersionChange;
     mOldTvbVersion = oldTvbVersion;
-    createGui(downloadUrl, dialogType, itemArr, parent);
+    createGui(downloadUrl, dialogType, itemArr, parent, search);
     
     if(dialogType == SoftwareUpdater.DRAG_AND_DROP_TYPE || dialogType == SoftwareUpdater.ONLY_UPDATE_TYPE) {
       mSoftwareUpdateItemList.selectAll();
@@ -197,7 +213,7 @@ public class SoftwareUpdateDlg extends JDialog implements ActionListener, ListSe
     mDownloadBtn.setEnabled(mSoftwareUpdateItemList.getItemCount() > 0);
   }
 
-  private void createGui(String downloadUrl, int dialogType, SoftwareUpdateItem[] itemArr, Window parent) {
+  private void createGui(String downloadUrl, int dialogType, SoftwareUpdateItem[] itemArr, Window parent, String search) {
     Arrays.sort(itemArr, new Comparator<SoftwareUpdateItem>() {
       @Override
       public int compare(SoftwareUpdateItem item1, SoftwareUpdateItem item2) {
@@ -529,6 +545,10 @@ public class SoftwareUpdateDlg extends JDialog implements ActionListener, ListSe
       
       northPn.add(nameFilterLabel, CC.xy(1, y));
       northPn.add(name, CC.xy(3, y));
+      
+      if(search != null && !search.isBlank()) {
+        name.setText(search);
+      }
     }
 
     contentPane.add(northPn, BorderLayout.NORTH);

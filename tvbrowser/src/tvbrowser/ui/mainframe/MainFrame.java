@@ -2781,6 +2781,10 @@ public class MainFrame extends JFrame implements DateListener,DropTargetListener
   }
 
   public void showUpdatePluginsDlg(boolean noQuestion) {
+    showUpdatePluginsDlg(noQuestion, null);
+  }
+  
+  public void showUpdatePluginsDlg(boolean noQuestion, String search) {
     int answer = JOptionPane.YES_OPTION;
 
     if(!noQuestion) {
@@ -2794,7 +2798,7 @@ public class MainFrame extends JFrame implements DateListener,DropTargetListener
     }
 
     if (answer == JOptionPane.YES_OPTION) {
-      updatePlugins(PluginAutoUpdater.DEFAULT_PLUGINS_DOWNLOAD_URL, SoftwareUpdater.ALL_TYPE, mStatusBar.getLabel(),false);
+      updatePlugins(PluginAutoUpdater.DEFAULT_PLUGINS_DOWNLOAD_URL, SoftwareUpdater.ALL_TYPE, mStatusBar.getLabel(),false,search);
     }
   }
 
@@ -2806,8 +2810,9 @@ public class MainFrame extends JFrame implements DateListener,DropTargetListener
    * @param infoLabel The label to use to show infos.
    * @param dontShowUpdateDlg If the dialog should not be shown even if updates
    *                          are available. (User has disabled automatically plugin updates.)
+   * @param search Search string for the text filter of the plugin update dialog.
    */
-  public void updatePlugins(final String baseUrl, final int dialogType, final JLabel infoLabel, final boolean dontShowUpdateDlg) {
+  public void updatePlugins(final String baseUrl, final int dialogType, final JLabel infoLabel, final boolean dontShowUpdateDlg, final String search) {
     new Thread("Plugin Update Thread") {
       public void run() {
         try {
@@ -2834,7 +2839,7 @@ public class MainFrame extends JFrame implements DateListener,DropTargetListener
             try {
               UIThreadRunner.invokeAndWait(() -> {
                 SoftwareUpdateDlg dlg = new SoftwareUpdateDlg(parent, baseUrl,
-                    dialogType, mSoftwareUpdateItems);
+                    dialogType, mSoftwareUpdateItems, false, null, search);
                 dlg.setVisible(true);
               });
             } catch (InterruptedException e) {

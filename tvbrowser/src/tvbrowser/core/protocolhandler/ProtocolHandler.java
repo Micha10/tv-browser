@@ -72,11 +72,12 @@ import util.ui.UiUtilities;
  * @since 4.2.3
  */
 public class ProtocolHandler {
-  private static final String PROTOCOL_MESSAGE_CONFIG = "config";
-  private static final String PROTOCOL_MESSAGE_PLUGIN = "plugin";
-  private static final String PROTOCOL_MESSAGE_ENABLE = "enable";
-  private static final String PROTOCOL_MESSAGE_SHOW = "show";
-  private static final String PROTOCOL_MESSAGE_SETTINGS = "settings";
+  private static final String MESSAGE_CONFIG = "config";
+  private static final String MESSAGE_PLUGIN = "plugin";
+  private static final String MESSAGE_ENABLE = "enable";
+  private static final String MESSAGE_SHOW = "show";
+  private static final String MESSAGE_SETTINGS = "settings";
+  private static final String MESSAGE_PLUGIN_UPDATE = "pluginUpdate";
 
   private static final Localizer LOCALIZER = Localizer.getLocalizerFor(ProtocolHandler.class);
   private static final Logger LOG = Logger.getLogger(ProtocolHandler.class.getName());
@@ -192,13 +193,13 @@ public class ProtocolHandler {
       final String[] parts = message.substring(6).strip().split("/");
       
       if(parts.length > 1) {
-        if(PROTOCOL_MESSAGE_CONFIG.equalsIgnoreCase(parts[0]) && parts[1].contains("=")) {
+        if(MESSAGE_CONFIG.equalsIgnoreCase(parts[0]) && parts[1].contains("=")) {
           configMessage(parts);
         }
-        else if(PROTOCOL_MESSAGE_SHOW.equalsIgnoreCase(parts[0]) && parts.length == 2 && parts[1].contains("=")) {
+        else if(MESSAGE_SHOW.equalsIgnoreCase(parts[0]) && parts.length == 2 && parts[1].contains("=")) {
           showMessage(parts);
         }
-        else if(PROTOCOL_MESSAGE_PLUGIN.equalsIgnoreCase(parts[0]) && parts.length >= 3) {
+        else if(MESSAGE_PLUGIN.equalsIgnoreCase(parts[0]) && parts.length >= 3) {
           pluginMessage(parts);
         }
       }
@@ -302,16 +303,19 @@ public class ProtocolHandler {
   private void showMessage(String[] parts) {
     final String[] values = parts[1].split("=");
     
-    if(values[0].equals(PROTOCOL_MESSAGE_SETTINGS)) {
+    if(values[0].equals(MESSAGE_SETTINGS)) {
       SwingUtilities.invokeLater(() -> PluginManagerImpl.getInstance().showSettings((values[1].contains(".") ? "" : "#")+values[1]));
+    }
+    else if(values[0].equals(MESSAGE_PLUGIN_UPDATE)) {
+      MainFrame.getInstance().showUpdatePluginsDlg(false,values[1]);
     }
   }
   
   private void pluginMessage(String[] parts) {
-    if(PROTOCOL_MESSAGE_ENABLE.contentEquals(parts[1]) && parts.length == 3 && parts[2].contains("=")) {
+    if(MESSAGE_ENABLE.contentEquals(parts[1]) && parts.length == 3 && parts[2].contains("=")) {
       pluginEnableMessage(parts);
     }
-    else if(PROTOCOL_MESSAGE_CONFIG.equals(parts[1]) && parts.length == 4) {
+    else if(MESSAGE_CONFIG.equals(parts[1]) && parts.length == 4) {
       pluginConfigMessage(parts);
     }
   }
