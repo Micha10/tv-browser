@@ -72,6 +72,10 @@ import util.ui.UiUtilities;
  * @since 4.2.3
  */
 public class ProtocolHandler {
+  private static final String ESCAPE_SLASH = "|||";
+  private static final String ESCAPE_SEMICOLON = ":::";
+  private static final String ESCAPE_COMMA = "%%%";
+  
   private static final String MESSAGE_CONFIG = "config";
   private static final String MESSAGE_PLUGIN = "plugin";
   private static final String MESSAGE_ENABLE = "enable";
@@ -256,14 +260,22 @@ public class ProtocolHandler {
               }
             }
             else if(p instanceof StringProperty) {
-              ((StringProperty) p).setString(nameValue[1]);
+              ((StringProperty) p).setString(nameValue[1].replace(ESCAPE_SEMICOLON, ";").replace(ESCAPE_COMMA, ",").replace(ESCAPE_SLASH, "/"));
             }
             else if(p instanceof StringArrayProperty) {
-              ((StringArrayProperty) p).setStringArray(nameValue[1].split(","));
+              String[] temp = nameValue[1].split(",");
+              
+              for(int i = 0; i < temp.length; i++) {
+                temp[i] = temp[i].replace(ESCAPE_SEMICOLON, ";").replace(ESCAPE_COMMA, ",").replace(ESCAPE_SLASH, "/");
+              }
+              
+              ((StringArrayProperty) p).setStringArray(temp);
             }
             else if(p instanceof ChoiceProperty) {
-              if(((ChoiceProperty) p).isAllowed(nameValue[1])) {
-                ((ChoiceProperty) p).setString(nameValue[1]);
+              String v = nameValue[1].replace(ESCAPE_SEMICOLON, ";").replace(ESCAPE_COMMA, ",").replace(ESCAPE_SLASH, "/");;
+              
+              if(((ChoiceProperty) p).isAllowed(v)) {
+                ((ChoiceProperty) p).setString(v);
               }
             }
             else if(p instanceof ColorProperty) {
