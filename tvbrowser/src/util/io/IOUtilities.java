@@ -1383,4 +1383,29 @@ public class IOUtilities {
       
       return result;
     }
+    
+    /**
+     * Gets the MD5 hash for the given file.
+     * <p>
+     * @param file The file to get the MD5 hash for.
+     * @return The MD5 hash of the given file or <code>null</code>
+     * 		   if the hash could not be read.
+     * @since 4.2.3
+     */
+    public static String getMD5Hash(File file) {
+        try {
+             final java.security.MessageDigest md = java.security.MessageDigest.getInstance("MD5");
+             final byte[] array = md.digest(IOUtilities.getBytesFromFile(file));
+             
+             final StringBuilder sb = new StringBuilder();
+             
+             for (int i = 0; i < array.length; ++i) {
+               sb.append(Integer.toHexString((array[i] & 0xFF) | 0x100).substring(1,3));
+            }
+             return sb.toString();
+         } catch (Exception e) {
+           e.printStackTrace();
+         }
+         return null;
+      }
 }

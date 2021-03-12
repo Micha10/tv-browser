@@ -91,16 +91,24 @@ public class JREUpdater {
   				if(IOUtilities.download(new java.net.URL(url), temp, 10000)) {
   				  parts = new String(IOUtilities.getBytesFromFile(temp)).split("\n");
   				  
-  				  if(parts.length != 2) {
+  				  if(parts.length < 4) {
   				    throw new IOException();
   				  }
   				}
 			  }catch(IOException ioe1) {
-		      if(IOUtilities.download(new java.net.URL(DEFAULT_DOWNLOAD_URL+FILENAME), temp, 10000)) {
-            parts = new String(IOUtilities.getBytesFromFile(temp)).split("\n");
-          }
+		        if(IOUtilities.download(new java.net.URL(DEFAULT_DOWNLOAD_URL+FILENAME), temp, 10000)) {
+		          parts = new String(IOUtilities.getBytesFromFile(temp)).split("\n");
+		        }
 			  }
-				
+			  
+			  String md5_32 = null;
+			  String md5_64 = null;
+			  
+			  if(parts != null && parts.length == 4) {
+				  md5_32 = parts[2];
+				  md5_64 = parts[3];
+			  }
+			  			  
 				if(parts != null && parts.length == 2) {
 					Settings.propJreUpdateDateLast.setDate(Date.getCurrentDate());
 					
@@ -131,17 +139,32 @@ public class JREUpdater {
 					}
 					
 					if(update) {
-						final String downloadUrl = parts[1].replace("%version%", parts[0]).replace("%arch%", "win"+System.getProperty("sun.arch.data.model"));
-						final File target = new File(Settings.getUserSettingsDirName(),"tvbrowser-jre_"+parts[0]+"_win"+System.getProperty("sun.arch.data.model")+".exe");
+						String bits = System.getProperty("sun.arch.data.model");
+						
+						final String downloadUrl = parts[1].replace("%version%", parts[0]).replace("%arch%", "win"+bits);
+						final File target = new File(Settings.getUserSettingsDirName(),"tvbrowser-jre_"+parts[0]+"_win"+bits+".exe");
 						
 						if(!target.isFile()) {
 							IOUtilities.download(new java.net.URL(downloadUrl), target, 30000);
 						}
 						
 						if(target.isFile()) {
-						  result = true;
+						  String md5 = IOUtilities.getMD5Hash(target);
+						  
+						  if(bits.equals("64")) {
+							result = md5_64 == null || md5.equals(md5_64);
+						  }
+						  else {
+							result = md5_32 == null || md5.equals(md5_32);  
+						  }
+						  
+						  if(result) {
 							Settings.propJreUpdate.setString(target.getAbsolutePath());
 							handlePossibleUpdate();
+						  }
+						  else {
+							target.delete();
+						  }
 						}
 					}
 					
