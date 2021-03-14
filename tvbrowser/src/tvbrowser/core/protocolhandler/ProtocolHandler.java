@@ -33,12 +33,16 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
+import devplugin.PluginManager;
+import devplugin.Program;
+import devplugin.ProgramFieldType;
 import devplugin.ProgramReceiveTarget;
 import tvbrowser.TVBrowser;
 import tvbrowser.core.Settings;
@@ -47,6 +51,8 @@ import tvbrowser.core.plugin.PluginProxy;
 import tvbrowser.core.plugin.PluginProxyManager;
 import tvbrowser.core.tvdataservice.TvDataServiceProxy;
 import tvbrowser.core.tvdataservice.TvDataServiceProxyManager;
+import tvbrowser.extras.programinfo.ProgramInfo;
+import tvbrowser.extras.searchplugin.SearchPlugin;
 import tvbrowser.ui.DontShowAgainOptionBox;
 import tvbrowser.ui.mainframe.MainFrame;
 import util.browserlauncher.Launch;
@@ -63,6 +69,7 @@ import util.settings.IntArrayProperty;
 import util.settings.IntProperty;
 import util.settings.StringArrayProperty;
 import util.settings.StringProperty;
+import util.ui.SearchFormSettings;
 import util.ui.UiUtilities;
 
 /**
@@ -81,9 +88,28 @@ public class ProtocolHandler {
   private static final String MESSAGE_PLUGIN = "plugin";
   private static final String MESSAGE_ENABLE = "enable";
   private static final String MESSAGE_SHOW = "show";
+  private static final String MESSAGE_SEARCH = "search";
+  private static final String MESSAGE_PROGRAM = "program";
   private static final String MESSAGE_SETTINGS = "settings";
   private static final String MESSAGE_PLUGIN_UPDATE = "pluginUpdate";
-
+  
+  private static final String KEY_SEARCH_WHERE = "where";
+  private static final String KEY_SEARCH_CASE_SENSITIVE = "casesensitive";
+  private static final String KEY_SEARCH_TEXT = "text";
+  
+  private static final String VALUE_SEARCH_WHERE_ALL = "all";
+  private static final String VALUE_SEARCH_WHERE_TITLE = "title";
+  
+  private static final String KEY_SHOW_PROGRAM_ID = "id";
+  
+  private static final String MESSAGE_SEARCH_TYPE_EXACTLY = "exact";
+  private static final String MESSAGE_SEARCH_TYPE_WHOLE_TERM = "term";
+  private static final String MESSAGE_SEARCH_TYPE_KEYWORD = "keyword";
+  private static final String MESSAGE_SEARCH_TYPE_BOOL = "bool";
+  private static final String MESSAGE_SEARCH_TYPE_REGEX = "regex";
+  
+  
+  
   private static final Localizer LOCALIZER = Localizer.getLocalizerFor(ProtocolHandler.class);
   private static final Logger LOG = Logger.getLogger(ProtocolHandler.class.getName());
   
@@ -142,6 +168,7 @@ public class ProtocolHandler {
         
         if(source == null) {
           source = new File("/usr/share/tvbrowser/tvbrowser.sh");
+          
         }
         
         if(ask) {
@@ -201,13 +228,90 @@ public class ProtocolHandler {
         if(MESSAGE_CONFIG.equalsIgnoreCase(parts[0]) && parts[1].contains("=")) {
           configMessage(parts);
         }
-        else if(MESSAGE_SHOW.equalsIgnoreCase(parts[0]) && parts.length == 2 && parts[1].contains("=")) {
+        else if(MESSAGE_SHOW.equalsIgnoreCase(parts[0]) && (parts.length == 2 || parts.length == 3) && parts[parts.length-1].contains("=")) {
           showMessage(parts);
         }
         else if(MESSAGE_PLUGIN.equalsIgnoreCase(parts[0]) && parts.length >= 3) {
           pluginMessage(parts);
         }
+        else if(MESSAGE_SEARCH.equalsIgnoreCase(parts[0]) && parts.length == 3) {
+          searchMessage(parts);
+        }
       }
+    }
+  }
+  
+  // URL for searches, values in () are optional
+  // tvb://search/TYPE/text=TEXT(;where=VALUES;casesensitive=true/1)
+  private void searchMessage(String[] parts) {
+    SearchFormSettings settings = new SearchFormSettings("");
+    
+    if(MESSAGE_SEARCH_TYPE_EXACTLY.equals(parts[1])) {
+      settings.setSearcherType(PluginManager.TYPE_SEARCHER_EXACTLY);
+    }
+    else if(MESSAGE_SEARCH_TYPE_WHOLE_TERM.equals(parts[1])) {
+      settings.setSearcherType(PluginManager.TYPE_SEARCHER_WHOLE_TERM);
+    }
+    else if(MESSAGE_SEARCH_TYPE_REGEX.equals(parts[1])) {
+      settings.setSearcherType(PluginManager.TYPE_SEARCHER_REGULAR_EXPRESSION);
+    }
+    else if(MESSAGE_SEARCH_TYPE_BOOL.equals(parts[1])) {
+      settings.setSearcherType(PluginManager.TYPE_SEARCHER_BOOLEAN);
+    }
+    else if(MESSAGE_SEARCH_TYPE_KEYWORD.equals(parts[1])) {
+      settings.setSearcherType(PluginManager.TYPE_SEARCHER_KEYWORD);
+    }
+    
+    String[] values = parts[2].split(";");
+    
+    String searchText = null;
+    
+    for(String value : values) {
+      int index = value.indexOf("=");
+      
+      if(index != -1) {
+        String key = value.substring(0,index);
+        String v = unescape(value.substring(index+1));
+        
+        if(key.equals(KEY_SEARCH_WHERE)) {
+          if(v.equals(VALUE_SEARCH_WHERE_ALL)) {
+            settings.setSearchIn(SearchFormSettings.SEARCH_IN_ALL);
+          }
+          else if(v.equals(VALUE_SEARCH_WHERE_TITLE)) {
+            settings.setSearchIn(SearchFormSettings.SEARCH_IN_TITLE);
+          }
+          else if(v.contains(",")) {
+            String[] fields = v.split(",");
+            
+            ArrayList<ProgramFieldType> progTypes = new ArrayList<ProgramFieldType>();
+            
+            for(String f : fields) {
+              try {
+                Field field = ProgramFieldType.class.getDeclaredField(f);
+                field.setAccessible(true);
+                progTypes.add((ProgramFieldType)field.get(null));
+              } catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException e) {
+                // Ignore
+              }
+            }
+            
+            if(!progTypes.isEmpty()) {
+              settings.setSearchIn(SearchFormSettings.SEARCH_IN_USER_DEFINED);
+              settings.setUserDefinedFieldTypes(progTypes.toArray(new ProgramFieldType[0]));
+            }
+          }
+        }
+        else if(key.equals(KEY_SEARCH_TEXT)) {
+          searchText = v;
+        }
+        else if(key.equals(KEY_SEARCH_CASE_SENSITIVE)) {
+          settings.setCaseSensitive(v.equals("true") || v.equals("1"));
+        }
+      }
+    }
+    
+    if(!searchText.isBlank()) {
+      SearchPlugin.getInstance().openSearchDialog(searchText, settings, true);
     }
   }
   
@@ -262,19 +366,19 @@ public class ProtocolHandler {
               }
             }
             else if(p instanceof StringProperty) {
-              ((StringProperty) p).setString(value.replace(ESCAPE_SEMICOLON, ";").replace(ESCAPE_COMMA, ",").replace(ESCAPE_SLASH, "/").replace(ESCAPE_QUOTE, "\""));
+              ((StringProperty) p).setString(unescape(value));
             }
             else if(p instanceof StringArrayProperty) {
               String[] temp = value.split(",");
               
               for(int i = 0; i < temp.length; i++) {
-                temp[i] = temp[i].replace(ESCAPE_SEMICOLON, ";").replace(ESCAPE_COMMA, ",").replace(ESCAPE_SLASH, "/").replace(ESCAPE_QUOTE, "\"");
+                temp[i] = unescape(temp[i]);
               }
               
               ((StringArrayProperty) p).setStringArray(temp);
             }
             else if(p instanceof ChoiceProperty) {
-              String v = value.replace(ESCAPE_SEMICOLON, ";").replace(ESCAPE_COMMA, ",").replace(ESCAPE_SLASH, "/").replace(ESCAPE_QUOTE, "\"");
+              String v = unescape(value);
               
               if(((ChoiceProperty) p).isAllowed(v)) {
                 ((ChoiceProperty) p).setString(v);
@@ -315,14 +419,39 @@ public class ProtocolHandler {
   }
   
   private void showMessage(String[] parts) {
-    String name = parts[1].substring(0,parts[1].indexOf("="));
-    String value = parts[1].substring(parts[1].indexOf("=")+1);
-    
-    if(name.equals(MESSAGE_SETTINGS)) {
-      SwingUtilities.invokeLater(() -> PluginManagerImpl.getInstance().showSettings((value.contains(".") ? "" : "#")+value));
+    if(parts[1].equals(MESSAGE_PROGRAM)) {
+      showProgramMessage(parts);
     }
-    else if(name.equals(MESSAGE_PLUGIN_UPDATE)) {
-      MainFrame.getInstance().showUpdatePluginsDlg(false,value.replace(ESCAPE_SEMICOLON, ";").replace(ESCAPE_COMMA, ",").replace(ESCAPE_SLASH, "/").replace(ESCAPE_QUOTE, "\""));
+    else {
+      String name = parts[1].substring(0,parts[1].indexOf("="));
+      String value = parts[1].substring(parts[1].indexOf("=")+1);
+      
+      if(name.equals(MESSAGE_SETTINGS)) {
+        SwingUtilities.invokeLater(() -> PluginManagerImpl.getInstance().showSettings((value.contains(".") ? "" : "#")+value));
+      }
+      else if(name.equals(MESSAGE_PLUGIN_UPDATE)) {
+        MainFrame.getInstance().showUpdatePluginsDlg(false,unescape(value));
+      }
+    }
+  }
+  
+  // tvb://show/program/id=UNIQUEID
+  private void showProgramMessage(String[] parts) {
+    int index = parts[2].indexOf("=");
+    
+    if(index != -1) {
+      String key = parts[2].substring(0,index);
+      String v = unescape(parts[2].substring(index+1));
+      
+      if(key.equals(KEY_SHOW_PROGRAM_ID)) {
+        Program p = PluginManagerImpl.getInstance().getProgram(v);
+        
+        if(p != null) {
+          ProgramInfo.getInstance().showProgramInformation(p);
+        }
+        
+        return;
+      }
     }
   }
   
@@ -548,5 +677,9 @@ public class ProtocolHandler {
     }catch(IOException ioe) {
       ioe.printStackTrace();
     }
+  }
+  
+  private static String unescape(String value) {
+    return value.replace(ESCAPE_COMMA, ",").replace(ESCAPE_QUOTE, "\"").replace(ESCAPE_SEMICOLON, ";").replace(ESCAPE_SLASH, "/");
   }
 }

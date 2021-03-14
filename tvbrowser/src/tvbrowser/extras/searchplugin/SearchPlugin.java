@@ -33,6 +33,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
 import javax.swing.KeyStroke;
+import javax.swing.SwingUtilities;
 
 import devplugin.ActionMenu;
 import devplugin.ButtonAction;
@@ -289,18 +290,25 @@ public class SearchPlugin {
     mRepetitionTimeSelect = selectedIndex;
   }
 
-  protected void openSearchDialog(String text, final SearchFormSettings settings) {
+  public void openSearchDialog(String text, final SearchFormSettings settings, boolean start) {
     Window parent = UiUtilities.getLastModalChildOf(MainFrame.getInstance());
     SearchDialog dlg = new SearchDialog(parent);
-    dlg.setSearchText(text);
+    
     if (settings != null) {
       dlg.setSearchSettings(settings);
     }
-    dlg.setVisible(true);
+    dlg.setSearchText(text);
+    
+    if(start) {
+      SwingUtilities.invokeLater(() -> dlg.search());
+    }
+    else {
+      dlg.setVisible(true);
+    }
   }
 
   protected void openSearchDialog(String text) {
-    openSearchDialog(text, null);
+    openSearchDialog(text, null, false);
   }
 
   private static void searchRepetitions(final Program program) {try {    

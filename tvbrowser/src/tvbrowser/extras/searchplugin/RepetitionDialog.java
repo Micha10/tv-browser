@@ -173,7 +173,7 @@ class RepetitionDialog extends JDialog implements WindowClosingIf {
         SearchPlugin.getInstance().openSearchDialog(mText.getText());
       }
       else {
-        SearchPlugin.getInstance().openSearchDialog(mText.getText(),getSearchSettings());
+        SearchPlugin.getInstance().openSearchDialog(mText.getText(),getSearchSettings(),false);
       }
     });
 

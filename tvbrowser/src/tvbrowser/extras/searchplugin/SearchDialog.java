@@ -189,7 +189,7 @@ public class SearchDialog extends JDialog implements WindowClosingIf {
   /**
    * Starts the search.
    */
-  private void search() {
+  public void search() {
     final SearchFormSettings settings = mSearchForm.getSearchFormSettings();
     if (settings.getFieldTypes().length == 0) {
       String msg = mLocalizer.msg("noFields.message",
