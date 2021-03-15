@@ -94,7 +94,9 @@ import util.ui.WindowClosingIf;
  * @author René Mach
  */
 public class SimpleMarkerPlugin extends Plugin {
-  private static final Version mVersion = new Version(3,31,1,true);
+  public static boolean HANDLE_SEPARATORS = true;
+  
+  private static final Version mVersion = new Version(3,31,3,true);
 
   /** The localizer for this class. */
   private static final util.ui.Localizer mLocalizer = util.ui.Localizer.getLocalizerFor(SimpleMarkerPlugin.class);
@@ -121,7 +123,7 @@ public class SimpleMarkerPlugin extends Plugin {
   
   private JPanel mCenterPanelWrapper;
   
-  private ManagePanel mMangePanel;
+  private ManagePanel mManagePanel;
   
   private SimpleMarkerUpdateInfoPanel mInfoPanel;
   
@@ -150,8 +152,9 @@ public class SimpleMarkerPlugin extends Plugin {
   }
 
   public void onActivation() {
-	mShowHtmlContextMenu = getPluginManager().getTVBrowserVersion().compareTo(new Version(4,9,97,false)) > 0;
-	  
+    
+    mShowHtmlContextMenu = getPluginManager().getTVBrowserVersion().compareTo(new Version(4,9,97,false)) > 0;
+    HANDLE_SEPARATORS = getPluginManager().getTVBrowserVersion().compareTo(new Version(4,22,52,false)) < 0;
     mInfoCounter = 1;
     updateTree(true);
     
@@ -176,29 +179,29 @@ public class SimpleMarkerPlugin extends Plugin {
   private void addCenterPanel() {
     SwingUtilities.invokeLater(new Runnable() {
       public void run() {
-        mMangePanel = new ManagePanel(mMarkListVector, null);
-        PersonaCompat.getInstance().registerPersonaListener(mMangePanel);
+        mManagePanel = new ManagePanel(mMarkListVector, null);
+        PersonaCompat.getInstance().registerPersonaListener(mManagePanel);
         
-        mCenterPanelWrapper.add(mMangePanel,BorderLayout.CENTER);
+        mCenterPanelWrapper.add(mManagePanel,BorderLayout.CENTER);
         mCenterPanelWrapper.updateUI();
       }
     });    
   }
   
   private void updateCenterPanel() {
-    if(mMangePanel != null && mCenterPanelWrapper != null) {
-      mCenterPanelWrapper.remove(mMangePanel);
-      PersonaCompat.getInstance().removePersonaListener(mMangePanel);
-      mMangePanel = null;
+    if(mManagePanel != null && mCenterPanelWrapper != null) {
+      mCenterPanelWrapper.remove(mManagePanel);
+      PersonaCompat.getInstance().removePersonaListener(mManagePanel);
+      mManagePanel = null;
       
       addCenterPanel();
     }
   }
   
   public void onDeactivation() {
-    PersonaCompat.getInstance().registerPersonaListener(mMangePanel);
-    mCenterPanelWrapper.remove(mMangePanel);
-    mMangePanel = null;
+    PersonaCompat.getInstance().registerPersonaListener(mManagePanel);
+    mCenterPanelWrapper.remove(mManagePanel);
+    mManagePanel = null;
   }
 
   public static Version getVersion() {
@@ -446,8 +449,8 @@ public class SimpleMarkerPlugin extends Plugin {
       mInfoShowingThread.interrupt();
     }
     
-    if(mMangePanel != null) {
-      mMangePanel.selectPrograms(false);
+    if(mManagePanel != null) {
+      mManagePanel.selectPrograms(false);
     }
     
     if(!VersionCompat.isCenterPanelSupported() && mInfoPanel != null) {
@@ -659,8 +662,8 @@ public class SimpleMarkerPlugin extends Plugin {
     addGroupingActions(root);
     root.update();
     
-    if(mMangePanel != null) {
-      mMangePanel.selectPrograms(scroll);
+    if(mManagePanel != null) {
+      mManagePanel.selectPrograms(scroll);
     }
   }
 
@@ -799,8 +802,8 @@ public class SimpleMarkerPlugin extends Plugin {
       updateCenterPanel();
     }
     
-    if(mMangePanel != null) {
-      mMangePanel.selectPrograms(false);
+    if(mManagePanel != null) {
+      mManagePanel.selectPrograms(false);
     }
     
     saveMe();
@@ -928,4 +931,9 @@ public class SimpleMarkerPlugin extends Plugin {
     return Plugin.getPluginManager().getTVBrowserVersion().compareTo(new Version(4, 21, 52, false)) >= 0;
   }
   
+  public void handleTvBrowserSettingsChanged() {
+    if(mManagePanel != null) {
+      mManagePanel.handleSettingsChanged();
+    }
+  }
 }

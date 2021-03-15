@@ -31,6 +31,8 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Hashtable;
@@ -53,6 +55,8 @@ import javax.swing.JSplitPane;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
+import javax.swing.event.AncestorEvent;
+import javax.swing.event.AncestorListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.event.PopupMenuEvent;
@@ -142,6 +146,7 @@ public class ManagePanel extends TabListenerPanel implements PersonaCompatListen
     mProgramsList = new ProgramList(mProgramListModel,new ProgramPanelSettings(new PluginPictureSettings(PluginPictureSettings.ALL_PLUGINS_SETTINGS_TYPE), false, ProgramPanelSettings.X_AXIS));
     ProgramListCompat.addMouseAndKeyListeners(mProgramsList, null);
     setDefaultFocusOwner(mProgramsList);
+    handleSettingsChanged();
     
     mMarkListsScrolPane = new JScrollPane(mMarkListsList);
     mProgramsScrollPane = new JScrollPane(mProgramsList);
@@ -309,6 +314,40 @@ public class ManagePanel extends TabListenerPanel implements PersonaCompatListen
     if(close == null) {
       updatePersona();
     }
+    
+    addAncestorListener(new AncestorListener() {
+      @Override
+      public void ancestorRemoved(AncestorEvent event) {
+        // TODO Auto-generated method stub
+        
+      }
+      
+      @Override
+      public void ancestorMoved(AncestorEvent event) {
+        // TODO Auto-generated method stub
+        
+      }
+      
+      @Override
+      public void ancestorAdded(AncestorEvent event) {
+        // TODO Auto-generated method stub
+        SwingUtilities.invokeLater(new Runnable() {
+          
+          @Override
+          public void run() {
+            try {
+              Thread.sleep(500);
+            } catch (InterruptedException e) {
+              // TODO Auto-generated catch block
+              e.printStackTrace();
+            }
+            // TODO Auto-generated method stub
+            
+            mProgramsList.updateUI();
+          }
+        });
+      }
+    });
   }
   
   private synchronized void fillFilterBox() {
@@ -409,6 +448,18 @@ public class ManagePanel extends TabListenerPanel implements PersonaCompatListen
     }}catch(Throwable t) {t.printStackTrace();}
   }
   
+  public void handleSettingsChanged() {
+    if(!SimpleMarkerPlugin.HANDLE_SEPARATORS) {
+      try {
+        Method m = mProgramsList.getClass().getDeclaredMethod("setShowDateSeparators", boolean.class);
+        m.invoke(mProgramsList, SimpleMarkerPlugin.getInstance().getSettings().isShowingDateSeperators());
+      } catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+      }
+    }
+  }
+  
   synchronized void selectPrograms(boolean scroll) {
     mProgramsList.clearSelection();
     mProgramListModel.clear();
@@ -436,11 +487,13 @@ public class ManagePanel extends TabListenerPanel implements PersonaCompatListen
       
       mProgramsList.setModel(mProgramListModel);
       
-      if(!mProgramListModel.isEmpty() && SimpleMarkerPlugin.getInstance().getSettings().isShowingDateSeperators()) {
-        try {
-          ProgramListCompat.addDateSeparators(mProgramsList);
-        } catch (Throwable e) {
-          e.printStackTrace();
+      if(SimpleMarkerPlugin.HANDLE_SEPARATORS) {
+        if(!mProgramListModel.isEmpty() && SimpleMarkerPlugin.getInstance().getSettings().isShowingDateSeperators()) {
+          try {
+            ProgramListCompat.addDateSeparators(mProgramsList);
+          } catch (Throwable e) {
+            e.printStackTrace();
+          }
         }
       }
     } else {
@@ -451,7 +504,9 @@ public class ManagePanel extends TabListenerPanel implements PersonaCompatListen
         mProgramListModel.addElement(keys.nextElement());
       }
       
-      mProgramsList.setModel(mProgramListModel);
+      if(SimpleMarkerPlugin.HANDLE_SEPARATORS) {
+        mProgramsList.setModel(mProgramListModel);
+      }
     }
     
     if(scroll) {
@@ -673,7 +728,14 @@ public class ManagePanel extends TabListenerPanel implements PersonaCompatListen
       for(int i = 0; i < mProgramListModel.getSize(); i++) {
         if(mProgramListModel.getElementAt(i) instanceof Program && 
             !((Program)mProgramListModel.getElementAt(i)).isExpired()) {
-          scroll(ProgramListCompat.getNewIndexForOldIndex(mProgramsList,i));
+          final int ii = i;
+          SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+              scroll(ProgramListCompat.getNewIndexForOldIndex(mProgramsList,ii));
+            }
+          });
+          
           break;
         }
       }
