@@ -112,17 +112,23 @@ public class ParamParser {
     boolean escapemode = false;
     boolean commandmode = false;
     boolean stringmode = false;
+    boolean stringescape = false;
     StringBuilder cmdBuffer = new StringBuilder();
     char[] chars = command.toCharArray();
     StringBuilder ret = new StringBuilder();
 
     for (int pos=0;pos<chars.length;pos++) {
-
       if (escapemode) {
         ret.append(chars[pos]);
         escapemode = false;
       } else if (chars[pos] == '\\'){
         escapemode = true;
+      } else if(stringmode && stringescape) {
+        cmdBuffer.append(chars[pos]);
+        stringescape = false;
+      } else if(stringmode && chars[pos] == '/') {
+        cmdBuffer.append(chars[pos]);
+        stringescape = true;
       } else if (commandmode && (chars[pos] == '"')) {
         cmdBuffer.append(chars[pos]);
         stringmode = !stringmode;
@@ -135,7 +141,7 @@ public class ParamParser {
         String newCommand = cmdBuffer.toString().trim();
 
         String retu = analyseCommand(prg, newCommand, pos-cmdBuffer.length());
-
+        
         if (retu == null) {
           return null;
         }
@@ -150,7 +156,7 @@ public class ParamParser {
       }
 
     }
-
+    
     if (commandmode) {
       setError("One \"{\" was not closed properly");
       return null;
@@ -265,29 +271,38 @@ public class ParamParser {
 
     char[] chars = params.toCharArray();
 
+    boolean escape = false;
+    
     for (char c : chars) {
-
-      if (c == '"') {
-        instring = !instring;
-        curparam.append(c);
-      } else if (c == ')') {
-        infunction--;
-        curparam.append(c);
-      } else if (c == '(') {
-        infunction++;
-        curparam.append(c);
-      } else if ((infunction>0)||instring) {
-        curparam.append(c);
-      } else if (c == ',') {
-        list.add(curparam.toString().trim());
-        curparam = new StringBuilder();
-      } else {
-        curparam.append(c);
+      if(c == '/') {
+        escape = true;
       }
-
-      if (infunction<0) {
-        setError("One \")\" at the wrong Position found");
-        return null;
+      else if(escape) {
+        curparam.append(c);
+        escape = false;
+      }
+      else { if (c == '"') {
+          instring = !instring;
+          curparam.append(c);
+        } else if (c == ')') {
+          infunction--;
+          curparam.append(c);
+        } else if (c == '(') {
+          infunction++;
+          curparam.append(c);
+        } else if ((infunction>0)||instring) {
+          curparam.append(c);
+        } else if (c == ',') {
+          list.add(curparam.toString().trim());
+          curparam = new StringBuilder();
+        } else {
+          curparam.append(c);
+        }
+  
+        if (infunction<0) {
+          setError("One \")\" at the wrong Position found");
+          return null;
+        }
       }
     }
 
