@@ -25,6 +25,8 @@
  */
 package listviewplugin;
 
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.util.Properties;
 
 import javax.swing.ButtonGroup;
@@ -53,6 +55,7 @@ public class ListViewSettings implements SettingsTab {
   
   public static final String SHOW_AT_STARTUP = "showAtStartup";
   public static final String PROVIDE_TAB = "provideTab";
+  public static final String REACT_ONLY_IF_TAB_VISIBLE = "reactOnlyIfVisible";
   public static final String PICTURE_SETTINGS = "pictureSettings";
   public static final String CHANNEL_LOGO_NAME_TYPE = "channelLogoNameType";
   
@@ -68,6 +71,7 @@ public class ListViewSettings implements SettingsTab {
   private PluginsPictureSettingsPanel mPictureSettings;
   
   private JCheckBox mProvideTab;
+  private JCheckBox mReactOnlyIfVisible;
   
   private JRadioButton mShowChannelLogoAndName;
   private JRadioButton mShowChannelLogo;
@@ -85,7 +89,7 @@ public class ListViewSettings implements SettingsTab {
    * Create the Panel
    */
   public JPanel createSettingsPanel() {
-    EnhancedPanelBuilder panel = new EnhancedPanelBuilder("5dlu,default:grow");
+    EnhancedPanelBuilder panel = new EnhancedPanelBuilder("5dlu,10dlu,default:grow");
     
     CellConstraints cc = new CellConstraints();
     
@@ -95,14 +99,27 @@ public class ListViewSettings implements SettingsTab {
     mProvideTab = new JCheckBox(mLocalizer.msg("provideTab", "Provide tab in TV-Browser main window"));
     mProvideTab.setSelected(mSettings.getProperty(PROVIDE_TAB,"true").equals("true"));
     
+    mReactOnlyIfVisible = new JCheckBox(mLocalizer.msg("reactOnlyIfVisible", "React to TV-Browser user interaction only if visible"));
+    mReactOnlyIfVisible.setSelected(mSettings.getProperty(REACT_ONLY_IF_TAB_VISIBLE,"false").equals("true"));
+    mReactOnlyIfVisible.setEnabled(mProvideTab.isSelected());
+    
+    mProvideTab.addItemListener(new ItemListener() {
+      @Override
+      public void itemStateChanged(ItemEvent e) {
+        mReactOnlyIfVisible.setEnabled(e.getStateChange() == ItemEvent.SELECTED);
+      }
+    });
+    
     mPictureSettings = new PluginsPictureSettingsPanel(ListViewPlugin.getInstance().getPictureSettings(), false);
     
     panel.addRow();
-    panel.add(mShowAtStart, cc.xy(2,panel.getRow()));
+    panel.add(mShowAtStart, cc.xyw(2,panel.getRow(),2));
     
     if(VersionCompat.isCenterPanelSupported()) {
       panel.addRow();
-      panel.add(mProvideTab, cc.xy(2,panel.getRow()));
+      panel.add(mProvideTab, cc.xyw(2,panel.getRow(),2));
+      panel.addRow("default");
+      panel.add(mReactOnlyIfVisible, cc.xy(3,panel.getRow()));
     }
     
     mShowChannelLogoAndName = new JRadioButton(mLocalizer.msg("showIconAndName","Show channel icon and channel name"));
@@ -125,16 +142,16 @@ public class ListViewSettings implements SettingsTab {
     
     panel.addParagraph(mLocalizer.msg("logoNameTitle","Channel icons and names"));
     panel.addRow();
-    panel.add(mShowChannelLogoAndName, CC.xy(2, panel.getRow()));
+    panel.add(mShowChannelLogoAndName, CC.xyw(2, panel.getRow(), 2));
     panel.addRow();
-    panel.add(mShowChannelLogo, CC.xy(2, panel.getRow()));
+    panel.add(mShowChannelLogo, CC.xyw(2, panel.getRow(), 2));
     panel.addRow();
-    panel.add(mShowChannelName, CC.xy(2, panel.getRow()));
+    panel.add(mShowChannelName, CC.xyw(2, panel.getRow(), 2));
     
     panel.addParagraph(PluginsPictureSettingsPanel.getTitle());
     
     panel.addGrowingRow();
-    panel.add(mPictureSettings, cc.xy(2,panel.getRow()));
+    panel.add(mPictureSettings, cc.xyw(2,panel.getRow(),2));
         
     return panel.getPanel();
   }
@@ -145,6 +162,7 @@ public class ListViewSettings implements SettingsTab {
   public void saveSettings() {
     mSettings.setProperty(SHOW_AT_STARTUP, String.valueOf(mShowAtStart.isSelected()));
     mSettings.setProperty(PROVIDE_TAB, String.valueOf(mProvideTab.isSelected()));
+    mSettings.setProperty(REACT_ONLY_IF_TAB_VISIBLE, String.valueOf(mReactOnlyIfVisible.isSelected()));
     mSettings.setProperty(PICTURE_SETTINGS, String.valueOf(mPictureSettings.getSettings().getType()));
     
     if(mShowChannelLogoAndName.isSelected()) {

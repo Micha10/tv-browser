@@ -24,6 +24,7 @@
 package listviewplugin;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -57,7 +58,6 @@ import javax.swing.table.TableColumn;
 
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
-import com.jgoodies.forms.layout.RowSpec;
 import com.jgoodies.forms.layout.Sizes;
 
 import compat.ChannelCompat;
@@ -138,7 +138,11 @@ public class ListViewPanel extends TabListenerPanel implements PersonaCompatList
   
   private Thread mRefreshThread;
   
+  private boolean mIsVisible;
+  private boolean mReactOnlyIfVisible;
+  
   public ListViewPanel(Plugin plugin) {
+    mIsVisible = false;
     mPlugin = plugin;
     mTimes = Plugin.getPluginManager().getTvBrowserSettings().getTimeButtonTimes();
     mModel = new ListTableModel();
@@ -631,6 +635,10 @@ public class ListViewPanel extends TabListenerPanel implements PersonaCompatList
     }
   }
 
+  void setReactOnlyIfVisible(boolean value) {
+    mReactOnlyIfVisible = value;
+  }
+  
   /**
    * Refresh the List with current settings
    */
@@ -696,39 +704,43 @@ public class ListViewPanel extends TabListenerPanel implements PersonaCompatList
    * @param time The time to select.
    */
   synchronized void showForTimeButton(int time) {
-    try {
-      if(time != -1) {
-        if(mRuns.isSelected()) {
-          for(int i = 0; i < mBox.getItemCount(); i++) {
-            if(time == calcTimeForSelection(i)) {
-              mBox.setSelectedIndex(i);
-              break;
+    if(react()) {
+      try {
+        if(time != -1) {
+          if(mRuns.isSelected()) {
+            for(int i = 0; i < mBox.getItemCount(); i++) {
+              if(time == calcTimeForSelection(i)) {
+                mBox.setSelectedIndex(i);
+                break;
+              }
             }
           }
+          else {
+            Calendar cal = Calendar.getInstance();
+            cal.set(Calendar.HOUR_OF_DAY, time / 60);
+            cal.set(Calendar.MINUTE, time % 60);
+            
+            mTimeSpinner.setValue(cal.getTime());
+          }
         }
-        else {
-          Calendar cal = Calendar.getInstance();
-          cal.set(Calendar.HOUR_OF_DAY, time / 60);
-          cal.set(Calendar.MINUTE, time % 60);
-          
-          mTimeSpinner.setValue(cal.getTime());
-        }
-      }
-    }catch(Throwable t) {t.printStackTrace();}
+      }catch(Throwable t) {t.printStackTrace();}
+    }
   }
   
   /**
    * Select now.
    */
   synchronized void showForNow() {
-    SwingUtilities.invokeLater(new Runnable() {
-      public void run() {
-        try {
-          mRuns.setSelected(true);
-          mBox.setSelectedIndex(0);
-        }catch(Throwable t) {t.printStackTrace();}
-      }
-    });
+    if(react()) {
+      SwingUtilities.invokeLater(new Runnable() {
+        public void run() {
+          try {
+            mRuns.setSelected(true);
+            mBox.setSelectedIndex(0);
+          }catch(Throwable t) {t.printStackTrace();}
+        }
+      });
+    }
   }
   
   /**
@@ -738,7 +750,7 @@ public class ListViewPanel extends TabListenerPanel implements PersonaCompatList
    * @param minute The minute to select.
    */
   synchronized void showForDate(final Date date, final int minute) {
-    if(mDateThread == null || !mDateThread.isAlive()) {
+    if(react() && (mDateThread == null || !mDateThread.isAlive())) {
       mDateThread = new Thread() {        
         @Override
         public void run() {try {
@@ -769,41 +781,43 @@ public class ListViewPanel extends TabListenerPanel implements PersonaCompatList
    * @param filter The filter to select.
    */
   synchronized void showForFilter(ProgramFilter filter) {
-    try {
-      String selected = (String)mFilterBox.getSelectedItem();
-      boolean foundSelected = false;
-      boolean foundFilter = false;
-      
-      ArrayList<String> availableList = new ArrayList<String>();
-      
-      for (ProgramFilter availableFilter : Plugin.getPluginManager().getFilterManager().getAvailableFilters()) {
-        if(availableFilter.getName().equals(selected)) {
-          foundSelected = true;
-        }
-        else if(filter != null && filter.getName().equals(availableFilter.getName())) {
-          foundFilter = true;
+    if(react()) {
+      try {
+        String selected = (String)mFilterBox.getSelectedItem();
+        boolean foundSelected = false;
+        boolean foundFilter = false;
+        
+        ArrayList<String> availableList = new ArrayList<String>();
+        
+        for (ProgramFilter availableFilter : Plugin.getPluginManager().getFilterManager().getAvailableFilters()) {
+          if(availableFilter.getName().equals(selected)) {
+            foundSelected = true;
+          }
+          else if(filter != null && filter.getName().equals(availableFilter.getName())) {
+            foundFilter = true;
+          }
+          
+          availableList.add(availableFilter.getName());
         }
         
-        availableList.add(availableFilter.getName());
-      }
-      
-      for(int i = mFilterBox.getItemCount() - 1; i >= 0; i--) {
-        if(!availableList.remove(mFilterBox.getItemAt(i))) {
-          mFilterBox.removeItemAt(i);
+        for(int i = mFilterBox.getItemCount() - 1; i >= 0; i--) {
+          if(!availableList.remove(mFilterBox.getItemAt(i))) {
+            mFilterBox.removeItemAt(i);
+          }
         }
-      }
-      
-      for(String availableFilter : availableList) {
-        mFilterBox.addItem(availableFilter);
-      }
-      
-      if(foundFilter && filter != null) {
-        mFilterBox.setSelectedItem(filter.getName());
-      }
-      else if(!foundSelected) {
-        mFilterBox.setSelectedItem(ListViewPlugin.getPluginManager().getFilterManager().getCurrentFilter().getName());
-      }
-    }catch(Throwable t) {t.printStackTrace();}
+        
+        for(String availableFilter : availableList) {
+          mFilterBox.addItem(availableFilter);
+        }
+        
+        if(foundFilter && filter != null) {
+          mFilterBox.setSelectedItem(filter.getName());
+        }
+        else if(!foundSelected) {
+          mFilterBox.setSelectedItem(ListViewPlugin.getPluginManager().getFilterManager().getCurrentFilter().getName());
+        }
+      }catch(Throwable t) {t.printStackTrace();}
+    }
   }
   
   /**
@@ -812,26 +826,28 @@ public class ListViewPanel extends TabListenerPanel implements PersonaCompatList
    * @param ch The channel to select.
    */
   synchronized void showChannel(final Channel ch) {
-    try {
-      for(int i = 0; i < mProgramTable.getRowCount(); i++) {
-        if(mProgramTable.getValueAt(i, 0).equals(ch)) {
-          final int row = i;          
-          
-          if(row >= 0 && row < mProgramTable.getRowCount()) {
-            mProgramTable.getSelectionModel().setSelectionInterval(row, row);
-          }
-          
-          SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {try {
-              if(row >= 0 && row < mProgramTable.getRowCount()) {
-                mProgramTable.scrollRectToVisible(mProgramTable.getCellRect(row, 0, true));
-              }}catch(Throwable t) {t.printStackTrace();}
+    if(react()) {
+      try {
+        for(int i = 0; i < mProgramTable.getRowCount(); i++) {
+          if(mProgramTable.getValueAt(i, 0).equals(ch)) {
+            final int row = i;          
+            
+            if(row >= 0 && row < mProgramTable.getRowCount()) {
+              mProgramTable.getSelectionModel().setSelectionInterval(row, row);
             }
-          });
+            
+            SwingUtilities.invokeLater(new Runnable() {
+              @Override
+              public void run() {try {
+                if(row >= 0 && row < mProgramTable.getRowCount()) {
+                  mProgramTable.scrollRectToVisible(mProgramTable.getCellRect(row, 0, true));
+                }}catch(Throwable t) {t.printStackTrace();}
+              }
+            });
+          }
         }
-      }
-    }catch(Throwable t) {t.printStackTrace();}
+      }catch(Throwable t) {t.printStackTrace();}
+    }
   }
   
   @Override
@@ -898,5 +914,19 @@ public class ListViewPanel extends TabListenerPanel implements PersonaCompatList
 
     JPopupMenu menu = devplugin.Plugin.getPluginManager().createPluginContextMenu(prg, mPlugin);
     menu.show(mProgramTable, e.getX() - 15, e.getY() - 15);
+  }
+  
+  private boolean react() {
+    return (mIsVisible || !mReactOnlyIfVisible);
+  }
+  
+  @Override
+  public void tabShown() {
+    mIsVisible = true;
+  }
+  
+  @Override
+  public void tabHidden(Component mostRecent) {
+    mIsVisible = false;
   }
 }

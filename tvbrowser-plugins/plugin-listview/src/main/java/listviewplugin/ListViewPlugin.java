@@ -57,7 +57,7 @@ import util.settings.PluginPictureSettings;
  * @author bodo
  */
 public class ListViewPlugin extends Plugin {
-  private static final Version mVersion = new Version(3,28,3,true);
+  private static final Version mVersion = new Version(3,30,0,true);
 
     protected static final int PROGRAMTABLEWIDTH = 200;
   
@@ -221,7 +221,7 @@ public class ListViewPlugin extends Plugin {
           mListPanel = null;
           
           mListPanel = new ListViewPanel(ListViewPlugin.this);
-          
+          mListPanel.setReactOnlyIfVisible(mSettings.getProperty(ListViewSettings.REACT_ONLY_IF_TAB_VISIBLE, "false").equals("true"));
           mAncestorListener = new AncestorListener() {
             @Override
             public void ancestorRemoved(AncestorEvent event) {
