@@ -47,6 +47,45 @@ import devplugin.ProgramFieldType;
  * @author bodum
  */
 public class ParamLibrary {
+  private static final String KEY_TITLE = "title";
+  private static final String KEY_ORIGINAL_TITLE = "original_title";
+  private static final String KEY_START_DAY = "start_day";
+  private static final String KEY_START_MONTH = "start_month";
+  private static final String KEY_START_YEAR = "start_year";
+  private static final String KEY_START_HOUR = "start_hour";
+  private static final String KEY_START_MINUTE = "start_minute";
+  private static final String KEY_END_MONTH = "end_month";
+  private static final String KEY_END_YEAR = "end_year";
+  private static final String KEY_END_DAY = "end_day";
+  private static final String KEY_END_HOUR = "end_hour";
+  private static final String KEY_END_MINUTE = "end_minute";
+  private static final String KEY_LENGTH_MINUTES = "length_minutes";
+  private static final String KEY_LENGTH_SECONDS = "length_sec";
+  private static final String KEY_SHORT_INFO = "short_info";
+  private static final String KEY_DESCRIPTION = "description";
+  private static final String KEY_EPISODE = "episode";
+  private static final String KEY_EPISODE_ORIGINAL = "original_episode";
+  private static final String KEY_EPISODE_NUMBER = "episode_number";
+  private static final String KEY_CHANNEL_NAME = "channel_name";
+  private static final String KEY_CHANNEL_SORT_NUMBER = "channel_sort_number";
+  private static final String KEY_URL = "url";
+  private static final String KEY_START_DAY_OF_WEEK = "start_day_of_week";
+  private static final String KEY_START_MONTH_NAME = "url";
+  private static final String KEY_GENRE = "genre";
+  private static final String KEY_START_UNIX = "start_unix";
+  private static final String KEY_END_UNIX = "end_unix";
+  private static final String KEY_CUSTOM = "custom";
+  private static final String KEY_PRODUCTION_YEAR = "production_year";
+  private static final String KEY_ACTORS = "actors";
+  private static final String KEY_ORIGIN = "origin";
+  private static final String KEY_SEASON_NUMBER = "season_number";
+  
+  private static final String[] KEY_ARRAY = { KEY_TITLE, KEY_ORIGINAL_TITLE, KEY_START_DAY, KEY_START_MONTH, KEY_START_YEAR, KEY_START_HOUR, KEY_START_MINUTE,
+      KEY_END_MONTH, KEY_END_YEAR, KEY_END_DAY, KEY_END_HOUR, KEY_END_MINUTE, KEY_LENGTH_MINUTES, KEY_LENGTH_SECONDS, KEY_SHORT_INFO,
+      KEY_DESCRIPTION, KEY_EPISODE, KEY_EPISODE_ORIGINAL, KEY_EPISODE_NUMBER, KEY_CHANNEL_NAME, KEY_CHANNEL_SORT_NUMBER, KEY_URL,
+      KEY_START_DAY_OF_WEEK, KEY_START_MONTH_NAME, KEY_GENRE, KEY_START_UNIX, KEY_END_UNIX, KEY_CUSTOM, KEY_PRODUCTION_YEAR, KEY_ACTORS,
+      KEY_ORIGIN,KEY_SEASON_NUMBER};
+  
   /** Translator */
   private static final Localizer LOCALIZER = Localizer.getLocalizerFor(ParamLibrary.class);
 
@@ -97,12 +136,7 @@ public class ParamLibrary {
    * @return Array with possible Keys
    */
   public String[] getPossibleKeys() {
-    String[] str = { "title", "original_title", "start_day", "start_month", "start_year", "start_hour", "start_minute",
-        "end_month", "end_year", "end_day", "end_hour", "end_minute", "length_minutes", "length_sec", "short_info",
-        "description", "episode", "original_episode", "episode_number", "channel_name", "channel_sort_number", "url",
-        "start_day_of_week", "start_month_name", "genre", "start_unix", "end_unix", "custom", "production_year", "actors",
-        "origin","season_number"};
-    return str;
+    return KEY_ARRAY;
   }
 
   /**
@@ -153,68 +187,84 @@ public class ParamLibrary {
    * @return Value of key in program
    */
   public String getStringForKey(Program program, String key) {
-    if (key.equalsIgnoreCase("title")) {
+    if (key.equalsIgnoreCase(KEY_TITLE)) {
       return program.getTitle();
-    } else if (key.equalsIgnoreCase("start_day")) {
+    } else if (key.equalsIgnoreCase(KEY_START_DAY)) {
       return String.valueOf(program.getDate().getDayOfMonth());
-    } else if (key.equalsIgnoreCase("start_month")) {
+    } else if (key.equalsIgnoreCase(KEY_START_MONTH)) {
       return String.valueOf(program.getDate().getMonth());
-    } else if (key.equalsIgnoreCase("start_year")) {
+    } else if (key.equalsIgnoreCase(KEY_START_YEAR)) {
       return String.valueOf(program.getDate().getYear());
-    } else if (key.equalsIgnoreCase("end_day")) {
+    } else if (key.equalsIgnoreCase(KEY_END_DAY)) {
       return String.valueOf(getEndTimeFieldInProgram(program, Calendar.DAY_OF_MONTH));
-    } else if (key.equalsIgnoreCase("end_month")) {
+    } else if (key.equalsIgnoreCase(KEY_END_MONTH)) {
       return String.valueOf(getEndTimeFieldInProgram(program, Calendar.MONTH) + 1);
-    } else if (key.equalsIgnoreCase("end_year")) {
+    } else if (key.equalsIgnoreCase(KEY_END_YEAR)) {
       return String.valueOf(getEndTimeFieldInProgram(program, Calendar.YEAR));
-    } else if (key.equalsIgnoreCase("start_hour")) {
+    } else if (key.equalsIgnoreCase(KEY_START_HOUR)) {
       return String.valueOf(program.getHours());
-    } else if (key.equalsIgnoreCase("start_minute")) {
+    } else if (key.equalsIgnoreCase(KEY_START_MINUTE)) {
       return String.valueOf(program.getMinutes());
-    } else if (key.equalsIgnoreCase("end_hour")) {
+    } else if (key.equalsIgnoreCase(KEY_END_HOUR)) {
       return String.valueOf(getEndTimeFieldInProgram(program, Calendar.HOUR_OF_DAY));
-    } else if (key.equalsIgnoreCase("end_minute")) {
+    } else if (key.equalsIgnoreCase(KEY_END_MINUTE)) {
       return String.valueOf(getEndTimeFieldInProgram(program, Calendar.MINUTE));
-    } else if (key.equalsIgnoreCase("length_minutes")) {
+    } else if (key.equalsIgnoreCase(KEY_LENGTH_MINUTES)) {
       return String.valueOf(program.getLength());
-    } else if (key.equalsIgnoreCase("length_sec")) {
+    } else if (key.equalsIgnoreCase(KEY_LENGTH_SECONDS)) {
       return String.valueOf(program.getLength() * 60);
-    } else if (key.equalsIgnoreCase("short_info")) {
+    } else if (key.equalsIgnoreCase(KEY_SHORT_INFO)) {
       return removeNull(program.getShortInfo());
-    } else if (key.equalsIgnoreCase("description")) {
+    } else if (key.equalsIgnoreCase(KEY_DESCRIPTION)) {
       String res = removeNull(program.getDescription());
       String copyright = program.getChannel().getCopyrightNotice();
 	    if (copyright != null) {
         return new StringBuilder(res).append('\n').append(copyright).toString();
       }
       return res;
-    } else if (key.equalsIgnoreCase("channel_name")) {
+    } else if (key.equalsIgnoreCase(KEY_CHANNEL_NAME)) {
       return removeNull(program.getChannel().getName());
-    } else if (key.equalsIgnoreCase("channel_sort_number")) {
+    } else if (key.equalsIgnoreCase(KEY_CHANNEL_SORT_NUMBER)) {
       return removeNull(program.getChannel().getSortNumber());
-    } else if (key.equalsIgnoreCase("start_day_of_week")) {
+    } else if (key.equalsIgnoreCase(KEY_START_DAY_OF_WEEK)) {
       SimpleDateFormat format = new SimpleDateFormat("EEEE");
       return format.format(new java.util.Date(program.getDate().getCalendar().getTimeInMillis()));
-    } else if (key.equalsIgnoreCase("start_month_name")) {
+    } else if (key.equalsIgnoreCase(KEY_START_MONTH_NAME)) {
       SimpleDateFormat format = new SimpleDateFormat("MMMM");
       return format.format(new java.util.Date(program.getDate().getCalendar().getTimeInMillis()));
-    } else if (key.equalsIgnoreCase("start_unix")) {
+    } else if (key.equalsIgnoreCase(KEY_START_UNIX)) {
       return Long.toString(createStartTime(program).getTimeInMillis() / 1000);
-    } else if (key.equalsIgnoreCase("end_unix")) {
+    } else if (key.equalsIgnoreCase(KEY_END_UNIX)) {
       return Long.toString(createEndTime(program).getTimeInMillis() / 1000);
-    } else if (key.equalsIgnoreCase("episode_number")) {
+    } else if (key.equalsIgnoreCase(KEY_EPISODE_NUMBER)) {
       int epNum = program.getIntField(ProgramFieldType.EPISODE_NUMBER_TYPE);
       if (epNum == -1) {
         return "";
       }
       return Integer.toString(epNum);
-    } else if (key.equalsIgnoreCase("production_year")) {
+    } else if (key.equalsIgnoreCase(KEY_PRODUCTION_YEAR)) {
       int productionYear = program.getIntField(ProgramFieldType.PRODUCTION_YEAR_TYPE);
       if (productionYear < 1800) {
         return "";
       }
       return Integer.toString(productionYear);
-    } else if (key.equalsIgnoreCase("actors")) {
+    } else if (key.equalsIgnoreCase(KEY_GENRE)) {
+      return removeNull(program.getTextField(ProgramFieldType.GENRE_TYPE));
+    } else if (key.equalsIgnoreCase(KEY_ORIGIN)) {
+      return removeNull(program.getTextField(ProgramFieldType.ORIGIN_TYPE));
+    } else if (key.equalsIgnoreCase(KEY_ORIGINAL_TITLE)) {
+      return removeNull(program.getTextField(ProgramFieldType.ORIGINAL_TITLE_TYPE));
+    } else if (key.equalsIgnoreCase(KEY_URL)) {
+      return removeNull(program.getTextField(ProgramFieldType.URL_TYPE));
+    } else if (key.equalsIgnoreCase(KEY_EPISODE)) {
+      return removeNull(program.getTextField(ProgramFieldType.EPISODE_TYPE));
+    } else if (key.equalsIgnoreCase(KEY_EPISODE_ORIGINAL)) {
+      return removeNull(program.getTextField(ProgramFieldType.ORIGINAL_EPISODE_TYPE));
+    } else if (key.equalsIgnoreCase(KEY_CUSTOM)) {
+      return removeNull(program.getTextField(ProgramFieldType.CUSTOM_TYPE));
+    } else if (key.equalsIgnoreCase(KEY_SEASON_NUMBER)) {
+      return removeNull(program.getTextField(ProgramFieldType.SEASON_NUMBER_TYPE));
+    } else if (key.equalsIgnoreCase(KEY_ACTORS)) {
       return removeNull(program.getTextField(ProgramFieldType.ACTOR_LIST_TYPE));
     } else {
       try {
@@ -467,7 +517,12 @@ public class ParamLibrary {
     		
     		String[] parts = replace.split("::");
     		
-    		haystack = haystack.replace(parts[0], parts[1]);
+    		if(parts.length == 1) {
+    		  haystack = haystack.replace(parts[0], "");
+    		}
+    		else {
+    		  haystack = haystack.replace(parts[0], parts[1]);
+    		}
     	}
     	
     	return haystack;
