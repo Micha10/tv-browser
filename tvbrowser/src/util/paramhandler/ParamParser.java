@@ -45,6 +45,9 @@ import devplugin.Program;
  *  @author bodum
  */
 public class ParamParser {
+  private static final char ESCAPE_IN_STRING = '%';
+  private static final char ESCAPE_OUT_STRING = '\\';
+	
   /** The Library to use */
   private ParamLibrary mLibrary;
   /** The ErrorString */
@@ -118,17 +121,17 @@ public class ParamParser {
     StringBuilder ret = new StringBuilder();
 
     for (int pos=0;pos<chars.length;pos++) {
-      if (escapemode) {
-        ret.append(chars[pos]);
-        escapemode = false;
-      } else if (chars[pos] == '\\'){
-        escapemode = true;
-      } else if(stringmode && stringescape) {
+      if(stringmode && stringescape) {
         cmdBuffer.append(chars[pos]);
         stringescape = false;
-      } else if(stringmode && chars[pos] == '/') {
+      } else if(stringmode && chars[pos] == ESCAPE_IN_STRING) {
         cmdBuffer.append(chars[pos]);
         stringescape = true;
+      } else if (escapemode) {
+        ret.append(chars[pos]);
+        escapemode = false;
+      } else if (chars[pos] == ESCAPE_OUT_STRING){
+        escapemode = true;
       } else if (commandmode && (chars[pos] == '"')) {
         cmdBuffer.append(chars[pos]);
         stringmode = !stringmode;
@@ -154,7 +157,6 @@ public class ParamParser {
       } else {
         ret.append(chars[pos]);
       }
-
     }
     
     if (commandmode) {
@@ -180,7 +182,7 @@ public class ParamParser {
    */
   private String analyseCommand(Program prg, String newCommand, int pos) {
     String ret;
-
+    
     if (newCommand.startsWith("\"") && newCommand.endsWith("\"")) {
       ret = newCommand.substring(1, newCommand.length()-1);
     } else if (newCommand.indexOf('(') > -1) {
@@ -203,7 +205,28 @@ public class ParamParser {
 
       ret = cmdRet;
     }
-
+    
+    boolean stringEscape = false;
+    
+    StringBuilder result = new StringBuilder();
+    
+    for(int i = 0; i < ret.length(); i++) {
+      char c = ret.charAt(i);
+      
+      if(stringEscape) {
+        result.append(c);
+        stringEscape = false;
+      }
+      else if(c == ESCAPE_IN_STRING) {
+    	stringEscape = true;
+      }
+      else {
+    	result.append(c);
+      }
+    }
+    
+    ret = result.toString();
+    
     return ret;
   }
 
@@ -268,20 +291,21 @@ public class ParamParser {
     StringBuilder curparam = new StringBuilder();
 
     ArrayList<String> list = new ArrayList<String>();
-
-    char[] chars = params.toCharArray();
-
     boolean escape = false;
     
-    for (char c : chars) {
-      if(c == '/') {
-        escape = true;
-      }
-      else if(escape) {
-        curparam.append(c);
+    for (int i = 0; i < params.length(); i++) {
+      char c = params.charAt(i);
+        
+      if(escape) {
+    	curparam.append(ESCAPE_IN_STRING);
+    	curparam.append(c);
         escape = false;
       }
-      else { if (c == '"') {
+      else if(c == ESCAPE_IN_STRING) {
+        escape = true;
+      }
+      else {
+    	if (c == '"') {
           instring = !instring;
           curparam.append(c);
         } else if (c == ')') {
@@ -305,7 +329,7 @@ public class ParamParser {
         }
       }
     }
-
+    
     if (instring) {
       setError("One \" was not closed properly");
       return null;
