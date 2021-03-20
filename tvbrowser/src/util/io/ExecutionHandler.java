@@ -246,35 +246,46 @@ public class ExecutionHandler {
   }
 
   private String[] calculateParameter(String parameter, String programPath) {
-    StringBuilder lastString = null;
     ArrayList<String> args = new ArrayList<String>();
 
     args.add(programPath.trim());
-
-    for (String part : parameter.split(" ")) {
-      if (part.length() > 0 && part.charAt(0) == '"') {
-        if (part.charAt(part.length()-1) == '"') {
-          args.add(part);
-        } else {
-          lastString = new StringBuilder(part);
-          lastString.deleteCharAt(0);
+    
+    StringBuilder part = new StringBuilder();
+    
+    boolean inString = false;
+    boolean escape = false;
+    
+    for(int i = 0; i < parameter.length(); i++) {
+      if(escape) {
+        part.append(parameter.charAt(i));
+        escape = false;
+      }
+      else if(parameter.charAt(i) == '\\') {
+        escape = true;
+      }
+      else if(!inString && parameter.charAt(i) == ' ') {
+        if(part.toString().strip().length() > 0) {
+          args.add(part.toString());
         }
-      } else if (lastString != null) {
-        lastString.append(' ');
-        lastString.append(part);
-        if (part.length() > 0 && part.charAt(part.length()-1) == '"') {
-          lastString.deleteCharAt(lastString.length() - 1);
-          args.add(lastString.toString());
-          lastString = null;
+        
+        part.setLength(0);
+      }
+      else if(parameter.charAt(i) == '"') {
+        if(inString) {
+          if(part.toString().strip().length() > 0) {
+            args.add(part.toString());
+          }
+          
+          part.setLength(0);
         }
-      // Add parameter only if it isn't just whitespace. Use quotes
-      // to add empty or whitespace only parameters!
-      // FSCHAECK - 2008-12-06
-      } else if (part.trim().length() > 0) {
-        args.add(part);
+        
+        inString = !inString;
+      }
+      else {
+        part.append(parameter.charAt(i));
       }
     }
-
+    
     return args.toArray(new String[args.size()]);
   }
 
