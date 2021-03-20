@@ -82,7 +82,7 @@ public class StreamReaderThread extends Thread {
         reader = new BufferedReader(new InputStreamReader(mInput));
       }
 
-      while ((line = reader.readLine()) != null) {System.out.println(line);
+      while ((line = reader.readLine()) != null) {
         if (mSaveOutput) {
           mOutput.append(line).append('\n');
         }

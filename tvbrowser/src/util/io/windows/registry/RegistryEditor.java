@@ -189,7 +189,6 @@ public class RegistryEditor {
           // TODO Auto-generated catch block
           e.printStackTrace();
         }
-        System.out.println(h.getOutput()+" ");
       }
     } catch (IOException e) {
       // TODO Auto-generated catch block
