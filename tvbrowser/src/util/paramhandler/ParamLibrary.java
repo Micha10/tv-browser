@@ -35,6 +35,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import devplugin.Program;
 import devplugin.ProgramFieldType;
+import util.browserlauncher.Launch;
 import util.i18n.Localizer;
 import util.misc.TextLineBreakerStringWidth;
 
@@ -544,7 +545,7 @@ public class ParamLibrary {
       return params[0].replaceAll("\\r*\\n", " ").strip();
     }
     else if(function.equalsIgnoreCase(FUNCTION_ESCAPE_QUOTES)) {
-      return params[0].replace("\"", "\\\"");
+      return Launch.getOs() == Launch.OS_WINDOWS ? params[0].replace("\"", "\\\"\\\"") : params[0].replace("\"", "\\\"");
     }
 
     mError = true;
