@@ -89,6 +89,7 @@ public class ParamLibrary {
   private static final String FUNCTION_TESTPARAM = "testparam";
   private static final String FUNCTION_MAX_LENGTH = "maxlength";
   private static final String FUNCTION_REPLACE = "replace";
+  private static final String FUNCTION_REPLACE_LINE_FEED = "replaceNewline";
   private static final String FUNCTION_ESCAPE_QUOTES = "escapeQuotes";
   
   private static final String[] KEY_ARRAY = { KEY_TITLE, KEY_ORIGINAL_TITLE, KEY_START_DAY, KEY_START_MONTH, KEY_START_YEAR, KEY_START_HOUR, KEY_START_MINUTE,
@@ -98,7 +99,7 @@ public class ParamLibrary {
       KEY_ORIGIN,KEY_SEASON_NUMBER};
   
   private static final String[] FUNCTION_ARRAY = { FUNCTION_ISSET, FUNCTION_URLENCODE, FUNCTION_CONCAT, FUNCTION_CLEAN, FUNCTION_CLEAN_LESS, FUNCTION_LEADING_ZERO,
-      FUNCTION_SPLIT_AT, FUNCTION_TESTPARAM, FUNCTION_MAX_LENGTH, FUNCTION_REPLACE, FUNCTION_ESCAPE_QUOTES};
+      FUNCTION_SPLIT_AT, FUNCTION_TESTPARAM, FUNCTION_MAX_LENGTH, FUNCTION_REPLACE, FUNCTION_REPLACE_LINE_FEED, FUNCTION_ESCAPE_QUOTES};
   
   /** Translator */
   private static final Localizer LOCALIZER = Localizer.getLocalizerFor(ParamLibrary.class);
@@ -537,8 +538,10 @@ public class ParamLibrary {
     		  haystack = haystack.replace(parts[0], parts[1]);
     		}
     	}
-    	
     	return haystack;
+    }
+    else if(function.equalsIgnoreCase(FUNCTION_REPLACE_LINE_FEED)) {
+      return params[0].replaceAll("\\r*\\n", " ").strip();
     }
     else if(function.equalsIgnoreCase(FUNCTION_ESCAPE_QUOTES)) {
       return params[0].replace("\"", "\\\"");
