@@ -33,11 +33,10 @@ import java.util.Calendar;
 
 import org.apache.commons.lang3.StringUtils;
 
-import util.misc.TextLineBreakerStringWidth;
-import util.i18n.Localizer;
-
 import devplugin.Program;
 import devplugin.ProgramFieldType;
+import util.i18n.Localizer;
+import util.misc.TextLineBreakerStringWidth;
 
 /**
  * The default ParamLibrary. If you want to add new parameters or functions for your
@@ -70,7 +69,7 @@ public class ParamLibrary {
   private static final String KEY_CHANNEL_SORT_NUMBER = "channel_sort_number";
   private static final String KEY_URL = "url";
   private static final String KEY_START_DAY_OF_WEEK = "start_day_of_week";
-  private static final String KEY_START_MONTH_NAME = "url";
+  private static final String KEY_START_MONTH_NAME = "start_month_name";
   private static final String KEY_GENRE = "genre";
   private static final String KEY_START_UNIX = "start_unix";
   private static final String KEY_END_UNIX = "end_unix";
@@ -80,11 +79,26 @@ public class ParamLibrary {
   private static final String KEY_ORIGIN = "origin";
   private static final String KEY_SEASON_NUMBER = "season_number";
   
+  private static final String FUNCTION_ISSET = "isset";
+  private static final String FUNCTION_URLENCODE = "urlencode";
+  private static final String FUNCTION_CONCAT = "concat";
+  private static final String FUNCTION_CLEAN = "clean";
+  private static final String FUNCTION_CLEAN_LESS = "cleanLess";
+  private static final String FUNCTION_LEADING_ZERO = "leadingZero";
+  private static final String FUNCTION_SPLIT_AT = "splitAt";
+  private static final String FUNCTION_TESTPARAM = "testparam";
+  private static final String FUNCTION_MAX_LENGTH = "maxlength";
+  private static final String FUNCTION_REPLACE = "replace";
+  private static final String FUNCTION_ESCAPE_QUOTES = "escapeQuotes";
+  
   private static final String[] KEY_ARRAY = { KEY_TITLE, KEY_ORIGINAL_TITLE, KEY_START_DAY, KEY_START_MONTH, KEY_START_YEAR, KEY_START_HOUR, KEY_START_MINUTE,
       KEY_END_MONTH, KEY_END_YEAR, KEY_END_DAY, KEY_END_HOUR, KEY_END_MINUTE, KEY_LENGTH_MINUTES, KEY_LENGTH_SECONDS, KEY_SHORT_INFO,
       KEY_DESCRIPTION, KEY_EPISODE, KEY_EPISODE_ORIGINAL, KEY_EPISODE_NUMBER, KEY_CHANNEL_NAME, KEY_CHANNEL_SORT_NUMBER, KEY_URL,
       KEY_START_DAY_OF_WEEK, KEY_START_MONTH_NAME, KEY_GENRE, KEY_START_UNIX, KEY_END_UNIX, KEY_CUSTOM, KEY_PRODUCTION_YEAR, KEY_ACTORS,
       KEY_ORIGIN,KEY_SEASON_NUMBER};
+  
+  private static final String[] FUNCTION_ARRAY = { FUNCTION_ISSET, FUNCTION_URLENCODE, FUNCTION_CONCAT, FUNCTION_CLEAN, FUNCTION_CLEAN_LESS, FUNCTION_LEADING_ZERO,
+      FUNCTION_SPLIT_AT, FUNCTION_TESTPARAM, FUNCTION_MAX_LENGTH, FUNCTION_REPLACE, FUNCTION_ESCAPE_QUOTES};
   
   /** Translator */
   private static final Localizer LOCALIZER = Localizer.getLocalizerFor(ParamLibrary.class);
@@ -159,8 +173,7 @@ public class ParamLibrary {
    * @return List of possible Functions
    */
   public String[] getPossibleFunctions() {
-    String[] str = { "isset", "urlencode", "concat", "clean", "cleanLess", "leadingZero", "splitAt", "testparam", "maxlength", "replace"};
-    return str;
+    return FUNCTION_ARRAY;
   }
 
   /**
@@ -353,7 +366,7 @@ public class ParamLibrary {
    * @return Return-Value of Function
    */
   public String getStringForFunction(Program prg, String function, String[] params) {
-    if (function.equalsIgnoreCase("isset")) {
+    if (function.equalsIgnoreCase(FUNCTION_ISSET)) {
       if (params.length != 2) {
         mError = true;
         mErrorString = LOCALIZER.msg("isset2Params", "isset needs 2 Parameters");
@@ -365,7 +378,7 @@ public class ParamLibrary {
       }
 
       return params[1];
-    } else if (function.equalsIgnoreCase("testparam")) {
+    } else if (function.equalsIgnoreCase(FUNCTION_TESTPARAM)) {
       if ((params.length < 2) || ((params.length > 3))) {
         mError = true;
         mErrorString = LOCALIZER.msg("testparam2Params", "testparam needs 2-3 Parameters");
@@ -381,7 +394,7 @@ public class ParamLibrary {
       }
 
       return "";
-    } else if (function.equalsIgnoreCase("urlencode")) {
+    } else if (function.equalsIgnoreCase(FUNCTION_URLENCODE)) {
       if (params.length != 2) {
         mError = true;
         mErrorString = LOCALIZER.msg("urlencode2Params", "urlencode needs 2 Parameters");
@@ -395,28 +408,28 @@ public class ParamLibrary {
         mErrorString = LOCALIZER.msg("urlencodeProblems", "Problems with encoding : ") + e.toString();
         return null;
       }
-    } else if (function.equalsIgnoreCase("concat")) {
+    } else if (function.equalsIgnoreCase(FUNCTION_CONCAT)) {
       StringBuilder buffer = new StringBuilder();
 
       for (String param : params) {
         buffer.append(param);
       }
       return buffer.toString();
-    } else if (function.equalsIgnoreCase("clean")) {
+    } else if (function.equalsIgnoreCase(FUNCTION_CLEAN)) {
       StringBuilder buffer = new StringBuilder();
 
       for (String param : params) {
         buffer.append(clean(param));
       }
       return buffer.toString();
-    } else if (function.equalsIgnoreCase("cleanLess")) {
+    } else if (function.equalsIgnoreCase(FUNCTION_CLEAN_LESS)) {
       StringBuilder buffer = new StringBuilder();
 
       for (String param : params) {
         buffer.append(cleanLess(param));
       }
       return buffer.toString();
-    } else if (function.equalsIgnoreCase("leadingZero")) {
+    } else if (function.equalsIgnoreCase(FUNCTION_LEADING_ZERO)) {
       if (params.length > 2) {
         mError = true;
         mErrorString = LOCALIZER.msg("leadingZero2Params", "leadingZero has max. 2 Parameters");
@@ -436,7 +449,7 @@ public class ParamLibrary {
       }
 
       return addLeadingZeros(params[0], num);
-    } else if (function.equalsIgnoreCase("splitAt")) {
+    } else if (function.equalsIgnoreCase(FUNCTION_SPLIT_AT)) {
       if (params.length != 2) {
         mError = true;
         mErrorString = LOCALIZER.msg("splitAt2Params", "splitAt needs 2 Parameters");
@@ -472,7 +485,7 @@ public class ParamLibrary {
       }
 
       return result.toString().trim();
-    } else if (function.equalsIgnoreCase("maxlength")) {
+    } else if (function.equalsIgnoreCase(FUNCTION_MAX_LENGTH)) {
       if (params.length != 2) {
         mError = true;
         mErrorString = LOCALIZER.msg("maxlength2Params", "maxlength needs 2 Parameters");
@@ -496,7 +509,7 @@ public class ParamLibrary {
       }
 
       return result;
-    } else if(function.equalsIgnoreCase("replace")) {
+    } else if(function.equalsIgnoreCase(FUNCTION_REPLACE)) {
     	if(params.length != 2) {
     		mError = true;
             mErrorString = LOCALIZER.msg("replace2Params", "replace needs 2 Parameters");
@@ -526,6 +539,9 @@ public class ParamLibrary {
     	}
     	
     	return haystack;
+    }
+    else if(function.equalsIgnoreCase(FUNCTION_ESCAPE_QUOTES)) {
+      return params[0].replace("\"", "\\\"");
     }
 
     mError = true;
