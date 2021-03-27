@@ -672,9 +672,9 @@ Section "Uninstall"
   isadmin:
     ReadRegStr $9 HKLM "Software\${PROG_NAME}${VERSION}" "Install directory"
     IfErrors noDeleteStartMenu
-  	ReadRegStr $10 HKLM "Software\${PROG_NAME}" "Install directory"
+  	ReadRegStr $R1 HKLM "Software\${PROG_NAME}" "Install directory"
   	IfErrors deleteProgramEntry
-  	${If} "$9" == "$10"
+  	${If} "$9" == "$R1"
   		DeleteRegKey \
     	HKLM \
     	"Software\${PROG_NAME}"
@@ -693,9 +693,9 @@ Section "Uninstall"
   isnotpower:
     ReadRegStr $9 HKCU "Software\${PROG_NAME}${VERSION}" "Install directory"
     IfErrors noDeleteStartMenu
-  	ReadRegStr $10 HKCU "Software\${PROG_NAME}" "Install directory"
+  	ReadRegStr $R1 HKCU "Software\${PROG_NAME}" "Install directory"
   	IfErrors deleteProgramEntryUser
-  	${If} "$9" == "$10"
+  	${If} "$9" == "$R1"
   		DeleteRegKey \
     	HKLM \
     	"Software\${PROG_NAME}"
