@@ -158,12 +158,12 @@ Function .onInit
   ClearErrors
   ReadRegStr $0 HKLM "Software\${PROG_NAME}${VERSION}" "Install directory"
   IfErrors +1 +2
-  ReadRegStr $0 HKLM "Software\TV-Browser" "Install directory"
+  ReadRegStr $0 HKLM "Software\${PROG_NAME}" "Install directory"
   # Get the default start menu folder from registry if available
   ClearErrors
   ReadRegStr $7 HKLM "Software\${PROG_NAME}${VERSION}" "Start Menu Folder"
   IfErrors +1 +2
-  ReadRegStr $7 HKLM "Software\TV-Browser" "Start Menu Folder"
+  ReadRegStr $7 HKLM "Software\${PROG_NAME}" "Start Menu Folder"
   goto goon
   isnotpower:
   StrCpy $8 "HKCU"
@@ -171,12 +171,12 @@ Function .onInit
   ClearErrors
   ReadRegStr $0 HKCU "Software\${PROG_NAME}${VERSION}" "Install directory"
   IfErrors +1 +2
-  ReadRegStr $0 HKCU "Software\TV-Browser" "Install directory"
+  ReadRegStr $0 HKCU "Software\${PROG_NAME}" "Install directory"
   # Get the default start menu folder from registry if available
   ClearErrors
   ReadRegStr $7 HKCU "Software\${PROG_NAME}${VERSION}" "Start Menu Folder"
   IfErrors +1 +2
-  ReadRegStr $7 HKCU "Software\TV-Browser" "Start Menu Folder"
+  ReadRegStr $7 HKCU "Software\${PROG_NAME}" "Start Menu Folder"
 
   goon:
   IfErrors errors
@@ -262,6 +262,17 @@ InstType "$(INSTALLATION_TYPE_NORMAL)" #"Normal"
 Section "$(STD_SECTION_NAME)" SEC_STANDARD
   # make the section required
   SectionIn 1 2 RO
+
+  ${If} ${RunningX64}
+    StrCpy $9 "$PROGRAMFILES64"
+  ${Else}
+    StrCpy $9 "$PROGRAMFILES32"
+  ${EndIf}
+  
+  ${If} "$INSTDIR" == "$9"
+    StrCpy $INSTDIR "$9\${PROG_NAME}"
+  ${EndIf}
+  
 
   # Set output path to the installation directory.
   SetOutPath "$INSTDIR"
@@ -651,7 +662,7 @@ Section "Uninstall"
   RMDir /r "$1\TV-Browser"
   noDelete:
 
-  # Unregister uninstaller at Windows (Add/Remove programs)
+  # Unregister uninstaller at Windows (Add/Remove programs), remove TV-Browser software entry
   push $8
   UserInfo::GetAccountType
   pop $1
@@ -659,6 +670,16 @@ Section "Uninstall"
   isnotadmin:
   StrCmp $1 "Power" isadmin isnotpower
   isadmin:
+    ReadRegStr $9 HKLM "Software\${PROG_NAME}${VERSION}" "Install directory"
+    IfErrors noDeleteStartMenu
+  	ReadRegStr $10 HKLM "Software\${PROG_NAME}" "Install directory"
+  	IfErrors deleteProgramEntry
+  	${If} "$9" == "$10"
+  		DeleteRegKey \
+    	HKLM \
+    	"Software\${PROG_NAME}"
+  	${EndIf}
+    deleteProgramEntry:
     ReadRegStr $8 HKLM "Software\${PROG_NAME}${VERSION}" "Start Menu Folder"
     IfErrors noDeleteStartMenu
     DeleteRegKey \
@@ -670,6 +691,16 @@ Section "Uninstall"
     SetShellVarContext all
     goto end
   isnotpower:
+    ReadRegStr $9 HKCU "Software\${PROG_NAME}${VERSION}" "Install directory"
+    IfErrors noDeleteStartMenu
+  	ReadRegStr $10 HKCU "Software\${PROG_NAME}" "Install directory"
+  	IfErrors deleteProgramEntryUser
+  	${If} "$9" == "$10"
+  		DeleteRegKey \
+    	HKLM \
+    	"Software\${PROG_NAME}"
+  	${EndIf}
+    deleteProgramEntryUser:
     ReadRegStr $8 HKCU "Software\${PROG_NAME}${VERSION}" "Start Menu Folder"
     IfErrors noDeleteStartMenu
     DeleteRegKey \

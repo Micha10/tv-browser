@@ -21,12 +21,12 @@
     <opt>--module-path "lib;tvbrowser.jar" -splash:imgs/splash.png -Dpropertiesfile=windows.properties -m tvbrowser/tvbrowser.TVBrowser</opt>
   </jre>
   <versionInfo>
-    <fileVersion>4.0.9.5</fileVersion>
-    <txtFileVersion>4.0.9.5</txtFileVersion>
+    <fileVersion>4.2.3.0</fileVersion>
+    <txtFileVersion>4.2.3.0</txtFileVersion>
     <fileDescription>TV-Browser</fileDescription>
     <copyright>Copyright (c) 04/2003 by Martin Oberhauser, Til Schneider, Bodo Tasche, Rene Mach, Michael Keppler under GNU General Public License.</copyright>
-    <productVersion>4.0.9.5</productVersion>
-    <txtProductVersion>4.0.9.5</txtProductVersion>
+    <productVersion>4.2.3.0</productVersion>
+    <txtProductVersion>4.2.3.0</txtProductVersion>
     <productName>TV-Browser</productName>
     <companyName></companyName>
     <internalName>TV-Browser</internalName>
