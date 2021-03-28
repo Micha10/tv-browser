@@ -32,6 +32,7 @@ import devplugin.ProgramInfo;
 import devplugin.ProgramRatingIf;
 import devplugin.ProgramReceiveTarget;
 import devplugin.ToolTipIcon;
+import devplugin.Version;
 import devplugin.beanshell.BeanShellScriptIf;
 
 
@@ -371,5 +372,11 @@ public class BeanShellPluginProxy extends AbstractPluginProxy {
     public PluginProgramInformation doGetProgramInformation(Program p, String informationKey) {
       // TODO Auto-generated method stub
       return null;
+    }
+
+    @Override
+    protected void doHandleTvBrowserVersionUpdate(Version previousVersion) {
+      // TODO Auto-generated method stub
+      
     }
  }

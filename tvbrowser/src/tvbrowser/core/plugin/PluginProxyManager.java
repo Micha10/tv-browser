@@ -47,6 +47,7 @@ import devplugin.ContextMenuIf;
 import devplugin.Date;
 import devplugin.PluginsProgramFilter;
 import devplugin.Program;
+import devplugin.Version;
 import tvbrowser.core.Settings;
 import tvbrowser.core.TvDataBase;
 import tvbrowser.core.TvDataBaseListener;
@@ -162,6 +163,30 @@ public class PluginProxyManager {
     }*/
 
     public abstract void run();
+  }
+  
+  private class TvBrowserVersionUpdateThreadPoolMethod extends ThreadPoolMethod {
+    private Version mPreviousVersion;
+    
+    public TvBrowserVersionUpdateThreadPoolMethod(final Version previousVersion) {
+      super("handleTvBrowserVersionUpdate");
+      mPreviousVersion = previousVersion;
+    }
+
+    @Override
+    public void run() {
+      for (PluginListItem item : getPluginListCopy()) {
+        if (item.getPlugin().isActivated()) {
+          final AbstractPluginProxy plugin = item.getPlugin();
+          try {
+            plugin.doHandleTvBrowserVersionUpdate(mPreviousVersion);
+          }catch(Throwable t) {
+            /* Catch all possible not catched errors that occur in the plugin method*/
+            mLog.log(Level.WARNING, "A not catched error occured in 'handleTvBrowserVersionUpdate' of Plugin '" + plugin +"'.", t);
+          }
+        }
+      }
+    }
   }
   
   private class TvDataUpdateFinishedThreadPoolMethod extends ThreadPoolMethod {
@@ -1393,6 +1418,10 @@ public class PluginProxyManager {
         runWithThreadPool(new TvBrowserSettingsChangedThreadPoolMethod(plugin));
       }
     }
+  }
+  
+  public void fireTvBrowserVersionUpdate(final Version previousVersion) {
+    runWithThreadPool(new TvBrowserVersionUpdateThreadPoolMethod(previousVersion));
   }
 
   /**

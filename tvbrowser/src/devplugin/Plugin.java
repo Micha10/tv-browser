@@ -1116,6 +1116,15 @@ abstract public class Plugin implements Marker, ContextMenuIf, ProgramReceiveIf 
   }
   
   /**
+   * Is called when TV-Browser itself was updated to a new version.
+   * @param previousVersion The previous version of TV-Browser.
+   * @since 4.2.3
+   */
+  public void handleTvBrowserVersionUpdate(final Version previousVersion) {
+    
+  }
+  
+  /**
    * Is called when a TV data update is started.
    * @since 3.2
    * @deprecated since 3.3.3

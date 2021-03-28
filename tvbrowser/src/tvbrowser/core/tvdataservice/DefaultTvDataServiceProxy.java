@@ -43,6 +43,7 @@ import devplugin.Date;
 import devplugin.PluginInfo;
 import devplugin.Program;
 import devplugin.ProgressMonitor;
+import devplugin.Version;
 
 public class DefaultTvDataServiceProxy extends AbstractTvDataServiceProxy {
 
@@ -304,5 +305,10 @@ public class DefaultTvDataServiceProxy extends AbstractTvDataServiceProxy {
   @Override
   public void receiveProtocolMessage(String[] values) {
     mTvDataService.receiveProtocolMessage(values);
+  }
+
+  @Override
+  public void handleTvBrowserVersionUpdate(final Version previousVersion) {
+    mTvDataService.handleTvBrowserVersionUpdate(previousVersion);
   }
 }

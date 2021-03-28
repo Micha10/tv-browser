@@ -37,6 +37,7 @@ import devplugin.Date;
 import devplugin.InfoIf;
 import devplugin.PluginInfo;
 import devplugin.ProgressMonitor;
+import devplugin.Version;
 import tvbrowser.core.plugin.ButtonActionIf;
 import tvdataservice.SettingsPanel;
 import tvdataservice.TvDataUpdateManager;
@@ -219,4 +220,11 @@ public interface TvDataServiceProxy extends ContextMenuIf, ButtonActionIf, InfoI
    * @since 4.2.3
    */
   public void receiveProtocolMessage(String[] values);
+  
+  /**
+   * Is called when TV-Browser itself was updated to a new version.
+   * @param previousVersion The previous version of TV-Browser.
+   * @since 4.2.3
+   */
+  public void handleTvBrowserVersionUpdate(final Version previousVersion);
 }

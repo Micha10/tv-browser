@@ -340,4 +340,13 @@ public abstract class AbstractTvDataService {
   public void receiveProtocolMessage(String[] values) {
     
   }
+  
+  /**
+   * Is called when TV-Browser itself was updated to a new version.
+   * @param previousVersion The previous version of TV-Browser.
+   * @since 4.2.3
+   */
+  public void handleTvBrowserVersionUpdate(final Version previousVersion) {
+    
+  }
 }

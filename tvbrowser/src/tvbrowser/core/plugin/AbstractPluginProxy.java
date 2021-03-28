@@ -50,6 +50,7 @@ import devplugin.ProgramInfo;
 import devplugin.ProgramReceiveIf;
 import devplugin.ProgramReceiveTarget;
 import devplugin.ToolTipIcon;
+import devplugin.Version;
 import tvbrowser.core.Settings;
 import tvdataservice.MutableChannelDayProgram;
 import tvdataservice.MutableProgram;
@@ -680,6 +681,21 @@ public abstract class AbstractPluginProxy implements PluginProxy, ContextMenuIf 
 
   protected abstract void doHandleTvBrowserStartFinished();
 
+  /**
+   * Is called when TV-Browser itself was updated to a new version.
+   * @since 4.2.3
+   */
+  public void handleTvBrowserVersionUpdate(final Version previousVersion) {
+    try {
+      doHandleTvBrowserVersionUpdate(previousVersion);
+    } catch (Throwable exc) {
+      handlePluginException(exc);
+    }
+  }
+
+  protected abstract void doHandleTvBrowserVersionUpdate(final Version previousVersion);
+  
+  
   protected abstract boolean doCanUseProgramTree();
 
   /**

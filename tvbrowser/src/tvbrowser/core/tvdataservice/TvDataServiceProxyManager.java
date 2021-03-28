@@ -38,12 +38,13 @@ import java.util.Properties;
 
 import javax.swing.JFrame;
 
+import devplugin.AbstractTvDataService;
+import devplugin.Version;
 import tvbrowser.core.Settings;
 import tvbrowser.core.plugin.PluginManagerImpl;
 import util.exc.ErrorHandler;
 import util.io.stream.OutputStreamProcessor;
 import util.io.stream.StreamUtilities;
-import devplugin.AbstractTvDataService;
 
 
 /**
@@ -226,6 +227,12 @@ public class TvDataServiceProxyManager {
   public void fireTvBrowserStartFinished() {
     for (TvDataServiceProxy proxy : getDataServices()) {
         proxy.handleTvBrowserStartFinished();
+    }
+  }
+  
+  public void fireTvBrowserVersionUpdate(final Version previousVersion) {
+    for (TvDataServiceProxy proxy : getDataServices()) {
+        proxy.handleTvBrowserVersionUpdate(previousVersion);
     }
   }
 

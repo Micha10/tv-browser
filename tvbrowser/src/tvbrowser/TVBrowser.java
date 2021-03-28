@@ -349,6 +349,9 @@ public class TVBrowser {
   
   private static String mProtocolMessage = null;
   
+  private static Version VERSION_LAST = null;
+  private static boolean IS_TVB_UPDATE = false;
+  
   /**
    * Entry point of the application
    * @param args The arguments given in the command line.
@@ -499,12 +502,15 @@ public class TVBrowser {
      */
     updateProxySettings();
     
+    VERSION_LAST = Settings.propTVBrowserVersion.getVersion();
+    
     //Update plugin on version change
-    if(Settings.propTVBrowserVersion.getVersion() != null && VERSION.compareTo(Settings.propTVBrowserVersion.getVersion()) > 0) {
+    if(VERSION.isNewerThan(VERSION_LAST)) {
       updateLookAndFeel();
       updatePluginsOnVersionChange();
+      IS_TVB_UPDATE = true;
     }
-    else if(Settings.propTVBrowserVersion.getVersion() != null && (Settings.propDateOldSettingsCheckedLast.getDate() == null || Settings.propDateOldSettingsCheckedLast.getDate().addDays(180).compareTo(Date.getCurrentDate()) < 0)) {
+    else if(VERSION_LAST != null && (Settings.propDateOldSettingsCheckedLast.getDate() == null || Settings.propDateOldSettingsCheckedLast.getDate().addDays(180).compareTo(Date.getCurrentDate()) < 0)) {
       updateLookAndFeel();
       seachForOldVersionFiles();
     }
@@ -533,7 +539,7 @@ public class TVBrowser {
     /*TODO Create an update service for installed TV data services that doesn't
      *     work with TV-Browser 3.0 and updates for them are known.
      */
-    if(!isTransportable() && Launch.isOsWindowsNtBranch() && currentVersion != null && currentVersion.compareTo(new Version(3,0,true)) < 0) {
+    if(!isTransportable() && Launch.isOsWindowsNtBranch() && new Version(3,0,true).isNewerThan(currentVersion)) {
       String tvDataDir = Settings.propTVDataDirectory.getString().replace("/",File.separator);
 
       if(!tvDataDir.startsWith(System.getenv("appdata"))) {
@@ -651,9 +657,14 @@ public class TVBrowser {
           
           // now handle all plugins and services
           GlobalPluginProgramFormatingManager.getInstance();
+          
+          if(IS_TVB_UPDATE) {
+            PluginProxyManager.getInstance().fireTvBrowserVersionUpdate(VERSION_LAST);
+            TvDataServiceProxyManager.getInstance().fireTvBrowserVersionUpdate(VERSION_LAST);
+          }
+          
           PluginProxyManager.getInstance().fireTvBrowserStartFinished();
-          TvDataServiceProxyManager.getInstance()
-              .fireTvBrowserStartFinished();
+          TvDataServiceProxyManager.getInstance().fireTvBrowserStartFinished();
 
           // finally submit plugin caused updates to database
           TvDataBase.getInstance().handleTvBrowserStartFinished();

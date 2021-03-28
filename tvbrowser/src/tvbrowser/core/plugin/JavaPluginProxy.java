@@ -62,6 +62,7 @@ import devplugin.ProgramRatingIf;
 import devplugin.ProgramReceiveTarget;
 import devplugin.SettingsTab;
 import devplugin.ToolTipIcon;
+import devplugin.Version;
 import tvbrowser.TVBrowser;
 import tvbrowser.core.PluginLoader;
 import tvbrowser.core.Settings;
@@ -70,10 +71,10 @@ import tvbrowser.core.filters.UserFilter;
 import tvbrowser.ui.mainframe.MainFrame;
 import tvdataservice.MutableChannelDayProgram;
 import util.exc.TvBrowserException;
+import util.i18n.Localizer;
 import util.io.IOUtilities;
 import util.io.stream.ObjectOutputStreamProcessor;
 import util.io.stream.StreamUtilities;
-import util.i18n.Localizer;
 import util.ui.TVBrowserIcons;
 import util.ui.UiUtilities;
 
@@ -834,5 +835,10 @@ public class JavaPluginProxy extends AbstractPluginProxy {
   @Override
   public PluginProgramInformation doGetProgramInformation(Program p, String informationKey) {
     return mPlugin.getProgramInformation(p, informationKey);
+  }
+
+  @Override
+  protected void doHandleTvBrowserVersionUpdate(final Version previousVersion) {
+    mPlugin.handleTvBrowserVersionUpdate(previousVersion);
   }
 }
