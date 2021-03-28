@@ -159,6 +159,10 @@ public class CaptureParamLibrary extends ParamLibrary {
   }
 
   public String getStringForKey(Program prg, String key) {
+    if(mPrgTime == null) {
+      setProgramTime(new ProgramTime(prg));
+    }
+    
     if (key.equals("title")) {
       return String.valueOf(mPrgTime.getTitle());
     } else if (key.equals("start_day")) {

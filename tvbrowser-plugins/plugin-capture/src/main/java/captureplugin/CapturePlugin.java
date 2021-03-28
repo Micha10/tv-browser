@@ -81,7 +81,7 @@ import util.ui.UiUtilities;
  *         adopted by fishhead
  */
 public class CapturePlugin extends devplugin.Plugin {
-  private static final Version mVersion = new Version(3,15,3,true);
+  private static final Version mVersion = new Version(3,15,5,true);
   
     /**
      * Translator
@@ -108,7 +108,7 @@ public class CapturePlugin extends devplugin.Plugin {
     private boolean mNeedsUpdate = false;
 
     private Properties mSettings;
-
+    
     /**
      * Root-Node for the Program-Tree
      */
@@ -133,7 +133,7 @@ public class CapturePlugin extends devplugin.Plugin {
     public static CapturePlugin getInstance() {
         return mInstance;
     }
-
+    
     /**
      * Called by the host-application during start-up. Implement this method to
      * load any objects from the file system.
@@ -168,6 +168,10 @@ public class CapturePlugin extends devplugin.Plugin {
       }
     }
 
+    public void handleTvBrowserVersionUpdate(final Version previousVersion) {
+      
+    }
+    
     /**
      * Called by the host-application during shut-down. Implements this method
      * to store your plugins settings to the file system.
