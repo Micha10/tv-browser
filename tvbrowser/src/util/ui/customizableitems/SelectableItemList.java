@@ -390,6 +390,16 @@ public class SelectableItemList<E> extends JPanel implements ListSelectionListen
   }
 
   /**
+   * Select all currently shown items.
+   * @since 4.2.3
+   */
+  public void selectFiltered() {
+    for(int i = 0; i < mListModel.getSize(); i++) {
+      mListModel.getElementAt(i).setSelected(true);
+    }
+  }
+  
+  /**
    * Select all items.
    */
   public void selectAll() {

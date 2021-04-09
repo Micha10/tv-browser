@@ -144,7 +144,7 @@ public class SoftwareUpdateDlg extends JDialog implements ActionListener, ListSe
    */
   public SoftwareUpdateDlg(Window parent, String downloadUrl,
       int dialogType, SoftwareUpdateItem[] itemArr, boolean isVersionChange, Version oldTvbVersion) {
-    this(parent,downloadUrl,dialogType,itemArr,isVersionChange,oldTvbVersion,null);
+    this(parent,downloadUrl,dialogType,itemArr,isVersionChange,oldTvbVersion,null,false);
   }
   /**
    * Creates an instance of this class.
@@ -155,11 +155,12 @@ public class SoftwareUpdateDlg extends JDialog implements ActionListener, ListSe
    * @param itemArr The array with the available update items.
    * @param isVersionChange If this dialog is shown for a TV-Browser version change.
    * @param oldTvbVersion Version that is updated from.
-   * @param search The search string for the text filter. 
+   * @param search The search string for the text filter.
+   * @param select If the entries of the filtered list should be preselected.  
    */
   public SoftwareUpdateDlg(Window parent, String downloadUrl,
       int dialogType, SoftwareUpdateItem[] itemArr, boolean isVersionChange, Version oldTvbVersion,
-      String search) {
+      String search, boolean select) {
     super(parent,ModalityType.DOCUMENT_MODAL);
     mDialogType = dialogType;
     mIsVersionChange = isVersionChange;
@@ -168,6 +169,10 @@ public class SoftwareUpdateDlg extends JDialog implements ActionListener, ListSe
     
     if(dialogType == SoftwareUpdater.DRAG_AND_DROP_TYPE || dialogType == SoftwareUpdater.ONLY_UPDATE_TYPE) {
       mSoftwareUpdateItemList.selectAll();
+      mDownloadBtn.setEnabled(!mSoftwareUpdateItemList.getSelectionList().isEmpty());
+    }
+    else if(select) {
+      mSoftwareUpdateItemList.selectFiltered();
       mDownloadBtn.setEnabled(!mSoftwareUpdateItemList.getSelectionList().isEmpty());
     }
   }

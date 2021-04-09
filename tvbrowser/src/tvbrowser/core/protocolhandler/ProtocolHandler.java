@@ -430,7 +430,21 @@ public class ProtocolHandler {
         SwingUtilities.invokeLater(() -> PluginManagerImpl.getInstance().showSettings((value.contains(".") ? "" : "#")+value));
       }
       else if(name.equals(MESSAGE_PLUGIN_UPDATE)) {
-        MainFrame.getInstance().showUpdatePluginsDlg(false,unescape(value));
+        boolean select = false;
+        
+        String[] subParts = value.split(";");
+        StringBuilder search = new StringBuilder();
+        
+        for(String subPart : subParts) {
+          if(subPart.toLowerCase().equals("select")) {
+            select = true;
+          }
+          else {
+            search.append(subPart);
+          }
+        }
+        
+        MainFrame.getInstance().showUpdatePluginsDlg(false,unescape(search.toString()),select);
       }
     }
   }

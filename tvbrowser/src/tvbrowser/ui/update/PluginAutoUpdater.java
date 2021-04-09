@@ -122,7 +122,7 @@ public class PluginAutoUpdater {
         
         downloadMirrorList(url);
         
-        MainFrame.getInstance().updatePlugins(url, SoftwareUpdater.ONLY_UPDATE_TYPE, infoLabel, !Settings.propAutoUpdatePlugins.getBoolean(), null);
+        MainFrame.getInstance().updatePlugins(url, SoftwareUpdater.ONLY_UPDATE_TYPE, infoLabel, !Settings.propAutoUpdatePlugins.getBoolean(), null, false);
       }
     }.start();
   }

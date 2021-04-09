@@ -2781,10 +2781,10 @@ public class MainFrame extends JFrame implements DateListener,DropTargetListener
   }
 
   public void showUpdatePluginsDlg(boolean noQuestion) {
-    showUpdatePluginsDlg(noQuestion, null);
+    showUpdatePluginsDlg(noQuestion, null, false);
   }
   
-  public void showUpdatePluginsDlg(boolean noQuestion, String search) {
+  public void showUpdatePluginsDlg(boolean noQuestion, String search, boolean select) {
     int answer = JOptionPane.YES_OPTION;
 
     if(!noQuestion) {
@@ -2798,7 +2798,7 @@ public class MainFrame extends JFrame implements DateListener,DropTargetListener
     }
 
     if (answer == JOptionPane.YES_OPTION) {
-      updatePlugins(PluginAutoUpdater.DEFAULT_PLUGINS_DOWNLOAD_URL, SoftwareUpdater.ALL_TYPE, mStatusBar.getLabel(),false,search);
+      updatePlugins(PluginAutoUpdater.DEFAULT_PLUGINS_DOWNLOAD_URL, SoftwareUpdater.ALL_TYPE, mStatusBar.getLabel(),false,search,select);
     }
   }
 
@@ -2811,8 +2811,9 @@ public class MainFrame extends JFrame implements DateListener,DropTargetListener
    * @param dontShowUpdateDlg If the dialog should not be shown even if updates
    *                          are available. (User has disabled automatically plugin updates.)
    * @param search Search string for the text filter of the plugin update dialog.
+   * @param select If the found entries should be preselected.
    */
-  public void updatePlugins(final String baseUrl, final int dialogType, final JLabel infoLabel, final boolean dontShowUpdateDlg, final String search) {
+  public void updatePlugins(final String baseUrl, final int dialogType, final JLabel infoLabel, final boolean dontShowUpdateDlg, final String search, final boolean select) {
     new Thread("Plugin Update Thread") {
       public void run() {
         try {
@@ -2839,7 +2840,7 @@ public class MainFrame extends JFrame implements DateListener,DropTargetListener
             try {
               UIThreadRunner.invokeAndWait(() -> {
                 SoftwareUpdateDlg dlg = new SoftwareUpdateDlg(parent, baseUrl,
-                    dialogType, mSoftwareUpdateItems, false, null, search);
+                    dialogType, mSoftwareUpdateItems, false, null, search, select);
                 dlg.setVisible(true);
               });
             } catch (InterruptedException e) {
