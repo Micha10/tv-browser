@@ -295,7 +295,6 @@ public class SettingsDialog implements WindowClosingIf {
         Settings.handleChangedSettings();
         showSettingsPanelForSelectedNode();
       }catch(Throwable t) {
-        System.out.println("hier");
         ErrorHandler.handle(LOCALIZER.msg("error.saving", "Saving settings caused an error."), t);
       }
     });
@@ -330,7 +329,6 @@ public class SettingsDialog implements WindowClosingIf {
 
     mDialog.addWindowListener(new WindowAdapter() {
       public void windowClosing(WindowEvent e) {
-        System.out.println("hier");
         Settings.removeRestartInfoListener(mRestartListener);
         ChannelLabel.clearIconCache();
         Settings.propSettingsDialogDividerLocation.setInt(splitPane
