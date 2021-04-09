@@ -183,6 +183,7 @@ public class NewsDialog implements WindowClosingIf {
     mNewsPane.addHyperlinkListener(new HyperlinkListener() {
       public void hyperlinkUpdate(HyperlinkEvent evt) {
         if (evt.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
+          
           URL url = evt.getURL();
           if (url != null) {
             if(url.toString().startsWith("index.php")) {
@@ -194,6 +195,16 @@ public class NewsDialog implements WindowClosingIf {
             }
             
             Launch.openURL(url.toString());
+          }
+          else if(evt.getDescription() != null && evt.getDescription().startsWith("tvb://")) {
+            final String link = evt.getDescription();
+            SwingUtilities.invokeLater(new Runnable() {
+              @Override
+              public void run() {
+                Launch.openURL(link);
+              }
+            });
+            close();
           }
         }
       }
@@ -315,9 +326,21 @@ public class NewsDialog implements WindowClosingIf {
           newsText.append("<tr><td class=\"title\">" + news.getTitle() + "</td></tr>");
   
           String text = news.getText();
+          
           text = IOUtilities.replace(text, "&lt;", "<");
           text = IOUtilities.replace(text, "&gt;", ">");
           text = IOUtilities.replace(text, "/>", ">"); // JEditorPane knows no XHTML
+          
+          if(text.startsWith("<p>")) {
+            text = text.substring(3);
+          }
+          if(text.endsWith("</p>")) {
+            text = text.substring(0,text.length()-3);
+          }
+          
+          text = IOUtilities.replace(text, "<p>", "<br>");
+          text = IOUtilities.replace(text, "</p>", "<br>");
+          
           newsText.append("<tr><td class=\"text\">" + text + "</td></tr>");
   
           newsText.append("<tr><td class=\"author\">" + news.getAuthor() + "</td></tr>");
