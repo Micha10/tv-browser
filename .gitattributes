@@ -658,6 +658,8 @@ tvbrowser-plugins/plugin-dataviewer/src/main/resources/dataviewerplugin/dataview
 tvbrowser-plugins/plugin-dataviewer/src/main/resources/dataviewerplugin/icons/16x16/actions/format-justify-fill.png -text
 tvbrowser-plugins/plugin-dataviewer/src/main/resources/dataviewerplugin/icons/22x22/actions/format-justify-fill.png -text
 tvbrowser-plugins/plugin-dataviewer/src/main/resources/dataviewerplugin/icons/Readme.txt -text
+tvbrowser-plugins/plugin-degender/pom.xml -text svneol=unset#text/plain
+tvbrowser-plugins/plugin-degender/src/main/java/degenderplugin/DegenderPlugin.java -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-dreamboxdataservice/pom.xml -text
 tvbrowser-plugins/plugin-dreamboxdataservice/src/main/java/dreamboxdataservice/DreamboxChannelHandler.java -text
 tvbrowser-plugins/plugin-dreamboxdataservice/src/main/java/dreamboxdataservice/DreamboxDataService.java -text
