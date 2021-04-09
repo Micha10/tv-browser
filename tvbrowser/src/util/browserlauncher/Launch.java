@@ -39,6 +39,7 @@ import javax.swing.JRootPane;
 import org.apache.commons.lang3.StringUtils;
 
 import tvbrowser.core.Settings;
+import tvbrowser.core.protocolhandler.ProtocolHandler;
 import tvbrowser.ui.mainframe.MainFrame;
 import util.exc.ErrorHandler;
 import util.io.ExecutionHandler;
@@ -85,7 +86,7 @@ public class Launch {
     if (urls.length > 1) {
       boolean multiUrls = true;
       for (String partUrl : urls) {
-        if (!partUrl.trim().startsWith("http")) {
+        if (!partUrl.trim().startsWith("http") && !partUrl.trim().startsWith("tvb://")) {
           multiUrls = false;
         }
       }
@@ -96,97 +97,103 @@ public class Launch {
         return;
       }
     }
-    String browserExecutable = IOUtilities.translateRelativePath(Settings.propUserDefinedWebbrowser.getString());
-    try {
-      if (browserExecutable != null) {
-        String params = Settings.propUserDefinedWebbrowserParams.getString().replace("{0}", url);
-
-        // Test if the JVM is a Mac-VM and the Application is an .app-File.
-        // These Files must be launched differently
-        if ((getOs() == OS_MAC) && (browserExecutable.trim().toLowerCase().endsWith(".app"))) {
-          new ExecutionHandler(params, "open -a " + browserExecutable).execute();
-        } else {
-          new ExecutionHandler(params, browserExecutable).execute();
-        }
-      } else {
-        boolean opened = false;
-        // Java 6 specific code of how to run the browser
-        if (Desktop.isDesktopSupported()) {
-          try {
-            Desktop desktop = Desktop.getDesktop();
-            if (desktop.isSupported(Desktop.Action.BROWSE)) {
-              desktop.browse(new URI(url));
-              opened = true;
-            }
-          } catch (Exception e) {
-            // do nothing
-            opened = false;
-          }
-        }
-        // use alternative code for systems where desktop is not supported, or if exception occured
-        if (!opened) {
-          BrowserLauncher.openURL(url);
-        }
-      }
-
-      if (Settings.propShowBrowserOpenDialog.getBoolean()){
-        final JDialog dialog = new JDialog(MainFrame.getInstance(), true);
-        dialog.setTitle(mLocalizer.msg("okTitle", "okTitle"));
-
-        UiUtilities.registerForClosing(new WindowClosingIf() {
-          public void close() {
-            dialog.setVisible(false);
-            Settings.propShowBrowserOpenDialog.setBoolean(true);
-          }
-          public JRootPane getRootPane() {
-            return dialog.getRootPane();
-          }
-        });
-
-        JPanel content = (JPanel) dialog.getContentPane();
-        content.setBorder(Borders.DIALOG);
-
-        FormLayout layout = new FormLayout("fill:235dlu:grow", "default, 3dlu, default, 3dlu, default");
-        dialog.getContentPane().setLayout(layout);
-
-        CellConstraints cc = new CellConstraints();
-
-        content.add(UiUtilities.createHelpTextArea(mLocalizer.msg("okMessage", "OK Message")), cc.xy(1, 1));
-
-        final JCheckBox showBrowserDialog = new JCheckBox(mLocalizer.msg("okCheckbox", "OK Checkbox"));
-        content.add(showBrowserDialog, cc.xy(1, 3));
-
-        JButton ok = new JButton(Localizer.getLocalization(Localizer.I18N_OK));
-        ok.addActionListener(e -> {
-          dialog.setVisible(false);
-          if (showBrowserDialog.isSelected()) {
-            Settings.propShowBrowserOpenDialog.setBoolean(false);
+    
+    if(url.startsWith("tvb://")) {
+      ProtocolHandler.getInstance().handleMessage(url);
+    }
+    else {
+      String browserExecutable = IOUtilities.translateRelativePath(Settings.propUserDefinedWebbrowser.getString());
+      try {
+        if (browserExecutable != null) {
+          String params = Settings.propUserDefinedWebbrowserParams.getString().replace("{0}", url);
+  
+          // Test if the JVM is a Mac-VM and the Application is an .app-File.
+          // These Files must be launched differently
+          if ((getOs() == OS_MAC) && (browserExecutable.trim().toLowerCase().endsWith(".app"))) {
+            new ExecutionHandler(params, "open -a " + browserExecutable).execute();
           } else {
-            Settings.propShowBrowserOpenDialog.setBoolean(true);
+            new ExecutionHandler(params, browserExecutable).execute();
           }
-        });
-
-        JButton configure = new JButton(mLocalizer.msg("okConfigure", "Configure"));
-        configure.addActionListener(e -> {
-          dialog.setVisible(false);
+        } else {
+          boolean opened = false;
+          // Java 6 specific code of how to run the browser
+          if (Desktop.isDesktopSupported()) {
+            try {
+              Desktop desktop = Desktop.getDesktop();
+              if (desktop.isSupported(Desktop.Action.BROWSE)) {
+                desktop.browse(new URI(url));
+                opened = true;
+              }
+            } catch (Exception e) {
+              // do nothing
+              opened = false;
+            }
+          }
+          // use alternative code for systems where desktop is not supported, or if exception occured
+          if (!opened) {
+            BrowserLauncher.openURL(url);
+          }
+        }
+  
+        if (Settings.propShowBrowserOpenDialog.getBoolean()){
+          final JDialog dialog = new JDialog(MainFrame.getInstance(), true);
+          dialog.setTitle(mLocalizer.msg("okTitle", "okTitle"));
+  
+          UiUtilities.registerForClosing(new WindowClosingIf() {
+            public void close() {
+              dialog.setVisible(false);
+              Settings.propShowBrowserOpenDialog.setBoolean(true);
+            }
+            public JRootPane getRootPane() {
+              return dialog.getRootPane();
+            }
+          });
+  
+          JPanel content = (JPanel) dialog.getContentPane();
+          content.setBorder(Borders.DIALOG);
+  
+          FormLayout layout = new FormLayout("fill:235dlu:grow", "default, 3dlu, default, 3dlu, default");
+          dialog.getContentPane().setLayout(layout);
+  
+          CellConstraints cc = new CellConstraints();
+  
+          content.add(UiUtilities.createHelpTextArea(mLocalizer.msg("okMessage", "OK Message")), cc.xy(1, 1));
+  
+          final JCheckBox showBrowserDialog = new JCheckBox(mLocalizer.msg("okCheckbox", "OK Checkbox"));
+          content.add(showBrowserDialog, cc.xy(1, 3));
+  
+          JButton ok = new JButton(Localizer.getLocalization(Localizer.I18N_OK));
+          ok.addActionListener(e -> {
+            dialog.setVisible(false);
+            if (showBrowserDialog.isSelected()) {
+              Settings.propShowBrowserOpenDialog.setBoolean(false);
+            } else {
+              Settings.propShowBrowserOpenDialog.setBoolean(true);
+            }
+          });
+  
+          JButton configure = new JButton(mLocalizer.msg("okConfigure", "Configure"));
+          configure.addActionListener(e -> {
+            dialog.setVisible(false);
+            MainFrame.getInstance().showSettingsDialog(SettingsItem.WEBBROWSER);
+          });
+  
+          JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+          buttonPanel.add(configure);
+          buttonPanel.add(ok);
+          content.add(buttonPanel, cc.xy(1, 5));
+  
+          dialog.pack();
+          UiUtilities.centerAndShow(dialog);
+        }
+  
+      } catch (IOException e) {
+        e.printStackTrace();
+        int ret = ErrorHandler.handle(mLocalizer.msg("error", "An error occured"), e, ErrorHandler.SHOW_YES_NO);
+  
+        if (ret == ErrorHandler.YES_PRESSED) {
           MainFrame.getInstance().showSettingsDialog(SettingsItem.WEBBROWSER);
-        });
-
-        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-        buttonPanel.add(configure);
-        buttonPanel.add(ok);
-        content.add(buttonPanel, cc.xy(1, 5));
-
-        dialog.pack();
-        UiUtilities.centerAndShow(dialog);
-      }
-
-    } catch (IOException e) {
-      e.printStackTrace();
-      int ret = ErrorHandler.handle(mLocalizer.msg("error", "An error occured"), e, ErrorHandler.SHOW_YES_NO);
-
-      if (ret == ErrorHandler.YES_PRESSED) {
-        MainFrame.getInstance().showSettingsDialog(SettingsItem.WEBBROWSER);
+        }
       }
     }
   }

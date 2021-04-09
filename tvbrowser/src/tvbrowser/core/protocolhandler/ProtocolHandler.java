@@ -213,7 +213,7 @@ public class ProtocolHandler {
    * 
    * @param message The tvb:// protocol message to handle
    */
-  public void handleMessage(final String message) {
+  public synchronized void handleMessage(final String message) {
     try {
       Thread.sleep(500);
     } catch (InterruptedException e1) {
