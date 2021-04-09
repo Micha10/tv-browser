@@ -1903,6 +1903,8 @@ tvbrowser/deployment/win/launch4j/w32api/libadvapi32.a -text
 tvbrowser/deployment/win/launch4j/w32api/libgcc.a -text
 tvbrowser/deployment/win/launch4j/w32api/libkernel32.a -text
 tvbrowser/deployment/win/launch4j/w32api/libmingw32.a -text
+tvbrowser/deployment/win/launch4j/w32api/libmingwex.a -text
+tvbrowser/deployment/win/launch4j/w32api/libmoldname.a -text
 tvbrowser/deployment/win/launch4j/w32api/libmsvcrt.a -text
 tvbrowser/deployment/win/launch4j/w32api/libshell32.a -text
 tvbrowser/deployment/win/launch4j/w32api/libuser32.a -text
