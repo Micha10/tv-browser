@@ -145,7 +145,7 @@ public class DegenderPlugin extends Plugin {
   private static final Pattern GENDERED = Pattern.compile("(\\b(?i)(die\\s){0,1}(?-i)\\b(?!Mc)(\\w+?)(?:\\s*[\\*\\:_](?i:i)|I)n(nen){0,1})", Pattern.DOTALL | Pattern.UNICODE_CHARACTER_CLASS); 
   private static final Pattern GENDERED_LONG = Pattern.compile("(\\b([\\w\\-]+?)innen\\b\\s+(?:und|oder)\\s+\\-{0,1}\\b(\\w+?)\\b)|(\\b([\\w\\-]+?)\\b\\s+(?:und|oder)\\s+\\-{0,1}\\b(\\w+?)innen\\b)", Pattern.DOTALL | Pattern.UNICODE_CHARACTER_CLASS);
   private static final Pattern GENDERED_PARTIZIP = Pattern.compile("(\\b(?i)(die\\s){0,1}(?-i)\\b((\\p{Upper}\\w+)ende(n){0,1}(\\w*)\\b))", Pattern.DOTALL | Pattern.UNICODE_CHARACTER_CLASS);
-  private static final Version VERSION = new Version(0,10,false);
+  private static final Version VERSION = new Version(0,11,false);
   
   private boolean mRemoveLongForm = false;
   private boolean mReplacePartizip = false;
@@ -395,6 +395,9 @@ public class DegenderPlugin extends Plugin {
           }
           else if(m.group(4).toLowerCase().endsWith("forsch")) {
             replace = m.group(4).substring(0,m.group(4).length()-5)+"orscher";
+          }
+          else if(m.group(4).toLowerCase().endsWith("lehr")) {
+            replace = m.group(4).substring(0,m.group(4).length()-3)+"ehrer";
           }
           else if(m.group(4).toLowerCase().endsWith("fahr")) {
             replace = m.group(4).substring(0,m.group(4).length()-3)+"ahrer";
