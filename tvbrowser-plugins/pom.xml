@@ -135,6 +135,7 @@
     <module>plugin-web</module>
     <module>plugin-unityglobalmenusupport</module>
     <module>plugin-schedulesdirectdataservice</module>
+    <module>plugin-degender</module>
   </modules>
     <profiles>
     <profile>
