@@ -193,8 +193,8 @@ public class ProtocolHandler {
       else if(Launch.getOs() == Launch.OS_MAC && !TVBrowser.isTransportable()) {
         File tvbprotocol = new File("/Applications/TV-Browser Protocol.app");
         
-        if(!tvbprotocol.isFile()) {
-          DontShowAgainOptionBox.showOptionDialog("tvbProtocolMissing", UiUtilities.getParentFrameOnMouseScreen(), LOCALIZER.msg("error.mac.msg", "Receiving protocol message with tvb:\\ is activated.\nProtocol message make it easier to configure TV-Browser.\nBut the protocol app is missing.\n\nPlease make sure to also install the TV-Browser Protocol app from the DMG with TV-Browser."), LOCALIZER.msg("error.mac.title", "tvb:\\ protocol app missing"), JOptionPane.QUESTION_MESSAGE, JOptionPane.OK_OPTION);
+        if(!tvbprotocol.exists()) {
+          DontShowAgainOptionBox.showOptionDialog("tvbProtocolMissing", UiUtilities.getParentFrameOnMouseScreen(), LOCALIZER.msg("error.mac.msg", "Receiving protocol message with tvb:\\ is activated.\nProtocol message make it easier to configure TV-Browser.\nBut the protocol app is missing.\n\nPlease make sure to also install the TV-Browser Protocol app from the DMG with TV-Browser."), LOCALIZER.msg("error.mac.title", "tvb:\\ protocol app missing"), JOptionPane.QUESTION_MESSAGE, JOptionPane.OK_CANCEL_OPTION);
         }
       }
     }
