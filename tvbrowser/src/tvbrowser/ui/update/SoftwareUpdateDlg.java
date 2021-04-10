@@ -309,7 +309,6 @@ public class SoftwareUpdateDlg extends JDialog implements ActionListener, ListSe
         selectedDataServices.add("TvBrowserDataService");
       }
       else if(country.equals(Locale.UK.getCountry())) {
-        selectedDataServices.add("BBCDataService");
         selectedDataServices.add("TvBrowserDataService");
       }
       else if(country.equals("NO")) {
@@ -322,7 +321,6 @@ public class SoftwareUpdateDlg extends JDialog implements ActionListener, ListSe
       else {
         selectedDataServices.add("TvBrowserDataService");
         selectedDataServices.add("SchedulesDirectDataService");
-        selectedDataServices.add("BBCDataService");
         selectedDataServices.add("RadioTimesDataService");
         selectedDataServices.add("SweDBTvDataService");
       }
