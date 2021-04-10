@@ -3,19 +3,21 @@ package degenderplugin;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.swing.Icon;
 import javax.swing.JCheckBox;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import com.jgoodies.forms.factories.CC;
 
 import devplugin.Channel;
+import devplugin.Date;
 import devplugin.Plugin;
 import devplugin.PluginInfo;
 import devplugin.ProgramFieldType;
@@ -136,35 +138,42 @@ public class DegenderPlugin extends Plugin {
       CHANNELS_DEFAULT.add("tvbrowserdataservice.TvBrowserDataService_austria_at_orfsportplus");
   };
   
-  private HashMap<String, String> mSingularReplacement;
-  private HashMap<String, String> mPluralReplacement;
+  private LinkedHashMap<String, String> mSingularReplacement;
+  private LinkedHashMap<String, String> mPluralReplacement;
   private HashSet<Channel> mChannelSet;
   
   private static final Pattern GENDERED = Pattern.compile("(\\b(?i)(die\\s){0,1}(?-i)\\b(?!Mc)(\\w+?)(?:\\s*[\\*\\:_](?i:i)|I)n(nen){0,1})", Pattern.DOTALL | Pattern.UNICODE_CHARACTER_CLASS); 
   private static final Pattern GENDERED_LONG = Pattern.compile("(\\b([\\w\\-]+?)innen\\b\\s+(?:und|oder)\\s+\\-{0,1}\\b(\\w+?)\\b)|(\\b([\\w\\-]+?)\\b\\s+(?:und|oder)\\s+\\-{0,1}\\b(\\w+?)innen\\b)", Pattern.DOTALL | Pattern.UNICODE_CHARACTER_CLASS);
-  private static final Version VERSION = new Version(0,8,false);
+  private static final Version VERSION = new Version(0,9,false);
   
   private boolean mRemoveLongForm = false;
   
+  private int mCountShort;
+  private int mCountLong;
+  
   public DegenderPlugin() {
-    mSingularReplacement = new HashMap<String, String>();
+    mSingularReplacement = new LinkedHashMap<String, String>();
     
     mSingularReplacement.put("\u00c4rzt", "Arzt");
     mSingularReplacement.put("B\u00e4uer", "Bauer");
     mSingularReplacement.put("Beamt", "Beamter");
+    mSingularReplacement.put("G\u00c4st", "Gast");
     mSingularReplacement.put("log", "loge");
     
-    mPluralReplacement = new HashMap<String, String>();
+    mPluralReplacement = new LinkedHashMap<String, String>();
     
     mPluralReplacement.put("\u00c4rzt","\u00c4rzte");
     mPluralReplacement.put("B\u00e4uer", "Bauern");
     mPluralReplacement.put("Beamt","Beamte");
-    mPluralReplacement.put("Architekt", "Architekten");
-    mPluralReplacement.put("Pr\u00e4fekt", "Pr\u00e4fekten");
+    mPluralReplacement.put("G\u00c4st","G\u00c4ste");
+    mPluralReplacement.put("Freund", "Freunde");
     
     mPluralReplacement.put("ling","linge");
-    mPluralReplacement.put("g","gen");
-    mPluralReplacement.put("ist", "isten");
+    mPluralReplacement.put("eur","eure");
+    mPluralReplacement.put("ich","iche");
+    mPluralReplacement.put("ier", "iere"); 
+    mPluralReplacement.put("ig", "ige");
+    mPluralReplacement.put("\u00f6r", "\u00f6re");
   }
   
   public static Version getVersion() {
@@ -191,6 +200,12 @@ public class DegenderPlugin extends Plugin {
       
       saveMe();
     }
+  }
+  
+  @Override
+  public void handleTvDataUpdateStarted(Date until) {
+    mCountShort = 0;
+    mCountLong = 0;
   }
   
   @Override
@@ -221,11 +236,10 @@ public class DegenderPlugin extends Plugin {
         int pos = 0;
         
         while(m.find(pos)) {
-          /*for(int i = 1; i <= m.groupCount(); i++) {
+        /* for(int i = 1; i <= m.groupCount(); i++) {
             System.out.println(i+": " + m.group(i));
           }
-          System.out.println();*/
-          
+          */
           boolean wrongArticle = (m.group(2) != null && !m.group(2).trim().isEmpty());
           String replace = m.group(3);
           String test = replace.toLowerCase();
@@ -249,7 +263,7 @@ public class DegenderPlugin extends Plugin {
               }
             }
             
-            if(!found && !test.endsWith("er")) {
+            if(!found && !test.endsWith("er") && !test.endsWith("el")) {
               replace += "en";
             }
           }
@@ -268,18 +282,6 @@ public class DegenderPlugin extends Plugin {
                 break;
               }
             }
-            /*if(test.endsWith("ärzt")) {
-              replace = replace.replace("Ärzt","Arzt").replace("ärzt","arzt");
-            }
-            else if(test.endsWith("beamt")) {
-              replace = replace.replace("Beamt","Beamter").replace("beamt","beamter");
-            }
-            else if(test.endsWith("zeug")) {
-              replace += "e";
-            }
-            else if(test.endsWith("bäuer")) {
-              replace = replace.replace("Bäuer","Bauer").replace("bäuer","bäuer");
-            }*/
             
             if(wrongArticle) {
               if(m.group(2).startsWith("D")) {
@@ -290,7 +292,8 @@ public class DegenderPlugin extends Plugin {
               }
             }
           }
-          
+       //   System.out.println("    "+replace+"\n");
+          mCountShort++;
           result.append(text.substring(pos,m.start(1))).append(replace);
           pos = m.end();
         }
@@ -348,6 +351,7 @@ public class DegenderPlugin extends Plugin {
           
           if(needle != null && male != null && female != null && male.startsWith(female)) {
             result.append(text.substring(pos,index)).append(replace);
+            mCountLong++;
           }
           else {
             result.append(text.substring(pos,index)).append(needle);
@@ -369,8 +373,14 @@ public class DegenderPlugin extends Plugin {
   
   @Override
   public void readData(ObjectInputStream in) throws IOException, ClassNotFoundException {
-    in.readInt(); //read version
+    int version = in.readInt(); //read version
     mRemoveLongForm = in.readBoolean();
+    
+    if(version >= 2) {
+      mCountShort = in.readInt();
+      mCountLong = in.readInt();
+    }
+    
     int n = in.readInt();
     
     mChannelSet = new HashSet<Channel>();
@@ -386,8 +396,10 @@ public class DegenderPlugin extends Plugin {
   
   @Override
   public void writeData(ObjectOutputStream out) throws IOException {
-    out.writeInt(1); //version
+    out.writeInt(2); //version
     out.writeBoolean(mRemoveLongForm);
+    out.writeInt(mCountShort);
+    out.writeInt(mCountLong);
     
     out.writeInt(mChannelSet.size());
     
@@ -433,6 +445,14 @@ public class DegenderPlugin extends Plugin {
         pb.addRow("5dlu", false);
         pb.addRow("fill:default:grow", false);
         pb.add(mChannelSelection, CC.xy(2, pb.getRowCount()));
+        pb.addRow("10dlu", false);
+        pb.addRow(false);
+        pb.addSeparator("Statistik des letzten Datenupdates", CC.xyw(1, pb.getRowCount(), 2));
+        pb.addRow("5dlu", false);
+        pb.addRow(false);
+        pb.add(new JLabel("Ersetzte Kurzformen (*,:,I,_): "+mCountShort), CC.xy(2, pb.getRowCount()));
+        pb.addRow(false);
+        pb.add(new JLabel("Ersetzte Langformen: "+mCountLong), CC.xy(2, pb.getRowCount()));
         
         return pb.getPanel();
       }
