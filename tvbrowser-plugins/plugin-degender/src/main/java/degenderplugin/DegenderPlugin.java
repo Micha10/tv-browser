@@ -144,7 +144,7 @@ public class DegenderPlugin extends Plugin {
   
   private static final Pattern GENDERED = Pattern.compile("(\\b(?i)(die\\s){0,1}(?-i)\\b(?!Mc)(\\w+?)(?:\\s*[\\*\\:_](?i:i)|I)n(nen){0,1})", Pattern.DOTALL | Pattern.UNICODE_CHARACTER_CLASS); 
   private static final Pattern GENDERED_LONG = Pattern.compile("(\\b([\\w\\-]+?)innen\\b\\s+(?:und|oder)\\s+\\-{0,1}\\b(\\w+?)\\b)|(\\b([\\w\\-]+?)\\b\\s+(?:und|oder)\\s+\\-{0,1}\\b(\\w+?)innen\\b)", Pattern.DOTALL | Pattern.UNICODE_CHARACTER_CLASS);
-  private static final Pattern GENDERED_PARTIZIP = Pattern.compile("(\\b(?i)(die\\s){0,1}(?-i)\\b((\\p{Upper}\\w+)ende(n){0,1})\\b)", Pattern.DOTALL | Pattern.UNICODE_CHARACTER_CLASS);
+  private static final Pattern GENDERED_PARTIZIP = Pattern.compile("(\\b(?i)(die\\s){0,1}(?-i)\\b((\\p{Upper}\\w+)ende(n){0,1}(\\w*)\\b))", Pattern.DOTALL | Pattern.UNICODE_CHARACTER_CLASS);
   private static final Version VERSION = new Version(0,10,false);
   
   private boolean mRemoveLongForm = false;
@@ -231,188 +231,219 @@ public class DegenderPlugin extends Plugin {
     }
   }
   
-  private String deGender(String text) {
-    if(text != null) {
-      Matcher m = GENDERED.matcher(text);
-      StringBuilder result = new StringBuilder();
+  private String deGenderShort(String text) {
+    Matcher m = GENDERED.matcher(text);
+    StringBuilder result = new StringBuilder();
+    
+    do {
+      int pos = 0;
       
-      do {
-        int pos = 0;
-        
-        while(m.find(pos)) {
-        /* for(int i = 1; i <= m.groupCount(); i++) {
-            System.out.println(i+": " + m.group(i));
-          }
-          */
-          boolean wrongArticle = (m.group(2) != null && !m.group(2).trim().isEmpty());
-          String replace = m.group(3);
-          String test = replace.toLowerCase();
-          boolean singular = (m.group(4) == null || m.group(4).trim().isEmpty());
-          
-          if(!singular) {
-            Set<String> keys = mPluralReplacement.keySet();
-            boolean found = false;
-            for(String key : keys) {
-              if(test.endsWith(key.toLowerCase())) {
-                found = true;
-                String replacement = mPluralReplacement.get(key);
-                
-                if(replace.charAt(replace.length()-key.length()) != key.charAt(0)) {
-                  replacement = replacement.toLowerCase();
-                }
-                
-                replace = replace.substring(0,replace.length()-key.length()) + replacement;
-                
-                break;
-              }
-            }
-            
-            if(!found && !test.endsWith("er") && !test.endsWith("el")) {
-              replace += "en";
-            }
-          }
-          else {
-            Set<String> keys = mSingularReplacement.keySet();
-            for(String key : keys) {
-              if(test.endsWith(key.toLowerCase())) {
-                String replacement = mSingularReplacement.get(key);
-                
-                if(replace.charAt(replace.length()-key.length()) != key.charAt(0)) {
-                  replacement = replacement.toLowerCase();
-                }
-                
-                replace = replace.substring(0,replace.length()-key.length()) + replacement;
-                
-                break;
-              }
-            }
-            
-            if(wrongArticle) {
-              if(m.group(2).startsWith("D")) {
-                replace = "Der "+replace;
-              }
-              else {
-                replace = "der "+replace;
-              }
-            }
-          }
-       //   System.out.println("    "+replace+"\n");
-          mCountShort++;
-          result.append(text.substring(pos,m.start(1))).append(replace);
-          pos = m.end();
-        }
-        
-        if(pos < text.length()) {
-          result.append(text.substring(pos,text.length()));
-        }
-        
-        text = result.toString();
-        result.setLength(0);
-        
-        m = GENDERED.matcher(text);
-      }while(m.find());
-      
-      if(mRemoveLongForm) {
-        int pos = 0;
-        
-        m = GENDERED_LONG.matcher(text);
-        
-        while(m.find(pos)) {
-          /*for(int i = 1; i <= m.groupCount(); i++) {
+      while(m.find(pos)) {
+      /* for(int i = 1; i <= m.groupCount(); i++) {
           System.out.println(i+": " + m.group(i));
-        }System.out.println();*/
-          String needle = null;
-          String replace = null;
-          String male = null;
-          String female = null;
-          int index = -1;
-          
-          if(m.group(1) != null && m.group(2) != null && m.group(3) != null) {
-            needle = m.group(1);
-            female = m.group(2).toLowerCase().replace("ä", "a").replace("ö", "o").replace("ü", "u");
-            replace = m.group(3);
-            male = replace.toLowerCase().replace("ä", "a").replace("ö", "o").replace("ü", "u");
-            
-            if(female.contains("-")) {
-              female = female.substring(female.lastIndexOf("-")+1);
-              replace = m.group(2).substring(0,m.group(2).lastIndexOf("-")+1)+replace;
-            }
-            
-            index = m.start(1);
-          }
-          else if(m.group(4) != null && m.group(5) != null && m.group(6) != null) {
-            needle = m.group(4);
-            female = m.group(6).toLowerCase().replace("ä", "a").replace("ö", "o").replace("ü", "u");
-            replace = m.group(5);
-            male = replace.toLowerCase().replace("ä", "a").replace("ö", "o").replace("ü", "u");
-            
-            if(male.contains("-")) {
-              male = male.substring(male.lastIndexOf("-")+1);
-            }
-            
-            index = m.start(4);
-          }
-          
-          if(needle != null && male != null && female != null && male.startsWith(female)) {
-            result.append(text.substring(pos,index)).append(replace);
-            mCountLong++;
-          }
-          else {
-            result.append(text.substring(pos,index)).append(needle);
-          }
-          
-          pos = m.end();
         }
+        */
+        boolean wrongArticle = (m.group(2) != null && !m.group(2).trim().isEmpty());
+        String replace = m.group(3);
+        String test = replace.toLowerCase();
+        boolean singular = (m.group(4) == null || m.group(4).trim().isEmpty());
         
-        if(pos < text.length()) {
-          result.append(text.substring(pos,text.length()));
+        if(!singular) {
+          Set<String> keys = mPluralReplacement.keySet();
+          boolean found = false;
+          for(String key : keys) {
+            if(test.endsWith(key.toLowerCase())) {
+              found = true;
+              String replacement = mPluralReplacement.get(key);
+              
+              if(replace.charAt(replace.length()-key.length()) != key.charAt(0)) {
+                replacement = replacement.toLowerCase();
+              }
+              
+              replace = replace.substring(0,replace.length()-key.length()) + replacement;
+              
+              break;
+            }
+          }
+          
+          if(!found && !test.endsWith("er") && !test.endsWith("el")) {
+            replace += "en";
+          }
         }
+        else {
+          Set<String> keys = mSingularReplacement.keySet();
+          for(String key : keys) {
+            if(test.endsWith(key.toLowerCase())) {
+              String replacement = mSingularReplacement.get(key);
+              
+              if(replace.charAt(replace.length()-key.length()) != key.charAt(0)) {
+                replacement = replacement.toLowerCase();
+              }
+              
+              replace = replace.substring(0,replace.length()-key.length()) + replacement;
+              
+              break;
+            }
+          }
+          
+          if(wrongArticle) {
+            if(m.group(2).startsWith("D")) {
+              replace = "Der "+replace;
+            }
+            else {
+              replace = "der "+replace;
+            }
+          }
+        }
+     //   System.out.println("    "+replace+"\n");
+        mCountShort++;
+        result.append(text.substring(pos,m.start(1))).append(replace);
+        pos = m.end();
+      }
+      
+      if(pos < text.length()) {
+        result.append(text.substring(pos,text.length()));
       }
       
       text = result.toString();
-      result.setLength(0);
       
-      if(mReplacePartizip) {
-        m = GENDERED_PARTIZIP.matcher(text);
-        int pos = 0;
+      m = GENDERED.matcher(text);
+    }while(m.find());
+    
+    return text;
+  }
+  
+  private String deGenderLong(String text) {
+    if(mRemoveLongForm && text != null) {
+      int pos = 0;
+      StringBuilder result = new StringBuilder();
+      Matcher m = GENDERED_LONG.matcher(text);
+      
+      while(m.find(pos)) {
+        /*for(int i = 1; i <= m.groupCount(); i++) {
+        System.out.println(i+": " + m.group(i));
+      }System.out.println();*/
+        String needle = null;
+        String replace = null;
+        String male = null;
+        String female = null;
+        int index = -1;
         
-        while(m.find(pos)) {
-        /*  for(int i = 1; i <= m.groupCount(); i++) {
-            System.out.println(i+": " + m.group(i));
-          }*/
+        if(m.group(1) != null && m.group(2) != null && m.group(3) != null) {
+          needle = m.group(1);
+          female = m.group(2).toLowerCase().replace("ä", "a").replace("ö", "o").replace("ü", "u");
+          replace = m.group(3);
+          male = replace.toLowerCase().replace("ä", "a").replace("ö", "o").replace("ü", "u");
           
-          String replace = m.group(1);
+          if(female.contains("-")) {
+            female = female.substring(female.lastIndexOf("-")+1);
+            replace = m.group(2).substring(0,m.group(2).lastIndexOf("-")+1)+replace;
+          }
           
-          if(m.group(5) != null || m.group(2) == null) {
-            if(m.group(4).trim().equals("Studier")) {
-              replace = "Studenten";
-            }
-            else if(m.group(4).trim().equals("Forsch")) {
-              replace = "Forscher";
-            }
+          index = m.start(1);
+        }
+        else if(m.group(4) != null && m.group(5) != null && m.group(6) != null) {
+          needle = m.group(4);
+          female = m.group(6).toLowerCase().replace("ä", "a").replace("ö", "o").replace("ü", "u");
+          replace = m.group(5);
+          male = replace.toLowerCase().replace("ä", "a").replace("ö", "o").replace("ü", "u");
+          
+          if(male.contains("-")) {
+            male = male.substring(male.lastIndexOf("-")+1);
+          }
+          
+          index = m.start(4);
+        }
+        
+        if(needle != null && male != null && female != null && male.startsWith(female)) {
+          result.append(text.substring(pos,index)).append(replace);
+          mCountLong++;
+        }
+        else {
+          result.append(text.substring(pos,index)).append(needle);
+        }
+        
+        pos = m.end();
+      }
+      
+      if(pos < text.length()) {
+        result.append(text.substring(pos,text.length()));
+      }
+      
+      text = result.toString();
+    }
+    
+    return text;
+  }
+  
+  private String deGenderPartizip(String text) {
+    if(mReplacePartizip && text != null) {
+      StringBuilder result = new StringBuilder();
+      Matcher m = GENDERED_PARTIZIP.matcher(text);
+      int pos = 0;
+      
+      while(m.find(pos)) {
+        /*for(int i = 1; i <= m.groupCount(); i++) {
+          System.out.println(i+": " + m.group(i));
+        }
+        */
+        String replace = m.group(1);
+        
+        if(m.group(5) != null || m.group(2) == null) {
+          if(m.group(4).toLowerCase().endsWith("studier")) {
+            replace = m.group(4).substring(0,m.group(4).length()-6)+"tudenten";
+          }
+          else if(m.group(4).toLowerCase().endsWith("forsch")) {
+            replace = m.group(4).substring(0,m.group(4).length()-5)+"orscher";
+          }
+          else if(m.group(4).toLowerCase().endsWith("fahr")) {
+            replace = m.group(4).substring(0,m.group(4).length()-3)+"ahrer";
+          }
+          else if(m.group(4).toLowerCase().endsWith("zufußgeh")) {
+            replace = m.group(4).substring(0,m.group(4).length()-8);
             
-            if(!replace.equals(m.group(1))) {
-              if(m.group(2) != null) {
-                replace = m.group(2)+" "+replace;
-              }
-              
-              mCountPartizip++;
+            if(Character.isUpperCase(m.group(4).charAt(m.group(4).length()-8))) {
+              replace += "Fußgänger";
+            }
+            else {
+              replace += "fußgänger";
             }
           }
           
-          //System.out.println("   " + replace+"\n");
-          result.append(text.substring(pos,m.start(1))).append(replace);
           
-          pos = m.end();
+          if(!replace.equals(m.group(1))) {
+            if(m.group(2) != null) {
+              replace = m.group(2)+" "+replace;
+            }
+            if(m.group(6) != null && !m.group(6).trim().isEmpty()) {
+              replace += m.group(6);
+            }
+            
+            mCountPartizip++;
+          }
         }
         
-        if(pos < text.length()) {
-          result.append(text.substring(pos,text.length()));
-        }
+       // System.out.println("   " + replace+"\n");
+        result.append(text.substring(pos,m.start(1))).append(replace);
         
-        text = result.toString();
-        result.setLength(0);
+        pos = m.end();
       }
+      
+      if(pos < text.length()) {
+        result.append(text.substring(pos,text.length()));
+      }
+      
+      text = result.toString();
+    }
+    
+    return text;
+  }
+  
+  private String deGender(String text) {
+    if(text != null) {
+      text = deGenderShort(text);
+      text = deGenderLong(text);
+      text = deGenderPartizip(text);
     }
     
     return text;
