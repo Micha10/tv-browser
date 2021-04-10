@@ -26,6 +26,7 @@
 #   VERSION_FILE
 #   PROG_NAME
 #   PROG_NAME_FILE
+#   PROG_NAME_REGISTRY
 #   RUNTIME_DIR
 #   INSTALLER_DIR
 #   PUBLIC_DIR
@@ -330,62 +331,62 @@ Section "$(STD_SECTION_NAME)" SEC_STANDARD
     WriteRegStr HKCU "Software\${PROG_NAME}${VERSION}" "Start Menu Folder" $STARTMENU_FOLDER
     WriteRegExpandStr \
       HKCU \
-      "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PROG_NAME_FILE}" \
+      "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PROG_NAME_REGISTRY}" \
       "UninstallString" \
       "$INSTDIR\Uninstall.exe"
     WriteRegExpandStr \
       HKCU \
-      "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PROG_NAME_FILE}" \
+      "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PROG_NAME_REGISTRY}" \
       "InstallLocation" \
       "$INSTDIR"
     WriteRegStr \
       HKCU \
-      "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PROG_NAME_FILE}" \
+      "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PROG_NAME_REGISTRY}" \
       "DisplayName" \
       "${PROG_NAME} ${VERSION}"
     WriteRegStr \
       HKCU \
-      "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PROG_NAME_FILE}" \
+      "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PROG_NAME_REGISTRY}" \
       "DisplayIcon" \
       ${REGISTER_ICON}
     WriteRegStr \
       HKCU \
-      "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PROG_NAME_FILE}" \
+      "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PROG_NAME_REGISTRY}" \
       "DisplayVersion" \
       "${VERSION}"
     WriteRegStr \
       HKCU \
-      "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PROG_NAME_FILE}" \
+      "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PROG_NAME_REGISTRY}" \
       "Publisher" \
       "TV-Browser Team"
     ; get update infos directly on sourceforge
     WriteRegStr \
       HKCU \
-      "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PROG_NAME_FILE}" \
+      "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PROG_NAME_REGISTRY}" \
       "URLUpdateInfo" \
       ${UPDATE_INFO_URL}
     ; link about to homepage
     WriteRegStr \
       HKCU \
-      "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PROG_NAME_FILE}" \
+      "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PROG_NAME_REGISTRY}" \
       "URLInfoAbout" \
       ${ABOUT_URL}
     ; support via forum
     WriteRegStr \
       HKCU \
-      "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PROG_NAME_FILE}" \
+      "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PROG_NAME_REGISTRY}" \
       "HelpLink" \
       ${SUPPORT_URL}
     ; no modify option
     WriteRegDWORD \
       HKCU \
-      "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PROG_NAME_FILE}" \
+      "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PROG_NAME_REGISTRY}" \
       "NoModify" \
       1
     ; no repair option
     WriteRegDWORD \
       HKCU \
-      "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PROG_NAME_FILE}" \
+      "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PROG_NAME_REGISTRY}" \
       "NoRepair" \
       1
     goto end
@@ -400,63 +401,72 @@ Section "$(STD_SECTION_NAME)" SEC_STANDARD
     WriteRegStr HKLM "Software\TV-Browser" "Start Menu Folder" $STARTMENU_FOLDER
     WriteRegStr HKLM "Software\${PROG_NAME}${VERSION}" "Start Menu Folder" $STARTMENU_FOLDER
     
+    DeleteRegKey \
+      HKLM \
+      "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PROG_NAME_REGISTRY}-full"
+    DeleteRegKey \
+      HKLM \
+      "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PROG_NAME_REGISTRY}-lite"
+    
+    ClearErrors
+    
     WriteRegExpandStr \
       HKLM \
-      "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PROG_NAME_FILE}" \
+      "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PROG_NAME_REGISTRY}" \
       "UninstallString" \
       "$INSTDIR\Uninstall.exe"
     WriteRegExpandStr \
       HKLM \
-      "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PROG_NAME_FILE}" \
+      "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PROG_NAME_REGISTRY}" \
       "InstallLocation" \
       "$INSTDIR"
     WriteRegStr \
       HKLM \
-      "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PROG_NAME_FILE}" \
+      "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PROG_NAME_REGISTRY}" \
       "DisplayName" \
       "${PROG_NAME} ${VERSION}"
     WriteRegStr \
       HKLM \
-      "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PROG_NAME_FILE}" \
+      "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PROG_NAME_REGISTRY}" \
       "DisplayIcon" \
       ${REGISTER_ICON}
     WriteRegStr \
       HKLM \
-      "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PROG_NAME_FILE}" \
+      "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PROG_NAME_REGISTRY}" \
       "DisplayVersion" \
       "${VERSION}"
     WriteRegStr \
       HKLM \
-      "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PROG_NAME_FILE}" \
+      "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PROG_NAME_REGISTRY}" \
       "Publisher" \
       "TV-Browser Team"
     WriteRegStr \
       HKLM \
-      "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PROG_NAME_FILE}" \
+      "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PROG_NAME_REGISTRY}" \
       "URLUpdateInfo" \
       ${UPDATE_INFO_URL}
     ; link about to homepage
     WriteRegStr \
       HKLM \
-      "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PROG_NAME_FILE}" \
+      "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PROG_NAME_REGISTRY}" \
       "URLInfoAbout" \
       ${ABOUT_URL}
     ; support via forum
     WriteRegStr \
       HKLM \
-      "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PROG_NAME_FILE}" \
+      "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PROG_NAME_REGISTRY}" \
       "HelpLink" \
       ${SUPPORT_URL}
     ; no modify option
     WriteRegDWORD \
       HKLM \
-      "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PROG_NAME_FILE}" \
+      "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PROG_NAME_REGISTRY}" \
       "NoModify" \
       1
     ; no repair option
     WriteRegDWORD \
       HKLM \
-      "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PROG_NAME_FILE}" \
+      "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PROG_NAME_REGISTRY}" \
       "NoRepair" \
       1
   end:
@@ -687,7 +697,7 @@ Section "Uninstall"
     "Software\${PROG_NAME}${VERSION}"
     DeleteRegKey \
     HKLM \
-    "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PROG_NAME_FILE}"
+    "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PROG_NAME_REGISTRY}"
     SetShellVarContext all
     goto end
   isnotpower:
@@ -708,7 +718,7 @@ Section "Uninstall"
     "Software\${PROG_NAME}${VERSION}"
     DeleteRegKey \
     HKCU \
-    "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PROG_NAME_FILE}"
+    "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PROG_NAME_REGISTRY}"
     SetShellVarContext current
   end:
 

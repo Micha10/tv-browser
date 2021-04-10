@@ -759,6 +759,7 @@
       <arg value="/DVERSION_FILE=${tvbrowser.version.file}"/>
       <arg value="/DPROG_NAME=${programname}"/>
       <arg value="/DPROG_NAME_FILE=${programname.file}-lite"/>
+      <arg value="/DPROG_NAME_REGISTRY=${programname.file}"/>
       <arg value="/DRUNTIME_DIR=${tvbrowser-win.runtime.dir}"/>
       <arg value="/DINSTALLER_DIR=${installer.dir}"/>
       <arg value="/DPUBLIC_DIR=${public.dir}"/>
@@ -786,6 +787,7 @@
       <arg value="/DVERSION_FILE=${tvbrowser.version.file}"/>
       <arg value="/DPROG_NAME=${programname}"/>
       <arg value="/DPROG_NAME_FILE=${programname.file}-full"/>
+  	  <arg value="/DPROG_NAME_REGISTRY=${programname.file}"/>
       <arg value="/DRUNTIME_DIR=${tvbrowser-win.runtime.dir}"/>
       <arg value="/DINSTALLER_DIR=${installer.dir}"/>
       <arg value="/DPUBLIC_DIR=${public.dir}"/>
@@ -820,6 +822,7 @@
       <arg value="/DVERSION_FILE=${tvbrowser.version.file}"/>
       <arg value="/DPROG_NAME=${programname}"/>
       <arg value="/DPROG_NAME_FILE=${programname.file}-full"/>
+  	  <arg value="/DPROG_NAME_REGISTRY=${programname.file}"/>
       <arg value="/DRUNTIME_DIR=${tvbrowser-win.runtime.dir}"/>
       <arg value="/DINSTALLER_DIR=${installer.dir}"/>
       <arg value="/DPUBLIC_DIR=${public.dir}"/>
