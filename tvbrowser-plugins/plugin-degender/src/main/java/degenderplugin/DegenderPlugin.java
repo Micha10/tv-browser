@@ -144,12 +144,15 @@ public class DegenderPlugin extends Plugin {
   
   private static final Pattern GENDERED = Pattern.compile("(\\b(?i)(die\\s){0,1}(?-i)\\b(?!Mc)(\\w+?)(?:\\s*[\\*\\:_](?i:i)|I)n(nen){0,1})", Pattern.DOTALL | Pattern.UNICODE_CHARACTER_CLASS); 
   private static final Pattern GENDERED_LONG = Pattern.compile("(\\b([\\w\\-]+?)innen\\b\\s+(?:und|oder)\\s+\\-{0,1}\\b(\\w+?)\\b)|(\\b([\\w\\-]+?)\\b\\s+(?:und|oder)\\s+\\-{0,1}\\b(\\w+?)innen\\b)", Pattern.DOTALL | Pattern.UNICODE_CHARACTER_CLASS);
-  private static final Version VERSION = new Version(0,9,false);
+  private static final Pattern GENDERED_PARTIZIP = Pattern.compile("(\\b(?i)(die\\s){0,1}(?-i)\\b((\\p{Upper}\\w+)ende(n){0,1})\\b)", Pattern.DOTALL | Pattern.UNICODE_CHARACTER_CLASS);
+  private static final Version VERSION = new Version(0,10,false);
   
   private boolean mRemoveLongForm = false;
+  private boolean mReplacePartizip = false;
   
   private int mCountShort;
   private int mCountLong;
+  private int mCountPartizip;
   
   public DegenderPlugin() {
     mSingularReplacement = new LinkedHashMap<String, String>();
@@ -206,6 +209,7 @@ public class DegenderPlugin extends Plugin {
   public void handleTvDataUpdateStarted(Date until) {
     mCountShort = 0;
     mCountLong = 0;
+    mCountPartizip = 0;
   }
   
   @Override
@@ -366,6 +370,49 @@ public class DegenderPlugin extends Plugin {
       }
       
       text = result.toString();
+      result.setLength(0);
+      
+      if(mReplacePartizip) {
+        m = GENDERED_PARTIZIP.matcher(text);
+        int pos = 0;
+        
+        while(m.find(pos)) {
+        /*  for(int i = 1; i <= m.groupCount(); i++) {
+            System.out.println(i+": " + m.group(i));
+          }*/
+          
+          String replace = m.group(1);
+          
+          if(m.group(5) != null || m.group(2) == null) {
+            if(m.group(4).trim().equals("Studier")) {
+              replace = "Studenten";
+            }
+            else if(m.group(4).trim().equals("Forsch")) {
+              replace = "Forscher";
+            }
+            
+            if(!replace.equals(m.group(1))) {
+              if(m.group(2) != null) {
+                replace = m.group(2)+" "+replace;
+              }
+              
+              mCountPartizip++;
+            }
+          }
+          
+          //System.out.println("   " + replace+"\n");
+          result.append(text.substring(pos,m.start(1))).append(replace);
+          
+          pos = m.end();
+        }
+        
+        if(pos < text.length()) {
+          result.append(text.substring(pos,text.length()));
+        }
+        
+        text = result.toString();
+        result.setLength(0);
+      }
     }
     
     return text;
@@ -375,6 +422,11 @@ public class DegenderPlugin extends Plugin {
   public void readData(ObjectInputStream in) throws IOException, ClassNotFoundException {
     int version = in.readInt(); //read version
     mRemoveLongForm = in.readBoolean();
+    
+    if(version >= 3) {
+      mReplacePartizip = in.readBoolean();
+      mCountPartizip = in.readInt();
+    }
     
     if(version >= 2) {
       mCountShort = in.readInt();
@@ -396,8 +448,10 @@ public class DegenderPlugin extends Plugin {
   
   @Override
   public void writeData(ObjectOutputStream out) throws IOException {
-    out.writeInt(2); //version
+    out.writeInt(3); //version
     out.writeBoolean(mRemoveLongForm);
+    out.writeBoolean(mReplacePartizip);
+    out.writeInt(mCountPartizip);
     out.writeInt(mCountShort);
     out.writeInt(mCountLong);
     
@@ -412,11 +466,13 @@ public class DegenderPlugin extends Plugin {
   public SettingsTab getSettingsTab() {
     return new SettingsTab() {
       private JCheckBox mRemoveLongGendered;
+      private JCheckBox mReplacePartizipCb;
       private SelectableItemList<Channel> mChannelSelection;
       
       @Override
       public void saveSettings() {
         mRemoveLongForm = mRemoveLongGendered.isSelected();
+        mReplacePartizip = mReplacePartizipCb.isSelected();
         mChannelSet.addAll(mChannelSelection.getSelectionList());
       }
       
@@ -432,13 +488,16 @@ public class DegenderPlugin extends Plugin {
       
       @Override
       public JPanel createSettingsPanel() {
-        mRemoveLongGendered = new JCheckBox("Gender-Langform (z.B. Nutzerinnen und Nutzer) ebenfalls entfernen",mRemoveLongForm);
+        mRemoveLongGendered = new JCheckBox("Gender-Langform (z.B. Nutzerinnen und Nutzer) entfernen",mRemoveLongForm);
+        mReplacePartizipCb = new JCheckBox("Häufig verwendete Partizipformen (z.B. Studierende) ersetzen",mReplacePartizip);
         mChannelSelection = new SelectableItemList<Channel>(mChannelSet.toArray(new Channel[0]), getPluginManager().getSubscribedChannels(),true);
         
         EnhancedPanelBuilder pb = new EnhancedPanelBuilder("5dlu,default:grow");
         pb.addRow("5dlu", false);
         pb.addRow(false);
         pb.add(mRemoveLongGendered, CC.xy(2, pb.getRowCount()));
+        pb.addRow(false);
+        pb.add(mReplacePartizipCb, CC.xy(2, pb.getRowCount()));
         pb.addRow("5dlu", false);
         pb.addRow(false);
         pb.addSeparator("Sender", CC.xyw(1, pb.getRowCount(), 2));
@@ -453,6 +512,8 @@ public class DegenderPlugin extends Plugin {
         pb.add(new JLabel("Ersetzte Kurzformen (*,:,I,_): "+mCountShort), CC.xy(2, pb.getRowCount()));
         pb.addRow(false);
         pb.add(new JLabel("Ersetzte Langformen: "+mCountLong), CC.xy(2, pb.getRowCount()));
+        pb.addRow(false);
+        pb.add(new JLabel("Ersetzte Partizipien: "+mCountPartizip), CC.xy(2, pb.getRowCount()));
         
         return pb.getPanel();
       }
