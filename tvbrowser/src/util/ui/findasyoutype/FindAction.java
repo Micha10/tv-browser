@@ -13,6 +13,7 @@ import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.KeyStroke;
+import javax.swing.UIManager;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.Position;
@@ -52,10 +53,11 @@ public abstract class FindAction extends AbstractAction implements DocumentListe
   private Thread mThread;
   private JLabel mMessage;
   private Color mBg, mFg;
+  private static final Color COLOR_NOT_FOUND = new Color(255,102,102);
   
   public FindAction(JComponent comp, boolean startAtKeytype) {
     super(mLocalizer.msg("incrementalSearch", "Incremental Search")); // NOI18N
-
+    
     mBg = mSearchField.getBackground();
     mFg = mSearchField.getForeground();
     
@@ -172,8 +174,13 @@ public abstract class FindAction extends AbstractAction implements DocumentListe
       reset();
     }
     else {
-      mSearchField.setBackground(new Color(255,102,102));
-      mSearchField.setForeground(Color.white);
+      if(!"com.sun.java.swing.plaf.gtk.GTKLookAndFeel".equals(UIManager.getLookAndFeel().getClass().getCanonicalName())) {
+        mSearchField.setBackground(COLOR_NOT_FOUND);
+        mSearchField.setForeground(Color.white);
+      }
+      else {
+        mSearchField.setForeground(COLOR_NOT_FOUND);
+      }
       mMessage.setVisible(true);
     }
   }
