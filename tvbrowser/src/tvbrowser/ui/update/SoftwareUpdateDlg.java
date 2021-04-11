@@ -752,7 +752,7 @@ public class SoftwareUpdateDlg extends JDialog implements ActionListener, ListSe
       boolean result = true;
       
       if(o instanceof PluginSoftwareUpdateItem) {
-        result = mTextField.getText().isBlank() || ((PluginSoftwareUpdateItem) o).getName().toLowerCase().contains(mTextField.getText().toLowerCase());        
+        result = mTextField.getText().isBlank() || ((PluginSoftwareUpdateItem) o).getName().toLowerCase().contains(mTextField.getText().toLowerCase()) || ((PluginSoftwareUpdateItem) o).getClassName().toLowerCase().contains(mTextField.getText().toLowerCase());        
       }
       
       return result;
