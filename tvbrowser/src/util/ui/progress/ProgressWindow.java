@@ -105,6 +105,12 @@ public class ProgressWindow implements devplugin.ProgressMonitor {
       mBar.setValue(value);
     });
   }
+  
+  public void incrementValue() {
+    UIThreadRunner.invokeLater(() -> {
+      mBar.setValue(mBar.getValue()+1);
+    });
+  }
 
   public void setMessage(final String msg) {
     SwingUtilities.invokeLater(() -> {

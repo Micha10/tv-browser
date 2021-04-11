@@ -92,9 +92,9 @@ import tvbrowser.ui.mainframe.MainFrame;
 import tvbrowser.ui.mainframe.SoftwareUpdater;
 import util.browserlauncher.Launch;
 import util.exc.TvBrowserException;
+import util.i18n.Localizer;
 import util.ui.EnhancedPanelBuilder;
 import util.ui.LinkButton;
-import util.i18n.Localizer;
 import util.ui.TVBrowserIcons;
 import util.ui.TextAreaIcon;
 import util.ui.UiUtilities;
@@ -104,6 +104,7 @@ import util.ui.customizableitems.SelectableItem;
 import util.ui.customizableitems.SelectableItemList;
 import util.ui.customizableitems.SelectableItemRendererCenterComponentIf;
 import util.ui.html.HTMLTextHelper;
+import util.ui.progress.ProgressWindow;
 
 /**
  * A dialog class that shows the plugin updates/new plugins.
@@ -593,41 +594,50 @@ public class SoftwareUpdateDlg extends JDialog implements ActionListener, ListSe
     if (event.getSource() == mCloseBtn) {
       close();
     } else if (event.getSource() == mDownloadBtn) {
-      mDownloadBtn.setEnabled(false);
-      Cursor cursor = getCursor();
-      this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-      int successfullyDownloadedItems = 0;
-      try {
-        for (SoftwareUpdateItem item : mSoftwareUpdateItemList.getSelectionList()) {
-          try {
-            item.download(mDownloadUrl);
-            successfullyDownloadedItems++;
-          } catch (TvBrowserException e) {
-            util.exc.ErrorHandler.handle(e);
+      ProgressWindow p = new ProgressWindow(this,"");
+      p.setMaximum(mSoftwareUpdateItemList.getSelectionList().size());
+      p.run(() -> {
+        mDownloadBtn.setEnabled(false);
+        Cursor cursor = getCursor();
+        this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+        int successfullyDownloadedItems = 0;
+        try {
+          for (SoftwareUpdateItem item : mSoftwareUpdateItemList.getSelectionList()) {
+            try {
+              p.setMessage(item.getName());
+              item.download(mDownloadUrl);
+              p.incrementValue();
+              successfullyDownloadedItems++;
+            } catch (TvBrowserException e) {
+              util.exc.ErrorHandler.handle(e);
+            }
           }
+        } finally {
+          mDownloadBtn.setEnabled(true);
+          setCursor(cursor);
         }
-      } finally {
-        mDownloadBtn.setEnabled(true);
-        setCursor(cursor);
-      }
-      if (successfullyDownloadedItems > 0 && !mIsVersionChange && mDialogType != SoftwareUpdater.ONLY_DATA_SERVICE_TYPE) {
-    	if (TVBrowser.restartEnabled()) {
-    		String[] options = {"",""};
-    		options[0] = LOCALIZER.msg("restartnow", "restart");
-    		options[1] = LOCALIZER.msg("restartlater", "later");
-    		if (JOptionPane.showOptionDialog(UiUtilities.getLastModalChildOf(MainFrame.getInstance()),  LOCALIZER.msg("restartplugin", "plugins has been installed.\nrestart TV-Browser?"),
-    				LOCALIZER.msg("restartdialog","restart"), JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null,options ,options[0])==0){
-    	        TVBrowser.addRestart();
-    	        MainFrame.getInstance().quit();
-    		}
-    	} else {
-    		JOptionPane.showMessageDialog(UiUtilities.getLastModalChildOf(MainFrame.getInstance()), LOCALIZER.msg("restartprogram", "please restart tvbrowser before..."));
-    	}
-        setVisible(false);
-      }
-      else if(mIsVersionChange || mDialogType == SoftwareUpdater.ONLY_DATA_SERVICE_TYPE) {
-        setVisible(false);
-      }
+        if (successfullyDownloadedItems > 0 && !mIsVersionChange && mDialogType != SoftwareUpdater.ONLY_DATA_SERVICE_TYPE) {
+          if (TVBrowser.restartEnabled()) {
+            String[] options = {"",""};
+            options[0] = LOCALIZER.msg("restartnow", "restart");
+            options[1] = LOCALIZER.msg("restartlater", "later");
+            
+            if (JOptionPane.showOptionDialog(UiUtilities.getLastModalChildOf(MainFrame.getInstance()),  LOCALIZER.msg("restartplugin", "plugins has been installed.\nrestart TV-Browser?"),
+                LOCALIZER.msg("restartdialog","restart"), JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null,options ,options[0])==0){
+                  TVBrowser.addRestart();
+                  MainFrame.getInstance().quit();
+            }
+          } else {
+            JOptionPane.showMessageDialog(UiUtilities.getLastModalChildOf(MainFrame.getInstance()), LOCALIZER.msg("restartprogram", "please restart tvbrowser before..."));
+          }
+          
+          setVisible(false);
+        }
+        else if(mIsVersionChange || mDialogType == SoftwareUpdater.ONLY_DATA_SERVICE_TYPE) {
+          setVisible(false);
+        }
+      });
+      
     }
     else if (event.getSource() == mHelpBtn) {
       final SoftwareUpdateItem item = mSoftwareUpdateItemList.getSelectedValue().getItem();
