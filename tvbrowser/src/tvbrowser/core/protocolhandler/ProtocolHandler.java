@@ -73,7 +73,7 @@ import util.ui.SearchFormSettings;
 import util.ui.UiUtilities;
 
 /**
- * Handler for protocol message with tvb:\\
+ * Handler for protocol message with tvb://
  * 
  * @author René Mach
  * @since 4.2.3
@@ -172,7 +172,7 @@ public class ProtocolHandler {
         }
         
         if(ask) {
-          if(!source.isFile() || DontShowAgainOptionBox.showOptionDialog("tvbProtocolWrongTarget", UiUtilities.getParentFrameOnMouseScreen(), LOCALIZER.msg("error.linux.msg", "Receiving protocol message with tvb:\\ is activated.\nProtocol message make it easier to configure TV-Browser.\nBut the protocol leads to another TV-Browser.\n\nShould the protocol instead lead to this TV-Browser?\n(The protocol messages are deactivted for this TV-Browser if not.)"), LOCALIZER.msg("error.linux.title", "tvb:\\\\-Protokoll leads to another TV-Browser"), JOptionPane.QUESTION_MESSAGE, JOptionPane.YES_NO_CANCEL_OPTION) == JOptionPane.YES_OPTION) {
+          if(!source.isFile() || DontShowAgainOptionBox.showOptionDialog("tvbProtocolWrongTarget", UiUtilities.getParentFrameOnMouseScreen(), LOCALIZER.msg("error.linux.msg", "Receiving protocol message with tvb:// is activated.\nProtocol message make it easier to configure TV-Browser.\nBut the protocol leads to another TV-Browser.\n\nShould the protocol instead lead to this TV-Browser?\n(The protocol messages are deactivted for this TV-Browser if not.)"), LOCALIZER.msg("error.linux.title", "tvb://\\-Protokoll leads to another TV-Browser"), JOptionPane.QUESTION_MESSAGE, JOptionPane.YES_NO_CANCEL_OPTION) == JOptionPane.YES_OPTION) {
             enable(false);
           }
           else {
@@ -194,7 +194,7 @@ public class ProtocolHandler {
         File tvbprotocol = new File("/Applications/TV-Browser Protocol.app");
         
         if(!tvbprotocol.exists()) {
-          DontShowAgainOptionBox.showOptionDialog("tvbProtocolMissing", UiUtilities.getParentFrameOnMouseScreen(), LOCALIZER.msg("error.mac.msg", "Receiving protocol message with tvb:\\ is activated.\nProtocol message make it easier to configure TV-Browser.\nBut the protocol app is missing.\n\nPlease make sure to also install the TV-Browser Protocol app from the DMG with TV-Browser."), LOCALIZER.msg("error.mac.title", "tvb:\\ protocol app missing"), JOptionPane.QUESTION_MESSAGE, JOptionPane.OK_CANCEL_OPTION);
+          DontShowAgainOptionBox.showOptionDialog("tvbProtocolMissing", UiUtilities.getParentFrameOnMouseScreen(), LOCALIZER.msg("error.mac.msg", "Receiving protocol message with tvb:// is activated.\nProtocol message make it easier to configure TV-Browser.\nBut the protocol app is missing.\n\nPlease make sure to also install the TV-Browser Protocol app from the DMG with TV-Browser."), LOCALIZER.msg("error.mac.title", "tvb:// protocol app missing"), JOptionPane.QUESTION_MESSAGE, JOptionPane.OK_CANCEL_OPTION);
         }
       }
     }
@@ -559,7 +559,7 @@ public class ProtocolHandler {
     File exe = new File(TVBrowser.isTransportable() ? "tvbrowser-transportable.exe" : "tvbrowser.exe");
     
     if((v == null || !v.getData().contains(exe.getAbsolutePath()))) {
-      if(DontShowAgainOptionBox.showOptionDialog("tvbProtocolWrongTarget", UiUtilities.getParentFrameOnMouseScreen(), LOCALIZER.msg("error.win.msg", "Receiving protocol message with tvb:\\ is activated.\nProtocol message make it easier to configure TV-Browser.\nBut the protocol doesn't exists in Windows or leads to another TV-Browser.\n\nShould the protocol be created in Windows now to lead to this TV-Browser (Administrator rights are needed for this)?\n(The protocol messages are deactivted for this TV-Browser if not.)"), LOCALIZER.msg("error.win.title", "tvb:\\ protocol error"), JOptionPane.QUESTION_MESSAGE, JOptionPane.YES_NO_CANCEL_OPTION) == JOptionPane.YES_OPTION) {
+      if(DontShowAgainOptionBox.showOptionDialog("tvbProtocolWrongTarget", UiUtilities.getParentFrameOnMouseScreen(), LOCALIZER.msg("error.win.msg", "Receiving protocol message with tvb:// is activated.\nProtocol message make it easier to configure TV-Browser.\nBut the protocol doesn't exists in Windows or leads to another TV-Browser.\n\nShould the protocol be created in Windows now to lead to this TV-Browser (Administrator rights are needed for this)?\n(The protocol messages are deactivted for this TV-Browser if not.)"), LOCALIZER.msg("error.win.title", "tvb:// protocol error"), JOptionPane.QUESTION_MESSAGE, JOptionPane.YES_NO_CANCEL_OPTION) == JOptionPane.YES_OPTION) {
         enableWindows();
       }
       else {
