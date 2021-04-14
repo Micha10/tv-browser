@@ -1246,7 +1246,7 @@ public class FavoritesPlugin {
   public void showExcludeProgramsDialog(Favorite fav, Program program) {
     WizardHandler handler = new WizardHandler(UiUtilities.getLastModalChildOf(MainFrame.getInstance()), new ExcludeWizardStep(fav, program));
     Object exclusion = handler.show();
-System.out.println("EXCLUSION " + exclusion);
+    
     if (exclusion != null) {
       if(fav == null) {
         Exclusion[] exclusionArr = new Exclusion[mExclusions.length + 1];
