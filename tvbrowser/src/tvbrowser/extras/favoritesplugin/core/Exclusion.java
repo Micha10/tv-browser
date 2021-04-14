@@ -524,10 +524,10 @@ public class Exclusion implements Comparable<Exclusion> {
       }
       
       if(mTypeDuration == TYPE_DURATION_TOO_SHORT) {
-        textValue.append(LOCALIZER.msg("exclude.duration.tooShort","duration shorter than {0} minutes'", mDuration));
+        textValue.append(LOCALIZER.msg("exclude.duration.tooShort","duration shorter than {0} minutes'", mDuration+1));
       }
       else if(mTypeDuration == TYPE_DURATION_TOO_LONG) {
-        textValue.append(LOCALIZER.msg("exclude.duration.tooLong","duration longer than {0} minutes'", mDuration));
+        textValue.append(LOCALIZER.msg("exclude.duration.tooLong","duration longer than {0} minutes'", mDuration-1));
       }
     }
     
