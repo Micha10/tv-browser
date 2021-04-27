@@ -145,7 +145,7 @@ public class DegenderPlugin extends Plugin {
   private static final Pattern GENDERED = Pattern.compile("(\\b(?i)(die\\s){0,1}(?-i)\\b(?!Mc)(\\w+?)(?:\\s*[\\*\\:_](?i:i)|I)n(nen){0,1})", Pattern.DOTALL | Pattern.UNICODE_CHARACTER_CLASS); 
   private static final Pattern GENDERED_LONG = Pattern.compile("(\\b([\\w\\-]+?)innen\\b\\s+(?:und|oder)\\s+\\-{0,1}\\b(\\w+?)\\b)|(\\b([\\w\\-]+?)\\b\\s+(?:und|oder)\\s+\\-{0,1}\\b(\\w+?)innen\\b)", Pattern.DOTALL | Pattern.UNICODE_CHARACTER_CLASS);
   private static final Pattern GENDERED_PARTIZIP = Pattern.compile("(\\b(?i)(die\\s){0,1}(?-i)\\b((\\p{Upper}\\w+)ende(n){0,1}(\\w*)\\b))", Pattern.DOTALL | Pattern.UNICODE_CHARACTER_CLASS);
-  private static final Version VERSION = new Version(0,11,false);
+  private static final Version VERSION = new Version(0,12,false);
   
   private boolean mRemoveLongForm = false;
   private boolean mReplacePartizip = false;
@@ -158,14 +158,17 @@ public class DegenderPlugin extends Plugin {
     mSingularReplacement = new LinkedHashMap<String, String>();
     
     mSingularReplacement.put("\u00c4rzt", "Arzt");
+    mSingularReplacement.put("Anw\u00e4lt", "Anwalt");
     mSingularReplacement.put("B\u00e4uer", "Bauer");
     mSingularReplacement.put("Beamt", "Beamter");
     mSingularReplacement.put("G\u00c4st", "Gast");
     mSingularReplacement.put("log", "loge");
+    mSingularReplacement.put("r\u00e4t", "rat");
     
     mPluralReplacement = new LinkedHashMap<String, String>();
     
     mPluralReplacement.put("\u00c4rzt","\u00c4rzte");
+    mPluralReplacement.put("Anw\u00e4lt", "Anw\u00e4lte");
     mPluralReplacement.put("B\u00e4uer", "Bauern");
     mPluralReplacement.put("Beamt","Beamte");
     mPluralReplacement.put("G\u00c4st","G\u00c4ste");
@@ -177,6 +180,7 @@ public class DegenderPlugin extends Plugin {
     mPluralReplacement.put("ier", "iere"); 
     mPluralReplacement.put("ig", "ige");
     mPluralReplacement.put("\u00f6r", "\u00f6re");
+    mPluralReplacement.put("r\u00e4t", "r\u00e4te");
   }
   
   public static Version getVersion() {
@@ -399,6 +403,15 @@ public class DegenderPlugin extends Plugin {
           else if(m.group(4).toLowerCase().endsWith("lehr")) {
             replace = m.group(4).substring(0,m.group(4).length()-3)+"ehrer";
           }
+          else if(m.group(4).toLowerCase().endsWith("wohn")) {
+            replace = m.group(4).substring(0,m.group(4).length()-3)+"ohner";
+          }
+          else if(m.group(4).toLowerCase().endsWith("eit")) {
+            replace = m.group(4).substring(0,m.group(4).length()-2)+"iter";
+          }
+          else if(m.group(4).toLowerCase().endsWith("ütz")) {
+            replace = m.group(4).substring(0,m.group(4).length()-2)+"tzer";
+          }
           else if(m.group(4).toLowerCase().endsWith("fahr")) {
             replace = m.group(4).substring(0,m.group(4).length()-3)+"ahrer";
           }
@@ -426,7 +439,7 @@ public class DegenderPlugin extends Plugin {
           }
         }
         
-       // System.out.println("   " + replace+"\n");
+     //   System.out.println(m.group(4) + "   " + replace+"\n");
         result.append(text.substring(pos,m.start(1))).append(replace);
         
         pos = m.end();
