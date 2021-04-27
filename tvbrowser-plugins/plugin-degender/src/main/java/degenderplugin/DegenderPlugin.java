@@ -144,8 +144,8 @@ public class DegenderPlugin extends Plugin {
   
   private static final Pattern GENDERED = Pattern.compile("(\\b(?i)(die\\s){0,1}(?-i)\\b(?!Mc)(\\w+?)(?:\\s*[\\*\\:_](?i:i)|I)n(nen){0,1})", Pattern.DOTALL | Pattern.UNICODE_CHARACTER_CLASS); 
   private static final Pattern GENDERED_LONG = Pattern.compile("(\\b([\\w\\-]+?)innen\\b\\s+(?:und|oder)\\s+\\-{0,1}\\b(\\w+?)\\b)|(\\b([\\w\\-]+?)\\b\\s+(?:und|oder)\\s+\\-{0,1}\\b(\\w+?)innen\\b)", Pattern.DOTALL | Pattern.UNICODE_CHARACTER_CLASS);
-  private static final Pattern GENDERED_PARTIZIP = Pattern.compile("(\\b(?i)(die\\s){0,1}(?-i)\\b((\\p{Upper}\\w+)ende(n){0,1}(\\w*)\\b))", Pattern.DOTALL | Pattern.UNICODE_CHARACTER_CLASS);
-  private static final Version VERSION = new Version(0,12,false);
+  private static final Pattern GENDERED_PARTIZIP = Pattern.compile("(\\b(?i)(?:(die|den)\\s){0,1}(?-i)\\b((\\p{Upper}\\w+)ende(n|r){0,1}(\\w*)\\b))", Pattern.DOTALL | Pattern.UNICODE_CHARACTER_CLASS);
+  private static final Version VERSION = new Version(0,12,true);
   
   private boolean mRemoveLongForm = false;
   private boolean mReplacePartizip = false;
@@ -396,6 +396,10 @@ public class DegenderPlugin extends Plugin {
         if(m.group(5) != null || m.group(2) == null) {
           if(m.group(4).toLowerCase().endsWith("studier")) {
             replace = m.group(4).substring(0,m.group(4).length()-6)+"tudenten";
+            
+            if(m.group(5) != null && m.group(5).equals("r")) {
+              replace = replace.substring(0,replace.length()-2);
+            }
           }
           else if(m.group(4).toLowerCase().endsWith("forsch")) {
             replace = m.group(4).substring(0,m.group(4).length()-5)+"orscher";
@@ -403,8 +407,8 @@ public class DegenderPlugin extends Plugin {
           else if(m.group(4).toLowerCase().endsWith("lehr")) {
             replace = m.group(4).substring(0,m.group(4).length()-3)+"ehrer";
           }
-          else if(m.group(4).toLowerCase().endsWith("wohn")) {
-            replace = m.group(4).substring(0,m.group(4).length()-3)+"ohner";
+          else if(m.group(4).toLowerCase().endsWith("bewohn")) {
+            replace = m.group(4).substring(0,m.group(4).length()-5)+"ewohner";
           }
           else if(m.group(4).toLowerCase().endsWith("eit")) {
             replace = m.group(4).substring(0,m.group(4).length()-2)+"iter";
@@ -430,11 +434,16 @@ public class DegenderPlugin extends Plugin {
           if(!replace.equals(m.group(1))) {
             if(m.group(2) != null) {
               replace = m.group(2)+" "+replace;
+              
+              if(m.group(2).toLowerCase().equals("den") && replace.toLowerCase().endsWith("er")) {
+                replace += "n";
+              }
             }
             if(m.group(6) != null && !m.group(6).trim().isEmpty()) {
               replace += m.group(6);
             }
             
+           // System.out.println(m.group(1) + " " + m.group(6) + " " + replace);
             mCountPartizip++;
           }
         }
