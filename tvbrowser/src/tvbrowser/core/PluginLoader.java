@@ -150,6 +150,31 @@ public class PluginLoader {
       if (oldIcon.exists()) {
         deletePluginProxy(oldIcon);
       }
+      
+      if(oldFile.getName().equals("DegenderPlugin.jar")) {
+        String id = "java.degenderplugin.DegenderPlugin";
+        final String[] sortedPlugins = Settings.propDataPluginPostProcessingOrder.getStringArray();
+        
+        boolean found = false;
+        
+        for(String test : sortedPlugins) {
+          if(test.equals(id)) {
+            found = true;
+            break;
+          }
+        }
+        
+        if(!found) {
+          final String[] value = new String[sortedPlugins.length+1];
+          value[0] = id;
+          
+          if(sortedPlugins.length > 0) {
+            System.arraycopy(sortedPlugins, 0, value, 1, sortedPlugins.length);
+          }
+          
+          Settings.propDataPluginPostProcessingOrder.setStringArray(value);
+        }
+      }
 
       // Delete the old file
       deletePluginProxy(oldFile);
