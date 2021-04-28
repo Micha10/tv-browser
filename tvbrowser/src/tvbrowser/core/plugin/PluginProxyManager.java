@@ -1501,20 +1501,20 @@ public class PluginProxyManager {
         
         if(pp1Index != -1 && pp2Index != -1) {
           if(pp1Index > pp2Index) {
-            result = 1;
+            result = -1;
           }
           else if(pp1Index < pp2Index) {
-            result = -1;
+            result = 1;
           }
         }
         else if(pp1Index == -1 && pp2Index == -1) {
           result = pp1.getPlugin().getInfo().getName().compareToIgnoreCase(pp2.getPlugin().getInfo().getName());
         }
         else if(pp1Index == -1) {
-          result = -1;
+          result = 1;
         }
         else if(pp2Index == -1) {
-          result = 1;
+          result = -1;
         }
         
         return result;
