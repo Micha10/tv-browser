@@ -38,105 +38,6 @@ public class DegenderPlugin extends Plugin {
       ProgramFieldType.EPISODE_TYPE,
       ProgramFieldType.SERIES_TYPE
   };
-  private static final HashSet<String> CHANNELS_DEFAULT = new HashSet<String>();
-  
-  static {
-      CHANNELS_DEFAULT.add("tvbrowserdataservice.TvBrowserDataService_main_de_ard");
-      CHANNELS_DEFAULT.add("tvbrowserdataservice.TvBrowserDataService_ARD-Radio_de_DASDING");
-      CHANNELS_DEFAULT.add("tvbrowserdataservice.TvBrowserDataService_main_de_zdf");
-      CHANNELS_DEFAULT.add("tvbrowserdataservice.TvBrowserDataService_local_de_swr");
-      CHANNELS_DEFAULT.add("tvbrowserdataservice.TvBrowserDataService_others_at_3sat");
-      CHANNELS_DEFAULT.add("tvbrowserdataservice.TvBrowserDataService_local_de_rbbberlin");
-      CHANNELS_DEFAULT.add("tvbrowserdataservice.TvBrowserDataService_others_de_phoenix");
-      CHANNELS_DEFAULT.add("tvbrowserdataservice.TvBrowserDataService_digital_de_zdfinfo");
-      CHANNELS_DEFAULT.add("tvbrowserdataservice.TvBrowserDataService_digital_de_zdfneo");
-      CHANNELS_DEFAULT.add("tvbrowserdataservice.TvBrowserDataService_others_de_kika");
-      CHANNELS_DEFAULT.add("tvbrowserdataservice.TvBrowserDataService_ARD-Radio_de_rbb.kultur");
-      CHANNELS_DEFAULT.add("tvbrowserdataservice.TvBrowserDataService_local_de_wdr");
-      CHANNELS_DEFAULT.add("tvbrowserdataservice.TvBrowserDataService_ARD-Radio_de_N.JOY");
-      CHANNELS_DEFAULT.add("tvbrowserdataservice.TvBrowserDataService_others_de_arte");
-      CHANNELS_DEFAULT.add("tvbrowserdataservice.TvBrowserDataService_local_de_br");
-      CHANNELS_DEFAULT.add("tvbrowserdataservice.TvBrowserDataService_radio_de_wdr.2");
-      CHANNELS_DEFAULT.add("tvbrowserdataservice.TvBrowserDataService_radio_de_wdr.3");
-      CHANNELS_DEFAULT.add("tvbrowserdataservice.TvBrowserDataService_local_de_hr");
-      CHANNELS_DEFAULT.add("tvbrowserdataservice.TvBrowserDataService_ARD-Radio_de_hr-info");
-      CHANNELS_DEFAULT.add("tvbrowserdataservice.TvBrowserDataService_ARD-Radio_de_hr1");
-      CHANNELS_DEFAULT.add("tvbrowserdataservice.TvBrowserDataService_ARD-Radio_de_SR.1");
-      CHANNELS_DEFAULT.add("tvbrowserdataservice.TvBrowserDataService_ARD-Radio_de_SR.2");
-      CHANNELS_DEFAULT.add("tvbrowserdataservice.TvBrowserDataService_ARD-Radio_de_SR.3");
-      CHANNELS_DEFAULT.add("tvbrowserdataservice.TvBrowserDataService_ARD-Radio_de_hr2");
-      CHANNELS_DEFAULT.add("tvbrowserdataservice.TvBrowserDataService_ARD-Radio_de_hr3");
-      CHANNELS_DEFAULT.add("tvbrowserdataservice.TvBrowserDataService_ARD-Radio_de_hr4");
-      CHANNELS_DEFAULT.add("tvbrowserdataservice.TvBrowserDataService_radio_de_wdr.4");
-      CHANNELS_DEFAULT.add("tvbrowserdataservice.TvBrowserDataService_radio_de_wdr.radio5");
-      CHANNELS_DEFAULT.add("tvbrowserdataservice.TvBrowserDataService_ARD-Radio_de_mdr.jump");
-      CHANNELS_DEFAULT.add("tvbrowserdataservice.TvBrowserDataService_ARD-Radio_de_WDR.Event");
-      CHANNELS_DEFAULT.add("tvbrowserdataservice.TvBrowserDataService_ARD-Radio_de_SWRinfo");
-      CHANNELS_DEFAULT.add("tvbrowserdataservice.TvBrowserDataService_local_de_swrrp");
-      CHANNELS_DEFAULT.add("tvbrowserdataservice.TvBrowserDataService_ARD-Radio_de_ndr1nds");
-      CHANNELS_DEFAULT.add("tvbrowserdataservice.TvBrowserDataService_ARD-Radio_de_ndr1mv");
-      CHANNELS_DEFAULT.add("tvbrowserdataservice.TvBrowserDataService_ARD-Radio_de_ndr1wn");
-      CHANNELS_DEFAULT.add("tvbrowserdataservice.TvBrowserDataService_ARD-Radio_de_ndr2");
-      CHANNELS_DEFAULT.add("tvbrowserdataservice.TvBrowserDataService_ARD-Radio_de_ndr903");
-      CHANNELS_DEFAULT.add("tvbrowserdataservice.TvBrowserDataService_ARD-Radio_de_ndrblue");
-      CHANNELS_DEFAULT.add("tvbrowserdataservice.TvBrowserDataService_local_de_ndr-hh");
-      CHANNELS_DEFAULT.add("tvbrowserdataservice.TvBrowserDataService_ARD-Radio_de_ndrinfo");
-      CHANNELS_DEFAULT.add("tvbrowserdataservice.TvBrowserDataService_ARD-Radio_de_ndrinfospezial");
-      CHANNELS_DEFAULT.add("tvbrowserdataservice.TvBrowserDataService_ARD-Radio_de_ndrkultur");
-      CHANNELS_DEFAULT.add("tvbrowserdataservice.TvBrowserDataService_local_de_ndr-mv");
-      CHANNELS_DEFAULT.add("tvbrowserdataservice.TvBrowserDataService_local_de_ndr");
-      CHANNELS_DEFAULT.add("tvbrowserdataservice.TvBrowserDataService_local_de_ndr-sh");
-      CHANNELS_DEFAULT.add("tvbrowserdataservice.TvBrowserDataService_local_de_swrsr");
-      CHANNELS_DEFAULT.add("tvbrowserdataservice.TvBrowserDataService_ARD-Radio_de_swr1.bw");
-      CHANNELS_DEFAULT.add("tvbrowserdataservice.TvBrowserDataService_ARD-Radio_de_swr1.rp");
-      CHANNELS_DEFAULT.add("tvbrowserdataservice.TvBrowserDataService_ARD-Radio_de_swr2.bw");
-      CHANNELS_DEFAULT.add("tvbrowserdataservice.TvBrowserDataService_ARD-Radio_de_SWR3");
-      CHANNELS_DEFAULT.add("tvbrowserdataservice.TvBrowserDataService_ARD-Radio_de_Antenne.Brandenburg");
-      CHANNELS_DEFAULT.add("tvbrowserdataservice.TvBrowserDataService_ARD-Radio_de_BR.Verkehr");
-      CHANNELS_DEFAULT.add("tvbrowserdataservice.TvBrowserDataService_ARD-Radio_de_mdr1.sachsen");
-      CHANNELS_DEFAULT.add("tvbrowserdataservice.TvBrowserDataService_ARD-Radio_de_mdr1.sachsen-anhalt");
-      CHANNELS_DEFAULT.add("tvbrowserdataservice.TvBrowserDataService_ARD-Radio_de_mdr1.thueringen");
-      CHANNELS_DEFAULT.add("tvbrowserdataservice.TvBrowserDataService_ARD-Radio_de_mdr.info");
-      CHANNELS_DEFAULT.add("tvbrowserdataservice.TvBrowserDataService_ARD-Radio_de_mdr.klassik");
-      CHANNELS_DEFAULT.add("tvbrowserdataservice.TvBrowserDataService_ARD-Radio_de_mdr.figaro");
-      CHANNELS_DEFAULT.add("tvbrowserdataservice.TvBrowserDataService_local_de_mdr-sn");
-      CHANNELS_DEFAULT.add("tvbrowserdataservice.TvBrowserDataService_local_de_mdr");
-      CHANNELS_DEFAULT.add("tvbrowserdataservice.TvBrowserDataService_local_de_mdr-th");
-      CHANNELS_DEFAULT.add("tvbrowserdataservice.TvBrowserDataService_local_de_bfs-nord");
-      CHANNELS_DEFAULT.add("tvbrowserdataservice.TvBrowserDataService_local_de_bfs");
-      CHANNELS_DEFAULT.add("tvbrowserdataservice.TvBrowserDataService_ARD-Radio_de_bayern4");
-      CHANNELS_DEFAULT.add("tvbrowserdataservice.TvBrowserDataService_ARD-Radio_de_Bremen.Eins");
-      CHANNELS_DEFAULT.add("tvbrowserdataservice.TvBrowserDataService_ARD-Radio_de_Bremen.Vier");
-      CHANNELS_DEFAULT.add("tvbrowserdataservice.TvBrowserDataService_ARD-Radio_de_Nordwestradio");
-      CHANNELS_DEFAULT.add("tvbrowserdataservice.TvBrowserDataService_local_de_radiobremen");
-      CHANNELS_DEFAULT.add("tvbrowserdataservice.TvBrowserDataService_local_de_rbbbrandenburg");
-      CHANNELS_DEFAULT.add("tvbrowserdataservice.TvBrowserDataService_ARD-Radio_de_SWR4.BW");
-      CHANNELS_DEFAULT.add("tvbrowserdataservice.TvBrowserDataService_ARD-Radio_de_SWR4.RP");
-      CHANNELS_DEFAULT.add("tvbrowserdataservice.TvBrowserDataService_digital_de_einsextra");
-      CHANNELS_DEFAULT.add("tvbrowserdataservice.TvBrowserDataService_digital_de_einstfestival");
-      CHANNELS_DEFAULT.add("tvbrowserdataservice.TvBrowserDataService_austria_at_orf2");
-      CHANNELS_DEFAULT.add("tvbrowserdataservice.TvBrowserDataService_austria_at_orf2europe");
-      CHANNELS_DEFAULT.add("tvbrowserdataservice.TvBrowserDataService_austria_at_orf1");
-      CHANNELS_DEFAULT.add("tvbrowserdataservice.TvBrowserDataService_austria_at_orf3");
-      CHANNELS_DEFAULT.add("tvbrowserdataservice.TvBrowserDataService_radio_at_ORFRB");
-      CHANNELS_DEFAULT.add("tvbrowserdataservice.TvBrowserDataService_radio_at_ORFRK");
-      CHANNELS_DEFAULT.add("tvbrowserdataservice.TvBrowserDataService_radio_ch_drs1");
-      CHANNELS_DEFAULT.add("tvbrowserdataservice.TvBrowserDataService_radio_ch_drs2");
-      CHANNELS_DEFAULT.add("tvbrowserdataservice.TvBrowserDataService_radio_ch_drs3");
-      CHANNELS_DEFAULT.add("tvbrowserdataservice.TvBrowserDataService_radio_ch_drs4");
-      CHANNELS_DEFAULT.add("tvbrowserdataservice.TvBrowserDataService_radio_ch_drs.musikwelle");
-      CHANNELS_DEFAULT.add("tvbrowserdataservice.TvBrowserDataService_others_ch_sfdrs1");
-      CHANNELS_DEFAULT.add("tvbrowserdataservice.TvBrowserDataService_others_ch_sfinfo");
-      CHANNELS_DEFAULT.add("tvbrowserdataservice.TvBrowserDataService_others_ch_sfdrs2");
-      CHANNELS_DEFAULT.add("tvbrowserdataservice.TvBrowserDataService_radio_at_ORFRN");
-      CHANNELS_DEFAULT.add("tvbrowserdataservice.TvBrowserDataService_radio_at_ORFROE");
-      CHANNELS_DEFAULT.add("tvbrowserdataservice.TvBrowserDataService_radio_at_ORFRS");
-      CHANNELS_DEFAULT.add("tvbrowserdataservice.TvBrowserDataService_radio_at_ORFRST");
-      CHANNELS_DEFAULT.add("tvbrowserdataservice.TvBrowserDataService_radio_at_ORFRT");
-      CHANNELS_DEFAULT.add("tvbrowserdataservice.TvBrowserDataService_radio_at_ORFRV");
-      CHANNELS_DEFAULT.add("tvbrowserdataservice.TvBrowserDataService_radio_at_ORFRW");
-      CHANNELS_DEFAULT.add("tvbrowserdataservice.TvBrowserDataService_austria_at_orfsportplus");
-  };
   
   private LinkedHashMap<String, String> mSingularReplacement;
   private LinkedHashMap<String, String> mPluralReplacement;
@@ -145,7 +46,7 @@ public class DegenderPlugin extends Plugin {
   private static final Pattern GENDERED = Pattern.compile("(\\b(?i)(die\\s){0,1}(?-i)\\b(?!Mc)(\\w+?)(?:\\s*[\\*\\:_](?i:i)|I)n(nen){0,1})", Pattern.DOTALL | Pattern.UNICODE_CHARACTER_CLASS); 
   private static final Pattern GENDERED_LONG = Pattern.compile("(\\b([\\w\\-]+?)innen\\b\\s+(?:und|oder)\\s+\\-{0,1}\\b(\\w+?)\\b)|(\\b([\\w\\-]+?)\\b\\s+(?:und|oder)\\s+\\-{0,1}\\b(\\w+?)innen\\b)", Pattern.DOTALL | Pattern.UNICODE_CHARACTER_CLASS);
   private static final Pattern GENDERED_PARTIZIP = Pattern.compile("(\\b(?i)(?:(die|den)\\s){0,1}(?-i)\\b((\\p{Upper}\\w+)ende(n|r){0,1}(\\w*)\\b))", Pattern.DOTALL | Pattern.UNICODE_CHARACTER_CLASS);
-  private static final Version VERSION = new Version(0,12,true);
+  private static final Version VERSION = new Version(0,12,1,true);
   
   private boolean mRemoveLongForm = false;
   private boolean mReplacePartizip = false;
@@ -200,9 +101,7 @@ public class DegenderPlugin extends Plugin {
       final Channel[] channels = getPluginManager().getSubscribedChannels();
       
       for(Channel ch : channels) {
-        if(CHANNELS_DEFAULT.contains(ch.getUniqueId())) {
           mChannelSet.add(ch);
-        }
       }
       
       saveMe();
@@ -243,7 +142,7 @@ public class DegenderPlugin extends Plugin {
       int pos = 0;
       
       while(m.find(pos)) {
-      /* for(int i = 1; i <= m.groupCount(); i++) {
+       /*for(int i = 1; i <= m.groupCount(); i++) {
           System.out.println(i+": " + m.group(i));
         }
         */
@@ -529,6 +428,7 @@ public class DegenderPlugin extends Plugin {
       public void saveSettings() {
         mRemoveLongForm = mRemoveLongGendered.isSelected();
         mReplacePartizip = mReplacePartizipCb.isSelected();
+        mChannelSet.clear();
         mChannelSet.addAll(mChannelSelection.getSelectionList());
       }
       
