@@ -49,7 +49,7 @@ public class ExecutionHandler {
    */
   public ExecutionHandler(String parameter, String programPath) {
     this(parameter, programPath, (File) null);
-
+    
     if(programPath.contains(File.separator)) {
       String path = programPath.substring(0,programPath.lastIndexOf(File.separator) + 1);
 
@@ -284,6 +284,10 @@ public class ExecutionHandler {
       else {
         part.append(parameter.charAt(i));
       }
+    }
+    
+    if(!inString && part.toString().strip().length() > 0) {
+      args.add(part.toString());
     }
     
     return args.toArray(new String[args.size()]);
