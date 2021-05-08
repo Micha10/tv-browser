@@ -24,6 +24,7 @@
 
 package tvbrowser.ui.mainframe;
 
+import java.awt.Desktop;
 import java.awt.Graphics;
 import java.awt.Toolkit;
 import java.awt.Window;
@@ -33,6 +34,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -110,7 +112,7 @@ public abstract class MenuBar extends JMenuBar implements ActionListener {
 
 	private MainFrame mMainFrame;
 
-  protected JMenuItem mQuitMI, mRestartMI, mToolbarMI, mSettingsMI, mAboutMI, mDebugMI, mDonateMI; // these are accessed in MacOS menu sub class
+  protected JMenuItem mQuitMI, mRestartMI, mToolbarMI, mSettingsMI, mAboutMI, mDebugMI, mDonateMI, mOpenSettingsMI; // these are accessed in MacOS menu sub class
   protected JMenu mPluginsMenu, mHelpMenu, mEditMenu; // these are accessed in common menu sub class
 
 	private JMenuItem mStatusbarMI,
@@ -400,6 +402,12 @@ public abstract class MenuBar extends JMenuBar implements ActionListener {
         "imgs/tvbrowser16.png"), false);
 		mDebugMI.addActionListener(this);
 		MenuHelpTextAdapter.create(mDebugMI, mLocalizer.msg("menuinfo.debug", ""),
+        mLabel);
+		
+		mOpenSettingsMI = createMenuItem("menuitem.openSettings", "Open settings directory", new ImageIconEnhanced(
+        "imgs/tvbrowser16.png"), false);
+		mOpenSettingsMI.addActionListener(this);
+    MenuHelpTextAdapter.create(mOpenSettingsMI, mLocalizer.msg("menuinfo.openSettings", ""),
         mLabel);
 		
     mDonateMI = createMenuItem("menuitem.donate", "How to donate?", TVBrowserIcons.webBrowser(TVBrowserIcons.SIZE_SMALL), false);
@@ -1144,6 +1152,15 @@ public abstract class MenuBar extends JMenuBar implements ActionListener {
 		  clpbrd.setContents (stringSelection, null);
 		  
 		  JOptionPane.showMessageDialog(UiUtilities.getLastModalChildOf(MainFrame.getInstance()), mLocalizer.msg("debugCopied", "Debug information copied to clipboard."), Localizer.getLocalization(Localizer.I18N_INFO), JOptionPane.INFORMATION_MESSAGE);
+		} else if(source == mOpenSettingsMI) {
+      if(Desktop.isDesktopSupported()) {
+        try {
+          Desktop.getDesktop().open(new File(Settings.getUserSettingsDirName()));
+        } catch (IOException e) {
+          // TODO Auto-generated catch block
+          e.printStackTrace();
+        }
+      }
 		} else if(source == mDonateMI) {
 		  Launch.openURL("https://www.tvbrowser.org/index.php?id=donations");
 		}
@@ -1220,6 +1237,11 @@ public abstract class MenuBar extends JMenuBar implements ActionListener {
     mHelpMenu.add(mDonorMI);
     mHelpMenu.addSeparator();
     mHelpMenu.add(mDonateMI);
+    
+    if(Desktop.isDesktopSupported()) {
+      mHelpMenu.add(mOpenSettingsMI);
+    }
+    
     mHelpMenu.add(mDebugMI);
     
     if(aboutMenu) {
