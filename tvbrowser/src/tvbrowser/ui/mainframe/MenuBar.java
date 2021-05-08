@@ -1110,6 +1110,7 @@ public abstract class MenuBar extends JMenuBar implements ActionListener {
 		  infoBuilder.append("\nInfo-Icons: ").append(Settings.propInfoIconThemeID.getString());
 		  infoBuilder.append("\nNumber of markings: ").append(MarkedProgramsMap.getInstance().getMarkedPrograms().length);
 		  infoBuilder.append("\nActive filter: ").append(mMainFrame.getProgramFilter());
+		  infoBuilder.append("\nDefault fonts: ").append(Settings.propUseDefaultFonts.getBoolean());
 		  infoBuilder.append("\n\nInstalled plugins:");
 		  
 		  PluginProxy[] plugins = PluginProxyManager.getInstance().getAllPlugins();
