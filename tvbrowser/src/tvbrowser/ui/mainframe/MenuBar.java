@@ -1108,6 +1108,8 @@ public abstract class MenuBar extends JMenuBar implements ActionListener {
 		  infoBuilder.append("\nPersona: ").append(Persona.getInstance().getName());
 		  infoBuilder.append("\nIcons: ").append(Settings.propIcontheme.getString());
 		  infoBuilder.append("\nInfo-Icons: ").append(Settings.propInfoIconThemeID.getString());
+		  infoBuilder.append("\nProgram table style: ").append(Settings.propTableBackgroundStyle.getString()).append(",").append(Settings.propTableLayout.getString());
+		  infoBuilder.append("\nProgram table times: ").append(Settings.propProgramTableStartOfDay.getInt()).append("-").append(Settings.propProgramTableEndOfDay.getInt());
 		  infoBuilder.append("\nNumber of markings: ").append(MarkedProgramsMap.getInstance().getMarkedPrograms().length);
 		  infoBuilder.append("\nActive filter: ").append(mMainFrame.getProgramFilter());
 		  infoBuilder.append("\nDefault fonts: ").append(Settings.propUseDefaultFonts.getBoolean());
