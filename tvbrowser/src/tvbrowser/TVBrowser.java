@@ -198,10 +198,10 @@ public class TVBrowser {
   
   public static final ArrayList<Image> ICONS_WINDOW = new ArrayList<Image>(4);
 
-  private static final boolean IS_STABLE = false;
+  private static final boolean IS_STABLE = true;
   private static final int MAJRO_VERSION = 4;
-  private static final int MINOR_VERSION = 22;
-  private static final int SUB_MINOR_VERSION = 96;
+  private static final int MINOR_VERSION = 23;
+  private static final int SUB_MINOR_VERSION = 0;
 
   /* If you want to change the version string, add it to the beginning of this array.
      We need the old version strings to import the settings.
@@ -215,11 +215,7 @@ public class TVBrowser {
   */
   /** The string array with the names of the earlier versions. */
   private static final String[] ALL_VERSIONS = new String[] {
-      "4.2.2.96 RC1",
-      "4.2.2.95 Beta1",
-      "4.2.2.52 SVN",
-      "4.2.2.51 SVN",
-      "4.2.2.50 SVN",
+          "4.2.3", "4.2.2.96 RC1", "4.2.2.95 Beta1", "4.2.2.52 SVN", "4.2.2.51 SVN", "4.2.2.50 SVN",
           "4.2.2", "4.2.1.96 RC1", "4.2.1.95 Beta1", "4.2.1.52 SVN", "4.2.1.51 SVN", "4.2.1.50 SVN", 
           "4.2.1", "4.2.0.97 RC1", "4.2.0.51 SVN", "4.2.0.50 SVN",
 		      "4.2", "4.0.9.98 RC3", "4.0.9.98 RC2", "4.0.9.97 RC1", "4.0.9.96 Beta2", "4.0.9.95 Beta1", "4.0.1.50 SVN",
@@ -2287,7 +2283,7 @@ public class TVBrowser {
     final boolean oldBetaWarning = Settings.propPluginBetaWarning.getBoolean();
     try {
       UIThreadRunner.invokeAndWait(() -> {
-        Version obligartoryUpdate = new Version(3,21,51,false);
+        Version obligartoryUpdate = new Version(4,22,96,false);
         
         TvBrowserVersionChangeDlg versionChange = new TvBrowserVersionChangeDlg(Settings.propTVBrowserVersion.getVersion(),obligartoryUpdate);
         versionChange.setIconImages(ICONS_WINDOW);
