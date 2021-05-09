@@ -278,7 +278,7 @@ public class ParamLibrary {
     } else if (key.equalsIgnoreCase(KEY_CUSTOM)) {
       return removeNull(program.getTextField(ProgramFieldType.CUSTOM_TYPE));
     } else if (key.equalsIgnoreCase(KEY_SEASON_NUMBER)) {
-      return removeNull(program.getTextField(ProgramFieldType.SEASON_NUMBER_TYPE));
+      return removeNull(program.getIntFieldAsString(ProgramFieldType.SEASON_NUMBER_TYPE));
     } else if (key.equalsIgnoreCase(KEY_ACTORS)) {
       return removeNull(program.getTextField(ProgramFieldType.ACTOR_LIST_TYPE));
     } else {
