@@ -25,6 +25,7 @@ import captureplugin.drivers.utils.ProgramTime;
 import captureplugin.drivers.utils.ProgramTimeDialog;
 import devplugin.Program;
 import devplugin.ProgramReceiveTarget;
+import devplugin.Version;
 
 /**
  * A recoding device for a Topfield SRP-2410.
@@ -499,5 +500,11 @@ public final class TopfieldDevice implements DeviceIf {
   @Override
   public void writeData(ObjectOutputStream stream) throws IOException {
     configuration.writeToStream(stream);
+  }
+
+  @Override
+  public void handleTvBrowserVersionUpdate(Version previousVersion) {
+    // TODO Auto-generated method stub
+    
   }
 }

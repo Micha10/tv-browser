@@ -50,6 +50,7 @@ import captureplugin.drivers.utils.ProgramTimeDialog;
 import captureplugin.utils.ExternalChannelIf;
 import devplugin.Program;
 import devplugin.ProgramReceiveTarget;
+import devplugin.Version;
 import util.paramhandler.ParamParser;
 import util.ui.Localizer;
 import util.ui.UiUtilities;
@@ -453,5 +454,11 @@ public final class DreamboxDevice implements DeviceIf {
       for(ProgramReceiveTarget target : targets) {
         target.receivePrograms(progs);
       }
+    }
+
+    @Override
+    public void handleTvBrowserVersionUpdate(Version previousVersion) {
+      // TODO Auto-generated method stub
+      
     }
 }

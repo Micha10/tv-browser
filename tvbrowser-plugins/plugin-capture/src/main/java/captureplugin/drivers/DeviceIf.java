@@ -30,6 +30,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
 import devplugin.Program;
+import devplugin.Version;
 
 /**
  * This Interfaces represents a Device.
@@ -184,4 +185,11 @@ public interface DeviceIf extends Cloneable {
      * @since 3.0
      */
     public void sendProgramsToReceiveTargets(Program[] progs);
+    
+    /**
+     * Is called when TV-Browser itself was updated to a new version.
+     * @param previousVersion The previous version of TV-Browser.
+     * @since 4.2.3
+     */
+    public void handleTvBrowserVersionUpdate(final Version previousVersion);
 }

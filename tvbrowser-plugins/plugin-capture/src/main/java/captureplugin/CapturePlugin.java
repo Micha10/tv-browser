@@ -37,6 +37,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.RandomAccessFile;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Properties;
 import java.util.Set;
@@ -70,6 +71,7 @@ import devplugin.ProgramReceiveTarget;
 import devplugin.SettingsTab;
 import devplugin.ThemeIcon;
 import devplugin.Version;
+import util.io.IOUtilities;
 import util.ui.Localizer;
 import util.ui.UIThreadRunner;
 import util.ui.UiUtilities;
@@ -81,7 +83,7 @@ import util.ui.UiUtilities;
  *         adopted by fishhead
  */
 public class CapturePlugin extends devplugin.Plugin {
-  private static final Version mVersion = new Version(3,15,5,true);
+  private static final Version mVersion = new Version(3,16,0,true);
   
     /**
      * Translator
@@ -169,7 +171,13 @@ public class CapturePlugin extends devplugin.Plugin {
     }
 
     public void handleTvBrowserVersionUpdate(final Version previousVersion) {
+      Collection<DeviceIf> devices = mConfig.getDevices();
       
+      for(DeviceIf device : devices) {
+        device.handleTvBrowserVersionUpdate(previousVersion);
+      }
+      
+      saveMe();
     }
     
     /**
@@ -182,6 +190,18 @@ public class CapturePlugin extends devplugin.Plugin {
 
     public static Version getVersion() {
       return mVersion;
+    }
+    
+    public static void resetData(final File userDirectory) {
+      final File test = new File(userDirectory,"CaptureDevices");
+      
+      if(test.isDirectory()) {
+        try {
+          IOUtilities.deleteDirectory(test);
+        } catch (IOException e) {
+          // ignore
+        }
+      }
     }
 
     /**

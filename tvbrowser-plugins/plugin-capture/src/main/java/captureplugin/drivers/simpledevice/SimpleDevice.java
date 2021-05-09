@@ -41,6 +41,7 @@ import captureplugin.drivers.utils.ProgramTime;
 import captureplugin.drivers.utils.ProgramTimeDialog;
 import devplugin.Channel;
 import devplugin.Program;
+import devplugin.Version;
 
 /**
  * The Applescript-Device
@@ -273,6 +274,12 @@ public final class SimpleDevice implements DeviceIf {
 
     @Override
     public void sendProgramsToReceiveTargets(Program[] progs) {
+      // TODO Auto-generated method stub
+      
+    }
+
+    @Override
+    public void handleTvBrowserVersionUpdate(Version previousVersion) {
       // TODO Auto-generated method stub
       
     }

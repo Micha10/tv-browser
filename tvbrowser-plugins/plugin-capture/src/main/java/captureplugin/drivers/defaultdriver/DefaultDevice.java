@@ -25,6 +25,7 @@
 package captureplugin.drivers.defaultdriver;
 
 import java.awt.Window;
+import java.io.File;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -34,14 +35,16 @@ import java.util.Iterator;
 
 import javax.swing.JOptionPane;
 
-import util.ui.Localizer;
-import util.ui.UiUtilities;
 import captureplugin.drivers.DeviceIf;
 import captureplugin.drivers.DriverIf;
 import captureplugin.drivers.utils.ProgramTime;
 import captureplugin.drivers.utils.ProgramTimeDialog;
 import devplugin.Program;
 import devplugin.ProgramReceiveTarget;
+import devplugin.Version;
+import util.browserlauncher.Launch;
+import util.ui.Localizer;
+import util.ui.UiUtilities;
 
 /**
  * The Default-Device
@@ -337,5 +340,56 @@ public final class DefaultDevice implements DeviceIf {
       for(ProgramReceiveTarget target : targets) {
         target.receivePrograms(progs);
       }
+    }
+
+
+    @Override
+    public void handleTvBrowserVersionUpdate(Version previousVersion) {
+      if((Launch.getOs() == Launch.OS_WINDOWS) && previousVersion.compareTo(new Version(4,22,true)) <= 0) {
+        mConfig.setParameterFormatAdd(replaceSeparator(mConfig.getParameterFormatAdd()));
+        mConfig.setParameterFormatRem(replaceSeparator(mConfig.getParameterFormatRem()));
+        
+        Collection<ParamEntry> params = mConfig.getParamList();
+        
+        for(ParamEntry entry : params) {
+          entry.setParam(replaceSeparator(entry.getParam()));
+        }
+      }
+    }
+    
+    private String replaceSeparator(String param) {
+      int index2 = 0;
+      int index1 = -1;
+      
+      do {
+        index1 = param.indexOf(":\\",index2);
+        
+        if(index1 != -1) {
+          index2 = -1;
+          index1--;
+          
+          if(index1 > 0 && param.charAt(index1-1) == '"') {
+            index2 = param.indexOf("\"",index1);
+          }
+          
+          if(index2 == -1) {
+            index2 = param.indexOf(" ",index1);
+          }
+          
+          if(index2 == -1) {
+            index2 = param.length();
+          }
+          
+          String fileName = param.substring(index1,index2);
+          
+          File test = new File(fileName);
+          
+          if(test.isFile()) {
+            param = param.substring(0,index1) + fileName.replace("\\", "\\\\") + param.substring(index2);
+          }
+        }
+      }while(index1 != -1);
+      
+      return param;
     }
 }
