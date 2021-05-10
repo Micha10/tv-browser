@@ -1147,12 +1147,24 @@ public class ProgramTextCreator {
               if (person.contains("(")) {
                 int index = person.indexOf('(');
                 String topic = person.substring(0, index).trim();
-                link = addSearchLink(topic,foreground) + " " + "<span style=\"font-weight:bold;color:"+HTMLTextHelper.getCssRgbColorEntry(infoColor)+"\">"+person.substring(index).trim()+"</span>";
+                
+                if(ProgramFieldType.ADDITIONAL_PERSONS_TYPE == fieldType) {
+                  link = addSearchLink(topic,foreground) + " <span style=\"font-weight:bold;color:"+HTMLTextHelper.getCssRgbColorEntry(infoColor)+"\">"+person.substring(index).trim()+"</span>";
+                }
+                else {
+                  link = addSearchLink(topic,foreground) + " " + person.substring(index).trim();
+                }
               }
               if (person.contains(":")) {
                 int index = person.indexOf(':')+1;
                 String label = person.substring(0, index).trim();
-                link = "<span style=\"font-weight:bold;color:"+HTMLTextHelper.getCssRgbColorEntry(infoColor)+"\">"+label+"</span> " + addSearchLink(person.substring(index).trim(),foreground);
+                
+                if(ProgramFieldType.ADDITIONAL_PERSONS_TYPE == fieldType) {
+                  link = "<span style=\"font-weight:bold;color:"+HTMLTextHelper.getCssRgbColorEntry(infoColor)+"\">"+label+"</span> " + addSearchLink(person.substring(index).trim(),foreground);
+                }
+                else {
+                  link = label + " " + addSearchLink(person.substring(index).trim(),foreground);
+                }
               } 
               else if(link == null) {
                 link = addSearchLink(person,foreground);
