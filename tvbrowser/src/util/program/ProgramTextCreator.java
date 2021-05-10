@@ -1147,12 +1147,12 @@ public class ProgramTextCreator {
               if (person.contains("(")) {
                 int index = person.indexOf('(');
                 String topic = person.substring(0, index).trim();
-                link = addSearchLink(topic,foreground) + " " + person.substring(index).trim();
+                link = addSearchLink(topic,foreground) + " " + "<span style=\"font-weight:bold;color:"+HTMLTextHelper.getCssRgbColorEntry(infoColor)+"\">"+person.substring(index).trim()+"</span>";
               }
               if (person.contains(":")) {
                 int index = person.indexOf(':')+1;
                 String label = person.substring(0, index).trim();
-                link = label + " " + addSearchLink(person.substring(index).trim(),foreground);
+                link = "<span style=\"font-weight:bold;color:"+HTMLTextHelper.getCssRgbColorEntry(infoColor)+"\">"+label+"</span> " + addSearchLink(person.substring(index).trim(),foreground);
               } 
               else if(link == null) {
                 link = addSearchLink(person,foreground);
@@ -1166,15 +1166,16 @@ public class ProgramTextCreator {
           String[] parts = text.split("<br>|\n");
           
           for(String part : parts) {
-            if(part.contains(":")) {
+            if(part.contains(":") && part.indexOf(":") < part.indexOf("<")) {
               part = part.substring(0, part.indexOf(":")+1);
               
               text = text.replace(part, "<span style=\"font-weight:bold;color:"+HTMLTextHelper.getCssRgbColorEntry(infoColor)+"\">"+part+"</span>");
             }
           }
-          
-          
         }
+        
+        
+        
         buffer.append(text);
       }
       else if (ProgramFieldType.DESCRIPTION_TYPE == fieldType) {
