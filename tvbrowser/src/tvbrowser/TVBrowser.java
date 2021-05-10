@@ -355,6 +355,9 @@ public class TVBrowser {
    * @param args The arguments given in the command line.
    */
   public static void main(String[] args) {
+    // Set the String to use for indicating the user agent in http requests
+    System.setProperty("http.agent", MAINWINDOW_TITLE);
+
     // Read the command line parameters
     parseCommandline(args);
     
@@ -527,9 +530,6 @@ public class TVBrowser {
     ReminderPlugin.resetLocalizer();
     Date.resetLocalizer();
     ProgramFieldType.resetLocalizer();
-
-    // Set the String to use for indicating the user agent in http requests
-    System.setProperty("http.agent", MAINWINDOW_TITLE);
 
     Version tmpVer = Settings.propTVBrowserVersion.getVersion();
     final Version currentVersion = tmpVer != null ? new Version(tmpVer.getMajor(),tmpVer.getMinor(),tmpVer.getSubMinor(),Settings.propTVBrowserVersionIsStable.getBoolean()) : tmpVer;
