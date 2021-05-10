@@ -45,8 +45,8 @@ public class DegenderPlugin extends Plugin {
   
   private static final Pattern GENDERED = Pattern.compile("(\\b(?i)(die\\s){0,1}(?-i)\\b(?!Mc)(\\w+?)(?:\\s*[\\*\\:_](?i:i)|I)n(nen){0,1})", Pattern.DOTALL | Pattern.UNICODE_CHARACTER_CLASS); 
   private static final Pattern GENDERED_LONG = Pattern.compile("(\\b([\\w\\-]+?)innen\\b\\s+(?:und|oder)\\s+\\-{0,1}\\b(\\w+?)\\b)|(\\b([\\w\\-]+?)\\b\\s+(?:und|oder)\\s+\\-{0,1}\\b(\\w+?)innen\\b)", Pattern.DOTALL | Pattern.UNICODE_CHARACTER_CLASS);
-  private static final Pattern GENDERED_PARTIZIP = Pattern.compile("(\\b(?i)(?:(die|den)\\s){0,1}(?-i)\\b((\\p{Upper}\\w+)ende(n|r){0,1}(\\w*)\\b))", Pattern.DOTALL | Pattern.UNICODE_CHARACTER_CLASS);
-  private static final Version VERSION = new Version(0,12,1,true);
+  private static final Pattern GENDERED_PARTIZIP = Pattern.compile("(\\b(?i)(?:(die|den|bei)\\s){0,1}(?-i)\\b((\\p{Upper}\\w+)ende(n|r){0,1}(\\w*)\\b))", Pattern.DOTALL | Pattern.UNICODE_CHARACTER_CLASS);
+  private static final Version VERSION = new Version(0,12,2,true);
   
   private boolean mRemoveLongForm = false;
   private boolean mReplacePartizip = false;
@@ -293,30 +293,21 @@ public class DegenderPlugin extends Plugin {
         String replace = m.group(1);
         
         if(m.group(5) != null || m.group(2) == null) {
-          if(m.group(4).toLowerCase().endsWith("studier")) {
-            replace = m.group(4).substring(0,m.group(4).length()-6)+"tudenten";
+          if(m.group(4).toLowerCase().endsWith("studier") || m.group(4).toLowerCase().endsWith("dozier")) {
+            replace = m.group(4).substring(0,m.group(4).length()-3)+"enten";
             
             if(m.group(5) != null && m.group(5).equals("r")) {
               replace = replace.substring(0,replace.length()-2);
             }
           }
-          else if(m.group(4).toLowerCase().endsWith("forsch")) {
-            replace = m.group(4).substring(0,m.group(4).length()-5)+"orscher";
+          else if(m.group(4).toLowerCase().endsWith("kunstschaff")) {
+            replace = m.group(4).substring(0,m.group(4).length()-10)+"ünstler";
           }
-          else if(m.group(4).toLowerCase().endsWith("lehr")) {
-            replace = m.group(4).substring(0,m.group(4).length()-3)+"ehrer";
-          }
-          else if(m.group(4).toLowerCase().endsWith("bewohn")) {
-            replace = m.group(4).substring(0,m.group(4).length()-5)+"ewohner";
-          }
-          else if(m.group(4).toLowerCase().endsWith("eit")) {
-            replace = m.group(4).substring(0,m.group(4).length()-2)+"iter";
-          }
-          else if(m.group(4).toLowerCase().endsWith("ütz")) {
-            replace = m.group(4).substring(0,m.group(4).length()-2)+"tzer";
-          }
-          else if(m.group(4).toLowerCase().endsWith("fahr")) {
-            replace = m.group(4).substring(0,m.group(4).length()-3)+"ahrer";
+          else if(m.group(4).toLowerCase().endsWith("forsch") || m.group(4).toLowerCase().endsWith("lehr") 
+              || m.group(4).toLowerCase().endsWith("bewohn") || m.group(4).toLowerCase().endsWith("besuch")
+              || m.group(4).toLowerCase().endsWith("eit") || m.group(4).toLowerCase().endsWith("ütz")
+              || m.group(4).toLowerCase().endsWith("fahr")) {
+            replace = m.group(4)+"er";
           }
           else if(m.group(4).toLowerCase().endsWith("zufußgeh")) {
             replace = m.group(4).substring(0,m.group(4).length()-8);
@@ -334,7 +325,7 @@ public class DegenderPlugin extends Plugin {
             if(m.group(2) != null) {
               replace = m.group(2)+" "+replace;
               
-              if(m.group(2).toLowerCase().equals("den") && replace.toLowerCase().endsWith("er")) {
+              if((m.group(2).toLowerCase().equals("den") || m.group(2).toLowerCase().equals("bei")) && replace.toLowerCase().endsWith("er")) {
                 replace += "n";
               }
             }
@@ -347,7 +338,7 @@ public class DegenderPlugin extends Plugin {
           }
         }
         
-     //   System.out.println(m.group(4) + "   " + replace+"\n");
+        System.out.println(m.group(4) + "   " + replace+"\n");
         result.append(text.substring(pos,m.start(1))).append(replace);
         
         pos = m.end();
