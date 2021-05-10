@@ -675,7 +675,7 @@ public class ProgramUtilities {
     } catch (NumberFormatException e) {
       // ignore, this wasn't a numerical code
     }
-    System.out.println("Unknown rating code: " + rating);
+    //System.out.println("Unknown rating code: " + rating);
     return -1;
   }
 
