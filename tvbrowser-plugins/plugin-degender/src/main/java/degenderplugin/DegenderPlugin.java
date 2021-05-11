@@ -46,7 +46,7 @@ public class DegenderPlugin extends Plugin {
   private static final Pattern GENDERED = Pattern.compile("(\\b(?i)(die\\s){0,1}(?-i)\\b(?!Mc)(\\w+?)(?:\\s*[\\*\\:_](?i:i)|I)n(nen){0,1})", Pattern.DOTALL | Pattern.UNICODE_CHARACTER_CLASS); 
   private static final Pattern GENDERED_LONG = Pattern.compile("(\\b([\\w\\-]+?)innen\\b\\s+(?:und|oder)\\s+\\-{0,1}\\b(\\w+?)\\b)|(\\b([\\w\\-]+?)\\b\\s+(?:und|oder)\\s+\\-{0,1}\\b(\\w+?)innen\\b)", Pattern.DOTALL | Pattern.UNICODE_CHARACTER_CLASS);
   private static final Pattern GENDERED_PARTIZIP = Pattern.compile("(\\b(?i)(?:(\\w*eine|der|die|bei|mit|\\w+en)\\s){0,1}(?-i)(?:\\b\\w+\\b\\s){0,1}\\b((\\p{Upper}\\w+)ende(n|r){0,1}(\\w*)\\b))", Pattern.DOTALL | Pattern.UNICODE_CHARACTER_CLASS);
-  private static final Version VERSION = new Version(0,13,2,true);
+  private static final Version VERSION = new Version(0,13,3,true);
   
   private boolean mRemoveLongForm = false;
   private boolean mReplacePartizip = false;
@@ -286,8 +286,10 @@ public class DegenderPlugin extends Plugin {
       int pos = 0;
       
       while(m.find(pos)) {
-        for(int i = 1; i <= m.groupCount(); i++) {
-          System.out.println(i+": " + m.group(i));
+        if(!VERSION.isStable()) {
+          for(int i = 1; i <= m.groupCount(); i++) {
+            System.out.println(i+": " + m.group(i));
+          }
         }
         
         String replace = m.group(1);
@@ -383,7 +385,10 @@ public class DegenderPlugin extends Plugin {
           mCountPartizip++;
         }
         
-       System.out.println(m.group(4) + "   " + replace+"\n");
+        if(!VERSION.isStable()) {
+          System.out.println(m.group(4) + "   " + replace+"\n");
+        }
+        
         result.append(text.substring(pos,m.start(1))).append(replace);
         
         pos = m.end();
