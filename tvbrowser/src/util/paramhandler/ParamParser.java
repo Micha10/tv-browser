@@ -163,7 +163,7 @@ public class ParamParser {
       setError("One \"{\" was not closed properly");
       return null;
     }
-
+    
     return ret.toString();
   }
 
@@ -183,8 +183,10 @@ public class ParamParser {
   private String analyseCommand(Program prg, String newCommand, int pos) {
     String ret;
     
+    boolean stringmode = false;
     if (newCommand.startsWith("\"") && newCommand.endsWith("\"")) {
       ret = newCommand.substring(1, newCommand.length()-1);
+      stringmode = true;
     } else if (newCommand.indexOf('(') > -1) {
       String funcRet = parseFunction(prg, newCommand, pos);
       if (funcRet == null) {
@@ -210,22 +212,26 @@ public class ParamParser {
     
     StringBuilder result = new StringBuilder();
     
-    for(int i = 0; i < ret.length(); i++) {
-      char c = ret.charAt(i);
-      
-      if(stringEscape) {
-        result.append(c);
-        stringEscape = false;
-      }
-      else if(c == ESCAPE_IN_STRING) {
-    	stringEscape = true;
-      }
-      else {
-    	result.append(c);
-      }
+    if(stringmode) {
+	    for(int i = 0; i < ret.length(); i++) {
+	      char c = ret.charAt(i);
+	      
+	      if(stringEscape) {
+	        result.append(c);
+	        stringEscape = false;
+	      }
+	      else if(c == ESCAPE_IN_STRING) {
+	    	stringEscape = true;
+	      }
+	      else {
+	    	result.append(c);
+	      }
+	    }
+	    
+	    ret = result.toString();
     }
     
-    ret = result.toString();
+    
     
     return ret;
   }
