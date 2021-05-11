@@ -57,6 +57,7 @@ import devplugin.SettingsTab;
 import devplugin.ThemeIcon;
 import devplugin.Version;
 import util.browserlauncher.Launch;
+import util.paramhandler.ParamLibrary;
 import util.paramhandler.ParamParser;
 import util.program.ProgramUtilities;
 import util.ui.Localizer;
@@ -67,7 +68,7 @@ import util.ui.UiUtilities;
  * A User can configure his favorite Search-Engines and search for the given Movie
  */
 public class WebPlugin extends Plugin {
-  private static final Version VERSION = new Version(3,20);
+  private static final Version VERSION = new Version(3,20,1);
 
   private static final Logger LOGGER = java.util.logging.Logger
   .getLogger(WebPlugin.class.getName());
@@ -142,12 +143,18 @@ public class WebPlugin extends Plugin {
    */
   private boolean mShowDetails = true;
 
+  private boolean mTvb423 = false;
   /**
    * Creates the Plugin
    */
   public WebPlugin() {
     INSTANCE = this;
   }
+  
+  @Override
+	public void onActivation() {
+	  mTvb423 = getPluginManager().getTVBrowserVersion().compareTo(new Version(4,23,true)) == 0;
+	}
 
   /**
    * Returns the Instance of the Plugin
@@ -595,7 +602,25 @@ public class WebPlugin extends Plugin {
     try {
       final ParamParser parser = new ParamParser();
       
+      if(mTvb423) {
+    	  parser.setParamLibrary(new ParamLibrary() {
+    		  @Override
+    		public String getStringForFunction(Program prg, String function, String[] params) {
+    			String result = super.getStringForFunction(prg, function, params);
+    			
+    			if(function.equals("urlencode")) {
+    				result = result.replace("%", "%%");
+    			}
+    			
+    			return result;
+    		}
+    	  });
+      }
+      
+      System.out.println(address.getUrl());
+      
       final String result = parser.analyse(address.getUrl(), program);
+      
       
       if (parser.hasErrors()) {
         final String errorString = parser.getErrorString();
