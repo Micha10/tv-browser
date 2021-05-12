@@ -38,6 +38,7 @@ import java.util.LinkedList;
 import java.util.Map.Entry;
 import java.util.Vector;
 
+import javax.sound.sampled.ReverbType;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.Icon;
@@ -416,7 +417,22 @@ public class MarkList extends Vector<Program> {
     if(p != null) {
       if (mReceiveTargets != null) {
         for (ProgramReceiveTarget target:mReceiveTargets){
-          target.receivePrograms(new Program[] {p});
+          if(SimpleMarkerPlugin.IS_TVB_422_423 && "target_remind".equals(target.getTargetId())) {
+            ProgramReceiveIf receiveIf = target.getReceifeIfForIdOfTarget();
+            
+            if(receiveIf != null && "reminderplugin.ReminderPlugin".equals(receiveIf.getId())) {
+              try {
+                Method receive = receiveIf.getClass().getDeclaredMethod("receivePrograms", int.class, Program[].class, ProgramReceiveTarget.class);
+                receive.invoke(receiveIf, 0, new Program[] {p}, target);
+              } catch (Exception e) {
+                e.printStackTrace();
+                receiveIf.receivePrograms(new Program[] {p}, target);
+              } 
+            }
+          }
+          else {
+            target.receivePrograms(new Program[] {p});
+          }
         }
       }
       

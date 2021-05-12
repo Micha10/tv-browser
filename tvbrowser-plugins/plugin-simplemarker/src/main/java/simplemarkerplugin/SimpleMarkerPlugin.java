@@ -96,7 +96,7 @@ import util.ui.WindowClosingIf;
 public class SimpleMarkerPlugin extends Plugin {
   public static boolean HANDLE_SEPARATORS = true;
   
-  private static final Version mVersion = new Version(3,31,3,true);
+  private static final Version mVersion = new Version(3,31,4,true);
 
   /** The localizer for this class. */
   private static final util.ui.Localizer mLocalizer = util.ui.Localizer.getLocalizerFor(SimpleMarkerPlugin.class);
@@ -132,6 +132,8 @@ public class SimpleMarkerPlugin extends Plugin {
   private static int mActionIdCount;
   
   private boolean mShowHtmlContextMenu = true;
+  
+  public static boolean IS_TVB_422_423 = false;
 
   /**
    * Standard constructor for this class.
@@ -152,6 +154,7 @@ public class SimpleMarkerPlugin extends Plugin {
   }
 
   public void onActivation() {
+    IS_TVB_422_423 = getPluginManager().getTVBrowserVersion().compareTo(new Version(4,22,true)) >= 0 && getPluginManager().getTVBrowserVersion().compareTo(new Version(4,23,true)) <= 0;
     
     mShowHtmlContextMenu = getPluginManager().getTVBrowserVersion().compareTo(new Version(4,9,97,false)) > 0;
     HANDLE_SEPARATORS = getPluginManager().getTVBrowserVersion().compareTo(new Version(4,22,52,false)) < 0;
