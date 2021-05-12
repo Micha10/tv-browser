@@ -136,12 +136,6 @@ public class ReminderPluginProxy extends AbstractInternalPluginProxy implements 
   }
 
   @Override
-  @Deprecated(since="4.2.2") public boolean receiveValues(String[] values,
-      ProgramReceiveTarget receiveTarget) {
-    return false;
-  }
-
-  @Override
   public void handleTvDataUpdateFinished() {
     getReminderInstance().handleTvDataUpdateFinished();
   }
@@ -177,5 +171,10 @@ public class ReminderPluginProxy extends AbstractInternalPluginProxy implements 
   @Override
   public int[] getMarkPrioritiesForProgram(Program p) {
     return new int[] {getMarkPriorityMaxForProgram(p)};
+  }
+  
+  @Override
+  public boolean canReceiveProgramsWithTarget() {
+    return true;
   }
 }

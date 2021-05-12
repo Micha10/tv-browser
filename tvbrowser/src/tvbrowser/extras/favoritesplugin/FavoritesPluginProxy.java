@@ -222,4 +222,9 @@ public class FavoritesPluginProxy extends AbstractInternalPluginProxy implements
   public int[] getMarkPrioritiesForProgram(Program p) {
     return new int[] {getMarkPriorityMaxForProgram(p)};
   }
+  
+  @Override
+  public boolean canReceiveProgramsWithTarget() {
+    return true;
+  }
 }
