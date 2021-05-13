@@ -56,9 +56,12 @@ public class ReminderPluginProxy extends AbstractInternalPluginProxy implements 
   private static final String PROGRAM_TARGET_REMIND = "target_remind";
   private static ReminderPluginProxy mInstance;
   private Icon mMarkIcon;
+  private ProgramReceiveTarget mProgramReceiveTarget;
 
   private ReminderPluginProxy() {
     mInstance = this;
+    mProgramReceiveTarget = new ProgramReceiveTarget(ProgramReceiveTarget.TYPE_EVENT_ADDED + ProgramReceiveTarget.TYPE_EVENT_REMOVED, this,
+        mLocalizer.msg("programTarget", "Remind"), PROGRAM_TARGET_REMIND);
   }
 
   /**
@@ -85,13 +88,23 @@ public class ReminderPluginProxy extends AbstractInternalPluginProxy implements 
   }
   
   public boolean receivePrograms(int type, Program[] programArr, ProgramReceiveTarget receiveTarget) {
-    getReminderInstance().addPrograms(programArr);
-    return true;
+    boolean result = false;
+    
+    if(receiveTarget.isReceiveTargetWithIdOfProgramReceiveIf(this, PROGRAM_TARGET_REMIND)) {
+      if(type == ProgramReceiveTarget.TYPE_EVENT_UNDIFINED || type == ProgramReceiveTarget.TYPE_EVENT_ADDED) {
+        getReminderInstance().addPrograms(programArr);
+      }
+      else if(type == ProgramReceiveTarget.TYPE_EVENT_REMOVED) {
+        getReminderInstance().removePrograms(programArr);
+      }
+      result = true;
+    }
+    
+    return result;
   }
 
   public ProgramReceiveTarget[] getProgramReceiveTargets() {
-    return new ProgramReceiveTarget[] { new ProgramReceiveTarget(this,
-        mLocalizer.msg("programTarget", "Remind"), PROGRAM_TARGET_REMIND) };
+    return new ProgramReceiveTarget[] {mProgramReceiveTarget};
   }
 
   public Icon getMarkIcon() {

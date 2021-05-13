@@ -902,7 +902,7 @@ public class ReminderPlugin {
 
     synchronized(mReminderList) {
       item = mReminderList.getReminderItem(prog);
-
+      
       mReminderList.remove(prog);
     }
 
