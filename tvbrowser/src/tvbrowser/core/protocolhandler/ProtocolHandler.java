@@ -144,9 +144,9 @@ public class ProtocolHandler {
         final File start = new File(baseDir.getAbsolutePath(),"/tvbrowser"+(TVBrowser.isTransportable() ? "-transportable":"")+".sh");
         
         File source = new File(System.getProperty("user.home")+"/.local/share/applications/tvbrowserWebstart.desktop");
-        boolean ask = !source.isFile();
+        boolean ask = handler == null || !source.isFile();
         
-        if(handler.equals("tvbrowser.desktop")) {
+        if(handler != null && handler.equals("tvbrowser.desktop")) {
           source = null;
           ask = !baseDir.getAbsolutePath().startsWith("/usr/share/tvbrowser");
         }
