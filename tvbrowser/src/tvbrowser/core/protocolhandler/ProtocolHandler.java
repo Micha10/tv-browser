@@ -122,22 +122,16 @@ public class ProtocolHandler {
     
     if(mIsEnabled) {
       if(Launch.getOs() == Launch.OS_LINUX) {
-        final File mime = new File(System.getProperty("user.home")+"/.config/mimeapps.list");
         String handler = null;
         
-        if(mime.isFile()) {
-          try(BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(mime), "UTF-8"))) {
-            String line = null;
-            
-            while((line = in.readLine()) != null) {
-              if(line.startsWith("x-scheme-handler/tvb")) {
-                handler = line.substring(line.indexOf("=")+1);
-                break;
-              }
-            }
-          }catch(IOException ioe) {
-            ioe.printStackTrace();
-          }
+        ExecutionHandler h = ExecutionHandler.create("/usr/bin/xdg-mime","query","default","x-scheme-handler/tvb");
+        try {
+          h.execute(true);
+          h.getProcess().waitFor();
+          handler = h.getOutput().strip();
+        } catch (Exception e) {
+          // TODO Auto-generated catch block
+          e.printStackTrace();
         }
         
         final File baseDir = new File("");
@@ -226,7 +220,7 @@ public class ProtocolHandler {
       
       if(parts.length > 1) {
         if(MESSAGE_CONFIG.equalsIgnoreCase(parts[0]) && parts[1].contains("=")) {
-          configMessage(parts);
+          configMessage(message, parts);
         }
         else if(MESSAGE_SHOW.equalsIgnoreCase(parts[0]) && (parts.length == 2 || parts.length == 3) && parts[parts.length-1].contains("=")) {
           showMessage(parts);
@@ -315,8 +309,8 @@ public class ProtocolHandler {
     }
   }
   
-  private void configMessage(String[] parts) {
-    if(JOptionPane.YES_OPTION == UiUtilities.showConfirmDialogOnMouseScreen(LOCALIZER.msg("receive.config.msg","TV-Browser received changes of settings.\nIf you haven't triggered the change, please cancel it now!\n\nDo you want to apply the changed settings?"), LOCALIZER.msg("receive.config.title","Apply settings change?"), JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, true)) {
+  private void configMessage(String message, String[] parts) {
+    if(JOptionPane.YES_OPTION == UiUtilities.showConfirmDialogOnMouseScreen(LOCALIZER.msg("receive.config.msg","TV-Browser received changes of settings:\n{0}\n\nIf you haven't triggered the change, please cancel it now!\n\nDo you want to apply the changed settings?", message), LOCALIZER.msg("receive.config.title","Apply settings change?"), JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, true)) {
       try {
         String[] props = parts[1].split(";");
         
@@ -601,7 +595,8 @@ public class ProtocolHandler {
       ExecutionHandler h = ExecutionHandler.create("/usr/bin/xdg-mime","default",name,"x-scheme-handler/tvb");
       try {
         h.execute();
-      } catch (IOException e) {
+        h.getProcess().waitFor();
+      } catch (Exception e) {
         // TODO Auto-generated catch block
         e.printStackTrace();
       }
@@ -609,10 +604,29 @@ public class ProtocolHandler {
       h = ExecutionHandler.create("/usr/bin/xdg-desktop-menu","forceupdate");
       try {
         h.execute();
-      } catch (IOException e) {
+        h.getProcess().waitFor();
+      } catch (Exception e) {
         // TODO Auto-generated catch block
         e.printStackTrace();
       }
+      
+      h = ExecutionHandler.create("/usr/bin/xdg-mime","query","default","x-scheme-handler/tvb");
+      try {
+        h.execute(true);
+        h.getProcess().waitFor();
+        
+        if(h.getOutput().isBlank()) {
+          File apps = new File(System.getProperty("user.home"),".local/share/applications");
+          
+          if(!apps.isDirectory()) {
+            apps.mkdirs();
+          }
+        }
+      } catch (Exception e) {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+      }
+      
     }
     else if(Launch.getOs() == Launch.OS_WINDOWS) {
       enableWindows();
@@ -667,6 +681,10 @@ public class ProtocolHandler {
   }
   
   public static void createDesktopFile(final File target, final String name, final boolean isMimeHandler) {
+    if(!target.getParentFile().isDirectory()) {
+      target.mkdirs();
+    }
+    
     final File baseDir = new File("");
     
     try(BufferedWriter out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(target), "UTF-8"))) {
