@@ -153,7 +153,7 @@ public class PluginChooserDlg extends JDialog implements WindowClosingIf {
   }
   
   /**
-  * @param type The of selection of send type
+  * @param type The type of selection of send type
   * @param parent The parent window
   * @param pluginArr
   *          The initially selected ProgramReceiveIfs.
@@ -168,7 +168,7 @@ public class PluginChooserDlg extends JDialog implements WindowClosingIf {
  public PluginChooserDlg(int type, Window parent, ProgramReceiveTarget[] pluginArr,String description, ProgramReceiveIf caller, ProgramReceiveTarget[] disabledTargets) {
    super(parent);
    setModalityType(ModalityType.DOCUMENT_MODAL);
-
+   
    Hashtable<ProgramReceiveIf, ArrayList<ProgramReceiveTarget>> table = createReceiveTable(pluginArr);
 
    init(type, table.keySet().toArray(new ProgramReceiveIf[table.keySet().size()]),description, caller, table, disabledTargets, parent);
@@ -439,9 +439,13 @@ public class PluginChooserDlg extends JDialog implements WindowClosingIf {
                       mReceiveTargetTable.put(currPlugin, selTargets);
                     }
                   });
+              
+              if(targetList.getSelectedValue() == null && !targetList.isEmpty()) {
+                targetList.setSelectedIndex(0);
+              }
             }
             targetPanel.updateUI();
-
+            
           }
         } catch (Exception e1) {
           e1.printStackTrace();
