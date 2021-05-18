@@ -50,6 +50,8 @@ import util.ui.UiUtilities;
  * The Default-Device
  */
 public final class DefaultDevice implements DeviceIf {
+  private static final String SEASON_NUMBER = "season_number";
+  private static final String SEASON_NUMBER_TYPE = "season_number_type";
     /** Driver */
     private DriverIf mDriver;
     /** Config */
@@ -355,6 +357,42 @@ public final class DefaultDevice implements DeviceIf {
           entry.setParam(replaceSeparator(entry.getParam()));
         }
       }
+      if(previousVersion.compareTo(new Version(4,22,95,true)) <= 0) {
+        mConfig.setParameterFormatAdd(fixSeasonNumber(mConfig.getParameterFormatAdd()));
+        mConfig.setParameterFormatRem(fixSeasonNumber(mConfig.getParameterFormatRem()));
+        
+        Collection<ParamEntry> params = mConfig.getParamList();
+        
+        for(ParamEntry entry : params) {
+          entry.setParam(fixSeasonNumber(entry.getParam()));
+        }
+      }
+    }
+    
+    private String fixSeasonNumber(String param) {
+      try {
+      int index1 = 0;
+      
+      do {
+        index1 = param.indexOf(SEASON_NUMBER,index1);
+        
+        int test = param.indexOf(SEASON_NUMBER_TYPE,index1);
+        
+        if(index1 != -1) {
+          if(index1 != test) {
+            param = param.substring(0,index1)+SEASON_NUMBER_TYPE+param.substring(index1+SEASON_NUMBER.length());
+            index1 += SEASON_NUMBER_TYPE.length();
+          }
+          else {
+            index1 += SEASON_NUMBER.length();
+          }
+        }
+      } while(index1 != -1);
+      
+      }catch(Throwable t) {
+        t.printStackTrace();
+      }
+      return param;
     }
     
     private String replaceSeparator(String param) {
@@ -384,7 +422,7 @@ public final class DefaultDevice implements DeviceIf {
           
           File test = new File(fileName);
           
-          if(test.isFile()) {
+          if(test.exists()) {
             param = param.substring(0,index1) + fileName.replace("\\", "\\\\") + param.substring(index2);
           }
         }

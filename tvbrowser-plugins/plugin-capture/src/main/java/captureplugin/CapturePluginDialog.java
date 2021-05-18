@@ -33,12 +33,12 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 
+import com.jgoodies.forms.builder.ButtonBarBuilder2;
+import com.jgoodies.forms.factories.Borders;
+
 import util.ui.Localizer;
 import util.ui.UiUtilities;
 import util.ui.WindowClosingIf;
-
-import com.jgoodies.forms.builder.ButtonBarBuilder2;
-import com.jgoodies.forms.factories.Borders;
 
 /**
  * The Dialog for the Settings. Uses the PluginPanel
