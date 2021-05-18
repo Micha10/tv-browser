@@ -153,7 +153,7 @@ public class ChannelPanel extends JPanel {
       help.addActionListener(new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
-          if(JOptionPane.YES_OPTION == JOptionPane.showConfirmDialog(UiUtilities.getLastModalChildOf(CapturePlugin.getInstance().getSuperFrame()), LOCALIZER.msg("help.message", "The CSV file must contain two colums, the order of the internal and external\nchannels can be controlled with the first line of the file.\n\nINT;EXT as first line signals that the first column contains the internal names (of TV-Browser)\nand the external names (of the recording program) are contained in the second column.\nEXT;INT or if the line to control the order is omitted signals that the first column contains\nthe external names and the second column contains the internale names.\n\nTo separate the columns a semicolon (;) is used. If the name of a channel contains a semicolon\nit can be marked as being text by using a backslash (\\) in front of it. Example: abc\\;xy\n\nDo you want to create a CSV file that contains the names of the TV-Browser channel now?\n(It will be created in the encoding of the system your currently using.)"), Localizer.getLocalization(Localizer.I18N_HELP), JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE)) {
+          if(JOptionPane.YES_OPTION == JOptionPane.showConfirmDialog(UiUtilities.getLastModalChildOf(CapturePlugin.getInstance().getSuperFrame()), LOCALIZER.msg("help.message", "The CSV file must contain two colums, the order of the internal and external\nchannels can be controlled with the first line of the file.\n\nINT;EXT as first line signals that the first column contains the internal names (of TV-Browser)\nand the external names (of the recording program) are contained in the second column.\nEXT;INT or if the line to control the order is omitted signals that the first column contains\nthe external names and the second column contains the internale names.\n\nTo separate the columns a semicolon (;) is used. If the name of a channel contains a semicolon or a backslash\nit can be marked as being text by using a backslash (\\) in front of it.\nExample: abc\\;xy respectively abc\\xy\n\nDo you want to create a CSV file that contains the names of the TV-Browser channel now?\n(It will be created in the encoding of the system your currently using.)"), Localizer.getLocalization(Localizer.I18N_HELP), JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE)) {
             export();
           }
         }
@@ -194,11 +194,11 @@ public class ChannelPanel extends JPanel {
             String value = (String)mTableModel.getValueAt(i,1);
             
             out.write("\n");
-            out.write(ch.getName().replace(";", "\\;"));
+            out.write(ch.getName().replace("\\", "\\\\").replace(";", "\\;"));
             out.write(";");
             
             if(value != null && !value.trim().isEmpty()) {
-              out.write(value.replace(";", "\\;"));
+              out.write(value.replace("\\", "\\\\").replace(";", "\\;"));
             }
           }
         } catch (IOException e) {
@@ -255,8 +255,16 @@ public class ChannelPanel extends JPanel {
         
         ArrayList<ChannelImport> externalChannelList = new ArrayList<ChannelImport>(0);
 
-        try(BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(chooser.getSelectedFile()),encoding))) {
+        try(FileInputStream fIn = new FileInputStream(chooser.getSelectedFile()); BufferedReader in = new BufferedReader(new InputStreamReader(fIn,encoding))) {
+          int byte1 = fIn.read();
+          int byte2 = fIn.read();
+          int byte3 = fIn.read();
+          
           String line = in.readLine();
+          
+          if(!encoding.equals("UTF-8") || !(byte1 == 239 && byte2 == 187 && byte3 == 191)) {
+            line = new String(new byte[] {(byte)byte1,(byte)byte2,(byte)byte3},encoding) + line;
+          }
           
           int indexInt = 1;
           
