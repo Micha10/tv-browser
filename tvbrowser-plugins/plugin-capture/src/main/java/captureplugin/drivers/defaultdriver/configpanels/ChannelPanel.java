@@ -295,7 +295,7 @@ public class ChannelPanel extends JPanel {
         int index = 0;
         
         for(int i = 0; i < line.length(); i++) {
-          if(line.charAt(i) == '\\') {
+          if(!escape && line.charAt(i) == '\\') {
             escape = true;
           }
           else if(!escape && line.charAt(i) == ';') {

@@ -83,7 +83,7 @@ import util.ui.UiUtilities;
  *         adopted by fishhead
  */
 public class CapturePlugin extends devplugin.Plugin {
-  private static final Version mVersion = new Version(3,17,1,true);
+  private static final Version mVersion = new Version(3,17,2,true);
   
     /**
      * Translator
