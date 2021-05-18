@@ -45,6 +45,7 @@ import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.RowSpec;
 
+import devplugin.CancelableSettingsTab;
 import devplugin.Marker;
 import devplugin.Plugin;
 import devplugin.PluginAccess;
@@ -71,7 +72,7 @@ import util.ui.UiUtilities;
  * @author René Mach
  * @since 2.2.2
  */
-public class PictureSettingsTab extends AbstractSettingsTab {
+public class PictureSettingsTab extends AbstractSettingsTab implements CancelableSettingsTab {
   private static final Localizer mLocalizer = Localizer.getLocalizerFor(PictureSettingsTab.class);
 
   private JRadioButton mShowPicturesEver, mShowPicturesNever, mShowPicturesForSelection, mShowPicturesForFilter;
@@ -388,6 +389,11 @@ public class PictureSettingsTab extends AbstractSettingsTab {
     Settings.propPictureDescriptionLines.setInt((Integer) mDescriptionLines.getValue());
   }
   
+  @Override
+  public void cancel() {
+    Settings.setRestartInfo(PictureSettingsTab.class.getCanonicalName(), PLUGIN_PICTURE_SELECTION_ORIGINAL != Settings.propPluginsPictureSetting.getInt());
+  }
+  
   /**
    * @since 2.6
    */
@@ -495,4 +501,5 @@ public class PictureSettingsTab extends AbstractSettingsTab {
 
     return null;
   }
+
 }

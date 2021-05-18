@@ -37,7 +37,7 @@ import com.jgoodies.forms.factories.Borders;
 import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
 
-import devplugin.SettingsTab;
+import devplugin.CancelableSettingsTab;
 import tvbrowser.core.Settings;
 import util.settings.ProgramPanelSettings;
 
@@ -47,7 +47,7 @@ import util.settings.ProgramPanelSettings;
  * 
  * @author René Mach
  */
-public class ChannelIconAndNameSettingsTab implements SettingsTab {
+public class ChannelIconAndNameSettingsTab implements CancelableSettingsTab {
   private static final util.i18n.Localizer mLocalizer = util.i18n.Localizer.getLocalizerFor(ChannelIconAndNameSettingsTab.class);
   
   private JRadioButton mShowIconAndNameInProgramTable;
@@ -168,6 +168,12 @@ public class ChannelIconAndNameSettingsTab implements SettingsTab {
     Settings.propShowSortNumberInProgramTable.setBoolean(mShowSortNumberInProgramTable.isSelected());
     Settings.propShowChannelTooltipInProgramTable.setBoolean(mShowTooltipInProgramTable.isSelected());
     Settings.propShowSortNumberInProgramLists.setBoolean(mShowSortNumberInChannelLists.isSelected());
+  }
+  
+
+  @Override
+  public void cancel() {
+    Settings.setRestartInfo(ChannelIconAndNameSettingsTab.class.getCanonicalName(),INDEX_ICONS_PROGRAM_PANEL != Settings.propShowChannelLogoForProgramPanel.getInt());
   }
 
   /**

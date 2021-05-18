@@ -81,7 +81,7 @@ import util.ui.customizableitems.SelectableItemRendererCenterComponentIf;
 /**
  * Locale Settings
  */
-public class LocaleSettingsTab implements devplugin.SettingsTab {
+public class LocaleSettingsTab implements devplugin.CancelableSettingsTab {
   /** The localizer for this class. */
   private static final util.i18n.Localizer mLocalizer = util.i18n.Localizer.getLocalizerFor(LocaleSettingsTab.class);
   private static final Logger mLog =  Logger.getLogger(LocaleSettingsTab.class.getName());
@@ -142,26 +142,7 @@ public class LocaleSettingsTab implements devplugin.SettingsTab {
     
     mSettingsPn.add(downloadLanguages, CC.xy(6,3));
 
-    String language = Settings.propLanguage.getString();
-    String country = Settings.propCountry.getString();
-    String variant = Settings.propVariant.getString();
-
-    Locale loc = new Locale(language, country, variant);
-    if (localesList.contains(loc)) {
-      mLanguageCB.setSelectedItem(loc);
-    }
-    else {
-      loc = new Locale(language, country);
-      if (localesList.contains(loc)) {
-        mLanguageCB.setSelectedItem(loc);
-      }
-      else {
-        loc = new Locale(language);
-        if (localesList.contains(loc)) {
-          mLanguageCB.setSelectedItem(loc);
-        }
-      }
-    }
+    selectLanguageFromSettings(localesList);
 
     // time zone data may not be accessible, therefore use try-catch everywhere
     String[] zoneIds = new String[0];
@@ -184,21 +165,8 @@ public class LocaleSettingsTab implements devplugin.SettingsTab {
     }
     
     mTimezoneCB = new JComboBox<>(zoneIds);
-    String zone = Settings.propTimezone.getString();
-    if (zone == null) {
-      try {
-        zone = TimeZone.getDefault().getID();
-      } catch (Exception e) {
-        e.printStackTrace();
-      }
-    }
-    for (int i = 0; i < zoneIds.length; i++) {
-      if (zoneIds[i].equals(zone)) {
-        mTimezoneCB.setSelectedIndex(i);
-        break;
-      }
-    }
-
+    selectTimeZoneFromSettings(zoneIds);
+    
     mTimezoneLB = new JLabel(mLocalizer.msg("timezone", "Timezone:"));
 
     mSettingsPn.add(DefaultComponentFactory.getInstance().createSeparator(mLocalizer.msg("titleTimezone", "Locale")), CC.xyw(1,5,7));
@@ -264,7 +232,6 @@ public class LocaleSettingsTab implements devplugin.SettingsTab {
               !TWELVE_HOUR_FORMAT_IS_SELECTED && !mTwentyfourHourFormat.isSelected() ||
               mFirstDayOfWeek.getSelectedIndex() != FIRST_DAY_OF_WEEK_INDEX);
       Settings.setRestartInfo(LocaleSettingsTab.class.getCanonicalName(), SOMETHING_CHANGED);
-      
     };
 
     mLanguageCB.addItemListener(itemListener);
@@ -274,6 +241,72 @@ public class LocaleSettingsTab implements devplugin.SettingsTab {
     mFirstDayOfWeek.addItemListener(itemListener);
 
     return mSettingsPn;
+  }
+  
+  private void selectLanguageFromSettings(ArrayList<Locale> localesList) {
+    if(localesList == null) {
+      Locale[] allLocales = mLocalizer.getAllAvailableLocales();
+      localesList = new ArrayList<Locale>(Arrays.asList(allLocales));
+    }
+    
+    String language = Settings.propLanguage.getString();
+    String country = Settings.propCountry.getString();
+    String variant = Settings.propVariant.getString();
+
+    Locale loc = new Locale(language, country, variant);
+    if (localesList.contains(loc)) {
+      mLanguageCB.setSelectedItem(loc);
+    }
+    else {
+      loc = new Locale(language, country);
+      if (localesList.contains(loc)) {
+        mLanguageCB.setSelectedItem(loc);
+      }
+      else {
+        loc = new Locale(language);
+        if (localesList.contains(loc)) {
+          mLanguageCB.setSelectedItem(loc);
+        }
+      }
+    }
+  }
+  
+  private void selectTimeZoneFromSettings(String[] zoneIds) {
+    if(zoneIds == null) {
+      zoneIds = new String[0];
+      try {
+        zoneIds = TimeZone.getAvailableIDs();
+        
+        Arrays.sort(zoneIds);
+      } catch (Exception e) {
+          zoneIds = new String[24];
+          zoneIds[12] = "GMT+0";
+        for(int i=0; i < 12; i++) {
+          zoneIds[i] = "GMT-"+Math.abs(i-12);
+        }
+          
+        for(int i=1; i < 12; i++) {
+          zoneIds[i+12] = "GMT+"+i;
+        }
+        
+        mLog.log(Level.INFO, "TimeZone IDs not available, use default values", e);
+      }
+    }
+    
+    String zone = Settings.propTimezone.getString();
+    if (zone == null) {
+      try {
+        zone = TimeZone.getDefault().getID();
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
+    }
+    for (int i = 0; i < zoneIds.length; i++) {
+      if (zoneIds[i].equals(zone)) {
+        mTimezoneCB.setSelectedIndex(i);
+        break;
+      }
+    }
   }
 
 
@@ -301,6 +334,20 @@ public class LocaleSettingsTab implements devplugin.SettingsTab {
     }
     
     Settings.propFirstDayOfWeek.setInt((Integer)mFirstDayOfWeek.getSelectedItem());
+  }
+  
+
+  @Override
+  public void cancel() {
+    selectLanguageFromSettings(null);
+    selectTimeZoneFromSettings(null);
+    
+    SOMETHING_CHANGED = mLanguageCB.getSelectedIndex() != START_LANGUAGE_INDEX ||
+        mTimezoneCB.getSelectedIndex() != START_TIME_ZONE_INDEX ||
+        (TWELVE_HOUR_FORMAT_IS_SELECTED != Settings.propTwelveHourFormat.getBoolean() ||
+            (int)mFirstDayOfWeek.getSelectedItem() != Settings.propFirstDayOfWeek.getInt());
+    
+    Settings.setRestartInfo(LocaleSettingsTab.class.getCanonicalName(), SOMETHING_CHANGED);
   }
 
   /**
