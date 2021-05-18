@@ -629,6 +629,9 @@ public class SoftwareUpdateDlg extends JDialog implements ActionListener, ListSe
                       TVBrowser.addRestart();
                       MainFrame.getInstance().quit();
                 }
+                else {
+                  Settings.setRestartInfo("SoftwareUpdateDlg.pluginInstallation", true);
+                }
               } else {
                 JOptionPane.showMessageDialog(UiUtilities.getLastModalChildOf(MainFrame.getInstance()), LOCALIZER.msg("restartprogram", "please restart tvbrowser before..."));
               }
