@@ -1011,6 +1011,7 @@ public class ProgramTextCreator {
                   if (personsString.endsWith(".")) {
                     personsString = personsString.substring(0, personsString.length() - 1).trim();
                   }
+                  
                   String[] persons = personsString.split(" und ");
                   boolean doLink = true;
                   for (String person : persons) {
@@ -1135,41 +1136,47 @@ public class ProgramTextCreator {
               continue;
             }
             
+            String role = null;
+            String topic = null;
+            String replace = persons[i];
+            
             if(persons[i].contains(":")) {
+              role = persons[i].substring(0,persons[i].indexOf(":")+1)+" ";
               persons[i] = persons[i].substring(persons[i].indexOf(":")+1).trim();
+            }
+            
+            if (persons[i].contains("(") && persons[i].contains(")")) {
+              int index = persons[i].indexOf('(');
+              topic = persons[i].substring(index, persons[i].indexOf(")")+1).trim();
+              persons[i] = persons[i].substring(0,index).trim();
             }
             
             // a name shall not have more name parts
             if (persons[i].trim().split(" ").length <= 3) {
               String person = persons[i].replace("\t", " ");
-              
               String link = null;
-              if (person.contains("(")) {
-                int index = person.indexOf('(');
-                String topic = person.substring(0, index).trim();
-                
+              
+              if(topic != null) {
                 if(ProgramFieldType.ADDITIONAL_PERSONS_TYPE == fieldType) {
-                  link = addSearchLink(topic,foreground) + " <span style=\"font-weight:bold;color:"+HTMLTextHelper.getCssRgbColorEntry(infoColor)+"\">"+person.substring(index).trim()+"</span>";
+                  link = addSearchLink(person,foreground) + " <span style=\"font-weight:bold;color:"+HTMLTextHelper.getCssRgbColorEntry(infoColor)+"\">"+topic+"</span>";
                 }
                 else {
-                  link = addSearchLink(topic,foreground) + " " + person.substring(index).trim();
+                  link = addSearchLink(person,foreground) + " " + topic;
                 }
               }
-              if (person.contains(":")) {
-                int index = person.indexOf(':')+1;
-                String label = person.substring(0, index).trim();
-                
+              else if(role != null) {
                 if(ProgramFieldType.ADDITIONAL_PERSONS_TYPE == fieldType) {
-                  link = "<span style=\"font-weight:bold;color:"+HTMLTextHelper.getCssRgbColorEntry(infoColor)+"\">"+label+"</span> " + addSearchLink(person.substring(index).trim(),foreground);
+                  link = "<span style=\"font-weight:bold;color:"+HTMLTextHelper.getCssRgbColorEntry(infoColor)+"\">"+role+"</span> " + addSearchLink(person,foreground);
                 }
                 else {
-                  link = label + " " + addSearchLink(person.substring(index).trim(),foreground);
+                  link = role + " " + addSearchLink(person.trim(),foreground);
                 }
-              } 
+              }
               else if(link == null) {
                 link = addSearchLink(person,foreground);
               }
-              text = text.replace(persons[i], link);
+              
+              text = text.replace(replace, link);
             }
           }
         }
