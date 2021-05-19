@@ -20,6 +20,7 @@ import devplugin.Channel;
 import devplugin.Date;
 import devplugin.Plugin;
 import devplugin.PluginInfo;
+import devplugin.Program;
 import devplugin.ProgramFieldType;
 import devplugin.SettingsTab;
 import devplugin.Version;
@@ -46,7 +47,7 @@ public class DegenderPlugin extends Plugin {
   private static final Pattern GENDERED = Pattern.compile("(\\b(?i)(die\\s){0,1}(?-i)\\b(?!Mc)(\\w+?)(?:\\s*[\\*\\:_](?i:i)|I)n(nen){0,1})", Pattern.DOTALL | Pattern.UNICODE_CHARACTER_CLASS); 
   private static final Pattern GENDERED_LONG = Pattern.compile("(\\b([\\w\\-]+?)innen\\b\\s+(?:und|oder)\\s+\\-{0,1}\\b(\\w+?)\\b)|(\\b([\\w\\-]+?)\\b\\s+(?:und|oder)\\s+\\-{0,1}\\b(\\w+?)innen\\b)", Pattern.DOTALL | Pattern.UNICODE_CHARACTER_CLASS);
   private static final Pattern GENDERED_PARTIZIP = Pattern.compile("(\\b(?i)(?:(\\w*eine|der|die|bei|mit|\\w+en)\\s){0,1}(?-i)(?:\\b\\w+\\b\\s){0,1}\\b((\\p{Upper}\\w+)ende(n|r){0,1}(\\w*)\\b))", Pattern.DOTALL | Pattern.UNICODE_CHARACTER_CLASS);
-  private static final Version VERSION = new Version(0,13,4,true);
+  private static final Version VERSION = new Version(0,13,5,true);
   
   private boolean mRemoveLongForm = false;
   private boolean mReplacePartizip = false;
@@ -123,7 +124,7 @@ public class DegenderPlugin extends Plugin {
           MutableProgram p = (MutableProgram)newProg.getProgramAt(i);
           
           for(ProgramFieldType type : FIELD_TYPES) {
-            String text = deGender(p.getTextField(type));
+            String text = deGender(p.getTextField(type),p);
             
             if(text != null) {
               p.setTextField(type, text);
@@ -279,7 +280,7 @@ public class DegenderPlugin extends Plugin {
     return text;
   }
   
-  private String deGenderPartizip(String text) {
+  private String deGenderPartizip(String text, Program p) {
     if(mReplacePartizip && text != null) {
       StringBuilder result = new StringBuilder();
       Matcher m = GENDERED_PARTIZIP.matcher(text);
@@ -294,57 +295,12 @@ public class DegenderPlugin extends Plugin {
         
         String replace = m.group(1);
         
-      /*  if(m.group(5) != null || m.group(2) == null) {
-          if(m.group(4).toLowerCase().endsWith("studier") || m.group(4).toLowerCase().endsWith("dozier")) {
-            replace = m.group(4).substring(0,m.group(4).length()-3)+"enten";
-            
-            if(m.group(5) != null && m.group(5).equals("r")) {
-              replace = replace.substring(0,replace.length()-2);
-            }
-          }
-          else if(m.group(4).toLowerCase().endsWith("kunstschaff")) {
-            replace = m.group(4).substring(0,m.group(4).length()-10)+"ünstler";
-          }
-          else if(m.group(4).toLowerCase().endsWith("forsch") || m.group(4).toLowerCase().endsWith("lehr") 
-              || m.group(4).toLowerCase().endsWith("bewohn") || m.group(4).toLowerCase().endsWith("besuch")
-              || m.group(4).toLowerCase().endsWith("eit") || m.group(4).toLowerCase().endsWith("ütz")
-              || m.group(4).toLowerCase().endsWith("fahr")) {
-            replace = m.group(4)+"er";
-          }
-          else if(m.group(4).toLowerCase().endsWith("zufußgeh")) {
-            replace = m.group(4).substring(0,m.group(4).length()-8);
-            
-            if(Character.isUpperCase(m.group(4).charAt(m.group(4).length()-8))) {
-              replace += "Fußgänger";
-            }
-            else {
-              replace += "fußgänger";
-            }
-          }
-          
-          
-          if(!replace.equals(m.group(1))) {
-            if(m.group(2) != null) {
-              replace = m.group(2)+" "+replace;
-              
-              if((m.group(2).toLowerCase().equals("den") || m.group(2).toLowerCase().equals("bei")) && replace.toLowerCase().endsWith("er")) {
-                replace += "n";
-              }
-            }
-            if(m.group(6) != null && !m.group(6).trim().isEmpty()) {
-              replace += m.group(6);
-            }
-            
-           // System.out.println(m.group(1) + " " + m.group(6) + " " + replace);
-            mCountPartizip++;
-          }
-        }*/
-        
         if(m.group(4).toLowerCase().endsWith("studier") || m.group(4).toLowerCase().endsWith("dozier")) {
           replace = m.group(1).substring(0,m.group(1).length()-m.group(3).length()+1) + m.group(4).substring(1,m.group(4).length()-3)+"ent";
           
           if((m.group(2) == null && (m.group(5) == null || (m.group(5) != null && m.group(5).equals("n")))) || 
-              (m.group(2) != null && (m.group(5) != null && m.group(5).equals("n")))) {
+              (m.group(2) != null && (m.group(5) != null && m.group(5).equals("n"))) ||
+              (m.group(2) != null && m.group(5) == null && m.group(2).endsWith("en"))) {
             replace += "en";
           }
         }
@@ -355,7 +311,9 @@ public class DegenderPlugin extends Plugin {
             || m.group(4).toLowerCase().endsWith("bewohn") || m.group(4).toLowerCase().endsWith("besuch")
             || m.group(4).toLowerCase().endsWith("eit") || m.group(4).toLowerCase().endsWith("ütz")
             || m.group(4).toLowerCase().endsWith("fahr") || m.group(4).toLowerCase().endsWith("arbeitnehm")
-            || m.group(4).toLowerCase().endsWith("helf")) {
+            || m.group(4).toLowerCase().endsWith("helf") || m.group(4).toLowerCase().endsWith("schau")
+            || m.group(4).toLowerCase().endsWith("trink") || m.group(4).toLowerCase().endsWith("teilnehm")
+            || m.group(4).toLowerCase().endsWith("deal")) {
           replace = m.group(1).substring(0,m.group(1).length()-m.group(3).length()) + m.group(4)+"er";
         }
         else if(m.group(4).toLowerCase().endsWith("zufußgeh")) {
@@ -381,7 +339,9 @@ public class DegenderPlugin extends Plugin {
               || m.group(2).endsWith("en")) && replace.toLowerCase().endsWith("er")) {
             replace += "n";
           }
-          
+          if(!VERSION.isStable()) {
+            System.out.println(p);
+          }
          // System.out.println(m.group(1) + " " + m.group(6) + " " + replace);
           mCountPartizip++;
         }
@@ -407,11 +367,11 @@ public class DegenderPlugin extends Plugin {
     return text;
   }
   
-  private String deGender(String text) {
+  private String deGender(String text, Program p) {
     if(text != null) {
       text = deGenderShort(text);
       text = deGenderLong(text);
-      text = deGenderPartizip(text);
+      text = deGenderPartizip(text,p);
     }
     
     return text;
