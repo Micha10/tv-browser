@@ -30,6 +30,8 @@ package util.io.windows.registry;
  * @since 4.1
  */
 public class RegistryValue {
+	public static final String DEFAULT = "default";
+
 	static final int TYPE_REG_UNKNOWN = 0;
 	public static final int TYPE_REG_SZ = 1;
 	public static final int TYPE_REG_BINARY = 2;

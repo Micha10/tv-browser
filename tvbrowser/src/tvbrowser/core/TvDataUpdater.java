@@ -78,10 +78,14 @@ import tvbrowser.ui.settings.StartupSettingsTab;
 import tvdataservice.MarkedProgramsMap;
 import tvdataservice.MutableChannelDayProgram;
 import tvdataservice.TvDataUpdateManager;
+import util.browserlauncher.Launch;
 import util.exc.ErrorHandler;
-import util.io.NetworkUtilities;
-import util.ui.EnhancedPanelBuilder;
 import util.i18n.Localizer;
+import util.io.ExecutionHandler;
+import util.io.NetworkUtilities;
+import util.io.windows.registry.RegistryKey;
+import util.io.windows.registry.RegistryValue;
+import util.ui.EnhancedPanelBuilder;
 import util.ui.UIThreadRunner;
 import util.ui.UiUtilities;
 import util.ui.WindowClosingIf;
@@ -96,11 +100,11 @@ import util.ui.progress.ProgressMonitorGroup;
 public class TvDataUpdater {
 
   /** The localizer for this class. */
-  private static final util.i18n.Localizer mLocalizer
+  private static final util.i18n.Localizer LOCALIZER
     = util.i18n.Localizer.getLocalizerFor(TvDataUpdater.class);
 
   /** The logger for this class. */
-  private static final Logger mLog
+  private static final Logger LOG
     = Logger.getLogger(TvDataUpdater.class.getName());
 
   /** The singleton. */
@@ -175,6 +179,30 @@ public class TvDataUpdater {
       return;
     }
 
+    if(Launch.isWindows() && !DontShowAgainOptionBox.isHiddenMessageBox(TvDataUpdater.class.getCanonicalName()+"#ACRONIS")) {
+    	RegistryKey acronis = new RegistryKey(RegistryKey.HKEY_LOCAL_MACHINE, "SOFTWARE\\Acronis\\TrueImageHome");
+    	RegistryValue value = acronis.getValue(RegistryValue.DEFAULT);
+    	
+    	if(value.getType() == RegistryValue.TYPE_REG_SZ && !value.getData().isBlank()) {
+    		final File tasklist = new File(System.getenv("windir")+File.separator+(System.getProperty("os.arch").contains("64") ? "SysWOW64" : "System32")+File.separator+"tasklist.exe");
+    		
+    		boolean ask = true;
+    		
+    		if(tasklist.isFile()) {
+    			final ExecutionHandler h = ExecutionHandler.create(tasklist.getAbsolutePath(),"/FO","LIST");
+    			try {
+					h.execute(true);
+					h.getProcess().waitFor();
+					ask = h.getOutput().contains("anti_ransomware_service.exe");
+				} catch (Exception e) {}
+    		}
+    		
+    		if(ask) {
+    			DontShowAgainOptionBox.showOptionDialog(TvDataUpdater.class.getCanonicalName()+"#ACRONIS", UiUtilities.getParentFrameOnMouseScreen(), LOCALIZER.msg("acronisMessage","Acronis True Image was found on your system.\n\nIf the Active Protection of Acronis True Image is enabled\nTV-Browser might crash when updating data.\n\nTo make sure the data update of TV-Browser works correctly\ndisable the Active Protection function of Acronis True Image."), LOCALIZER.msg("acronisTitle", "Acronis True Image found"), JOptionPane.WARNING_MESSAGE);
+    		}
+    	}
+    }
+    
     // Set the download flag
     mIsDownloading = true;
     mStopDownloading = false;
@@ -223,8 +251,8 @@ public class TvDataUpdater {
           mMessageShown = true;
           try {
             UIThreadRunner.invokeAndWait(() -> UiUtilities.showMessageDialogOnMouseScreen(
-                mLocalizer.msg("noConnectionMessage", "No connection!"),
-                mLocalizer.msg("noConnectionTitle", "No connection!"),
+                LOCALIZER.msg("noConnectionMessage", "No connection!"),
+                LOCALIZER.msg("noConnectionTitle", "No connection!"),
                 JOptionPane.ERROR_MESSAGE));
           } catch (InterruptedException e) {
             e.printStackTrace();
@@ -258,7 +286,7 @@ public class TvDataUpdater {
                                  daysToDownload, monitor);
       }
       catch (Throwable thr) {
-        mLog.log(Level.WARNING, "Updating the TV data for TV data service "
+        LOG.log(Level.WARNING, "Updating the TV data for TV data service "
           + dataService.getInfo().getName() + " failed", thr);
 
         downloadException = thr;
@@ -267,7 +295,7 @@ public class TvDataUpdater {
     
     // Show the exception if there was one
     if (downloadException != null) {
-      String msg = mLocalizer.msg("error.1", "Couldn't download the whole program!");
+      String msg = LOCALIZER.msg("error.1", "Couldn't download the whole program!");
       ErrorHandler.handle(msg, downloadException);
     }
 
@@ -277,7 +305,7 @@ public class TvDataUpdater {
     checkLocalDateUsingNTP();
     
     ProgressBarProgressMonitor monitor = new ProgressBarProgressMonitor(progressBar, label);
-    monitor.setMessage(mLocalizer.msg("calculateEntries","Calculating new entries in the database"));
+    monitor.setMessage(LOCALIZER.msg("calculateEntries","Calculating new entries in the database"));
     
     synchronized (mRecalculatePrograms) {
       monitor.setMaximum(mRecalculatePrograms.size());
@@ -403,7 +431,7 @@ public class TvDataUpdater {
         
         if(showDialog) {
           final JDialog infoDialog = new JDialog(UiUtilities.getLastModalChildOf(MainFrame.getInstance()));
-          infoDialog.setTitle(mLocalizer.msg("afterUpdateInfo","Information of data update"));
+          infoDialog.setTitle(LOCALIZER.msg("afterUpdateInfo","Information of data update"));
           
           JScrollPane scrollPane = new JScrollPane(centerPanel);
           scrollPane.setBorder(BorderFactory.createEmptyBorder());
@@ -474,7 +502,7 @@ public class TvDataUpdater {
       // not yet trigger the message
       if (count >= 2) {
         DontShowAgainOptionBox.showOptionDialog("wrongTimeZone", null,
-            mLocalizer.msg("timezone", ""));
+            LOCALIZER.msg("timezone", ""));
       }
     }
   }
@@ -543,7 +571,7 @@ public class TvDataUpdater {
           JOptionPane
               .showMessageDialog(
                   null,
-                  mLocalizer
+                  LOCALIZER
                       .msg(
                           "downloadFailed",
                           "TV-Browser could not download any data. A check with an internet time server showed that your local computer time differs more than a day from the official time.\n\nPlease check the date and time settings of your computer.\n\nYour date and time: {0}\nInternet date and time: {1}",
@@ -562,7 +590,7 @@ public class TvDataUpdater {
         try {
           lst.tvDataUpdateStarted(until);
         } catch(Throwable thr) {
-          mLog.log(Level.WARNING, "Firing event 'TV data update started' failed", thr);
+          LOG.log(Level.WARNING, "Firing event 'TV data update started' failed", thr);
         }
       }
     }
@@ -576,7 +604,7 @@ public class TvDataUpdater {
         try {
           lst.tvDataUpdateFinished();
         } catch(Throwable thr) {
-          mLog.log(Level.WARNING, "Firing event 'TV data update finished' failed", thr);
+          LOG.log(Level.WARNING, "Firing event 'TV data update finished' failed", thr);
         }
       }
 

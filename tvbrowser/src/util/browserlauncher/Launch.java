@@ -223,4 +223,36 @@ public class Launch {
   public static boolean isOsWindowsNtBranch() {
     return BrowserLauncher.getJvm() == 6;
   }
+  
+  /**
+   * @return If the OS is Windows.
+   * @since 4.2.4
+   */
+  public static boolean isWindows() {
+	  return getOs() == OS_WINDOWS;
+  }
+  
+  /**
+   * @return If the OS is macOS.
+   * @since 4.2.4
+   */
+  public static boolean isMacOs() {
+	  return getOs() == OS_MAC;
+  }
+  
+  /**
+   * @return If the OS is Linux.
+   * @since 4.2.4
+   */
+  public static boolean isLinux() {
+	  return getOs() == OS_LINUX;
+  }
+  
+  /**
+   * @return If the OS is other OS.
+   * @since 4.2.4
+   */
+  public static boolean isOther() {
+	  return getOs() == OS_OTHER;
+  }
 }

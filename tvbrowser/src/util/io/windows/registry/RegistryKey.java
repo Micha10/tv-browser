@@ -45,15 +45,15 @@ public class RegistryKey {
 	private String mKey;
 	private String mPath;
 	
-	private static final File mRegTool = new File(System.getenv("windir")+File.separator+"SysWOW64"+File.separator+"reg.exe");
+	private static final File REG_TOOL = new File(System.getenv("windir")+File.separator+(System.getProperty("os.arch").contains("64") ? "SysWOW64" : "System32")+File.separator+"reg.exe");
 	
-	private Pattern mPatternQuery = Pattern.compile("\\s{2,}(.*?)\\s+(REG_.*?)\\s+(.*?)$",Pattern.DOTALL);
+	private static final Pattern PATTERN_QUERY = Pattern.compile("\\s{2,}(.*?)\\s+(REG_.*?)\\s+(.*?)$",Pattern.DOTALL);
 	
 	/**
 	 * @return <code>true</code> if the registry is accessible, <code>false</code> otherwise.
 	 */
 	public static boolean isUsable() {
-		return mRegTool.isFile();
+		return REG_TOOL.isFile();
 	}
 	
 	/**
@@ -65,7 +65,7 @@ public class RegistryKey {
 	 */
 	public RegistryKey(final String hkey, final String path) throws RuntimeException {
 		if(!isUsable() || Launch.getOs() != Launch.OS_WINDOWS) {
-			throw new RuntimeException("Reg tool '" + mRegTool.getAbsolutePath() + "' not available. No access to Windows Registry");
+			throw new RuntimeException("Reg tool '" + REG_TOOL.getAbsolutePath() + "' not available. No access to Windows Registry");
 		}
 		
 		mKey = hkey;
@@ -79,15 +79,19 @@ public class RegistryKey {
 	 * @param key The key to get the value for.
 	 * @return The result of the registry query.
 	 */
-	public RegistryValue getValue(final String key) {
+	public RegistryValue getValue(String key) {
 		final ArrayList<String> cmdList = new ArrayList<>();
-		cmdList.add(mRegTool.getAbsolutePath());
+		cmdList.add(REG_TOOL.getAbsolutePath());
 		cmdList.add("query");
 		cmdList.add(mKey + "\\" + mPath);
 		
-		if(!key.isBlank()) {
-  		cmdList.add("/v");
-  		cmdList.add(key);
+		if(key.equals(RegistryValue.DEFAULT)) {
+			cmdList.add("/ve");
+			key = "";
+		}
+		else if(!key.isBlank()) {
+			cmdList.add("/v");
+			cmdList.add(key);
 		}
 		
 		final ExecutionHandler handler = new ExecutionHandler(cmdList.toArray(new String[0]));
@@ -98,7 +102,7 @@ public class RegistryKey {
 			handler.execute(true);
 			handler.getProcess().waitFor();
 			
-			final Matcher m = mPatternQuery.matcher(handler.getOutput());
+			final Matcher m = PATTERN_QUERY.matcher(handler.getOutput());
 			int pos = 0;
 			
 			while(m.find(pos)) {
@@ -141,7 +145,7 @@ public class RegistryKey {
 	  boolean result = false;
 	  
 	  final ArrayList<String> cmdList = new ArrayList<>();
-    cmdList.add(mRegTool.getAbsolutePath());
+    cmdList.add(REG_TOOL.getAbsolutePath());
     cmdList.add("add");
     cmdList.add(mKey + "\\" + mPath);
     cmdList.add("/t");
@@ -183,7 +187,7 @@ public class RegistryKey {
 	  boolean result = false;
 	  
 	  final ArrayList<String> cmdList = new ArrayList<>();
-    cmdList.add(mRegTool.getAbsolutePath());
+    cmdList.add(REG_TOOL.getAbsolutePath());
     cmdList.add("delete");
     cmdList.add(mKey + "\\" + mPath);
     cmdList.add("/f");
