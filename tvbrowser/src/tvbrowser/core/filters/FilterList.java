@@ -117,7 +117,8 @@ public class FilterList {
           e.printStackTrace();
         }
       }
-      else {
+      
+      if(mFilterTreeModel == null) {
         mFilterTreeModel = FilterTreeModel.initInstance(new ProgramFilter[0]);
       }
       final HashMap<String, ProgramFilter> filterList = new HashMap<String, ProgramFilter>();
