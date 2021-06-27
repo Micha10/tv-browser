@@ -228,9 +228,11 @@ public class ChannelList {
       Settings.propSubscribedChannels.clearCacheExternal();
       
       if(!MainFrame.isStarting()) {
-        DefaultProgramTableModel model = MainFrame.getInstance().getProgramTableModel();
-        model.setChannels(ChannelList.getSubscribedChannels());
-        MainFrame.getInstance().updateChannellist();
+        SwingUtilities.invokeLater(() -> {
+          DefaultProgramTableModel model = MainFrame.getInstance().getProgramTableModel();
+          model.setChannels(ChannelList.getSubscribedChannels());
+          MainFrame.getInstance().updateChannellist();
+        });
       }
     }
         
@@ -266,7 +268,9 @@ public class ChannelList {
       calculateChannelPositions();
     }
 
-    MainFrame.resetOnAirArrays();
+    SwingUtilities.invokeLater(() -> {
+      MainFrame.resetOnAirArrays();
+    });
   }
 
   private static void unsubscribeChannel(Channel channel) {
