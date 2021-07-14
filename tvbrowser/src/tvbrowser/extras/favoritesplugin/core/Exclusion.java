@@ -546,8 +546,8 @@ public class Exclusion implements Comparable<Exclusion> {
     }
     
    
-    if(textValue.length() < 1) {
-      textValue.append(LOCALIZER.msg("exclude.invalid","<invalid>"));
+    if(textValue.length() < 7) {
+      textValue.append(LOCALIZER.msg("exclude.invalid","&lt;invalid&gt;"));
     }
     else {
       if(LOCALIZER.msg("exclude.appendix",".").length() > 1) {
