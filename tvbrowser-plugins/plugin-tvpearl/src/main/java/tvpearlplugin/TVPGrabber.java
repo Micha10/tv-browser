@@ -30,6 +30,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -41,6 +43,7 @@ public class TVPGrabber
    * do not parse anything which was created more than a month ago
    */
   private static final Date MIN_CREATION_DATE;
+  private static final Logger LOG = Logger.getLogger(TVPGrabber.class.getName());
   static {
   	Calendar cal = Calendar.getInstance();
   	cal.add(Calendar.MONTH, -1);
@@ -159,9 +162,9 @@ public class TVPGrabber
 			}
 		}
 		catch (MalformedURLException e)
-		{}
+		{LOG.log(Level.SEVERE,"URL ERROR for '"+webUrl+"'",e);}
 		catch (IOException e)
-		{}
+		{LOG.log(Level.SEVERE,"ERROR DOWNLOADING '"+webUrl+"'",e);}
 		finally {
 		  if (in != null) {
         try {
@@ -236,6 +239,8 @@ public class TVPGrabber
 	private void parseContent(final String content,
       final List<TVPProgram> programList, final String originalUrl)
 	{
+	  LOG.info("TV-Pearl content:\n--------------------"+content+"\n-----------------");
+	  
     final Matcher matcher = PATTERN_CONTENT.matcher(content);
     
     while (matcher.find())

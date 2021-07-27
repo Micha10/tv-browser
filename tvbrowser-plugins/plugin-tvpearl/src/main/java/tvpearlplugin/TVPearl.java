@@ -29,19 +29,20 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.swing.SwingUtilities;
 
-import tvbrowser.TVBrowser;
 import devplugin.Channel;
 import devplugin.Plugin;
 import devplugin.PluginTreeNode;
 import devplugin.Program;
 import devplugin.ProgramReceiveIf;
 import devplugin.ProgramReceiveTarget;
+import tvbrowser.TVBrowser;
 
 public class TVPearl {
   /**
@@ -89,45 +90,51 @@ public class TVPearl {
   }
 
   public void update() {
-    if (canUpdate()) {
+    boolean canUpdate = canUpdate();
+    mLog.info("TV-Pearl canUpdate: " + canUpdate);
+    if (canUpdate) {
       Thread pearlThread = new Thread("TV pearl update") {
         @Override
         public void run() {
-          mLastUpdate = Calendar.getInstance();
-
-          final TVPGrabber grabber = new TVPGrabber();
-          
-          final List<TVPProgram> programList = grabber.parse(mUrl);
-          mUrl = grabber.getLastUrl();
-
-          for (TVPProgram program : programList) {
-            addProgram(program);
-          }
-          final Calendar limit = getViewLimit();
-          int i = 0;
-          while (i < mProgramList.size()) {
-            final TVPProgram p = mProgramList.get(i);
-            if (p.getStart().compareTo(limit) < 0) {
-              mProgramList.remove(i);
-              i--;
-            }
-            i++;
-          }
-          Collections.sort(mProgramList);
-          // TODO: change to UIThreadRunner after 3.0
           try {
-            SwingUtilities.invokeAndWait(new Runnable() {
-              public void run() {
-                //updateTVB();
-                TVPearlPlugin.getInstance().updateChanges();
+            mLastUpdate = Calendar.getInstance();
+  
+            final TVPGrabber grabber = new TVPGrabber();
+            
+            final List<TVPProgram> programList = grabber.parse(mUrl);
+            mUrl = grabber.getLastUrl();
+  
+            for (TVPProgram program : programList) {
+              addProgram(program);
+            }
+            final Calendar limit = getViewLimit();
+            int i = 0;
+            while (i < mProgramList.size()) {
+              final TVPProgram p = mProgramList.get(i);
+              if (p.getStart().compareTo(limit) < 0) {
+                mProgramList.remove(i);
+                i--;
               }
-            });
-          } catch (InterruptedException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-          } catch (InvocationTargetException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+              i++;
+            }
+            Collections.sort(mProgramList);
+            // TODO: change to UIThreadRunner after 3.0
+            try {
+              SwingUtilities.invokeAndWait(new Runnable() {
+                public void run() {
+                  //updateTVB();
+                  TVPearlPlugin.getInstance().updateChanges();
+                }
+              });
+            } catch (InterruptedException e) {
+              // TODO Auto-generated catch block
+              e.printStackTrace();
+            } catch (InvocationTargetException e) {
+              // TODO Auto-generated catch block
+              e.printStackTrace();
+            }
+          }catch(Throwable t) {
+            mLog.log(Level.SEVERE, "TV-Pearl update error.", t);
           }
         }
       };
@@ -247,10 +254,10 @@ public class TVPearl {
   private boolean canUpdate() {
     final Calendar now = Calendar.getInstance();
 
-    final long hours = Math.round((double) (now.getTimeInMillis() - mLastUpdate.getTimeInMillis()) / (60 * 60 * 1000));
+    final long hours = Math.round((double) (now.getTimeInMillis() - mLastUpdate.getTimeInMillis()) / (60 * 60000d));
 
     // always allow update in developer version
-    return hours > UPDATE_WAIT_HOURS || !TVBrowser.isStable();
+    return hours > UPDATE_WAIT_HOURS || !TVBrowser.isStable() || hours <= 0;
   }
 
   public synchronized TVPProgram getPearl(final Program program) {
@@ -272,7 +279,7 @@ public class TVPearl {
     return null;
   }
 
-  public TVPProgram[] getPearlList() {
+  public synchronized TVPProgram[] getPearlList() {
     final List<TVPProgram> result = new ArrayList<TVPProgram>();
     result.addAll(mProgramList);
 
