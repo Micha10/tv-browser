@@ -90,6 +90,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 import java.util.TooManyListenersException;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
@@ -125,7 +126,7 @@ import javax.swing.plaf.TabbedPaneUI;
 import javax.swing.plaf.basic.BasicTabbedPaneUI;
 
 import com.jgoodies.forms.factories.Borders;
-import com.jgoodies.forms.layout.CellConstraints;
+import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.Sizes;
 
@@ -229,6 +230,8 @@ public class MainFrame extends JFrame implements DateListener,DropTargetListener
 
   private static final int DIRECTION_LEFT = 1;
   private static final int DIRECTION_RIGHT = 2;
+  
+  private static final int COUNTDOWN_DATA_UPDATE_CLOSING_SECONDS = 300;
   
   private Node mTimebuttonsNode, mDateNode, mRootNode, mChannelNode;
 
@@ -1626,35 +1629,49 @@ public class MainFrame extends JFrame implements DateListener,DropTargetListener
 
   private void quit(boolean log, boolean export) {
     mTimer.stop(); // disable the update timer to avoid new update events
-    if (log && mDownloadingThread != null && mDownloadingThread.isAlive()) {    	
+    if (log && mDownloadingThread != null && mDownloadingThread.isAlive()) {
+      final AtomicInteger countdownValue = new AtomicInteger(COUNTDOWN_DATA_UPDATE_CLOSING_SECONDS);
+      TvDataUpdater.getInstance().stopDownload();
+      
       final JDialog info = new JDialog(UiUtilities.getLastModalChildOf(this));
-      info.setModalityType(ModalityType.DOCUMENT_MODAL);
+      info.setModalityType(ModalityType.APPLICATION_MODAL);
       info.setUndecorated(true);
       info.toFront();
 
-      JPanel main = new JPanel(new FormLayout("5dlu,pref,5dlu","5dlu,pref,5dlu"));
+      final JLabel countdown = new JLabel(countdownValue.get()/60+":"+String.format("%02d", countdownValue.get()%60));
+      countdown.setFont(countdown.getFont().deriveFont((float)countdown.getFont().getSize()*2));
+      
+      JPanel main = new JPanel(new FormLayout("5dlu,0dlu:grow,default,0dlu:grow,5dlu","5dlu,default,2dlu,default,5dlu"));
       main.setBorder(BorderFactory.createLineBorder(Color.black));
-      main.add(new JLabel(LOCALIZER.msg("downloadinfo","A data update is running. TV-Browser will be closed when the update is done.")), new CellConstraints().xy(2,2));
-
+      main.add(new JLabel(LOCALIZER.msg("downloadinfo","A data update is running. TV-Browser will be closed when the update is done or countdown is reached.")), CC.xyw(2,2,3));
+      main.add(countdown, CC.xy(3, 4));
+      
       info.setContentPane(main);
       info.pack();
       info.setLocationRelativeTo(this);
 
-      SwingUtilities.invokeLater(() -> {
-        if(mDownloadingThread != null && mDownloadingThread.isAlive()) {
-          try {
-            mDownloadingThread.join();
-          } catch (InterruptedException e) {
-            e.printStackTrace();
+      Thread wait = new Thread("WAIT FOR UPDATE COMPLETED") {
+        @Override
+        public void run() {
+          while(countdownValue.getAndDecrement() > 0 && mDownloadingThread != null && mDownloadingThread.isAlive()) {
+            try {
+              Thread.sleep(1000);
+            } catch (InterruptedException e) {
+              // ignore
+            }
+            
+            countdown.setText(countdownValue.get()/60+":"+String.format("%02d", countdownValue.get()%60));
           }
+          
+          info.setVisible(false);
+          info.dispose();
         }
-
-        info.setVisible(false);
-        info.dispose();
-      });
-
+      };
+      wait.start();
+      
       info.setVisible(true);
     }
+    
     if(log && this.isUndecorated()) {
       switchFullscreenMode();
     }

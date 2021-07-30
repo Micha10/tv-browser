@@ -111,7 +111,6 @@ public class TvDataUpdater {
   private static TvDataUpdater mSingleton;
 
   private boolean mIsDownloading;
-  private boolean mIsUpdating;
   
   /** Set to true if Stop was forced */
   private boolean mStopDownloading = false;
@@ -207,7 +206,6 @@ public class TvDataUpdater {
     mIsDownloading = true;
     mStopDownloading = false;
     mTvDataWasChanged = false;
-    mIsUpdating = true;
     
     // Inform the listeners
     fireTvDataUpdateStarted(Date.getCurrentDate().addDays(daysToDownload));
@@ -328,8 +326,6 @@ public class TvDataUpdater {
     }
     
     TvDataBase.getInstance().updateTvDataBase();
-    
-    mIsUpdating = false;
     
     MarkedProgramsMap.getInstance().revalidatePrograms();
 
@@ -487,10 +483,6 @@ public class TvDataUpdater {
     }.start();
   }
   
-  public boolean isUpdating() {
-    return mIsUpdating;
-  }
-
   private void checkLocalTime() {
     if (tvDataWasChanged()) {
       int count = 0;
