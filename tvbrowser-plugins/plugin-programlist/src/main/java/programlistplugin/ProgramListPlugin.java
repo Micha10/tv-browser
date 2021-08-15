@@ -38,6 +38,7 @@ import javax.swing.Action;
 import javax.swing.ButtonGroup;
 import javax.swing.Icon;
 import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -45,6 +46,7 @@ import javax.swing.JRadioButton;
 import javax.swing.JRootPane;
 import javax.swing.SwingUtilities;
 
+import com.jgoodies.forms.factories.Borders;
 import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
 
@@ -54,6 +56,7 @@ import compat.PluginCompat;
 import compat.UiCompat;
 import compat.VersionCompat;
 import devplugin.ActionMenu;
+import devplugin.AfterDataUpdateInfoPanel;
 import devplugin.Channel;
 import devplugin.Date;
 import devplugin.Plugin;
@@ -78,7 +81,7 @@ import util.ui.WindowClosingIf;
 public class ProgramListPlugin extends Plugin {
   static final Localizer mLocalizer = Localizer.getLocalizerFor(ProgramListPlugin.class);
 
-  private static Version mVersion = new Version(3, 30, 7, true);
+  private static Version mVersion = new Version(3, 32, 0, true);
   
   private static final int MAX_DIALOG_LIST_SIZE = 5000;
   static final int MAX_PANEL_LIST_SIZE = 2500;
@@ -192,7 +195,7 @@ public class ProgramListPlugin extends Plugin {
       public void run() {
         if(getSettings().getBooleanValue(ProgramListSettings.KEY_PROVIDE_TAB)) {
           if(mCenterPanelEntry == null) {
-            mCenterPanelEntry = new ProgramListPanel(null, false, MAX_PANEL_LIST_SIZE);
+            mCenterPanelEntry = new ProgramListPanel(null, false, MAX_PANEL_LIST_SIZE, true);
             PersonaCompat.getInstance().registerPersonaListener(mCenterPanelEntry);
             FilterCompat.getInstance().registerFilterChangeListener(mCenterPanelEntry);
             
@@ -223,6 +226,12 @@ public class ProgramListPlugin extends Plugin {
     if(mCenterPanelEntry != null) {
       mCenterPanelEntry.fillDateBox();
       mCenterPanelEntry.fillProgramList();
+    }
+  }
+  
+  public void handleTvBrowserSettingsChanged() {
+    if(mCenterPanelEntry != null) {
+      mCenterPanelEntry.checkChannels(getPluginManager().getSubscribedChannels());
     }
   }
   
@@ -339,7 +348,7 @@ public class ProgramListPlugin extends Plugin {
           }
         });
 
-        mDialogPanel = new ProgramListPanel(selectedChannel,true,MAX_DIALOG_LIST_SIZE);
+        mDialogPanel = new ProgramListPanel(selectedChannel,true,MAX_DIALOG_LIST_SIZE,true);
         
         mDialog.getContentPane().add(mDialogPanel, BorderLayout.CENTER);
 
@@ -419,12 +428,45 @@ public class ProgramListPlugin extends Plugin {
       private JCheckBox mReactOnDate;
       private JCheckBox mReactOnChannel;
       
+      private JCheckBox mShowAfterDataUpdate;
+      private JComboBox mShowAfterDataUpdateFilter;
+      
       @Override
       public JPanel createSettingsPanel() {
         JPanel panel = new JPanel(new FormLayout("5dlu,10dlu,10dlu,min:grow",
-            "5dlu,default,default,5dlu,default,5dlu,default,default,default,default,5dlu,default,5dlu,default,default"));
+            "5dlu,default,default,5dlu,default,5dlu,default,5dlu,default,5dlu,default,default,default,default,5dlu,default,5dlu,default,default"));
         
         mShowDateSeparator = new JCheckBox(mLocalizer.msg("showDateSeparator", "Show date separator in list"), getSettings().getBooleanValue(ProgramListSettings.KEY_SHOW_DATE_SEPARATOR));
+        mShowAfterDataUpdate = new JCheckBox(mLocalizer.msg("showAfterDataUpdateFilter", "Show program list after data update"), getSettings().getBooleanValue(ProgramListSettings.KEY_SHOW_AFTER_DATA_UPDATE));
+        mShowAfterDataUpdateFilter = new JComboBox();
+        
+        final ProgramFilter[] available = getPluginManager().getFilterManager().getAvailableFilters();
+        final String filterName = getSettings().getAfterDataUpdateFilterName().trim();
+        
+        for(ProgramFilter f : available) {
+          mShowAfterDataUpdateFilter.addItem(f);
+          if(!filterName.isEmpty() && f.getName().equals(filterName)) {
+            mShowAfterDataUpdateFilter.setSelectedItem(f);
+          }
+        }
+        
+        final JLabel filterLabel = new JLabel(mLocalizer.msg("filter", "Filter:"));
+        
+        final JPanel filter = new JPanel(new FormLayout("default,2dlu,default","default"));
+        filter.add(filterLabel, CC.xy(1, 1));
+        filter.add(mShowAfterDataUpdateFilter, CC.xy(3, 1));
+        
+        filterLabel.setEnabled(mShowAfterDataUpdate.isSelected());
+        mShowAfterDataUpdateFilter.setEnabled(mShowAfterDataUpdate.isSelected());
+        
+        mShowAfterDataUpdate.addItemListener(new ItemListener() {
+          @Override
+          public void itemStateChanged(ItemEvent e) {
+            mShowAfterDataUpdateFilter.setEnabled(e.getStateChange() == ItemEvent.SELECTED);
+            filterLabel.setEnabled(mShowAfterDataUpdateFilter.isEnabled());
+          }
+        });
+        
         mProvideTab = new JCheckBox(mLocalizer.msg("provideTab", "Provide tab in TV-Browser main window"), getSettings().getBooleanValue(ProgramListSettings.KEY_PROVIDE_TAB));
         
         final JLabel tabReactOnLabel = new JLabel(mLocalizer.msg("reactOn", "React on selection of the following actions in main window:"));
@@ -443,20 +485,24 @@ public class ProgramListPlugin extends Plugin {
         bg.add(mTabTimeScrollNext);
         bg.add(mTabTimeScrollDay);
         
-        panel.add(mShowDateSeparator, CC.xyw(2, 2, 3));
+        int y = 2;
+        
+        panel.add(mShowDateSeparator, CC.xyw(2, y++, 3));
+        panel.add(mShowAfterDataUpdate, CC.xyw(2, y++, 3));
+        panel.add(filter, CC.xyw(3, ++y, 2));
         
         if(VersionCompat.isCenterPanelSupported()) {
-          panel.add(mProvideTab, CC.xyw(2, 3, 3));
+          panel.add(mProvideTab, CC.xyw(2, y+=2, 3));
           
-          panel.add(tabReactOnLabel, CC.xyw(3, 5, 2));
-          panel.add(mReactOnTime, CC.xy(4, 7));
-          panel.add(mReactOnDate, CC.xy(4, 8));
-          panel.add(mReactOnChannel, CC.xy(4, 9));
-          panel.add(mReactOnFilterChange, CC.xy(4, 10));
+          panel.add(tabReactOnLabel, CC.xyw(3, y+=2, 2));
+          panel.add(mReactOnTime, CC.xy(4, y+=2));
+          panel.add(mReactOnDate, CC.xy(4, ++y));
+          panel.add(mReactOnChannel, CC.xy(4, ++y));
+          panel.add(mReactOnFilterChange, CC.xy(4, ++y));
           
-          panel.add(tabTimeScrollLabel, CC.xyw(3, 12, 2));
-          panel.add(mTabTimeScrollNext, CC.xy(4, 14));
-          panel.add(mTabTimeScrollDay, CC.xy(4, 15));
+          panel.add(tabTimeScrollLabel, CC.xyw(3, y+=2, 2));
+          panel.add(mTabTimeScrollNext, CC.xy(4, y+=2));
+          panel.add(mTabTimeScrollDay, CC.xy(4, ++y));
         }
         
         mReactOnFilterChange.setEnabled(mProvideTab.isSelected());
@@ -497,6 +543,9 @@ public class ProgramListPlugin extends Plugin {
       @Override
       public void saveSettings() {
         getSettings().setBooleanValue(ProgramListSettings.KEY_PROVIDE_TAB, mProvideTab.isSelected());
+
+        getSettings().setBooleanValue(ProgramListSettings.KEY_SHOW_AFTER_DATA_UPDATE, mShowAfterDataUpdate.isSelected());
+        getSettings().setAfterDataUpdateFilterName(((ProgramFilter)mShowAfterDataUpdateFilter.getSelectedItem()).getName());
         
         getSettings().setBooleanValue(ProgramListSettings.KEY_TAB_REACT_ON_TIME, mReactOnTime.isSelected());
         getSettings().setBooleanValue(ProgramListSettings.KEY_TAB_REACT_ON_DATE, mReactOnDate.isSelected());
@@ -523,6 +572,36 @@ public class ProgramListPlugin extends Plugin {
   
   public PluginCenterPanelWrapper getPluginCenterPanelWrapper() {
     return getSettings().getBooleanValue(ProgramListSettings.KEY_PROVIDE_TAB) ? mWrapper : null;
+  }
+  
+  @Override
+  public AfterDataUpdateInfoPanel getAfterDataUpdateInfoPanel() {
+    AfterDataUpdateInfoPanel result = null;
+    
+    if(getSettings().getBooleanValue(ProgramListSettings.KEY_SHOW_AFTER_DATA_UPDATE)) {
+      final ProgramListPanel p = new ProgramListPanel(null, false, MAX_PANEL_LIST_SIZE, false);
+      final String name = getSettings().getAfterDataUpdateFilterName();
+      
+      if(!name.isEmpty()) {
+        ProgramFilter[] filters = getPluginManager().getFilterManager().getAvailableFilters();
+        
+        for(ProgramFilter f : filters) {
+          if(f.getName().equals(name)) {
+            p.updateFilter(f);
+            break;
+          }
+        }
+      }
+      
+      result = new AfterDataUpdateInfoPanel() {
+        @Override
+        public void closed() {}
+      };
+      result.setLayout(new BorderLayout());
+      result.add(p);
+    }
+    
+    return result;
   }
   
   private class ProgramListCenterPanel extends PluginCenterPanel {

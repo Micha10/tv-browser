@@ -27,7 +27,6 @@ package programlistplugin;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Cursor;
-import java.awt.Font;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
@@ -53,7 +52,6 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
-import javax.swing.ListCellRenderer;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.event.AncestorEvent;
@@ -68,11 +66,15 @@ import compat.FilterCompat;
 import compat.PersonaCompat;
 import compat.PersonaCompatListener;
 import compat.ProgramListCompat;
+import devplugin.AfterDataUpdateInfoPanel;
+import devplugin.AfterDataUpdateInfoPanel.AfterDataUpdateInfoPanelListener;
 import devplugin.Channel;
 import devplugin.Date;
 import devplugin.Plugin;
 import devplugin.Program;
 import devplugin.ProgramFilter;
+import devplugin.Version;
+import util.exc.TvBrowserException;
 import util.program.ProgramUtilities;
 import util.settings.PluginPictureSettings;
 import util.settings.ProgramPanelSettings;
@@ -119,6 +121,7 @@ public class ProgramListPanel extends TabListenerPanel implements PersonaCompatL
   private JButton mPreviousDay;
   
   private boolean mUpdateList;
+  private boolean mSave;
   
   private AtomicBoolean mKeepListing;
   
@@ -136,9 +139,10 @@ public class ProgramListPanel extends TabListenerPanel implements PersonaCompatL
     }
   }
   
-  public ProgramListPanel(final Channel selectedChannel, boolean showClose, int maxListSize) {
+  public ProgramListPanel(final Channel selectedChannel, boolean showClose, int maxListSize, boolean save) {
     mKeepListing = new AtomicBoolean(false);
     mMaxListSize = maxListSize;
+    mSave = save;
     createGui(selectedChannel,showClose);
   }
   
@@ -156,42 +160,29 @@ public class ProgramListPanel extends TabListenerPanel implements PersonaCompatL
         PluginPictureSettings.ALL_PLUGINS_SETTINGS_TYPE), !showDescription, ProgramPanelSettings.X_AXIS);
     mList = new ProgramList(mModel, mProgramPanelSettings);
     
+    if(ProgramListPlugin.getPluginManager().getTVBrowserVersion().compareTo(new Version(4,22,51,false)) >= 0) {
+      try {
+        mList.addDateSeparators();
+      } catch (TvBrowserException e1) {
+        // TODO Auto-generated catch block
+        e1.printStackTrace();
+      }
+    }
+    
     setDefaultFocusOwner(mList);
     
-    final ListCellRenderer backend = mList.getCellRenderer();
-    
-    mList.setCellRenderer(new DefaultListCellRenderer() {
-      public Component getListCellRendererComponent(final JList list, Object value, final int index, boolean isSelected,
-          boolean cellHasFocus) {
-        Component c = backend.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-        
-        if(value instanceof String) {
-          JPanel separator = new JPanel(new FormLayout("0dlu:grow,default,0dlu:grow","5dlu,default,5dlu"));
-          separator.setBorder(BorderFactory.createMatteBorder(2, 0, 2, 0, UIManager.getColor("Label.foreground")));
-          
-          if(list.getModel().getSize() > index + 1) {
-            JLabel date = new JLabel(((Program)list.getModel().getElementAt(index + 1)).getDateString());
-            date.setFont(date.getFont().deriveFont(date.getFont().getSize2D() + 4).deriveFont(Font.BOLD));
-            
-            separator.add(date, new CellConstraints().xy(2, 2));
-            
-            return separator;
-          }
-          
-        }
-        
-        return c;
-      }
-    });
-    
-    mList.addMouseListeners(null);
+    mList.addMouseAndKeyListeners(null);
 
     Channel[] subscribedChannels = Plugin.getPluginManager().getSubscribedChannels();
     mChannelBox = new JComboBox(subscribedChannels);
     mChannelBox.insertItemAt(mLocalizer.msg("allChannels", "All channels"), 0);
     mChannelBox.setRenderer(new ChannelListCellRenderer());
-    if (mSettings.getIndex() < mChannelBox.getItemCount()) {
+    
+    if (mSave && mSettings.getIndex() < mChannelBox.getItemCount()) {
       mChannelBox.setSelectedIndex(mSettings.getIndex());
+    }
+    else {
+      mChannelBox.setSelectedIndex(0);
     }
     
     if (selectedChannel != null) {
@@ -215,7 +206,7 @@ public class ProgramListPanel extends TabListenerPanel implements PersonaCompatL
     mFilterBox = new JComboBox();
     mFilterBox.setRenderer(new ChannelListCellRenderer());
     
-    if (mSettings.getFilterName().isEmpty()) {
+    if (mSave && mSettings.getFilterName().isEmpty()) {
       mSettings.setFilterName(Plugin.getPluginManager().getFilterManager().getAllFilter().getName());
     }
 
@@ -305,7 +296,7 @@ public class ProgramListPanel extends TabListenerPanel implements PersonaCompatL
             if(mFilterBox.getSelectedItem().equals(filter)) {
               mFilter = filter;
               
-              if (mFilter != ProgramListPlugin.getInstance().getReceiveFilter()) {
+              if (mFilter != ProgramListPlugin.getInstance().getReceiveFilter() && mSave) {
                 mSettings.setFilterName(mFilter.getName());
                 found = true;
                 break;
@@ -328,7 +319,9 @@ public class ProgramListPanel extends TabListenerPanel implements PersonaCompatL
           fillProgramList();
         }
         
-        mSettings.setIndex(mChannelBox.getSelectedIndex());
+        if(mSave) {
+          mSettings.setIndex(mChannelBox.getSelectedIndex());
+        }
       }
     });
     
@@ -412,7 +405,13 @@ public class ProgramListPanel extends TabListenerPanel implements PersonaCompatL
               Object test = mList.getModel().getElementAt(i);
               
               if(test instanceof Program && current.compareTo(((Program)test).getDate()) < 0) {
-                Point p = mList.indexToLocation(i-(ProgramListPlugin.getInstance().getSettings().getBooleanValue(ProgramListSettings.KEY_SHOW_DATE_SEPARATOR) ? 1 : 0));
+                int offset = 0;
+                
+                if(i > 0 && mList.getModel().getElementAt(i-1) instanceof String) {
+                  offset = 1;
+                }
+                
+                Point p = mList.indexToLocation(i-offset);
                 mList.scrollRectToVisible(new Rectangle(p.x,p.y,1,mList.getVisibleRect().height));
                 return;
               }
@@ -618,6 +617,24 @@ public class ProgramListPanel extends TabListenerPanel implements PersonaCompatL
     }
   }
   
+  synchronized void checkChannels(Channel[] mSubscribedChannels) {
+    Object current = mChannelBox.getSelectedItem();
+    
+    mChannelBox.removeAllItems();
+    mChannelBox.addItem(mLocalizer.msg("allChannels", "All channels"));
+    
+    for(Channel ch : mSubscribedChannels) {
+      mChannelBox.addItem(ch);
+    }
+    
+    if(current != null) {
+      mChannelBox.setSelectedItem(current);
+    }
+    else {
+      mChannelBox.setSelectedIndex(0);
+    }
+  }
+  
   synchronized void fillProgramList() {
     mKeepListing.set(false);
     
@@ -729,11 +746,6 @@ public class ProgramListPanel extends TabListenerPanel implements PersonaCompatL
                     }
                     
                     if (model.size() < mMaxListSize) {
-                      if(ProgramListPlugin.getInstance().getSettings().getBooleanValue(ProgramListSettings.KEY_SHOW_DATE_SEPARATOR) && 
-                          (lastProgram == null || program.getDate().compareTo(lastProgram.getDate()) > 0)) {
-                        model.addElement(DATE_SEPARATOR);
-                      }
-                      
                       model.addElement(program);
                       
                       if(mCurrentSelection != null && mCurrentSelection.equals(program)) {
@@ -765,8 +777,27 @@ public class ProgramListPanel extends TabListenerPanel implements PersonaCompatL
                   e.printStackTrace();
                 }
               }
+              
+              if(ProgramListPlugin.getPluginManager().getTVBrowserVersion().compareTo(new Version(4,22,51,false)) < 0) {
+                mList.setModel(mModel);
+                
+                if(ProgramListPlugin.getInstance().getSettings().getBooleanValue(ProgramListSettings.KEY_SHOW_DATE_SEPARATOR)) {
+                  SwingUtilities.invokeLater(new Runnable() {
+                    @Override
+                    public void run() {
+                      try {
+                        mList.addDateSeparators();
+                      } catch (Exception e2) {
+                        // TODO Auto-generated catch block
+                        e2.printStackTrace();
+                      }
+                    }
+                  });
+                }
+              }
             }
           };
+          
           
           SwingUtilities.invokeLater(new Runnable() {
             @Override

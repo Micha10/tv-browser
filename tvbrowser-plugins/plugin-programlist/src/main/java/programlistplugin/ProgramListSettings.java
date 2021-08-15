@@ -36,6 +36,8 @@ public class ProgramListSettings extends PropertyBasedSettings {
   public static final String KEY_TAB_REACT_ON_TIME = "tabReactOnTime";
   public static final String KEY_TAB_REACT_ON_CHANNEL = "tabReactOnChannel";
   public static final String KEY_TAB_REACT_ON_DATE = "tabReactOnDate";
+  public static final String KEY_SHOW_AFTER_DATA_UPDATE = "showAfterDataUpdate";
+  public static final String KEY_SHOW_AFTER_DATA_UPDATE_FILTER = "showAfterDataUpdateFilter";
   
   private static final HashMap<String, Boolean> mDefaultMap;
   
@@ -67,11 +69,25 @@ public class ProgramListSettings extends PropertyBasedSettings {
   public String getFilterName() {
     return get(KEY_FILTER, "");
   }
-
+  
   public void setFilterName(final String name) {
     set(KEY_FILTER, name);
   }
   
+  public String getAfterDataUpdateFilterName() {
+    String result = get(KEY_SHOW_AFTER_DATA_UPDATE_FILTER, "");
+    
+    if(result.trim().isEmpty()) {
+      result = getFilterName();
+    }
+    
+    return result;
+  }
+  
+  public void setAfterDataUpdateFilterName(final String name) {
+    set(KEY_SHOW_AFTER_DATA_UPDATE_FILTER, name);
+  }
+
   public void setBooleanValue(final String key, final boolean value) {
     set(key, value);
   }
