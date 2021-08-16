@@ -1745,7 +1745,7 @@ public class TVBrowser {
                   mIsProcessing = true;
                   try {
                     int seconds = (int) ((Calendar.getInstance().getTimeInMillis() - timerStart) / 1000.0);
-                    seconds = (result.getResultForIndex(1) ? 40 : Settings.propAutoDownloadWaitingTime.getShort()) - seconds;
+                    seconds = (!result.getResultForIndex(0) && result.getResultForIndex(1) ? 40 : Settings.propAutoDownloadWaitingTime.getShort()) - seconds;
                     
                     if (seconds <= 0) {
                       mAutoDownloadWaitingTimer.stop();
