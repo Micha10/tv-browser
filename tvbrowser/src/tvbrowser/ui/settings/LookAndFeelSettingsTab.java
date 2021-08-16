@@ -477,12 +477,15 @@ public final class LookAndFeelSettingsTab implements CancelableSettingsTab {
     selectLookAndFeelFromSettings();
     
     String selectedName = Settings.propIcontheme.getString();
-    IconTheme theme = IconLoader.getInstance().getIconTheme(IconLoader.getInstance().getIconThemeFile(selectedName));
     
-    if (theme.loadTheme()) {
-      mIconThemes.setSelectedItem(theme);
-    } else {
-      mIconThemes.setSelectedItem(IconLoader.getInstance().getDefaultTheme());
+    if(selectedName != null) {
+      IconTheme theme = IconLoader.getInstance().getIconTheme(IconLoader.getInstance().getIconThemeFile(selectedName));
+      
+      if (theme.loadTheme()) {
+        mIconThemes.setSelectedItem(theme);
+      } else {
+        mIconThemes.setSelectedItem(IconLoader.getInstance().getDefaultTheme());
+      }
     }
     
     String currentInfoIconTheme = Settings.propInfoIconThemeID.getString();
