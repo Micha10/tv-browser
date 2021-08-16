@@ -139,14 +139,15 @@ public class ProgramListPanel extends TabListenerPanel implements PersonaCompatL
     }
   }
   
-  public ProgramListPanel(final Channel selectedChannel, boolean showClose, int maxListSize, boolean save) {
+  public ProgramListPanel(final Channel selectedChannel, boolean showClose, int maxListSize, boolean save, ProgramFilter selected) {
     mKeepListing = new AtomicBoolean(false);
     mMaxListSize = maxListSize;
     mSave = save;
-    createGui(selectedChannel,showClose);
+    mFilter = selected;
+    createGui(selectedChannel,showClose,selected);
   }
   
-  private void createGui(final Channel selectedChannel, boolean showClose) {
+  private void createGui(final Channel selectedChannel, boolean showClose, ProgramFilter selected) {
     final ProgramListSettings mSettings = ProgramListPlugin.getInstance().getSettings();
     
     setLayout(new BorderLayout(0,10));
@@ -210,7 +211,7 @@ public class ProgramListPanel extends TabListenerPanel implements PersonaCompatL
       mSettings.setFilterName(Plugin.getPluginManager().getFilterManager().getAllFilter().getName());
     }
 
-    fillFilterBox();
+    fillFilterBox(selected);
     
     JButton resetFilterBox = new JButton(ProgramListPlugin.getInstance().createImageIcon("actions", "edit-undo", TVBrowserIcons.SIZE_SMALL));
     resetFilterBox.setToolTipText(mLocalizer.msg("reset", "Reset"));
@@ -305,7 +306,7 @@ public class ProgramListPanel extends TabListenerPanel implements PersonaCompatL
           }
           
           if(!found) {
-            fillFilterBox();
+            fillFilterBox(null);
           }
           
           mChannelBox.getItemListeners()[0].itemStateChanged(null);
@@ -509,37 +510,44 @@ public class ProgramListPanel extends TabListenerPanel implements PersonaCompatL
     mUpdateList = false;
     mLastAncestorRemoved = -1;
     
-    addAncestorListener(new AncestorListener() {
-      @Override
-      public void ancestorRemoved(AncestorEvent event) {
-        mLastAncestorRemoved = System.currentTimeMillis();
-        mUpdateList = false;
-      }
-      
-      @Override
-      public void ancestorMoved(AncestorEvent event) {}
-      
-      @Override
-      public void ancestorAdded(AncestorEvent event) {
-        mUpdateList = true;
-        
-        if(mLastAncestorRemoved == -1) {
-          fillProgramList();
+    if(mSave) {
+      addAncestorListener(new AncestorListener() {
+        @Override
+        public void ancestorRemoved(AncestorEvent event) {
+          mLastAncestorRemoved = System.currentTimeMillis();
+          mUpdateList = false;
         }
-        else {
-          if(System.currentTimeMillis() - mLastAncestorRemoved > ANCHESTOR_UPDATE_TIMEOUT) {
-            mCurrentSelection = mList.getSelectedValue();
-            mCurrentVisible = mList.getVisibleRect();
-            mCurrentCount = mModel.getSize();
-            
-            mChannelBox.getItemListeners()[0].itemStateChanged(null);
+        
+        @Override
+        public void ancestorMoved(AncestorEvent event) {}
+        
+        @Override
+        public void ancestorAdded(AncestorEvent event) {
+          mUpdateList = true;
+          
+          if(mLastAncestorRemoved == -1) {
+            fillProgramList();
+          }
+          else {
+            if(System.currentTimeMillis() - mLastAncestorRemoved > ANCHESTOR_UPDATE_TIMEOUT) {
+              mCurrentSelection = mList.getSelectedValue();
+              mCurrentVisible = mList.getVisibleRect();
+              mCurrentCount = mModel.getSize();
+              
+              mChannelBox.getItemListeners()[0].itemStateChanged(null);
+            }
           }
         }
-      }
-    });
+      });
+    }
+    else if(selected != null) {
+      mUpdateList = true;
+      mKeepListing.set(true);
+      doFillProgramList();
+    }
   }
   
-  void fillFilterBox() {
+  void fillFilterBox(ProgramFilter selected) {
     mCurrentSelection = mList.getSelectedValue();
     
     // initialize filter as allFilter because we may no longer find the filter
@@ -556,7 +564,7 @@ public class ProgramListPanel extends TabListenerPanel implements PersonaCompatL
     if (receiveFilter != null) {
       filters.add(receiveFilter);
     }
-
+    
     for (ProgramFilter filter : filters) {
       boolean found = false;
 
@@ -572,8 +580,9 @@ public class ProgramListPanel extends TabListenerPanel implements PersonaCompatL
         
         mFilterBox.addItem(item);
 
-        if ((receiveFilter == null && filter.getName().equals(ProgramListPlugin.getInstance().getSettings().getFilterName()))
-            || (receiveFilter != null && filter.getName().equals(receiveFilter.getName()))) {
+        if ((selected == null && receiveFilter == null && filter.getName().equals(ProgramListPlugin.getInstance().getSettings().getFilterName()))
+            || (selected == null && receiveFilter != null && filter.getName().equals(receiveFilter.getName())) 
+            || (selected != null && selected.getName().equals(filter.getName()))) {
           mFilter = filter;
           mFilterBox.setSelectedItem(item);
         }
@@ -674,130 +683,10 @@ public class ProgramListPanel extends TabListenerPanel implements PersonaCompatL
           mUpdateListThread = new Thread() {
             @Override
             public void run() {
-              synchronized (mPrograms) {
-                final DefaultListModel model = new DefaultListModel();
-                
-                try {
-                  setPriority(MIN_PRIORITY);
-                  setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-                  mModel.clear();
-                  mPrograms.clear();
-                  
-                  Channel[] channels = mChannelBox.getSelectedItem() instanceof String ? Plugin.getPluginManager()
-                      .getSubscribedChannels() : new Channel[] { (Channel) mChannelBox.getSelectedItem() };
-                  
-                  boolean dateSelected = mDateBox.getSelectedItem() instanceof Date;
-                      
-                  Date date = dateSelected ? (Date)mDateBox.getSelectedItem() : Date.getCurrentDate();
-        
-                  int startTime = Plugin.getPluginManager().getTvBrowserSettings().getProgramTableStartOfDay();
-                  int endTime = Plugin.getPluginManager().getTvBrowserSettings().getProgramTableEndOfDay();
-        
-                  int maxDays = dateSelected ? 2 : 28;
-                  
-                  //boolean showExpired = date.compareTo(Date.getCurrentDate()) != 0;
-                  
-                  for (int d = 0; d < maxDays; d++) {
-                    if(!mKeepListing.get()) {
-                      break;
-                    }
-                    
-                    if (Plugin.getPluginManager().isDataAvailable(date)) {
-                      for (Channel channel : channels) {
-                        if(!mKeepListing.get()) {
-                          break;
-                        }
-                        
-                        for (Iterator<Program> it = Plugin.getPluginManager().getChannelDayProgram(date, channel); it.hasNext();) {
-                          if(!mKeepListing.get()) {
-                            break;
-                          }
-                          
-                          Program program = it.next();
-                          if ((dateSelected || !program.isExpired()) && mFilter.accept(program)) {
-                            if (dateSelected) {
-                              if ((d == 0 && program.getStartTime() >= startTime)
-                                  || (d == 1 && program.getStartTime() <= endTime)) {
-                                mPrograms.add(program);
-                              }
-                            } else {
-                              mPrograms.add(program);
-                            }
-                          }
-                        }
-                      }
-                    }
-                    date = date.addDays(1);
-                  }
-        
-                  if (channels.length > 1) {
-                    Collections.sort(mPrograms, ProgramUtilities.getProgramComparator());
-                  }
-        
-                  int index = -1;
-                  
-                  Program lastProgram = null;
-                  
-                  int currentSelectionNewIndex = -1;
-                  
-                  for (Program program : mPrograms) {
-                    if(!mKeepListing.get()) {
-                      break;
-                    }
-                    
-                    if (model.size() < mMaxListSize) {
-                      model.addElement(program);
-                      
-                      if(mCurrentSelection != null && mCurrentSelection.equals(program)) {
-                        currentSelectionNewIndex = model.getSize()-1;
-                      }
-                      
-                      if (!program.isExpired() && index == -1) {
-                        index = model.getSize() - (ProgramListPlugin.getInstance().getSettings().getBooleanValue(ProgramListSettings.KEY_SHOW_DATE_SEPARATOR) ? 2 : 1);
-                      }
-                      
-                      lastProgram = program;
-                    }
-                  }
-                  
-                  mCurrentSelection = null;
-                  
-                  if(currentSelectionNewIndex != -1) {
-                    index = currentSelectionNewIndex;
-                  }
-                  
-                  if(index == -1 && dateSelected) {
-                    index = 0;
-                  }
-                  
-                  if(mKeepListing.get()) {
-                    updateList(model, index, currentSelectionNewIndex != -1);
-                  }
-                } catch (Exception e) {
-                  e.printStackTrace();
-                }
-              }
-              
-              if(ProgramListPlugin.getPluginManager().getTVBrowserVersion().compareTo(new Version(4,22,51,false)) < 0) {
-                mList.setModel(mModel);
-                
-                if(ProgramListPlugin.getInstance().getSettings().getBooleanValue(ProgramListSettings.KEY_SHOW_DATE_SEPARATOR)) {
-                  SwingUtilities.invokeLater(new Runnable() {
-                    @Override
-                    public void run() {
-                      try {
-                        mList.addDateSeparators();
-                      } catch (Exception e2) {
-                        // TODO Auto-generated catch block
-                        e2.printStackTrace();
-                      }
-                    }
-                  });
-                }
-              }
+              setPriority(MIN_PRIORITY);
+              doFillProgramList();
             }
           };
-          
           
           SwingUtilities.invokeLater(new Runnable() {
             @Override
@@ -811,6 +700,134 @@ public class ProgramListPanel extends TabListenerPanel implements PersonaCompatL
       };
       mListThread.setDaemon(true);
       mListThread.start();
+    }
+  }
+  
+  public boolean isEmpty() {
+    return mPrograms == null || mPrograms.isEmpty();
+  }
+  
+  private synchronized void doFillProgramList() {
+    synchronized (mPrograms) {
+      final DefaultListModel model = new DefaultListModel();
+      
+      try {
+        
+        setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+        mModel.clear();
+        mPrograms.clear();
+        
+        Channel[] channels = mChannelBox.getSelectedItem() instanceof String ? Plugin.getPluginManager()
+            .getSubscribedChannels() : new Channel[] { (Channel) mChannelBox.getSelectedItem() };
+        
+        boolean dateSelected = mDateBox.getSelectedItem() instanceof Date;
+            
+        Date date = dateSelected ? (Date)mDateBox.getSelectedItem() : Date.getCurrentDate();
+
+        int startTime = Plugin.getPluginManager().getTvBrowserSettings().getProgramTableStartOfDay();
+        int endTime = Plugin.getPluginManager().getTvBrowserSettings().getProgramTableEndOfDay();
+
+        int maxDays = dateSelected ? 2 : 28;
+        
+        //boolean showExpired = date.compareTo(Date.getCurrentDate()) != 0;
+        
+        for (int d = 0; d < maxDays; d++) {
+          if(!mKeepListing.get()) {
+            break;
+          }
+          
+          if (Plugin.getPluginManager().isDataAvailable(date)) {
+            for (Channel channel : channels) {
+              if(!mKeepListing.get()) {
+                break;
+              }
+              
+              for (Iterator<Program> it = Plugin.getPluginManager().getChannelDayProgram(date, channel); it.hasNext();) {
+                if(!mKeepListing.get()) {
+                  break;
+                }
+                
+                Program program = it.next();
+                if ((dateSelected || !program.isExpired()) && mFilter.accept(program)) {
+                  if (dateSelected) {
+                    if ((d == 0 && program.getStartTime() >= startTime)
+                        || (d == 1 && program.getStartTime() <= endTime)) {
+                      mPrograms.add(program);
+                    }
+                  } else {
+                    mPrograms.add(program);
+                  }
+                }
+              }
+            }
+          }
+          date = date.addDays(1);
+        }
+
+        if (channels.length > 1) {
+          Collections.sort(mPrograms, ProgramUtilities.getProgramComparator());
+        }
+
+        int index = -1;
+        
+        Program lastProgram = null;
+        
+        int currentSelectionNewIndex = -1;
+        
+        for (Program program : mPrograms) {
+          if(!mKeepListing.get()) {
+            break;
+          }
+          
+          if (model.size() < mMaxListSize) {
+            model.addElement(program);
+            
+            if(mCurrentSelection != null && mCurrentSelection.equals(program)) {
+              currentSelectionNewIndex = model.getSize()-1;
+            }
+            
+            if (!program.isExpired() && index == -1) {
+              index = model.getSize() - (ProgramListPlugin.getInstance().getSettings().getBooleanValue(ProgramListSettings.KEY_SHOW_DATE_SEPARATOR) ? 2 : 1);
+            }
+            
+            lastProgram = program;
+          }
+        }
+        
+        mCurrentSelection = null;
+        
+        if(currentSelectionNewIndex != -1) {
+          index = currentSelectionNewIndex;
+        }
+        
+        if(index == -1 && dateSelected) {
+          index = 0;
+        }
+        
+        if(mKeepListing.get()) {
+          updateList(model, index, currentSelectionNewIndex != -1);
+        }
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
+    }
+    
+    if(ProgramListPlugin.getPluginManager().getTVBrowserVersion().compareTo(new Version(4,22,51,false)) < 0) {
+      mList.setModel(mModel);
+      
+      if(ProgramListPlugin.getInstance().getSettings().getBooleanValue(ProgramListSettings.KEY_SHOW_DATE_SEPARATOR)) {
+        SwingUtilities.invokeLater(new Runnable() {
+          @Override
+          public void run() {
+            try {
+              mList.addDateSeparators();
+            } catch (Exception e2) {
+              // TODO Auto-generated catch block
+              e2.printStackTrace();
+            }
+          }
+        });
+      }
     }
   }
   
@@ -897,7 +914,7 @@ public class ProgramListPanel extends TabListenerPanel implements PersonaCompatL
         mCurrentCount = mModel.getSize();
       }
       
-      fillFilterBox();
+      fillFilterBox(null);
       mFilterBox.setSelectedItem(getItemForFilter(filter));
     }
   }

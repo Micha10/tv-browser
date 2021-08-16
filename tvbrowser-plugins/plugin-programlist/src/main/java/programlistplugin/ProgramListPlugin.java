@@ -81,7 +81,7 @@ import util.ui.WindowClosingIf;
 public class ProgramListPlugin extends Plugin {
   static final Localizer mLocalizer = Localizer.getLocalizerFor(ProgramListPlugin.class);
 
-  private static Version mVersion = new Version(3, 32, 0, true);
+  private static Version mVersion = new Version(3, 33, 0, true);
   
   private static final int MAX_DIALOG_LIST_SIZE = 5000;
   static final int MAX_PANEL_LIST_SIZE = 2500;
@@ -124,41 +124,41 @@ public class ProgramListPlugin extends Plugin {
           }
           
           public void filterSelected(ProgramFilter filter) {
-            if(mCenterPanelEntry != null && getSettings().getBooleanValue(ProgramListSettings.KEY_TAB_REACT_ON_FILTER_CHANGE)) {
+            if(mCenterPanelEntry != null && mHandleTimeEvent && getSettings().getBooleanValue(ProgramListSettings.KEY_TAB_REACT_ON_FILTER_CHANGE)) {
               mCenterPanelEntry.updateFilter(filter);
             }
           }
           
           public void timeEvent() {
-            if(mCenterPanelEntry != null) {
+            if(mCenterPanelEntry != null && mHandleTimeEvent) {
               mCenterPanelEntry.timeEvent();
             }
           }
           
           @Override
           public void scrolledToDate(Date date) {
-            if(mCenterPanelEntry != null && getSettings().getBooleanValue(ProgramListSettings.KEY_TAB_REACT_ON_DATE)) {
+            if(mCenterPanelEntry != null && mHandleTimeEvent && getSettings().getBooleanValue(ProgramListSettings.KEY_TAB_REACT_ON_DATE)) {
               mCenterPanelEntry.dateSelected(date);
             }
           }
           
           @Override
           public void scrolledToNow() {
-            if(mCenterPanelEntry != null && getSettings().getBooleanValue(ProgramListSettings.KEY_TAB_REACT_ON_TIME)) {
+            if(mCenterPanelEntry != null && mHandleTimeEvent && getSettings().getBooleanValue(ProgramListSettings.KEY_TAB_REACT_ON_TIME)) {
               mCenterPanelEntry.nowSelected();
             }
           }
           
           @Override
           public void scrolledToTime(int time) {
-            if(mCenterPanelEntry != null && getSettings().getBooleanValue(ProgramListSettings.KEY_TAB_REACT_ON_TIME)) {
+            if(mCenterPanelEntry != null && mHandleTimeEvent && getSettings().getBooleanValue(ProgramListSettings.KEY_TAB_REACT_ON_TIME)) {
               mCenterPanelEntry.scrollToTime(time);
             }
           }
           
           @Override
           public void scrolledToChannel(Channel channel) {
-            if(mCenterPanelEntry != null && getSettings().getBooleanValue(ProgramListSettings.KEY_TAB_REACT_ON_CHANNEL)) {
+            if(mCenterPanelEntry != null && mHandleTimeEvent && getSettings().getBooleanValue(ProgramListSettings.KEY_TAB_REACT_ON_CHANNEL)) {
               mCenterPanelEntry.selectChannel(channel);
             }
           }
@@ -195,7 +195,7 @@ public class ProgramListPlugin extends Plugin {
       public void run() {
         if(getSettings().getBooleanValue(ProgramListSettings.KEY_PROVIDE_TAB)) {
           if(mCenterPanelEntry == null) {
-            mCenterPanelEntry = new ProgramListPanel(null, false, MAX_PANEL_LIST_SIZE, true);
+            mCenterPanelEntry = new ProgramListPanel(null, false, MAX_PANEL_LIST_SIZE, true, null);
             PersonaCompat.getInstance().registerPersonaListener(mCenterPanelEntry);
             FilterCompat.getInstance().registerFilterChangeListener(mCenterPanelEntry);
             
@@ -348,7 +348,7 @@ public class ProgramListPlugin extends Plugin {
           }
         });
 
-        mDialogPanel = new ProgramListPanel(selectedChannel,true,MAX_DIALOG_LIST_SIZE,true);
+        mDialogPanel = new ProgramListPanel(selectedChannel,true,MAX_DIALOG_LIST_SIZE,true,null);
         
         mDialog.getContentPane().add(mDialogPanel, BorderLayout.CENTER);
 
@@ -357,7 +357,7 @@ public class ProgramListPlugin extends Plugin {
         mDialog.setVisible(true); 
       } else {
         if (!mDialog.isVisible()) {
-          mDialogPanel.fillFilterBox();
+          mDialogPanel.fillFilterBox(null);
         }
 
         mDialog.setVisible(!mDialog.isVisible());
@@ -573,32 +573,40 @@ public class ProgramListPlugin extends Plugin {
   public PluginCenterPanelWrapper getPluginCenterPanelWrapper() {
     return getSettings().getBooleanValue(ProgramListSettings.KEY_PROVIDE_TAB) ? mWrapper : null;
   }
+  private boolean mHandleTimeEvent = true;
   
   @Override
   public AfterDataUpdateInfoPanel getAfterDataUpdateInfoPanel() {
     AfterDataUpdateInfoPanel result = null;
     
     if(getSettings().getBooleanValue(ProgramListSettings.KEY_SHOW_AFTER_DATA_UPDATE)) {
-      final ProgramListPanel p = new ProgramListPanel(null, false, MAX_PANEL_LIST_SIZE, false);
       final String name = getSettings().getAfterDataUpdateFilterName();
+      ProgramFilter selected = null;
       
       if(!name.isEmpty()) {
         ProgramFilter[] filters = getPluginManager().getFilterManager().getAvailableFilters();
         
         for(ProgramFilter f : filters) {
           if(f.getName().equals(name)) {
-            p.updateFilter(f);
+            selected = f;
             break;
           }
         }
       }
       
-      result = new AfterDataUpdateInfoPanel() {
-        @Override
-        public void closed() {}
-      };
-      result.setLayout(new BorderLayout());
-      result.add(p);
+      final ProgramListPanel p = new ProgramListPanel(null, false, MAX_PANEL_LIST_SIZE, false, selected);
+      
+      if(!p.isEmpty()) {
+        mHandleTimeEvent = false;
+        result = new AfterDataUpdateInfoPanel() {
+          @Override
+          public void closed() {
+            mHandleTimeEvent = true;
+          }
+        };
+        result.setLayout(new FormLayout("default:grow","fill:150dlu:grow"));
+        result.add(p, CC.xy(1, 1));
+      }
     }
     
     return result;
