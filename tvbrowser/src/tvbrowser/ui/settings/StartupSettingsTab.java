@@ -45,6 +45,7 @@ import javax.swing.SpinnerNumberModel;
 
 import com.jgoodies.forms.builder.PanelBuilder;
 import com.jgoodies.forms.factories.Borders;
+import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.factories.DefaultComponentFactory;
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
@@ -57,9 +58,9 @@ import tvbrowser.core.icontheme.IconLoader;
 import tvbrowser.core.protocolhandler.ProtocolHandler;
 import tvbrowser.ui.mainframe.MainFrame;
 import tvbrowser.ui.mainframe.PeriodItem;
-import util.io.windows.registry.RegistryKey;
 import util.browserlauncher.Launch;
 import util.i18n.Localizer;
+import util.io.windows.registry.RegistryKey;
 import util.ui.UiUtilities;
 import util.ui.WideComboBox;
 
@@ -129,25 +130,23 @@ public class StartupSettingsTab implements devplugin.SettingsTab {
         "default, 5dlu, default, 1dlu, default, 1dlu, default, 1dlu, default, 1dlu, default, 10dlu, default, 10dlu, default, 5dlu, default, default");
     mSettingsPn = new JPanel(layout);
     mSettingsPn.setBorder(Borders.DIALOG);
-
-    CellConstraints cc = new CellConstraints();
-
+    
     int y = 1;
 
     mSettingsPn.add(DefaultComponentFactory.getInstance().createSeparator(
-        LOCALIZER.msg("title", "Startup")), cc.xyw(1, y++, 5));
+        LOCALIZER.msg("title", "Startup")), CC.xyw(1, y++, 5));
 
     mMinimizeAfterStartUpChB = new JCheckBox(LOCALIZER.msg(
         "minimizeAfterStartup", "Minimize main window after start up"),
         Settings.propMinimizeAfterStartup.getBoolean());
-    mSettingsPn.add(mMinimizeAfterStartUpChB, cc.xy(2, ++y));
+    mSettingsPn.add(mMinimizeAfterStartUpChB, CC.xy(2, ++y));
 
     y++;
 
     mStartFullscreen = new JCheckBox(LOCALIZER.msg(
         "startFullscreen","Start in fullscreen mode"),
         Settings.propIsUsingFullscreen.getBoolean());
-    mSettingsPn.add(mStartFullscreen, cc.xy(2,++y));
+    mSettingsPn.add(mStartFullscreen, CC.xy(2,++y));
 
     mMinimizeAfterStartUpChB.addItemListener(e -> {
       if(e.getStateChange() == ItemEvent.SELECTED) {
@@ -166,18 +165,18 @@ public class StartupSettingsTab implements devplugin.SettingsTab {
     mShowStartScreenChB = new JCheckBox(LOCALIZER.msg("showStartScreen",
         "Show TV-Browser start screen during start up"), Settings.propStartScreenShow
         .getBoolean());
-    mSettingsPn.add(mShowStartScreenChB, cc.xy(2, ++y));
+    mSettingsPn.add(mShowStartScreenChB, CC.xy(2, ++y));
     
     y++;
     
     mServerForRestore = new JCheckBox(LOCALIZER.msg("serverForRestore",
         "Provide server port for restore running TV-Browser/handling protocol messages"), Settings.propServerRestoreEnabled.getBoolean());
-    mSettingsPn.add(mServerForRestore, cc.xy(2, ++y));
+    mSettingsPn.add(mServerForRestore, CC.xy(2, ++y));
     
     if(!TVBrowser.isTransportable() || Launch.getOs() != Launch.OS_MAC) {
       mProtocolHandler = new JCheckBox(LOCALIZER.msg("protocolHandler", "Allow handling of tvb:// protocol messages"), Settings.propCanReceiveProtocolMessages.getBoolean() && mServerForRestore.isSelected());
       mProtocolHandler.setEnabled(mServerForRestore.isSelected());
-      mSettingsPn.add(mProtocolHandler, cc.xy(2, y+=2));
+      mSettingsPn.add(mProtocolHandler, CC.xy(2, y+=2));
     }
     
     mServerForRestore.addItemListener(e -> {
@@ -215,7 +214,7 @@ public class StartupSettingsTab implements devplugin.SettingsTab {
         mAutostart = new JCheckBox(LOCALIZER.msg("autostart","Start TV-Browser with Windows"),
             mLinkFileFile.isFile());
 
-        mSettingsPn.add(mAutostart, cc.xy(2, y));
+        mSettingsPn.add(mAutostart, CC.xy(2, y));
       } catch (Throwable e) {e.printStackTrace();}
     }
     else if(Launch.getOs() == Launch.OS_LINUX && !TVBrowser.isTransportable()) {
@@ -252,12 +251,12 @@ public class StartupSettingsTab implements devplugin.SettingsTab {
       
       mAutostart = new JCheckBox(LOCALIZER.msg("autostartLinux","Start TV-Browser after login"), mLinkFileFile.isFile());
 
-      mSettingsPn.add(mAutostart, cc.xy(2, y));
+      mSettingsPn.add(mAutostart, CC.xy(2, y));
     }
 
     y++;
 
-    mSettingsPn.add(createRefreshPanel(), cc.xyw(1,++y,5));
+    mSettingsPn.add(createRefreshPanel(), CC.xyw(1,++y,5));
     
     mAutoJREUpdate = new JCheckBox(LOCALIZER.msg("autoJREUpdate","Search and download updates for TV-Browser JRE regularly"),Settings.propJreUpdateEnabled.getBoolean());
     
@@ -265,7 +264,7 @@ public class StartupSettingsTab implements devplugin.SettingsTab {
       layout.insertRow(++y, RowSpec.decode("5dlu"));
       layout.insertRow(++y, RowSpec.decode("pref"));
     
-      mSettingsPn.add(mAutoJREUpdate, cc.xyw(2,y,4));
+      mSettingsPn.add(mAutoJREUpdate, CC.xyw(2,y,4));
     }
 
     y++;
@@ -276,16 +275,16 @@ public class StartupSettingsTab implements devplugin.SettingsTab {
     mOnlyMinimizeWhenWindowClosingChB = new JCheckBox(msg, Settings.propOnlyMinimizeWhenWindowClosing.getBoolean());
     mAskForExitConfirmation = new JCheckBox(LOCALIZER.msg("askForExitConfirmation","Ask for confirmation on TV-Browser exit"), !Settings.propHiddenMessageBoxes.containsItem("MainFrame.askForExitConfirm"));
 
-    mSettingsPn.add(DefaultComponentFactory.getInstance().createSeparator(LOCALIZER.msg("closing","Closing")), cc.xyw(1,++y,5));
+    mSettingsPn.add(DefaultComponentFactory.getInstance().createSeparator(LOCALIZER.msg("closing","Closing")), CC.xyw(1,++y,5));
 
     y++;
 
-    mSettingsPn.add(mOnlyMinimizeWhenWindowClosingChB, cc.xyw(2,++y,4));
-    mSettingsPn.add(mAskForExitConfirmation, cc.xyw(2,++y,4));
+    mSettingsPn.add(mOnlyMinimizeWhenWindowClosingChB, CC.xyw(2,++y,4));
+    mSettingsPn.add(mAskForExitConfirmation, CC.xyw(2,++y,4));
     
     return mSettingsPn;
   }
-
+  
   private void createLink() throws Exception {
     if(Launch.getOs() == Launch.OS_LINUX) {
       ProtocolHandler.createDesktopFile(mLinkFileFile, "TV-Browser", false);
