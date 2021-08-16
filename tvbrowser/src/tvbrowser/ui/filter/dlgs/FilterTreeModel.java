@@ -371,7 +371,7 @@ public class FilterTreeModel extends DefaultTreeModel {
     }
   }
   
-  void fireFilterTouched(final ProgramFilter filter) {
+  public void fireFilterTouched(final ProgramFilter filter) {
     for(FilterChangeListenerV2 listener : CHANGE_LISTENER_LISTV2) {
       listener.filterTouched(filter);
     }
