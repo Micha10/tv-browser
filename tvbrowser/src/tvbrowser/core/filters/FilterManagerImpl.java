@@ -222,4 +222,9 @@ public class FilterManagerImpl implements FilterManager {
       ChannelFilterChangeListener listener) {
     ChannelFilterList.getInstance().unregisterChannelFilterChangeListener(listener);
   }
+
+  @Override
+  public ProgramFilter getFilterByName(String name) {
+    return FilterList.getInstance().getFilterByName(name);
+  }
 }

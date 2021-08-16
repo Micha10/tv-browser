@@ -156,4 +156,13 @@ public interface FilterManager {
    * @since 3.4.1
    */
   public void unregisterChannelFilterChangeListener(ChannelFilterChangeListener listener);
+  
+  /**
+   * Gets the filter for the given name or <code>null</code> if there is none with that name.
+   * <p>
+   * @param name The name to get the filter for.
+   * @return The filter for the given name or <code>null</code> if there is none with that name.
+   * @since 4.2.4
+   */
+  public ProgramFilter getFilterByName(final String name);
 }
