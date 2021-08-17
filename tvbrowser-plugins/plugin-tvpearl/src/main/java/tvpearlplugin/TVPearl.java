@@ -109,15 +109,19 @@ public class TVPearl {
             }
             final Calendar limit = getViewLimit();
             int i = 0;
-            while (i < mProgramList.size()) {
-              final TVPProgram p = mProgramList.get(i);
-              if (p.getStart().compareTo(limit) < 0) {
-                mProgramList.remove(i);
-                i--;
+            
+            synchronized (mProgramList) {
+              while (i < mProgramList.size()) {
+                final TVPProgram p = mProgramList.get(i);
+                if (p.getStart().compareTo(limit) < 0) {
+                  mProgramList.remove(i);
+                  i--;
+                }
+                i++;
               }
-              i++;
+              Collections.sort(mProgramList);  
             }
-            Collections.sort(mProgramList);
+            
             // TODO: change to UIThreadRunner after 3.0
             try {
               SwingUtilities.invokeAndWait(new Runnable() {
@@ -144,13 +148,15 @@ public class TVPearl {
   }
 
   private synchronized void addProgram(final TVPProgram program) {
-    int index = indexOf(program);
-    if (index == -1 || mProgramList.get(index).getProgramID().length() == 0) {
-      if (index != -1) {
-        mProgramList.remove(index);
-      }
-      setProgramID(program, false);
-      mProgramList.add(program);
+    synchronized (mProgramList) {
+      int index = indexOf(program);
+      if (index == -1 || mProgramList.get(index).getProgramID().length() == 0) {
+        if (index != -1) {
+          mProgramList.remove(index);
+        }
+        setProgramID(program, false);
+        mProgramList.add(program);
+      }      
     }
   }
 
@@ -271,18 +277,23 @@ public class TVPearl {
       return test;
     }
     
-    for (TVPProgram p : mProgramList) {
-      if (p.getProgramID().equalsIgnoreCase(program.getID()) && program.getDate().equals(p.getDate())) {
-        return p;
+    synchronized (mProgramList) {
+      for (TVPProgram p : mProgramList) {
+        if (p.getProgramID().equalsIgnoreCase(program.getID()) && program.getDate().equals(p.getDate())) {
+          return p;
+        }
       }
     }
+    
     return null;
   }
 
   public synchronized TVPProgram[] getPearlList() {
     final List<TVPProgram> result = new ArrayList<TVPProgram>();
-    result.addAll(mProgramList);
-
+    synchronized (mProgramList) {
+      result.addAll(mProgramList);
+    }
+    
     final Calendar limit = getViewLimit();
     final boolean filterEnabled = TVPearlPlugin.getSettings().getFilterEnabled();
     final boolean showSubscribed = TVPearlPlugin.getSettings().getShowSubscribedChannels();
@@ -300,8 +311,10 @@ public class TVPearl {
   }
 
   public synchronized void recheckProgramID() {
-    for (TVPProgram program : mProgramList) {
-      setProgramID(program, mReindexAll);
+    synchronized (mProgramList) {
+      for (TVPProgram program : mProgramList) {
+        setProgramID(program, mReindexAll);
+      }      
     }
   }
 
@@ -421,11 +434,13 @@ public class TVPearl {
    */
   private void updateProgramMark() {
     try {
-      for (TVPProgram program : mProgramList) {
-        if (program.wasFound()) {
-          final Program p = program.getProgram();
-          if (p != null) {
-            markProgram(p, TVPearlPlugin.getSettings().getMarkPearls() && TVPProgramFilter.showProgram(program), program);
+      synchronized (mProgramList) {
+        for (TVPProgram program : mProgramList) {
+          if (program.wasFound()) {
+            final Program p = program.getProgram();
+            if (p != null) {
+              markProgram(p, TVPearlPlugin.getSettings().getMarkPearls() && TVPProgramFilter.showProgram(program), program);
+            }
           }
         }
       }

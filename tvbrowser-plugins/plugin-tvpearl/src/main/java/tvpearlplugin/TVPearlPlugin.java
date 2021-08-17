@@ -76,7 +76,7 @@ public final class TVPearlPlugin extends devplugin.Plugin implements Runnable
 {
 
 	private static final boolean PLUGIN_IS_STABLE = true;
-  private static final Version PLUGIN_VERSION = new Version(0, 28, 4, PLUGIN_IS_STABLE);
+  private static final Version PLUGIN_VERSION = new Version(0, 28, 5, PLUGIN_IS_STABLE);
 
   private static final String TARGET_PEARL_COPY = "pearlCopy";
   private static final util.ui.Localizer mLocalizer = util.ui.Localizer
@@ -900,7 +900,7 @@ public final class TVPearlPlugin extends devplugin.Plugin implements Runnable
 	 * @return
 	 */
 	synchronized TVPProgram getPearl(final Program program) {
-		return mTVPearls.getPearl(program);
+		return mTVPearls != null ? mTVPearls.getPearl(program) : null;
 	}
 
 	public static String poolString(String input) {
