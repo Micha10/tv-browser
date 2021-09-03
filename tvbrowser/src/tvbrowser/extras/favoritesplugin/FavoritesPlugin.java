@@ -63,6 +63,9 @@ import javax.swing.event.AncestorEvent;
 import javax.swing.event.AncestorListener;
 import javax.swing.event.HyperlinkEvent;
 
+import com.jgoodies.forms.factories.CC;
+import com.jgoodies.forms.layout.FormLayout;
+
 import devplugin.ActionMenu;
 import devplugin.AfterDataUpdateInfoPanel;
 import devplugin.ButtonAction;
@@ -322,11 +325,11 @@ public class FavoritesPlugin {
         mHasRightToSave = false;
         mSendPluginsTable.clear();
         
-        if(mInfoPanel == null) {
-          for (Favorite favorite : FavoriteTreeModel.getInstance().getFavoriteArr()) {
+        for (Favorite favorite : FavoriteTreeModel.getInstance().getFavoriteArr()) {
+          if(mInfoPanel == null) {
             favorite.clearNewPrograms();
-            favorite.clearRemovedPrograms();
           }
+          favorite.clearRemovedPrograms();
         }
       }
 
@@ -1572,9 +1575,9 @@ public class FavoritesPlugin {
               panel = null;
             }
           };
-          mInfoPanel.setLayout(new BorderLayout());
+          mInfoPanel.setLayout(new FormLayout("default:grow","fill:320dlu:grow"));
           
-          mInfoPanel.add(panel, BorderLayout.CENTER);
+          mInfoPanel.add(panel, CC.xy(1, 1));
         }
       }
     }
