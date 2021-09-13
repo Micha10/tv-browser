@@ -223,11 +223,9 @@ public class ReminderList implements ActionListener {
       mTimer.start();
     }
   }
-
-  @SuppressWarnings("unchecked")
+  
   public void removeExpiredItems() {
-    ArrayList<ReminderListItem> localItems = (ArrayList<ReminderListItem>) mList
-            .clone();
+    ReminderListItem[] localItems = mList.toArray(new ReminderListItem[0]);
     for (ReminderListItem item : localItems) {
       final Program program = item.getProgram();
       if (program == null || program.isExpired() || !ChannelList.isSubscribedChannel(program.getChannel())) {
@@ -267,10 +265,8 @@ public class ReminderList implements ActionListener {
     remove(new Program[]{program});
   }
 
-  @SuppressWarnings("unchecked")
   public void remove(Program[] programs) {
-    ArrayList<ReminderListItem> localItems = (ArrayList<ReminderListItem>) mList
-        .clone();
+    ReminderListItem[] localItems = mList.toArray(new ReminderListItem[0]);
     for (Program program : programs) {
       for (ReminderListItem item : localItems) {
         if (program != null && item != null && (item.getProgram() == null || item.getProgram().equals(program))) {
@@ -338,12 +334,11 @@ public class ReminderList implements ActionListener {
    *
    * @return all removed programs
    */
-  @SuppressWarnings("unchecked")
   public Program[] updatePrograms() {
-    ArrayList<ReminderListItem> localItems;
+    ReminderListItem[] localItems;
 
     synchronized (mList) {
-      localItems = (ArrayList<ReminderListItem>) mList.clone();
+      localItems = mList.toArray(new ReminderListItem[0]);
       mList.clear();
     }
 
