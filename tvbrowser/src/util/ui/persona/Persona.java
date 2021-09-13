@@ -492,7 +492,52 @@ public final class Persona {
    * @return The readable Color.
    */
   public static Color testPersonaForegroundAgainst(Color c) {
-    return UiUtilities.getReadableColor(Persona.getInstance().getTextColor(), c, 0);
+    int test = UiUtilities.getBrightnessValueForColor(Persona.getInstance().getTextColor());
+    int alpha = 100;
+    
+    if(test <= 12) {
+      c = Color.white;
+      alpha = 200;
+    }
+    else if(test <= 16) {
+      c = c.brighter().brighter().brighter().brighter().brighter().brighter();
+      alpha = 200;
+    }
+    else if(test <= 24) {
+      c = c.brighter().brighter().brighter();
+      alpha = 160;
+    }
+    else if(test <= 39) {
+      c = c.brighter().brighter();
+      alpha = 140;
+    }
+    else if(test <= 57) {
+      alpha = 120;
+    }
+    else if(test <= 67) {
+      c = c.darker();
+      alpha = 120;
+    }
+    else if(test <= 80) {
+      c = c.darker().darker();
+      alpha = 120;
+    }
+    else if(test <= 86){
+      c = c.darker().darker().darker();
+      alpha = 100;
+    }
+    else if(test <= 92){
+      c = c.darker().darker().darker().darker();
+      alpha = 100;
+    }
+    else {
+      c = Color.black;
+      alpha = 100;
+    }
+    
+    c = new Color(c.getRed(),c.getGreen(),c.getBlue(),alpha);
+      
+    return c;
   }
   
   /**

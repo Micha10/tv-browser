@@ -56,7 +56,6 @@ import tvbrowser.core.Settings;
 import tvbrowser.core.contextmenu.ContextMenuManager.ContextMenuAction;
 import tvbrowser.ui.mainframe.MainFrame;
 import tvbrowser.ui.programtable.background.BackgroundPainter;
-import util.ui.UiUtilities;
 import util.ui.persona.Persona;
 
 /**
@@ -200,7 +199,7 @@ public class ProgramTableScrollPane extends JScrollPane implements ProgramTableM
     g.setColor(new Color(c.getRed(),c.getGreen(),c.getBlue(),110));
     g.fillRect(0,0,getWidth(),getHeight());
     
-    c = UiUtilities.getReadableColor(Persona.getInstance().getTextColor(), Persona.getInstance().getTextColor(), 0);
+    c = Persona.testPersonaForegroundAgainst(Persona.getInstance().getTextColor());
     
     g.setColor(c);
     g.fillRect(0,0,getWidth(),getHeight());

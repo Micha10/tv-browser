@@ -17,6 +17,7 @@ import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
+import devplugin.Channel;
 import tvbrowser.core.Settings;
 import util.browserlauncher.Launch;
 import util.ui.ChannelContextMenu;
@@ -25,7 +26,6 @@ import util.ui.ImageUtilities;
 import util.ui.ToolTipWithIcon;
 import util.ui.UiUtilities;
 import util.ui.persona.Persona;
-import devplugin.Channel;
 
 public class ProgramTableChannelLabel extends ChannelLabel {
 
@@ -196,10 +196,9 @@ public class ProgramTableChannelLabel extends ChannelLabel {
     if(mChannel.isUsingUserBackgroundColor() || ( Persona.getInstance().getHeaderImage() != null && Persona.getInstance().getTextColor() != null && Persona.getInstance().getShadowColor() != null)) {
       try {
       Color c = mChannel.isUsingUserBackgroundColor() ? mChannel.getUserBackgroundColor() : Persona.getInstance().getAccentColor();
-      Color foreground = mChannel.isUsingUserBackgroundColor() ? getForeground() : Persona.getInstance().getTextColor();
       
       if(!mChannel.isUsingUserBackgroundColor()) {
-        c = UiUtilities.getReadableColor(foreground, c, 0);
+        c = Persona.testPersonaForegroundAgainst(c);
       }
       
       Color textColor = mChannel.isUsingUserBackgroundColor() ? getForeground() : Persona.getInstance().getTextColor();
