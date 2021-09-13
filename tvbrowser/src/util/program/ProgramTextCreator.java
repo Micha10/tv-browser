@@ -273,6 +273,7 @@ public class ProgramTextCreator {
     Color foreground = Color.black;
     Color background = Color.white;
     Color infoColor = Color.gray;
+    Color titleColor = new Color(0xff,0x0,0x0);
     Color episodeColor = new Color(0x0,0x33,0x66);
     
     if(config.mUseThemeColors) {
@@ -288,13 +289,18 @@ public class ProgramTextCreator {
       double testBackground = (0.2126 * background.getRed()) + (0.7152 * background.getGreen()) + (0.0722 * background.getBlue());
       double testInfoColor = (0.2126 * infoColor.getRed()) + (0.7152 * infoColor.getGreen()) + (0.0722 * infoColor.getBlue());
       double testInfoEpisode = (0.2126 * episodeColor.getRed()) + (0.7152 * episodeColor.getGreen()) + (0.0722 * episodeColor.getBlue());
+      double testTitleColor = (0.2126 * titleColor.getRed()) + (0.7152 * titleColor.getGreen()) + (0.0722 * titleColor.getBlue());
       
       if(testBackground - testInfoColor > 90) {
         infoColor = new Color(infoColor.getRed()+30,infoColor.getGreen()+30,infoColor.getBlue()+30);
       }
       
-      if(testBackground - testInfoEpisode < -30) {
+      if(Math.abs(testBackground - testInfoEpisode) < 60) {
         episodeColor = episodeColor.brighter().brighter();
+      }
+      
+      if(Math.abs(testBackground - testTitleColor) < 60) {
+        titleColor = new Color(255,100,100);
       }
     }
     
@@ -343,7 +349,7 @@ public class ProgramTextCreator {
     buffer.append(doc.createCompTag(channelLogo));
 
     buffer.append("</p></td><td><table width=\"100%\" border=\""+ debugTables +"\" cellpadding=\"0\"><tr><td>");
-    buffer.append("<div style=\"color:#ff0000; font-size:");
+    buffer.append("<div style=\"color:"+HTMLTextHelper.getCssRgbColorEntry(titleColor)+"; font-size:");
 
     buffer.append(mBodyFontSize);
 
