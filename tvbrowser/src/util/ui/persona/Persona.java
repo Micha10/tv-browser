@@ -47,6 +47,7 @@ import javax.swing.UIManager;
 import javax.swing.border.Border;
 
 import tvbrowser.core.Settings;
+import util.ui.UiUtilities;
 
 /**
  * A class to handle Personas for TV-Browser.
@@ -436,10 +437,7 @@ public final class Persona {
     if(b.getModel().isArmed() || b.getModel().isRollover() || b.isFocusOwner()) {
       c = UIManager.getColor("List.selectionBackground");
       
-      double test1 = (0.2126 * c.getRed()) + (0.7152 * c.getGreen()) + (0.0722 * c.getBlue());
-      double test2 = (0.2126 * textColor.getRed()) + (0.7152 * textColor.getGreen()) + (0.0722 * textColor.getBlue());
-      
-      if(Math.abs(test2-test1) <= 40) {
+      if(UiUtilities.isBrightnessSimilarForColors(c, textColor, 84)) {
         textColor = UIManager.getColor("List.selectionForeground");
       }
     }
@@ -494,52 +492,7 @@ public final class Persona {
    * @return The readable Color.
    */
   public static Color testPersonaForegroundAgainst(Color c) {
-    double test = (0.2126 * Persona.getInstance().getTextColor().getRed()) + (0.7152 * Persona.getInstance().getTextColor().getGreen()) + (0.0722 * Persona.getInstance().getTextColor().getBlue());
-    int alpha = 100;
-    
-    if(test <= 30) {
-      c = Color.white;
-      alpha = 200;
-    }
-    else if(test <= 40) {
-      c = c.brighter().brighter().brighter().brighter().brighter().brighter();
-      alpha = 200;
-    }
-    else if(test <= 60) {
-      c = c.brighter().brighter().brighter();
-      alpha = 160;
-    }
-    else if(test <= 100) {
-      c = c.brighter().brighter();
-      alpha = 140;
-    }
-    else if(test <= 145) {
-      alpha = 120;
-    }
-    else if(test <= 170) {
-      c = c.darker();
-      alpha = 120;
-    }
-    else if(test <= 205) {
-      c = c.darker().darker();
-      alpha = 120;
-    }
-    else if(test <= 220){
-      c = c.darker().darker().darker();
-      alpha = 100;
-    }
-    else if(test <= 235){
-      c = c.darker().darker().darker().darker();
-      alpha = 100;
-    }
-    else {
-      c = Color.black;
-      alpha = 100;
-    }
-    
-    c = new Color(c.getRed(),c.getGreen(),c.getBlue(),alpha);
-    
-    return c;
+    return UiUtilities.getReadableColor(Persona.getInstance().getTextColor(), c, 0);
   }
   
   /**

@@ -46,6 +46,7 @@ import tvbrowser.ui.programtable.ProgramTableModel;
 import util.io.IOUtilities;
 import util.ui.ProgramPanel;
 import util.ui.TimeFormatter;
+import util.ui.UiUtilities;
 import devplugin.Date;
 import devplugin.Program;
 
@@ -88,13 +89,13 @@ public class UiTimeBlockBackPainter extends AbstractBackPainter {
     
     mLineColor = new Color(r,g,b);
     
-    double test2 = (0.2126 * c1.getRed()) + (0.7152 * c1.getGreen()) + (0.0722 * c1.getBlue());
-    double test1 = (0.2126 * mLineColor.getRed()) + (0.7152 * mLineColor.getGreen()) + (0.0722 * mLineColor.getBlue());
+    int test2 = UiUtilities.getBrightnessValueForColor(c1);
+    int test1 = UiUtilities.getBrightnessValueForColor(mLineColor);
     
-    if(test2 - test1 > 90) {
+    if(test2 - test1 > 35) {
       mLineColor = new Color(mLineColor.getRed()+30,mLineColor.getGreen()+30,mLineColor.getBlue()+30);
     }
-    else if(test2 - test1 < -90) {
+    else if(test2 - test1 < -35) {
       mLineColor = mLineColor.darker();
     }
     

@@ -23,6 +23,7 @@ import util.ui.ChannelContextMenu;
 import util.ui.ChannelLabel;
 import util.ui.ImageUtilities;
 import util.ui.ToolTipWithIcon;
+import util.ui.UiUtilities;
 import util.ui.persona.Persona;
 import devplugin.Channel;
 
@@ -197,67 +198,21 @@ public class ProgramTableChannelLabel extends ChannelLabel {
       Color c = mChannel.isUsingUserBackgroundColor() ? mChannel.getUserBackgroundColor() : Persona.getInstance().getAccentColor();
       Color foreground = mChannel.isUsingUserBackgroundColor() ? getForeground() : Persona.getInstance().getTextColor();
       
-      int alpha = c.getAlpha();
-      
       if(!mChannel.isUsingUserBackgroundColor()) {
-        double test = (0.2126 * foreground.getRed()) + (0.7152 * foreground.getGreen()) + (0.0722 * foreground.getBlue());
-        alpha = 100;
-        
-        if(test <= 30) {
-          c = Color.white;
-          alpha = 200;
-        }
-        else if(test <= 40) {
-          c = c.brighter().brighter().brighter().brighter().brighter().brighter();
-          alpha = 200;
-        }
-        else if(test <= 60) {
-          c = c.brighter().brighter().brighter();
-          alpha = 160;
-        }
-        else if(test <= 100) {
-          c = c.brighter().brighter();
-          alpha = 140;
-        }
-        else if(test <= 145) {
-          alpha = 120;
-        }
-        else if(test <= 170) {
-          c = c.darker();
-          alpha = 120;
-        }
-        else if(test <= 205) {
-          c = c.darker().darker();
-          alpha = 120;
-        }
-        else if(test <= 220){
-          c = c.darker().darker().darker();
-          alpha = 100;
-        }
-        else if(test <= 235){
-          c = c.darker().darker().darker().darker();
-          alpha = 100;
-        }
-        else {
-          c = Color.black;
-          alpha = 100;
-        }
+        c = UiUtilities.getReadableColor(foreground, c, 0);
       }
       
       Color textColor = mChannel.isUsingUserBackgroundColor() ? getForeground() : Persona.getInstance().getTextColor();
       
       if(mIsRollover) {
-        c = UIManager.getColor("List.selectionBackground");
+        Color test = UIManager.getColor("List.selectionBackground");
         
-        double test1 = (0.2126 * c.getRed()) + (0.7152 * c.getGreen()) + (0.0722 * c.getBlue());
-        double test2 = (0.2126 * textColor.getRed()) + (0.7152 * textColor.getGreen()) + (0.0722 * textColor.getBlue());
-        
-        if(Math.abs(test2-test1) <= 40) {
+        if(UiUtilities.isBrightnessSimilarForColors(test, textColor, 84)) {
           textColor = UIManager.getColor("List.selectionForeground");
         }
       }
             
-      g.setColor(new Color(c.getRed(),c.getGreen(),c.getBlue(),alpha));
+      g.setColor(c);
       g.fillRect(0,0,getWidth(),getHeight());
       
       int iconX = (getWidth()/2);

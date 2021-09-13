@@ -1620,4 +1620,106 @@ public class UiUtilities {
     
     return result;
   }
+  
+  /**
+   * Gets the brightness value of the given color in percent with Color.white
+   * having a brightness of 100% and Color.black having 0% brightness.
+   * (Used formula: 0.2126 * color.getRed()) + (0.7152 * color.getGreen()) + (0.0722 * color.getBlue())
+   * <p> 
+   * @param color The color to calculate the brightness for.
+   * @return The brightness of the given color in percent.
+   * @since 4.2.4
+   */
+  public static int getBrightnessValueForColor(final Color color) {
+    return (int)(Math.round((0.2126 * color.getRed()) + (0.7152 * color.getGreen()) + (0.0722 * color.getBlue()))/255f*100);
+  }
+  
+  /**
+   * Gets the brightness similarity (in percent) for the given colors,
+   * with 0% being completely different and 100% with being equal in brightness. 
+   * <p>
+   * @param color1 The color to check against color2.
+   * @param color2 The color to check against color1.
+   * @return The similarity in percent of the given colors.
+   * @since 4.2.4
+   */
+  public static int getBrightnessSimilarityForColors(final Color color1, final Color color2) {
+    return 100-Math.abs(getBrightnessValueForColor(color1) - getBrightnessValueForColor(color2));
+  }
+  
+  /**
+   * Checks if the given colors are similar in brightness with similarityThreshold
+   * being the cutoff, meaning if both colors are similar in brightness at least in
+   * similarityThreshold this method returns <code>true</code>.
+   * <p>
+   * @param color1 The color to check against color2.
+   * @param color2 The color to check against color1.
+   * @param similarityThreshold The cutoff of the similarity in percent.
+   * @return <code>true</code> if both colors are at lest as similar in brightness as similarityThreshold
+   * @since 4.2.4
+   */
+  public static boolean isBrightnessSimilarForColors(final Color color1, final Color color2, int similarityThreshold) {
+    return getBrightnessSimilarityForColors(color1, color2) >= similarityThreshold;
+  }
+  
+  /**
+   * Checks foreground against background and derives a new color from foreground that will be
+   * readable against background if both colors are at least similar as similarityThreshold.
+   * <p>
+   * @param background The background color.
+   * @param foreground The foreground color.
+   * @param similarityThreshold The cutoff of the similarity in percent.
+   * @return A color derived from foreground that will be readable against background.
+   * @since 4.2.4
+   */
+  public static Color getReadableColor(final Color background, Color foreground, int similarityThreshold) {
+    if(isBrightnessSimilarForColors(background, foreground, similarityThreshold)) {
+      int test = UiUtilities.getBrightnessValueForColor(background);
+      int alpha = 100;
+      
+      if(test <= 12) {
+        foreground = Color.white;
+        alpha = 200;
+      }
+      else if(test <= 16) {
+        foreground = foreground.brighter().brighter().brighter().brighter().brighter().brighter();
+        alpha = 200;
+      }
+      else if(test <= 24) {
+        foreground = foreground.brighter().brighter().brighter();
+        alpha = 160;
+      }
+      else if(test <= 39) {
+        foreground = foreground.brighter().brighter();
+        alpha = 140;
+      }
+      else if(test <= 57) {
+        alpha = 120;
+      }
+      else if(test <= 67) {
+        foreground = foreground.darker();
+        alpha = 120;
+      }
+      else if(test <= 80) {
+        foreground = foreground.darker().darker();
+        alpha = 120;
+      }
+      else if(test <= 86){
+        foreground = foreground.darker().darker().darker();
+        alpha = 100;
+      }
+      else if(test <= 92){
+        foreground = foreground.darker().darker().darker().darker();
+        alpha = 100;
+      }
+      else {
+        foreground = Color.black;
+        alpha = 100;
+      }
+      
+      foreground = new Color(foreground.getRed(),foreground.getGreen(),foreground.getBlue(),alpha);
+    }
+    
+    return foreground;
+  }
 }

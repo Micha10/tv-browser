@@ -56,6 +56,7 @@ import tvbrowser.core.Settings;
 import tvbrowser.core.contextmenu.ContextMenuManager.ContextMenuAction;
 import tvbrowser.ui.mainframe.MainFrame;
 import tvbrowser.ui.programtable.background.BackgroundPainter;
+import util.ui.UiUtilities;
 import util.ui.persona.Persona;
 
 /**
@@ -199,52 +200,9 @@ public class ProgramTableScrollPane extends JScrollPane implements ProgramTableM
     g.setColor(new Color(c.getRed(),c.getGreen(),c.getBlue(),110));
     g.fillRect(0,0,getWidth(),getHeight());
     
-    c = Persona.getInstance().getAccentColor();
+    c = UiUtilities.getReadableColor(Persona.getInstance().getTextColor(), Persona.getInstance().getTextColor(), 0);
     
-    double test = (0.2126 * Persona.getInstance().getTextColor().getRed()) + (0.7152 * Persona.getInstance().getTextColor().getGreen()) + (0.0722 * Persona.getInstance().getTextColor().getBlue());
-    int alpha = 100;
-    
-    if(test <= 30) {
-      c = Color.white;
-      alpha = 200;
-    }
-    else if(test <= 40) {
-      c = c.brighter().brighter().brighter().brighter().brighter().brighter();
-      alpha = 200;
-    }
-    else if(test <= 60) {
-      c = c.brighter().brighter().brighter();
-      alpha = 160;
-    }
-    else if(test <= 100) {
-      c = c.brighter().brighter();
-      alpha = 140;
-    }
-    else if(test <= 145) {
-      alpha = 120;
-    }
-    else if(test <= 170) {
-      c = c.darker();
-      alpha = 120;
-    }
-    else if(test <= 205) {
-      c = c.darker().darker();
-      alpha = 120;
-    }
-    else if(test <= 220){
-      c = c.darker().darker().darker();
-      alpha = 100;
-    }
-    else if(test <= 235){
-      c = c.darker().darker().darker().darker();
-      alpha = 100;
-    }
-    else {
-      c = Color.black;
-      alpha = 100;
-    }
-    
-    g.setColor(new Color(c.getRed(),c.getGreen(),c.getBlue(),alpha));
+    g.setColor(c);
     g.fillRect(0,0,getWidth(),getHeight());
   }
 

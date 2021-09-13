@@ -286,20 +286,20 @@ public class ProgramTextCreator {
       
       infoColor = new Color(r,g,b);
       
-      double testBackground = (0.2126 * background.getRed()) + (0.7152 * background.getGreen()) + (0.0722 * background.getBlue());
-      double testInfoColor = (0.2126 * infoColor.getRed()) + (0.7152 * infoColor.getGreen()) + (0.0722 * infoColor.getBlue());
-      double testInfoEpisode = (0.2126 * episodeColor.getRed()) + (0.7152 * episodeColor.getGreen()) + (0.0722 * episodeColor.getBlue());
-      double testTitleColor = (0.2126 * titleColor.getRed()) + (0.7152 * titleColor.getGreen()) + (0.0722 * titleColor.getBlue());
+      int testBackground = UiUtilities.getBrightnessValueForColor(background);
+      int testInfoColor = UiUtilities.getBrightnessValueForColor(infoColor);
+      int testInfoEpisode = UiUtilities.getBrightnessValueForColor(episodeColor);
+      int testTitleColor = UiUtilities.getBrightnessValueForColor(titleColor);
       
-      if(testBackground - testInfoColor > 90) {
+      if(testBackground - testInfoColor > 35) {
         infoColor = new Color(infoColor.getRed()+30,infoColor.getGreen()+30,infoColor.getBlue()+30);
       }
       
-      if(Math.abs(testBackground - testInfoEpisode) < 60) {
+      if(Math.abs(testBackground - testInfoEpisode) < 25) {
         episodeColor = episodeColor.brighter().brighter();
       }
       
-      if(Math.abs(testBackground - testTitleColor) < 60) {
+      if(Math.abs(testBackground - testTitleColor) < 25) {
         titleColor = new Color(255,100,100);
       }
     }
