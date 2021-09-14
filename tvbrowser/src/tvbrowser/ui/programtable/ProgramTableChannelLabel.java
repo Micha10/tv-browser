@@ -19,6 +19,7 @@ import javax.swing.UIManager;
 
 import devplugin.Channel;
 import tvbrowser.core.Settings;
+import tvbrowser.ui.mainframe.MainFrame;
 import util.browserlauncher.Launch;
 import util.ui.ChannelContextMenu;
 import util.ui.ChannelLabel;
@@ -86,16 +87,23 @@ public class ProgramTableChannelLabel extends ChannelLabel {
         int b = (getForeground().getBlue()  + getBackground().getBlue())  >> 1;
           
         e.getComponent().setForeground(new Color(r,g,b));
+        
+        if(Settings.propHighlightChannelColumnByMouse.getBoolean()) {
+          MainFrame.getInstance().getProgramTableScrollPane().highlightChannel(mChannel);
+        }
       }
       
       public void mouseExited(MouseEvent e) {
         mIsRollover = false;
-
+        
         e.getComponent().setForeground(UIManager.getColor("List.selectionForeground"));
+        
+        if(Settings.propHighlightChannelColumnByMouse.getBoolean()) {
+          MainFrame.getInstance().getProgramTableScrollPane().unHighlightChannel(mChannel);
+        }
       }
     });
   }
-  
  /* public void setChannel(Channel ch) {
     super.clearIconCache();
     super.setChannel(ch);

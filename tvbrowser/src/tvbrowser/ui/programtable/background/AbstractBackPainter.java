@@ -97,11 +97,16 @@ public abstract class AbstractBackPainter implements BackgroundPainter {
   }
   
   @Override
+  public int getSelectedColumn() {
+    return mSelectedColumn;
+  }
+  
+  @Override
   public void paintBackground(Graphics grp, int columnWidth, int tableHeight,
       int minCol, int maxCol, Rectangle clipBounds, ProgramTableLayout layout,
       ProgramTableModel model) {
-    if(mSelectedColumn != -1 && Settings.propScrollToChannnelMarkingActivated.getBoolean()) {
-      grp.setColor(Settings.propScrollToChannelProgramsBackground.getColor());
+    if(mSelectedColumn != COLUMN_SELECTION_NONE && Settings.propHighlightChannelColumnByScrolling.getBoolean()) {
+      grp.setColor(Settings.propHighlightChannelProgramsBackground.getColor());
       grp.fillRect(mSelectedColumn * columnWidth, 0, columnWidth, tableHeight);
     }
   }

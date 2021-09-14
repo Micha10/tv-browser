@@ -39,6 +39,7 @@ import tvbrowser.ui.programtable.ProgramTableModel;
  * @author Til Schneider, www.murfman.de
  */
 public interface BackgroundPainter {
+  public static final int COLUMN_SELECTION_NONE = -1;
 
   /**
    * Is called when the table's layout has changed.
@@ -73,4 +74,6 @@ public interface BackgroundPainter {
   public JComponent getTableWest();
 
   public void setSelectedColumn(int column);
+  
+  public int getSelectedColumn();
 }

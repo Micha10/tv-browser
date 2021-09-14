@@ -253,7 +253,7 @@ public class ProgramTableScrollPane extends JScrollPane implements ProgramTableM
   public synchronized void scrollToChannel(Channel channel) {
     final Channel wait = channel;
     mScrollChannel.set(wait);
-    int column = -1;
+    int column = BackgroundPainter.COLUMN_SELECTION_NONE;
     
     if(getHorizontalScrollBar().isVisible()) {
       channel = Channel.getChannelForChannel(channel);
@@ -279,7 +279,7 @@ public class ProgramTableScrollPane extends JScrollPane implements ProgramTableM
         }
       }
     }
-    else if(Settings.propScrollToChannnelMarkingActivated.getBoolean()) {
+    else if(Settings.propHighlightChannelColumnByScrolling.getBoolean()) {
       final Channel[] shownChannelArr = mProgramTable.getModel().getShownChannels();
       
       for (int col = 0; col < shownChannelArr.length; col++) {
@@ -289,7 +289,7 @@ public class ProgramTableScrollPane extends JScrollPane implements ProgramTableM
       }
     }
     
-    if(Settings.propScrollToChannnelMarkingActivated.getBoolean()) {
+    if(Settings.propHighlightChannelColumnByScrolling.getBoolean()) {
       mProgramTable.getBackgroundPainter().setSelectedColumn(column);
       mProgramTable.repaint();
       
@@ -307,12 +307,45 @@ public class ProgramTableScrollPane extends JScrollPane implements ProgramTableM
           }
           
           if(mScrollChannel.get() != null && wait.equals(mScrollChannel.get())) {
-            mProgramTable.getBackgroundPainter().setSelectedColumn(-1);
+            mProgramTable.getBackgroundPainter().setSelectedColumn(BackgroundPainter.COLUMN_SELECTION_NONE);
             mProgramTable.repaint();
           }
         }
       };
       mCleanScrollBackground.start();
+    }
+  }
+  
+  public void highlightChannel(final Channel channel) {
+    int column = BackgroundPainter.COLUMN_SELECTION_NONE;
+    
+    final Channel[] shownChannelArr = mProgramTable.getModel().getShownChannels();
+    
+    for (int col = 0; col < shownChannelArr.length; col++) {
+      if (channel.equals(shownChannelArr[col])) {
+        column = col;
+      }
+    }
+    
+    mProgramTable.getBackgroundPainter().setSelectedColumn(column);
+    mProgramTable.repaint();
+  }
+  
+  public void unHighlightChannel(final Channel channel) {
+    int column = BackgroundPainter.COLUMN_SELECTION_NONE;
+    
+    final Channel[] shownChannelArr = mProgramTable.getModel().getShownChannels();
+    
+    for (int col = 0; col < shownChannelArr.length; col++) {
+      if (channel.equals(shownChannelArr[col])) {
+        column = col;
+      }
+    }
+    
+    if(mProgramTable.getBackgroundPainter().getSelectedColumn() != BackgroundPainter.COLUMN_SELECTION_NONE &&
+        mProgramTable.getBackgroundPainter().getSelectedColumn() == column) {
+      mProgramTable.getBackgroundPainter().setSelectedColumn(BackgroundPainter.COLUMN_SELECTION_NONE);
+      mProgramTable.repaint();
     }
   }
 

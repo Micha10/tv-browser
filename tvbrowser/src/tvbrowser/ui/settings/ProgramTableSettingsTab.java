@@ -53,8 +53,8 @@ import javax.swing.SpinnerNumberModel;
 import javax.swing.border.EmptyBorder;
 
 import com.jgoodies.forms.factories.Borders;
+import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.factories.DefaultComponentFactory;
-import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.RowSpec;
 
@@ -70,8 +70,8 @@ import tvbrowser.ui.settings.tablebackgroundstyles.UiColorBackgroundStyle;
 import tvbrowser.ui.settings.tablebackgroundstyles.UiTimeBlockBackgroundStyle;
 import tvbrowser.ui.settings.util.ColorButton;
 import tvbrowser.ui.settings.util.ColorLabel;
-import util.ui.CaretPositionCorrector;
 import util.i18n.Localizer;
+import util.ui.CaretPositionCorrector;
 import util.ui.UiUtilities;
 
 /**
@@ -133,7 +133,8 @@ public class ProgramTableSettingsTab implements SettingsTab, ActionListener {
   private ColorButton mLight, mDark;
   private JCheckBox mShowScrollHighlight;
   
-  private JCheckBox mShowScrollChannelHighlight;
+  private JCheckBox mHighlightChannelScroll;
+  private JCheckBox mHighlightChannelMouse;
   private ColorLabel mScrollChannelLb;
   private ColorButton mScrollChannelColor;
   
@@ -152,7 +153,6 @@ public class ProgramTableSettingsTab implements SettingsTab, ActionListener {
     mSettingsPn = new JPanel(layout);
     mSettingsPn.setBorder(Borders.DIALOG);
 
-    CellConstraints cc = new CellConstraints();
     int currentRow = 1;
     
     // Layout-Rows ****************************************
@@ -168,9 +168,9 @@ public class ProgramTableSettingsTab implements SettingsTab, ActionListener {
     layout.appendRow(RowSpec.decode("10dlu"));
     
     mSettingsPn.add(DefaultComponentFactory.getInstance().createSeparator(
-        mLocalizer.msg("layout", "Layout")), cc.xyw(1, currentRow, 8));
+        mLocalizer.msg("layout", "Layout")), CC.xyw(1, currentRow, 8));
     mSettingsPn.add(new JLabel(mLocalizer.msg("programArrangement",
-        "Program arrangement")), cc.xy(2, (currentRow += 2)));
+        "Program arrangement")), CC.xy(2, (currentRow += 2)));
     
     // program table layout
     String[] arrangementArr = { mLocalizer.msg(Settings.LAYOUT_TIME_SYNCHRONOUS, "Time synchronous"),
@@ -198,17 +198,17 @@ public class ProgramTableSettingsTab implements SettingsTab, ActionListener {
     
     mLastSelectedLayoutIndex = (short)mProgramArrangementCB.getSelectedIndex();
 
-    mSettingsPn.add(mProgramArrangementCB, cc.xy(4, currentRow));
+    mSettingsPn.add(mProgramArrangementCB, CC.xy(4, currentRow));
 
     // Cut long titles
     mCutLongTitlesCB = new JCheckBox(mLocalizer.msg("cutTitle",
         "Cut long titles"), Settings.propProgramTableCutTitle.getBoolean());
-    mSettingsPn.add(mCutLongTitlesCB, cc.xyw(2, (currentRow += 2), 2));
+    mSettingsPn.add(mCutLongTitlesCB, CC.xyw(2, (currentRow += 2), 2));
     mCutLongTitlesSelection = new JSpinner(new SpinnerNumberModel(
         Settings.propProgramTableCutTitleLines.getInt(), 1, 3, 1));
-    mSettingsPn.add(mCutLongTitlesSelection, cc.xy(4, currentRow));
+    mSettingsPn.add(mCutLongTitlesSelection, CC.xy(4, currentRow));
     mCutLongTitlesLabel = new JLabel(mLocalizer.msg("lines", "Lines"));
-    mSettingsPn.add(mCutLongTitlesLabel, cc.xy(6, currentRow));
+    mSettingsPn.add(mCutLongTitlesLabel, CC.xy(6, currentRow));
     
     mCutLongTitlesCB.addActionListener(e -> {
       mCutLongTitlesSelection.setEnabled(mCutLongTitlesCB.isSelected());
@@ -220,22 +220,22 @@ public class ProgramTableSettingsTab implements SettingsTab, ActionListener {
     mDescriptionLines = new JSpinner(new SpinnerNumberModel(
         Settings.propProgramPanelMaxLines.getInt(), 1, 5, 1));
     mSettingsPn.add(new JLabel(mLocalizer.msg("shortDescription",
-        "Short description")), cc.xyw(2, currentRow += 2, 2));
-    mSettingsPn.add(mDescriptionLines, cc.xy(4, currentRow));
-    mSettingsPn.add(new JLabel(mLocalizer.msg("lines", "Lines")), cc.xy(6,
+        "Short description")), CC.xyw(2, currentRow += 2, 2));
+    mSettingsPn.add(mDescriptionLines, CC.xy(4, currentRow));
+    mSettingsPn.add(new JLabel(mLocalizer.msg("lines", "Lines")), CC.xy(6,
         currentRow));
     
     // Short programs no description
     mShortProgramsCB = new JCheckBox(mLocalizer.msg("shortPrograms",
         "If duration less than"),
         Settings.propProgramPanelShortDurationActive.getBoolean());
-    mSettingsPn.add(mShortProgramsCB, cc.xyw(2, (currentRow += 2), 2));
+    mSettingsPn.add(mShortProgramsCB, CC.xyw(2, (currentRow += 2), 2));
     mShortProgramsMinutes = new JSpinner(new SpinnerNumberModel(
         Settings.propProgramPanelShortDurationMinutes.getInt(), 1, 30, 1));
-    mSettingsPn.add(mShortProgramsMinutes, cc.xy(4, currentRow));
+    mSettingsPn.add(mShortProgramsMinutes, CC.xy(4, currentRow));
     mShortProgramsLabel = new JLabel(mLocalizer.msg("shortPrograms2",
         "minutes, then hide description"));
-    mSettingsPn.add(mShortProgramsLabel, cc.xy(6, currentRow));
+    mSettingsPn.add(mShortProgramsLabel, CC.xy(6, currentRow));
 
     mShortProgramsCB.addActionListener(e -> {
       mShortProgramsMinutes.setEnabled(mShortProgramsCB.isSelected());
@@ -250,7 +250,7 @@ public class ProgramTableSettingsTab implements SettingsTab, ActionListener {
     layout.appendRow(RowSpec.decode("10dlu"));
     
     mSettingsPn.add(DefaultComponentFactory.getInstance().createSeparator(
-        mLocalizer.msg("columnwidth", "column width")), cc.xyw(1,
+        mLocalizer.msg("columnwidth", "column width")), CC.xyw(1,
         (currentRow += 2), 8));
     
     // column width
@@ -267,13 +267,13 @@ public class ProgramTableSettingsTab implements SettingsTab, ActionListener {
     mColWidth = new JSpinner(new SpinnerNumberModel(
             width, Settings.MIN_COLUMN_WIDTH, Settings.MAX_COLUMN_WIDTH, 1));
 
-    mSettingsPn.add(new JLabel(mLocalizer.msg("widthInPixels", "Width in Pixels")), cc.xy(2, (currentRow += 2)));
-    mSettingsPn.add(mColWidth, cc.xy(4, currentRow));
+    mSettingsPn.add(new JLabel(mLocalizer.msg("widthInPixels", "Width in Pixels")), CC.xy(2, (currentRow += 2)));
+    mSettingsPn.add(mColWidth, CC.xy(4, currentRow));
 
     mDefaultBtn = new JButton(Localizer.getLocalization(Localizer.I18N_DEFAULT));
     mDefaultBtn.addActionListener(this);
 
-    mSettingsPn.add(mDefaultBtn, cc.xy(6, currentRow));
+    mSettingsPn.add(mDefaultBtn, CC.xy(6, currentRow));
     
     // Column Rows ***************************************
     layout.appendRow(RowSpec.decode("pref"));
@@ -284,10 +284,10 @@ public class ProgramTableSettingsTab implements SettingsTab, ActionListener {
     layout.appendRow(RowSpec.decode("10dlu"));
     
     mSettingsPn.add(DefaultComponentFactory.getInstance().createSeparator(
-        mLocalizer.msg("range", "Range")), cc.xyw(1, (currentRow += 2), 8));
+        mLocalizer.msg("range", "Range")), CC.xyw(1, (currentRow += 2), 8));
     
     mSettingsPn.add(new JLabel(mLocalizer.msg("startOfDay", "Start of day")),
-        cc.xy(2, (currentRow += 2)));
+        CC.xy(2, (currentRow += 2)));
     
     TwoSpinnerDateModel startModel = new TwoSpinnerDateModel();
     
@@ -296,13 +296,13 @@ public class ProgramTableSettingsTab implements SettingsTab, ActionListener {
     
     JSpinner.DateEditor dateEditor = new JSpinner.DateEditor(mStartOfDayTimeSp, Settings.getTimePattern());
     mStartOfDayTimeSp.setEditor(dateEditor);
-    mSettingsPn.add(mStartOfDayTimeSp, cc.xy(4, currentRow));
+    mSettingsPn.add(mStartOfDayTimeSp, CC.xy(4, currentRow));
     mSettingsPn.add(new JLabel("("
-        + Localizer.getLocalization(Localizer.I18N_TODAY) + ")"), cc.xy(6,
+        + Localizer.getLocalization(Localizer.I18N_TODAY) + ")"), CC.xy(6,
         currentRow));
     CaretPositionCorrector.createCorrector(dateEditor.getTextField(), new char[] {':'}, -1);
     
-    mSettingsPn.add(new JLabel(mLocalizer.msg("endOfDay", "End of day")), cc
+    mSettingsPn.add(new JLabel(mLocalizer.msg("endOfDay", "End of day")), CC
         .xy(2, (currentRow += 2)));
     
     TwoSpinnerDateModel endModel = new TwoSpinnerDateModel();
@@ -312,9 +312,9 @@ public class ProgramTableSettingsTab implements SettingsTab, ActionListener {
     
     dateEditor = new JSpinner.DateEditor(mEndOfDayTimeSp, Settings.getTimePattern());
     mEndOfDayTimeSp.setEditor(dateEditor);
-    mSettingsPn.add(mEndOfDayTimeSp, cc.xy(4, currentRow));
+    mSettingsPn.add(mEndOfDayTimeSp, CC.xy(4, currentRow));
     mSettingsPn.add(new JLabel("(" + mLocalizer.msg("nextDay", "next day")
-        + ")"), cc.xy(6, currentRow));
+        + ")"), CC.xy(6, currentRow));
     CaretPositionCorrector.createCorrector(dateEditor.getTextField(), new char[] {':'}, -1);
     
     int minutes;
@@ -339,10 +339,10 @@ public class ProgramTableSettingsTab implements SettingsTab, ActionListener {
     layout.appendRow(RowSpec.decode("10dlu"));
     
     mSettingsPn.add(DefaultComponentFactory.getInstance().createSeparator(
-        mLocalizer.msg("tableBackground", "Table background")), cc.xyw(1,(currentRow += 2), 8));
+        mLocalizer.msg("tableBackground", "Table background")), CC.xyw(1,(currentRow += 2), 8));
 
     mSettingsPn.add(new JLabel(mLocalizer.msg("tableBackgroundStyle",
-        "Table background style")), cc.xy(2, (currentRow += 2)));
+        "Table background style")), CC.xy(2, (currentRow += 2)));
     
     TableBackgroundStyle[] styles = getTableBackgroundStyles();
     mBackgroundStyleCB = new JComboBox<>(styles);
@@ -359,7 +359,7 @@ public class ProgramTableSettingsTab implements SettingsTab, ActionListener {
       updateBackgroundStyleConfigureButton();
     });
 
-    mSettingsPn.add(mBackgroundStyleCB, cc.xy(4, currentRow));
+    mSettingsPn.add(mBackgroundStyleCB, CC.xy(4, currentRow));
     
     mConfigBackgroundStyleBt = new JButton(mLocalizer.ellipsisMsg("configure", "Configure"));
 
@@ -369,7 +369,7 @@ public class ProgramTableSettingsTab implements SettingsTab, ActionListener {
       dlg.show();
     });
 
-    mSettingsPn.add(mConfigBackgroundStyleBt, cc.xy(6, currentRow));
+    mSettingsPn.add(mConfigBackgroundStyleBt, CC.xy(6, currentRow));
         
     // Foreground color
     layout.appendRow(RowSpec.decode("pref"));
@@ -385,13 +385,13 @@ public class ProgramTableSettingsTab implements SettingsTab, ActionListener {
         mLocalizer.msg("foreground", "Foreground")); 
     mForegroundLabel = new JLabel(mLocalizer.msg("fontColor", "Font color"));
     
-    mSettingsPn.add(mForegroundSeparator, cc.xyw(1,(currentRow += 2), 8));
+    mSettingsPn.add(mForegroundSeparator, CC.xyw(1,(currentRow += 2), 8));
     
-    mSettingsPn.add(mForegroundLabel, cc
+    mSettingsPn.add(mForegroundLabel, CC
         .xy(2,
         (currentRow += 2)));
-    mSettingsPn.add(mForegroundColorLb, cc.xy(4, currentRow));
-    mSettingsPn.add(mProgramPanelForegroundColorChangeBtn, cc.xy(6, currentRow));
+    mSettingsPn.add(mForegroundColorLb, CC.xy(4, currentRow));
+    mSettingsPn.add(mProgramPanelForegroundColorChangeBtn, CC.xy(6, currentRow));
     
     // Mouse *********************************************
     layout.appendRow(RowSpec.decode("pref"));
@@ -414,11 +414,15 @@ public class ProgramTableSettingsTab implements SettingsTab, ActionListener {
     layout.appendRow(RowSpec.decode("3dlu"));
     layout.appendRow(RowSpec.decode("pref"));
     
-    // channel scroll markings
+    // channel highlighting markings
     layout.appendRow(RowSpec.decode("10dlu"));
-    layout.appendRow(RowSpec.decode("pref"));
+    layout.appendRow(RowSpec.decode("default"));
     layout.appendRow(RowSpec.decode("5dlu"));
-    layout.appendRow(RowSpec.decode("pref"));
+    layout.appendRow(RowSpec.decode("default"));
+    layout.appendRow(RowSpec.decode("3dlu"));
+    layout.appendRow(RowSpec.decode("default"));
+    layout.appendRow(RowSpec.decode("3dlu"));
+    layout.appendRow(RowSpec.decode("default"));
     
     // Miscellaneous *********************************************
     layout.appendRow(RowSpec.decode("10dlu"));
@@ -427,12 +431,12 @@ public class ProgramTableSettingsTab implements SettingsTab, ActionListener {
     layout.appendRow(RowSpec.decode("pref"));
 
     mSettingsPn.add(DefaultComponentFactory.getInstance().createSeparator(
-        mLocalizer.msg("mouse", "Mouse")), cc.xyw(1,
+        mLocalizer.msg("mouse", "Mouse")), CC.xyw(1,
         (currentRow += 2), 8));
 
     mMouseOverCb = new JCheckBox(mLocalizer.msg("MouseOver", "Mouse-Over-Effect"));
     mMouseOverCb.setSelected(Settings.propProgramTableMouseOver.getBoolean());
-    mSettingsPn.add(mMouseOverCb, cc.xy(2, (currentRow += 2)));
+    mSettingsPn.add(mMouseOverCb, CC.xy(2, (currentRow += 2)));
     
     mMouseOverColorLb = new ColorLabel(Settings.propProgramTableMouseOverColor.getColor());
     mMouseOverColorLb.setStandardColor(Settings.propProgramTableMouseOverColor.getDefaultColor());
@@ -446,24 +450,24 @@ public class ProgramTableSettingsTab implements SettingsTab, ActionListener {
     
     mTypeAsYouFind = new JCheckBox(mLocalizer.msg("typeAsYouFind", "Type-As-You-Find enabled"),Settings.propTypeAsYouFindEnabled.getBoolean());
 
-    mSettingsPn.add(mMouseOverColorLb, cc.xy(4, currentRow));
-    mSettingsPn.add(mouseOverColorChangeBtn, cc.xy(6, currentRow));
+    mSettingsPn.add(mMouseOverColorLb, CC.xy(4, currentRow));
+    mSettingsPn.add(mouseOverColorChangeBtn, CC.xy(6, currentRow));
     
     // auto scrolling
     mAutoScrollCb = new JCheckBox(mLocalizer.msg("mouseAutoScroll",
         "Throw'n scroll"));
     mAutoScrollCb.setSelected(Settings.propProgramTableMouseAutoScroll
         .getBoolean());
-    mSettingsPn.add(mAutoScrollCb, cc.xyw(2, (currentRow += 2), 6));
+    mSettingsPn.add(mAutoScrollCb, CC.xyw(2, (currentRow += 2), 6));
         
     mScrollHorizontalCb = new JCheckBox(mLocalizer.msg("mouseScrollHorizontal", "Scroll horizontal with mouse wheel"));
     mScrollHorizontalCb.setSelected(Settings.propProgramTableScrollHorizontal.getBoolean());
-    mSettingsPn.add(mScrollHorizontalCb, cc.xyw(2, (currentRow += 2), 6));
+    mSettingsPn.add(mScrollHorizontalCb, CC.xyw(2, (currentRow += 2), 6));
     
     mAutoChangeDate = new JCheckBox(mLocalizer.msg("mouseAutoChangeDate",
         "Automatically change date when scrolling with mouse wheel against top and bottom"));
     mAutoChangeDate.setSelected(Settings.propProgramTableAutoChangeDate.getBoolean());
-    mSettingsPn.add(mAutoChangeDate, cc.xyw(2, (currentRow += 2), 6));
+    mSettingsPn.add(mAutoChangeDate, CC.xyw(2, (currentRow += 2), 6));
     
     mShowScrollHighlight = new JCheckBox(mLocalizer.msg("activated","Activated"), Settings.propScrollToTimeMarkingActivated.getBoolean());
     
@@ -493,43 +497,54 @@ public class ProgramTableSettingsTab implements SettingsTab, ActionListener {
     });
     
     mSettingsPn.add(DefaultComponentFactory.getInstance().createSeparator(
-        mLocalizer.msg("scrollToTimeTitle", "Highlight programs running at jump time")), cc.xyw(1,
+        mLocalizer.msg("scrollToTimeTitle", "Highlight programs running at jump time")), CC.xyw(1,
         (currentRow += 2), 8));
     
-    mSettingsPn.add(mShowScrollHighlight, cc.xyw(2, (currentRow += 2), 2));
-    mSettingsPn.add(mLightDesc, cc.xy(2, (currentRow += 2)));
-    mSettingsPn.add(mLightColorLb, cc.xy(4, currentRow));
-    mSettingsPn.add(mLight, cc.xy(6, currentRow));
-    mSettingsPn.add(mDarkDesc, cc.xy(2, (currentRow += 2)));
-    mSettingsPn.add(mDarkColorLb, cc.xy(4, currentRow));    
-    mSettingsPn.add(mDark, cc.xy(6, currentRow));
+    mSettingsPn.add(mShowScrollHighlight, CC.xyw(2, (currentRow += 2), 2));
+    mSettingsPn.add(mLightDesc, CC.xy(2, (currentRow += 2)));
+    mSettingsPn.add(mLightColorLb, CC.xy(4, currentRow));
+    mSettingsPn.add(mLight, CC.xy(6, currentRow));
+    mSettingsPn.add(mDarkDesc, CC.xy(2, (currentRow += 2)));
+    mSettingsPn.add(mDarkColorLb, CC.xy(4, currentRow));    
+    mSettingsPn.add(mDark, CC.xy(6, currentRow));
         
-    mShowScrollChannelHighlight = new JCheckBox(mLocalizer.msg("activated","Activated"), Settings.propScrollToChannnelMarkingActivated.getBoolean());
+    mHighlightChannelScroll = new JCheckBox(mLocalizer.msg("highlightChannel.scroll","scrolled to"), Settings.propHighlightChannelColumnByScrolling.getBoolean());
+    mHighlightChannelMouse = new JCheckBox(mLocalizer.msg("highlightChannel.mouse","mouse pointer enters channel column header"), Settings.propHighlightChannelColumnByMouse.getBoolean());
     
-    mScrollChannelLb = new ColorLabel(Settings.propScrollToChannelProgramsBackground.getColor());
-    mScrollChannelLb.setStandardColor(Settings.propScrollToChannelProgramsBackground.getDefaultColor());
-    mScrollChannelLb.setEnabled(mShowScrollChannelHighlight.isSelected());
+    final JLabel highlightChannelColorLabel = new JLabel(mLocalizer.msg("highlightChannel.color","Color"));
+    mScrollChannelLb = new ColorLabel(Settings.propHighlightChannelProgramsBackground.getColor());
+    mScrollChannelLb.setStandardColor(Settings.propHighlightChannelProgramsBackground.getDefaultColor());
+    mScrollChannelLb.setEnabled(mHighlightChannelScroll.isSelected());
     
     mScrollChannelColor = new ColorButton(mScrollChannelLb);
-    mScrollChannelColor.setEnabled(mShowScrollChannelHighlight.isSelected());
+    mScrollChannelColor.setEnabled(mHighlightChannelScroll.isSelected());
     
-    mShowScrollChannelHighlight.addItemListener(e -> {
-      mScrollChannelLb.setEnabled(e.getStateChange() == ItemEvent.SELECTED);
+    mHighlightChannelScroll.addItemListener(e -> {
+      mScrollChannelLb.setEnabled(e.getStateChange() == ItemEvent.SELECTED || mHighlightChannelMouse.isSelected());
       mScrollChannelColor.setEnabled(mScrollChannelLb.isEnabled());
+      highlightChannelColorLabel.setEnabled(mScrollChannelLb.isEnabled());
+    });
+    
+    mHighlightChannelMouse.addItemListener(e -> {
+      mScrollChannelLb.setEnabled(e.getStateChange() == ItemEvent.SELECTED || mHighlightChannelScroll.isSelected());
+      mScrollChannelColor.setEnabled(mScrollChannelLb.isEnabled());
+      highlightChannelColorLabel.setEnabled(mScrollChannelLb.isEnabled());
     });
     
     mSettingsPn.add(DefaultComponentFactory.getInstance().createSeparator(
-        mLocalizer.msg("scrollToChannelTitle", "Highlight channel selected")), cc.xyw(1,
+        mLocalizer.msg("highlightChannel.title", "Highlight channel...")), CC.xyw(1,
         (currentRow += 2), 8));
-    mSettingsPn.add(mShowScrollChannelHighlight, cc.xy(2, (currentRow += 2)));
-    mSettingsPn.add(mScrollChannelLb, cc.xy(4, currentRow));
-    mSettingsPn.add(mScrollChannelColor, cc.xy(6, currentRow));
+    mSettingsPn.add(mHighlightChannelScroll, CC.xyw(2, (currentRow += 2), 5));
+    mSettingsPn.add(mHighlightChannelMouse, CC.xyw(2, (currentRow += 2), 5));
+    mSettingsPn.add(highlightChannelColorLabel, CC.xy(2, (currentRow += 2)));
+    mSettingsPn.add(mScrollChannelLb, CC.xy(4, currentRow));
+    mSettingsPn.add(mScrollChannelColor, CC.xy(6, currentRow));
         
     mSettingsPn.add(DefaultComponentFactory.getInstance().createSeparator(
-        mLocalizer.msg("misc", "Misc")), cc.xyw(1,
+        mLocalizer.msg("misc", "Misc")), CC.xyw(1,
         (currentRow += 2), 8));
     
-    mSettingsPn.add(mTypeAsYouFind, cc.xyw(2, (currentRow += 2), 6));
+    mSettingsPn.add(mTypeAsYouFind, CC.xyw(2, (currentRow += 2), 6));
 
     updateBackgroundStyleConfigureButton();
 
@@ -652,8 +667,9 @@ public class ProgramTableSettingsTab implements SettingsTab, ActionListener {
     Settings.propScrollToTimeProgramsLightBackground.setColor(mLightColorLb.getColor());
     Settings.propScrollToTimeProgramsDarkBackground.setColor(mDarkColorLb.getColor());
     
-    Settings.propScrollToChannnelMarkingActivated.setBoolean(mShowScrollChannelHighlight.isSelected());
-    Settings.propScrollToChannelProgramsBackground.setColor(mScrollChannelLb.getColor());
+    Settings.propHighlightChannelColumnByScrolling.setBoolean(mHighlightChannelScroll.isSelected());
+    Settings.propHighlightChannelColumnByMouse.setBoolean(mHighlightChannelMouse.isSelected());
+    Settings.propHighlightChannelProgramsBackground.setColor(mScrollChannelLb.getColor());
     
     Settings.propTypeAsYouFindEnabled.setBoolean(mTypeAsYouFind.isSelected());
     

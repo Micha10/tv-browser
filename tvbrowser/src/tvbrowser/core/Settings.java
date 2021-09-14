@@ -1509,11 +1509,16 @@ public class Settings {
   public static final ColorProperty propScrollToTimeProgramsLightBackground = new ColorProperty(
       mProp, "scrollToTimeProgramsLightBackground", new Color(255, 150, 0, 40));
 
-  public static final ColorProperty propScrollToChannelProgramsBackground = new ColorProperty(
+  public static final ColorProperty propHighlightChannelProgramsBackground = new ColorProperty(
       mProp, "scrollToChannelProgramsBackground", new Color(255, 150, 0, 40));
 
-  public static final BooleanProperty propScrollToChannnelMarkingActivated = new BooleanProperty(
+  public static final BooleanProperty propHighlightChannelColumnByScrolling = new BooleanProperty(
       mProp, "scrollToChannelMarkingActivated", true);
+  /**
+   * @since 4.2.4
+   */
+  public static final BooleanProperty propHighlightChannelColumnByMouse = new BooleanProperty(
+      mProp, "highlightChannelColumnByMouse", true);
   /*
    * Settings for the NOW_TYPE of the ProgramMenuItem.
    */

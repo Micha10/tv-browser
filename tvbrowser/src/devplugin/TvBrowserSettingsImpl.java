@@ -150,7 +150,7 @@ public final class TvBrowserSettingsImpl implements TvBrowserSettings {
 
   @Override
   public Color getScrollColorChannel() {
-    return Settings.propScrollToChannelProgramsBackground.getColor();
+    return Settings.propHighlightChannelProgramsBackground.getColor();
   }
 
   @Override
@@ -160,7 +160,7 @@ public final class TvBrowserSettingsImpl implements TvBrowserSettings {
 
   @Override
   public boolean isScrollToChannelHighlightActivated() {
-    return Settings.propScrollToChannnelMarkingActivated.getBoolean();
+    return Settings.propHighlightChannelColumnByScrolling.getBoolean();
   }
 
   @Override
