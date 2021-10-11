@@ -1195,44 +1195,4 @@ public abstract class AbstractPluginProxy implements PluginProxy, ContextMenuIf 
   }
   
   public abstract PluginProgramInformation doGetProgramInformation(Program p, String informationKey);
-
-  /**
-   * Called before TV-Browser saves the data of a Plugin, to determine if data
-   * needs to be saved.
-   * <p>
-   * @return <code>true</code> if the Plugin has data that needs to be saved.
-   *         Defaults to <code>true</code>
-   * @since 4.2.4
-   */
-  public boolean hasToSaveSettings() {
-    try {
-      return doHasToSaveSettings();
-    } catch (Throwable exc) {
-      handlePluginException(exc);
-    }
-    
-    return true;
-  }
-  
-  public abstract boolean doHasToSaveSettings();
-  
-  /**
-   * Called before TV-Browser saves the data of a Plugin, to determine if data
-   * needs to be saved.
-   * <p>
-   * @return <code>true</code> if the Plugin has data that needs to be saved.
-   *         Defaults to <code>true</code>
-   * @since 4.2.4
-   */
-  public boolean hasToSaveData() {
-    try {
-      return doHasToSaveData();
-    } catch (Throwable exc) {
-      handlePluginException(exc);
-    }
-    
-    return true;
-  }
-  
-  public abstract boolean doHasToSaveData();
 }

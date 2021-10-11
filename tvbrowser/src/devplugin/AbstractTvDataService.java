@@ -349,4 +349,16 @@ public abstract class AbstractTvDataService {
   public void handleTvBrowserVersionUpdate(final Version previousVersion) {
     
   }
+  
+  /**
+   * Called before TV-Browser saves the settings of a data service, to determine if data
+   * needs to be saved.
+   * <p>
+   * @return <code>true</code> if the data service has settings that needs to be saved.
+   *         Defaults to <code>true</code>
+   * @since 4.2.4
+   */
+  public boolean hasToSaveSettings() {
+    return true;
+  }
 }

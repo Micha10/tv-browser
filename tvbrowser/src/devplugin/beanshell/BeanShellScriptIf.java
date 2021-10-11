@@ -14,8 +14,9 @@ import devplugin.Program;
 
 /**
  * @author bodum
+ * @deprecated since 4.2.4
  */
-public interface BeanShellScriptIf {
+@Deprecated(since="4.2.4") public interface BeanShellScriptIf {
 
     public abstract PluginInfo getInfo();
     

@@ -103,6 +103,8 @@ public class TvDataServiceProxyManager {
 
   private void storeServiceSettings(TvDataServiceProxy service) {
     final Properties prop = service.storeSettings();
+    // don't ever delete settings file if prop is null
+    // since stored data might be needed but not saved again
     if (prop!=null) {
       String dir=Settings.getUserSettingsDirName();
       File f=new File(dir);

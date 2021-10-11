@@ -1208,16 +1208,4 @@ abstract public class Plugin implements Marker, ContextMenuIf, ProgramReceiveIf 
   public boolean hasToSaveSettings() {
     return true;
   }
-  
-  /**
-   * Called before TV-Browser saves the data of a Plugin, to determine if data
-   * needs to be saved.
-   * <p>
-   * @return <code>true</code> if the Plugin has data that needs to be saved.
-   *         Defaults to <code>true</code>
-   * @since 4.2.4
-   */
-  public boolean hasToSaveData() {
-    return true;
-  }
 }

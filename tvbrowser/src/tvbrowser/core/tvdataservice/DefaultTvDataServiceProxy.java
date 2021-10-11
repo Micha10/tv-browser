@@ -112,12 +112,17 @@ public class DefaultTvDataServiceProxy extends AbstractTvDataServiceProxy {
   }
 
   public Properties storeSettings() {
-    try {
-      return mTvDataService.storeSettings();
-    } catch (Throwable e) {
-      logError(e, "store settings");
-      return null;
+    Properties result = null;
+    
+    if(mTvDataService.hasToSaveSettings()) {
+      try {
+        result = mTvDataService.storeSettings();
+      } catch (Throwable e) {
+        logError(e, "store settings");
+      }
     }
+    
+    return result;
   }
 
   public boolean hasSettingsPanel() {

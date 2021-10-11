@@ -380,16 +380,4 @@ import devplugin.beanshell.BeanShellScriptIf;
       // TODO Auto-generated method stub
       
     }
-
-    @Override
-    public boolean doHasToSaveSettings() {
-      // TODO Auto-generated method stub
-      return true;
-    }
-
-    @Override
-    public boolean doHasToSaveData() {
-      // TODO Auto-generated method stub
-      return true;
-    }
  }
