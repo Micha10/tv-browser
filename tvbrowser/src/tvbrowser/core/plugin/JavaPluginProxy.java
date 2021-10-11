@@ -841,4 +841,14 @@ public class JavaPluginProxy extends AbstractPluginProxy {
   protected void doHandleTvBrowserVersionUpdate(final Version previousVersion) {
     mPlugin.handleTvBrowserVersionUpdate(previousVersion);
   }
+
+  @Override
+  public boolean doHasToSaveSettings() {
+    return mPlugin.hasToSaveSettings();
+  }
+
+  @Override
+  public boolean doHasToSaveData() {
+    return mPlugin.hasToSaveData();
+  }
 }

@@ -38,8 +38,9 @@ import devplugin.beanshell.BeanShellScriptIf;
 
 /**
  * @author bodum
+ * @deprecated since 4.2.4
  */
-public class BeanShellPluginProxy extends AbstractPluginProxy {
+@Deprecated(since="4.2.4") public class BeanShellPluginProxy extends AbstractPluginProxy {
 
     private static final ImageIcon BEANICON = new ImageIcon("imgs/beanshell.png");
 
@@ -378,5 +379,17 @@ public class BeanShellPluginProxy extends AbstractPluginProxy {
     protected void doHandleTvBrowserVersionUpdate(Version previousVersion) {
       // TODO Auto-generated method stub
       
+    }
+
+    @Override
+    public boolean doHasToSaveSettings() {
+      // TODO Auto-generated method stub
+      return true;
+    }
+
+    @Override
+    public boolean doHasToSaveData() {
+      // TODO Auto-generated method stub
+      return true;
     }
  }
