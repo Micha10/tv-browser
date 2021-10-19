@@ -30,19 +30,24 @@ import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
+import java.nio.charset.Charset;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -58,6 +63,7 @@ import javax.swing.Icon;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JEditorPane;
+import javax.swing.JFileChooser;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -66,6 +72,7 @@ import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 import org.apache.commons.codec.binary.Base64;
 
@@ -120,6 +127,8 @@ public class AndroidSync extends Plugin {
   private static final String REMINDER_UP_SYNC_ADDRESS = URL_BASE + "data/scripts/syncUp.php?type=reminderFromDesktop";
   private static final String REMINDER_BACK_SYNC_ADDRESS = URL_BASE + "data/scripts/syncDown.php?type=reminderFromApp";
   
+  static final String PREF_DOWN_SYNC_ADDRESS = URL_BASE + "data/scripts/syncDown.php?type=preferencesBackup";
+  
   private static final String LAST_UPLOAD = "LAST_UPLOAD";
   private static final String SELECTED_PLUGINS = "SELECTED_PLUGINS";
   private static final String SELECTED_INTERNAL_PLUGINS = "SELECTED_INTERNAL_PLUGINS";
@@ -131,7 +140,7 @@ public class AndroidSync extends Plugin {
   private static final String PLUGIN_TYPE = "PLUGIN_TYPE";
   private static final String FILTER_TYPE = "FILTER_TYPE";
   
-  private static final Version mVersion = new Version(0, 27, 0, true);
+  private static final Version mVersion = new Version(0, 30, 0, true);
   private final String CrLf = "\r\n";
   private Properties mProperties;
   
@@ -331,10 +340,84 @@ public class AndroidSync extends Plugin {
     });
     remindersBack.putValue(Plugin.BIG_ICON, createImageIcon("actions","appointment-new",22));
     
-    ActionMenu menu = new ActionMenu(getInfo().getName(), createImageIcon("apps","android_robot",16), new ContextMenuAction[] {action, backSync, channels, remindersUp, remindersBack});
+    ContextMenuAction downloadPref = new ContextMenuAction(LOCALIZER.msg("downloadPrefAndFavorties", "Preferences and Favorites of app"), createImageIcon("categories",
+        "preferences-system", 16));
+    downloadPref.setActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        downloadData(false);
+      }
+    });
+    ContextMenuAction downloadFavSearches = new ContextMenuAction(LOCALIZER.msg("downloadFavortieSearchValues", "Favorite search values of app"), createImageIcon("apps",
+        "emblem-favorite", 16));
+    downloadFavSearches.setActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        downloadData(true);
+      }
+    });
+    
+    ActionMenu dataDownload = new ActionMenu(LOCALIZER.ellipsisMsg("downloadData", "Download data"), createImageIcon("actions","document-save-as",16), new ContextMenuAction[] {downloadPref,downloadFavSearches});
+    
+    ActionMenu menu = new ActionMenu(getInfo().getName(), createImageIcon("apps","android_robot",16), new Object[] {action, backSync, channels, remindersUp, remindersBack, dataDownload});
     menu.getAction().putValue(Plugin.BIG_ICON, createImageIcon("apps","android_robot",22));
     
     return menu;
+  }
+  
+  private void downloadData(boolean onlyFavorites) {
+    final String[] result = download(PREF_DOWN_SYNC_ADDRESS,false,false);
+    
+    if(result == null || result.length == 0) {
+      JOptionPane.showMessageDialog(getParentFrame(), LOCALIZER.msg("noPrefDownload", "Preferences and Favorites data does not exists\nor could not be loaded."), Localizer.getLocalization(Localizer.I18N_INFO), JOptionPane.INFORMATION_MESSAGE);
+    }
+    else {
+      FileNameExtensionFilter filter = new FileNameExtensionFilter(LOCALIZER.msg("textFileType", "Text files"), "txt");
+      
+      File downloadDir = new File(System.getProperty("user.home"), "Downloads");
+      
+      JFileChooser chooser = new JFileChooser();
+      chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+      chooser.setDialogTitle(LOCALIZER.msg("savePrefSelectFile", "Save preferences and Favorites of app"));
+      chooser.addChoosableFileFilter(filter);
+      chooser.setFileFilter(filter);
+      chooser.setAcceptAllFileFilterUsed(false);
+      chooser.setSelectedFile(new File(downloadDir,onlyFavorites ? "tvbAppFavoritesSearchValues.txt" : "tvbAppPrefAndFavorites.txt"));
+      
+      if(chooser.showSaveDialog(UiUtilities.getLastModalChildOf(getParentFrame())) == JFileChooser.APPROVE_OPTION) {
+        File store = chooser.getSelectedFile();
+        
+        BufferedWriter out = null;
+        
+        try {
+          out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(store), Charset.defaultCharset()));
+          
+          for(String line : result) {
+            if(onlyFavorites) {
+              if(line.startsWith("favorite:")) {
+                String[] parts = line.substring(line.indexOf("=")+1).split(";;");
+                
+                out.write(parts[1]+System.getProperty("line.separator"));
+              }
+            }
+            else {
+              out.write(line+System.getProperty("line.separator"));
+            }
+          }
+        } catch(IOException ioe) {
+          ioe.printStackTrace();
+        } finally {
+          if(out != null) {
+            try {
+              out.close();
+            } catch (IOException e1) {
+              // TODO Auto-generated catch block
+              e1.printStackTrace();
+            }
+          }
+        }
+      }
+    }
   }
   
   @Override
@@ -1078,13 +1161,14 @@ public class AndroidSync extends Plugin {
     return result;
   }
   
-  private String[] download(String address, boolean info, boolean showUserdataInput) {
+  String[] download(String address, boolean info, boolean showUserdataInput) {
     String car = mProperties.getProperty(KEY_CAR,"");
     String bicycle = mProperties.getProperty(KEY_BICYCLE,"");
     String[] result = null;
     
     boolean backSync = address.equals(BACK_SYNC_ADDRESS);
     boolean channels = address.equals(CHANNEL_DOWN_SYNC_ADDRESS);
+    boolean data = address.equals(PREF_DOWN_SYNC_ADDRESS);
     
     if(showUserdataInput && (car.trim().length() == 0 || bicycle.trim().length() == 0)) {
       final UserPanel userPanel = new UserPanel(car, bicycle, false);
@@ -1162,6 +1246,9 @@ public class AndroidSync extends Plugin {
                   
                   channelList.add(channelValue);
                 }
+                else if(data) {
+                  channelList.add(line);
+                }
                 else {
                   String[] parts = line.split(";");
                                   
@@ -1198,7 +1285,7 @@ public class AndroidSync extends Plugin {
                   if(timeZone != null) {
                     Calendar cal = Calendar.getInstance(timeZone);
                     
-                    if(timeZone.getID().equals("UTC")) {
+                    if(timeZone.getID().equals("UTdownloadC")) {
                       cal = Calendar.getInstance();
                     }
                     
@@ -1250,7 +1337,7 @@ public class AndroidSync extends Plugin {
               }
             }
             
-            if(channels) {
+            if(channels || data) {
               result = channelList.toArray(new String[channelList.size()]);
             }
             
