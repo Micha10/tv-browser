@@ -51,7 +51,7 @@ import util.ui.WindowClosingIf;
 public class ManageFavoritesDialog extends JDialog implements WindowClosingIf{
 
   /** The localizer for this class. */
-  protected static final util.i18n.Localizer mLocalizer
+  protected static final util.i18n.Localizer LOCALIZER
     = util.i18n.Localizer.getLocalizerFor(ManageFavoritesDialog.class);
 
   private static ManageFavoritesDialog mInstance = null;
@@ -86,9 +86,9 @@ public class ManageFavoritesDialog extends JDialog implements WindowClosingIf{
       UiUtilities.registerForClosing(this);
   
       if(showNew) {
-        setTitle(mLocalizer.msg("newTitle", "New programs found"));
+        setTitle(LOCALIZER.msg("newTitle", "New programs found"));
       } else {
-        setTitle(mLocalizer.msg("title", "Manage favorite programs"));
+        setTitle(LOCALIZER.msg("title", "Manage favorite programs"));
       }
       
       setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
@@ -152,8 +152,8 @@ public class ManageFavoritesDialog extends JDialog implements WindowClosingIf{
     return mManagePanel.isShowingNewFoundPrograms();
   }
   
-  public void newFolder(FavoriteNode parent, Window partenWindow) {
-    mManagePanel.newFolder(parent,partenWindow);
+  public void newFolder(FavoriteNode parent, Window partenWindow, String name) {
+    mManagePanel.newFolder(parent,partenWindow,name);
   }
   
   public void reload(boolean keepPath) {

@@ -1,7 +1,11 @@
 package util.ui;
 
+import javax.swing.Action;
+import javax.swing.Icon;
 import javax.swing.ImageIcon;
 
+import devplugin.ActionMenu;
+import devplugin.Plugin;
 import tvbrowser.core.icontheme.IconLoader;
 
 /**
@@ -330,5 +334,34 @@ public class TVBrowserIcons {
    */
   public static ImageIcon showMenu(int size) {
     return icon("actions", "show-menu", size);
+  }
+  
+  /**
+   * Gets the icon for the action.
+   * 
+   * @param actionMenu The menu to get the icon from.
+   * @param preferredSize Either Action.SMALL_ICON or Plugin.BIG_ICON.
+   * <p>
+   * @return The requested icon or icon in other size or <code>null</code> if there is none.
+   */
+  public static Icon getMenuIcon(ActionMenu actionMenu, String preferredSize) {
+    Icon result = null;
+    Action action;
+    if (actionMenu != null) {
+      action = actionMenu.getAction();
+      if (action != null) {
+        result = (Icon) action.getValue(preferredSize);
+        
+        if(result == null) {
+          if(preferredSize.equals(Action.SMALL_ICON)) {
+            result = (Icon) action.getValue(Plugin.BIG_ICON);
+          }
+          else {
+            result = (Icon) action.getValue(Action.SMALL_ICON);
+          }
+        }
+      }
+    }
+    return result;
   }
 }

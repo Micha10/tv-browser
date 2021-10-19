@@ -1695,11 +1695,15 @@ public class FavoritesPlugin {
   }
   
   public void newFolder(FavoriteNode parent) {
+    newFolder(parent, null);
+  }
+  
+  public void newFolder(FavoriteNode parent, String name) {
     if(ManageFavoritesDialog.getInstance() != null && ManageFavoritesDialog.getInstance().isVisible()) {
-      ManageFavoritesDialog.getInstance().newFolder(parent,ManageFavoritesDialog.getInstance());
+      ManageFavoritesDialog.getInstance().newFolder(parent,ManageFavoritesDialog.getInstance(),name);
     }
     else if(mMangePanel != null) {
-      mMangePanel.newFolder(parent, MainFrame.getInstance());
+      mMangePanel.newFolder(parent, MainFrame.getInstance(),name);
     }
   }
   

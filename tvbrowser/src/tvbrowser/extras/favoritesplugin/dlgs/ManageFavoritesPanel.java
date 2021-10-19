@@ -38,13 +38,21 @@ import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.lang.reflect.Method;
+import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Comparator;
 import java.util.Hashtable;
+import java.util.TimeZone;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -76,21 +84,37 @@ import com.jgoodies.forms.factories.Borders;
 
 import devplugin.Channel;
 import devplugin.Date;
+import devplugin.Plugin;
+import devplugin.PluginCommunication;
+import devplugin.PluginManager;
 import devplugin.Program;
 import devplugin.ProgramFilter;
 import devplugin.ProgressMonitorExtended;
 import devplugin.SettingsItem;
+import tvbrowser.core.ChannelList;
+import tvbrowser.core.filters.FilterComponentList;
+import tvbrowser.core.filters.FilterList;
+import tvbrowser.core.filters.UserFilter;
+import tvbrowser.core.filters.filtercomponents.ProgramInfoFilterComponent;
 import tvbrowser.core.icontheme.IconLoader;
 import tvbrowser.core.plugin.PluginManagerImpl;
+import tvbrowser.core.plugin.PluginProxy;
+import tvbrowser.core.plugin.PluginProxyManager;
+import tvbrowser.extras.common.ReminderConfiguration;
 import tvbrowser.extras.favoritesplugin.FavoritesPlugin;
 import tvbrowser.extras.favoritesplugin.core.AdvancedFavorite;
+import tvbrowser.extras.favoritesplugin.core.Exclusion;
 import tvbrowser.extras.favoritesplugin.core.Favorite;
 import tvbrowser.extras.favoritesplugin.core.FilterFavorite;
+import tvbrowser.extras.favoritesplugin.core.TitleFavorite;
+import tvbrowser.extras.favoritesplugin.core.TopicFavorite;
 import tvbrowser.extras.favoritesplugin.wizards.TypeWizardStep;
 import tvbrowser.extras.favoritesplugin.wizards.WizardHandler;
+import tvbrowser.extras.reminderplugin.ReminderPlugin;
 import tvbrowser.ui.mainframe.MainFrame;
 import util.exc.ErrorHandler;
 import util.exc.TvBrowserException;
+import util.i18n.Localizer;
 import util.program.ProgramUtilities;
 import util.settings.PluginPictureSettings;
 import util.settings.ProgramPanelSettings;
@@ -99,8 +123,8 @@ import util.ui.ExtensionFileFilter;
 import util.ui.FilterableProgramListPanel;
 import util.ui.ListDragAndDropHandler;
 import util.ui.ListDropAction;
-import util.i18n.Localizer;
 import util.ui.ProgramList;
+import util.ui.SearchFormSettings;
 import util.ui.SendToPluginDialog;
 import util.ui.TVBrowserIcons;
 import util.ui.TabListenerPanel;
@@ -117,13 +141,13 @@ public class ManageFavoritesPanel extends TabListenerPanel implements ListDropAc
   public static final int FILTER_START_LAST_TYPE = -1;
   
   private static final int MAX_SHOWN_PROGRAMS = 6000;
-  private static final Localizer mLocalizer = ManageFavoritesDialog.mLocalizer;
+  private static final Localizer LOCALIZER = ManageFavoritesDialog.LOCALIZER;
   private DefaultListModel<Favorite> mFavoritesListModel;
   private JList<Favorite> mFavoritesList;
   private FavoriteTree mFavoriteTree;
   private ProgramList mProgramList;
   private JSplitPane mSplitPane;
-  private JButton mNewBt, mEditBt, mDeleteBt, mUpBt, mDownBt, mSortAlphaBt, mSortCountBt, mImportBt, mSendBt, mUpdateBt;
+  private JButton mNewBt, mEditBt, mDeleteBt, mUpBt, mDownBt, mSortAlphaBt, mSortCountBt, mImportBt, mSendBt, mUpdateBt, mImportApp;
   private JButton mCloseBt;
 
   private boolean mShowNew = false;
@@ -181,7 +205,7 @@ public class ManageFavoritesPanel extends TabListenerPanel implements ListDropAc
 
     if(!mShowNew) {
       if(favoriteArr == null) {
-        JButton newFolder = UiUtilities.createToolBarButton(mLocalizer.msg("newFolder", "New folder"),
+        JButton newFolder = UiUtilities.createToolBarButton(LOCALIZER.msg("newFolder", "New folder"),
             IconLoader.getInstance().getIconFromTheme("actions", "folder-new", 22));
         newFolder.setOpaque(false);
         newFolder.addActionListener(e -> {
@@ -199,7 +223,7 @@ public class ManageFavoritesPanel extends TabListenerPanel implements ListDropAc
 
       addToolbarSeperator(toolbarPn);
 
-      msg = mLocalizer.ellipsisMsg("new", "Create a new favorite");
+      msg = LOCALIZER.ellipsisMsg("new", "Create a new favorite");
       icon = TVBrowserIcons.newIcon(TVBrowserIcons.SIZE_LARGE);
       mNewBt = UiUtilities.createToolBarButton(msg, icon);
       mNewBt.setOpaque(false);
@@ -218,7 +242,7 @@ public class ManageFavoritesPanel extends TabListenerPanel implements ListDropAc
       toolbarPn.add(mNewBt);
     }
 
-    msg = mLocalizer.ellipsisMsg("edit", "Edit the selected favorite");
+    msg = LOCALIZER.ellipsisMsg("edit", "Edit the selected favorite");
     icon = TVBrowserIcons.edit(TVBrowserIcons.SIZE_LARGE);
     mEditBt = UiUtilities.createToolBarButton(msg, icon);
     mEditBt.setOpaque(false);
@@ -237,7 +261,7 @@ public class ManageFavoritesPanel extends TabListenerPanel implements ListDropAc
     });
     toolbarPn.add(mEditBt);
 
-    msg = mLocalizer.ellipsisMsg("delete", "Delete selected favorite");
+    msg = LOCALIZER.ellipsisMsg("delete", "Delete selected favorite");
     icon = TVBrowserIcons.delete(TVBrowserIcons.SIZE_LARGE);
     mDeleteBt = UiUtilities.createToolBarButton(msg, icon);
     mDeleteBt.setOpaque(false);
@@ -249,6 +273,7 @@ public class ManageFavoritesPanel extends TabListenerPanel implements ListDropAc
 
         if(node.isDirectoryNode()) {
           mFavoriteTree.delete(node);
+          FavoritesPlugin.getInstance().updateRootNode(true);
         } else {
           deleteSelectedFavorite();
         }
@@ -256,7 +281,7 @@ public class ManageFavoritesPanel extends TabListenerPanel implements ListDropAc
     });
     toolbarPn.add(mDeleteBt);
 
-    msg = mLocalizer.ellipsisMsg("update", "Search for all Favorites again");
+    msg = LOCALIZER.ellipsisMsg("update", "Search for all Favorites again");
     icon = TVBrowserIcons.update(TVBrowserIcons.SIZE_LARGE);
     mUpdateBt = UiUtilities.createToolBarButton(msg, icon);
     mUpdateBt.setOpaque(false);
@@ -267,7 +292,7 @@ public class ManageFavoritesPanel extends TabListenerPanel implements ListDropAc
       final Favorite[] favs = mFavoriteTree.getModel().getFavoriteArr();
       
       m.setMaximum(favs.length);
-      m.setMessage(mLocalizer.ellipsisMsg("update", "Search for all Favorites again"));
+      m.setMessage(LOCALIZER.ellipsisMsg("update", "Search for all Favorites again"));
       m.setVisible(true);
     
       for(int i= 0; i < favs.length; i++) {
@@ -288,7 +313,7 @@ public class ManageFavoritesPanel extends TabListenerPanel implements ListDropAc
       toolbarPn.add(mUpdateBt);
     }
     
-    msg = mLocalizer.msg("up", "Move the selected favorite up");
+    msg = LOCALIZER.msg("up", "Move the selected favorite up");
     icon = TVBrowserIcons.up(TVBrowserIcons.SIZE_LARGE);
     mUpBt = UiUtilities.createToolBarButton(msg, icon);
     mUpBt.setOpaque(false);
@@ -301,7 +326,7 @@ public class ManageFavoritesPanel extends TabListenerPanel implements ListDropAc
       toolbarPn.add(mUpBt);
     }
 
-    msg = mLocalizer.msg("down", "Move the selected favorite down");
+    msg = LOCALIZER.msg("down", "Move the selected favorite down");
     icon = TVBrowserIcons.down(TVBrowserIcons.SIZE_LARGE);
     mDownBt = UiUtilities.createToolBarButton(msg, icon);
     mDownBt.setOpaque(false);
@@ -313,7 +338,7 @@ public class ManageFavoritesPanel extends TabListenerPanel implements ListDropAc
       toolbarPn.add(mDownBt);
     }
 
-    msg = mLocalizer.msg("sort", "Sort favorites alphabetically");
+    msg = LOCALIZER.msg("sort", "Sort favorites alphabetically");
     icon = FavoritesPlugin.getIconFromTheme("actions", "sort-list", 22);
     final String titleAlpha = msg;
     mSortAlphaBt = UiUtilities.createToolBarButton(msg, icon);
@@ -322,7 +347,7 @@ public class ManageFavoritesPanel extends TabListenerPanel implements ListDropAc
       sortFavorites(FavoriteNodeComparator.getInstance(), titleAlpha);
     });
 
-    msg = mLocalizer.msg("sortCount", "Sort favorites by number of programs");
+    msg = LOCALIZER.msg("sortCount", "Sort favorites by number of programs");
     icon = FavoritesPlugin.getIconFromTheme("actions", "sort-list-numerical", 22);
     final String titleCount = msg;
     mSortCountBt = UiUtilities.createToolBarButton(msg, icon);
@@ -336,7 +361,7 @@ public class ManageFavoritesPanel extends TabListenerPanel implements ListDropAc
       toolbarPn.add(mSortCountBt);
     }
 
-    msg = mLocalizer.msg("send", "Send Programs to another Plugin");
+    msg = LOCALIZER.msg("send", "Send Programs to another Plugin");
     icon = TVBrowserIcons.copy(TVBrowserIcons.SIZE_LARGE);
     mSendBt = UiUtilities.createToolBarButton(msg, icon);
     mSendBt.setOpaque(false);
@@ -347,19 +372,30 @@ public class ManageFavoritesPanel extends TabListenerPanel implements ListDropAc
     addToolbarSeperator(toolbarPn);
     toolbarPn.add(mSendBt);
 
-    msg = mLocalizer.msg("import", "Import favorites from TVgenial");
+    msg = LOCALIZER.msg("import", "Import favorites from TVgenial");
     icon = FavoritesPlugin.getIconFromTheme("actions", "document-open", 22);
     mImportBt = UiUtilities.createToolBarButton(msg, icon);
     mImportBt.setOpaque(false);
     mImportBt.addActionListener(e -> {
       importFavorites();
     });
-
+    
+    msg = LOCALIZER.msg("importAndroidSync", "Import favorites with AndroidSync");
+    icon = FavoritesPlugin.getIconFromTheme("actions", "document-open", 22);
+    mImportApp = UiUtilities.createToolBarButton(msg, icon);
+    mImportApp.setOpaque(false);
+    mImportApp.addActionListener(e -> {
+      importFavoritesAndroid();
+    });
+    
+    updateAndroidSyncImportButton();
+    
     if(!mShowNew) {
       toolbarPn.add(mImportBt);
+      toolbarPn.add(mImportApp);
     }
 
-    msg = mLocalizer.msg("settings","Open settings");
+    msg = LOCALIZER.msg("settings","Open settings");
     icon = TVBrowserIcons.preferences(TVBrowserIcons.SIZE_LARGE);
     
     if(ManageFavoritesDialog.getInstance() != null) {
@@ -379,7 +415,7 @@ public class ManageFavoritesPanel extends TabListenerPanel implements ListDropAc
     
     toolbarPn.add(Box.createGlue());
     
-    mScrollToFirstNotExpired = UiUtilities.createToolBarButton(mLocalizer.msg("scrollToFirstNotExpired", "Scroll to first not expired program."),TVBrowserIcons.scrollToNow(TVBrowserIcons.SIZE_LARGE));
+    mScrollToFirstNotExpired = UiUtilities.createToolBarButton(LOCALIZER.msg("scrollToFirstNotExpired", "Scroll to first not expired program."),TVBrowserIcons.scrollToNow(TVBrowserIcons.SIZE_LARGE));
     mScrollToFirstNotExpired.setOpaque(false);
     toolbarPn.add(mScrollToFirstNotExpired);
     mScrollToFirstNotExpired.addActionListener(e -> {
@@ -560,7 +596,7 @@ public class ManageFavoritesPanel extends TabListenerPanel implements ListDropAc
     
     mSplitPane.setRightComponent(mProgramListPanel);
 
-    msg = mLocalizer.msg("showBlack", "Show single removed programs");
+    msg = LOCALIZER.msg("showBlack", "Show single removed programs");
     mBlackListChb = new JCheckBox(msg);
     mBlackListChb.setOpaque(false);
     mBlackListChb.setSelected(FavoritesPlugin.getInstance().isShowingBlackListEntries());
@@ -631,7 +667,7 @@ public class ManageFavoritesPanel extends TabListenerPanel implements ListDropAc
     mFavoritesList.setSelectedIndex(mFavoritesList.locationToIndex(new Point(x,y)));
 
     if (!mShowNew) {
-      JMenuItem createNew = new JMenuItem(mLocalizer.ellipsisMsg("new", "Create a new favorite"),
+      JMenuItem createNew = new JMenuItem(LOCALIZER.ellipsisMsg("new", "Create a new favorite"),
           TVBrowserIcons.newIcon(TVBrowserIcons.SIZE_SMALL));
 
       createNew.addActionListener(e -> {
@@ -642,7 +678,7 @@ public class ManageFavoritesPanel extends TabListenerPanel implements ListDropAc
       menu.addSeparator();
     }
 
-    JMenuItem edit = new JMenuItem(mLocalizer.ellipsisMsg("edit", "Edit the selected favorite"),
+    JMenuItem edit = new JMenuItem(LOCALIZER.ellipsisMsg("edit", "Edit the selected favorite"),
         TVBrowserIcons.edit(TVBrowserIcons.SIZE_SMALL));
 
     edit.addActionListener(e -> {
@@ -651,7 +687,7 @@ public class ManageFavoritesPanel extends TabListenerPanel implements ListDropAc
 
     menu.add(edit);
 
-    JMenuItem delete = new JMenuItem(mLocalizer.ellipsisMsg("delete", "Delete selected favorite"),
+    JMenuItem delete = new JMenuItem(LOCALIZER.ellipsisMsg("delete", "Delete selected favorite"),
         TVBrowserIcons.delete(TVBrowserIcons.SIZE_SMALL));
 
     delete.addActionListener(e -> {
@@ -661,7 +697,7 @@ public class ManageFavoritesPanel extends TabListenerPanel implements ListDropAc
     menu.add(delete);
     menu.addSeparator();
 
-    JMenuItem sendPrograms = new JMenuItem(mLocalizer.msg("send", "Send Programs to another Plugin"),
+    JMenuItem sendPrograms = new JMenuItem(LOCALIZER.msg("send", "Send Programs to another Plugin"),
         TVBrowserIcons.copy(TVBrowserIcons.SIZE_SMALL));
 
     sendPrograms.addActionListener(e -> {
@@ -696,8 +732,8 @@ public class ManageFavoritesPanel extends TabListenerPanel implements ListDropAc
       mEditBt.setEnabled(selection != -1);
       mDeleteBt.setEnabled(selection != -1);
 
-      mEditBt.setToolTipText(mLocalizer.ellipsisMsg("edit", "Edit the selected favorite"));
-      mDeleteBt.setToolTipText(mLocalizer.ellipsisMsg("delete", "Delete selected favorite"));
+      mEditBt.setToolTipText(LOCALIZER.ellipsisMsg("edit", "Edit the selected favorite"));
+      mDeleteBt.setToolTipText(LOCALIZER.ellipsisMsg("delete", "Delete selected favorite"));
 
       mUpBt.setEnabled(selection > 0);
       mDownBt.setEnabled((selection != -1) && (selection < (size - 1)));
@@ -726,8 +762,8 @@ public class ManageFavoritesPanel extends TabListenerPanel implements ListDropAc
           enableButtons(true);
           changeProgramList(fav,scrollToFirst);
           mDeleteBt.setEnabled(true);
-          mEditBt.setToolTipText(mLocalizer.ellipsisMsg("edit", "Edit the selected favorite"));
-          mDeleteBt.setToolTipText(mLocalizer.ellipsisMsg("delete", "Delete selected favorite"));
+          mEditBt.setToolTipText(LOCALIZER.ellipsisMsg("edit", "Edit the selected favorite"));
+          mDeleteBt.setToolTipText(LOCALIZER.ellipsisMsg("delete", "Delete selected favorite"));
         }
         else {
           Program[] p = ((FavoriteNode)mFavoriteTree.getSelectionPath().getLastPathComponent()).getAllPrograms(false);
@@ -790,8 +826,8 @@ public class ManageFavoritesPanel extends TabListenerPanel implements ListDropAc
             mScrollToPreviousDay.setEnabled(false);
             mScrollToNextDay.setEnabled(false);
           }
-          mEditBt.setToolTipText(mLocalizer.ellipsisMsg("renameFolder", "Rename selected folder"));
-          mDeleteBt.setToolTipText(mLocalizer.msg("deleteFolder", "Delete selected folder"));
+          mEditBt.setToolTipText(LOCALIZER.ellipsisMsg("renameFolder", "Rename selected folder"));
+          mDeleteBt.setToolTipText(LOCALIZER.msg("deleteFolder", "Delete selected folder"));
         }
       }
       else {
@@ -1039,7 +1075,7 @@ public class ManageFavoritesPanel extends TabListenerPanel implements ListDropAc
 
       if (JOptionPane.showConfirmDialog(this,
               FavoritesPlugin.LOCALIZER.msg("reallyDelete", "Really delete favorite '{0}'?", fav.getName()),
-              mLocalizer.msg("delete", "Delete selected favorite..."),
+              LOCALIZER.msg("delete", "Delete selected favorite..."),
               JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
 
         
@@ -1073,11 +1109,353 @@ public class ManageFavoritesPanel extends TabListenerPanel implements ListDropAc
     }
   }
 
+  @SuppressWarnings("unchecked")
+  private void importFavoritesAndroid() {
+    PluginProxy androidSync = PluginProxyManager.getInstance().getActivatedPluginForId("java.androidsync.AndroidSync");
+    PluginCommunication c = androidSync.getCommunicationClass();
+    
+    if(c != null && c.getVersion() >= 2) {
+      final Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+      cal.set(2021, 12, 24);
+      
+      final Calendar my = Calendar.getInstance(TimeZone.getDefault());
+      
+      final int KEYWORD_ONLY_TITLE_TYPE = 0;
+      final int KEYWORD_TYPE = 1;
+      final int RESTRICTION_RULES_TYPE = 2;
+      
+      try {
+        Method getFavorites = c.getClass().getDeclaredMethod("getFavorites");
+        getFavorites.setAccessible(true);
+        Object result = getFavorites.invoke(c);
+        
+        if(result == null) {
+          UiUtilities.showMessageDialogOnMouseScreen(LOCALIZER.msg("androidSyncNoData", "AndroidSync has not provided the needed data.\nMake sure the Favorites were uploaded in the Android app,\nyou're connected to the Internet and try again later."), Localizer.getLocalization(Localizer.I18N_ERROR), JOptionPane.ERROR_MESSAGE);
+        }
+        else if(result instanceof String[]) {
+          String[] favorites = (String[])result;
+          
+          if(favorites.length == 0) {
+            UiUtilities.showMessageDialogOnMouseScreen(LOCALIZER.msg("androidSyncNoFavorites", "AndroidSync has found no Favorites.\nMake sure the Favorites were uploaded in the Android app."), Localizer.getLocalization(Localizer.I18N_INFO), JOptionPane.INFORMATION_MESSAGE);
+          }
+          
+          FavoriteNode folderAdded = null;
+          
+          for(String fav : favorites) {
+            String[] values = fav.split(";;");
+            
+            String name = null;
+            String search = null;
+            
+            int type = KEYWORD_ONLY_TITLE_TYPE;
+            boolean remind = false;
+            ArrayList<Channel> excludedChannels = null;
+            int timeRestrictionStart = -1;
+            int timeRestrictionEnd = -1;
+            int[] restrictedDays = null;
+            String[] exculdedKeywords = null;
+            int shorterThan = -1;
+            int longerThan = -1;
+            int categories = 0;
+            
+            if(values.length > 2) {
+              name = values[0];
+              search = values[1];
+              
+              try {
+                type = Integer.parseInt(values[2]);
+              }catch(NumberFormatException e) {
+                boolean onlyTitle = Boolean.valueOf(values[2]);
+                
+                if(onlyTitle) {
+                  type = KEYWORD_ONLY_TITLE_TYPE;
+                }
+                else {
+                  type = KEYWORD_TYPE;
+                }
+              }
+            }
+            
+            if(values.length > 3) {
+              remind = Boolean.valueOf(values[3]);
+            }
+            
+            if(values.length > 4) {
+              if(!values[4].equals("null")) {
+                String[] parts = values[4].split(",");
+                
+                try {
+                  timeRestrictionStart = Integer.parseInt(parts[1])+1;
+                  timeRestrictionEnd = Integer.parseInt(parts[0])-1;
+                  
+                  if(timeRestrictionStart >= 1440) {
+                    timeRestrictionStart -= 1440;
+                  }
+                  if(timeRestrictionEnd < 0) {
+                    timeRestrictionEnd += 1440;
+                  }
+                  
+                  
+                  cal.set(Calendar.HOUR_OF_DAY, timeRestrictionStart/60);
+                  cal.set(Calendar.MINUTE, timeRestrictionStart%60);
+                  
+                  my.setTimeInMillis(cal.getTimeInMillis());
+                  
+                  timeRestrictionStart = my.get(Calendar.HOUR_OF_DAY)*60+my.get(Calendar.MINUTE);
+                  
+                  cal.set(Calendar.HOUR_OF_DAY, timeRestrictionEnd/60);
+                  cal.set(Calendar.MINUTE, timeRestrictionEnd%60);
+                  
+                  my.setTimeInMillis(cal.getTimeInMillis());
+                  
+                  timeRestrictionEnd = my.get(Calendar.HOUR_OF_DAY)*60+my.get(Calendar.MINUTE);
+                }catch(NumberFormatException nfe) {
+                  timeRestrictionStart = -1;
+                  timeRestrictionEnd = -1;
+                }
+              }
+              
+              Object dayRestriction = parseArray(DAY_RESTRICTION_TYPE, values[5]);
+              
+              if(dayRestriction != null && dayRestriction instanceof int[]) {
+                int[] temp = (int[])dayRestriction;
+                
+                ArrayList<Integer> days = new ArrayList<Integer>();
+                days.add(Calendar.MONDAY);
+                days.add(Calendar.TUESDAY);
+                days.add(Calendar.WEDNESDAY);
+                days.add(Calendar.THURSDAY);
+                days.add(Calendar.FRIDAY);
+                days.add(Calendar.SATURDAY);
+                days.add(Calendar.SUNDAY);
+                
+                for(int test : temp) {
+                  days.remove((Integer)test);
+                }
+                
+                if(!days.isEmpty()) {
+                  restrictedDays = new int[days.size()];
+                  
+                  for(int i = 0; i < days.size(); i++) {
+                    restrictedDays[i] = days.get(i);
+                  }
+                }
+              }
+              
+              Object exclCh = parseArray(CHANNEL_RESTRICTION_TYPE, values[6]);
+              
+              if(exclCh != null && exclCh instanceof ArrayList<?>) {
+                excludedChannels = (ArrayList<Channel>)exclCh;
+              }
+            }
+            
+            if(values.length > 7 && !values[7].equals("null")) {
+              if(values[7].contains(",")) {
+                exculdedKeywords = values[7].split(",");
+              }
+              else {
+                exculdedKeywords = new String[1];
+                exculdedKeywords[0] = values[7];
+              }
+            }
+            
+            if(values.length > 8) {
+              if(!values[8].equals("null")) {
+                String[] parts = values[8].split(",");
+                
+                try {
+                  longerThan = Integer.parseInt(parts[0]);
+                  shorterThan = Integer.parseInt(parts[1]);
+                  
+                  if(longerThan != -1) {
+                    longerThan--;
+                  }
+                  if(shorterThan != -1) {
+                    shorterThan++;
+                  }
+                }catch(NumberFormatException nfe) {
+                  longerThan = shorterThan = -1;
+                }
+              }
+            }
+            
+            if(values.length > 9) {
+              Object temp = parseArray(ATTRIBUTE_RESTRICTION_TYPE, values[9]);
+              
+              if(temp != null && temp instanceof int[]) {
+                int[] cats = (int[])temp;
+                
+                for(int cat : cats) {
+                  categories |= (1 << (cat+1));
+                }
+              }
+            }
+            
+            Favorite toAdd = null;
+            
+            if(type == KEYWORD_ONLY_TITLE_TYPE) {
+              toAdd = new TitleFavorite(search);
+            }
+            else if(type == KEYWORD_TYPE) {
+              toAdd = new TopicFavorite(search);
+            }
+            else if(type == RESTRICTION_RULES_TYPE) {
+              toAdd = new AdvancedFavorite(".*",SearchFormSettings.SEARCH_IN_TITLE,PluginManager.TYPE_SEARCHER_REGULAR_EXPRESSION,false);
+            }
+            
+            if(toAdd != null) {
+              toAdd.setName(name);
+              ArrayList<Exclusion> exclusionList = new ArrayList<Exclusion>();
+              
+              if(remind) {
+                toAdd.setReminderMinutesDefault(ReminderPlugin.getInstance().getDefaultReminderTime());
+                toAdd.getReminderConfiguration().setReminderServices(new String[] { ReminderConfiguration.REMINDER_DEFAULT });
+              }
+              else {
+                toAdd.getReminderConfiguration().setReminderServices(new String[0]);
+              }
+              
+              if(excludedChannels != null) {
+                for(Channel ch : excludedChannels) {
+                  exclusionList.add(new Exclusion(null, null, ch, -1, -1, -1, null, null, 0, null, Exclusion.TYPE_DURATION_NONE, -1));
+                }
+              }
+              
+              if(timeRestrictionStart != -1 && timeRestrictionEnd != -1) {
+                exclusionList.add(new Exclusion(null, null, null, timeRestrictionStart, timeRestrictionEnd, -1, null, null, 0, null, Exclusion.TYPE_DURATION_NONE, -1));
+              }
+              
+              if(restrictedDays != null) {
+                for(int day : restrictedDays) {
+                  exclusionList.add(new Exclusion(null, null, null, -1, -1, day, null, null, 0, null, Exclusion.TYPE_DURATION_NONE, -1));
+                }
+              }
+              
+              if(exculdedKeywords != null) {
+                for(String keyword : exculdedKeywords) {
+                  exclusionList.add(new Exclusion(null, keyword, null, -1, -1, -1, null, null, 0, null, Exclusion.TYPE_DURATION_NONE, -1));
+                }
+              }
+              
+              if(shorterThan != -1) {
+                exclusionList.add(new Exclusion(null, null, null, -1, -1, -1, null, null, 0, null, Exclusion.TYPE_DURATION_TOO_LONG, shorterThan));
+              }
+
+              if(longerThan != -1) {
+                exclusionList.add(new Exclusion(null, null, null, -1, -1, -1, null, null, 0, null, Exclusion.TYPE_DURATION_TOO_SHORT, longerThan));
+              }
+              
+              if(categories != 0) {
+                try(ByteArrayOutputStream bOut = new ByteArrayOutputStream(); ObjectOutputStream out = new ObjectOutputStream(bOut);) {
+                  out.writeInt(categories);
+                  out.flush();
+                  try(ObjectInputStream in = new ObjectInputStream(new ByteArrayInputStream(bOut.toByteArray()))) {
+                    ProgramInfoFilterComponent infoFilter = new ProgramInfoFilterComponent("AndroidSync-Import_"+name.replaceAll("\\s+|\\p{Punct}", "_")+"_"+DateFormat.getDateTimeInstance().format(new java.util.Date()).replaceAll("\\s+|\\p{Punct}", "_"), "");
+                    infoFilter.read(in, 1);
+                    
+                    FilterComponentList.getInstance().add(infoFilter);
+                    
+                    UserFilter filter = new UserFilter("AndroidSync-Import_"+name.replaceAll("\\s+|\\p{Punct}", "_")+"_"+DateFormat.getDateTimeInstance().format(new java.util.Date()).replaceAll("\\s+|\\p{Punct}", "_"));
+                    filter.setRule("NOT "+infoFilter.getName());
+                    
+                    FilterList.getInstance().addProgramFilter(filter);
+                    
+                    exclusionList.add(new Exclusion(null, null, null, -1, -1, -1, filter.getName(), null, 0, null, Exclusion.TYPE_DURATION_NONE, -1));
+                  }
+                }catch(IOException ioe) {
+                  ioe.printStackTrace();
+                }
+              }
+
+              if(!exclusionList.isEmpty()) {
+                toAdd.setExclusions(exclusionList.toArray(new Exclusion[0]));
+              }
+              
+              if(folderAdded == null) {
+                TreePath path = mFavoriteTree.getSelectionPath();
+                
+                if(path != null) {
+                  FavoritesPlugin.getInstance().newFolder((FavoriteNode)path.getLastPathComponent(),"AndroidSync-Import "+DateFormat.getDateTimeInstance().format(new java.util.Date()));
+                } else {
+                  FavoritesPlugin.getInstance().newFolder(mFavoriteTree.getRoot(),"AndroidSync-Import "+DateFormat.getDateTimeInstance().format(new java.util.Date()));
+                }
+                
+                
+                path = mFavoriteTree.getSelectionPath();
+                folderAdded = (FavoriteNode)path.getLastPathComponent();
+              }
+              
+              addFavorite(toAdd, true, folderAdded);
+            }
+          }
+          
+          if(folderAdded != null) {
+            MainFrame.getInstance().updateFilterMenu();
+          }
+        }
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
+    }
+  }
+  private static final int DAY_RESTRICTION_TYPE = 0;
+  private static final int CHANNEL_RESTRICTION_TYPE = 1;
+  private static final int ATTRIBUTE_RESTRICTION_TYPE = 2;
+  
+  private Object parseArray(int type, String value) {
+    Object result = null;
+    
+    if(!value.equals("null")) {
+      if(type == CHANNEL_RESTRICTION_TYPE && value.contains("#_#")) {
+        ArrayList<Channel> channelList = new ArrayList<Channel>();
+        channelList.addAll(Arrays.asList(ChannelList.getSubscribedChannels()));
+        
+        String[] parts = value.split(",");
+        
+        for(String part : parts) {
+          String[] subParts = part.split("#_#");
+          
+          for(int i = channelList.size()-1; i >= 0; i--) {
+            Channel ch = channelList.get(i);
+            if(ch.getDataServiceId().equals("tvbrowserdataservice.TvBrowserDataService") && subParts[0].equals("1")) {
+              if(ch.getGroup().getId().equals(subParts[1]) && ch.getId().equals(subParts[2])) {
+                channelList.remove(i);
+                break;
+              }
+            }
+            else if(ch.getDataServiceId().equals("epgdonatedata.EPGdonateData") && subParts[0].equals("2")) {
+              if(ch.getId().equals(subParts[1])) {
+                channelList.remove(i);
+                break;
+              }
+            }
+          }
+        }
+        
+        if(!channelList.isEmpty()) {
+          result = channelList;
+        }
+      }
+      else {
+        String[] parts = value.split(",");
+        
+        int[] array = new int[parts.length];
+        
+        for(int i = 0; i < parts.length; i++) {
+          array[i] = Integer.parseInt(parts[i]);
+        }
+        
+        result = array;
+      }
+    }
+    
+    return result;
+  }
 
   protected void importFavorites() {
     JFileChooser fileChooser = new JFileChooser();
     String[] extArr = { ".txt" };
-    String msg = mLocalizer.msg("importFile.TVgenial", "Text file (from TVgenial) (.txt)");
+    String msg = LOCALIZER.msg("importFile.TVgenial", "Text file (from TVgenial) (.txt)");
     fileChooser.setFileFilter(new ExtensionFileFilter(extArr, msg));
     if (fileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
 
@@ -1134,7 +1512,7 @@ public class ManageFavoritesPanel extends TabListenerPanel implements ListDropAc
           }
         }
         catch (Exception exc) {
-          msg = mLocalizer.msg("error.1", "Importing text file failed: {0}.",
+          msg = LOCALIZER.msg("error.1", "Importing text file failed: {0}.",
                                file.getAbsolutePath());
           ErrorHandler.handle(msg, exc);
         }
@@ -1147,7 +1525,7 @@ public class ManageFavoritesPanel extends TabListenerPanel implements ListDropAc
         }
 
         if (importedFavoritesCount == 0) {
-          msg = mLocalizer.msg("error.2", "There are no new favorites in {0}.",
+          msg = LOCALIZER.msg("error.2", "There are no new favorites in {0}.",
                                file.getAbsolutePath());
           JOptionPane.showMessageDialog(this, msg);
         } else {
@@ -1159,7 +1537,7 @@ public class ManageFavoritesPanel extends TabListenerPanel implements ListDropAc
             mFavoritesList.setSelectedIndex(firstNewIdx);
             mFavoritesList.ensureIndexIsVisible(firstNewIdx);
           }
-          msg = mLocalizer.msg("importDone", "There were {0} new favorites imported.", importedFavoritesCount);
+          msg = LOCALIZER.msg("importDone", "There were {0} new favorites imported.", importedFavoritesCount);
           JOptionPane.showMessageDialog(this, msg);
         }
       }
@@ -1240,8 +1618,8 @@ public class ManageFavoritesPanel extends TabListenerPanel implements ListDropAc
     });
   }
   
-  public void newFolder(FavoriteNode parent, Window partenWindow) {
-    mFavoriteTree.newFolder(parent,partenWindow);
+  public void newFolder(FavoriteNode parent, Window partenWindow, String name) {
+    mFavoriteTree.newFolder(parent,partenWindow,name);
   }
 
   @Override
@@ -1297,5 +1675,19 @@ public class ManageFavoritesPanel extends TabListenerPanel implements ListDropAc
   public void tabShown() {
     super.tabShown();
     scrollToFirstNotExpiredIndex(false);
+    updateAndroidSyncImportButton();
+  }
+  
+  private void updateAndroidSyncImportButton() {
+    PluginProxy androidSync = PluginProxyManager.getInstance().getActivatedPluginForId("java.androidsync.AndroidSync");
+    
+    if(androidSync != null) {
+      PluginCommunication c = androidSync.getCommunicationClass();
+      mImportApp.setIcon(TVBrowserIcons.getMenuIcon(androidSync.getButtonAction(), Plugin.BIG_ICON));
+      mImportApp.setEnabled(c != null && c.getVersion() >= 2);
+    }
+    else {
+      mImportApp.setEnabled(false);
+    }
   }
 }

@@ -429,7 +429,7 @@ public class FavoriteTree extends JTree implements DragGestureListener, DropTarg
       if(!FavoritesPlugin.getInstance().programListIsEmpty()) {
         menu.addSeparator();
 
-        item = new JMenuItem(ManageFavoritesDialog.mLocalizer.msg("send", "Send Programs to another Plugin"), TVBrowserIcons.copy(TVBrowserIcons.SIZE_SMALL));
+        item = new JMenuItem(ManageFavoritesDialog.LOCALIZER.msg("send", "Send Programs to another Plugin"), TVBrowserIcons.copy(TVBrowserIcons.SIZE_SMALL));
         item.addActionListener(e -> {
            FavoritesPlugin.getInstance().showSendDialog();
         });
@@ -763,9 +763,15 @@ public class FavoriteTree extends JTree implements DragGestureListener, DropTarg
     }
   }
 
-  public void newFolder(FavoriteNode parent, Window partenWindow) {
-    String value = JOptionPane.showInputDialog(partenWindow, LOCALIZER.msg("folderName","Folder name:"), LOCALIZER.msg("newFolder","New folder"));
-
+  public void newFolder(FavoriteNode parent, Window parentWindow) {
+    newFolder(parent, parentWindow, null);
+  }
+  
+  public void newFolder(FavoriteNode parent, Window parentWindow, String value) {
+    if(value == null) {
+      value = JOptionPane.showInputDialog(parentWindow, LOCALIZER.msg("folderName","Folder name:"), LOCALIZER.msg("newFolder","New folder"));
+    }
+    
     if(value != null && value.length() > 0) {
       FavoriteNode node = new FavoriteNode(value);
 
@@ -777,6 +783,7 @@ public class FavoriteTree extends JTree implements DragGestureListener, DropTarg
       }
 
       reload((FavoriteNode)node.getParent());
+      setSelectionPath(new TreePath(node.getPath()));
     }
   }
 

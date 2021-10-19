@@ -164,6 +164,7 @@ public class FilterTreeModel extends DefaultTreeModel {
   public void addFilter(ProgramFilter filter) {
     if(filter != null) {
       addFilter(filter, (FilterNode) getRoot(), null);
+      fireFilterAdded(filter);
     }
   }
 

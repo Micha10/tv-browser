@@ -56,6 +56,7 @@ import tvdataservice.MutableChannelDayProgram;
 import tvdataservice.MutableProgram;
 import util.exc.ErrorHandler;
 import util.exc.TvBrowserException;
+import util.ui.TVBrowserIcons;
 
 /**
  * An abstract implementation of a plugin proxy. Encapsulates all calls to the
@@ -1022,7 +1023,7 @@ public abstract class AbstractPluginProxy implements PluginProxy, ContextMenuIf 
   public Icon getPluginIcon() {
     // first try button icon
     ActionMenu actionMenu = getButtonAction();
-    Icon icon = getMenuIcon(actionMenu);
+    Icon icon = TVBrowserIcons.getMenuIcon(actionMenu,Action.SMALL_ICON);
 
     // then try the mark icon
     if (icon == null) {
@@ -1033,7 +1034,7 @@ public abstract class AbstractPluginProxy implements PluginProxy, ContextMenuIf 
     if (icon == null && isActivated()) {
       actionMenu = getContextMenuActions(PluginManagerImpl.getInstance()
           .getExampleProgram());
-      icon = getMenuIcon(actionMenu);
+      icon = TVBrowserIcons.getMenuIcon(actionMenu,Action.SMALL_ICON);
     }
 
     if (icon != null) {
@@ -1041,17 +1042,6 @@ public abstract class AbstractPluginProxy implements PluginProxy, ContextMenuIf 
     }
 
     return new ImageIcon(DEFAULT_PLUGIN_ICON_NAME);
-  }
-
-  private Icon getMenuIcon(ActionMenu actionMenu) {
-    Action action;
-    if (actionMenu != null) {
-      action = actionMenu.getAction();
-      if (action != null) {
-        return (Icon) action.getValue(Action.SMALL_ICON);
-      }
-    }
-    return null;
   }
 
   final public boolean hasArtificialPluginTree() {

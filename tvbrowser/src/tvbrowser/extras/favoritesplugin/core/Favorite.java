@@ -1057,6 +1057,16 @@ public abstract class Favorite {
   public ProgramSearcher getSearcher() throws TvBrowserException {
     return mSearchFormSettings.createSearcher();
   }
+  
+  /**
+   * Gets the search text of this favorite.
+   * 
+   * @return The search text of this favorite
+   * @since 4.2.4
+   */
+  public String getSearchText() {
+    return mSearchFormSettings.getSearchText();
+  }
 
   /**
    * Checks if the program is marked by this favorite and remove it if it does.

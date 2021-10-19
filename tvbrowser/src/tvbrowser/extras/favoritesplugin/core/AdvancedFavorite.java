@@ -99,6 +99,20 @@ public class AdvancedFavorite extends Favorite implements PendingFilterLoader {
       mSearchFormSettings.setSearchIn(SearchFormSettings.SEARCH_IN_ALL);
     }
   }
+  
+  public AdvancedFavorite(String searchText, int searchIn, int searcherType, boolean useDefaultSearchFieldTypes) {
+    super();
+    mSearchFormSettings = new SearchFormSettings(searchText);
+    mSearchFormSettings.setSearchIn(searchIn);
+    mSearchFormSettings.setSearcherType(searcherType);
+    if(useDefaultSearchFieldTypes) {
+      mSearchFormSettings.setUserDefaultFieldTypes(FavoritesPlugin.getInstance().getDefaultProgramFieldTypeSelection());
+    }
+    if (searchText.contains(" OR ") || searchText.contains(" AND ")
+        || searchText.contains(" NOT ")) {
+      mSearchFormSettings.setSearcherType(PluginManager.TYPE_SEARCHER_BOOLEAN);
+    }
+  }
 
   @Override
   public String getTypeID() {
