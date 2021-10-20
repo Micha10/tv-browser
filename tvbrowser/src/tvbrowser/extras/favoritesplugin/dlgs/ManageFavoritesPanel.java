@@ -51,11 +51,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Comparator;
+import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.TimeZone;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
+import javax.swing.ButtonGroup;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.DefaultListModel;
 import javax.swing.Icon;
@@ -69,6 +72,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
+import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JToolBar;
@@ -272,8 +276,16 @@ public class ManageFavoritesPanel extends TabListenerPanel implements ListDropAc
         FavoriteNode node = (FavoriteNode)mFavoriteTree.getSelectionPath().getLastPathComponent();
 
         if(node.isDirectoryNode()) {
+          Enumeration<TreePath> expanded = mFavoriteTree.getExpandedDescendants(new TreePath(mFavoriteTree.getRoot()));
+          
           mFavoriteTree.delete(node);
+          
           FavoritesPlugin.getInstance().updateRootNode(true);
+          
+          while(expanded.hasMoreElements()) {
+            TreePath path = expanded.nextElement();
+            mFavoriteTree.expandPath(path);
+          }
         } else {
           deleteSelectedFavorite();
         }
@@ -380,7 +392,7 @@ public class ManageFavoritesPanel extends TabListenerPanel implements ListDropAc
       importFavorites();
     });
     
-    msg = LOCALIZER.msg("importAndroidSync", "Import favorites with AndroidSync");
+    msg = LOCALIZER.msg("androidSync.import", "Import favorites with AndroidSync");
     icon = FavoritesPlugin.getIconFromTheme("actions", "document-open", 22);
     mImportApp = UiUtilities.createToolBarButton(msg, icon);
     mImportApp.setOpaque(false);
@@ -1078,9 +1090,8 @@ public class ManageFavoritesPanel extends TabListenerPanel implements ListDropAc
               LOCALIZER.msg("delete", "Delete selected favorite..."),
               JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
 
-        
         FavoriteTreeModel.getInstance().deleteFavorite(fav);
-
+        
         if (parent != null) {
           mFavoriteTree.setSelectionPath(new TreePath(parent.getPath()));
           mFavoriteTree.reload(parent);
@@ -1130,267 +1141,391 @@ public class ManageFavoritesPanel extends TabListenerPanel implements ListDropAc
         Object result = getFavorites.invoke(c);
         
         if(result == null) {
-          UiUtilities.showMessageDialogOnMouseScreen(LOCALIZER.msg("androidSyncNoData", "AndroidSync has not provided the needed data.\nMake sure the Favorites were uploaded in the Android app,\nyou're connected to the Internet and try again later."), Localizer.getLocalization(Localizer.I18N_ERROR), JOptionPane.ERROR_MESSAGE);
+          UiUtilities.showMessageDialogOnMouseScreen(LOCALIZER.msg("androidSync.noData", "AndroidSync has not provided the needed data.\nMake sure the Favorites were uploaded in the Android app,\nyou're connected to the Internet and try again later."), Localizer.getLocalization(Localizer.I18N_ERROR), JOptionPane.ERROR_MESSAGE);
         }
         else if(result instanceof String[]) {
           String[] favorites = (String[])result;
           
           if(favorites.length == 0) {
-            UiUtilities.showMessageDialogOnMouseScreen(LOCALIZER.msg("androidSyncNoFavorites", "AndroidSync has found no Favorites.\nMake sure the Favorites were uploaded in the Android app."), Localizer.getLocalization(Localizer.I18N_INFO), JOptionPane.INFORMATION_MESSAGE);
+            UiUtilities.showMessageDialogOnMouseScreen(LOCALIZER.msg("androidSync.noFavorites", "AndroidSync has found no Favorites.\nMake sure the Favorites were uploaded in the Android app."), Localizer.getLocalization(Localizer.I18N_INFO), JOptionPane.INFORMATION_MESSAGE);
           }
-          
-          FavoriteNode folderAdded = null;
-          
-          for(String fav : favorites) {
-            String[] values = fav.split(";;");
+          else {
+            JRadioButton add = new JRadioButton(LOCALIZER.msg("androidSync.duplicates.msg.add", "Add imported Favorite"),true);
+            JRadioButton replace = new JRadioButton(LOCALIZER.msg("androidSync.duplicates.msg.replace", "Replace existing with imported Favorite"));
+            JRadioButton ignore = new JRadioButton(LOCALIZER.msg("androidSync.duplicates.msg.ignore", "Ignore Favorite to import"));
+            JRadioButton ask = new JRadioButton(LOCALIZER.msg("androidSync.duplicates.msg.ask", "Separately ask for each existing Favorite"));
             
-            String name = null;
-            String search = null;
+            ButtonGroup bg = new ButtonGroup();
             
-            int type = KEYWORD_ONLY_TITLE_TYPE;
-            boolean remind = false;
-            ArrayList<Channel> excludedChannels = null;
-            int timeRestrictionStart = -1;
-            int timeRestrictionEnd = -1;
-            int[] restrictedDays = null;
-            String[] exculdedKeywords = null;
-            int shorterThan = -1;
-            int longerThan = -1;
-            int categories = 0;
+            bg.add(add);
+            bg.add(replace);
+            bg.add(ignore);
+            bg.add(ask);
             
-            if(values.length > 2) {
-              name = values[0];
-              search = values[1];
+            Object[] message = new Object[] {
+              LOCALIZER.msg("androidSync.duplicates.msg.global", "How to handle existing imported Favorites?\n\n"),
+              add,
+              replace,
+              ignore,
+              ask
+            };
+            
+            if(UiUtilities.showConfirmDialogOnMouseScreen(message, LOCALIZER.msg("androidSync.duplicates.title", "How to handle duplicate Favorites?"), JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE) == JOptionPane.OK_OPTION) {
+              final ImportInfo importInfo = new ImportInfo(add.isSelected(), replace.isSelected(), ask.isSelected());
+              FavoriteNode folderAdded = null;
               
-              try {
-                type = Integer.parseInt(values[2]);
-              }catch(NumberFormatException e) {
-                boolean onlyTitle = Boolean.valueOf(values[2]);
+              HashMap<String, ArrayList<Favorite>> existingFavorites = new HashMap<String, ArrayList<Favorite>>();
+              
+              if(!importInfo.mAdd) {
+                Favorite[] favs = mFavoriteTree.getModel().getFavoriteArr();
                 
-                if(onlyTitle) {
-                  type = KEYWORD_ONLY_TITLE_TYPE;
-                }
-                else {
-                  type = KEYWORD_TYPE;
-                }
-              }
-            }
-            
-            if(values.length > 3) {
-              remind = Boolean.valueOf(values[3]);
-            }
-            
-            if(values.length > 4) {
-              if(!values[4].equals("null")) {
-                String[] parts = values[4].split(",");
-                
-                try {
-                  timeRestrictionStart = Integer.parseInt(parts[1])+1;
-                  timeRestrictionEnd = Integer.parseInt(parts[0])-1;
+                for(Favorite fav : favs) {
+                  ArrayList<Favorite> list = existingFavorites.get(fav.getName());
                   
-                  if(timeRestrictionStart >= 1440) {
-                    timeRestrictionStart -= 1440;
-                  }
-                  if(timeRestrictionEnd < 0) {
-                    timeRestrictionEnd += 1440;
+                  if(list == null) {
+                    list = new ArrayList<Favorite>();
+                    existingFavorites.put(fav.getName(), list);
                   }
                   
-                  
-                  cal.set(Calendar.HOUR_OF_DAY, timeRestrictionStart/60);
-                  cal.set(Calendar.MINUTE, timeRestrictionStart%60);
-                  
-                  my.setTimeInMillis(cal.getTimeInMillis());
-                  
-                  timeRestrictionStart = my.get(Calendar.HOUR_OF_DAY)*60+my.get(Calendar.MINUTE);
-                  
-                  cal.set(Calendar.HOUR_OF_DAY, timeRestrictionEnd/60);
-                  cal.set(Calendar.MINUTE, timeRestrictionEnd%60);
-                  
-                  my.setTimeInMillis(cal.getTimeInMillis());
-                  
-                  timeRestrictionEnd = my.get(Calendar.HOUR_OF_DAY)*60+my.get(Calendar.MINUTE);
-                }catch(NumberFormatException nfe) {
-                  timeRestrictionStart = -1;
-                  timeRestrictionEnd = -1;
+                  list.add(fav);
                 }
               }
               
-              Object dayRestriction = parseArray(DAY_RESTRICTION_TYPE, values[5]);
+              int count = 0;
               
-              if(dayRestriction != null && dayRestriction instanceof int[]) {
-                int[] temp = (int[])dayRestriction;
+              for(String fav : favorites) {
+                String[] values = fav.split(";;");
                 
-                ArrayList<Integer> days = new ArrayList<Integer>();
-                days.add(Calendar.MONDAY);
-                days.add(Calendar.TUESDAY);
-                days.add(Calendar.WEDNESDAY);
-                days.add(Calendar.THURSDAY);
-                days.add(Calendar.FRIDAY);
-                days.add(Calendar.SATURDAY);
-                days.add(Calendar.SUNDAY);
+                String name = null;
+                String search = null;
                 
-                for(int test : temp) {
-                  days.remove((Integer)test);
-                }
+                int type = KEYWORD_ONLY_TITLE_TYPE;
+                boolean remind = false;
+                ArrayList<Channel> excludedChannels = null;
+                int timeRestrictionStart = -1;
+                int timeRestrictionEnd = -1;
+                int[] restrictedDays = null;
+                String[] exculdedKeywords = null;
+                int shorterThan = -1;
+                int longerThan = -1;
+                int categories = 0;
                 
-                if(!days.isEmpty()) {
-                  restrictedDays = new int[days.size()];
+                if(values.length > 2) {
+                  name = values[0];
+                  search = values[1];
                   
-                  for(int i = 0; i < days.size(); i++) {
-                    restrictedDays[i] = days.get(i);
-                  }
-                }
-              }
-              
-              Object exclCh = parseArray(CHANNEL_RESTRICTION_TYPE, values[6]);
-              
-              if(exclCh != null && exclCh instanceof ArrayList<?>) {
-                excludedChannels = (ArrayList<Channel>)exclCh;
-              }
-            }
-            
-            if(values.length > 7 && !values[7].equals("null")) {
-              if(values[7].contains(",")) {
-                exculdedKeywords = values[7].split(",");
-              }
-              else {
-                exculdedKeywords = new String[1];
-                exculdedKeywords[0] = values[7];
-              }
-            }
-            
-            if(values.length > 8) {
-              if(!values[8].equals("null")) {
-                String[] parts = values[8].split(",");
-                
-                try {
-                  longerThan = Integer.parseInt(parts[0]);
-                  shorterThan = Integer.parseInt(parts[1]);
-                  
-                  if(longerThan != -1) {
-                    longerThan--;
-                  }
-                  if(shorterThan != -1) {
-                    shorterThan++;
-                  }
-                }catch(NumberFormatException nfe) {
-                  longerThan = shorterThan = -1;
-                }
-              }
-            }
-            
-            if(values.length > 9) {
-              Object temp = parseArray(ATTRIBUTE_RESTRICTION_TYPE, values[9]);
-              
-              if(temp != null && temp instanceof int[]) {
-                int[] cats = (int[])temp;
-                
-                for(int cat : cats) {
-                  categories |= (1 << (cat+1));
-                }
-              }
-            }
-            
-            Favorite toAdd = null;
-            
-            if(type == KEYWORD_ONLY_TITLE_TYPE) {
-              toAdd = new TitleFavorite(search);
-            }
-            else if(type == KEYWORD_TYPE) {
-              toAdd = new TopicFavorite(search);
-            }
-            else if(type == RESTRICTION_RULES_TYPE) {
-              toAdd = new AdvancedFavorite(".*",SearchFormSettings.SEARCH_IN_TITLE,PluginManager.TYPE_SEARCHER_REGULAR_EXPRESSION,false);
-            }
-            
-            if(toAdd != null) {
-              toAdd.setName(name);
-              ArrayList<Exclusion> exclusionList = new ArrayList<Exclusion>();
-              
-              if(remind) {
-                toAdd.setReminderMinutesDefault(ReminderPlugin.getInstance().getDefaultReminderTime());
-                toAdd.getReminderConfiguration().setReminderServices(new String[] { ReminderConfiguration.REMINDER_DEFAULT });
-              }
-              else {
-                toAdd.getReminderConfiguration().setReminderServices(new String[0]);
-              }
-              
-              if(excludedChannels != null) {
-                for(Channel ch : excludedChannels) {
-                  exclusionList.add(new Exclusion(null, null, ch, -1, -1, -1, null, null, 0, null, Exclusion.TYPE_DURATION_NONE, -1));
-                }
-              }
-              
-              if(timeRestrictionStart != -1 && timeRestrictionEnd != -1) {
-                exclusionList.add(new Exclusion(null, null, null, timeRestrictionStart, timeRestrictionEnd, -1, null, null, 0, null, Exclusion.TYPE_DURATION_NONE, -1));
-              }
-              
-              if(restrictedDays != null) {
-                for(int day : restrictedDays) {
-                  exclusionList.add(new Exclusion(null, null, null, -1, -1, day, null, null, 0, null, Exclusion.TYPE_DURATION_NONE, -1));
-                }
-              }
-              
-              if(exculdedKeywords != null) {
-                for(String keyword : exculdedKeywords) {
-                  exclusionList.add(new Exclusion(null, keyword, null, -1, -1, -1, null, null, 0, null, Exclusion.TYPE_DURATION_NONE, -1));
-                }
-              }
-              
-              if(shorterThan != -1) {
-                exclusionList.add(new Exclusion(null, null, null, -1, -1, -1, null, null, 0, null, Exclusion.TYPE_DURATION_TOO_LONG, shorterThan));
-              }
-
-              if(longerThan != -1) {
-                exclusionList.add(new Exclusion(null, null, null, -1, -1, -1, null, null, 0, null, Exclusion.TYPE_DURATION_TOO_SHORT, longerThan));
-              }
-              
-              if(categories != 0) {
-                try(ByteArrayOutputStream bOut = new ByteArrayOutputStream(); ObjectOutputStream out = new ObjectOutputStream(bOut);) {
-                  out.writeInt(categories);
-                  out.flush();
-                  try(ObjectInputStream in = new ObjectInputStream(new ByteArrayInputStream(bOut.toByteArray()))) {
-                    ProgramInfoFilterComponent infoFilter = new ProgramInfoFilterComponent("AndroidSync-Import_"+name.replaceAll("\\s+|\\p{Punct}", "_")+"_"+DateFormat.getDateTimeInstance().format(new java.util.Date()).replaceAll("\\s+|\\p{Punct}", "_"), "");
-                    infoFilter.read(in, 1);
+                  try {
+                    type = Integer.parseInt(values[2]);
+                  }catch(NumberFormatException e) {
+                    boolean onlyTitle = Boolean.valueOf(values[2]);
                     
-                    FilterComponentList.getInstance().add(infoFilter);
-                    
-                    UserFilter filter = new UserFilter("AndroidSync-Import_"+name.replaceAll("\\s+|\\p{Punct}", "_")+"_"+DateFormat.getDateTimeInstance().format(new java.util.Date()).replaceAll("\\s+|\\p{Punct}", "_"));
-                    filter.setRule("NOT "+infoFilter.getName());
-                    
-                    FilterList.getInstance().addProgramFilter(filter);
-                    
-                    exclusionList.add(new Exclusion(null, null, null, -1, -1, -1, filter.getName(), null, 0, null, Exclusion.TYPE_DURATION_NONE, -1));
+                    if(onlyTitle) {
+                      type = KEYWORD_ONLY_TITLE_TYPE;
+                    }
+                    else {
+                      type = KEYWORD_TYPE;
+                    }
                   }
-                }catch(IOException ioe) {
-                  ioe.printStackTrace();
+                  
+                  if(type == RESTRICTION_RULES_TYPE) {
+                    search = ".*";
+                  }
+                  
+                  ArrayList<Favorite> duplicates = new ArrayList<Favorite>();
+                  
+                  if(!importInfo.mAdd) {
+                    ArrayList<Favorite> list = existingFavorites.get(name);
+                    
+                    if(list != null) {
+                      for(Favorite entry : list) {
+                        if(entry.getSearchText().equals(search)) {
+                          duplicates.add(entry);
+                        }
+                      }
+                    }
+                  }
+                  
+                  ImportInfo importInfoTemp = null;
+                  
+                  if(!duplicates.isEmpty() && importInfo.mAsk) {
+                    add.setSelected(true);
+                    message = new Object[] {
+                        LOCALIZER.msg("androidSync.duplicates.msg.single","Duplicate Favorites found: '{0}'\nWhat should be done with found Favorite?\n\n",name),
+                        add,
+                        replace,
+                        ignore
+                      };
+                      
+                    if(UiUtilities.showConfirmDialogOnMouseScreen(message, LOCALIZER.msg("androidSync.duplicates.title", "How to handle duplicate Favorites?"), JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE) == JOptionPane.OK_OPTION) {
+                      importInfoTemp = new ImportInfo(add.isSelected(), replace.isSelected(), false);
+                    }
+                    else {
+                      importInfoTemp = new ImportInfo(false, false, false);
+                    }
+                  }
+                  else {
+                    importInfoTemp = importInfo;
+                  }
+                  
+                  if(duplicates.isEmpty() || importInfoTemp.mReplace || importInfoTemp.mAdd) {
+                    if(values.length > 3) {
+                      remind = Boolean.valueOf(values[3]);
+                    }
+                    
+                    if(values.length > 4) {
+                      if(!values[4].equals("null")) {
+                        String[] parts = values[4].split(",");
+                        
+                        try {
+                          timeRestrictionStart = Integer.parseInt(parts[1])+1;
+                          timeRestrictionEnd = Integer.parseInt(parts[0])-1;
+                          
+                          if(timeRestrictionStart >= 1440) {
+                            timeRestrictionStart -= 1440;
+                          }
+                          if(timeRestrictionEnd < 0) {
+                            timeRestrictionEnd += 1440;
+                          }
+                          
+                          
+                          cal.set(Calendar.HOUR_OF_DAY, timeRestrictionStart/60);
+                          cal.set(Calendar.MINUTE, timeRestrictionStart%60);
+                          
+                          my.setTimeInMillis(cal.getTimeInMillis());
+                          
+                          timeRestrictionStart = my.get(Calendar.HOUR_OF_DAY)*60+my.get(Calendar.MINUTE);
+                          
+                          cal.set(Calendar.HOUR_OF_DAY, timeRestrictionEnd/60);
+                          cal.set(Calendar.MINUTE, timeRestrictionEnd%60);
+                          
+                          my.setTimeInMillis(cal.getTimeInMillis());
+                          
+                          timeRestrictionEnd = my.get(Calendar.HOUR_OF_DAY)*60+my.get(Calendar.MINUTE);
+                        }catch(NumberFormatException nfe) {
+                          timeRestrictionStart = -1;
+                          timeRestrictionEnd = -1;
+                        }
+                      }
+                      
+                      Object dayRestriction = parseArray(DAY_RESTRICTION_TYPE, values[5]);
+                      
+                      if(dayRestriction != null && dayRestriction instanceof int[]) {
+                        int[] temp = (int[])dayRestriction;
+                        
+                        ArrayList<Integer> days = new ArrayList<Integer>();
+                        days.add(Calendar.MONDAY);
+                        days.add(Calendar.TUESDAY);
+                        days.add(Calendar.WEDNESDAY);
+                        days.add(Calendar.THURSDAY);
+                        days.add(Calendar.FRIDAY);
+                        days.add(Calendar.SATURDAY);
+                        days.add(Calendar.SUNDAY);
+                        
+                        for(int test : temp) {
+                          days.remove((Integer)test);
+                        }
+                        
+                        if(!days.isEmpty()) {
+                          restrictedDays = new int[days.size()];
+                          
+                          for(int i = 0; i < days.size(); i++) {
+                            restrictedDays[i] = days.get(i);
+                          }
+                        }
+                      }
+                      
+                      Object exclCh = parseArray(CHANNEL_RESTRICTION_TYPE, values[6]);
+                      
+                      if(exclCh != null && exclCh instanceof ArrayList<?>) {
+                        excludedChannels = (ArrayList<Channel>)exclCh;
+                      }
+                    }
+                    
+                    if(values.length > 7 && !values[7].equals("null")) {
+                      if(values[7].contains(",")) {
+                        exculdedKeywords = values[7].split(",");
+                      }
+                      else {
+                        exculdedKeywords = new String[1];
+                        exculdedKeywords[0] = values[7];
+                      }
+                    }
+                    
+                    if(values.length > 8) {
+                      if(!values[8].equals("null")) {
+                        String[] parts = values[8].split(",");
+                        
+                        try {
+                          longerThan = Integer.parseInt(parts[0]);
+                          shorterThan = Integer.parseInt(parts[1]);
+                          
+                          if(longerThan != -1) {
+                            longerThan--;
+                          }
+                          if(shorterThan != -1) {
+                            shorterThan++;
+                          }
+                        }catch(NumberFormatException nfe) {
+                          longerThan = shorterThan = -1;
+                        }
+                      }
+                    }
+                    
+                    if(values.length > 9) {
+                      Object temp = parseArray(ATTRIBUTE_RESTRICTION_TYPE, values[9]);
+                      
+                      if(temp != null && temp instanceof int[]) {
+                        int[] cats = (int[])temp;
+                        
+                        for(int cat : cats) {
+                          categories |= (1 << (cat+1));
+                        }
+                      }
+                    }
+                    
+                    Favorite toAdd = null;
+                    
+                    if(type == KEYWORD_ONLY_TITLE_TYPE) {
+                      toAdd = new TitleFavorite(search);
+                    }
+                    else if(type == KEYWORD_TYPE) {
+                      toAdd = new TopicFavorite(search);
+                    }
+                    else if(type == RESTRICTION_RULES_TYPE) {
+                      toAdd = new AdvancedFavorite(".*",SearchFormSettings.SEARCH_IN_TITLE,PluginManager.TYPE_SEARCHER_REGULAR_EXPRESSION,false);
+                    }
+                    
+                    if(toAdd != null) {
+                      toAdd.setName(name);
+                      ArrayList<Exclusion> exclusionList = new ArrayList<Exclusion>();
+                      
+                      if(remind) {
+                        toAdd.setReminderMinutesDefault(ReminderPlugin.getInstance().getDefaultReminderTime());
+                        toAdd.getReminderConfiguration().setReminderServices(new String[] { ReminderConfiguration.REMINDER_DEFAULT });
+                      }
+                      else {
+                        toAdd.getReminderConfiguration().setReminderServices(new String[0]);
+                      }
+                      
+                      if(excludedChannels != null) {
+                        for(Channel ch : excludedChannels) {
+                          exclusionList.add(new Exclusion(null, null, ch, -1, -1, -1, null, null, 0, null, Exclusion.TYPE_DURATION_NONE, -1));
+                        }
+                      }
+                      
+                      if(timeRestrictionStart != -1 && timeRestrictionEnd != -1) {
+                        exclusionList.add(new Exclusion(null, null, null, timeRestrictionStart, timeRestrictionEnd, -1, null, null, 0, null, Exclusion.TYPE_DURATION_NONE, -1));
+                      }
+                      
+                      if(restrictedDays != null) {
+                        for(int day : restrictedDays) {
+                          exclusionList.add(new Exclusion(null, null, null, -1, -1, day, null, null, 0, null, Exclusion.TYPE_DURATION_NONE, -1));
+                        }
+                      }
+                      
+                      if(exculdedKeywords != null) {
+                        for(String keyword : exculdedKeywords) {
+                          exclusionList.add(new Exclusion(null, keyword, null, -1, -1, -1, null, null, 0, null, Exclusion.TYPE_DURATION_NONE, -1));
+                        }
+                      }
+                      
+                      if(shorterThan != -1) {
+                        exclusionList.add(new Exclusion(null, null, null, -1, -1, -1, null, null, 0, null, Exclusion.TYPE_DURATION_TOO_LONG, shorterThan));
+                      }
+        
+                      if(longerThan != -1) {
+                        exclusionList.add(new Exclusion(null, null, null, -1, -1, -1, null, null, 0, null, Exclusion.TYPE_DURATION_TOO_SHORT, longerThan));
+                      }
+                      
+                      if(categories != 0) {
+                        try(ByteArrayOutputStream bOut = new ByteArrayOutputStream(); ObjectOutputStream out = new ObjectOutputStream(bOut);) {
+                          out.writeInt(categories);
+                          out.flush();
+                          try(ObjectInputStream in = new ObjectInputStream(new ByteArrayInputStream(bOut.toByteArray()))) {
+                            ProgramInfoFilterComponent infoFilter = new ProgramInfoFilterComponent("AndroidSync-Import_"+name.replaceAll("\\s+|\\p{Punct}", "_")+"_"+DateFormat.getDateTimeInstance().format(new java.util.Date()).replaceAll("\\s+|\\p{Punct}", "_"), "");
+                            infoFilter.read(in, 1);
+                            
+                            FilterComponentList.getInstance().add(infoFilter);
+                            
+                            UserFilter filter = new UserFilter("AndroidSync-Import_"+name.replaceAll("\\s+|\\p{Punct}", "_")+"_"+DateFormat.getDateTimeInstance().format(new java.util.Date()).replaceAll("\\s+|\\p{Punct}", "_"));
+                            filter.setRule("NOT "+infoFilter.getName());
+                            
+                            FilterList.getInstance().addProgramFilter(filter);
+                            
+                            exclusionList.add(new Exclusion(null, null, null, -1, -1, -1, filter.getName(), null, 0, null, Exclusion.TYPE_DURATION_NONE, -1));
+                          }
+                        }catch(IOException ioe) {
+                          ioe.printStackTrace();
+                        }
+                      }
+        
+                      if(!exclusionList.isEmpty()) {
+                        toAdd.setExclusions(exclusionList.toArray(new Exclusion[0]));
+                      }
+                      
+                      if(!duplicates.isEmpty() && importInfoTemp.mReplace) {
+                        FavoriteNode parent = null;
+                        
+                        for(Favorite dup : duplicates) {
+                          if(parent == null) {
+                            FavoriteNode temp = mFavoriteTree.findFavorite(dup);
+                            if(temp != null) {
+                              parent = (FavoriteNode)temp.getParent();
+                            }
+                          }
+                          
+                          FavoriteTreeModel.getInstance().deleteFavorite(dup);
+                        }
+                        
+                        duplicates.clear();
+                        
+                        if(parent == null) {
+                          parent = folderAdded;
+                        }
+                        duplicates.add(toAdd);
+                        
+                        addFavorite(toAdd, true, parent);
+                      }
+                      else {
+                        if(folderAdded == null) {
+                          TreePath path = mFavoriteTree.getSelectionPath();
+                          
+                          if(path != null) {
+                            FavoritesPlugin.getInstance().newFolder((FavoriteNode)path.getLastPathComponent(),"AndroidSync-Import "+DateFormat.getDateTimeInstance().format(new java.util.Date()));
+                          } else {
+                            FavoritesPlugin.getInstance().newFolder(mFavoriteTree.getRoot(),"AndroidSync-Import "+DateFormat.getDateTimeInstance().format(new java.util.Date()));
+                          }
+                          
+                          path = mFavoriteTree.getSelectionPath();
+                          folderAdded = (FavoriteNode)path.getLastPathComponent();
+                          favoriteSelectionChanged();
+                        }
+                        
+                        addFavorite(toAdd, true, folderAdded);
+                      }
+                      
+                      count++;
+                      
+                      if(!importInfo.mAdd) {
+                        ArrayList<Favorite> list = existingFavorites.get(toAdd.getName());
+                        
+                        if(list == null) {
+                          list = new ArrayList<Favorite>();
+                          existingFavorites.put(toAdd.getName(), list);
+                        }
+                        
+                        list.add(toAdd);
+                      }
+                    }
+                  }
                 }
               }
-
-              if(!exclusionList.isEmpty()) {
-                toAdd.setExclusions(exclusionList.toArray(new Exclusion[0]));
-              }
               
-              if(folderAdded == null) {
-                TreePath path = mFavoriteTree.getSelectionPath();
-                
-                if(path != null) {
-                  FavoritesPlugin.getInstance().newFolder((FavoriteNode)path.getLastPathComponent(),"AndroidSync-Import "+DateFormat.getDateTimeInstance().format(new java.util.Date()));
-                } else {
-                  FavoritesPlugin.getInstance().newFolder(mFavoriteTree.getRoot(),"AndroidSync-Import "+DateFormat.getDateTimeInstance().format(new java.util.Date()));
-                }
-                
-                
-                path = mFavoriteTree.getSelectionPath();
-                folderAdded = (FavoriteNode)path.getLastPathComponent();
+              if(count > 0) {
+                UiUtilities.showMessageDialogOnMouseScreen(LOCALIZER.msg("androidSync.success", "{0} Favorites were imported.", count), Localizer.getLocalization(Localizer.I18N_INFO), JOptionPane.INFORMATION_MESSAGE);
+                MainFrame.getInstance().updateFilterMenu();
               }
-              
-              addFavorite(toAdd, true, folderAdded);
             }
-          }
-          
-          if(folderAdded != null) {
-            MainFrame.getInstance().updateFilterMenu();
           }
         }
       } catch (Exception e) {
@@ -1688,6 +1823,18 @@ public class ManageFavoritesPanel extends TabListenerPanel implements ListDropAc
     }
     else {
       mImportApp.setEnabled(false);
+    }
+  }
+  
+  private static final class ImportInfo {
+    private final boolean mAdd;
+    private final boolean mReplace;
+    private final boolean mAsk;
+    
+    private ImportInfo(final boolean add, final boolean replace, final boolean ask) {
+      mAdd = add;
+      mReplace = replace;
+      mAsk = ask;
     }
   }
 }

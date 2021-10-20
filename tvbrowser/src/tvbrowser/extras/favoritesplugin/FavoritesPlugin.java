@@ -1705,6 +1705,8 @@ public class FavoritesPlugin {
     else if(mMangePanel != null) {
       mMangePanel.newFolder(parent, MainFrame.getInstance(),name);
     }
+    
+    updateRootNode(true);
   }
   
   public void favoriteSelectionChanged() {

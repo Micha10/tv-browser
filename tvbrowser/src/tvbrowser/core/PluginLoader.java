@@ -702,7 +702,7 @@ public class PluginLoader {
     return plugin;
   }
 
-  private Object loadBeanShellPlugin(File file) {
+  @Deprecated(since="4.2.4") private Object loadBeanShellPlugin(File file) {
     return new BeanShellPluginProxy(file);
   }
 
