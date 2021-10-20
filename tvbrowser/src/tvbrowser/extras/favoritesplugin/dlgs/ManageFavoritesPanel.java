@@ -1139,7 +1139,7 @@ public class ManageFavoritesPanel extends TabListenerPanel implements ListDropAc
           String[] favorites = (String[])result;
           
           if(favorites.length == 0) {
-            UiUtilities.showMessageDialogOnMouseScreen(LOCALIZER.msg("androidSync.noFavorites", "AndroidSync has found no Favorites.\nMake sure the Favorites were uploaded in the Android app."), Localizer.getLocalization(Localizer.I18N_INFO), JOptionPane.INFORMATION_MESSAGE);
+            UiUtilities.showMessageDialogOnMouseScreen(LOCALIZER.msg("androidSync.noFavorites", "AndroidSync has found no Favorites.\nMake sure the Favorites were uploaded in the Android app\nand check if the correct credentials were entered in the\nAndroidSync plugin."), Localizer.getLocalization(Localizer.I18N_INFO), JOptionPane.INFORMATION_MESSAGE);
           }
           else {
             JCheckBox expert = new JCheckBox(LOCALIZER.msg("androidSync.importAsExpert", "Import all as expert Favorites"));
