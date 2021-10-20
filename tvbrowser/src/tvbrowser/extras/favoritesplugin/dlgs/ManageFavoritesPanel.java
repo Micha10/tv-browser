@@ -1142,6 +1142,8 @@ public class ManageFavoritesPanel extends TabListenerPanel implements ListDropAc
             UiUtilities.showMessageDialogOnMouseScreen(LOCALIZER.msg("androidSync.noFavorites", "AndroidSync has found no Favorites.\nMake sure the Favorites were uploaded in the Android app."), Localizer.getLocalization(Localizer.I18N_INFO), JOptionPane.INFORMATION_MESSAGE);
           }
           else {
+            JCheckBox expert = new JCheckBox(LOCALIZER.msg("androidSync.importAsExpert", "Import all as expert Favorites"));
+            
             JRadioButton add = new JRadioButton(LOCALIZER.msg("androidSync.duplicates.msg.add", "Add imported Favorite"),true);
             JRadioButton replace = new JRadioButton(LOCALIZER.msg("androidSync.duplicates.msg.replace", "Replace existing with imported Favorite"));
             JRadioButton ignore = new JRadioButton(LOCALIZER.msg("androidSync.duplicates.msg.ignore", "Ignore Favorite to import"));
@@ -1159,7 +1161,9 @@ public class ManageFavoritesPanel extends TabListenerPanel implements ListDropAc
               add,
               replace,
               ignore,
-              ask
+              ask,
+              " ",
+              expert
             };
             
             if(UiUtilities.showConfirmDialogOnMouseScreen(message, LOCALIZER.msg("androidSync.duplicates.title", "How to handle duplicate Favorites?"), JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE) == JOptionPane.OK_OPTION) {
@@ -1378,10 +1382,20 @@ public class ManageFavoritesPanel extends TabListenerPanel implements ListDropAc
                     Favorite toAdd = null;
                     
                     if(type == KEYWORD_ONLY_TITLE_TYPE) {
-                      toAdd = new TitleFavorite(search);
+                      if(expert.isSelected()) {
+                        toAdd = new AdvancedFavorite(search,SearchFormSettings.SEARCH_IN_TITLE,PluginManager.TYPE_SEARCHER_KEYWORD,false);
+                      }
+                      else {
+                        toAdd = new TitleFavorite(search);
+                      }
                     }
                     else if(type == KEYWORD_TYPE) {
-                      toAdd = new TopicFavorite(search);
+                      if(expert.isSelected()) {
+                        toAdd = new AdvancedFavorite(search,SearchFormSettings.SEARCH_IN_ALL,PluginManager.TYPE_SEARCHER_KEYWORD,false);
+                      }
+                      else {
+                        toAdd = new TopicFavorite(search);
+                      }
                     }
                     else if(type == RESTRICTION_RULES_TYPE) {
                       toAdd = new AdvancedFavorite(".*",SearchFormSettings.SEARCH_IN_TITLE,PluginManager.TYPE_SEARCHER_REGULAR_EXPRESSION,false);
