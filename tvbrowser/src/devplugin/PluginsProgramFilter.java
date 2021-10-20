@@ -18,6 +18,7 @@
  */
 package devplugin;
 
+import tvbrowser.core.plugin.PluginProxy;
 import tvbrowser.core.plugin.PluginProxyManager;
 
 /**
@@ -47,7 +48,21 @@ public abstract class PluginsProgramFilter implements ProgramFilter {
    */
   public final String getName() {
     String subName = getSubName();
-    String name = getPluginAccessOfFilter() != null ? getPluginAccessOfFilter().getInfo().getName() : "DeactivatedPluginFilter: " + PluginProxyManager.getInstance().getPluginForId(mPluginId).getInfo().getName();
+    String name = "DeactivatedPluginFilter: ";
+    
+    if(getPluginAccessOfFilter() != null) {
+      name = getPluginAccessOfFilter().getInfo().getName();
+    }
+    else {
+      PluginProxy proxy = PluginProxyManager.getInstance().getPluginForId(mPluginId);
+      
+      if(proxy != null) {
+        name += proxy.getInfo().getName();
+      }
+      else {
+        name += mPluginId;
+      }
+    }
     
     if (subName != null && subName.length() > 0) {
       return name + ": " + subName;

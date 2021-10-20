@@ -51,7 +51,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Comparator;
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.TimeZone;
@@ -276,16 +275,9 @@ public class ManageFavoritesPanel extends TabListenerPanel implements ListDropAc
         FavoriteNode node = (FavoriteNode)mFavoriteTree.getSelectionPath().getLastPathComponent();
 
         if(node.isDirectoryNode()) {
-          Enumeration<TreePath> expanded = mFavoriteTree.getExpandedDescendants(new TreePath(mFavoriteTree.getRoot()));
-          
           mFavoriteTree.delete(node);
           
           FavoritesPlugin.getInstance().updateRootNode(true);
-          
-          while(expanded.hasMoreElements()) {
-            TreePath path = expanded.nextElement();
-            mFavoriteTree.expandPath(path);
-          }
         } else {
           deleteSelectedFavorite();
         }
