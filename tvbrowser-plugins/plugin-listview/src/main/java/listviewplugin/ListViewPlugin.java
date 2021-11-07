@@ -57,7 +57,7 @@ import util.settings.PluginPictureSettings;
  * @author bodo
  */
 public class ListViewPlugin extends Plugin {
-  private static final Version mVersion = new Version(3,30,0,true);
+  private static final Version mVersion = new Version(3,31,0,true);
 
     protected static final int PROGRAMTABLEWIDTH = 200;
   
@@ -386,5 +386,41 @@ public class ListViewPlugin extends Plugin {
     
     public boolean provideTab() {
       return mSettings.getProperty(ListViewSettings.PROVIDE_TAB, "true").equals("true");
+    }
+    
+    void setValue(String name, String value) {
+      if(value == null) {
+        mSettings.remove(name);
+      }
+      else {
+        mSettings.setProperty(name, value);
+      }
+      
+      saveMe();
+    }
+    
+    void setIndex(String name, int index) {
+      if(index < 0) {
+        mSettings.remove(name);
+      }
+      else {
+        mSettings.setProperty(name, String.valueOf(index));
+      }
+      
+      saveMe();
+    }
+    
+    int getIndexForName(String name) {
+      int result = 0;
+      
+      try {
+        result = Integer.parseInt(mSettings.getProperty(name, "0"));
+      }catch(NumberFormatException nfe) {}
+      
+      return result;
+    }
+    
+    String getValueForName(String name) {
+      return mSettings.getProperty(name);
     }
 }

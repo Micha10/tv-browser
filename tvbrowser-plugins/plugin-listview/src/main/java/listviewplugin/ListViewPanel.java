@@ -40,6 +40,7 @@ import java.util.TimerTask;
 import java.util.Vector;
 
 import javax.swing.ButtonGroup;
+import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -80,6 +81,7 @@ import util.programmouseevent.ProgramMouseEventHandler;
 import util.ui.CaretPositionCorrector;
 import util.ui.ChannelLabel;
 import util.ui.Localizer;
+import util.ui.TVBrowserIcons;
 import util.ui.TabListenerPanel;
 import util.ui.TimeFormatter;
 import util.ui.UiUtilities;
@@ -87,6 +89,8 @@ import util.ui.UiUtilities;
 public class ListViewPanel extends TabListenerPanel implements PersonaCompatListener, ProgramMouseAndContextMenuListener {
   private static final Localizer mLocalizer = ListViewDialog.mLocalizer;
   
+  private static final String KEY_SELECTED_CHANNEL_FILTER = "selectedChannelFilter";
+  private static final String KEY_SELECTED_FILTER = "selectedFilter";
 
   /** The Table */
   private ListTable mProgramTable;
@@ -235,15 +239,33 @@ public class ListViewPanel extends TabListenerPanel implements PersonaCompatList
     datetimeselect.add(mTimeSpinner);
 
     Vector<String> filters = new Vector<String>();
+    
+    String selectedChannelFilter = ListViewPlugin.getInstance().getValueForName(KEY_SELECTED_CHANNEL_FILTER);
+    
+    if(selectedChannelFilter == null) {
+      selectedChannelFilter = mLocalizer.msg("filterAll", "all channels");
+    }
+    
     filters.add(mLocalizer.msg("filterAll", "all channels"));
     for (String filterName : FilterCompat.getChannelFilterComponentNames()) {
       filters.add(filterName);
     }
     filters.add(mLocalizer.ellipsisMsg("filterDefine", "define filter"));
     mChannels = new JComboBox(filters);
+    mChannels.setSelectedItem(selectedChannelFilter);
     datetimeselect.add(new JLabel("    "));
     datetimeselect.add(mChannels);
 
+    final JButton resetChannels = new JButton(ListViewPlugin.getInstance().createImageIcon("actions", "edit-undo", TVBrowserIcons.SIZE_SMALL));
+    resetChannels.setEnabled(mChannels.getSelectedIndex() > 0);
+    datetimeselect.add(resetChannels);
+    resetChannels.addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        mChannels.setSelectedIndex(0);
+      }
+    });
+    
     // Event-Handler
 
     mRuns.addItemListener(new ItemListener() {
@@ -282,6 +304,16 @@ public class ListViewPanel extends TabListenerPanel implements PersonaCompatList
       }
     });
 
+    mChannels.addItemListener(new ItemListener() {
+      @Override
+      public void itemStateChanged(ItemEvent e) {
+        if(e.getStateChange() == ItemEvent.SELECTED) {
+          ListViewPlugin.getInstance().setValue(KEY_SELECTED_CHANNEL_FILTER, (String)e.getItem());
+          resetChannels.setEnabled(mChannels.getSelectedIndex() > 0);
+        }
+      }
+    });
+    
     mChannels.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
@@ -324,13 +356,16 @@ public class ListViewPanel extends TabListenerPanel implements PersonaCompatList
       filterNames[i] = availableFilters[i].getName();
     }
     
+    final JButton resetFilter = new JButton(ListViewPlugin.getInstance().createImageIcon("actions", "edit-undo", TVBrowserIcons.SIZE_SMALL));
+    
     mFilterBox = new JComboBox(filterNames);
     mFilterBox.setSelectedItem(Plugin.getPluginManager().getFilterManager().getCurrentFilter().getName());
     mFilterBox.addItemListener(new ItemListener() {
       public void itemStateChanged(ItemEvent e) {
         if(e.getStateChange() == ItemEvent.SELECTED) {
           String name = (String)e.getItem();
-          
+          ListViewPlugin.getInstance().setValue(KEY_SELECTED_FILTER, name);
+          resetFilter.setEnabled(!name.equals(Plugin.getPluginManager().getFilterManager().getCurrentFilter().getName()));
           boolean found = false;
           
           for(ProgramFilter filter : Plugin.getPluginManager().getFilterManager().getAvailableFilters()) {
@@ -351,6 +386,24 @@ public class ListViewPanel extends TabListenerPanel implements PersonaCompatList
       }
     });
     
+    String selectedFilter = ListViewPlugin.getInstance().getValueForName(KEY_SELECTED_FILTER);
+    
+    if(selectedFilter != null) {
+      mFilterBox.setSelectedItem(selectedFilter);
+    }
+    
+    resetFilter.setEnabled(mFilterBox.getSelectedItem() != null && !mFilterBox.getSelectedItem().equals(Plugin.getPluginManager().getFilterManager().getCurrentFilter().getName()));
+    resetFilter.addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        mFilterBox.setSelectedItem(Plugin.getPluginManager().getFilterManager().getCurrentFilter().getName());
+      }
+    });
+    
+    JPanel filterPanel = new JPanel(new BorderLayout());
+    filterPanel.add(mFilterBox, BorderLayout.CENTER);
+    filterPanel.add(resetFilter, BorderLayout.EAST);
+    
     // Upper Panel
 
     JPanel topPanel = new JPanel(new FormLayout("pref, 3dlu, pref, 15dlu, pref, 3dlu, pref, 3dlu, pref", "pref, 1dlu, pref, 3dlu"));
@@ -364,7 +417,7 @@ public class ListViewPanel extends TabListenerPanel implements PersonaCompatList
     topPanel.add(datetimeselect, cc.xy(7,1));
     
     topPanel.add(mFilterLabel, cc.xy(1,3));
-    topPanel.add(mFilterBox, cc.xyw(3,3,5));
+    topPanel.add(filterPanel, cc.xyw(3,3,5));
 
     add(topPanel, BorderLayout.NORTH);
 
