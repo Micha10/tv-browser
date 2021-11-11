@@ -45,18 +45,17 @@ import javax.swing.SpinnerNumberModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import com.jgoodies.forms.builder.PanelBuilder;
+import com.jgoodies.forms.factories.CC;
+import com.jgoodies.forms.layout.FormLayout;
+
+import captureplugin.CapturePlugin;
+import captureplugin.drivers.defaultdriver.DeviceConfig;
+import devplugin.ProgramReceiveTarget;
 import util.ui.Localizer;
 import util.ui.ProgramReceiveTargetSelectionPanel;
 import util.ui.ScrollableJPanel;
 import util.ui.UiUtilities;
-import captureplugin.CapturePlugin;
-import captureplugin.drivers.defaultdriver.DeviceConfig;
-
-import com.jgoodies.forms.builder.PanelBuilder;
-import com.jgoodies.forms.layout.CellConstraints;
-import com.jgoodies.forms.layout.FormLayout;
-
-import devplugin.ProgramReceiveTarget;
 
 
 /**
@@ -67,7 +66,7 @@ import devplugin.ProgramReceiveTarget;
 public class SettingsPanel extends ScrollableJPanel implements ActionListener, ChangeListener {
 
     /** Translator */
-    private static final Localizer mLocalizer = Localizer.getLocalizerFor(SettingsPanel.class);
+    private static final Localizer LOCALIZER = Localizer.getLocalizerFor(SettingsPanel.class);
 
     /** GUI */
     private JSpinner mPreTimeSpinner;
@@ -87,7 +86,7 @@ public class SettingsPanel extends ScrollableJPanel implements ActionListener, C
     private DeviceConfig mData;
     
     private JCheckBox mCheckReturn, mShowOnError, mShowTitleAndTimeDialog, mOldPrograms,
-                      mUseTime, mDeleteRemovedPrograms;
+                      mUseTime, mDeleteRemovedPrograms, mUseTimeOffsetForAllCommands;
     
     private JComboBox mTimeZones;
 
@@ -108,15 +107,15 @@ public class SettingsPanel extends ScrollableJPanel implements ActionListener, C
      * creates a JPanel for getting the time offsets
      */
     private void createPanel() {
-      CellConstraints cc = new CellConstraints();
       PanelBuilder pb = new PanelBuilder(new FormLayout("5dlu,12dlu,pref:grow,5dlu,pref:grow,5dlu",
-      "pref,5dlu,pref,1dlu,pref,10dlu,pref,5dlu,pref,1dlu,"+
+      "pref,5dlu,pref,1dlu,pref,1dlu,default,10dlu,pref,5dlu,pref,1dlu,"+
       "pref,10dlu,pref,5dlu,pref,1dlu,pref,7dlu,pref,pref," +
       "pref,pref,pref,7dlu,pref,pref,10dlu,pref"),this);
       pb.setDefaultDialogBorder();
       
       mPreTimeSpinner = new JSpinner(new SpinnerNumberModel(mData.getPreTime(), 0, null, 1));
       mPostTimeTextField = new JSpinner(new SpinnerNumberModel(mData.getPostTime(), 0, null, 1));
+      mUseTimeOffsetForAllCommands = new JCheckBox(LOCALIZER.msg("timeOffsetForAll", "Also use time offset for additional commands"),mData.getUseTimeOffsetForAllCommands());
       
       mUserName.setText(mData.getUsername());
       mUserPwd.setText(mData.getPassword());
@@ -124,13 +123,13 @@ public class SettingsPanel extends ScrollableJPanel implements ActionListener, C
       mMaxSimult = new JSpinner(new SpinnerNumberModel(mData.getMaxSimultanious(), 1, null, 1));
       mMaxTimeout = new JSpinner(new SpinnerNumberModel(mData.getTimeout(), -1, 999, 1));
 
-      mCheckReturn = new JCheckBox(mLocalizer.msg("CheckError", "Check if returns Error"), mData.useReturnValue());
-      mShowOnError = new JCheckBox(mLocalizer.msg("ShowResultOnError","Show Result-Dialog only on Error"), mData.getDialogOnlyOnError());
-      mShowTitleAndTimeDialog = new JCheckBox(mLocalizer.msg("showTitleAndTime", "Show title and time settings dialog"), mData.getShowTitleAndTimeDialog());
-      mDeleteRemovedPrograms = new JCheckBox(mLocalizer.msg("autoDeletePrograms", "Automatically delete programs that were removed during a data update"), mData.getDeleteRemovedPrograms());
-      mOldPrograms = new JCheckBox(mLocalizer.msg("OnlyFuture", "Only allow Programs that are in the future"), mData.getOnlyFuturePrograms());
+      mCheckReturn = new JCheckBox(LOCALIZER.msg("CheckError", "Check if returns Error"), mData.useReturnValue());
+      mShowOnError = new JCheckBox(LOCALIZER.msg("ShowResultOnError","Show Result-Dialog only on Error"), mData.getDialogOnlyOnError());
+      mShowTitleAndTimeDialog = new JCheckBox(LOCALIZER.msg("showTitleAndTime", "Show title and time settings dialog"), mData.getShowTitleAndTimeDialog());
+      mDeleteRemovedPrograms = new JCheckBox(LOCALIZER.msg("autoDeletePrograms", "Automatically delete programs that were removed during a data update"), mData.getDeleteRemovedPrograms());
+      mOldPrograms = new JCheckBox(LOCALIZER.msg("OnlyFuture", "Only allow Programs that are in the future"), mData.getOnlyFuturePrograms());
       
-      mUseTime = new JCheckBox(mLocalizer.msg("useSystemTimezone","Use timezone provided by OS"), !mData.useTimeZone());
+      mUseTime = new JCheckBox(LOCALIZER.msg("useSystemTimezone","Use timezone provided by OS"), !mData.useTimeZone());
       
       String[] zoneIds = new String[0];
       try {
@@ -147,45 +146,49 @@ public class SettingsPanel extends ScrollableJPanel implements ActionListener, C
         }
       }
       
-      pb.addSeparator(mLocalizer.msg("TimeSettings", "Timesettings"), cc.xyw(1,1,6));
+      int y = 1;
       
-      pb.addLabel(mLocalizer.msg("Earlier", "Number of minutes to start erlier"),cc.xyw(2,3,2));
-      pb.add(mPreTimeSpinner, cc.xy(5,3));
+      pb.addSeparator(LOCALIZER.msg("TimeSettings", "Timesettings"), CC.xyw(1,y++,6));
       
-      pb.addLabel(mLocalizer.msg("Later", "Number of minutes to stop later"),cc.xyw(2,5,2));
-      pb.add(mPostTimeTextField, cc.xy(5,5));
+      pb.addLabel(LOCALIZER.msg("Earlier", "Number of minutes to start erlier"),CC.xyw(2,++y,2));
+      pb.add(mPreTimeSpinner, CC.xy(5,y));
       
-      pb.addSeparator(mLocalizer.msg("User", "User"), cc.xyw(1,7,6));
+      pb.addLabel(LOCALIZER.msg("Later", "Number of minutes to stop later"),CC.xyw(2,y+=2,2));
+      pb.add(mPostTimeTextField, CC.xy(5,y));
       
-      pb.addLabel(mLocalizer.msg("Username", "Username") + ":", cc.xyw(2,9,2));
-      pb.add(mUserName, cc.xy(5,9));
+      pb.add(mUseTimeOffsetForAllCommands, CC.xyw(2, y+=2, 4));
       
-      pb.addLabel(mLocalizer.msg("Password", "Password") + ":", cc.xyw(2,11,2));
-      pb.add(mUserPwd, cc.xy(5,11));
+      pb.addSeparator(LOCALIZER.msg("User", "User"), CC.xyw(1,y+=2,6));
+      
+      pb.addLabel(LOCALIZER.msg("Username", "Username") + ":", CC.xyw(2,y+=2,2));
+      pb.add(mUserName, CC.xy(5,y));
+      
+      pb.addLabel(LOCALIZER.msg("Password", "Password") + ":", CC.xyw(2,y+=2,2));
+      pb.add(mUserPwd, CC.xy(5,y));
             
-      pb.addSeparator(mLocalizer.msg("Additional", "Additional"), cc.xyw(1,13,6));
+      pb.addSeparator(LOCALIZER.msg("Additional", "Additional"), CC.xyw(1,y+=2,6));
 
-      pb.addLabel(mLocalizer.msg("MaxSimult","Maximum simultaneous recordings")+ ":" , cc.xyw(2,15,2));
-      pb.add(mMaxSimult,cc.xy(5,15));
+      pb.addLabel(LOCALIZER.msg("MaxSimult","Maximum simultaneous recordings")+ ":" , CC.xyw(2,y+=2,2));
+      pb.add(mMaxSimult,CC.xy(5,y));
       
-      pb.addLabel(mLocalizer.msg("Timeout","Wait sec. until Timeout (-1 = disabled)")+ ":", cc.xyw(2,17,2));
-      pb.add(mMaxTimeout,cc.xy(5,17));
+      pb.addLabel(LOCALIZER.msg("Timeout","Wait sec. until Timeout (-1 = disabled)")+ ":", CC.xyw(2,y+=2,2));
+      pb.add(mMaxTimeout,CC.xy(5,y));
 
-      pb.add(mCheckReturn, cc.xyw(2,19,4));
-      pb.add(mShowOnError, cc.xyw(2,20,4));
-      pb.add(mShowTitleAndTimeDialog, cc.xyw(2,21,4));
-      pb.add(mDeleteRemovedPrograms, cc.xyw(2,22,4));
-      pb.add(mOldPrograms, cc.xyw(2,23,4));
+      pb.add(mCheckReturn, CC.xyw(2,y+=2,4));
+      pb.add(mShowOnError, CC.xyw(2,++y,4));
+      pb.add(mShowTitleAndTimeDialog, CC.xyw(2,++y,4));
+      pb.add(mDeleteRemovedPrograms, CC.xyw(2,++y,4));
+      pb.add(mOldPrograms, CC.xyw(2,++y,4));
       
-      pb.add(mUseTime, cc.xyw(2,25,4));
+      pb.add(mUseTime, CC.xyw(2,y+=2,4));
       
       JPanel timeZonePanel = new JPanel(new FlowLayout(FlowLayout.LEFT,0,0));
-      mTimeZoneLabel = new JLabel(mLocalizer.msg("Timezone","Timezone")+": ");
+      mTimeZoneLabel = new JLabel(LOCALIZER.msg("Timezone","Timezone")+": ");
       mTimeZoneLabel.setEnabled(mTimeZones.isEnabled());
       timeZonePanel.add(mTimeZoneLabel);
       timeZonePanel.add(mTimeZones);
       
-      pb.add(timeZonePanel, cc.xyw(3,26,3));
+      pb.add(timeZonePanel, CC.xyw(3,++y,3));
       
       ProgramReceiveTarget[] targets = mData.getProgramReceiveTargets();
       
@@ -198,9 +201,9 @@ public class SettingsPanel extends ScrollableJPanel implements ActionListener, C
       }
         
       mProgramReceiveTargetSelection = new ProgramReceiveTargetSelectionPanel(UiUtilities.getLastModalChildOf(CapturePlugin.getInstance().getSuperFrame()),
-          existing.toArray(new ProgramReceiveTarget[existing.size()]),null,CapturePlugin.getInstance(),true,mLocalizer.msg("sendToTitle","Send scheduled programs to:"));
+          existing.toArray(new ProgramReceiveTarget[existing.size()]),null,CapturePlugin.getInstance(),true,LOCALIZER.msg("sendToTitle","Send scheduled programs to:"));
       mProgramReceiveTargetSelection.addChangeListener(this);
-      pb.add(mProgramReceiveTargetSelection, cc.xyw(1,28,5));
+      pb.add(mProgramReceiveTargetSelection, CC.xyw(1,y+=2,5));
       
       // add ChangeListener to the spinners
       mPreTimeSpinner.addChangeListener(this);
@@ -215,6 +218,7 @@ public class SettingsPanel extends ScrollableJPanel implements ActionListener, C
       mDeleteRemovedPrograms.addActionListener(this);
       mOldPrograms.addActionListener(this);
       mUseTime.addActionListener(this);
+      mUseTimeOffsetForAllCommands.addActionListener(this);
       
       mUserName.addFocusListener(new FocusAdapter() {
         public void focusLost(FocusEvent e) {
@@ -233,6 +237,8 @@ public class SettingsPanel extends ScrollableJPanel implements ActionListener, C
           mData.setTimeZone(TimeZone.getTimeZone((String)mTimeZones.getSelectedItem()));
         }
       });
+      
+      setOpaque(true);
     }
 
     public void actionPerformed(ActionEvent e) {
@@ -250,6 +256,8 @@ public class SettingsPanel extends ScrollableJPanel implements ActionListener, C
         mData.setUseTimeZone(!mUseTime.isSelected());
         mTimeZones.setEnabled(!mUseTime.isSelected());
         mTimeZoneLabel.setEnabled(mTimeZones.isEnabled());
+      } else if(e.getSource().equals(mUseTimeOffsetForAllCommands)) {
+        mData.setUseTimeOffsetForAllCommands(mUseTimeOffsetForAllCommands.isSelected());
       }
       
     }

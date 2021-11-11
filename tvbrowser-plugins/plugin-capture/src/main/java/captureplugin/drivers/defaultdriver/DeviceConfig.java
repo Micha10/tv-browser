@@ -33,11 +33,11 @@ import java.util.Iterator;
 import java.util.TimeZone;
 import java.util.TreeMap;
 
-import util.ui.Localizer;
 import captureplugin.drivers.utils.IDGenerator;
 import captureplugin.utils.ChannelComparator;
 import devplugin.Channel;
 import devplugin.ProgramReceiveTarget;
+import util.ui.Localizer;
 
 
 /**
@@ -122,6 +122,11 @@ public final class DeviceConfig implements Cloneable {
 
     /** The targets for the program export */
     private ProgramReceiveTarget[] mReceiveTargets = new ProgramReceiveTarget[0];
+    
+    /**
+     * If the set time offset should be used for additional commands.
+     */
+    private boolean mUseTimeOffsetForAllCommands = false;
 
     /**
      * Create an empty Config
@@ -159,6 +164,7 @@ public final class DeviceConfig implements Cloneable {
         setShowTitleAndTimeDialog(data.getShowTitleAndTimeDialog());
         setDeleteRemovedPrograms(data.getDeleteRemovedPrograms());
         setProgramReceiveTargets(data.getProgramReceiveTargets());
+        setUseTimeOffsetForAllCommands(data.getUseTimeOffsetForAllCommands());
     }
 
     /**
@@ -509,7 +515,7 @@ public final class DeviceConfig implements Cloneable {
      */
     public void writeData(ObjectOutputStream stream) throws IOException {
 
-        stream.writeInt(11);
+        stream.writeInt(12);
 
         stream.writeObject(getName());
 
@@ -559,6 +565,8 @@ public final class DeviceConfig implements Cloneable {
         for(ProgramReceiveTarget receiveTarget : mReceiveTargets) {
           receiveTarget.writeData(stream);
         }
+        
+        stream.writeBoolean(mUseTimeOffsetForAllCommands);
     }
 
     /**
@@ -648,6 +656,10 @@ public final class DeviceConfig implements Cloneable {
           for(int i = 0; i < mReceiveTargets.length; i++) {
             mReceiveTargets[i] = new ProgramReceiveTarget(stream);
           }
+        }
+        
+        if(version > 11) {
+          mUseTimeOffsetForAllCommands = stream.readBoolean();
         }
     }
 
@@ -770,5 +782,23 @@ public final class DeviceConfig implements Cloneable {
      */
     public ProgramReceiveTarget[] getProgramReceiveTargets() {
       return mReceiveTargets;
+    }
+    
+    /**
+     * Sets the use of the time offset for all commands. 
+     * @param useOffset <code>true</code> if all commands should use time offset,
+     * <code>false</code> otherwise.
+     */
+    public void setUseTimeOffsetForAllCommands(boolean useOffset) {
+      mUseTimeOffsetForAllCommands = useOffset;
+    }
+    
+    /**
+     * Gets the use of time offset for all commands.
+     * @return <code>true</code> if all commands should use time offset,
+     * <code>false</code> otherwise.
+     */
+    public boolean getUseTimeOffsetForAllCommands() {
+      return mUseTimeOffsetForAllCommands;
     }
 }

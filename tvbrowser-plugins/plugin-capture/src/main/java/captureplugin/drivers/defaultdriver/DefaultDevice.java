@@ -274,6 +274,11 @@ public final class DefaultDevice implements DeviceIf {
             
             ProgramTime time = new ProgramTime(program);
             
+            if(mConfig.getUseTimeOffsetForAllCommands()) {
+              time.addMinutesToStart(mConfig.getPreTime() * -1);
+              time.addMinutesToEnd(mConfig.getPostTime());
+            }
+            
             return exec.execute(time, list.get(num).getParam());
         }
         
