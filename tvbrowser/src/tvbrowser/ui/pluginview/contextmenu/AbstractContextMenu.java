@@ -183,7 +183,8 @@ public abstract class AbstractContextMenu implements ContextMenu {
         if ((currentPlugin == null) || (!currentPlugin.getId().equals(plugin.getId()))) {
           ProgramReceiveTarget[] targets = plugin.getProgramReceiveTargets();
           if (targets.length == 1 && (!(o instanceof ProgramReceiveTarget) || !o.equals(targets[0]))) {
-            JMenuItem item = new JMenuItem(targets[0].toString());
+            JMenuItem item = new JMenuItem(ProgramReceiveTarget.isDefaultProgramReceiveTargetForProgramReceiveIf(plugin, targets[0]) ? plugin.getInfo().getName() : targets[0].toString());
+            
             item.setFont(MenuUtil.CONTEXT_MENU_PLAINFONT);
 
             Icon icon = plugin.getPluginIcon();

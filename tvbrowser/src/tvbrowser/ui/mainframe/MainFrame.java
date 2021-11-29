@@ -3658,12 +3658,14 @@ public class MainFrame extends JFrame implements DateListener,DropTargetListener
           
           String name = panel.getName();
           Icon icon = panel.getIcon();
+          String tooltip = null;
           
           if(Settings.propTabBarCenterPanelNameIconConfig.getInt() == Settings.VALUE_NAME_ONLY) {
             icon = null;
           }
           else if(Settings.propTabBarCenterPanelNameIconConfig.getInt() == Settings.VALUE_ICON_ONLY
               && icon != null) {
+            tooltip = name;
             name = null;
           }
           
@@ -3672,6 +3674,7 @@ public class MainFrame extends JFrame implements DateListener,DropTargetListener
           }
           
           mCenterTabPane.addTab(name, icon, jPanel);
+          mCenterTabPane.setToolTipTextAt(mCenterTabPane.getTabCount()-1, tooltip);
           
           if(addNew) {
             usedIdList.add(panel.getId());
