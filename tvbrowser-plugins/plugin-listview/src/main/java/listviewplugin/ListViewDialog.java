@@ -29,6 +29,8 @@ import java.awt.BorderLayout;
 import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.Properties;
 
 import javax.swing.BorderFactory;
@@ -39,15 +41,14 @@ import javax.swing.JPanel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import com.jgoodies.forms.factories.CC;
+import com.jgoodies.forms.layout.FormLayout;
+
+import devplugin.Plugin;
 import util.ui.Localizer;
 import util.ui.TVBrowserIcons;
 import util.ui.UiUtilities;
 import util.ui.WindowClosingIf;
-
-import com.jgoodies.forms.layout.CellConstraints;
-import com.jgoodies.forms.layout.FormLayout;
-
-import devplugin.Plugin;
 
 /**
  * Creates a Dialog with a List of Programs
@@ -77,13 +78,17 @@ public class ListViewDialog extends JDialog implements WindowClosingIf {
     mSettings = settings;
     mListViewPanel = new ListViewPanel(plugin);
     createGUI();
-    mListViewPanel.addChangeTimer();
+    
     UiUtilities.registerForClosing(this);
+    addWindowListener(new WindowAdapter() {
+      @Override
+      public void windowClosing(WindowEvent e) {
+        close();
+      }
+    });
   }
   
   public void createGUI() {
-    CellConstraints cc = new CellConstraints();
-    
     JPanel content = (JPanel) this.getContentPane();
     content.setLayout(new BorderLayout());
     
@@ -122,8 +127,8 @@ public class ListViewDialog extends JDialog implements WindowClosingIf {
       }
     });
 
-    p.add(settings, cc.xy(1, 1));
-    p.add(showAtStartup, cc.xy(3, 1));
+    p.add(settings, CC.xy(1, 1));
+    p.add(showAtStartup, CC.xy(3, 1));
 
     buttonPn.add(p, BorderLayout.WEST);
 
@@ -134,12 +139,19 @@ public class ListViewDialog extends JDialog implements WindowClosingIf {
   }
 
   @Override
-  public void setVisible(boolean b) {
-    super.setVisible(b);
-    mListViewPanel.cancelTimer();
+  public void setVisible(boolean visible) {
+    if(visible) {
+      mListViewPanel.addChangeTimer();
+    }
+    else {
+      mListViewPanel.cancelTimer();
+    }
+    
+    super.setVisible(visible);
   }
 
   public void close() {
+    mListViewPanel.cancelTimer();
     dispose();
   }
 }
