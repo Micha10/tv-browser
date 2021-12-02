@@ -27,11 +27,14 @@ package listviewplugin;
 
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.Properties;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JPanel;
+import javax.swing.JSplitPane;
 import javax.swing.SwingUtilities;
 import javax.swing.event.AncestorEvent;
 import javax.swing.event.AncestorListener;
@@ -57,9 +60,10 @@ import util.settings.PluginPictureSettings;
  * @author bodo
  */
 public class ListViewPlugin extends Plugin {
-  private static final Version mVersion = new Version(3,31,1,true);
+  private static final Version mVersion = new Version(3,32,0,true);
 
     protected static final int PROGRAMTABLEWIDTH = 200;
+    protected static final String KEY_TAB_SPLIT_DIVIDER_LOCATION = "tabSplitDividerLocation";
   
     /** Translator */
     private static final util.ui.Localizer mLocalizer = util.ui.Localizer.getLocalizerFor(ListViewPlugin.class);
@@ -79,6 +83,8 @@ public class ListViewPlugin extends Plugin {
     private ListViewPanel mListPanel;
     
     private JPanel mCenterPanelWrapper;
+    
+    private JSplitPane mCenterSplitPane;
     
     private boolean mTvBrowserStarted;
     
@@ -115,6 +121,46 @@ public class ListViewPlugin extends Plugin {
           // TODO Auto-generated method stub
           
       if(mCenterPanelWrapper == null) {
+        mCenterSplitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, true);
+        mCenterSplitPane.setOpaque(false);
+        
+        int dividerLocation = Integer.parseInt(mSettings.getProperty(KEY_TAB_SPLIT_DIVIDER_LOCATION, "-1"));
+        
+        if(dividerLocation > 0) {
+          mCenterSplitPane.setDividerLocation(dividerLocation);
+        }
+        
+        mCenterSplitPane.addPropertyChangeListener(JSplitPane.DIVIDER_LOCATION_PROPERTY, new PropertyChangeListener() {
+          private int mWait;
+          private Thread mWaitThread;
+          
+          @Override
+          public synchronized void propertyChange(PropertyChangeEvent e) {
+            if(mWaitThread == null || !mWaitThread.isAlive()) {
+              mWaitThread = new Thread() {
+                @Override
+                public void run() {
+                  mWait = 30;
+                  while(mWait-- > 0) {
+                    try {
+                      Thread.sleep(10);
+                    } catch (InterruptedException e) {
+                      // ignore
+                    }
+                  }
+                  
+                  mSettings.setProperty(KEY_TAB_SPLIT_DIVIDER_LOCATION, String.valueOf(mCenterSplitPane.getDividerLocation()));
+                  saveMe();
+                }
+              };
+              mWaitThread.start();
+            }
+            else {
+              mWait = 25;
+            }
+          }
+        });
+        
         mCenterPanelWrapper = UiCompat.createPersonaBackgroundPanel();
         mCenterWrapper = new PluginCenterPanelWrapper() {
           
@@ -191,7 +237,7 @@ public class ListViewPlugin extends Plugin {
             updateCenterPanel();
           }
           else if(!provideTab() && mListPanel != null) {
-            mCenterPanelWrapper.remove(mListPanel);
+            mCenterPanelWrapper.remove(mCenterSplitPane);
             PersonaCompat.getInstance().removePersonaListener(mListPanel);
             mListPanel = null;
           }
@@ -213,7 +259,7 @@ public class ListViewPlugin extends Plugin {
         public void run() {
           if(mListPanel != null) {
             PersonaCompat.getInstance().removePersonaListener(mListPanel);
-            mCenterPanelWrapper.remove(mListPanel);
+            mCenterPanelWrapper.remove(mCenterSplitPane);
           }
           
           mCenterPanelWrapper.removeAncestorListener(mAncestorListener);
@@ -226,7 +272,7 @@ public class ListViewPlugin extends Plugin {
             @Override
             public void ancestorRemoved(AncestorEvent event) {
               PersonaCompat.getInstance().removePersonaListener(mListPanel);
-              mCenterPanelWrapper.remove(mListPanel);
+              mCenterPanelWrapper.remove(mCenterSplitPane);
             }
             
             @Override
@@ -235,7 +281,7 @@ public class ListViewPlugin extends Plugin {
             @Override
             public void ancestorAdded(AncestorEvent event) {
               PersonaCompat.getInstance().registerPersonaListener(mListPanel);
-              mCenterPanelWrapper.add(mListPanel, BorderLayout.CENTER);
+              mCenterPanelWrapper.add(mCenterSplitPane, BorderLayout.CENTER);
               mCenterPanelWrapper.repaint();
               mListPanel.updatePersona();
             }
@@ -312,7 +358,12 @@ public class ListViewPlugin extends Plugin {
           PersonaCompat.getInstance().registerPersonaListener(mListPanel);
           mListPanel.updatePersona();
           mCenterPanelWrapper.add(mListPanel, BorderLayout.CENTER);
-
+          mCenterSplitPane.setLeftComponent(mListPanel);
+          
+          final JPanel right = new JPanel();
+          right.setOpaque(false);
+          mCenterSplitPane.setRightComponent(right);
+          
           if (mShowAtStartup) {
             showDialog();
           }
