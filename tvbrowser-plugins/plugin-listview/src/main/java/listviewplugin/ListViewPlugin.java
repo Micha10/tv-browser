@@ -65,7 +65,7 @@ import util.settings.PluginPictureSettings;
  * @author bodo
  */
 public class ListViewPlugin extends Plugin {
-  private static final Version mVersion = new Version(3,33,1,true);
+  private static final Version mVersion = new Version(3,33,2,true);
 
     protected static final int PROGRAMTABLEWIDTH = 200;
     protected static final String KEY_TAB_SPLIT_DIVIDER_LOCATION = "tabSplitDividerLocation";
@@ -299,16 +299,19 @@ public class ListViewPlugin extends Plugin {
             
             @Override
             public void ancestorAdded(AncestorEvent event) {
-              PersonaCompat.getInstance().registerPersonaListener(mListPanel);
               mCenterPanelWrapper.add(mCenterSplitPane, BorderLayout.CENTER);
               mCenterPanelWrapper.repaint();
-              mListPanel.updatePersona();
+              
+              if(mListPanel != null) {
+                PersonaCompat.getInstance().registerPersonaListener(mListPanel);
+                mListPanel.updatePersona();
+              }
             }
           };
           
           mCenterPanelWrapper.addAncestorListener(mAncestorListener);
           
-          if(mListPanel.isVisible()) {
+          if(mListPanel != null && mListPanel.isVisible()) {
             mAncestorListener.ancestorAdded(null);
           }
         }
