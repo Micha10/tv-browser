@@ -65,7 +65,7 @@ import util.settings.PluginPictureSettings;
  * @author bodo
  */
 public class ListViewPlugin extends Plugin {
-  private static final Version mVersion = new Version(3,33,0,true);
+  private static final Version mVersion = new Version(3,33,1,true);
 
     protected static final int PROGRAMTABLEWIDTH = 200;
     protected static final String KEY_TAB_SPLIT_DIVIDER_LOCATION = "tabSplitDividerLocation";
@@ -278,7 +278,7 @@ public class ListViewPlugin extends Plugin {
             mCenterSplitPane.setRightComponent(null);
             mCenterSplitPane.setDividerSize(0);
           }
-          else {
+          else if(mCenterSplitPane.getRightComponent() == null) {
             final JPanel right = new JPanel();
             right.setMaximumSize(new Dimension(0,0));
             right.setOpaque(false);

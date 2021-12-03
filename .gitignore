@@ -189,6 +189,7 @@ tvbrowser-plugins/plugin-knotify/target
 tvbrowser-plugins/plugin-listview/.classpath
 tvbrowser-plugins/plugin-listview/.project
 tvbrowser-plugins/plugin-listview/.settings
+tvbrowser-plugins/plugin-listview/src/test
 tvbrowser-plugins/plugin-listview/target
 tvbrowser-plugins/plugin-logging/.classpath
 tvbrowser-plugins/plugin-logging/.escabaseline
