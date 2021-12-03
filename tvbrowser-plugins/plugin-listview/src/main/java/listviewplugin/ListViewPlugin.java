@@ -26,6 +26,8 @@
 package listviewplugin;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -39,6 +41,8 @@ import javax.swing.SwingUtilities;
 import javax.swing.event.AncestorEvent;
 import javax.swing.event.AncestorListener;
 
+import com.jgoodies.forms.layout.Sizes;
+
 import compat.PersonaCompat;
 import compat.PluginCompat;
 import compat.UiCompat;
@@ -51,6 +55,7 @@ import devplugin.PluginCenterPanelWrapper;
 import devplugin.PluginInfo;
 import devplugin.ProgramFilter;
 import devplugin.SettingsTab;
+import devplugin.TabListener;
 import devplugin.Version;
 import util.settings.PluginPictureSettings;
 
@@ -60,7 +65,7 @@ import util.settings.PluginPictureSettings;
  * @author bodo
  */
 public class ListViewPlugin extends Plugin {
-  private static final Version mVersion = new Version(3,32,0,true);
+  private static final Version mVersion = new Version(3,33,0,true);
 
     protected static final int PROGRAMTABLEWIDTH = 200;
     protected static final String KEY_TAB_SPLIT_DIVIDER_LOCATION = "tabSplitDividerLocation";
@@ -84,7 +89,7 @@ public class ListViewPlugin extends Plugin {
     
     private JPanel mCenterPanelWrapper;
     
-    private JSplitPane mCenterSplitPane;
+    private TabListenerSplitPane mCenterSplitPane;
     
     private boolean mTvBrowserStarted;
     
@@ -118,112 +123,112 @@ public class ListViewPlugin extends Plugin {
         
         @Override
         public void run() {
-          // TODO Auto-generated method stub
-          
-      if(mCenterPanelWrapper == null) {
-        mCenterSplitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, true);
-        mCenterSplitPane.setOpaque(false);
-        
-        int dividerLocation = Integer.parseInt(mSettings.getProperty(KEY_TAB_SPLIT_DIVIDER_LOCATION, "-1"));
-        
-        if(dividerLocation > 0) {
-          mCenterSplitPane.setDividerLocation(dividerLocation);
-        }
-        
-        mCenterSplitPane.addPropertyChangeListener(JSplitPane.DIVIDER_LOCATION_PROPERTY, new PropertyChangeListener() {
-          private int mWait;
-          private Thread mWaitThread;
-          
-          @Override
-          public synchronized void propertyChange(PropertyChangeEvent e) {
-            if(mWaitThread == null || !mWaitThread.isAlive()) {
-              mWaitThread = new Thread() {
-                @Override
-                public void run() {
-                  mWait = 30;
-                  while(mWait-- > 0) {
-                    try {
-                      Thread.sleep(10);
-                    } catch (InterruptedException e) {
-                      // ignore
-                    }
-                  }
-                  
-                  mSettings.setProperty(KEY_TAB_SPLIT_DIVIDER_LOCATION, String.valueOf(mCenterSplitPane.getDividerLocation()));
-                  saveMe();
-                }
-              };
-              mWaitThread.start();
-            }
-            else {
-              mWait = 25;
-            }
-          }
-        });
-        
-        mCenterPanelWrapper = UiCompat.createPersonaBackgroundPanel();
-        mCenterWrapper = new PluginCenterPanelWrapper() {
-          
-          @Override
-          public PluginCenterPanel[] getCenterPanels() {
-            return new PluginCenterPanel[] {new PluginCenterPanelImpl()};
-          }
-          
-          @Override
-          public void scrolledToChannel(Channel channel) {
-            if(mListPanel != null) {
-              mListPanel.showChannel(channel);
-            }
-          }
-          
-          @Override
-          public void filterSelected(ProgramFilter filter) {
-            if(mListPanel != null) {
-              mListPanel.showForFilter(filter);
-            }
-          }
-          
-          @Override
-          public void scrolledToDate(Date date) {
-            if(mListPanel != null) {
-              mListPanel.showForDate(date, -1);
-            }
-          }
-                    
-          @Override
-          public void scrolledToNow() {
-            if(mListPanel != null) {
-              mListPanel.showForNow();
-            }
-          }
-          
-          @Override
-          public void scrolledToTime(int time) {
-            if(mListPanel != null) {
-              mListPanel.showForTimeButton(time);
-            }
-          }
-          
-          @Override
-          public void timeEvent() {
-            if(mListPanel != null) {
-              mListPanel.refreshView();
-            }
-          }
-        };
-        
-        new Thread() {
-          public void run() {
-            while(!mTvBrowserStarted) {
-              try {
-                sleep(200);
-              } catch (InterruptedException e) {}
+          if(mCenterPanelWrapper == null) {
+            mCenterSplitPane = new TabListenerSplitPane();
+            mCenterSplitPane.setOpaque(false);
+            
+            int dividerLocation = Integer.parseInt(mSettings.getProperty(KEY_TAB_SPLIT_DIVIDER_LOCATION, "-1"));
+            
+            if(dividerLocation > 0) {
+              mCenterSplitPane.setDividerLocation(dividerLocation);
             }
             
-            addPanel();
+            mCenterSplitPane.addPropertyChangeListener(JSplitPane.DIVIDER_LOCATION_PROPERTY, new PropertyChangeListener() {
+              private int mWait;
+              private Thread mWaitThread;
+              
+              @Override
+              public synchronized void propertyChange(PropertyChangeEvent e) {
+                if(mWaitThread == null || !mWaitThread.isAlive()) {
+                  mWaitThread = new Thread() {
+                    @Override
+                    public void run() {
+                      mWait = 30;
+                      while(mWait-- > 0) {
+                        try {
+                          Thread.sleep(10);
+                        } catch (InterruptedException e) {
+                          // ignore
+                        }
+                      }
+                      
+                      if(mCenterSplitPane.getDividerSize() > 0) {
+                        mSettings.setProperty(KEY_TAB_SPLIT_DIVIDER_LOCATION, String.valueOf(mCenterSplitPane.getDividerLocation()));
+                        saveMe();
+                      }
+                    }
+                  };
+                  mWaitThread.start();
+                }
+                else {
+                  mWait = 25;
+                }
+              }
+            });
+            
+            mCenterPanelWrapper = UiCompat.createPersonaBackgroundPanel();
+            mCenterWrapper = new PluginCenterPanelWrapper() {
+              
+              @Override
+              public PluginCenterPanel[] getCenterPanels() {
+                return new PluginCenterPanel[] {new PluginCenterPanelImpl()};
+              }
+              
+              @Override
+              public void scrolledToChannel(Channel channel) {
+                if(mListPanel != null) {
+                  mListPanel.showChannel(channel);
+                }
+              }
+              
+              @Override
+              public void filterSelected(ProgramFilter filter) {
+                if(mListPanel != null) {
+                  mListPanel.showForFilter(filter);
+                }
+              }
+              
+              @Override
+              public void scrolledToDate(Date date) {
+                if(mListPanel != null) {
+                  mListPanel.showForDate(date, -1);
+                }
+              }
+                        
+              @Override
+              public void scrolledToNow() {
+                if(mListPanel != null) {
+                  mListPanel.showForNow();
+                }
+              }
+              
+              @Override
+              public void scrolledToTime(int time) {
+                if(mListPanel != null) {
+                  mListPanel.showForTimeButton(time);
+                }
+              }
+              
+              @Override
+              public void timeEvent() {
+                if(mListPanel != null) {
+                  mListPanel.refreshView();
+                }
+              }
+            };
+            
+            new Thread() {
+              public void run() {
+                while(!mTvBrowserStarted) {
+                  try {
+                    sleep(200);
+                  } catch (InterruptedException e) {}
+                }
+                
+                addPanel();
+              }
+            }.start();
           }
-        }.start();
-      }
         }
       });
 
@@ -264,9 +269,23 @@ public class ListViewPlugin extends Plugin {
           
           mCenterPanelWrapper.removeAncestorListener(mAncestorListener);
           
-          mListPanel = null;
+          if(mListPanel == null) {
+            mListPanel = new ListViewPanel(ListViewPlugin.this);
+            mCenterSplitPane.setLeftComponent(mListPanel);
+          }
           
-          mListPanel = new ListViewPanel(ListViewPlugin.this);
+          if(changeWidthAutomatically()) {
+            mCenterSplitPane.setRightComponent(null);
+            mCenterSplitPane.setDividerSize(0);
+          }
+          else {
+            final JPanel right = new JPanel();
+            right.setMaximumSize(new Dimension(0,0));
+            right.setOpaque(false);
+            mCenterSplitPane.setRightComponent(right);
+            mCenterSplitPane.setDividerSize(Sizes.dialogUnitXAsPixel(3, mCenterSplitPane));
+          }
+          
           mListPanel.setReactOnlyIfVisible(mSettings.getProperty(ListViewSettings.REACT_ONLY_IF_TAB_VISIBLE, "false").equals("true"));
           mAncestorListener = new AncestorListener() {
             @Override
@@ -360,10 +379,6 @@ public class ListViewPlugin extends Plugin {
           mCenterPanelWrapper.add(mListPanel, BorderLayout.CENTER);
           mCenterSplitPane.setLeftComponent(mListPanel);
           
-          final JPanel right = new JPanel();
-          right.setOpaque(false);
-          mCenterSplitPane.setRightComponent(right);
-          
           if (mShowAtStartup) {
             showDialog();
           }
@@ -439,6 +454,10 @@ public class ListViewPlugin extends Plugin {
       return mSettings.getProperty(ListViewSettings.PROVIDE_TAB, "true").equals("true");
     }
     
+    private boolean changeWidthAutomatically() {
+      return mSettings.getProperty(ListViewSettings.CHANGE_WIDTH_AUTOMATICALLY, "false").equals("true");
+    }
+    
     void setValue(String name, String value) {
       if(value == null) {
         mSettings.remove(name);
@@ -473,5 +492,36 @@ public class ListViewPlugin extends Plugin {
     
     String getValueForName(String name) {
       return mSettings.getProperty(name);
+    }
+    
+    private static final class TabListenerSplitPane extends JSplitPane implements TabListener {
+      private ListViewPanel mPanel;
+      
+      private TabListenerSplitPane() {
+        super(JSplitPane.HORIZONTAL_SPLIT, true);
+      }
+      
+      @Override
+      public void tabHidden(Component c) {
+        if(mPanel != null) {
+          mPanel.tabHidden(c);
+        }
+      }
+
+      @Override
+      public void tabShown() {
+        if(mPanel != null) {
+          mPanel.tabShown();
+        }
+      }
+      
+      @Override
+      public void setLeftComponent(Component comp) {
+        super.setLeftComponent(comp);
+        
+        if(comp instanceof ListViewPanel) {
+          mPanel = (ListViewPanel)comp;
+        }
+      }
     }
 }

@@ -35,14 +35,12 @@ import javax.swing.JCheckBox;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 
-import util.ui.EnhancedPanelBuilder;
-import util.ui.PluginsPictureSettingsPanel;
-
 import com.jgoodies.forms.factories.CC;
-import com.jgoodies.forms.layout.CellConstraints;
 
 import compat.VersionCompat;
 import devplugin.SettingsTab;
+import util.ui.EnhancedPanelBuilder;
+import util.ui.PluginsPictureSettingsPanel;
 
 /**
  * Configuration Dialog for the ListView Plugin
@@ -51,13 +49,14 @@ import devplugin.SettingsTab;
  */
 public class ListViewSettings implements SettingsTab {
   /** Translator */
-  private static final util.ui.Localizer mLocalizer = util.ui.Localizer.getLocalizerFor(ListViewSettings.class);
+  private static final util.ui.Localizer LOCALIZER = util.ui.Localizer.getLocalizerFor(ListViewSettings.class);
   
   public static final String SHOW_AT_STARTUP = "showAtStartup";
   public static final String PROVIDE_TAB = "provideTab";
   public static final String REACT_ONLY_IF_TAB_VISIBLE = "reactOnlyIfVisible";
   public static final String PICTURE_SETTINGS = "pictureSettings";
   public static final String CHANNEL_LOGO_NAME_TYPE = "channelLogoNameType";
+  public static final String CHANGE_WIDTH_AUTOMATICALLY = "changeWidthAutomatically";
   
   public static final int SHOW_CHANNEL_LOGO_AND_NAME = 0;
   public static final int SHOW_CHANNEL_LOGO = 1;
@@ -72,6 +71,7 @@ public class ListViewSettings implements SettingsTab {
   
   private JCheckBox mProvideTab;
   private JCheckBox mReactOnlyIfVisible;
+  private JCheckBox mChangeWidthAutomatically;
   
   private JRadioButton mShowChannelLogoAndName;
   private JRadioButton mShowChannelLogo;
@@ -91,21 +91,24 @@ public class ListViewSettings implements SettingsTab {
   public JPanel createSettingsPanel() {
     EnhancedPanelBuilder panel = new EnhancedPanelBuilder("5dlu,10dlu,default:grow");
     
-    CellConstraints cc = new CellConstraints();
-    
-    mShowAtStart = new JCheckBox(mLocalizer.msg("showAtStart", "Show at startup"));
+    mShowAtStart = new JCheckBox(LOCALIZER.msg("showAtStart", "Show at startup"));
     mShowAtStart.setSelected(mSettings.getProperty(SHOW_AT_STARTUP, "false").equals("true"));
 
-    mProvideTab = new JCheckBox(mLocalizer.msg("provideTab", "Provide tab in TV-Browser main window"));
+    mProvideTab = new JCheckBox(LOCALIZER.msg("provideTab", "Provide tab in TV-Browser main window"));
     mProvideTab.setSelected(mSettings.getProperty(PROVIDE_TAB,"true").equals("true"));
     
-    mReactOnlyIfVisible = new JCheckBox(mLocalizer.msg("reactOnlyIfVisible", "React to TV-Browser user interaction only if visible"));
+    mChangeWidthAutomatically = new JCheckBox(LOCALIZER.msg("changeWidthAutomatically","Automatically change width with TV-Browser window"));
+    mChangeWidthAutomatically.setSelected(mSettings.getProperty(CHANGE_WIDTH_AUTOMATICALLY,"false").equals("true"));
+    mChangeWidthAutomatically.setEnabled(mProvideTab.isSelected());
+    
+    mReactOnlyIfVisible = new JCheckBox(LOCALIZER.msg("reactOnlyIfVisible", "React to TV-Browser user interaction only if visible"));
     mReactOnlyIfVisible.setSelected(mSettings.getProperty(REACT_ONLY_IF_TAB_VISIBLE,"false").equals("true"));
     mReactOnlyIfVisible.setEnabled(mProvideTab.isSelected());
     
     mProvideTab.addItemListener(new ItemListener() {
       @Override
       public void itemStateChanged(ItemEvent e) {
+        mChangeWidthAutomatically.setEnabled(e.getStateChange() == ItemEvent.SELECTED);
         mReactOnlyIfVisible.setEnabled(e.getStateChange() == ItemEvent.SELECTED);
       }
     });
@@ -113,18 +116,20 @@ public class ListViewSettings implements SettingsTab {
     mPictureSettings = new PluginsPictureSettingsPanel(ListViewPlugin.getInstance().getPictureSettings(), false);
     
     panel.addRow();
-    panel.add(mShowAtStart, cc.xyw(2,panel.getRow(),2));
+    panel.add(mShowAtStart, CC.xyw(2,panel.getRow(),2));
     
     if(VersionCompat.isCenterPanelSupported()) {
       panel.addRow();
-      panel.add(mProvideTab, cc.xyw(2,panel.getRow(),2));
+      panel.add(mProvideTab, CC.xyw(2,panel.getRow(),2));
       panel.addRow("default");
-      panel.add(mReactOnlyIfVisible, cc.xy(3,panel.getRow()));
+      panel.add(mChangeWidthAutomatically, CC.xy(3,panel.getRow()));
+      panel.addRow("default");
+      panel.add(mReactOnlyIfVisible, CC.xy(3,panel.getRow()));
     }
     
-    mShowChannelLogoAndName = new JRadioButton(mLocalizer.msg("showIconAndName","Show channel icon and channel name"));
-    mShowChannelLogo = new JRadioButton(mLocalizer.msg("showOnlyIcon","Show channel icon"));
-    mShowChannelName = new JRadioButton(mLocalizer.msg("showOnlyName","Show channel name"));
+    mShowChannelLogoAndName = new JRadioButton(LOCALIZER.msg("showIconAndName","Show channel icon and channel name"));
+    mShowChannelLogo = new JRadioButton(LOCALIZER.msg("showOnlyIcon","Show channel icon"));
+    mShowChannelName = new JRadioButton(LOCALIZER.msg("showOnlyName","Show channel name"));
     
     ButtonGroup channelLogoAndNameType = new ButtonGroup();
     
@@ -140,7 +145,7 @@ public class ListViewSettings implements SettingsTab {
       default: mShowChannelLogoAndName.setSelected(true);break;
     }
     
-    panel.addParagraph(mLocalizer.msg("logoNameTitle","Channel icons and names"));
+    panel.addParagraph(LOCALIZER.msg("logoNameTitle","Channel icons and names"));
     panel.addRow();
     panel.add(mShowChannelLogoAndName, CC.xyw(2, panel.getRow(), 2));
     panel.addRow();
@@ -151,7 +156,7 @@ public class ListViewSettings implements SettingsTab {
     panel.addParagraph(PluginsPictureSettingsPanel.getTitle());
     
     panel.addGrowingRow();
-    panel.add(mPictureSettings, cc.xyw(2,panel.getRow(),2));
+    panel.add(mPictureSettings, CC.xyw(2,panel.getRow(),2));
         
     return panel.getPanel();
   }
@@ -162,6 +167,7 @@ public class ListViewSettings implements SettingsTab {
   public void saveSettings() {
     mSettings.setProperty(SHOW_AT_STARTUP, String.valueOf(mShowAtStart.isSelected()));
     mSettings.setProperty(PROVIDE_TAB, String.valueOf(mProvideTab.isSelected()));
+    mSettings.setProperty(CHANGE_WIDTH_AUTOMATICALLY, String.valueOf(mChangeWidthAutomatically.isSelected()));
     mSettings.setProperty(REACT_ONLY_IF_TAB_VISIBLE, String.valueOf(mReactOnlyIfVisible.isSelected()));
     mSettings.setProperty(PICTURE_SETTINGS, String.valueOf(mPictureSettings.getSettings().getType()));
     
@@ -189,6 +195,6 @@ public class ListViewSettings implements SettingsTab {
    * Get the Title
    */
   public String getTitle() {
-    return mLocalizer.msg("settingsTabName", "ListView Plugin");
+    return LOCALIZER.msg("settingsTabName", "ListView Plugin");
   }
 }
