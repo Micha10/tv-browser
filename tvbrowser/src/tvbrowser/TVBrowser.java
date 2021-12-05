@@ -31,12 +31,14 @@ import java.awt.Dialog.ModalityType;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Frame;
+import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.awt.Image;
 import java.awt.Insets;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Toolkit;
+import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
@@ -1547,12 +1549,12 @@ public class TVBrowser {
     splash.hideSplash();
 
     mainFrame.repaint();
-
+    
     // maximize the frame if wanted
     if (Settings.propIsWindowMaximized.getBoolean()) {
       SwingUtilities.invokeLater(() -> {
-        mainFrame.setExtendedState(Frame.MAXIMIZED_BOTH);
-        SwingUtilities.invokeLater(() -> {
+    	mainFrame.setExtendedState(Frame.MAXIMIZED_BOTH);
+    	SwingUtilities.invokeLater(() -> {
           mainFrame.repaint();
         });
       });
@@ -1619,6 +1621,11 @@ public class TVBrowser {
 
       if(!mainFrame.isFullScreenMode()) {
         boolean maximized = (state & JFrame.MAXIMIZED_BOTH) == JFrame.MAXIMIZED_BOTH;
+        
+        if(!maximized && Launch.isMacOs() && state == 0) {
+          maximized = mainFrame.getGraphicsConfiguration().getBounds().equals(mainFrame.getBounds());	
+        }
+        
         Settings.propIsWindowMaximized.setBoolean(maximized);
   
         if (! maximized) {
