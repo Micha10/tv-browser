@@ -71,6 +71,7 @@ import com.jgoodies.forms.layout.Sizes;
 import compat.PersonaCompat;
 import compat.PersonaCompatListener;
 import compat.ProgramListCompat;
+import devplugin.ActionMenu;
 import devplugin.Plugin;
 import devplugin.Program;
 import devplugin.ProgramFilter;
@@ -116,6 +117,7 @@ public class ManagePanel extends TabListenerPanel implements PersonaCompatListen
   
   private JComboBox mFilterSelection;
   private JLabel mFilterLabel;
+  private boolean mIsAncestor;
   
   /**
    * Creates an instance of this panel.
@@ -125,6 +127,7 @@ public class ManagePanel extends TabListenerPanel implements PersonaCompatListen
   public ManagePanel(MarkListsVector markListVector, JButton close) {
     mMarkListVector = markListVector;
     mClose = close;
+    mIsAncestor = false;
     
     setOpaque(false);
 
@@ -319,7 +322,7 @@ public class ManagePanel extends TabListenerPanel implements PersonaCompatListen
       @Override
       public void ancestorRemoved(AncestorEvent event) {
         // TODO Auto-generated method stub
-        
+        mIsAncestor = false;
       }
       
       @Override
@@ -330,6 +333,7 @@ public class ManagePanel extends TabListenerPanel implements PersonaCompatListen
       
       @Override
       public void ancestorAdded(AncestorEvent event) {
+        mIsAncestor = true;
         // TODO Auto-generated method stub
         SwingUtilities.invokeLater(new Runnable() {
           
@@ -740,5 +744,22 @@ public class ManagePanel extends TabListenerPanel implements PersonaCompatListen
         }
       }
     }
+  }
+  
+  ActionMenu getMenuForCurrentList(Program p) {
+    ActionMenu result = null;
+    
+    MarkList list = (MarkList)mMarkListsList.getSelectedValue();
+    
+    if(list != null) {
+      result = list.getContextMenuAction(p, false);
+    }
+    
+    
+    return result;
+  }
+  
+  boolean isAncestor() {
+    return mIsAncestor;
   }
 }

@@ -33,6 +33,7 @@ import java.awt.event.WindowEvent;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Properties;
@@ -96,10 +97,10 @@ import util.ui.WindowClosingIf;
 public class SimpleMarkerPlugin extends Plugin {
   public static boolean HANDLE_SEPARATORS = true;
   
-  private static final Version mVersion = new Version(3,31,4,true);
+  private static final Version mVersion = new Version(3,33,0,true);
 
   /** The localizer for this class. */
-  private static final util.ui.Localizer mLocalizer = util.ui.Localizer.getLocalizerFor(SimpleMarkerPlugin.class);
+  private static final util.ui.Localizer LOCALIZER = util.ui.Localizer.getLocalizerFor(SimpleMarkerPlugin.class);
 
   private static SimpleMarkerPlugin mInstance;
 
@@ -133,7 +134,7 @@ public class SimpleMarkerPlugin extends Plugin {
   
   private boolean mShowHtmlContextMenu = true;
   
-  public static boolean IS_TVB_422_423 = false;
+  public static boolean SUPPORTS_RECEIVE_REMOVE = false;
 
   /**
    * Standard constructor for this class.
@@ -150,11 +151,11 @@ public class SimpleMarkerPlugin extends Plugin {
    * @return The localizer.
    */
   public static final Localizer getLocalizer() {
-    return mLocalizer;
+    return LOCALIZER;
   }
 
   public void onActivation() {
-    IS_TVB_422_423 = getPluginManager().getTVBrowserVersion().compareTo(new Version(4,22,true)) >= 0 && getPluginManager().getTVBrowserVersion().compareTo(new Version(4,23,true)) <= 0;
+    SUPPORTS_RECEIVE_REMOVE = getPluginManager().getTVBrowserVersion().compareTo(new Version(4,22,true)) >= 0;
     
     mShowHtmlContextMenu = getPluginManager().getTVBrowserVersion().compareTo(new Version(4,9,97,false)) > 0;
     HANDLE_SEPARATORS = getPluginManager().getTVBrowserVersion().compareTo(new Version(4,22,52,false)) < 0;
@@ -221,8 +222,8 @@ public class SimpleMarkerPlugin extends Plugin {
   /** @return The Plugin Info. */
   public PluginInfo getInfo() {
     if(mPluginInfo == null) {
-      String name = mLocalizer.msg("name","Marker plugin");
-      String description = mLocalizer.msg("description", "A simple marker plugin (formerly Just_Mark)");
+      String name = LOCALIZER.msg("name","Marker plugin");
+      String description = LOCALIZER.msg("description", "A simple marker plugin (formerly Just_Mark)");
 
       mPluginInfo = new PluginInfo(SimpleMarkerPlugin.class, name, description, "Ren\u00e9 Mach", "GPL");
     }
@@ -266,7 +267,7 @@ public class SimpleMarkerPlugin extends Plugin {
    */
   public ActionMenu getContextMenuActions(final Program program) {
     if(program == null || getPluginManager().getFilterManager() == null) {
-      return new ActionMenu(new ContextMenuAction(mLocalizer.msg("mark", "Mark"),createImageIcon("status", "mail-attachment", 16)));
+      return new ActionMenu(new ContextMenuAction(LOCALIZER.msg("mark", "Mark"),createImageIcon("status", "mail-attachment", 16)));
     }
     
     boolean isExampleProgram = getPluginManager().getExampleProgram().equals(program);
@@ -275,7 +276,7 @@ public class SimpleMarkerPlugin extends Plugin {
     
     if(mMarkListVector.isEmpty()) {
       if(isExampleProgram) {
-        result = new ActionMenu(new ContextMenuAction(mLocalizer.msg("mark", "Mark"),createImageIcon("status", "mail-attachment", 16)));
+        result = new ActionMenu(new ContextMenuAction(LOCALIZER.msg("mark", "Mark"),createImageIcon("status", "mail-attachment", 16)));
       }
     }
     else if (mMarkListVector.size() == 1) {
@@ -283,20 +284,57 @@ public class SimpleMarkerPlugin extends Plugin {
       result = new ActionMenu(mMarkListVector.getListAt(0).getContextMenuAction(program, true));
       
       if(isExampleProgram) {
-        result.getAction().putValue(Action.NAME, mLocalizer.msg("mark", "Mark") + " - " + result.getAction().getValue(Action.NAME)); 
+        result.getAction().putValue(Action.NAME, LOCALIZER.msg("mark", "Mark") + " - " + result.getAction().getValue(Action.NAME)); 
       }
     } else {
-      ActionMenu[] submenu = new ActionMenu[mMarkListVector.size()];
+      int add = 0;
+      
+      if(isExampleProgram || showCurrentMenu()) {
+        add = 1;
+      }
+      
+      ActionMenu[] submenu = new ActionMenu[mMarkListVector.size()+add];
 
       for (int i = 0; i < mMarkListVector.size(); i++) {
         submenu[i] = mMarkListVector.getListAt(i).getContextMenuAction(program, false);
         
         if(isExampleProgram) {
-          submenu[i].getAction().putValue(Action.NAME, mLocalizer.msg("mark", "Mark") + " - " + submenu[i].getAction().getValue(Action.NAME));
+          submenu[i].getAction().putValue(Action.NAME, LOCALIZER.msg("mark", "Mark") + " - " + submenu[i].getAction().getValue(Action.NAME));
         }
       }
       
-      result = new ActionMenu(mLocalizer.msg("mark", "Mark\u2026"), createImageIcon("status", "mail-attachment", 16), submenu);
+      if(add == 1) {
+        ContextMenuAction unmark = new ContextMenuAction(getUnmarkText(LOCALIZER.msg("selectedList", "Currently selected list")),createImageIcon("status", "mail-attachment", 16));
+        if(!isExampleProgram) {
+        unmark.setActionListener(new ActionListener() {
+          @Override
+          public void actionPerformed(ActionEvent e) {
+            ActionMenu toUse = null;
+            
+            if(mManageDialog != null && mManageDialog.isVisible()) {
+              toUse = mManageDialog.getMenuForCurrentList(program);
+            }
+            else if(mManagePanel != null && mManagePanel.isAncestor()) {
+              toUse = mManagePanel.getMenuForCurrentList(program);
+            }
+            
+            if(toUse != null) {
+              toUse.getAction().actionPerformed(null);
+            }
+          }
+        });
+        }
+        
+        try {
+          Constructor<ActionMenu> c = ActionMenu.class.getConstructor(int.class, Action.class);
+          submenu[submenu.length-1] = c.newInstance(Integer.MAX_VALUE, unmark);
+        } catch (Exception e1) {
+          e1.printStackTrace();
+          submenu[submenu.length-1] = new ActionMenu(unmark);
+        }
+      }
+      
+      result = new ActionMenu(LOCALIZER.msg("mark", "Mark\u2026"), createImageIcon("status", "mail-attachment", 16), submenu);
       result.getAction().putValue("showOnlySubMenus", mSettings.isShowingInContextMenu());
     }
     
@@ -521,7 +559,7 @@ public class SimpleMarkerPlugin extends Plugin {
       }
     };
     // Name of the buttons in the menu and the icon bar
-    action.putValue(Action.NAME, mLocalizer.msg("name","Marker plugin"));
+    action.putValue(Action.NAME, LOCALIZER.msg("name","Marker plugin"));
     // small icon
     action.putValue(Action.SMALL_ICON, createImageIcon("status", "mail-attachment",
         16));
@@ -535,7 +573,7 @@ public class SimpleMarkerPlugin extends Plugin {
     
     mStartFinished  = true;
     if(mMarkListVector.isEmpty()) {
-      mMarkListVector.addElement(new MarkList(mLocalizer.msg("default","default"),1));
+      mMarkListVector.addElement(new MarkList(LOCALIZER.msg("default","default"),1));
     }
 
     // now really load the programs which we currently only know as by date and id
@@ -599,21 +637,21 @@ public class SimpleMarkerPlugin extends Plugin {
   }
 
   protected void addGroupingActions(PluginTreeNode node) {
-    ActionMenu displayBoth = new ActionMenu(new AbstractAction(mLocalizer.msg(
+    ActionMenu displayBoth = new ActionMenu(new AbstractAction(LOCALIZER.msg(
         "grouping.both", "By title and date")) {
       public void actionPerformed(ActionEvent e) {
         mSettings.setNodeGroupingByBoth();
         updateTree();
       }
     }, mSettings.isGroupingByBoth());
-    ActionMenu displayTitle = new ActionMenu(new AbstractAction(mLocalizer.msg(
+    ActionMenu displayTitle = new ActionMenu(new AbstractAction(LOCALIZER.msg(
         "grouping.title", "By title")) {
       public void actionPerformed(ActionEvent e) {
         mSettings.setNodeGroupingByTitle();
         updateTree();
       }
     }, mSettings.isGroupingByTitle());
-    ActionMenu displayDate = new ActionMenu(new AbstractAction(mLocalizer.msg(
+    ActionMenu displayDate = new ActionMenu(new AbstractAction(LOCALIZER.msg(
         "grouping.date", "By date")) {
       public void actionPerformed(ActionEvent e) {
         mSettings.setNodeGroupingByDate();
@@ -622,7 +660,7 @@ public class SimpleMarkerPlugin extends Plugin {
     }, mSettings.isGroupingByDate());
     ActionMenu[] groupActions = new ActionMenu[] { displayBoth, displayTitle,
         displayDate };
-    node.addActionMenu(new ActionMenu(mLocalizer
+    node.addActionMenu(new ActionMenu(LOCALIZER
         .msg("grouping.grouping", "Grouping"), groupActions));
   }
   
@@ -813,7 +851,7 @@ public class SimpleMarkerPlugin extends Plugin {
   }
   
   public boolean isShowHtmlContextMenu() {
-	return mShowHtmlContextMenu;
+    return mShowHtmlContextMenu;
   }
   
   public String getPluginCategory() {
@@ -888,7 +926,7 @@ public class SimpleMarkerPlugin extends Plugin {
       setLayout(new FormLayout("default:grow","default,5dlu,fill:default:grow,5dlu,default"));
       CellConstraints cc = new CellConstraints();
 
-      add(new JLabel(mLocalizer.msg("deletedProgramsMsg","During the data update the following programs were deleted:")),cc.xy(1,1));
+      add(new JLabel(LOCALIZER.msg("deletedProgramsMsg","During the data update the following programs were deleted:")),cc.xy(1,1));
       add(scroll, cc.xy(1,3));
       
       setPreferredSize(new Dimension(200,200));
@@ -938,5 +976,22 @@ public class SimpleMarkerPlugin extends Plugin {
     if(mManagePanel != null) {
       mManagePanel.handleSettingsChanged();
     }
+  }
+  
+  private boolean showCurrentMenu() {
+    return mManageDialog != null && mManageDialog.isVisible() || mManagePanel != null && mManagePanel.isAncestor();
+  }
+  
+  String getUnmarkText(String name) {
+    String text = null;
+    
+    if(isShowHtmlContextMenu()) {
+      text = LOCALIZER.msg("list.unmark", "Remove from <b><i>{0}</i></b>", name);
+    }
+    else {
+      text = LOCALIZER.msg("list.unmark.old", "Remove program from '{0}'", name);
+    }
+    
+    return text;
   }
 }

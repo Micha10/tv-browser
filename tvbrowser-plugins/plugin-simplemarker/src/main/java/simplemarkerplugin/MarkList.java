@@ -38,7 +38,6 @@ import java.util.LinkedList;
 import java.util.Map.Entry;
 import java.util.Vector;
 
-import javax.sound.sampled.ReverbType;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.Icon;
@@ -344,7 +343,7 @@ public class MarkList extends Vector<Program> {
       if (defaultText) {
         action.putValue(Action.NAME, SimpleMarkerPlugin.getLocalizer().msg("unmark", "Remove marking"));
       } else {
-        action.putValue(Action.NAME, getUnmarkText());
+        action.putValue(Action.NAME, SimpleMarkerPlugin.getInstance().getUnmarkText(getName()));
       }
       action.putValue(Action.SMALL_ICON, SimpleMarkerPlugin.getInstance()
           .createIconForTree(0));
@@ -387,21 +386,6 @@ public class MarkList extends Vector<Program> {
 	  return text;
   }
   
-  private String getUnmarkText() {
-	  String text = null;
-	  
-	  if(SimpleMarkerPlugin.getInstance().isShowHtmlContextMenu()) {
-		  text = SimpleMarkerPlugin.getLocalizer().msg(
-				  "list.unmark", "Remove from <b><i>{0}</i></b>", getName());
-	  }
-	  else {
-		  text = SimpleMarkerPlugin.getLocalizer().msg(
-				  "list.unmark.old", "Remove program from '{0}'", getName());
-	  }
-	  
-	  return text;
-  }
-  
   private String getPrefix() {
 	  return SimpleMarkerPlugin.getInstance().getSettings().isShowingInContextMenu() ? SimpleMarkerPlugin.getLocalizer().msg("mark", "Mark").replace("\u2026", "") + " " : ""; 
   }
@@ -416,22 +400,19 @@ public class MarkList extends Vector<Program> {
 	
     if(p != null) {
       if (mReceiveTargets != null) {
-        for (ProgramReceiveTarget target:mReceiveTargets){
-          if(SimpleMarkerPlugin.IS_TVB_422_423 && "target_remind".equals(target.getTargetId())) {
-            ProgramReceiveIf receiveIf = target.getReceifeIfForIdOfTarget();
-            
-            if(receiveIf != null && "reminderplugin.ReminderPlugin".equals(receiveIf.getId())) {
-              try {
-                Method receive = receiveIf.getClass().getDeclaredMethod("receivePrograms", int.class, Program[].class, ProgramReceiveTarget.class);
-                receive.invoke(receiveIf, 0, new Program[] {p}, target);
-              } catch (Exception e) {
-                e.printStackTrace();
-                receiveIf.receivePrograms(new Program[] {p}, target);
-              } 
-            }
-          }
-          else {
-            target.receivePrograms(new Program[] {p});
+        for (ProgramReceiveTarget target : mReceiveTargets) {
+          if(SimpleMarkerPlugin.SUPPORTS_RECEIVE_REMOVE) {
+            try {
+              Method getEventType = ProgramReceiveTarget.class.getDeclaredMethod("getEventType");
+              int type = (Integer)getEventType.invoke(target);
+              
+              if(type != 2) {
+                Method receivePrograms = ProgramReceiveTarget.class.getDeclaredMethod("receivePrograms", int.class, Program[].class);
+                receivePrograms.invoke(target, 1, new Program[] {p});
+              }
+            } catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+              target.receivePrograms(new Program[] {p});
+            } 
           }
         }
       }
@@ -451,6 +432,37 @@ public class MarkList extends Vector<Program> {
     return result;
   }
 
+  @Override
+  public synchronized boolean removeElement(Object obj) {
+    boolean result = super.removeElement(obj);
+    
+    if(result && obj instanceof Program) {
+      deleteProgram((Program) obj);
+    }
+    
+    return result;
+  }
+  
+  private void deleteProgram(Program p) {
+    if (mReceiveTargets != null) {
+      for (ProgramReceiveTarget target : mReceiveTargets) {
+        if(SimpleMarkerPlugin.SUPPORTS_RECEIVE_REMOVE) {
+          try {
+            Method getEventType = ProgramReceiveTarget.class.getDeclaredMethod("getEventType");
+            int type = (Integer)getEventType.invoke(target);
+            
+            if(type == 2 || type == 3) {
+              Method receivePrograms = ProgramReceiveTarget.class.getDeclaredMethod("receivePrograms", int.class, Program[].class);
+              receivePrograms.invoke(target, 2, new Program[] {p});
+            }
+          } catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+            target.receivePrograms(new Program[] {p});
+          } 
+        }
+      }
+    }
+  }
+  
   /**
    * Remove all programs of the list
    *

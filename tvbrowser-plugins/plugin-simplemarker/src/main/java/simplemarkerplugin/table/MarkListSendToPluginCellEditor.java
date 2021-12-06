@@ -26,6 +26,8 @@ import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.EventObject;
@@ -35,6 +37,7 @@ import javax.swing.JButton;
 import javax.swing.JTable;
 import javax.swing.table.TableCellEditor;
 
+import devplugin.ProgramReceiveIf;
 import devplugin.ProgramReceiveTarget;
 import simplemarkerplugin.MarkList;
 import simplemarkerplugin.SimpleMarkerPlugin;
@@ -68,9 +71,21 @@ public class MarkListSendToPluginCellEditor extends AbstractCellEditor implement
         Window parent = UiUtilities
             .getLastModalChildOf(MainFrame.getInstance());
         PluginChooserDlg chooser = null;
-        chooser = new PluginChooserDlg(parent, mClientPluginTargets.toArray(new ProgramReceiveTarget[mClientPluginTargets.size()]), null,
+        if(SimpleMarkerPlugin.SUPPORTS_RECEIVE_REMOVE) {
+          try {
+            Constructor<PluginChooserDlg> c = PluginChooserDlg.class.getDeclaredConstructor(int.class,Window.class,ProgramReceiveTarget[].class,String.class,ProgramReceiveIf.class,ProgramReceiveTarget[].class);
+            chooser = c.newInstance(3, parent, mClientPluginTargets.toArray(new ProgramReceiveTarget[mClientPluginTargets.size()]), null, SimpleMarkerPlugin.getInstance(), null);
+          } catch (NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e1) {
+            chooser = new PluginChooserDlg(parent, mClientPluginTargets.toArray(new ProgramReceiveTarget[mClientPluginTargets.size()]), null, SimpleMarkerPlugin.getInstance());
+            // TODO Auto-generated catch block
+            e1.printStackTrace();
+          }
+        }
+        else {
+          chooser = new PluginChooserDlg(parent, mClientPluginTargets.toArray(new ProgramReceiveTarget[mClientPluginTargets.size()]), null,
             SimpleMarkerPlugin.getInstance());
-
+        }
+        
         chooser.setLocationRelativeTo(parent);
         chooser.setVisible(true);
 

@@ -32,6 +32,8 @@ import javax.swing.JDialog;
 import javax.swing.JRootPane;
 import javax.swing.WindowConstants;
 
+import devplugin.ActionMenu;
+import devplugin.Program;
 import util.ui.Localizer;
 import util.ui.UiUtilities;
 import util.ui.WindowClosingIf;
@@ -88,7 +90,11 @@ public class ManageDialog extends JDialog {
   }
   
   private void closeDialog() {
-    dispose();
     mPanel.saveSettings();
+    dispose();
+  }
+  
+  ActionMenu getMenuForCurrentList(Program p) {
+    return mPanel.getMenuForCurrentList(p);
   }
 }
