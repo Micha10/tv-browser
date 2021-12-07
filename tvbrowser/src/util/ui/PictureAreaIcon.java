@@ -58,7 +58,8 @@ public class PictureAreaIcon implements Icon {
   private boolean mIsGrayFilter;
   private boolean mShowPictureBorder;
   private int mDescriptionLines;
-
+  private int mCurrentAlpha;
+  
   /**
    * Constructor for programs with no picture or if pictures for
    * a program should not be shown.
@@ -199,7 +200,8 @@ public class PictureAreaIcon implements Icon {
       mIsExpired = true;
     }
 
-    if(c.getForeground().getAlpha() != 255) {
+    if(c.getForeground().getAlpha() != 255 && c.getForeground().getAlpha() != mCurrentAlpha) {
+      mCurrentAlpha = c.getForeground().getAlpha();
       ImageFilter filter = new RGBImageFilter() {
         public int filterRGB(int x, int y, int rgb) {
           if ((rgb & 0xff000000) != 0) {
@@ -208,7 +210,7 @@ public class PictureAreaIcon implements Icon {
           return rgb;
         }
       };
-
+      
       mScaledIcon.setImage(c.createImage(new FilteredImageSource(mScaledIcon.getImage().getSource(),filter)));
     }
 

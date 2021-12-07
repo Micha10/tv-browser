@@ -793,7 +793,7 @@ public class TVBrowser {
           pb.addSeparator(refresh, CC.xyw(1, pb.getRowCount(), 4));
           pb.addRow("5dlu",false);
           pb.addRow("default",false);
-          pb.add(UiUtilities.createHtmlHelpTextArea(LOCALIZER.msg("update.primeTimeUpdate","Independent of the configuration of the automatically data update, TV-Browser 4.2.2 provides the option to activate an automatically data update of the prime time (after 6 pm). If activated TV-Browser will download the data for today and tomorrow each day right before the prime time. You can configure this options under <b><i>{0}, {1}</i></b>&nbsp;&nbsp;or directly here.",StartupSettingsTab.LOCALIZER.msg("general","General settings"), refresh)), CC.xyw(2, pb.getRowCount(), 3));
+          pb.add(UiUtilities.createHtmlHelpTextArea(LOCALIZER.msg("update.primeTimeUpdate","Independent of the configuration of the automatically data update, TV-Browser since 4.2.2 provides the option to activate an automatically data update of the prime time (after 6 pm). If activated TV-Browser will download the data for today and tomorrow each day right before the prime time. You can configure this options under <b><i>{0}, {1}</i></b>&nbsp;&nbsp;or directly here.",StartupSettingsTab.LOCALIZER.msg("general","General settings"), refresh)), CC.xyw(2, pb.getRowCount(), 3));
           pb.addRow();
           pb.add(update, CC.xyw(2, pb.getRowCount(), 3));
           pb.addRow("10dlu",false);
@@ -838,7 +838,7 @@ public class TVBrowser {
           pb.getPanel().setBorder(Borders.DIALOG);
           pb.getPanel().setPreferredSize(new Dimension(Sizes.dialogUnitXAsPixel(450, pb.getPanel()), Sizes.dialogUnitYAsPixel(210, pb.getPanel())));
           
-          UiUtilities.showMessageDialogOnMouseScreen(pb.getPanel(), LOCALIZER.msg("update.title","Changed functionality with TV-Browser {0}","4.2.2"), JOptionPane.PLAIN_MESSAGE);
+          UiUtilities.showMessageDialogOnMouseScreen(pb.getPanel(), LOCALIZER.msg("update.title","Changed functionality since TV-Browser {0}","4.2.2"), JOptionPane.PLAIN_MESSAGE);
           
           if(fSetMarkPriority != null && rSetMarkPriority != null)
           try {
