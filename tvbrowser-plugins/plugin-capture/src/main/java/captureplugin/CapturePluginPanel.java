@@ -67,6 +67,7 @@ public class CapturePluginPanel extends JPanel {
     private DefaultMarkingPrioritySelectionPanel mMarkingPriorityPanel;
     
     private JCheckBox mShowAdditionalCommandsOnTop;
+    private JCheckBox mShowRemovedProgramsDialog;
     
     /**
      * Creates the Panel
@@ -93,11 +94,13 @@ public class CapturePluginPanel extends JPanel {
         mTabPane.addTab(DefaultMarkingPrioritySelectionPanel.getTitle(), mMarkingPriorityPanel);
 
         mShowAdditionalCommandsOnTop = new JCheckBox(LOCALIZER.msg("showOnTop", "Show additional commands (if any) on top of context menu."), data.showAdditionalCommandsOnTop());
+        mShowRemovedProgramsDialog = new JCheckBox(LOCALIZER.msg("showRemovedPrograms", "Show dialog with removed programs after data update."), data.showRemovedProgramsDialog());
         
-        PanelBuilder pb = new PanelBuilder(new FormLayout("default","default"));
+        PanelBuilder pb = new PanelBuilder(new FormLayout("default","default,default"));
         pb.border(Borders.DIALOG);
         
         pb.add(mShowAdditionalCommandsOnTop, CC.xy(1, 1));
+        pb.add(mShowRemovedProgramsDialog, CC.xy(1, 2));
         
         mTabPane.addTab(LOCALIZER.msg("Global", "Global Settings"), pb.getPanel());
         
@@ -128,5 +131,6 @@ public class CapturePluginPanel extends JPanel {
     public void saveMarkingSettings() {
       CapturePlugin.getInstance().getCapturePluginData().setMarkPriority(mMarkingPriorityPanel.getSelectedPriorities());
       CapturePlugin.getInstance().getCapturePluginData().setShowAdditionalCommandsOnTop(mShowAdditionalCommandsOnTop.isSelected());
+      CapturePlugin.getInstance().getCapturePluginData().setShowRemovedProgramsDialog(mShowRemovedProgramsDialog.isSelected());
     }
 }

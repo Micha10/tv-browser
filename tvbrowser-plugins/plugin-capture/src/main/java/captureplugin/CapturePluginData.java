@@ -41,12 +41,13 @@ import devplugin.Program;
  */
 public final class CapturePluginData implements Cloneable {
     /** Translator */
-    private static final Localizer mLocalizer = Localizer.getLocalizerFor(CapturePluginData.class);
+    private static final Localizer LOCALIZER = Localizer.getLocalizerFor(CapturePluginData.class);
 
     private int mMarkPriority = Program.MIN_MARK_PRIORITY;
     private int mPriorityMarkingMulti = Program.MAX_MARK_PRIORITY;
     
     private boolean mShowAdditionalCommandsOnTop = false;
+    private boolean mShowRemovedProgramsDialog = true;
     
     private int mWidthProgramTableColum1 = 200;
     private int mWidthProgramTableColum2 = 400;
@@ -88,11 +89,12 @@ public final class CapturePluginData implements Cloneable {
      * @throws IOException problems while writing
      */
     public void writeData(ObjectOutputStream out) throws IOException {
-        out.writeInt(6);
+        out.writeInt(7);
         
         out.writeInt(mMarkPriority);
         out.writeInt(mPriorityMarkingMulti);
         out.writeBoolean(mShowAdditionalCommandsOnTop);
+        out.writeBoolean(mShowRemovedProgramsDialog);
         out.writeInt(mDevices.size());
         
         DeviceFileHandling writer = new DeviceFileHandling();
@@ -136,6 +138,10 @@ public final class CapturePluginData implements Cloneable {
           mShowAdditionalCommandsOnTop = in.readBoolean();
         }
         
+        if(version >= 7) {
+          mShowRemovedProgramsDialog = in.readBoolean();
+        }
+        
         int num = in.readInt();
         
         mDevices = new Vector<DeviceIf>();
@@ -153,7 +159,7 @@ public final class CapturePluginData implements Cloneable {
                     mDevices.add(dev);
                 }
             } catch (Throwable e) {
-                ErrorHandler.handle(mLocalizer.msg("ProblemDevice", "Problems while loading Device {0}.", devname),e);
+                ErrorHandler.handle(LOCALIZER.msg("ProblemDevice", "Problems while loading Device {0}.", devname),e);
             }
             
         }
@@ -265,5 +271,13 @@ public final class CapturePluginData implements Cloneable {
     
     public void setWidthProgramTableColum2(int width) {
       mWidthProgramTableColum2 = width;
+    }
+
+    public boolean showRemovedProgramsDialog() {
+      return mShowRemovedProgramsDialog;
+    }
+
+    public void setShowRemovedProgramsDialog(boolean showRemovedProgramsDialog) {
+      mShowRemovedProgramsDialog = showRemovedProgramsDialog;
     }
 }

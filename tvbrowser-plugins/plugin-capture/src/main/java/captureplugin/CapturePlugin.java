@@ -58,6 +58,7 @@ import javax.swing.filechooser.FileFilter;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
+import org.apache.commons.codec.digest.Md5Crypt;
 import org.apache.commons.lang3.StringUtils;
 
 import captureplugin.drivers.DeviceIf;
@@ -83,7 +84,7 @@ import util.ui.UiUtilities;
  *         adopted by fishhead
  */
 public class CapturePlugin extends devplugin.Plugin {
-  private static final Version mVersion = new Version(3,18,0,true);
+  private static final Version mVersion = new Version(3,19,0,true);
   
     /**
      * Translator
@@ -670,7 +671,7 @@ public class CapturePlugin extends devplugin.Plugin {
               device.getProgramList();
             }
 
-            if(model.getRowCount() > 0) {
+            if(getCapturePluginData().showRemovedProgramsDialog() && model.getRowCount() > 0) {
               int sum = 0;
 
               for(int i = 0; i < columnWidth.length; i++) {
