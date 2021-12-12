@@ -72,6 +72,10 @@ public final class CapturePluginData implements Cloneable {
       
       mMarkPriority = data.getMarkPriority();
       
+      mShowAdditionalCommandsOnTop = data.showAdditionalCommandsOnTop();
+      
+      mShowRemovedProgramsDialog = data.showRemovedProgramsDialog();
+      
       mDevices = new Vector<DeviceIf>();
       
       Vector<DeviceIf> old = new Vector<DeviceIf>(data.getDevices());

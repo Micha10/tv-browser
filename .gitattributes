@@ -493,7 +493,6 @@ tvbrowser-plugins/plugin-capture/src/main/resources/captureplugin/drivers/dreamb
 tvbrowser-plugins/plugin-capture/src/main/resources/captureplugin/drivers/dreambox/connector/connector_de.properties -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-capture/src/main/resources/captureplugin/drivers/dreambox/connector/connector_hr.properties -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-capture/src/main/resources/captureplugin/drivers/dreambox/connector/cs/SD_HD.properties -text svneol=unset#text/plain
-tvbrowser-plugins/plugin-capture/src/main/resources/captureplugin/drivers/dreambox/connector/cs/build.xml -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-capture/src/main/resources/captureplugin/drivers/dreambox/connector/cs/cs.properties -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-capture/src/main/resources/captureplugin/drivers/dreambox/connector/cs/cs_de.properties -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-capture/src/main/resources/captureplugin/drivers/dreambox/connector/cs/cs_hr.properties -text svneol=unset#text/plain
