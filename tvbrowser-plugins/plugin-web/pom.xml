@@ -49,11 +49,6 @@
   </build>
   <dependencies>
   	<dependency>
-  		<groupId>log4j</groupId>
-  		<artifactId>log4j</artifactId>
-  		<scope>compile</scope>
-  	</dependency>
-  	<dependency>
   		<groupId>com.ctreber</groupId>
   		<artifactId>aclibico</artifactId>
   		<version>2.1</version>

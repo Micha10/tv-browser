@@ -35,20 +35,18 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
-
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
-
-import util.io.IOUtilities;
-import util.ui.UiUtilities;
 
 import com.ctreber.aclib.image.ico.BitmapDescriptor;
 import com.ctreber.aclib.image.ico.ICOFile;
 
 import devplugin.Plugin;
+import util.io.IOUtilities;
+import util.ui.UiUtilities;
 
 /**
  * This Class tries to get the Favicon for a Website
@@ -65,10 +63,6 @@ public class FavIconFetcher {
    * @return Filename, or null if error
    */
   public String fetchFavIconForUrl(String urlString) {
-    Logger logger = Logger.getRootLogger();
-    if (logger != null) {
-      logger.setLevel(Level.ERROR);
-    }
     int pos = urlString.indexOf("//");
     int firstslash = urlString.indexOf("/", pos + 2);
     if (firstslash >= 0) {
@@ -139,7 +133,7 @@ public class FavIconFetcher {
     } catch (IOException e) {
       e.printStackTrace();
     }
-
+      
     return null;
   }
 
