@@ -33,6 +33,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map.Entry;
 
 import javax.swing.AbstractAction;
@@ -572,39 +573,26 @@ public class FavoriteTreeModel extends DefaultTreeModel {
    *
    * @param node
    *          use this Node
-   * @return Number of Child-Nodes
+   * @return The ProgramCount class with the counted programs.
    */
-  public static int[] getProgramsCount(FavoriteNode node) {
-    int[] count = new int[2];
-
-    Date currentDate = Date.getCurrentDate();
+  public static ProgramCount getProgramsCount(FavoriteNode node, ProgramCount count) {
+    if(count == null) {
+      count = new ProgramCount();
+    }
+    
     if(node.containsFavorite()) {
-      Program[] whiteListPrograms = node.getFavorite().getWhiteListPrograms();
-      count[0] = whiteListPrograms.length;
-      for(Program p : whiteListPrograms) {
-        if(p.getDate().equals(currentDate) && !p.isExpired()) {
-          count[1]++;
-        }
-      }
+      count.addPrograms(node.getFavorite().getWhiteListPrograms());
     }
 
     for (int i = 0; i < node.getChildCount(); i++) {
       FavoriteNode child = (FavoriteNode)node.getChildAt(i);
       if (child.containsFavorite()) {
-        Program[] whiteListPrograms = child.getFavorite().getWhiteListPrograms();
-        count[0] += whiteListPrograms.length;
-
-        for(Program p : whiteListPrograms) {
-          if(p.getDate().equals(currentDate) && !p.isExpired()) {
-            count[1]++;
-          }
-        }
+        count.addPrograms(child.getFavorite().getWhiteListPrograms());
       } else {
-        int[] countReturned = getProgramsCount(child);
-        count[0] += countReturned[0];
-        count[1] += countReturned[1];
+        count = getProgramsCount(child,count);
       }
     }
+    
     return count;
   }
 
@@ -736,5 +724,47 @@ public class FavoriteTreeModel extends DefaultTreeModel {
   
   public void reValidateChannelLimitations() {
     
+  }
+  
+  static final class ProgramCount {
+    private HashSet<String> mAll;
+    private HashSet<String> mToday;
+    private Date mCurrent;
+    
+    public ProgramCount() {
+      mAll = new HashSet<String>();
+      mToday = new HashSet<String>();
+      mCurrent = Date.getCurrentDate();
+    }
+    
+    private void addProgram(Program p) {
+      mAll.add(p.getUniqueID());
+      
+      if(p.getDate().equals(mCurrent) && !p.isExpired()) {
+        mToday.add(p.getUniqueID());
+      }
+    }
+    
+    private void addPrograms(Program[] programs) {
+      for(Program p : programs) {
+        addProgram(p);
+      }
+    }
+    
+    int getCountToday() {
+      return mToday.size();
+    }
+    
+    int getCountAll() {
+      return mAll.size();
+    }
+    
+    boolean hasPrograms() {
+      return !mAll.isEmpty();
+    }
+    
+    boolean hasTodayPrograms() {
+      return !mToday.isEmpty();
+    }
   }
 }

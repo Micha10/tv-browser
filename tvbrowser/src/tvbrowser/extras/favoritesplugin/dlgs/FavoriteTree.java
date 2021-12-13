@@ -68,6 +68,7 @@ import tvbrowser.core.icontheme.IconLoader;
 import tvbrowser.extras.common.ReminderConfiguration;
 import tvbrowser.extras.favoritesplugin.FavoritesPlugin;
 import tvbrowser.extras.favoritesplugin.core.Favorite;
+import tvbrowser.extras.favoritesplugin.dlgs.FavoriteTreeModel.ProgramCount;
 import tvbrowser.extras.reminderplugin.ReminderPlugin;
 import tvbrowser.ui.mainframe.MainFrame;
 import util.i18n.Localizer;
@@ -798,15 +799,15 @@ public class FavoriteTree extends JTree implements DragGestureListener, DropTarg
     StringBuilder text = new StringBuilder(value.toString());
 
     if(value instanceof FavoriteNode) {
-      int[] count = FavoriteTreeModel.getProgramsCount((FavoriteNode)value);
+      ProgramCount count = FavoriteTreeModel.getProgramsCount((FavoriteNode)value,null);
 
-      if(count[0] > 0) {
-        if(count[1] < 1) {
-          text.append(" [").append(count[0]).append(']');
-        } else {
-          text.append(" [").append(count[0]).append(", ").append(
+      if(count.hasPrograms()) {
+        if(count.hasTodayPrograms()) {
+          text.append(" [").append(count.getCountAll()).append(", ").append(
               Localizer.getLocalization(Localizer.I18N_TODAY)).append(": ")
-              .append(count[1]).append(']');
+              .append(count.getCountToday()).append(']');
+        } else {
+          text.append(" [").append(count.getCountAll()).append(']');
         }
       }
     }
