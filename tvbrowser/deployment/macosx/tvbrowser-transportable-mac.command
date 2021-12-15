@@ -21,7 +21,7 @@ JAVA_JDK_ROOT="/Library/Java/JavaVirtualMachines"
 #MSG1="Starting TV-Browser..."
 #MSG2="Java exec found in "
 #MSG3="OOPS, your java version is too old"
-#MSG4="You need to upgrade to jre 8 or newer from https://www.java.com"
+#MSG4="You need to upgrade to jre 11 or newer from https://adoptium.net"
 #MSG5="Suitable java version found"
 #MSG6="Configuring environment ..."
 #MSG7="OOPS, you don't seem to have a valid jre"
@@ -43,11 +43,11 @@ looking_for_java()
   echo "java header is" $JAVA_HEADER
   JAVA_IMPL=`echo ${JAVA_HEADER} | cut -f1 -d' '`
   echo "java implementation is" ${JAVA_IMPL}
-  if [ "$JAVA_IMPL" = "java" ] ; then
+  if [[ "$JAVA_IMPL" = "java" || "$JAVA_IMPL" = "openjdk" ]] ; then
     VERSION=`echo ${JAVA_HEADER} | sed "s/java version \"\(.*\)\"/\1/"`
-    if echo $VERSION | grep "^1.[0-7]" ; then
+    if echo $VERSION | grep -E "([^1-9]1\.[0-9]|10\.[0-9])" ; then
       echo "Oops, this java version is too old" "[${JAVA_PLUGIN_DIR}/java = ${VERSION}]"
-      echo "You need to upgrade to JRE 8 or newer from https://www.java.com/"
+      echo "You need to upgrade to JRE 11 or newer from https://adoptium.net/"
       JAVA_DIR=
       return 1
     else
@@ -57,7 +57,7 @@ looking_for_java()
       return 0
     fi
    fi
-   # openjdk or similar is normally inlikely on macs
+   # not supported java
    echo "Wrong java implementation, exiting"
    return 1
 }
