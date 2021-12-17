@@ -475,7 +475,7 @@
 		    applicationCategory="public.app-category.entertainment"
 		    workingDirectory="$APP_ROOT/Contents/Resources"
 		    mainclassname="tvbrowser/tvbrowser.TVBrowser">
-		<arch name="x86_64"/>
+		<!---<arch name="x86_64"/>-->
 		<!--<classpath dir="${tvbrowser-default.runtime.dir}">
 		    <include name="*.jar"/>
 		</classpath>-->
@@ -484,6 +484,8 @@
 		<option value="-Dcom.apple.macos.use-file-dialog-packages=true"/>
 		<option value="-Dcom.apple.mrj.application.apple.menu.about.name=${bundle.name}"/>
 		<option value="-Dcom.apple.smallTabs=true"/>
+		<option value="--add-opens"/>
+		<option value="java.desktop/com.apple.eawt=tvbrowser"/>
 		<option value="--module-path=lib:tvbrowser.jar"/>
 	    <option value="-splash:imgs/splash.png"/>
 		<option value="-Xms16m"/>

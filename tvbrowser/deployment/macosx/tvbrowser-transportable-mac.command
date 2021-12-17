@@ -108,10 +108,10 @@ fi
 
 cd ${PROGRAM_DIR}
 echo "Loading TV-Browser:"
-echo "Command line is" ${JAVA_DIR}/java '-Xms16m -Xmx1G --module-path=\"lib:tvbrowser.jar\" -Dapple.laf.useScreenMenuBar=true -Dcom.apple.macos.use-file-dialog-packages=true -Dcom.apple.mrj.application.apple.menu.about.name=TV-Browser -Dcom.apple.smallTabs=true -Djava.library.path=\"${PROGRAM_DIR}\" -splash:imgs/splash.png -m tvbrowser/tvbrowser.TVBrowser \"$@\"'
+echo "Command line is" ${JAVA_DIR}/java '-Xms16m -Xmx1G --module-path=\"lib:tvbrowser.jar\" -Dapple.laf.useScreenMenuBar=true -Dcom.apple.macos.use-file-dialog-packages=true -Dcom.apple.mrj.application.apple.menu.about.name=TV-Browser -Dcom.apple.smallTabs=true -Djava.library.path=\"${PROGRAM_DIR}\" --add-opens java.desktop/com.apple.eawt=tvbrowser -splash:imgs/splash.png -m tvbrowser/tvbrowser.TVBrowser \"$@\"'
 
 $cmdLine
-"${JAVA_DIR}/java" -Xms16m -Xmx1G --module-path="lib:tvbrowser.jar" -Dcom.apple.macos.use-file-dialog-packages=true -Dcom.apple.smallTabs=true -Djava.library.path="${PROGRAM_DIR}" -splash:imgs/splash.png -m tvbrowser/tvbrowser.TVBrowser "$@"
+"${JAVA_DIR}/java" -Xms16m -Xmx1G --module-path="lib:tvbrowser.jar" -Dcom.apple.macos.use-file-dialog-packages=true -Dcom.apple.smallTabs=true -Djava.library.path="${PROGRAM_DIR}" --add-opens java.desktop/com.apple.eawt=tvbrowser -splash:imgs/splash.png -m tvbrowser/tvbrowser.TVBrowser "$@"
 # ensure disk cache is written to drive
 sync
 echo "TV-Browser will terminate."

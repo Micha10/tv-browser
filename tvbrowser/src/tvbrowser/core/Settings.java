@@ -1935,6 +1935,13 @@ public class Settings {
   public static final BooleanProperty propIsWindowMaximized = new BooleanProperty(
       mProp, "window.isMaximized", false);
 
+  /**
+   * Store if TV-Browser window is in native full screen mode of macOS
+   * @since 4.2.4
+   */
+  public static final BooleanProperty propIsInMacOSFullScreen = new BooleanProperty(
+	      mProp, "window.isInMacOSFullScreen", false);
+
   public static final BooleanProperty propIsUsingFullscreen = new BooleanProperty(
       mProp, "isUsingFullscreen", false);
 

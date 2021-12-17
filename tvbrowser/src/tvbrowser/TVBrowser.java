@@ -31,7 +31,6 @@ import java.awt.Dialog.ModalityType;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Frame;
-import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.awt.Image;
 import java.awt.Insets;
@@ -56,6 +55,7 @@ import java.io.StringWriter;
 import java.lang.management.ManagementFactory;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
 import java.net.Authenticator;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
@@ -1487,7 +1487,9 @@ public class TVBrowser {
     mainFrame=MainFrame.getInstance();
     PluginProxyManager.getInstance().setParentFrame(mainFrame);
     TvDataServiceProxyManager.getInstance().setParamFrame(mainFrame);
-
+    
+    
+    
     // Set the program icon
     
     mainFrame.setIconImages(ICONS_WINDOW);
@@ -1575,6 +1577,36 @@ public class TVBrowser {
       LOG.info("Running setup assistant");
       mainFrame.runSetupAssistant();
     }
+    
+    if(Launch.isMacOs()) {
+      try {
+    	Class<? extends Object> fullScreenUtilities = Class.forName("com.apple.eawt.FullScreenUtilities");
+    	fullScreenUtilities.getMethod("setWindowCanFullScreen", Window.class, Boolean.TYPE).invoke(null, mainFrame, true);
+    	
+    	if(Settings.propIsInMacOSFullScreen.getBoolean()) {
+    	  Class<? extends Object> app = Class.forName("com.apple.eawt.Application");
+    	  Object o = app.getMethod("getApplication").invoke(app);
+    	  app.getMethod("requestToggleFullScreen", Window.class).invoke(o,mainFrame);
+    	}
+    	
+		Class<? extends Object> fullScreenListenerClass = Class.forName("com.apple.eawt.FullScreenListener");
+		Object fullScreenListener = Proxy.newProxyInstance(fullScreenListenerClass.getClassLoader(), new Class<?>[] {fullScreenListenerClass}, (proxy, method, methodArgs) -> {
+		  if(method.getName().equals("windowEnteredFullScreen")) {
+		    Settings.propIsInMacOSFullScreen.setBoolean(true);
+		  }
+		  else if(method.getName().equals("windowExitedFullScreen")) {
+		    Settings.propIsInMacOSFullScreen.setBoolean(false);
+	      }
+		  
+		  return null;
+		});
+		
+		fullScreenUtilities.getMethod("addFullScreenListenerTo", Window.class, fullScreenListenerClass).invoke(null, mainFrame, fullScreenListener);
+	  } catch (Exception e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	  }
+    }
   }
 
   /**
@@ -1622,13 +1654,9 @@ public class TVBrowser {
       if(!mainFrame.isFullScreenMode()) {
         boolean maximized = (state & JFrame.MAXIMIZED_BOTH) == JFrame.MAXIMIZED_BOTH;
         
-        if(!maximized && Launch.isMacOs() && state == 0) {
-          maximized = mainFrame.getGraphicsConfiguration().getBounds().equals(mainFrame.getBounds());	
-        }
-        
         Settings.propIsWindowMaximized.setBoolean(maximized);
   
-        if (! maximized) {
+        if (! maximized && (!Launch.isMacOs() || !Settings.propIsInMacOSFullScreen.getBoolean())) {
           // Save the window size and location only when not maximized
           Settings.propWindowWidth.setInt(mainFrame.getWidth());
           Settings.propWindowHeight.setInt(mainFrame.getHeight());
