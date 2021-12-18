@@ -464,12 +464,12 @@
 		<mkdir dir="${tvbrowser-macjava.runtime.dir}"/>
 
 		<appbundler 
-			jvmrequired="11"
+		    jvmrequired="11"
 		    outputdirectory="${tvbrowser-macjava.runtime.dir}" 
 		    name="TV-Browser" 
 		    icon="images/additional/tvbrowser.icns"
 		    displayname="TV-Browser" 
-			copyright="2019 TV-Browser"
+		    copyright="2021 TV-Browser"
 		    identifier="tvbrowser.TVBrowser" 
 		    shortversion="${tvbrowser.version}"
 		    applicationCategory="public.app-category.entertainment"

@@ -1281,7 +1281,7 @@ public class TVBrowser {
         } else {
           LOG.warning("Wrong Syntax in parameter: '" + argument + "'");
         }
-      } else {
+      } else if(!argument.trim().isEmpty()) {
         LOG.warning("Unknown command line parameter: '" + argument + "'");
       }
     }
