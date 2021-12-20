@@ -636,11 +636,11 @@ public class SoftwareUpdateDlg extends JDialog implements ActionListener, ListSe
                 JOptionPane.showMessageDialog(UiUtilities.getLastModalChildOf(MainFrame.getInstance()), LOCALIZER.msg("restartprogram", "please restart tvbrowser before..."));
               }
               
-              setVisible(false);
+              closeInternal(true);
             });
           }
           else if(mIsVersionChange || mDialogType == SoftwareUpdater.ONLY_DATA_SERVICE_TYPE) {
-            setVisible(false);
+            closeInternal(false);
           }
         });
       }
@@ -653,15 +653,15 @@ public class SoftwareUpdateDlg extends JDialog implements ActionListener, ListSe
     }
   }
   
-  @Override
-  public void setVisible(boolean visible) {
-    super.setVisible(visible);
-    
-    if(!visible) {
+  private void closeInternal(boolean dispose) {
+    if(dispose) {
       dispose();
     }
+    else {
+      setVisible(false);
+    }
   }
-
+    
   @SuppressWarnings("unchecked")
   public void valueChanged(ListSelectionEvent event) {
     mDownloadBtn.setEnabled(!mSoftwareUpdateItemList.getSelectionList().isEmpty());
@@ -697,7 +697,7 @@ public class SoftwareUpdateDlg extends JDialog implements ActionListener, ListSe
 
   public void close() {
     if(!mIsVersionChange || mSoftwareUpdateItemList.getSelectionList().isEmpty()) {
-      setVisible(false);
+      closeInternal(true);
     }
   }
 
