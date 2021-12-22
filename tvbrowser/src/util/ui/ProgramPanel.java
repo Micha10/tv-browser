@@ -624,7 +624,7 @@ private static Font getDynamicFontSize(Font font, int offset) {
       setPreferredSize(new Dimension(WIDTH_TOTAL, mHeight));
 
       // Calculate the preferred height
-      mPreferredHeight = titleHeight + (maxDescLines * mNormalFont.getSize() * getLineGap(mNormalFont)) + mPictureAreaIcon.getIconHeight() + additionalHeight + V_GAP;
+      mPreferredHeight = titleHeight + (maxDescLines * (mNormalFont.getSize() + getLineGap(mNormalFont))) + mPictureAreaIcon.getIconHeight() + additionalHeight + V_GAP;
 
       if (mHeight < mPreferredHeight) {
         mPreferredHeight = mHeight;
