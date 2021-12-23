@@ -155,7 +155,7 @@ public class TextAreaIcon implements Icon {
     if (mTextLineArr == null) {
       return 0;
     } else {
-      return (mFont.getSize() + mLineSpace) * mTextLineArr.length;
+      return getHeightForLineCount(mTextLineArr.length);
     }
   }
   
@@ -209,6 +209,17 @@ public class TextAreaIcon implements Icon {
   public boolean isTextCut() {
     return mMaxLineCount > 0 && mMaxLineCount == mTextLineArr.length
         && mTextLineArr[mMaxLineCount - 1].endsWith(TextLineBreakerStringWidth.ELLIPSIS);
+  }
+  
+  /**
+   * Gets height for given number of lines.
+   * <p>
+   * @param lines Number of lines to calculate height for.
+   * @return The height of the lines count.
+   * @since 4.2.5
+   */
+  public int getHeightForLineCount(int lines) {
+    return (lines * (mFont.getSize() + mLineSpace));
   }
   
 }

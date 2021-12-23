@@ -593,7 +593,7 @@ private static Font getDynamicFontSize(Font font, int offset) {
     int additionalHeight = Settings.propProgramPanelUsesExtraSpaceForMarkIcons.getBoolean() && program.getMarkerArr().length > 0 ? 16 : 0;
 
     if (maxHeight != -1) {
-      maxDescLines = (maxHeight - titleHeight - mPictureAreaIcon.getIconHeight() - additionalHeight - V_GAP) / (mNormalFont.getSize() + getLineGap(mNormalFont));
+      maxDescLines = (maxHeight - titleHeight - mPictureAreaIcon.getIconHeight() - additionalHeight - V_GAP) / mDescriptionIcon.getHeightForLineCount(1);
     }
 
     if (programChanged
@@ -618,13 +618,13 @@ private static Font getDynamicFontSize(Font font, int offset) {
         descHeight = 0;
       }
 
-      int height = titleHeight + descHeight + mPictureAreaIcon.getIconHeight() + additionalHeight + V_GAP;
+      int height = calculateHeight(titleHeight, descHeight, additionalHeight);
       
       mHeight = (mChannelLabel != null ? Math.max(height, mChannelLabel.getPreferredSize().height) : height);
       setPreferredSize(new Dimension(WIDTH_TOTAL, mHeight));
 
       // Calculate the preferred height
-      mPreferredHeight = titleHeight + (maxDescLines * (mNormalFont.getSize() + getLineGap(mNormalFont))) + mPictureAreaIcon.getIconHeight() + additionalHeight + V_GAP;
+      mPreferredHeight = calculateHeight(titleHeight, mDescriptionIcon.getHeightForLineCount(maxDescLines), additionalHeight);
 
       if (mHeight < mPreferredHeight) {
         mPreferredHeight = mHeight;
@@ -639,6 +639,10 @@ private static Font getDynamicFontSize(Font font, int offset) {
       revalidate();
       repaint();
     }
+  }
+  
+  private int calculateHeight(int titleHeight, int descriptionHeight, int addtionalHeight) {
+    return titleHeight + descriptionHeight + mPictureAreaIcon.getIconHeight() + addtionalHeight + V_GAP;
   }
   
   private boolean showPicture(Program program, boolean dontShow) {
