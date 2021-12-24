@@ -1251,8 +1251,8 @@ public abstract class Favorite {
     boolean result = false;
     
     for(Exclusion ex : exclusions) {
-      if(ex.getFilter() != null && filter != null && (ex.getFilter().equals(filter))
-          || ex.getFilter().getName().equals(filter.getName())) {
+      if(ex.getFilter() != null && filter != null && (ex.getFilter().equals(filter)
+          || ex.getFilter().getName().equals(filter.getName()))) {
         result = true;
         ex.setFilter(filter);
         break;
