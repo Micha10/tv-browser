@@ -37,7 +37,8 @@ public class DegenderPlugin extends Plugin {
       ProgramFieldType.ADDITIONAL_INFORMATION_TYPE,
       ProgramFieldType.PICTURE_DESCRIPTION_TYPE,
       ProgramFieldType.EPISODE_TYPE,
-      ProgramFieldType.SERIES_TYPE
+      ProgramFieldType.SERIES_TYPE,
+      ProgramFieldType.ADDITIONAL_PERSONS_TYPE
   };
   
   private LinkedHashMap<String, String> mSingularReplacement;
@@ -47,7 +48,7 @@ public class DegenderPlugin extends Plugin {
   private static final Pattern GENDERED = Pattern.compile("(\\b(?i)(die\\s){0,1}(?-i)\\b(?!Mc)(\\w+?)(?:\\s*[\\*\\:_](?i:i)|I)n(nen){0,1})", Pattern.DOTALL | Pattern.UNICODE_CHARACTER_CLASS); 
   private static final Pattern GENDERED_LONG = Pattern.compile("(\\b([\\w\\-]+?)innen\\b\\s+(?:und|oder)\\s+\\-{0,1}\\b(\\w+?)\\b)|(\\b([\\w\\-]+?)\\b\\s+(?:und|oder)\\s+\\-{0,1}\\b(\\w+?)innen\\b)", Pattern.DOTALL | Pattern.UNICODE_CHARACTER_CLASS);
   private static final Pattern GENDERED_PARTIZIP = Pattern.compile("(\\b(?i)(?:(\\w*eine|der|die|bei|mit|\\w+en)\\s){0,1}(?-i)(?:\\b\\w+\\b\\s){0,1}\\b((\\p{Upper}\\w+)ende(n|r){0,1}(\\w*)\\b))", Pattern.DOTALL | Pattern.UNICODE_CHARACTER_CLASS);
-  private static final Version VERSION = new Version(0,13,5,true);
+  private static final Version VERSION = new Version(0,13,7,true);
   
   private boolean mRemoveLongForm = false;
   private boolean mReplacePartizip = false;
@@ -213,6 +214,8 @@ public class DegenderPlugin extends Plugin {
       
       m = GENDERED.matcher(text);
     }while(m.find());
+    
+    text = text.replace("jede:r", "jeder");
     
     return text;
   }
