@@ -47,8 +47,8 @@ public class DegenderPlugin extends Plugin {
   
   private static final Pattern GENDERED = Pattern.compile("(\\b(?i)(die\\s){0,1}(?-i)\\b(?!Mc)(\\w+?)(?:\\s*[\\*\\:_](?i:i)|I)n(nen){0,1})", Pattern.DOTALL | Pattern.UNICODE_CHARACTER_CLASS); 
   private static final Pattern GENDERED_LONG = Pattern.compile("(\\b([\\w\\-]+?)innen\\b\\s+(?:und|oder)\\s+\\-{0,1}\\b(\\w+?)\\b)|(\\b([\\w\\-]+?)\\b\\s+(?:und|oder)\\s+\\-{0,1}\\b(\\w+?)innen\\b)", Pattern.DOTALL | Pattern.UNICODE_CHARACTER_CLASS);
-  private static final Pattern GENDERED_PARTIZIP = Pattern.compile("(\\b(?i)(?:(\\w*eine|der|die|bei|mit|\\w+en)\\s){0,1}(?-i)(?:\\b\\w+\\b\\s){0,1}\\b((\\p{Upper}\\w+)ende(n|r){0,1}(\\w*)\\b))", Pattern.DOTALL | Pattern.UNICODE_CHARACTER_CLASS);
-  private static final Version VERSION = new Version(0,13,7,true);
+  private static final Pattern GENDERED_PARTIZIP = Pattern.compile("(\\b(?i)(?:(\\w*eine|der|die|bei|mit|\\w+en)\\s){0,1}(?-i)(\\b\\w+\\b\\s){0,1}\\b((\\p{Upper}\\w+)ende(n|r){0,1}(\\w*)\\b))", Pattern.DOTALL | Pattern.UNICODE_CHARACTER_CLASS);
+  private static final Version VERSION = new Version(0,13,8,true);
   
   private boolean mRemoveLongForm = false;
   private boolean mReplacePartizip = false;
@@ -298,59 +298,60 @@ public class DegenderPlugin extends Plugin {
         
         String replace = m.group(1);
         
-        if(m.group(4).toLowerCase().endsWith("studier") || m.group(4).toLowerCase().endsWith("dozier")) {
-          replace = m.group(1).substring(0,m.group(1).length()-m.group(3).length()+1) + m.group(4).substring(1,m.group(4).length()-3)+"ent";
+        if(m.group(5).toLowerCase().endsWith("studier") || m.group(5).toLowerCase().endsWith("dozier")) {
+          replace = m.group(1).substring(0,m.group(1).length()-m.group(4).length()+1) + m.group(5).substring(1,m.group(5).length()-3)+"ent";
           
-          if((m.group(2) == null && (m.group(5) == null || (m.group(5) != null && m.group(5).equals("n")))) || 
-              (m.group(2) != null && (m.group(5) != null && m.group(5).equals("n"))) ||
-              (m.group(2) != null && m.group(5) == null && m.group(2).endsWith("en"))) {
+          if((m.group(2) == null && (m.group(6) == null || (m.group(6) != null && m.group(6).equals("n")))) || 
+              (m.group(2) != null && (m.group(6) != null && m.group(6).equals("n"))) ||
+              (m.group(2) != null && m.group(6) == null && m.group(2).endsWith("en"))) {
             replace += "en";
           }
         }
-        else if(m.group(4).toLowerCase().endsWith("kunstschaff")) {
-          replace = m.group(1).substring(0,m.group(1).length()-m.group(3).length()+1) + m.group(4).substring(1,m.group(4).length()-10)+"ünstler";
+        else if(m.group(5).toLowerCase().endsWith("kunstschaff")) {
+          replace = m.group(1).substring(0,m.group(1).length()-m.group(4).length()+1) + m.group(5).substring(1,m.group(5).length()-10)+"ünstler";
         }
-        else if(m.group(4).toLowerCase().endsWith("forsch") || m.group(4).toLowerCase().endsWith("lehr") 
-            || m.group(4).toLowerCase().endsWith("bewohn") || m.group(4).toLowerCase().endsWith("besuch")
-            || m.group(4).toLowerCase().endsWith("eit") || m.group(4).toLowerCase().endsWith("ütz")
-            || m.group(4).toLowerCase().endsWith("fahr") || m.group(4).toLowerCase().endsWith("arbeitnehm")
-            || m.group(4).toLowerCase().endsWith("helf") || m.group(4).toLowerCase().endsWith("schau")
-            || m.group(4).toLowerCase().endsWith("trink") || m.group(4).toLowerCase().endsWith("teilnehm")
-            || m.group(4).toLowerCase().endsWith("deal")) {
-          replace = m.group(1).substring(0,m.group(1).length()-m.group(3).length()) + m.group(4)+"er";
+        else if(m.group(5).toLowerCase().endsWith("forsch") || m.group(5).toLowerCase().endsWith("lehr") 
+            || m.group(5).toLowerCase().endsWith("bewohn") || m.group(5).toLowerCase().endsWith("besuch")
+            || m.group(5).toLowerCase().endsWith("eit") || m.group(5).toLowerCase().endsWith("ütz")
+            || m.group(5).toLowerCase().endsWith("fahr") || m.group(5).toLowerCase().endsWith("arbeitnehm")
+            || m.group(5).toLowerCase().endsWith("helf") || m.group(5).toLowerCase().endsWith("schau")
+            || m.group(5).toLowerCase().endsWith("trink") || m.group(5).toLowerCase().endsWith("teilnehm")
+            || m.group(5).toLowerCase().endsWith("deal")) {
+          replace = m.group(1).substring(0,m.group(1).length()-m.group(4).length()) + m.group(5)+"er";
         }
-        else if(m.group(4).toLowerCase().endsWith("zufußgeh")) {
-          replace = m.group(4).substring(0,m.group(4).length()-8);
+        else if(m.group(5).toLowerCase().endsWith("zufußgeh")) {
+          replace = m.group(5).substring(0,m.group(5).length()-8);
           
-          if(Character.isUpperCase(m.group(4).charAt(m.group(4).length()-8))) {
+          if(Character.isUpperCase(m.group(5).charAt(m.group(5).length()-8))) {
             replace += "Fußgänger";
           }
           else {
             replace += "fußgänger";
           }
         }
-        
+        System.out.println(replace + " " + (m.group(3) == null || !m.group(3).trim().equals("die")));
         if(!replace.equals(m.group(1))) {
-          if(m.group(6) != null && !m.group(6).trim().isEmpty()) {
-            replace += m.group(6);
+          if(m.group(7) != null && !m.group(7).trim().isEmpty()) {
+            replace += m.group(7);
           }
      
-          if(m.group(5) == null && m.group(2) != null && (m.group(2).toLowerCase().equals("die") || m.group(2).toLowerCase().endsWith("eine"))) {
+          if(m.group(6) == null && m.group(2) != null && (m.group(2).toLowerCase().equals("die") || m.group(2).toLowerCase().endsWith("eine"))) {
             replace += "in";
           }
-          else if(m.group(5) != null && m.group(2) != null && (m.group(2).toLowerCase().equals("mit") || m.group(2).toLowerCase().equals("bei") 
-              || m.group(2).endsWith("en")) && replace.toLowerCase().endsWith("er")) {
+          else if(m.group(6) != null && m.group(2) != null && (m.group(2).toLowerCase().equals("mit") || m.group(2).toLowerCase().equals("bei") 
+              || m.group(2).endsWith("en")) && replace.toLowerCase().endsWith("er")
+              && (m.group(3) == null || !m.group(3).trim().equals("die"))) {
             replace += "n";
           }
           if(!VERSION.isStable()) {
             System.out.println(p);
           }
-         // System.out.println(m.group(1) + " " + m.group(6) + " " + replace);
+         // System.out.println(m.group(1) + " " + m.group(7) + " " + replace);
           mCountPartizip++;
         }
         
         if(!VERSION.isStable()) {
-          System.out.println(m.group(4) + "   " + replace+"\n");
+          System.out.println(m.group(5) + "   " + replace+"\n");
         }
         
         result.append(text.substring(pos,m.start(1))).append(replace);
