@@ -2970,5 +2970,7 @@ public class Settings {
       
     public static final StringProperty USER_DEFINED_PARAMS = Settings.propUserDefinedWebbrowserParams;
     public static final StringProperty USER_DEFINED = Settings.propUserDefinedWebbrowser;
+    
+    private WebBrowser() {}
   }
 }
