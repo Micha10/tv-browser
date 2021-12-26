@@ -522,31 +522,30 @@ public class Settings {
     else if (!oldDirectoryName.equals(newDirectoryName)) {
       File oldDir = null;
 
-      int countValue = 1;
-
-      String firstDir = System.getProperty("user.home") + "/TV-Browser";
-
+      ArrayList<String> directories = new ArrayList<>();
+      directories.add(getUserDirectoryName());
+      
       if(Launch.isOsWindowsNtBranch()) {
-        countValue = 3;
-      }
-      else if(Launch.getOs() == Launch.OS_LINUX) {
-        firstDir = System.getProperty("user.home") + File.separator + DEFAULT_USER_DIR;
-        countValue = 2;
-      }
-
-      if(OperatingSystem.isWindows()) {
         File test = new File(System.getenv("appdata"),"TV-Browser");
 
         if(test.isDirectory()) {
-          firstDir = test.getAbsolutePath();
+          directories.add(test.getAbsolutePath());
         }
+        
+        directories.add(System.getProperty("user.home") + "/TV-Browser");
       }
-
-      String[] directories = {getUserDirectoryName(),firstDir,System.getProperty("user.home") + "/TV-Browser",System.getProperty("user.home") + "/Library/Preferences/TV-Browser", System.getProperty("user.home") + "/.tvbrowser"};
-
-      for(int j = 0; j < (TVBrowser.isTransportable() ? directories.length : countValue); j++) {
-        mLog.info("Search for settings import in: '" + directories[j] + "'");
-        oldDir = findNewestOldVersionDir(directories[j], oldDirectoryName, j != 0);
+      else if(Launch.getOs() == Launch.OS_LINUX) {
+        directories.add(System.getProperty("user.home") + File.separator + ".config" + File.separator + "tvbrowser");
+      }
+      else if(Launch.isMacOs()) {
+        directories.add(System.getProperty("user.home") + "/Library/Preferences/TV-Browser");
+      }
+      
+      directories.add(System.getProperty("user.home") + File.separator + DEFAULT_USER_DIR);
+      
+      for(int j = 0; j < directories.size(); j++) {
+        mLog.info("Search for settings import in: '" + directories.get(j) + "'");
+        oldDir = findNewestOldVersionDir(directories.get(j), oldDirectoryName, j != 0);
         
         if(oldDir != null) {
           break;
