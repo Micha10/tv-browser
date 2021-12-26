@@ -44,7 +44,7 @@ import com.jgoodies.forms.layout.FormLayout;
  */
 public class SingleColorBackgroundStyle implements TableBackgroundStyle {
 
-  private static final util.i18n.Localizer mLocalizer
+  private static final util.i18n.Localizer LOCALIZER
     = util.i18n.Localizer.getLocalizerFor(SingleColorBackgroundStyle.class);
   
   private ColorLabel mColorLabel;
@@ -61,12 +61,12 @@ public class SingleColorBackgroundStyle implements TableBackgroundStyle {
     CellConstraints cc = new CellConstraints();
     PanelBuilder pb = new PanelBuilder(new FormLayout("default,5dlu,default,5dlu,default","default"));
     
-    mColorLabel = new ColorLabel(Settings.propProgramTableBackgroundSingleColor.getColor());
-    mColorLabel.setStandardColor(Settings.propProgramTableBackgroundSingleColor.getDefaultColor());
+    mColorLabel = new ColorLabel(Settings.ProgramTable.COLOR_BACKGROUND_SINGLE.getColor());
+    mColorLabel.setStandardColor(Settings.ProgramTable.COLOR_BACKGROUND_SINGLE.getDefaultColor());
     
     ColorButton colorButton = new ColorButton(mColorLabel);
     
-    pb.addLabel(mLocalizer.msg("text","Background color"), cc.xy(1,1));
+    pb.addLabel(LOCALIZER.msg("text","Background color"), cc.xy(1,1));
     pb.add(mColorLabel, cc.xy(3,1));
     pb.add(colorButton, cc.xy(5,1));
     
@@ -74,11 +74,11 @@ public class SingleColorBackgroundStyle implements TableBackgroundStyle {
   }
 
   public void storeSettings() {
-    Settings.propProgramTableBackgroundSingleColor.setColor(mColorLabel.getColor());
+    Settings.ProgramTable.COLOR_BACKGROUND_SINGLE.setColor(mColorLabel.getColor());
   }
 
   public String getName() {
-    return mLocalizer.msg("style","Single color");
+    return LOCALIZER.msg("style","Single color");
   }
 
 

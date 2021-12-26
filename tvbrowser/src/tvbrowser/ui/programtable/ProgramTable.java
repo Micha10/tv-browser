@@ -172,17 +172,17 @@ public class ProgramTable extends JPanel
   public void setProgramTableLayout(ProgramTableLayout layout) {
     if (layout == null) {
       // Use the default layout
-      if (Settings.propTableLayout.getString().equals(Settings.LAYOUT_COMPACT)) {
+      if (Settings.propTableLayout.getString().equals(Settings.TYPE_LAYOUT_COMPACT)) {
         layout = new CompactLayout();
-      } else if(Settings.propTableLayout.getString().equals(Settings.LAYOUT_REAL_COMPACT)) {
+      } else if(Settings.propTableLayout.getString().equals(Settings.TYPE_LAYOUT_REAL_COMPACT)) {
         layout = new RealCompactLayout();
-      } else if(Settings.propTableLayout.getString().equals(Settings.LAYOUT_TIME_SYNCHRONOUS)) {
+      } else if(Settings.propTableLayout.getString().equals(Settings.TYPE_LAYOUT_TIME_SYNCHRONOUS)) {
         layout = new TimeSynchronousLayout();
-      } else if(Settings.propTableLayout.getString().equals(Settings.LAYOUT_TIME_BLOCK)) {
+      } else if(Settings.propTableLayout.getString().equals(Settings.TYPE_LAYOUT_TIME_BLOCK)) {
         layout = new TimeBlockLayout();
-      } else if(Settings.propTableLayout.getString().equals(Settings.LAYOUT_COMPACT_TIME_BLOCK)) {
+      } else if(Settings.propTableLayout.getString().equals(Settings.TYPE_LAYOUT_COMPACT_TIME_BLOCK)) {
         layout = new CompactTimeBlockLayout();
-      } else if(Settings.propTableLayout.getString().equals(Settings.LAYOUT_OPTIMIZED_COMPACT_TIME_BLOCK)) {
+      } else if(Settings.propTableLayout.getString().equals(Settings.TYPE_LAYOUT_OPTIMIZED_COMPACT_TIME_BLOCK)) {
         layout = new OptimizedCompactTimeBlockLayout();
       } else {
         layout = new RealTimeSynchronousLayout();

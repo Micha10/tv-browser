@@ -58,7 +58,7 @@ import devplugin.SettingsTab;
  */
 public class GlobalPluginProgramFormatingSettings implements SettingsTab, ActionListener {
   /** The localizer for this class */
-  public static final Localizer mLocalizer = Localizer.getLocalizerFor(GlobalPluginProgramFormatingSettings.class);
+  public static final Localizer LOCALIZER = Localizer.getLocalizerFor(GlobalPluginProgramFormatingSettings.class);
 
   private SortableItemList<GlobalPluginProgramFormating> mConfigurations;
   private JButton mAdd, mEdit, mDelete;
@@ -81,7 +81,7 @@ public class GlobalPluginProgramFormatingSettings implements SettingsTab, Action
         }
       });
 
-      pb.addSeparator(mLocalizer.msg("title","Plugin program formating"), cc.xyw(1,1,3));
+      pb.addSeparator(LOCALIZER.msg("title","Plugin program formating"), cc.xyw(1,1,3));
       pb.add(mConfigurations, cc.xy(2,3));
 
       FormLayout layout = new FormLayout("default,5dlu,default,5dlu,default","pref");
@@ -108,7 +108,7 @@ public class GlobalPluginProgramFormatingSettings implements SettingsTab, Action
       buttonPanel.add(mDelete, cc.xy(5,1));
 
       pb.add(buttonPanel, cc.xy(2,5));
-      pb.addLabel(mLocalizer.msg("help","<html>This list of formating can be used by several plugins. So a formating don't have to be entered in every plugin that should use the formating. The selection of the formating can be done in the settings of the plugin.</html>"), cc.xy(2,7));
+      pb.addLabel(LOCALIZER.msg("help","<html>This list of formating can be used by several plugins. So a formating don't have to be entered in every plugin that should use the formating. The selection of the formating can be done in the settings of the plugin.</html>"), cc.xy(2,7));
 
       mConfigurations.getList().addListSelectionListener(e -> {
         if(!e.getValueIsAdjusting()) {
@@ -128,7 +128,7 @@ public class GlobalPluginProgramFormatingSettings implements SettingsTab, Action
   }
 
   public String getTitle() {
-    return mLocalizer.msg("title","Plugin program formating");
+    return LOCALIZER.msg("title","Plugin program formating");
   }
 
   public void saveSettings() {

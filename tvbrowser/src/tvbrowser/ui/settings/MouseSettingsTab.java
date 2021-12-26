@@ -70,16 +70,16 @@ import devplugin.Program;
 
 public class MouseSettingsTab implements devplugin.SettingsTab {
 
-	private static final util.i18n.Localizer mLocalizer = util.i18n.Localizer
+	private static final util.i18n.Localizer LOCALIZER = util.i18n.Localizer
 			.getLocalizerFor(MouseSettingsTab.class);
 	
   private static final String[] mLeftModifiersName = {
-    mLocalizer.msg("modifier.none","None"),
-    mLocalizer.msg("modifier.ctrl","Ctrl"),
-    mLocalizer.msg("modifier.ctrlShift","Ctrl+Shift"),
-    mLocalizer.msg("modifier.ctrlAlt","Ctrl+Alt"),
-    mLocalizer.msg("modifier.altShift","Alt+Shift"),
-    mLocalizer.msg("modifier.ctrlAltShift","Ctrl+Alt+Shift")
+    LOCALIZER.msg("modifier.none","None"),
+    LOCALIZER.msg("modifier.ctrl","Ctrl"),
+    LOCALIZER.msg("modifier.ctrlShift","Ctrl+Shift"),
+    LOCALIZER.msg("modifier.ctrlAlt","Ctrl+Alt"),
+    LOCALIZER.msg("modifier.altShift","Alt+Shift"),
+    LOCALIZER.msg("modifier.ctrlAltShift","Ctrl+Alt+Shift")
   };
   
   private static final int[] mLeftModifiersEx = {
@@ -92,13 +92,13 @@ public class MouseSettingsTab implements devplugin.SettingsTab {
   };
   
   private static final String[] mMiddleModifiersName = {
-    mLocalizer.msg("modifier.none","None"),
-    mLocalizer.msg("modifier.ctrl","Ctrl"),
-    mLocalizer.msg("modifier.shift","Shift"),
-    mLocalizer.msg("modifier.ctrlShift","Ctrl+Shift"),
-    mLocalizer.msg("modifier.ctrlAlt","Ctrl+Alt"),
-    mLocalizer.msg("modifier.altShift","Alt+Shift"),
-    mLocalizer.msg("modifier.ctrlAltShift","Ctrl+Alt+Shift")
+    LOCALIZER.msg("modifier.none","None"),
+    LOCALIZER.msg("modifier.ctrl","Ctrl"),
+    LOCALIZER.msg("modifier.shift","Shift"),
+    LOCALIZER.msg("modifier.ctrlShift","Ctrl+Shift"),
+    LOCALIZER.msg("modifier.ctrlAlt","Ctrl+Alt"),
+    LOCALIZER.msg("modifier.altShift","Alt+Shift"),
+    LOCALIZER.msg("modifier.ctrlAltShift","Ctrl+Alt+Shift")
   };
   
   private static final int[] mMiddleModifiersEx = {
@@ -111,8 +111,8 @@ public class MouseSettingsTab implements devplugin.SettingsTab {
     MouseEvent.CTRL_DOWN_MASK | MouseEvent.SHIFT_DOWN_MASK | MouseEvent.ALT_DOWN_MASK
   };
   
-  private static final String[] MOUSE_BUTTON_TEXT = {mLocalizer.msg("button.left", "Left"),mLocalizer.msg("button.middle", "Middle")};
-  private static final String[] CLICK_COUNT_TEXT = {mLocalizer.msg("click.single", "Single"),mLocalizer.msg("click.double", "Double")};
+  private static final String[] MOUSE_BUTTON_TEXT = {LOCALIZER.msg("button.left", "Left"),LOCALIZER.msg("button.middle", "Middle")};
+  private static final String[] CLICK_COUNT_TEXT = {LOCALIZER.msg("click.single", "Single"),LOCALIZER.msg("click.double", "Double")};
   
 	private ArrayList<ContextMenuPanel> mMouseActions = new ArrayList<ContextMenuPanel>();
 	private JPanel mMainPanel;
@@ -125,11 +125,11 @@ public class MouseSettingsTab implements devplugin.SettingsTab {
 		mMouseActions.clear();
 		
 		contentPanel.addRow();
-		contentPanel.addSeparator(mLocalizer.msg("title", "Title"), CC.xyw(1, contentPanel.getRow(), 6));
+		contentPanel.addSeparator(LOCALIZER.msg("title", "Title"), CC.xyw(1, contentPanel.getRow(), 6));
 
 		contentPanel.addRow();
 		contentPanel.add(
-				new JLabel(mLocalizer.msg("MouseButtons", "Mouse Buttons:")),
+				new JLabel(LOCALIZER.msg("MouseButtons", "Mouse Buttons:")),
 				CC.xyw(2, contentPanel.getRow(), 4));
 
 
@@ -139,10 +139,10 @@ public class MouseSettingsTab implements devplugin.SettingsTab {
 		contentPanel.addRow();
 		contentPanel.add(mMainPanel, CC.xyw(2, contentPanel.getRow(), 4));
 		
-    ContextMenuMouseActionSetting[] leftSingleClick = Settings.propLeftSingleClickIfArray.getContextMenuMouseActionArray();
-    ContextMenuMouseActionSetting[] leftDoubleClick = Settings.propLeftDoubleClickIfArray.getContextMenuMouseActionArray();
-    ContextMenuMouseActionSetting[] middleSingleClick = Settings.propMiddleSingleClickIfArray.getContextMenuMouseActionArray();
-    ContextMenuMouseActionSetting[] middleDoubleClick = Settings.propMiddleDoubleClickIfArray.getContextMenuMouseActionArray();
+    ContextMenuMouseActionSetting[] leftSingleClick = Settings.Mouse.LEFT_SINGLE_CLICK_IF_ARRAY.getContextMenuMouseActionArray();
+    ContextMenuMouseActionSetting[] leftDoubleClick = Settings.Mouse.LEFT_DOUBLE_CLICK_IF_ARRAY.getContextMenuMouseActionArray();
+    ContextMenuMouseActionSetting[] middleSingleClick = Settings.Mouse.MIDDLE_SINGLE_CLICK_IF_ARRAY.getContextMenuMouseActionArray();
+    ContextMenuMouseActionSetting[] middleDoubleClick = Settings.Mouse.MIDDLE_DOUBLE_CLICK_IF_ARRAY.getContextMenuMouseActionArray();
     
     addListEntries(leftSingleClick,1,1);
     addListEntries(leftDoubleClick,1,2);
@@ -151,7 +151,7 @@ public class MouseSettingsTab implements devplugin.SettingsTab {
         
     updateList();
 
-    JButton add = new JButton(mLocalizer.msg("add","Add a new mouse action"),TVBrowserIcons.newIcon(TVBrowserIcons.SIZE_SMALL));
+    JButton add = new JButton(LOCALIZER.msg("add","Add a new mouse action"),TVBrowserIcons.newIcon(TVBrowserIcons.SIZE_SMALL));
     add.addActionListener(e -> {
       ContextMenuMouseActionSetting setting = new ContextMenuMouseActionSetting(ContextMenuManager.NO_MOUSE_MODIFIER_EX, DoNothingContextMenuItem.getInstance().getId(), ActionMenu.ID_ACTION_NONE);
       
@@ -217,10 +217,10 @@ public class MouseSettingsTab implements devplugin.SettingsTab {
 		  }
 		}
 		
-		Settings.propLeftSingleClickIfArray.setContextMenuMouseActionArray(singleLeft.toArray(new ContextMenuMouseActionSetting[singleLeft.size()]));
-		Settings.propLeftDoubleClickIfArray.setContextMenuMouseActionArray(doubleLeft.toArray(new ContextMenuMouseActionSetting[doubleLeft.size()]));
-		Settings.propMiddleSingleClickIfArray.setContextMenuMouseActionArray(singleMiddle.toArray(new ContextMenuMouseActionSetting[singleMiddle.size()]));
-		Settings.propMiddleDoubleClickIfArray.setContextMenuMouseActionArray(doubleMiddle.toArray(new ContextMenuMouseActionSetting[doubleMiddle.size()]));		
+		Settings.Mouse.LEFT_SINGLE_CLICK_IF_ARRAY.setContextMenuMouseActionArray(singleLeft.toArray(new ContextMenuMouseActionSetting[singleLeft.size()]));
+		Settings.Mouse.LEFT_DOUBLE_CLICK_IF_ARRAY.setContextMenuMouseActionArray(doubleLeft.toArray(new ContextMenuMouseActionSetting[doubleLeft.size()]));
+		Settings.Mouse.MIDDLE_SINGLE_CLICK_IF_ARRAY.setContextMenuMouseActionArray(singleMiddle.toArray(new ContextMenuMouseActionSetting[singleMiddle.size()]));
+		Settings.Mouse.MIDDLE_DOUBLE_CLICK_IF_ARRAY.setContextMenuMouseActionArray(doubleMiddle.toArray(new ContextMenuMouseActionSetting[doubleMiddle.size()]));		
 		
 		ContextMenuManager.getInstance().init();
 		MainFrame.getInstance().addKeyboardAction();
@@ -245,7 +245,7 @@ public class MouseSettingsTab implements devplugin.SettingsTab {
 	}
 
 	public String getTitle() {
-		return mLocalizer.msg("title", "context menu");
+		return LOCALIZER.msg("title", "context menu");
 	}
 	
 	private class ContextMenuPanel extends JPanel {
@@ -258,10 +258,10 @@ public class MouseSettingsTab implements devplugin.SettingsTab {
 	    EnhancedPanelBuilder pb = new EnhancedPanelBuilder("default,3dlu,default,3dlu,default,3dlu,default,3dlu,default",this);
 
 	    pb.addRow();
-	    pb.addLabel(mLocalizer.msg("mouseButton", "Mouse button"), CC.xy(1, pb.getRow()));
-	    pb.addLabel(mLocalizer.msg("clickCount", "Click count"),CC.xy(3, pb.getRow()));
-	    pb.addLabel(mLocalizer.msg("modifier", "Keyboard"), CC.xy(5, pb.getRow()));
-	    pb.addLabel(mLocalizer.msg("action", "Action"), CC.xy(7, pb.getRow()));
+	    pb.addLabel(LOCALIZER.msg("mouseButton", "Mouse button"), CC.xy(1, pb.getRow()));
+	    pb.addLabel(LOCALIZER.msg("clickCount", "Click count"),CC.xy(3, pb.getRow()));
+	    pb.addLabel(LOCALIZER.msg("modifier", "Keyboard"), CC.xy(5, pb.getRow()));
+	    pb.addLabel(LOCALIZER.msg("action", "Action"), CC.xy(7, pb.getRow()));
 	    
 	    pb.addRow();
 	    

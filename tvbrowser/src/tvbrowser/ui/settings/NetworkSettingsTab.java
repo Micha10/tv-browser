@@ -28,7 +28,7 @@ import devplugin.SettingsTab;
  * @since 2.5.1
  */
 public class NetworkSettingsTab implements SettingsTab {
-  private static final util.i18n.Localizer mLocalizer = util.i18n.Localizer
+  private static final util.i18n.Localizer LOCALIZER = util.i18n.Localizer
   .getLocalizerFor(NetworkSettingsTab.class);
   
   private JSpinner mConnectionTimeout, mNetworkCheckTimeout;
@@ -41,17 +41,17 @@ public class NetworkSettingsTab implements SettingsTab {
     
     CellConstraints cc = new CellConstraints();
     
-    pb.addParagraph(mLocalizer.msg("connectionTestTitle","Internet connection test"));
+    pb.addParagraph(LOCALIZER.msg("connectionTestTitle","Internet connection test"));
     
     pb.addRow();
-    pb.add(mConnectionTest = new JCheckBox(mLocalizer.msg("connectionTestText","Internet connection test activated"), Settings.propInternetConnectionCheck.getBoolean()), cc.xyw(2, pb.getRowCount(), 3));
+    pb.add(mConnectionTest = new JCheckBox(LOCALIZER.msg("connectionTestText","Internet connection test activated"), Settings.Network.INTERNET_CONNECTION_CHECK.getBoolean()), cc.xyw(2, pb.getRowCount(), 3));
 
     pb.addRow();
-    pb.add(mNetworkCheckTimeout = new JSpinner(new SpinnerNumberModel(Settings.propNetworkCheckTimeout.getInt()/1000,10,90,5)), cc.xy(2, pb.getRowCount()));
-    final JLabel label = pb.addLabel(mLocalizer.msg("waitTime","Seconds maximum waiting time for connection test"), cc.xy(4, pb.getRowCount()));
+    pb.add(mNetworkCheckTimeout = new JSpinner(new SpinnerNumberModel(Settings.Network.CHECK_TIMEOUT.getInt()/1000,10,90,5)), cc.xy(2, pb.getRowCount()));
+    final JLabel label = pb.addLabel(LOCALIZER.msg("waitTime","Seconds maximum waiting time for connection test"), cc.xy(4, pb.getRowCount()));
     
     pb.addRow();
-    pb.add(new JLabel(mLocalizer.msg("sites", "Websites used for checking")), cc.xyw(2, pb.getRowCount(), 3));
+    pb.add(new JLabel(LOCALIZER.msg("sites", "Websites used for checking")), cc.xyw(2, pb.getRowCount(), 3));
     
     pb.addRow();
     final JList<String> urlList = new JList<>(NetworkUtilities.getConnectionCheckUrls());
@@ -67,11 +67,11 @@ public class NetworkSettingsTab implements SettingsTab {
     mNetworkCheckTimeout.setEnabled(mConnectionTest.isSelected());
     label.setEnabled(mConnectionTest.isSelected());
     
-    pb.addParagraph(mLocalizer.msg("cancelTime","Timeout for not responding connections"));
+    pb.addParagraph(LOCALIZER.msg("cancelTime","Timeout for not responding connections"));
     
     pb.addRow();
-    pb.add(mConnectionTimeout = new JSpinner(new SpinnerNumberModel(Settings.propDefaultNetworkConnectionTimeout.getInt()/1000,5,60,5)), cc.xy(2, pb.getRowCount()));
-    pb.addLabel(mLocalizer.msg("seconds","Seconds"), cc.xy(4, pb.getRowCount()));
+    pb.add(mConnectionTimeout = new JSpinner(new SpinnerNumberModel(Settings.Network.DEFAULT_CONNECTION_TIMEOUT.getInt()/1000,5,60,5)), cc.xy(2, pb.getRowCount()));
+    pb.addLabel(LOCALIZER.msg("seconds","Seconds"), cc.xy(4, pb.getRowCount()));
     
     return pb.getPanel();
   }
@@ -81,12 +81,12 @@ public class NetworkSettingsTab implements SettingsTab {
   }
 
   public String getTitle() {
-    return mLocalizer.msg("title","Network");
+    return LOCALIZER.msg("title","Network");
   }
 
   public void saveSettings() {
-    Settings.propInternetConnectionCheck.setBoolean(mConnectionTest.isSelected());
-    Settings.propDefaultNetworkConnectionTimeout.setInt(((Integer)mConnectionTimeout.getValue()).intValue() * 1000);
-    Settings.propNetworkCheckTimeout.setInt(((Integer)mNetworkCheckTimeout.getValue()).intValue() * 1000);
+    Settings.Network.INTERNET_CONNECTION_CHECK.setBoolean(mConnectionTest.isSelected());
+    Settings.Network.DEFAULT_CONNECTION_TIMEOUT.setInt(((Integer)mConnectionTimeout.getValue()).intValue() * 1000);
+    Settings.Network.CHECK_TIMEOUT.setInt(((Integer)mNetworkCheckTimeout.getValue()).intValue() * 1000);
   }
 }

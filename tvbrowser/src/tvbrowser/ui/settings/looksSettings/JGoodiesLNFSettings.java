@@ -107,7 +107,7 @@ public class JGoodiesLNFSettings extends JDialog implements WindowClosingIf {
       }
     });
     
-    String theme = Settings.propJGoodiesTheme.getString();
+    String theme = Settings.LookAndFeel.JGOODIES_THEME.getString();
     if (theme == null) {
       theme = PlasticLookAndFeel.createMyDefaultTheme().getClass().getName();
     }
@@ -121,7 +121,7 @@ public class JGoodiesLNFSettings extends JDialog implements WindowClosingIf {
     content.add(mColorScheme, cc.xy(3,1));
     
     mShadow = new JCheckBox(mLocalizer.msg("dropShadow", "Drop Shadow on Menus"));
-    mShadow.setSelected(Settings.propJGoodiesShadow.getBoolean());
+    mShadow.setSelected(Settings.LookAndFeel.JGOODIES_SHADOW.getBoolean());
     content.add(mShadow, cc.xyw(1,3,3));
     
     JButton ok = new JButton(Localizer.getLocalization(Localizer.I18N_OK));
@@ -157,8 +157,8 @@ public class JGoodiesLNFSettings extends JDialog implements WindowClosingIf {
    * OK was pressed
    */
   protected void okPressed() {
-    Settings.propJGoodiesTheme.setString(mColorScheme.getSelectedItem().getClass().getName());
-    Settings.propJGoodiesShadow.setBoolean(mShadow.isSelected());
+    Settings.LookAndFeel.JGOODIES_THEME.setString(mColorScheme.getSelectedItem().getClass().getName());
+    Settings.LookAndFeel.JGOODIES_SHADOW.setBoolean(mShadow.isSelected());
     setVisible(false);
   }
 

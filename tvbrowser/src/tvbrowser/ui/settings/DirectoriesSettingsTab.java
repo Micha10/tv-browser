@@ -80,7 +80,7 @@ public class DirectoriesSettingsTab implements SettingsTab {
     mainPanel.add(UiUtilities.createHelpTextArea(mLocalizer.msg("chooseFolder", "choose folder")), cc.xy(2,3));
     
     msg = mLocalizer.msg("tvdatadir", "TV data folder")+":";
-    mCurrentTvDataDir = Settings.propTVDataDirectory.getString();
+    mCurrentTvDataDir = Settings.Directories.TV_DATA.getString();
     mTVDataFolderPanel = new DirectoryChooserPanel(msg, mCurrentTvDataDir, false);
     mainPanel.add(mTVDataFolderPanel, cc.xy(2,5));
     
@@ -111,13 +111,13 @@ public class DirectoriesSettingsTab implements SettingsTab {
             IOUtilities.copy(
                 newDir.getName().toLowerCase().equals("tvdata") ? currentDir
                     .listFiles() : new File[] { currentDir }, newDir, true);
-            Settings.propTVDataDirectory.setString((newDir.getName()
+            Settings.Directories.TV_DATA.setString((newDir.getName()
                 .equalsIgnoreCase("tvdata") ? newDir.getParentFile() : newDir)
                 .toString().replaceAll("\\\\", "/")
                 + "/" + currentDir.getName());
           } catch (IOException e) {
             if (!currentDir.exists() && newDir.exists()) {
-              Settings.propTVDataDirectory
+              Settings.Directories.TV_DATA
                   .setString((newDir.getName().equalsIgnoreCase("tvdata") ? newDir
                       .getParentFile()
                       : newDir).toString().replaceAll("\\\\", "/")

@@ -102,10 +102,10 @@ public class ObjectSelectionButton<E> extends JButton implements ActionListener 
                   }
                   int progressX = (int)((getWidth())/(double)((Program)value).getLength() * runTime);
 
-                  g.setColor(Settings.propProgramTableColorOnAirDark.getColor());
+                  g.setColor(Settings.propProgramPanelColorOnAirDark.getColor());
                   g.fillRect(0,1,progressX,getHeight()-2);
 
-                  g.setColor(Settings.propProgramTableColorOnAirLight.getColor());
+                  g.setColor(Settings.propProgramPanelColorOnAirLight.getColor());
                   g.fillRect(0 + progressX,1,getWidth()-progressX,getHeight()-2);
                   
                   setForeground(Color.black);

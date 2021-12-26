@@ -125,6 +125,8 @@ public class SettingsDialog implements WindowClosingIf {
   private ArrayList<TreePath> mHistory;
   private int mIndexHistoryCurrent;
   private ChangeListener mRestartListener;
+  
+  private final JSplitPane mSplitPane;
 
   public static JPanel getRestartPanel() {
     final JLabel restartLb = new JLabel(LOCALIZER.msg("restartNote", "For changes to take effect TV-Browser has to be restarted."));
@@ -177,9 +179,9 @@ public class SettingsDialog implements WindowClosingIf {
     main.setBorder(Borders.DLU4);
     mDialog.setContentPane(main);
 
-    final JSplitPane splitPane = new JSplitPane();
-    splitPane.setContinuousLayout(true);
-    main.add(splitPane, cc.xy(1, 1));
+    mSplitPane = new JSplitPane();
+    mSplitPane.setContinuousLayout(true);
+    main.add(mSplitPane, cc.xy(1, 1));
 
     final SingleAndDoubleClickTreeUI treeUI = new SingleAndDoubleClickTreeUI(SingleAndDoubleClickTreeUI.AUTO_COLLAPSE_EXPAND, null);
 
@@ -206,10 +208,9 @@ public class SettingsDialog implements WindowClosingIf {
     JScrollPane scrollPane = new JScrollPane(mSelectionTree);
     scrollPane.setMinimumSize(new Dimension(150, 0));
     scrollPane.setBorder(null);
-    splitPane.setLeftComponent(scrollPane);
+    mSplitPane.setLeftComponent(scrollPane);
 
-    splitPane.setDividerLocation(Settings.propSettingsDialogDividerLocation
-        .getInt());
+    mSplitPane.setDividerLocation(Settings.propSettingsDialogDividerLocation.getInt());
 
     int categoryCount = mRootNode.getChildCount();
     // Let the tree collapse
@@ -231,7 +232,7 @@ public class SettingsDialog implements WindowClosingIf {
     right.add(mSettingsPn, BorderLayout.CENTER);
     right.add(restart, BorderLayout.SOUTH);
     
-    splitPane.setRightComponent(right);
+    mSplitPane.setRightComponent(right);
 
     ButtonBarBuilder builder = new ButtonBarBuilder();
 
@@ -329,11 +330,7 @@ public class SettingsDialog implements WindowClosingIf {
 
     mDialog.addWindowListener(new WindowAdapter() {
       public void windowClosing(WindowEvent e) {
-        Settings.removeRestartInfoListener(mRestartListener);
-        ChannelLabel.clearIconCache();
-        Settings.propSettingsDialogDividerLocation.setInt(splitPane
-            .getDividerLocation());
-        mInstance = null;
+        close();
       }
     });
   }
@@ -414,7 +411,7 @@ public class SettingsDialog implements WindowClosingIf {
     icon = TVBrowserIcons.preferences(TVBrowserIcons.SIZE_SMALL);
     SettingNode root = new SettingNode(new DefaultSettingsTab(Localizer.getLocalization(Localizer.I18N_SETTINGS), icon), SettingsItem.I18N);
 
-    SettingNode generalSettings = new SettingNode(new StartupSettingsTab(),SettingsItem.STARTUP);
+    SettingNode generalSettings = new SettingNode(new GeneralSettingsTab(),SettingsItem.GENRAL);
     root.add(generalSettings);
 
     SettingNode graphicalSettings = new SettingNode(new LookAndFeelSettingsTab(),SettingsItem.LOOKANDFEEL);
@@ -907,7 +904,11 @@ public class SettingsDialog implements WindowClosingIf {
   } // class SettingNodeCellRenderer
 
   public void close() {
+    Settings.removeRestartInfoListener(mRestartListener);
+    ChannelLabel.clearIconCache();
+    Settings.propSettingsDialogDividerLocation.setInt(mSplitPane.getDividerLocation());
     mDialog.dispose();
+    mInstance = null;
   }
 
   public JRootPane getRootPane() {

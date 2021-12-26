@@ -43,7 +43,7 @@ public class ConfigDataServiceSettingsTab extends AbstractSettingsTab implements
   private TvDataServiceProxy mDataService;
   private SettingsPanel mSettingsPanel;
 
-  private static final util.i18n.Localizer mLocalizer
+  private static final util.i18n.Localizer LOCALIZER
   = util.i18n.Localizer.getLocalizerFor(ConfigDataServiceSettingsTab.class);
 
   public ConfigDataServiceSettingsTab(TvDataServiceProxy dataService) {
@@ -65,7 +65,7 @@ public class ConfigDataServiceSettingsTab extends AbstractSettingsTab implements
     }
     else {
       JPanel centerPn=new JPanel(new BorderLayout());
-      centerPn.add(createEmptyPanel(mLocalizer.msg("noSettings", "No settings"), mLocalizer.msg("noSettings.text", "This plugin has no settings.")), BorderLayout.NORTH);
+      centerPn.add(createEmptyPanel(LOCALIZER.msg("noSettings", "No settings"), LOCALIZER.msg("noSettings.text", "This plugin has no settings.")), BorderLayout.NORTH);
       mainPn.add(centerPn, BorderLayout.CENTER);
     }
     return mainPn;

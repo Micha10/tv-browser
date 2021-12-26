@@ -69,13 +69,13 @@ import util.ui.WideComboBox;
  *
  * @author Martin Oberhauser
  */
-public class StartupSettingsTab implements devplugin.SettingsTab {
+public class GeneralSettingsTab implements devplugin.SettingsTab {
   public static final int VALUE_AUTO_CHANNEL_UPDATE_DISABLED = -1;
   private static final DayPeriod VALUE_AUTO_CHANNEL_UPDATE_PERIOD_DEFAULT = new DayPeriod(14);
   
   /** The localizer for this class. */
   public static final util.i18n.Localizer LOCALIZER = util.i18n.Localizer
-      .getLocalizerFor(StartupSettingsTab.class);
+      .getLocalizerFor(GeneralSettingsTab.class);
 
   private JPanel mSettingsPn;
 
@@ -138,14 +138,14 @@ public class StartupSettingsTab implements devplugin.SettingsTab {
 
     mMinimizeAfterStartUpChB = new JCheckBox(LOCALIZER.msg(
         "minimizeAfterStartup", "Minimize main window after start up"),
-        Settings.propMinimizeAfterStartup.getBoolean());
+        Settings.General.MINIMIZE_AFTER_STARTUP.getBoolean());
     mSettingsPn.add(mMinimizeAfterStartUpChB, CC.xy(2, ++y));
 
     y++;
 
     mStartFullscreen = new JCheckBox(LOCALIZER.msg(
         "startFullscreen","Start in fullscreen mode"),
-        Settings.propIsUsingFullscreen.getBoolean());
+        Settings.General.IS_USING_FULLSCREEN.getBoolean());
     mSettingsPn.add(mStartFullscreen, CC.xy(2,++y));
 
     mMinimizeAfterStartUpChB.addItemListener(e -> {
@@ -163,18 +163,18 @@ public class StartupSettingsTab implements devplugin.SettingsTab {
     y++;
 
     mShowStartScreenChB = new JCheckBox(LOCALIZER.msg("showStartScreen",
-        "Show TV-Browser start screen during start up"), Settings.propStartScreenShow
+        "Show TV-Browser start screen during start up"), Settings.General.START_SCREEN_SHOW
         .getBoolean());
     mSettingsPn.add(mShowStartScreenChB, CC.xy(2, ++y));
     
     y++;
     
     mServerForRestore = new JCheckBox(LOCALIZER.msg("serverForRestore",
-        "Provide server port for restore running TV-Browser/handling protocol messages"), Settings.propServerRestoreEnabled.getBoolean());
+        "Provide server port for restore running TV-Browser/handling protocol messages"), Settings.General.SERVER_RESTORE_ENABLED.getBoolean());
     mSettingsPn.add(mServerForRestore, CC.xy(2, ++y));
     
     if(!TVBrowser.isTransportable() || Launch.getOs() != Launch.OS_MAC) {
-      mProtocolHandler = new JCheckBox(LOCALIZER.msg("protocolHandler", "Allow handling of tvb:// protocol messages"), Settings.propCanReceiveProtocolMessages.getBoolean() && mServerForRestore.isSelected());
+      mProtocolHandler = new JCheckBox(LOCALIZER.msg("protocolHandler", "Allow handling of tvb:// protocol messages"), Settings.General.CAN_RECEIVE_PROTOCOL_MESSAGE.getBoolean() && mServerForRestore.isSelected());
       mProtocolHandler.setEnabled(mServerForRestore.isSelected());
       mSettingsPn.add(mProtocolHandler, CC.xy(2, y+=2));
     }
@@ -258,7 +258,7 @@ public class StartupSettingsTab implements devplugin.SettingsTab {
 
     mSettingsPn.add(createRefreshPanel(), CC.xyw(1,++y,5));
     
-    mAutoJREUpdate = new JCheckBox(LOCALIZER.msg("autoJREUpdate","Search and download updates for TV-Browser JRE regularly"),Settings.propJreUpdateEnabled.getBoolean());
+    mAutoJREUpdate = new JCheckBox(LOCALIZER.msg("autoJREUpdate","Search and download updates for TV-Browser JRE regularly"),Settings.General.JRE_UPDATE_ENABLED.getBoolean());
     
     if(JREUpdater.hasTvBrowserJRE()) {
       layout.insertRow(++y, RowSpec.decode("5dlu"));
@@ -272,8 +272,8 @@ public class StartupSettingsTab implements devplugin.SettingsTab {
     String msg = LOCALIZER.msg("onlyMinimizeWhenWindowClosing",
     "When closing the main window only minimize TV-Browser, don't quit.");
 
-    mOnlyMinimizeWhenWindowClosingChB = new JCheckBox(msg, Settings.propOnlyMinimizeWhenWindowClosing.getBoolean());
-    mAskForExitConfirmation = new JCheckBox(LOCALIZER.msg("askForExitConfirmation","Ask for confirmation on TV-Browser exit"), !Settings.propHiddenMessageBoxes.containsItem("MainFrame.askForExitConfirm"));
+    mOnlyMinimizeWhenWindowClosingChB = new JCheckBox(msg, Settings.General.ONLY_MINIMIZE_WHEN_WINDOW_CLOSING.getBoolean());
+    mAskForExitConfirmation = new JCheckBox(LOCALIZER.msg("askForExitConfirmation","Ask for confirmation on TV-Browser exit"), !Settings.General.ASK_FOR_EXIT_CONFIRMATION.isHidden());
 
     mSettingsPn.add(DefaultComponentFactory.getInstance().createSeparator(LOCALIZER.msg("closing","Closing")), CC.xyw(1,++y,5));
 
@@ -302,22 +302,22 @@ public class StartupSettingsTab implements devplugin.SettingsTab {
    * Called by the host-application, if the user wants to save the settings.
    */
   public void saveSettings() {
-    Settings.propMinimizeAfterStartup.setBoolean(mMinimizeAfterStartUpChB
+    Settings.General.MINIMIZE_AFTER_STARTUP.setBoolean(mMinimizeAfterStartUpChB
         .isSelected());
-    Settings.propStartScreenShow.setBoolean(mShowStartScreenChB.isSelected());
-    Settings.propIsUsingFullscreen.setBoolean(mStartFullscreen.isSelected());
-    Settings.propServerRestoreEnabled.setBoolean(mServerForRestore.isSelected());
-    Settings.propCanReceiveProtocolMessages.setBoolean(mServerForRestore.isSelected() && mProtocolHandler.isSelected());
+    Settings.General.START_SCREEN_SHOW.setBoolean(mShowStartScreenChB.isSelected());
+    Settings.General.IS_USING_FULLSCREEN.setBoolean(mStartFullscreen.isSelected());
+    Settings.General.SERVER_RESTORE_ENABLED.setBoolean(mServerForRestore.isSelected());
+    Settings.General.CAN_RECEIVE_PROTOCOL_MESSAGE.setBoolean(mServerForRestore.isSelected() && mProtocolHandler.isSelected());
     TVBrowser.updateLockGlobalToggle();
     
     if(mAutoChannelDownload.isSelected()) {
-      Settings.propAutoChannelUpdatePeriod.setInt(((DayPeriod)mAutoChannelDownloadPeriod.getSelectedItem()).mDays);
+      Settings.General.AUTO_CHANNEL_UPDATE_PERIOD.setInt(((DayPeriod)mAutoChannelDownloadPeriod.getSelectedItem()).mDays);
     }
     else {
-      Settings.propAutoChannelUpdatePeriod.setInt(VALUE_AUTO_CHANNEL_UPDATE_DISABLED);
+      Settings.General.AUTO_CHANNEL_UPDATE_PERIOD.setInt(VALUE_AUTO_CHANNEL_UPDATE_DISABLED);
     }
 
-    Settings.propAutoUpdatePrimeTime.setBoolean(mAutoDownloadPrimeTime.isSelected());
+    Settings.General.AUTO_UPDATE_PRIME_TIME.setBoolean(mAutoDownloadPrimeTime.isSelected());
     
     if(mAutostart != null) {
         if (mAutostart.isSelected()) {
@@ -347,45 +347,36 @@ public class StartupSettingsTab implements devplugin.SettingsTab {
     int inx = mAutoDownloadCombo.getSelectedIndex();
 
     if (!mAutoDownload.isSelected()) {
-      Settings.propAutoDownloadType.setString("never");
+      Settings.General.AUTO_DOWNLOAD_TYPE.setString("never");
     } else if (inx == 0) {
-      Settings.propAutoDownloadType.setString("daily");
+      Settings.General.AUTO_DOWNLOAD_TYPE.setString("daily");
     } else if (inx == 1) {
-      Settings.propAutoDownloadType.setString("every3days");
+      Settings.General.AUTO_DOWNLOAD_TYPE.setString("every3days");
     } else if (inx == 2) {
-      Settings.propAutoDownloadType.setString("weekly");
+      Settings.General.AUTO_DOWNLOAD_TYPE.setString("weekly");
     }
-
-    if (mShowFinishDialog.isSelected()) {
-      Settings.propHiddenMessageBoxes.removeItem("downloadDone");
-    } else if (!Settings.propHiddenMessageBoxes.containsItem("downloadDone")) {
-      Settings.propHiddenMessageBoxes.addItem("downloadDone");
-    }
-
-    Settings.propAutoDataDownloadEnabled.setBoolean(mRecurrentDownload.isSelected() && mAutoDownload.isSelected());
-    Settings.propAskForAutoDownload.setBoolean(mAskBeforeDownloadRadio.isSelected());
+    
+    Settings.General.DOWNLOAD_DONE.setHidden(!mShowFinishDialog.isSelected());
+    
+    Settings.General.AUTO_DATA_DOWNLOAD_ENABLED.setBoolean(mRecurrentDownload.isSelected() && mAutoDownload.isSelected());
+    Settings.General.ASK_FOR_AUTO_DOWNLOAD.setBoolean(mAskBeforeDownloadRadio.isSelected());
 
     PeriodItem periodItem = (PeriodItem) mAutoDownloadPeriodCB.getSelectedItem();
-    Settings.propAutoDownloadPeriod.setInt(periodItem.getDays());
-    Settings.propAutoDownloadWaitingTime.setShort(((Integer)mAutoDownloadWaitingTimeSp.getValue()).shortValue());
-    Settings.propAutoDownloadWaitingEnabled.setBoolean(mAutoDownloadWaitingTime.isSelected());
+    Settings.General.AUTO_DOWNLOAD_PERIOD.setInt(periodItem.getDays());
+    Settings.General.AUTO_DOWNLOAD_WAITING_TIME.setShort(((Integer)mAutoDownloadWaitingTimeSp.getValue()).shortValue());
+    Settings.General.AUTO_DOWNLOAD_WAITING_ENABLED.setBoolean(mAutoDownloadWaitingTime.isSelected());
 
-    Settings.propNTPTimeCheck.setBoolean(mDateCheck.isSelected());
+    Settings.General.NTP_TIME_CHECK.setBoolean(mDateCheck.isSelected());
 
     /* Close settings */
     if (mOnlyMinimizeWhenWindowClosingChB != null) {
       boolean checked = mOnlyMinimizeWhenWindowClosingChB.isSelected();
-      Settings.propOnlyMinimizeWhenWindowClosing.setBoolean(checked);
+      Settings.General.ONLY_MINIMIZE_WHEN_WINDOW_CLOSING.setBoolean(checked);
     }
 
-    if(mAskForExitConfirmation.isSelected()) {
-      Settings.propHiddenMessageBoxes.removeItem("MainFrame.askForExitConfirm");
-    }
-    else if(!Settings.propHiddenMessageBoxes.containsItem("MainFrame.askForExitConfirm")){
-      Settings.propHiddenMessageBoxes.addItem("MainFrame.askForExitConfirm");
-    }
+    Settings.General.ASK_FOR_EXIT_CONFIRMATION.setHidden(!mAskForExitConfirmation.isSelected());
     
-    Settings.propJreUpdateEnabled.setBoolean(mAutoJREUpdate.isSelected());
+    Settings.General.JRE_UPDATE_ENABLED.setBoolean(mAutoJREUpdate.isSelected());
   }
 
   /**
@@ -433,7 +424,7 @@ public class StartupSettingsTab implements devplugin.SettingsTab {
     refreshSettings.add(mRecurrentDownload, cc.xyw(3, y, 4));
 
     mAutoDownloadCombo = new JComboBox<>(AUTO_DOWNLOAD_MSG_ARR);
-    String dlType = Settings.propAutoDownloadType.getString();
+    String dlType = Settings.General.AUTO_DOWNLOAD_TYPE.getString();
     if (dlType.equals("daily")) {
       mAutoDownloadCombo.setSelectedIndex(0);
     } else if (dlType.equals("every3days")) {
@@ -444,8 +435,8 @@ public class StartupSettingsTab implements devplugin.SettingsTab {
 
     JPanel panel = new JPanel(new FormLayout("10dlu, pref, 3dlu, pref", "pref, 3dlu, pref, 3dlu, pref, 5dlu, pref"));
 
-    mStartDownload.setSelected(!dlType.equals("never") && !Settings.propAutoDataDownloadEnabled.getBoolean());
-    mRecurrentDownload.setSelected(Settings.propAutoDataDownloadEnabled.getBoolean());
+    mStartDownload.setSelected(!dlType.equals("never") && !Settings.General.AUTO_DATA_DOWNLOAD_ENABLED.getBoolean());
+    mRecurrentDownload.setSelected(Settings.General.AUTO_DATA_DOWNLOAD_ENABLED.getBoolean());
 
     mAutoDownload.setSelected(mStartDownload.isSelected() || mRecurrentDownload.isSelected());
     mStartDownload.setSelected(!mAutoDownload.isSelected() || mStartDownload.isSelected());
@@ -460,7 +451,7 @@ public class StartupSettingsTab implements devplugin.SettingsTab {
     mAskBeforeDownloadRadio = new JRadioButton(LOCALIZER.msg("autoDownload.ask", "Ask before downloading"));
     mAutoDownloadPeriodCB = new JComboBox<>(PeriodItem.getPeriodItems());
 
-    int autoDLPeriod = Settings.propAutoDownloadPeriod.getInt();
+    int autoDLPeriod = Settings.General.AUTO_DOWNLOAD_PERIOD.getInt();
     PeriodItem pi = new PeriodItem(autoDLPeriod);
     mAutoDownloadPeriodCB.setSelectedItem(pi);
 
@@ -474,12 +465,12 @@ public class StartupSettingsTab implements devplugin.SettingsTab {
     group.add(mAskBeforeDownloadRadio);
     group.add(mAskTimeRadio);
 
-    mAskBeforeDownloadRadio.setSelected(Settings.propAskForAutoDownload.getBoolean());
-    mAskTimeRadio.setSelected(!Settings.propAskForAutoDownload.getBoolean());
+    mAskBeforeDownloadRadio.setSelected(Settings.General.ASK_FOR_AUTO_DOWNLOAD.getBoolean());
+    mAskTimeRadio.setSelected(!Settings.General.ASK_FOR_AUTO_DOWNLOAD.getBoolean());
 
-    mAutoDownloadWaitingTime = new JCheckBox(LOCALIZER.msg("autoDownload.waiting","Delay auto update for"),Settings.propAutoDownloadWaitingEnabled.getBoolean());
+    mAutoDownloadWaitingTime = new JCheckBox(LOCALIZER.msg("autoDownload.waiting","Delay auto update for"),Settings.General.AUTO_DOWNLOAD_WAITING_ENABLED.getBoolean());
     mAutoDownloadWaitingTimeSp = new JSpinner(new SpinnerNumberModel(
-        Settings.propAutoDownloadWaitingTime.getShort(), 1, 300, 1));
+        Settings.General.AUTO_DOWNLOAD_WAITING_TIME.getShort(), 1, 300, 1));
     mSecondsLabel = new JLabel(LOCALIZER.msg("autoDownload.seconds","seconds"));
 
     mAutoDownload.addItemListener(e -> {
@@ -511,19 +502,19 @@ public class StartupSettingsTab implements devplugin.SettingsTab {
     refreshSettings.add(panel, cc.xyw(3, y++, 4));
     
     mAutoDownloadPrimeTime = new JCheckBox(LOCALIZER.msg("autoUpdatePrimeTime","Daily auto update prime time data in the evening"));
-    mAutoDownloadPrimeTime.setSelected(Settings.propAutoUpdatePrimeTime.getBoolean());
+    mAutoDownloadPrimeTime.setSelected(Settings.General.AUTO_UPDATE_PRIME_TIME.getBoolean());
     
     refreshSettings.add(mAutoDownloadPrimeTime, cc.xyw(2, y, 5));
 
     mDateCheck = new JCheckBox(LOCALIZER.msg("checkDate", "Check date via NTP if data download fails"));
-    mDateCheck.setSelected(Settings.propNTPTimeCheck.getBoolean());
+    mDateCheck.setSelected(Settings.General.NTP_TIME_CHECK.getBoolean());
 
     y += 2;
     
     refreshSettings.add(mDateCheck, cc.xyw(2, y, 5));
 
     mShowFinishDialog = new JCheckBox(LOCALIZER.msg("showFinishDialog", "Show dialog when update is done"));
-    mShowFinishDialog.setSelected(!Settings.propHiddenMessageBoxes.containsItem("downloadDone"));
+    mShowFinishDialog.setSelected(!Settings.General.DOWNLOAD_DONE.isHidden());
 
     y += 2;
     
@@ -541,9 +532,9 @@ public class StartupSettingsTab implements devplugin.SettingsTab {
     mAutoChannelDownloadPeriod.addItem(new DayPeriod(61));
     mAutoChannelDownloadPeriod.addItem(new DayPeriod(183));
     
-    if(Settings.propAutoChannelUpdatePeriod.getInt() > VALUE_AUTO_CHANNEL_UPDATE_DISABLED) {
+    if(Settings.General.AUTO_CHANNEL_UPDATE_PERIOD.getInt() > VALUE_AUTO_CHANNEL_UPDATE_DISABLED) {
       mAutoChannelDownload.setSelected(true);
-      mAutoChannelDownloadPeriod.setSelectedItem(new DayPeriod(Settings.propAutoChannelUpdatePeriod.getInt()));
+      mAutoChannelDownloadPeriod.setSelectedItem(new DayPeriod(Settings.General.AUTO_DOWNLOAD_PERIOD.getInt()));
     }
     else {
       mAutoChannelDownloadPeriod.setSelectedItem(VALUE_AUTO_CHANNEL_UPDATE_PERIOD_DEFAULT);

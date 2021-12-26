@@ -479,7 +479,7 @@ public class ChannelsSettingsTab implements SettingsTab, ListDropAction<Object> 
   
       panel.addAncestorListener(new AncestorListener() {
         public void ancestorRemoved(AncestorEvent event) {
-          Settings.propSelectedChannelCategoryIndex.setByte((byte)mCategoryCB.getSelectedIndex());
+          Settings.Channels.SELECTED_CATEGORY_INDEX.setByte((byte)mCategoryCB.getSelectedIndex());
           String country = "";
           if (mCountryCB.getSelectedIndex() >= 0) {
             Object object = ((FilterItem)mCountryCB.getSelectedItem()).getValue();
@@ -487,7 +487,7 @@ public class ChannelsSettingsTab implements SettingsTab, ListDropAction<Object> 
               country = object.toString();
             }
           }
-          Settings.propSelectedChannelCountry.setString(country);
+          Settings.Channels.SELECTED_COUNTRY.setString(country);
         }
   
         public void ancestorAdded(AncestorEvent event) {
@@ -542,7 +542,7 @@ public class ChannelsSettingsTab implements SettingsTab, ListDropAction<Object> 
       
       if(plugin == null) {
         if(UiUtilities.showConfirmDialogOnMouseScreen(LOCALIZER.msg("syncInstallPluginMsg","You can synchronize your channels with the AndroidSync plugin, therefor it needs to be installed.\n\nDo you want to install the AndroidSync plugin now and synchronize the channels?"), LOCALIZER.msg("syncInstallPluginTitle","Install AndroidSync plugin?"), JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE) == JOptionPane.OK_OPTION) {
-          File target = new File(Settings.propPluginsDirectory.getString(),"AndroidSync.jar");
+          File target = new File(Settings.Channels.PLUGINS_DIRECTORY.getString(),"AndroidSync.jar");
           boolean error = false;
           
           try {
@@ -640,7 +640,7 @@ public class ChannelsSettingsTab implements SettingsTab, ListDropAction<Object> 
     chooser.setDialogTitle(LOCALIZER.msg("exportChannels", "Export channels"));
     chooser.addChoosableFileFilter(filter);
     chooser.setFileFilter(filter);
-    chooser.setSelectedFile(new File(IOUtilities.translateRelativePath(Settings.propLastChannelExportFile.getString())));
+    chooser.setSelectedFile(new File(IOUtilities.translateRelativePath(Settings.Channels.LAST_EXPORT_FILE.getString())));
     chooser.setAcceptAllFileFilterUsed(false);
     
     if(chooser.showOpenDialog(UiUtilities.getLastModalChildOf(MainFrame.getInstance())) == JFileChooser.APPROVE_OPTION) {
@@ -684,7 +684,7 @@ public class ChannelsSettingsTab implements SettingsTab, ListDropAction<Object> 
     chooser.setDialogTitle(LOCALIZER.msg("exportChannels", "Export channels"));
     chooser.addChoosableFileFilter(filter);
     chooser.setFileFilter(filter);
-    chooser.setSelectedFile(new File(IOUtilities.translateRelativePath(Settings.propLastChannelExportFile.getString())));
+    chooser.setSelectedFile(new File(IOUtilities.translateRelativePath(Settings.Channels.LAST_EXPORT_FILE.getString())));
     chooser.setAcceptAllFileFilterUsed(false);
     
     if(chooser.showSaveDialog(UiUtilities.getLastModalChildOf(MainFrame.getInstance())) == JFileChooser.APPROVE_OPTION) {
@@ -701,7 +701,7 @@ public class ChannelsSettingsTab implements SettingsTab, ListDropAction<Object> 
       }
       
       if(save) {
-        Settings.propLastChannelExportFile.setString(IOUtilities.checkForRelativePath(file.getAbsolutePath()));
+        Settings.Channels.LAST_EXPORT_FILE.setString(IOUtilities.checkForRelativePath(file.getAbsolutePath()));
         
         BufferedWriter out = null;
         
@@ -1027,8 +1027,8 @@ public class ChannelsSettingsTab implements SettingsTab, ListDropAction<Object> 
       addCategoryFilter(Channel.CATEGORY_NONE);
     }
 
-    if(mCategoryCB.getItemCount() > Settings.propSelectedChannelCategoryIndex.getByte()) {
-      mCategoryCB.setSelectedIndex(Settings.propSelectedChannelCategoryIndex.getByte());
+    if(mCategoryCB.getItemCount() > Settings.Channels.SELECTED_CATEGORY_INDEX.getByte()) {
+      mCategoryCB.setSelectedIndex(Settings.Channels.SELECTED_CATEGORY_INDEX.getByte());
     }
 
     HashSet<String> countries = new HashSet<String>();
@@ -1054,7 +1054,7 @@ public class ChannelsSettingsTab implements SettingsTab, ListDropAction<Object> 
     }
     Collections.sort(items);
 
-    String defaultCountry = Settings.propSelectedChannelCountry.getString();
+    String defaultCountry = Settings.Channels.SELECTED_COUNTRY.getString();
     for (FilterItem item : items) {
       mCountryCB.addItem(item);
       // select last used country (or default country of this system)
@@ -1080,7 +1080,7 @@ public class ChannelsSettingsTab implements SettingsTab, ListDropAction<Object> 
     }
     Collections.sort(items);
 
-    String defaultPlugin = Settings.propSelectedChannelPlugin.getString();
+    String defaultPlugin = Settings.Channels.SELECTED_PLUGIN.getString();
     for (FilterItem item : items) {
       mPluginCB.addItem(item);
       // select last used plugin
@@ -1251,20 +1251,20 @@ public class ChannelsSettingsTab implements SettingsTab, ListDropAction<Object> 
     
     ChannelList.setSubscribeChannels(channelArr, autoUpdate);
     ChannelList.storeAllSettings();
-    Settings.propSubscribedChannelsSeparators.setStringArray(separators.toArray(new String[separators.size()]));
-    Settings.propSubscribedChannels.setChannelArray(channelArr);
-    Settings.propUsedChannelGroups.setStringArray(groups
+    Settings.Channels.SUBSCRIBED_SEPARATORS.setStringArray(separators.toArray(new String[separators.size()]));
+    Settings.Channels.SUBSCRIBED.setChannelArray(channelArr);
+    Settings.Channels.USED_CHANNEL_GROUPS.setStringArray(groups
         .toArray(new String[groups.size()]));
 
-    Settings.propChannelsWereConfigured.setBoolean(ChannelList.getNumberOfSubscribedChannels() > 0);
+    Settings.Channels.WERE_CONFIGURED.setBoolean(ChannelList.getNumberOfSubscribedChannels() > 0);
     
     Settings.updateChannelFilters(channelArr);
     
-    if (!Settings.propTrayUseSpecialChannels.getBoolean()) {
+    if (!Settings.Channels.TRAY_USE_SPECIAL_CHANNELS.getBoolean()) {
       Channel[] tempArr = new Channel[channelArr.length > 10 ? 10
           : channelArr.length];
       System.arraycopy(channelArr, 0, tempArr, 0, tempArr.length);
-      Settings.propTraySpecialChannels.setChannelArray(tempArr);
+      Settings.Channels.TRAY_SPECIAL_CHANNELS.setChannelArray(tempArr);
     }
   }
 
@@ -1312,7 +1312,7 @@ public class ChannelsSettingsTab implements SettingsTab, ListDropAction<Object> 
       }
     }
 
-    String[] separatorArr = Settings.propSubscribedChannelsSeparators.getStringArray();
+    String[] separatorArr = Settings.Channels.SUBSCRIBED_SEPARATORS.getStringArray();
     
     Channel previousChannel = null;
     int lastSeparatorIndex = 0;

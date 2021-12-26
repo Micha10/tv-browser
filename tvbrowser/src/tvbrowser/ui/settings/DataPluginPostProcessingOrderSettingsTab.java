@@ -28,7 +28,7 @@ public class DataPluginPostProcessingOrderSettingsTab implements SettingsTab {
   public JPanel createSettingsPanel() {
     PluginProxy[] available = PluginProxyManager.getInstance().getActivatedPlugins();
     
-    final String[] sortedPlugins = Settings.propDataPluginPostProcessingOrder.getStringArray();
+    final String[] sortedPlugins = Settings.DataPostProcessing.ORDER.getStringArray();
     
     Arrays.sort(available, new Comparator<PluginProxy>() {
 
@@ -95,7 +95,7 @@ public class DataPluginPostProcessingOrderSettingsTab implements SettingsTab {
       result[i] = ((PluginProxy)sorted[i]).getId();
     }
     
-    Settings.propDataPluginPostProcessingOrder.setStringArray(result);
+    Settings.DataPostProcessing.ORDER.setStringArray(result);
   }
 
   @Override

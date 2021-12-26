@@ -43,7 +43,7 @@ import util.ui.FontChooserPanel;
 public class FontsSettingsTab implements devplugin.SettingsTab {
 
   /** The localizer for this class. */
-  private static final util.i18n.Localizer mLocalizer = util.i18n.Localizer.getLocalizerFor(FontsSettingsTab.class);
+  private static final util.i18n.Localizer LOCALIZER = util.i18n.Localizer.getLocalizerFor(FontsSettingsTab.class);
 
   private JCheckBox mUseUserDefindedFontsCB;
 
@@ -70,58 +70,58 @@ public class FontsSettingsTab implements devplugin.SettingsTab {
     
     int y = 1;
     
-    mainPanel.addSeparator(mLocalizer.msg("Fonts", "Fonts"), CC.xyw(1,y++,6));
+    mainPanel.addSeparator(LOCALIZER.msg("Fonts", "Fonts"), CC.xyw(1,y++,6));
     
-    mEnableAntialiasingCB = new JCheckBox(mLocalizer.msg("EnableAntialiasing", "Enable antialiasing"));
-    mEnableAntialiasingCB.setSelected(Settings.propEnableAntialiasing.getBoolean());
+    mEnableAntialiasingCB = new JCheckBox(LOCALIZER.msg("EnableAntialiasing", "Enable antialiasing"));
+    mEnableAntialiasingCB.setSelected(Settings.Fonts.ANTIALIASING_ENABLED.getBoolean());
 
     mainPanel.add(mEnableAntialiasingCB, CC.xyw(2,++y,4));
 
-    mUseUserDefindedFontsCB = new JCheckBox(mLocalizer.msg("UserDefinedFonts", "Use userdefined fonts"));
-    mUseUserDefindedFontsCB.setSelected(!Settings.propUseDefaultFonts.getBoolean());
+    mUseUserDefindedFontsCB = new JCheckBox(LOCALIZER.msg("UserDefinedFonts", "Use userdefined fonts"));
+    mUseUserDefindedFontsCB.setSelected(!Settings.Fonts.USE_DEFAULT.getBoolean());
     
     mainPanel.add(mUseUserDefindedFontsCB, CC.xyw(2,++y,4));
 
     y += 2;
     
-    mChannelNameFontLabel = new JLabel(mLocalizer.msg("ChannelNames", "Channel name"));
+    mChannelNameFontLabel = new JLabel(LOCALIZER.msg("ChannelNames", "Channel name"));
     mainPanel.add(mChannelNameFontLabel, CC.xy(3,y));
-    mChannelNameFontPanel = new FontChooserPanel(Settings.propChannelNameFont.getFont());
+    mChannelNameFontPanel = new FontChooserPanel(Settings.Fonts.CHANNE_LNAME.getFont());
     mainPanel.add(mChannelNameFontPanel, CC.xy(5,y));
     
     y += 2;
     
-    mTitleFontLabel = new JLabel(mLocalizer.msg("ProgramTitle", "Program title"));
+    mTitleFontLabel = new JLabel(LOCALIZER.msg("ProgramTitle", "Program title"));
     mainPanel.add(mTitleFontLabel, CC.xy(3,y));
-    mTitleFontPanel = new FontChooserPanel(Settings.propProgramTitleFont.getFont());
+    mTitleFontPanel = new FontChooserPanel(Settings.Fonts.PROGRAM_TITLE.getFont());
     mainPanel.add(mTitleFontPanel, CC.xy(5,y));
 
     y += 2;
     
-    mInfoFontLabel = new JLabel(mLocalizer.msg("ProgramInfo", "Program information"));
+    mInfoFontLabel = new JLabel(LOCALIZER.msg("ProgramInfo", "Program information"));
     mainPanel.add(mInfoFontLabel, CC.xy(3,y));
-    mInfoFontPanel = new FontChooserPanel(Settings.propProgramInfoFont.getFont());
+    mInfoFontPanel = new FontChooserPanel(Settings.Fonts.PROGRAM_INFO.getFont());
     mainPanel.add(mInfoFontPanel, CC.xy(5,y));
     
     y += 2;
     
-    mTimeFontLabel = new JLabel(mLocalizer.msg("Time", "Time"));
+    mTimeFontLabel = new JLabel(LOCALIZER.msg("Time", "Time"));
     mainPanel.add(mTimeFontLabel, CC.xy(3,y));
-    mTimeFontPanel = new FontChooserPanel(Settings.propProgramTimeFont.getFont());
+    mTimeFontPanel = new FontChooserPanel(Settings.Fonts.PROGRAM_TIME.getFont());
     mainPanel.add(mTimeFontPanel, CC.xy(5,y));
     
     y += 2;
         
-    mTextLineGapLabel = new JLabel(mLocalizer.msg("lineSpacing", "Line spacing:"));
+    mTextLineGapLabel = new JLabel(LOCALIZER.msg("lineSpacing", "Line spacing:"));
     mainPanel.add(mTextLineGapLabel, CC.xyw(2,y,2));
     mTextLineGap = new JComboBox<>(new String[] {
-        mLocalizer.msg("lineSpacing.singleLine", "Single line"),
-        mLocalizer.msg("lineSpacing.oneAndAQuaterLine", "1.25 line"),
-        mLocalizer.msg("lineSpacing.oneAndAHalfLine", "1.5 line"),
-        mLocalizer.msg("lineSpacing.oneAndThreeQuaterLine", "1.75 line"),
-        mLocalizer.msg("lineSpacing.doubleLine", "Double line")
+        LOCALIZER.msg("lineSpacing.singleLine", "Single line"),
+        LOCALIZER.msg("lineSpacing.oneAndAQuaterLine", "1.25 line"),
+        LOCALIZER.msg("lineSpacing.oneAndAHalfLine", "1.5 line"),
+        LOCALIZER.msg("lineSpacing.oneAndThreeQuaterLine", "1.75 line"),
+        LOCALIZER.msg("lineSpacing.doubleLine", "Double line")
         });
-    mTextLineGap.setSelectedIndex(Settings.propProgramTextLineGap.getInt());
+    mTextLineGap.setSelectedIndex(Settings.Fonts.PROGRAM_TEX_TLINE_GAP.getInt());
     mainPanel.add(mTextLineGap, CC.xy(5,y));
     
     mUseUserDefindedFontsCB.addActionListener(e -> {
@@ -147,13 +147,13 @@ public class FontsSettingsTab implements devplugin.SettingsTab {
    * Called by the host-application, if the user wants to save the settings.
    */
   public void saveSettings() {
-    Settings.propProgramTitleFont.setFont(mTitleFontPanel.getChosenFont());
-    Settings.propProgramInfoFont.setFont(mInfoFontPanel.getChosenFont());
-    Settings.propChannelNameFont.setFont(mChannelNameFontPanel.getChosenFont());
-    Settings.propProgramTimeFont.setFont(mTimeFontPanel.getChosenFont());
-    Settings.propUseDefaultFonts.setBoolean(!mUseUserDefindedFontsCB.isSelected());
-    Settings.propEnableAntialiasing.setBoolean(mEnableAntialiasingCB.isSelected());
-    Settings.propProgramTextLineGap.setInt(mTextLineGap.getSelectedIndex());
+    Settings.Fonts.PROGRAM_TITLE.setFont(mTitleFontPanel.getChosenFont());
+    Settings.Fonts.PROGRAM_INFO.setFont(mInfoFontPanel.getChosenFont());
+    Settings.Fonts.CHANNE_LNAME.setFont(mChannelNameFontPanel.getChosenFont());
+    Settings.Fonts.PROGRAM_TIME.setFont(mTimeFontPanel.getChosenFont());
+    Settings.Fonts.USE_DEFAULT.setBoolean(!mUseUserDefindedFontsCB.isSelected());
+    Settings.Fonts.ANTIALIASING_ENABLED.setBoolean(mEnableAntialiasingCB.isSelected());
+    Settings.Fonts.PROGRAM_TEX_TLINE_GAP.setInt(mTextLineGap.getSelectedIndex());
   }
 
   public Icon getIcon() {
@@ -164,7 +164,7 @@ public class FontsSettingsTab implements devplugin.SettingsTab {
    * Returns the title of the tab-sheet.
    */
   public String getTitle() {
-    return mLocalizer.msg("Fonts", "Fonts");
+    return LOCALIZER.msg("Fonts", "Fonts");
   }
 
 }

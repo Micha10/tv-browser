@@ -2829,6 +2829,8 @@ tvbrowser/src/util/programmouseevent/ProgramMouseEventHandler.java -text
 tvbrowser/src/util/settings/ContextMenuMouseActionArrayProperty.java -text
 tvbrowser/src/util/settings/ContextMenuMouseActionSetting.java -text
 tvbrowser/src/util/settings/FontProperty.java -text
+tvbrowser/src/util/settings/HiddenMessagesProperty.java -text svneol=unset#text/plain
+tvbrowser/src/util/settings/MinutesProperty.java -text svneol=unset#text/plain
 tvbrowser/src/util/settings/ProgramPanelSettings.java -text
 tvbrowser/src/util/settings/PropertyBasedSettings.java -text
 tvbrowser/src/util/tvdataservice/IconLoader.java -text svneol=unset#text/plain

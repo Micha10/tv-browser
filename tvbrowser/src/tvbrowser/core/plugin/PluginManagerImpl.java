@@ -61,6 +61,7 @@ import devplugin.ProgramReceiveIf;
 import devplugin.ProgramReceiveTarget;
 import devplugin.ProgramSearcher;
 import devplugin.ProgressMonitorExtended;
+import devplugin.SettingsItem;
 import devplugin.ThemeIcon;
 import devplugin.TvBrowserSettings;
 import devplugin.TvBrowserSettingsImpl;
@@ -82,6 +83,7 @@ import tvbrowser.core.tvdataservice.TvDataServiceProxyManager;
 import tvbrowser.extras.reminderplugin.ReminderPluginProxy;
 import tvbrowser.ui.mainframe.MainFrame;
 import tvbrowser.ui.settings.SettingsDialog;
+import tvbrowser.ui.settings.ToolBarDragAndDropSettings;
 import tvdataservice.MarkedProgramsMap;
 import tvdataservice.MutableProgram;
 import util.exc.TvBrowserException;
@@ -1005,7 +1007,12 @@ public class PluginManagerImpl implements PluginManager {
    * @since 2.2
    */
   public void showSettings(Plugin plugin) {
-    MainFrame.getInstance().showSettingsDialog(plugin);
+    if(SettingsDialog.getInstance() == null) {
+      MainFrame.getInstance().showSettingsDialog(plugin);
+    }
+    else {
+      SettingsDialog.getInstance().showSettingsTab(plugin.getId());
+    }
   }
 
   /**
@@ -1015,7 +1022,14 @@ public class PluginManagerImpl implements PluginManager {
    * @since 2.2
    */
   public void showSettings(String settingsItem) {
-    if(SettingsDialog.getInstance() == null) {
+    if(settingsItem.equals(SettingsItem.TOOLBAR) ) {
+      if(SettingsDialog.getInstance() != null) {
+        SettingsDialog.getInstance().close();
+      }
+      
+      new ToolBarDragAndDropSettings();
+    }
+    else if(SettingsDialog.getInstance() == null) {
       MainFrame.getInstance().showSettingsDialog(settingsItem);
     }
     else {

@@ -30,7 +30,7 @@ public class TrayNowSettingsTab implements SettingsTab {
 
   private JCheckBox mIsEnabled, mShowTime, mShowToolTip;
   private JRadioButton mShowInSubMenu, mShowInTray;
-  private static final Localizer mLocalizer = TrayBaseSettingsTab.LOCALIZER;
+  private static final Localizer LOCALIZER = TrayBaseSettingsTab.LOCALIZER;
   private JLabel mIconSeparator, mSeparator1, mSeparator2;
   
   private JEditorPane mHelpLabel;
@@ -38,7 +38,7 @@ public class TrayNowSettingsTab implements SettingsTab {
   
   private JCheckBox mShowSortNumber;
   
-  private static boolean mTrayIsEnabled = Settings.propTrayIsEnabled.getBoolean();
+  private static boolean mTrayIsEnabled = Settings.Tray.ENABLED.getBoolean();
   private static TrayNowSettingsTab mInstance = null;
   
   public JPanel createSettingsPanel() {
@@ -49,50 +49,50 @@ public class TrayNowSettingsTab implements SettingsTab {
         "pref,5dlu,pref,10dlu,pref,5dlu,pref,pref,fill:pref:grow,pref"));
     builder.border(Borders.DIALOG);
     
-    mIsEnabled = new JCheckBox(mLocalizer.msg("nowEnabled","Show Now running programs"),Settings.propTrayNowProgramsEnabled.getBoolean());
+    mIsEnabled = new JCheckBox(LOCALIZER.msg("nowEnabled","Show Now running programs"),Settings.Tray.Now.ENABLED.getBoolean());
     
     ButtonGroup bg = new ButtonGroup();
     
-    mShowInSubMenu = new JRadioButton(mLocalizer.msg("inSubMenu","in a sub menu"),Settings.propTrayNowProgramsInSubMenu.getBoolean());
-    mShowInTray = new JRadioButton(mLocalizer.msg("inTray","in the tray menu"), !mShowInSubMenu.isSelected());
+    mShowInSubMenu = new JRadioButton(LOCALIZER.msg("inSubMenu","in a sub menu"),Settings.Tray.Now.IN_SUB_MENU.getBoolean());
+    mShowInTray = new JRadioButton(LOCALIZER.msg("inTray","in the tray menu"), !mShowInSubMenu.isSelected());
     
     bg.add(mShowInSubMenu);
     bg.add(mShowInTray);
     
-    mShowIconAndName = new JRadioButton(mLocalizer.msg("showIconName","Show channel icon and channel name"),Settings.propTrayNowProgramsContainsName.getBoolean() && Settings.propTrayNowProgramsContainsIcon.getBoolean());
-    mShowIcon = new JRadioButton(mLocalizer.msg("showIcon","Show channel icon"),!Settings.propTrayNowProgramsContainsName.getBoolean() && Settings.propTrayNowProgramsContainsIcon.getBoolean());
-    mShowName = new JRadioButton(mLocalizer.msg("showName","Show channel name"),Settings.propTrayNowProgramsContainsName.getBoolean() && !Settings.propTrayNowProgramsContainsIcon.getBoolean());
+    mShowIconAndName = new JRadioButton(LOCALIZER.msg("showIconName","Show channel icon and channel name"),Settings.Tray.Now.CONTAINS_NAME.getBoolean() && Settings.Tray.Now.CONTAINS_ICON.getBoolean());
+    mShowIcon = new JRadioButton(LOCALIZER.msg("showIcon","Show channel icon"),!Settings.Tray.Now.CONTAINS_NAME.getBoolean() && Settings.Tray.Now.CONTAINS_ICON.getBoolean());
+    mShowName = new JRadioButton(LOCALIZER.msg("showName","Show channel name"),Settings.Tray.Now.CONTAINS_NAME.getBoolean() && !Settings.Tray.Now.CONTAINS_ICON.getBoolean());
         
     ButtonGroup bg1 = new ButtonGroup();
     bg1.add(mShowIconAndName);
     bg1.add(mShowIcon);
     bg1.add(mShowName);
     
-    mShowSortNumber = new JCheckBox(mLocalizer.msg("showChannelNumber", "Show sort number"),Settings.propTrayNowProgramsShowingSortNumber.getBoolean());
+    mShowSortNumber = new JCheckBox(LOCALIZER.msg("showChannelNumber", "Show sort number"),Settings.Tray.Now.SORT_NUMBER_SHOW.getBoolean());
     
-    mShowTime = new JCheckBox(mLocalizer.msg("showTime","Show start time"),Settings.propTrayNowProgramsContainsTime.getBoolean());
-    mShowToolTip = new JCheckBox(mLocalizer.msg("showToolTip","Show additional information of the program in a tool tip"),Settings.propTrayNowProgramsContainsToolTip.getBoolean());
-    mShowToolTip.setToolTipText(mLocalizer.msg("toolTipTip","Tool tips are small helper to something, like this one."));
+    mShowTime = new JCheckBox(LOCALIZER.msg("showTime","Show start time"),Settings.Tray.Now.CONTAINS_TIME.getBoolean());
+    mShowToolTip = new JCheckBox(LOCALIZER.msg("showToolTip","Show additional information of the program in a tool tip"),Settings.Tray.Now.CONTAINS_TOOL_TIP.getBoolean());
+    mShowToolTip.setToolTipText(LOCALIZER.msg("toolTipTip","Tool tips are small helper to something, like this one."));
         
-    mHelpLabel = UiUtilities.createHtmlHelpTextArea(mLocalizer.msg("help","The Tray is deactivated. To activate these settings activate the option <b>Tray activated</b> in the <a href=\"#link\">Tray Base settings</a>."), e -> {
+    mHelpLabel = UiUtilities.createHtmlHelpTextArea(LOCALIZER.msg("help","The Tray is deactivated. To activate these settings activate the option <b>Tray activated</b> in the <a href=\"#link\">Tray Base settings</a>."), e -> {
       if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
         SettingsDialog.getInstance().showSettingsTab(SettingsItem.TRAY);
       }
     });
     
-    JPanel c = (JPanel) builder.addSeparator(mLocalizer.msg("now","Now running programs"), CC.xyw(1,1,4));
+    JPanel c = (JPanel) builder.addSeparator(LOCALIZER.msg("now","Now running programs"), CC.xyw(1,1,4));
     builder.add(mIsEnabled, CC.xyw(2,3,2));
     builder.add(mShowInTray, CC.xy(3,4));
     builder.add(mShowInSubMenu, CC.xy(3,5));
     
-    JPanel c1 = (JPanel) builder.addSeparator(mLocalizer.msg("iconNameSeparator","Channel icons/channel name"), CC.xyw(1,7,4));
+    JPanel c1 = (JPanel) builder.addSeparator(LOCALIZER.msg("iconNameSeparator","Channel icons/channel name"), CC.xyw(1,7,4));
     builder.add(mShowIconAndName, CC.xyw(2,9,2));
     builder.add(mShowIcon, CC.xyw(2,10,2));
     builder.add(mShowName, CC.xyw(2,11,2));
     
     builder.add(mShowSortNumber, CC.xyw(2,13,2));
     
-    JPanel c2 = (JPanel) builder.addSeparator(mLocalizer.msg("settings","Settings"), CC.xyw(1,15,4));
+    JPanel c2 = (JPanel) builder.addSeparator(LOCALIZER.msg("settings","Settings"), CC.xyw(1,15,4));
     builder.add(mShowTime, CC.xyw(2,17,2));
     builder.add(mShowToolTip, CC.xyw(2,18,2));
     builder.add(mHelpLabel, CC.xyw(1,20,4));
@@ -133,23 +133,23 @@ public class TrayNowSettingsTab implements SettingsTab {
   
   public void saveSettings() {
     if(mIsEnabled != null) {
-      Settings.propTrayNowProgramsEnabled.setBoolean(mIsEnabled.isSelected());
+      Settings.Tray.Now.ENABLED.setBoolean(mIsEnabled.isSelected());
     }
     if(mShowInSubMenu != null) {
-      Settings.propTrayNowProgramsInSubMenu.setBoolean(mShowInSubMenu.isSelected());
+      Settings.Tray.Now.IN_SUB_MENU.setBoolean(mShowInSubMenu.isSelected());
     }
     if(mShowIconAndName != null && mShowName != null && mShowIcon != null) {
-      Settings.propTrayNowProgramsContainsName.setBoolean(mShowIconAndName.isSelected() || mShowName.isSelected());
-      Settings.propTrayNowProgramsContainsIcon.setBoolean(mShowIconAndName.isSelected() || mShowIcon.isSelected());
+      Settings.Tray.Now.CONTAINS_NAME.setBoolean(mShowIconAndName.isSelected() || mShowName.isSelected());
+      Settings.Tray.Now.CONTAINS_ICON.setBoolean(mShowIconAndName.isSelected() || mShowIcon.isSelected());
     }
     if(mShowTime != null) {
-      Settings.propTrayNowProgramsContainsTime.setBoolean(mShowTime.isSelected());
+      Settings.Tray.Now.CONTAINS_TIME.setBoolean(mShowTime.isSelected());
     }
     if(mShowToolTip != null) {
-      Settings.propTrayNowProgramsContainsToolTip.setBoolean(mShowToolTip.isSelected());
+      Settings.Tray.Now.CONTAINS_TOOL_TIP.setBoolean(mShowToolTip.isSelected());
     }
     if(mShowSortNumber != null) {
-      Settings.propTrayNowProgramsShowingSortNumber.setBoolean(mShowSortNumber.isSelected());
+      Settings.Tray.Now.SORT_NUMBER_SHOW.setBoolean(mShowSortNumber.isSelected());
     }
   }
 
@@ -158,7 +158,7 @@ public class TrayNowSettingsTab implements SettingsTab {
   }
 
   public String getTitle() {
-    return mLocalizer.msg("now","Now running programs");
+    return LOCALIZER.msg("now","Now running programs");
   }
 
   protected static void setTrayIsEnabled(boolean value) {

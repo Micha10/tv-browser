@@ -55,7 +55,6 @@ import tvbrowser.core.icontheme.ThemeDownloadDlg;
 import tvbrowser.core.icontheme.ThemeDownloadItem;
 import tvbrowser.ui.mainframe.MainFrame;
 import tvbrowser.ui.settings.looksSettings.JGoodiesLNFSettings;
-import tvbrowser.ui.settings.looksSettings.SkinLNFSettings;
 import util.i18n.Localizer;
 import util.ui.CustomComboBoxRenderer;
 import util.ui.LinkButton;
@@ -91,8 +90,6 @@ public final class LookAndFeelSettingsTab implements CancelableSettingsTab {
   private static String JOODIES_START_THEME;
   private static boolean JGOODIES_START_SHADOW;
 
-  private static String SKIN_LF_START_THEME;
-  
   private static class LookAndFeelObj implements Comparable<LookAndFeelObj> {
     private UIManager.LookAndFeelInfo info;
 
@@ -142,7 +139,7 @@ public final class LookAndFeelSettingsTab implements CancelableSettingsTab {
 
     mPluginViewPosition = new JComboBox<>(new String[] {Localizer.getLocalization(Localizer.I18N_LEFT),Localizer.getLocalization(Localizer.I18N_RIGHT)});
 
-    if(Settings.propPluginViewIsLeft.getBoolean()) {
+    if(Settings.LookAndFeel.PLUGIN_VIEW_IS_LEFT.getBoolean()) {
       mPluginViewPosition.setSelectedIndex(1);
     }
     else {
@@ -166,7 +163,7 @@ public final class LookAndFeelSettingsTab implements CancelableSettingsTab {
             LOCALIZER.msg("dateFormat.calendarButtons", "Calendar (Buttons)")
     });
 
-    mDateLayout.setSelectedIndex(Settings.propViewDateLayout.getInt());
+    mDateLayout.setSelectedIndex(Settings.LookAndFeel.VIEW_DATE_LAYOUT.getInt());
 
     mDateLayout.addActionListener(e -> {
       updateRestartMessage();
@@ -211,14 +208,14 @@ public final class LookAndFeelSettingsTab implements CancelableSettingsTab {
     "https://www.tvbrowser.org/");
     
     for(PersonaInfo info : installedPersonas) {
-      if(Settings.propRandomPersona.getBoolean()) {
+      if(Settings.LookAndFeel.PERSONA_RANDOM.getBoolean()) {
         if(PersonaInfo.isRandomPersona(info)) {
           mPersonaSelection.setSelectedItem(info);
           personaDetails.setUrl(info.getDetailURL());
           break;          
         }
       }
-      else if(Settings.propSelectedPersona.getString().equals(info.getId())) {
+      else if(Settings.LookAndFeel.PERSONA_SELECTED.getString().equals(info.getId())) {
         mPersonaSelection.setSelectedItem(info);
         personaDetails.setUrl(info.getDetailURL());
         break;
@@ -298,9 +295,8 @@ public final class LookAndFeelSettingsTab implements CancelableSettingsTab {
       START_LOOK_AND_FEEL_INDEX = mLfComboBox.getSelectedIndex();
       START_ICON_INDEX = mIconThemes.getSelectedIndex();
       START_PLUGIN_VIEW_POSITION_INDEX = mPluginViewPosition.getSelectedIndex();
-      JOODIES_START_THEME = Settings.propJGoodiesTheme.getString();
-      JGOODIES_START_SHADOW = Settings.propJGoodiesShadow.getBoolean();
-      SKIN_LF_START_THEME = Settings.propSkinLFThemepack.getString();
+      JOODIES_START_THEME = Settings.LookAndFeel.JGOODIES_THEME.getString();
+      JGOODIES_START_SHADOW = Settings.LookAndFeel.JGOODIES_SHADOW.getBoolean();
       START_INFO_ICON_THEME_INDEX = mInfoIconThemes.getSelectedIndex();
     }
 
@@ -318,7 +314,7 @@ public final class LookAndFeelSettingsTab implements CancelableSettingsTab {
   }
   
   private void selectLookAndFeelFromSettings() {
-    String lfName = Settings.propLookAndFeel.getString();
+    String lfName = Settings.LookAndFeel.SELECTED.getString();
     
     for (int i = 0; i < mLfComboBox.getItemCount(); i++) {
       if (mLfComboBox.getItemAt(i).getLFClassName().equals(lfName)) {
@@ -353,7 +349,7 @@ public final class LookAndFeelSettingsTab implements CancelableSettingsTab {
   
   private void fillInfoThemeBox() {
     InfoIconTheme[] infoIconThemes = InfoThemeLoader.getInstance().getAvailableInfoIconThemes();
-    String currentInfoIconTheme = Settings.propInfoIconThemeID.getString();
+    String currentInfoIconTheme = Settings.LookAndFeel.INFO_ICON_THEME_ID.getString();
     String startIconID = null;
 
     if(mInfoIconThemes.getSelectedIndex() != -1) {
@@ -378,7 +374,7 @@ public final class LookAndFeelSettingsTab implements CancelableSettingsTab {
   
   private void fillThemeBox() {
     String startIconName = null;
-    String selectedName = Settings.propIcontheme.getString();
+    String selectedName = Settings.LookAndFeel.ICON_THEME.getString();
     
     if(mIconThemes.getSelectedIndex() != -1) {
       startIconName = "icons/" + ((IconTheme)mIconThemes.getItemAt(START_ICON_INDEX)).getBase().getName();
@@ -416,9 +412,8 @@ public final class LookAndFeelSettingsTab implements CancelableSettingsTab {
     Settings.setRestartInfo(LocaleSettingsTab.class.getCanonicalName(), 
         mLfComboBox.getSelectedIndex() != START_LOOK_AND_FEEL_INDEX ||
         mIconThemes.getSelectedIndex() != START_ICON_INDEX ||
-        JOODIES_START_THEME.compareTo(Settings.propJGoodiesTheme.getString()) != 0 ||
-        JGOODIES_START_SHADOW != Settings.propJGoodiesShadow.getBoolean() ||
-        SKIN_LF_START_THEME.compareTo(Settings.propSkinLFThemepack.getString()) != 0 ||
+        JOODIES_START_THEME.compareTo(Settings.LookAndFeel.JGOODIES_THEME.getString()) != 0 ||
+        JGOODIES_START_SHADOW != Settings.LookAndFeel.JGOODIES_SHADOW.getBoolean() ||
         mPluginViewPosition.getSelectedIndex() != START_PLUGIN_VIEW_POSITION_INDEX ||
         START_INFO_ICON_THEME_INDEX != mInfoIconThemes.getSelectedIndex());
   }
@@ -428,9 +423,6 @@ public final class LookAndFeelSettingsTab implements CancelableSettingsTab {
 
     if (classname.startsWith("com.jgoodies")) {
       JGoodiesLNFSettings settings = new JGoodiesLNFSettings((JDialog) UiUtilities.getBestDialogParent(mSettingsPn));
-      UiUtilities.centerAndShow(settings);
-    } else if(classname.startsWith("com.l2fprod.gui.plaf.skin.SkinLookAndFeel")) {
-      SkinLNFSettings settings = new SkinLNFSettings((JDialog) UiUtilities.getBestDialogParent(mSettingsPn));
       UiUtilities.centerAndShow(settings);
     }
 
@@ -451,24 +443,24 @@ public final class LookAndFeelSettingsTab implements CancelableSettingsTab {
 
   public void saveSettings() {
     LookAndFeelObj obj = (LookAndFeelObj) mLfComboBox.getSelectedItem();
-    Settings.propLookAndFeel.setString(obj.getLFClassName());
+    Settings.LookAndFeel.SELECTED.setString(obj.getLFClassName());
 
     IconTheme theme = (IconTheme) mIconThemes.getSelectedItem();
-    Settings.propIcontheme.setString("icons/" + theme.getBase().getName());
+    Settings.LookAndFeel.ICON_THEME.setString("icons/" + theme.getBase().getName());
 
 
-    Settings.propPluginViewIsLeft.setBoolean(mPluginViewPosition.getSelectedIndex() == 1);
-    Settings.propViewDateLayout.setInt(mDateLayout.getSelectedIndex());
+    Settings.LookAndFeel.PLUGIN_VIEW_IS_LEFT.setBoolean(mPluginViewPosition.getSelectedIndex() == 1);
+    Settings.LookAndFeel.VIEW_DATE_LAYOUT.setInt(mDateLayout.getSelectedIndex());
     
     if(PersonaInfo.isRandomPersona(((PersonaInfo)mPersonaSelection.getSelectedItem()))) {
-      Settings.propRandomPersona.setBoolean(true);
+      Settings.LookAndFeel.PERSONA_RANDOM.setBoolean(true);
     }
     else {
-      Settings.propRandomPersona.setBoolean(false);
-      Settings.propSelectedPersona.setString(((PersonaInfo)mPersonaSelection.getSelectedItem()).getId());
+      Settings.LookAndFeel.PERSONA_RANDOM.setBoolean(false);
+      Settings.LookAndFeel.PERSONA_SELECTED.setString(((PersonaInfo)mPersonaSelection.getSelectedItem()).getId());
     }
     
-    Settings.propInfoIconThemeID.setString(((InfoIconTheme)mInfoIconThemes.getSelectedItem()).getID());
+    Settings.LookAndFeel.INFO_ICON_THEME_ID.setString(((InfoIconTheme)mInfoIconThemes.getSelectedItem()).getID());
   }
   
   @Override
@@ -476,7 +468,7 @@ public final class LookAndFeelSettingsTab implements CancelableSettingsTab {
     
     selectLookAndFeelFromSettings();
     
-    String selectedName = Settings.propIcontheme.getString();
+    String selectedName = Settings.LookAndFeel.ICON_THEME.getString();
     
     if(selectedName != null) {
       IconTheme theme = IconLoader.getInstance().getIconTheme(IconLoader.getInstance().getIconThemeFile(selectedName));
@@ -488,7 +480,7 @@ public final class LookAndFeelSettingsTab implements CancelableSettingsTab {
       }
     }
     
-    String currentInfoIconTheme = Settings.propInfoIconThemeID.getString();
+    String currentInfoIconTheme = Settings.LookAndFeel.INFO_ICON_THEME_ID.getString();
     
     for(int i = 0; i < mInfoIconThemes.getItemCount(); i++) {
       if(mInfoIconThemes.getItemAt(i).getID().contentEquals(currentInfoIconTheme)) {
@@ -500,10 +492,9 @@ public final class LookAndFeelSettingsTab implements CancelableSettingsTab {
     Settings.setRestartInfo(LocaleSettingsTab.class.getCanonicalName(), 
         mLfComboBox.getSelectedIndex() != START_LOOK_AND_FEEL_INDEX ||
         mIconThemes.getSelectedIndex() != START_ICON_INDEX ||
-        JOODIES_START_THEME.compareTo(Settings.propJGoodiesTheme.getString()) != 0 ||
-        JGOODIES_START_SHADOW != Settings.propJGoodiesShadow.getBoolean() ||
-        SKIN_LF_START_THEME.compareTo(Settings.propSkinLFThemepack.getString()) != 0 ||
-        (Settings.propPluginViewIsLeft.getBoolean() ? 1 : 0) != START_PLUGIN_VIEW_POSITION_INDEX ||
+        JOODIES_START_THEME.compareTo(Settings.LookAndFeel.JGOODIES_THEME.getString()) != 0 ||
+        JGOODIES_START_SHADOW != Settings.LookAndFeel.JGOODIES_SHADOW.getBoolean() ||
+        (Settings.LookAndFeel.PLUGIN_VIEW_IS_LEFT.getBoolean() ? 1 : 0) != START_PLUGIN_VIEW_POSITION_INDEX ||
         START_INFO_ICON_THEME_INDEX != mInfoIconThemes.getSelectedIndex());
   }catch(Throwable t) {t.printStackTrace();}
   }

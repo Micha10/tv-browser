@@ -62,11 +62,11 @@ import util.ui.UiUtilities;
  */
 public class TrayProgramsChannelsSettingsTab implements SettingsTab {
 
-  private static final util.i18n.Localizer mLocalizer = TrayBaseSettingsTab.LOCALIZER;
+  private static final util.i18n.Localizer LOCALIZER = TrayBaseSettingsTab.LOCALIZER;
   
   private JCheckBox mUseUserChannels;
   private OrderChooser<Channel> mChannelOCh;
-  private static boolean mTrayIsEnabled = Settings.propTrayIsEnabled.getBoolean();
+  private static boolean mTrayIsEnabled = Settings.Tray.ENABLED.getBoolean();
   private JLabel mSeparator1;
   private JSlider mChannelWidth;
   
@@ -75,9 +75,9 @@ public class TrayProgramsChannelsSettingsTab implements SettingsTab {
   private JEditorPane mHelpLabel;
   
   private static TrayProgramsChannelsSettingsTab mInstance;
-  private static boolean mNow = Settings.propTrayNowProgramsEnabled.getBoolean(),
-                         mSoon = Settings.propTraySoonProgramsEnabled.getBoolean(),
-                         mOnTime = Settings.propTrayOnTimeProgramsEnabled.getBoolean();
+  private static boolean mNow = Settings.Tray.Now.ENABLED.getBoolean(),
+                         mSoon = Settings.Tray.Soon.ENABLED.getBoolean(),
+                         mOnTime = Settings.Tray.OnTime.ENABLED.getBoolean();
   
   public JPanel createSettingsPanel() {
     mInstance = this;
@@ -88,17 +88,17 @@ public class TrayProgramsChannelsSettingsTab implements SettingsTab {
     builder.border(Borders.DIALOG);
     CellConstraints cc = new CellConstraints();
     try {
-   mChannelWidth = new JSlider(SwingConstants.HORIZONTAL, 40, 150, Settings.propTrayChannelWidth.getInt());
+   mChannelWidth = new JSlider(SwingConstants.HORIZONTAL, 40, 150, Settings.Tray.Channels.WIDTH.getInt());
     }catch(Exception e){e.printStackTrace();}
     
-    mUseUserChannels = new JCheckBox(mLocalizer.msg("userChannels","Use user defined channels"),Settings.propTrayUseSpecialChannels.getBoolean());
-    mUseUserChannels.setToolTipText(mLocalizer.msg("userChannelsToolTip","<html>If you select this you can choose the channels that will be used for<br><b>Programs at...</b> and <b>Now/Soon running programs</b>.<br>If this isn't selected the first 10 channels in default order will be used.</html>"));
+    mUseUserChannels = new JCheckBox(LOCALIZER.msg("userChannels","Use user defined channels"),Settings.Tray.Channels.USE_SPECIAL.getBoolean());
+    mUseUserChannels.setToolTipText(LOCALIZER.msg("userChannelsToolTip","<html>If you select this you can choose the channels that will be used for<br><b>Programs at...</b> and <b>Now/Soon running programs</b>.<br>If this isn't selected the first 10 channels in default order will be used.</html>"));
     
     mChannelOCh = new OrderChooser<>(
-        Settings.propTraySpecialChannels.getChannelArray(),
-        Settings.propSubscribedChannels.getChannelArray(), true);
+        Settings.Tray.Channels.SPECIAL.getChannelArray(),
+        Settings.Channels.SUBSCRIBED.getChannelArray(), true);
     
-    mHelpLabel = UiUtilities.createHtmlHelpTextArea(mLocalizer.msg("help","The Tray is deactivated. To activate these settings activate the option <b>Tray activated</b> in the <a href=\"#link\">Tray Base settings</a>."),e -> {
+    mHelpLabel = UiUtilities.createHtmlHelpTextArea(LOCALIZER.msg("help","The Tray is deactivated. To activate these settings activate the option <b>Tray activated</b> in the <a href=\"#link\">Tray Base settings</a>."),e -> {
       if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
         SettingsDialog.getInstance().showSettingsTab(SettingsItem.TRAY);
       }
@@ -107,7 +107,7 @@ public class TrayProgramsChannelsSettingsTab implements SettingsTab {
     mHelpLinkText = mHelpLabel.getText();
     mHelpLabel.setFont(mUseUserChannels.getFont());
     
-    builder.addSeparator(mLocalizer.msg("channelColumnWidth","Column with for channel name"), cc.xyw(1, 1, 8));
+    builder.addSeparator(LOCALIZER.msg("channelColumnWidth","Column with for channel name"), cc.xyw(1, 1, 8));
     builder.add(mChannelWidth, cc.xy(2,3));
     final JLabel valueLabel = builder.addLabel(String.valueOf(mChannelWidth.getValue()), cc.xy(4,3));
     valueLabel.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -120,12 +120,12 @@ public class TrayProgramsChannelsSettingsTab implements SettingsTab {
     
     JButton reset = new JButton(Localizer.getLocalization(Localizer.I18N_DEFAULT));
     reset.addActionListener(e -> {
-      mChannelWidth.setValue(Settings.propTrayChannelWidth.getDefault());
+      mChannelWidth.setValue(Settings.Tray.Channels.WIDTH.getDefault());
     });
     
     builder.add(reset, cc.xy(6,3));
     
-    JPanel c = (JPanel) builder.addSeparator(mLocalizer.msg(
+    JPanel c = (JPanel) builder.addSeparator(LOCALIZER.msg(
         "channelsSeparator",
         "Which channels should be used for these displays?"), cc.xyw(1, 5, 8));
     builder.add(mUseUserChannels, cc.xyw(2,7,7));
@@ -154,7 +154,7 @@ public class TrayProgramsChannelsSettingsTab implements SettingsTab {
     }
     else if(!mNow && !mSoon && !mOnTime) {
       mHelpLabel.setVisible(true);
-      mHelpLabel.setText(createHtml(mHelpLabel.getFont(),mLocalizer.msg("helpPrograms","<html>These settings are used only by the Now, Soon and At... programs. Enable at least one of that to enable these settings.</html>")));
+      mHelpLabel.setText(createHtml(mHelpLabel.getFont(),LOCALIZER.msg("helpPrograms","<html>These settings are used only by the Now, Soon and At... programs. Enable at least one of that to enable these settings.</html>")));
     } else {
       mHelpLabel.setVisible(false);
     }
@@ -168,7 +168,7 @@ public class TrayProgramsChannelsSettingsTab implements SettingsTab {
   }
   
   public void saveSettings() {
-    Settings.propTrayUseSpecialChannels.setBoolean(mUseUserChannels
+    Settings.Tray.Channels.USE_SPECIAL.setBoolean(mUseUserChannels
         .isSelected());
     
     List<Channel> order = mChannelOCh.getOrderList();
@@ -176,7 +176,7 @@ public class TrayProgramsChannelsSettingsTab implements SettingsTab {
 
     if(!mUseUserChannels.isSelected()) {
       order.clear();
-      Collections.addAll(order, Settings.propSubscribedChannels.getChannelArray());
+      Collections.addAll(order, Settings.Channels.SUBSCRIBED.getChannelArray());
       
       ch = new Channel[order.size() > 10 ? 10 : order.size()];
     }
@@ -186,11 +186,11 @@ public class TrayProgramsChannelsSettingsTab implements SettingsTab {
     }
     
     if (order != null) {
-      Settings.propTraySpecialChannels.setChannelArray(ch);
+      Settings.Tray.Channels.SPECIAL.setChannelArray(ch);
     }
     
     if (mChannelWidth != null) {
-      Settings.propTrayChannelWidth.setInt(mChannelWidth.getValue());
+      Settings.Tray.Channels.WIDTH.setInt(mChannelWidth.getValue());
     }
   }
 

@@ -59,7 +59,7 @@ public class TrayBaseSettingsTab implements SettingsTab {
 
   private JCheckBox mTrayIsEnabled, mMinimizeToTrayChb, mNowOnRestore, mTrayIsAnialiasing;
   private boolean mOldState;
-  private static boolean mIsEnabled = Settings.propTrayIsEnabled.getBoolean();
+  private static boolean mIsEnabled = Settings.Tray.ENABLED.getBoolean();
   private JRadioButton mFilterAll,mNoMarkedFiltering,mNoFiltering;
 
   public JPanel createSettingsPanel() {
@@ -71,20 +71,20 @@ public class TrayBaseSettingsTab implements SettingsTab {
     CellConstraints cc = new CellConstraints();
 
     String msg = LOCALIZER.msg("trayIsEnabled", "Tray activated");
-    mOldState = Settings.propTrayIsEnabled.getBoolean();
+    mOldState = Settings.Tray.ENABLED.getBoolean();
     mTrayIsEnabled = new JCheckBox(msg, mOldState);
 
     msg = LOCALIZER.msg("minimizeToTray", "Minimize to Tray");
-    boolean checked = Settings.propTrayMinimizeTo.getBoolean();
+    boolean checked = Settings.Tray.MINIMIZE_TO.getBoolean();
     mMinimizeToTrayChb = new JCheckBox(msg, checked && mOldState);
     mMinimizeToTrayChb.setEnabled(mTrayIsEnabled.isSelected());
     
     msg = LOCALIZER.msg("nowOnDeIconify", "Jump to now when restoring application");
-    checked = Settings.propNowOnRestore.getBoolean();
+    checked = Settings.Tray.NOW_ON_RESTORE.getBoolean();
     mNowOnRestore = new JCheckBox(msg, checked);
 
     msg = LOCALIZER.msg("trayAntialiasing", "Antialiasing enabled");
-    checked = Settings.propTrayIsAntialiasing.getBoolean();
+    checked = Settings.Tray.ANTIALIASING.getBoolean();
     mTrayIsAnialiasing = new JCheckBox(msg, checked);
     
     if(System.getProperty("os.name").toLowerCase().startsWith("linux") && (JavaVersion.getVersion() < JavaVersion.VERSION_1_6 || OperatingSystem.isKDE())) {
@@ -102,11 +102,11 @@ public class TrayBaseSettingsTab implements SettingsTab {
     mFilterAll = new JRadioButton(msg);
 
     msg = LOCALIZER.msg("trayFilterNotMarked", "Filter programs, if not marked");
-    checked = Settings.propTrayFilterNotMarked.getBoolean();
+    checked = Settings.Tray.FILTER_NOT_MARKED.getBoolean();
     mNoMarkedFiltering = new JRadioButton(msg, checked);
 
     msg = LOCALIZER.msg("trayFilterNot", "Don't filter programs");
-    checked = Settings.propTrayFilterNot.getBoolean();
+    checked = Settings.Tray.FILTER_NOT.getBoolean();
     mNoFiltering = new JRadioButton(msg, checked);
     
     if(!mNoFiltering.isSelected() && !mNoMarkedFiltering.isSelected()) {
@@ -148,7 +148,7 @@ public class TrayBaseSettingsTab implements SettingsTab {
 
   public void saveSettings() {
     if (mTrayIsEnabled != null) {
-      Settings.propTrayIsEnabled.setBoolean(mTrayIsEnabled.isSelected());
+      Settings.Tray.ENABLED.setBoolean(mTrayIsEnabled.isSelected());
       if(mTrayIsEnabled.isSelected() && !mOldState) {
         TVBrowser.loadTray();
       } else if(!mTrayIsEnabled.isSelected() && mOldState) {
@@ -157,13 +157,13 @@ public class TrayBaseSettingsTab implements SettingsTab {
     }
     if (mMinimizeToTrayChb != null) {
       boolean checked = mMinimizeToTrayChb.isSelected() && mTrayIsEnabled.isSelected();
-      Settings.propTrayMinimizeTo.setBoolean(checked);
+      Settings.Tray.MINIMIZE_TO.setBoolean(checked);
     }
     
-    Settings.propNowOnRestore.setBoolean(mNowOnRestore.isSelected());
-    Settings.propTrayIsAntialiasing.setBoolean(mTrayIsAnialiasing.isSelected());
-    Settings.propTrayFilterNotMarked.setBoolean(mNoMarkedFiltering.isSelected());
-    Settings.propTrayFilterNot.setBoolean(mNoFiltering.isSelected());
+    Settings.Tray.NOW_ON_RESTORE.setBoolean(mNowOnRestore.isSelected());
+    Settings.Tray.ANTIALIASING.setBoolean(mTrayIsAnialiasing.isSelected());
+    Settings.Tray.FILTER_NOT_MARKED.setBoolean(mNoMarkedFiltering.isSelected());
+    Settings.Tray.FILTER_NOT.setBoolean(mNoFiltering.isSelected());
   }
 
   public Icon getIcon() {

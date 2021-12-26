@@ -208,7 +208,7 @@ public abstract class MenuBar extends JMenuBar implements ActionListener {
 		MenuHelpTextAdapter.create(mRestartMI, mLocalizer.msg("menuinfo.restart", ""),
 				mLabel);
 
-		mToolbarMI = new JCheckBoxMenuItem(ToolBarDragAndDropSettings.mLocalizer
+		mToolbarMI = new JCheckBoxMenuItem(ToolBarDragAndDropSettings.LOCALIZER
 				.msg("showToolbar", "Show toolbar"));
 		mToolbarMI.setSelected(Settings.propIsToolbarVisible.getBoolean());
 		mToolbarMI.addActionListener(this);

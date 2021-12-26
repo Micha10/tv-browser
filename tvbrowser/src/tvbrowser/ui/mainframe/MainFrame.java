@@ -1613,7 +1613,7 @@ public class MainFrame extends JFrame implements DateListener,DropTargetListener
   public void quit() {
     String[] options = {LOCALIZER.msg("exitConfirmTitle","Exit TV-Browser"),Localizer.getLocalization(Localizer.I18N_CANCEL)};
 
-    if(DontShowAgainOptionBox.showOptionDialog("MainFrame.askForExitConfirm",this.isActive() ? this : null,
+    if(DontShowAgainOptionBox.showOptionDialog(Settings.General.ASK_FOR_EXIT_CONFIRMATION.getMessageId(),this.isActive() ? this : null,
         LOCALIZER.msg("exitConirmText","Do you really want to quit TV-Browser?"), options[0], JOptionPane.QUESTION_MESSAGE,
         JOptionPane.YES_NO_OPTION, options, options[0], null) != JOptionPane.YES_OPTION) {
       return;
@@ -1932,7 +1932,7 @@ public class MainFrame extends JFrame implements DateListener,DropTargetListener
       }
 
       if (onAirChanged) {
-        if(Settings.propTableLayout.getString().equals(Settings.LAYOUT_OPTIMIZED_COMPACT_TIME_BLOCK)) {
+        if(Settings.propTableLayout.getString().equals(Settings.TYPE_LAYOUT_OPTIMIZED_COMPACT_TIME_BLOCK)) {
           mProgramTableScrollPane.getProgramTable().updateLayout();
           mProgramTableScrollPane.updateUI();
         }
@@ -2320,7 +2320,7 @@ public class MainFrame extends JFrame implements DateListener,DropTargetListener
 
     DontShowAgainOptionBox
         .showOptionDialog(
-            "downloadDone",
+            Settings.General.DOWNLOAD_DONE.getMessageId(),
             MainFrame.getInstance(),
             LOCALIZER
                 .msg(

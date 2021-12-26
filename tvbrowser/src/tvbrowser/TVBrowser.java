@@ -144,7 +144,7 @@ import tvbrowser.ui.mainframe.UpdateDlg;
 import tvbrowser.ui.settings.LookAndFeelSettingsTab;
 import tvbrowser.ui.settings.MarkingsSettingsTab;
 import tvbrowser.ui.settings.ProgramPanelSettingsTab;
-import tvbrowser.ui.settings.StartupSettingsTab;
+import tvbrowser.ui.settings.GeneralSettingsTab;
 import tvbrowser.ui.splashscreen.DummySplash;
 import tvbrowser.ui.splashscreen.Splash;
 import tvbrowser.ui.splashscreen.SplashScreen;
@@ -782,7 +782,7 @@ public class TVBrowser {
           Settings.propAcceptedLicenseArrForServiceIds
               .setStringArray(new String[0]);
         } else if(currentVersion != null && currentVersion.compareTo(new Version(4, 21, 96, false)) < 0) {
-          final String refresh = StartupSettingsTab.LOCALIZER.msg("titleRefresh", "Refresh");
+          final String refresh = GeneralSettingsTab.LOCALIZER.msg("titleRefresh", "Refresh");
           
           JCheckBox gradient = new JCheckBox(ProgramPanelSettingsTab.LOCALIZER.msg("color.programGradientHighlighting",
               "Highlight programs with gradient colors"), Settings.propProgramPanelGradientColorHighlighting.getBoolean());
@@ -793,7 +793,7 @@ public class TVBrowser {
           pb.addSeparator(refresh, CC.xyw(1, pb.getRowCount(), 4));
           pb.addRow("5dlu",false);
           pb.addRow("default",false);
-          pb.add(UiUtilities.createHtmlHelpTextArea(LOCALIZER.msg("update.primeTimeUpdate","Independent of the configuration of the automatically data update, TV-Browser since 4.2.2 provides the option to activate an automatically data update of the prime time (after 6 pm). If activated TV-Browser will download the data for today and tomorrow each day right before the prime time. You can configure this options under <b><i>{0}, {1}</i></b>&nbsp;&nbsp;or directly here.",StartupSettingsTab.LOCALIZER.msg("general","General settings"), refresh)), CC.xyw(2, pb.getRowCount(), 3));
+          pb.add(UiUtilities.createHtmlHelpTextArea(LOCALIZER.msg("update.primeTimeUpdate","Independent of the configuration of the automatically data update, TV-Browser since 4.2.2 provides the option to activate an automatically data update of the prime time (after 6 pm). If activated TV-Browser will download the data for today and tomorrow each day right before the prime time. You can configure this options under <b><i>{0}, {1}</i></b>&nbsp;&nbsp;or directly here.",GeneralSettingsTab.LOCALIZER.msg("general","General settings"), refresh)), CC.xyw(2, pb.getRowCount(), 3));
           pb.addRow();
           pb.add(update, CC.xyw(2, pb.getRowCount(), 3));
           pb.addRow("10dlu",false);

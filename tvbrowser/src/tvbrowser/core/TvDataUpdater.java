@@ -74,7 +74,7 @@ import tvbrowser.extras.favoritesplugin.FavoritesPlugin;
 import tvbrowser.ui.DontShowAgainOptionBox;
 import tvbrowser.ui.mainframe.MainFrame;
 import tvbrowser.ui.settings.ChannelListChangesDialog;
-import tvbrowser.ui.settings.StartupSettingsTab;
+import tvbrowser.ui.settings.GeneralSettingsTab;
 import tvdataservice.MarkedProgramsMap;
 import tvdataservice.MutableChannelDayProgram;
 import tvdataservice.TvDataUpdateManager;
@@ -349,7 +349,7 @@ public class TvDataUpdater {
   private void checkAndUpdateChannelList(ProgressMonitor monitor) {
     final int channelAutoUpdatePeriod = Settings.propAutoChannelUpdatePeriod.getInt();
     
-    if(channelAutoUpdatePeriod > StartupSettingsTab.VALUE_AUTO_CHANNEL_UPDATE_DISABLED) {
+    if(channelAutoUpdatePeriod > GeneralSettingsTab.VALUE_AUTO_CHANNEL_UPDATE_DISABLED) {
       final Date compare = new Date().addDays(-channelAutoUpdatePeriod+1);
       
       if((Settings.propLastChannelUpdate.getDate() == null || Settings.propLastChannelUpdate.getDate().compareTo(compare) < 0)

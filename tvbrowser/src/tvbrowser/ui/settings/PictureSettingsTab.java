@@ -73,7 +73,7 @@ import util.ui.UiUtilities;
  * @since 2.2.2
  */
 public class PictureSettingsTab extends AbstractSettingsTab implements CancelableSettingsTab {
-  private static final Localizer mLocalizer = Localizer.getLocalizerFor(PictureSettingsTab.class);
+  private static final Localizer LOCALIZER = Localizer.getLocalizerFor(PictureSettingsTab.class);
 
   private JRadioButton mShowPicturesEver, mShowPicturesNever, mShowPicturesForSelection, mShowPicturesForFilter;
   private JCheckBox mShowPicturesInTimeRange, mShowPicturesForDuration, mShowPicturesForPlugins;
@@ -101,15 +101,15 @@ public class PictureSettingsTab extends AbstractSettingsTab implements Cancelabl
 
   public JPanel createSettingsPanel() {
     try {
-      mShowPicturesNever = new JRadioButton(mLocalizer.msg("showNever", "Show never"), Settings.propPictureType.getInt() == ProgramPanelSettings.SHOW_PICTURES_NEVER);
-      mShowPicturesEver = new JRadioButton(mLocalizer.msg("showEver", "Show always"), Settings.propPictureType.getInt() == ProgramPanelSettings.SHOW_PICTURES_EVER);
-      mShowPicturesForSelection = new JRadioButton(mLocalizer.msg("showForSelection", "Selection..."), Settings.propPictureType.getInt() > 1 && Settings.propPictureType.getInt() < 10);
-      mShowPicturesForFilter = new JRadioButton(mLocalizer.msg("showForFilter", "For filter..."), Settings.propPictureType.getInt() == ProgramPanelSettings.SHOW_PICTURES_FOR_FILTER);
+      mShowPicturesNever = new JRadioButton(LOCALIZER.msg("showNever", "Show never"), Settings.Pictures.TYPE.getInt() == ProgramPanelSettings.SHOW_PICTURES_NEVER);
+      mShowPicturesEver = new JRadioButton(LOCALIZER.msg("showEver", "Show always"), Settings.Pictures.TYPE.getInt() == ProgramPanelSettings.SHOW_PICTURES_EVER);
+      mShowPicturesForSelection = new JRadioButton(LOCALIZER.msg("showForSelection", "Selection..."), Settings.Pictures.TYPE.getInt() > 1 && Settings.Pictures.TYPE.getInt() < 10);
+      mShowPicturesForFilter = new JRadioButton(LOCALIZER.msg("showForFilter", "For filter..."), Settings.Pictures.TYPE.getInt() == ProgramPanelSettings.SHOW_PICTURES_FOR_FILTER);
 
-      mShowPicturesInTimeRange = new JCheckBox(mLocalizer.msg("showInTimeRange", "Show in time range:"), ProgramPanelSettings.typeContainsType(Settings.propPictureType.getInt(), ProgramPanelSettings.SHOW_PICTURES_IN_TIME_RANGE));
-      mShowPicturesForDuration = new JCheckBox(mLocalizer.msg("showForDuration", "Show for duration more than or equals to:"), ProgramPanelSettings.typeContainsType(Settings.propPictureType.getInt(), ProgramPanelSettings.SHOW_PICTURES_FOR_DURATION));
+      mShowPicturesInTimeRange = new JCheckBox(LOCALIZER.msg("showInTimeRange", "Show in time range:"), ProgramPanelSettings.typeContainsType(Settings.Pictures.TYPE.getInt(), ProgramPanelSettings.SHOW_PICTURES_IN_TIME_RANGE));
+      mShowPicturesForDuration = new JCheckBox(LOCALIZER.msg("showForDuration", "Show for duration more than or equals to:"), ProgramPanelSettings.typeContainsType(Settings.Pictures.TYPE.getInt(), ProgramPanelSettings.SHOW_PICTURES_FOR_DURATION));
 
-      mShowPictureBorderProgramTable = new JCheckBox(mLocalizer.msg("showPictureBorder","Show border around picture"), Settings.propShowProgramTablePictureBorder.getBoolean());
+      mShowPictureBorderProgramTable = new JCheckBox(LOCALIZER.msg("showPictureBorder","Show border around picture"), Settings.Pictures.BORDER_SHOW.getBoolean());
       
       ButtonGroup bg = new ButtonGroup();
 
@@ -118,7 +118,7 @@ public class PictureSettingsTab extends AbstractSettingsTab implements Cancelabl
       bg.add(mShowPicturesForSelection);
       bg.add(mShowPicturesForFilter);
 
-      String timePattern = mLocalizer.msg("timePattern", "hh:mm a");
+      String timePattern = LOCALIZER.msg("timePattern", "hh:mm a");
 
       mPictureStartTime = new JSpinner(new SpinnerDateModel());
       mPictureStartTime.setEditor(new JSpinner.DateEditor(mPictureStartTime, timePattern));
@@ -128,23 +128,23 @@ public class PictureSettingsTab extends AbstractSettingsTab implements Cancelabl
       mPictureEndTime.setEditor(new JSpinner.DateEditor(mPictureEndTime, timePattern));
       CaretPositionCorrector.createCorrector(((JSpinner.DateEditor) mPictureEndTime.getEditor()).getTextField(), new char[]{':'}, -1);
 
-      mDuration = new JSpinner(new SpinnerNumberModel(Settings.propPictureDuration.getInt(), 10, 240, 1));
+      mDuration = new JSpinner(new SpinnerNumberModel(Settings.Pictures.DURATION.getInt(), 10, 240, 1));
 
       Calendar cal = Calendar.getInstance();
-      cal.set(Calendar.HOUR_OF_DAY, Settings.propPictureStartTime.getInt() / 60);
-      cal.set(Calendar.MINUTE, Settings.propPictureStartTime.getInt() % 60);
+      cal.set(Calendar.HOUR_OF_DAY, Settings.Pictures.TIME_START.getHourOfDay());
+      cal.set(Calendar.MINUTE, Settings.Pictures.TIME_START.getMinutesOfHour());
       mPictureStartTime.setValue(cal.getTime());
 
-      cal.set(Calendar.HOUR_OF_DAY, Settings.propPictureEndTime.getInt() / 60);
-      cal.set(Calendar.MINUTE, Settings.propPictureEndTime.getInt() % 60);
+      cal.set(Calendar.HOUR_OF_DAY, Settings.Pictures.TIME_END.getHourOfDay());
+      cal.set(Calendar.MINUTE, Settings.Pictures.TIME_END.getMinutesOfHour());
       mPictureEndTime.setValue(cal.getTime());
 
-      mShowDescription = new JCheckBox(mLocalizer.msg("showDescription", "Show description for pictures"), Settings.propIsPictureShowingDescription.getBoolean());
+      mShowDescription = new JCheckBox(LOCALIZER.msg("showDescription", "Show description for pictures"), Settings.Pictures.DESCRIPTION_SHOW.getBoolean());
       mShowDescription.addItemListener(e -> {
         mShowPictureBorderProgramTable.setEnabled(e.getStateChange() == ItemEvent.DESELECTED);
       });
       
-      JEditorPane helpLabel = UiUtilities.createHtmlHelpTextArea(mLocalizer.msg("help", "These settings affect only the showing of the pictures. The pictures can only be shown if the download of pictures in enabled. To enable the picture download look at the <a href=\"#link\">settings of the TV dataservices</a>."), e -> {
+      JEditorPane helpLabel = UiUtilities.createHtmlHelpTextArea(LOCALIZER.msg("help", "These settings affect only the showing of the pictures. The pictures can only be shown if the download of pictures in enabled. To enable the picture download look at the <a href=\"#link\">settings of the TV dataservices</a>."), e -> {
         if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
           SettingsDialog.getInstance().showSettingsTab(SettingsItem.PLUGINS);
         }
@@ -163,26 +163,26 @@ public class PictureSettingsTab extends AbstractSettingsTab implements Cancelabl
 
       int y = 1;
 
-      pb.addSeparator(mLocalizer.msg("basics", "Picture settings for the program table"), CC.xyw(1, y, 10));
+      pb.addSeparator(LOCALIZER.msg("basics", "Picture settings for the program table"), CC.xyw(1, y, 10));
 
       pb.add(mShowPicturesNever, CC.xyw(2, y+=2, 9));
       pb.add(mShowPicturesEver, CC.xyw(2, y+=1, 9));
       pb.add(mShowPicturesForSelection, CC.xyw(2, y+=1, 9));
 
       pb.add(mShowPicturesInTimeRange, CC.xyw(3, y+=2, 8));
-      mStartLabel = pb.addLabel(mLocalizer.msg("startTime", "From:"), CC.xy(4, y+=1));
+      mStartLabel = pb.addLabel(LOCALIZER.msg("startTime", "From:"), CC.xy(4, y+=1));
       pb.add(mPictureStartTime, CC.xy(6, y));
-      mEndLabel = pb.addLabel(mLocalizer.msg("endTime", "To:"), CC.xy(4, y+=2));
+      mEndLabel = pb.addLabel(LOCALIZER.msg("endTime", "To:"), CC.xy(4, y+=2));
       pb.add(mPictureEndTime, CC.xy(6, y));
 
       pb.add(mShowPicturesForDuration, CC.xyw(3, y+=2, 8));
       pb.add(mDuration, CC.xy(6, y+=1));
-      final JLabel minutesLabel = pb.addLabel(mLocalizer.msg("minutes", "Minutes"), CC.xy(8, y));
+      final JLabel minutesLabel = pb.addLabel(LOCALIZER.msg("minutes", "Minutes"), CC.xy(8, y));
       y++;
-      if (Settings.propPicturePluginIds.getStringArray() != null) {
+      if (Settings.Pictures.PLUGIN_IDS.getStringArray() != null) {
         JPanel mSubPanel = new JPanel(new FormLayout("15dlu,150dlu:grow,5dlu,pref", "pref,2dlu,pref"));
 
-        mShowPicturesForPlugins = new JCheckBox(mLocalizer.msg("showPicturesForPlugins", "Show for programs that are marked by plugins:"), ProgramPanelSettings.typeContainsType(Settings.propPictureType.getInt(), ProgramPanelSettings.SHOW_PICTURES_FOR_PLUGINS));
+        mShowPicturesForPlugins = new JCheckBox(LOCALIZER.msg("showPicturesForPlugins", "Show for programs that are marked by plugins:"), ProgramPanelSettings.typeContainsType(Settings.Pictures.TYPE.getInt(), ProgramPanelSettings.SHOW_PICTURES_FOR_PLUGINS));
         mPluginLabel = new JLabel();
         mPluginLabel.addComponentListener(new ComponentAdapter() {
           @Override
@@ -193,7 +193,7 @@ public class PictureSettingsTab extends AbstractSettingsTab implements Cancelabl
         
         mPluginLabel.setEnabled(mShowPicturesForPlugins.isSelected());
 
-        choose = new JButton(mLocalizer.msg("selectPlugins", "Choose Plugins"));
+        choose = new JButton(LOCALIZER.msg("selectPlugins", "Choose Plugins"));
         choose.addActionListener(e -> {
           Window parent = UiUtilities.getLastModalChildOf(MainFrame
               .getInstance());
@@ -207,14 +207,14 @@ public class PictureSettingsTab extends AbstractSettingsTab implements Cancelabl
           
           handlePluginSelection();
         });
-        choose.setEnabled(ProgramPanelSettings.typeContainsType(Settings.propPictureType.getInt(), ProgramPanelSettings.SHOW_PICTURES_FOR_PLUGINS));
+        choose.setEnabled(ProgramPanelSettings.typeContainsType(Settings.Pictures.TYPE.getInt(), ProgramPanelSettings.SHOW_PICTURES_FOR_PLUGINS));
 
         mShowPicturesForPlugins.addItemListener(e -> {
           mPluginLabel.setEnabled(e.getStateChange() == ItemEvent.SELECTED);
           choose.setEnabled(e.getStateChange() == ItemEvent.SELECTED);
         });
 
-        String[] clientPluginIdArr = Settings.propPicturePluginIds.getStringArray();
+        String[] clientPluginIdArr = Settings.Pictures.PLUGIN_IDS.getStringArray();
 
         ArrayList<Marker> clientPlugins = new ArrayList<Marker>();
 
@@ -245,7 +245,7 @@ public class PictureSettingsTab extends AbstractSettingsTab implements Cancelabl
         mPluginLabel.setEnabled(false);
       }
       
-      final JButton editFilter = new JButton(mLocalizer.msg("editFilter", "Edit filter"));
+      final JButton editFilter = new JButton(LOCALIZER.msg("editFilter", "Edit filter"));
       editFilter.setEnabled(mShowPicturesForFilter.isSelected());
       editFilter.addActionListener(e -> {
         final UserFilter filter = GenericFilterMap.getInstance().getGenericInternalFilter(GenericFilterMap.GENERIC_PICTURE_FILTER_NAME);
@@ -277,9 +277,9 @@ public class PictureSettingsTab extends AbstractSettingsTab implements Cancelabl
       
       pb.add(mShowDescription, CC.xyw(2, y+=1, 9));
 
-      mDescriptionLines = new JSpinner(new SpinnerNumberModel(Settings.propPictureDescriptionLines.getInt(), 1, 20, 1));
+      mDescriptionLines = new JSpinner(new SpinnerNumberModel(Settings.Pictures.DESCRIPTION_LINES.getInt(), 1, 20, 1));
       pb.add(mDescriptionLines, CC.xyw(3, y+=1, 4));
-      mDescriptionLabel = new JLabel(mLocalizer.msg("lines", "lines"));
+      mDescriptionLabel = new JLabel(LOCALIZER.msg("lines", "lines"));
   	  pb.add(mDescriptionLabel, CC.xy(8, y));
       pb.add(mShowPictureBorderProgramTable, CC.xyw(3,y+=1,8));
   	  mDescriptionLabel.setEnabled(mShowDescription.isSelected());
@@ -290,8 +290,8 @@ public class PictureSettingsTab extends AbstractSettingsTab implements Cancelabl
   		  mDescriptionLabel.setEnabled(mShowDescription.isSelected());
   		});
     
-      pb.addSeparator(mLocalizer.msg("pluginPictureTitle", "Default picture settings for the program lists of the Plugins"), CC.xyw(1, y+=2, 9));
-      pb.add(mPluginsPictureSettings = new PluginsPictureSettingsPanel(new PluginPictureSettings(Settings.propPluginsPictureSetting.getInt()), true), CC.xyw(2, y+=2, 8));
+      pb.addSeparator(LOCALIZER.msg("pluginPictureTitle", "Default picture settings for the program lists of the Plugins"), CC.xyw(1, y+=2, 9));
+      pb.add(mPluginsPictureSettings = new PluginsPictureSettingsPanel(new PluginPictureSettings(Settings.Pictures.PLUGINS_SETTING.getInt()), true), CC.xyw(2, y+=2, 8));
       pb.add(helpLabel, CC.xyw(1, y+=2, 10));
       
       if(PLUGIN_PICTURE_SELECTION_ORIGINAL == -1) {
@@ -368,30 +368,30 @@ public class PictureSettingsTab extends AbstractSettingsTab implements Cancelabl
   }
 
   public void saveSettings() {
-    Settings.propPictureType.setInt(getPictureShowingType());
-    Settings.propPictureStartTime.setInt(getPictureTimeRangeStart());
-    Settings.propPictureEndTime.setInt(getPictureTimeRangeEnd());
-    Settings.propPictureDuration.setInt((Integer) mDuration.getValue());
-    Settings.propIsPictureShowingDescription.setBoolean(mShowDescription.isSelected());
+    Settings.Pictures.TYPE.setInt(getPictureShowingType());
+    Settings.Pictures.TIME_START.setInt(getPictureTimeRangeStart());
+    Settings.Pictures.TIME_END.setInt(getPictureTimeRangeEnd());
+    Settings.Pictures.DURATION.setInt((Integer) mDuration.getValue());
+    Settings.Pictures.BORDER_SHOW.setBoolean(mShowDescription.isSelected());
     
     if(!mShowDescription.isSelected()) {
-      Settings.propShowProgramTablePictureBorder.setBoolean(mShowPictureBorderProgramTable.isSelected());
+      Settings.Pictures.BORDER_SHOW.setBoolean(mShowPictureBorderProgramTable.isSelected());
     }
     else {
-      Settings.propShowProgramTablePictureBorder.setBoolean(true);
+      Settings.Pictures.BORDER_SHOW.setBoolean(true);
     }
 
     if (ProgramPanelSettings.typeContainsType(getPictureShowingType(), ProgramPanelSettings.SHOW_PICTURES_FOR_PLUGINS)) {
-      Settings.propPicturePluginIds.setStringArray(getClientPluginIds());
+      Settings.Pictures.PLUGIN_IDS.setStringArray(getClientPluginIds());
     }
 
-    Settings.propPluginsPictureSetting.setInt(mPluginsPictureSettings.getSettings().getType());
-    Settings.propPictureDescriptionLines.setInt((Integer) mDescriptionLines.getValue());
+    Settings.Pictures.PLUGINS_SETTING.setInt(mPluginsPictureSettings.getSettings().getType());
+    Settings.Pictures.DESCRIPTION_LINES.setInt((Integer) mDescriptionLines.getValue());
   }
   
   @Override
   public void cancel() {
-    Settings.setRestartInfo(PictureSettingsTab.class.getCanonicalName(), PLUGIN_PICTURE_SELECTION_ORIGINAL != Settings.propPluginsPictureSetting.getInt());
+    Settings.setRestartInfo(PictureSettingsTab.class.getCanonicalName(), PLUGIN_PICTURE_SELECTION_ORIGINAL != Settings.Pictures.PLUGINS_SETTING.getInt());
   }
   
   /**
@@ -404,7 +404,7 @@ public class PictureSettingsTab extends AbstractSettingsTab implements Cancelabl
         mPluginLabel.setEnabled(mShowPicturesForPlugins.isSelected());
         
         int i = 1;
-        final String others = mLocalizer.ellipsisMsg("otherPlugins", "others");
+        final String others = LOCALIZER.ellipsisMsg("otherPlugins", "others");
         int otherLength = mPluginLabel.getFontMetrics(mPluginLabel.getFont()).stringWidth(others)+30;
         
         do {
@@ -428,7 +428,7 @@ public class PictureSettingsTab extends AbstractSettingsTab implements Cancelabl
           mPluginLabel.setText(mPluginLabel.getText() + " (" + (mClientPlugins.length - i) + " " + others + ")");
         }
       } else {
-        mPluginLabel.setText(mLocalizer.msg("noPlugins", "No Plugins choosen"));
+        mPluginLabel.setText(LOCALIZER.msg("noPlugins", "No Plugins choosen"));
         mPluginLabel.setEnabled(false);
       }
       

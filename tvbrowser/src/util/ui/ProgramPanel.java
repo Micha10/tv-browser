@@ -792,8 +792,8 @@ private static Font getDynamicFontSize(Font font, int offset) {
           RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
     }
     
-    Color lightBackground = Settings.propProgramTableColorOnAirLight.getColor();
-    Color darkBackground = Settings.propProgramTableColorOnAirDark.getColor();
+    Color lightBackground = Settings.propProgramPanelColorOnAirLight.getColor();
+    Color darkBackground = Settings.propProgramPanelColorOnAirDark.getColor();
     int minutesAfterMidnight = IOUtilities.getMinutesAfterMidnight();
     
     if(mMarkTime >= 0 && Settings.propScrollToTimeMarkingActivated.getBoolean()) {
@@ -824,7 +824,7 @@ private static Font getDynamicFontSize(Font font, int offset) {
         elapsedMinutes = Math.min(elapsedMinutes, progLength);
       }
 
-      int borderWidth = Settings.propProgramTableOnAirProgramsShowingBorder
+      int borderWidth = Settings.propProgramPanelOnAirProgramsShowingBorder
           .getBoolean() ? 1 : 0;
       if (mAxis == ProgramPanelSettings.X_AXIS) {
         // horizontal filling panel
@@ -883,7 +883,7 @@ private static Font getDynamicFontSize(Font font, int offset) {
           grp.fillRect(borderWidth, progressY, width - borderWidth * 2, fillHeight);
         }
       }
-      if (Settings.propProgramTableOnAirProgramsShowingBorder.getBoolean()) {
+      if (Settings.propProgramPanelOnAirProgramsShowingBorder.getBoolean()) {
         grp.draw3DRect(0, 0, width - 1, height - 1, true);
       }
     }

@@ -40,7 +40,7 @@ import com.jgoodies.forms.layout.FormLayout;
  */
 class PluginInfoPanel extends JPanel {
 
-  private static final util.i18n.Localizer mLocalizer = util.i18n.Localizer
+  private static final util.i18n.Localizer LOCALIZER = util.i18n.Localizer
       .getLocalizerFor(PluginInfoPanel.class);
 
   private JLabel mNameLabel;
@@ -79,17 +79,17 @@ class PluginInfoPanel extends JPanel {
         "pref,5dlu,top:pref,top:pref,top:pref,top:pref,10dlu,pref"));
     CellConstraints cc = new CellConstraints();
 
-    add(new JLabel(mLocalizer.msg("name", "Name")), cc.xy(2, mYCount));
+    add(new JLabel(LOCALIZER.msg("name", "Name")), cc.xy(2, mYCount));
     add(mNameLabel = new JLabel("-"), cc.xy(4, mYCount++));
 
-    add(new JLabel(mLocalizer.msg("version", "Version")), cc
+    add(new JLabel(LOCALIZER.msg("version", "Version")), cc
         .xy(2, mYCount));
     add(mVersionLabel = new JLabel("-"), cc.xy(4, mYCount++));
 
-    add(new JLabel(mLocalizer.msg("author", "Author")), cc.xy(2, mYCount));
+    add(new JLabel(LOCALIZER.msg("author", "Author")), cc.xy(2, mYCount));
     add(mAuthorLabel = new JLabel("-"), cc.xy(4, mYCount++));
 
-    add(new JLabel(mLocalizer.msg("description", "Description")), cc.xy(2,
+    add(new JLabel(LOCALIZER.msg("description", "Description")), cc.xy(2,
         mYCount));
     add(mDescriptionLabel = new JLabel(), cc.xy(4, mYCount++));
 
@@ -103,9 +103,9 @@ class PluginInfoPanel extends JPanel {
     String message;
 
     if (plugin) {
-      message = mLocalizer.msg("about", "About this Plugin");
+      message = LOCALIZER.msg("about", "About this Plugin");
     } else {
-      message = mLocalizer.msg("aboutDataService", "About this DataService");
+      message = LOCALIZER.msg("aboutDataService", "About this DataService");
     }
     add(DefaultComponentFactory.getInstance().createSeparator(message), cc.xyw(1, 1, 5));
 

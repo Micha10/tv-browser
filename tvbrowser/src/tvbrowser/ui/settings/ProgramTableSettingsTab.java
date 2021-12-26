@@ -141,7 +141,7 @@ public class ProgramTableSettingsTab implements SettingsTab, ActionListener {
   public void actionPerformed(ActionEvent event) {
     Object source = event.getSource();
     if (source == mDefaultBtn) {
-      mColWidth.setValue(Settings.propColumnWidth.getDefault());
+      mColWidth.setValue(Settings.ProgramTable.COLUMN_WIDTH.getDefault());
     }
   }
   
@@ -173,24 +173,24 @@ public class ProgramTableSettingsTab implements SettingsTab, ActionListener {
         "Program arrangement")), CC.xy(2, (currentRow += 2)));
     
     // program table layout
-    String[] arrangementArr = { mLocalizer.msg(Settings.LAYOUT_TIME_SYNCHRONOUS, "Time synchronous"),
-        mLocalizer.msg(Settings.LAYOUT_REAL_SYNCHRONOUS, "Real time synchronous"),
-        mLocalizer.msg(Settings.LAYOUT_COMPACT, "Compact"),mLocalizer.msg(Settings.LAYOUT_REAL_COMPACT, "Real compact"),
-        mLocalizer.msg(Settings.LAYOUT_TIME_BLOCK, "Time block"),
-        mLocalizer.msg(Settings.LAYOUT_COMPACT_TIME_BLOCK, "Compact time block"),
-        mLocalizer.msg(Settings.LAYOUT_OPTIMIZED_COMPACT_TIME_BLOCK, "Optimized compact time block")};
+    String[] arrangementArr = { mLocalizer.msg(Settings.ProgramTable.VALUE_LAYOUT_TIME_SYNCHRONOUS, "Time synchronous"),
+        mLocalizer.msg(Settings.ProgramTable.VALUE_LAYOUT_REAL_SYNCHRONOUS, "Real time synchronous"),
+        mLocalizer.msg(Settings.ProgramTable.VALUE_LAYOUT_COMPACT, "Compact"),mLocalizer.msg(Settings.ProgramTable.VALUE_LAYOUT_REAL_COMPACT, "Real compact"),
+        mLocalizer.msg(Settings.ProgramTable.VALUE_LAYOUT_TIME_BLOCK, "Time block"),
+        mLocalizer.msg(Settings.ProgramTable.VALUE_LAYOUT_COMPACT_TIME_BLOCK, "Compact time block"),
+        mLocalizer.msg(Settings.ProgramTable.VALUE_LAYOUT_OPTIMIZED_COMPACT_TIME_BLOCK, "Optimized compact time block")};
     mProgramArrangementCB = new JComboBox<>(arrangementArr);
-    if (Settings.propTableLayout.getString().equals(Settings.LAYOUT_COMPACT)) {
+    if (Settings.ProgramTable.LAYOUT.getString().equals(Settings.ProgramTable.VALUE_LAYOUT_COMPACT)) {
       mProgramArrangementCB.setSelectedIndex(2);
-    } else if (Settings.propTableLayout.getString().equals(Settings.LAYOUT_REAL_COMPACT)) {
+    } else if (Settings.ProgramTable.LAYOUT.getString().equals(Settings.ProgramTable.VALUE_LAYOUT_REAL_COMPACT)) {
       mProgramArrangementCB.setSelectedIndex(3);
-    } else if (Settings.propTableLayout.getString().equals(Settings.LAYOUT_TIME_SYNCHRONOUS)) {
+    } else if (Settings.ProgramTable.LAYOUT.getString().equals(Settings.ProgramTable.VALUE_LAYOUT_TIME_SYNCHRONOUS)) {
       mProgramArrangementCB.setSelectedIndex(0);
-    } else if (Settings.propTableLayout.getString().equals(Settings.LAYOUT_TIME_BLOCK)) {
+    } else if (Settings.ProgramTable.LAYOUT.getString().equals(Settings.ProgramTable.VALUE_LAYOUT_TIME_BLOCK)) {
       mProgramArrangementCB.setSelectedIndex(4);
-    } else if (Settings.propTableLayout.getString().equals(Settings.LAYOUT_COMPACT_TIME_BLOCK)) {
+    } else if (Settings.ProgramTable.LAYOUT.getString().equals(Settings.ProgramTable.VALUE_LAYOUT_COMPACT_TIME_BLOCK)) {
       mProgramArrangementCB.setSelectedIndex(5);
-    } else if (Settings.propTableLayout.getString().equals(Settings.LAYOUT_OPTIMIZED_COMPACT_TIME_BLOCK)) {
+    } else if (Settings.ProgramTable.LAYOUT.getString().equals(Settings.ProgramTable.VALUE_LAYOUT_OPTIMIZED_COMPACT_TIME_BLOCK)) {
       mProgramArrangementCB.setSelectedIndex(6);
     } else {
       mProgramArrangementCB.setSelectedIndex(1);
@@ -202,10 +202,10 @@ public class ProgramTableSettingsTab implements SettingsTab, ActionListener {
 
     // Cut long titles
     mCutLongTitlesCB = new JCheckBox(mLocalizer.msg("cutTitle",
-        "Cut long titles"), Settings.propProgramTableCutTitle.getBoolean());
+        "Cut long titles"), Settings.ProgramPanel.TITLE_CUT.getBoolean());
     mSettingsPn.add(mCutLongTitlesCB, CC.xyw(2, (currentRow += 2), 2));
     mCutLongTitlesSelection = new JSpinner(new SpinnerNumberModel(
-        Settings.propProgramTableCutTitleLines.getInt(), 1, 3, 1));
+        Settings.ProgramPanel.TITLE_CUT_LINES.getInt(), 1, 3, 1));
     mSettingsPn.add(mCutLongTitlesSelection, CC.xy(4, currentRow));
     mCutLongTitlesLabel = new JLabel(mLocalizer.msg("lines", "Lines"));
     mSettingsPn.add(mCutLongTitlesLabel, CC.xy(6, currentRow));
@@ -218,7 +218,7 @@ public class ProgramTableSettingsTab implements SettingsTab, ActionListener {
     
     // Short descriptions N lines
     mDescriptionLines = new JSpinner(new SpinnerNumberModel(
-        Settings.propProgramPanelMaxLines.getInt(), 1, 5, 1));
+        Settings.ProgramPanel.MAX_LINES.getInt(), 1, 5, 1));
     mSettingsPn.add(new JLabel(mLocalizer.msg("shortDescription",
         "Short description")), CC.xyw(2, currentRow += 2, 2));
     mSettingsPn.add(mDescriptionLines, CC.xy(4, currentRow));
@@ -228,10 +228,10 @@ public class ProgramTableSettingsTab implements SettingsTab, ActionListener {
     // Short programs no description
     mShortProgramsCB = new JCheckBox(mLocalizer.msg("shortPrograms",
         "If duration less than"),
-        Settings.propProgramPanelShortDurationActive.getBoolean());
+        Settings.ProgramPanel.DESCRIPTION_LIMIT_BY_DURATION.getBoolean());
     mSettingsPn.add(mShortProgramsCB, CC.xyw(2, (currentRow += 2), 2));
     mShortProgramsMinutes = new JSpinner(new SpinnerNumberModel(
-        Settings.propProgramPanelShortDurationMinutes.getInt(), 1, 30, 1));
+        Settings.ProgramPanel.DESCRIPTION_LIMIT_BY_DURATION_MINUTES.getInt(), 1, 30, 1));
     mSettingsPn.add(mShortProgramsMinutes, CC.xy(4, currentRow));
     mShortProgramsLabel = new JLabel(mLocalizer.msg("shortPrograms2",
         "minutes, then hide description"));
@@ -254,7 +254,7 @@ public class ProgramTableSettingsTab implements SettingsTab, ActionListener {
         (currentRow += 2), 8));
     
     // column width
-    int width = Settings.propColumnWidth.getInt();
+    int width = Settings.ProgramTable.COLUMN_WIDTH.getInt();
 
     if (width > Settings.MAX_COLUMN_WIDTH) {
       width = Settings.MAX_COLUMN_WIDTH;
@@ -319,13 +319,13 @@ public class ProgramTableSettingsTab implements SettingsTab, ActionListener {
     
     int minutes;
     Calendar cal = Calendar.getInstance();
-    minutes = Settings.propProgramTableStartOfDay.getInt();
+    minutes = Settings.ProgramTable.START_OF_DAY.getInt();
     cal.set(Calendar.HOUR_OF_DAY, minutes / 60);
     cal.set(Calendar.MINUTE, minutes % 60);
     mStartOfDayTimeSp.setValue(cal.getTime());
     
     
-    minutes = Settings.propProgramTableEndOfDay.getInt();
+    minutes = Settings.ProgramTable.END_OF_DAY.getInt();
     cal.set(Calendar.HOUR_OF_DAY, minutes / 60);
     cal.set(Calendar.MINUTE, minutes % 60);
     mEndOfDayTimeSp.setValue(cal.getTime());
@@ -347,7 +347,7 @@ public class ProgramTableSettingsTab implements SettingsTab, ActionListener {
     TableBackgroundStyle[] styles = getTableBackgroundStyles();
     mBackgroundStyleCB = new JComboBox<>(styles);
 
-    String style = Settings.propTableBackgroundStyle.getString();
+    String style = Settings.ProgramTable.STYLE_BACKGROUND.getString();
     for (int i = 0; i < styles.length; i++) {
       if (styles[i].getSettingsString().equals(style)) {
         mBackgroundStyleCB.setSelectedIndex(i);
@@ -377,8 +377,8 @@ public class ProgramTableSettingsTab implements SettingsTab, ActionListener {
     layout.appendRow(RowSpec.decode("pref"));
     layout.appendRow(RowSpec.decode("5dlu"));
 
-    mForegroundColorLb = new ColorLabel(Settings.propProgramPanelForegroundColor.getColor());
-    mForegroundColorLb.setStandardColor(Settings.propProgramPanelForegroundColor.getDefaultColor());
+    mForegroundColorLb = new ColorLabel(Settings.ProgramPanel.COLOR_FOREGROUND.getColor());
+    mForegroundColorLb.setStandardColor(Settings.ProgramPanel.COLOR_FOREGROUND.getDefaultColor());
     mProgramPanelForegroundColorChangeBtn = new ColorButton(mForegroundColorLb);
 
     mForegroundSeparator = DefaultComponentFactory.getInstance().createSeparator(
@@ -435,11 +435,11 @@ public class ProgramTableSettingsTab implements SettingsTab, ActionListener {
         (currentRow += 2), 8));
 
     mMouseOverCb = new JCheckBox(mLocalizer.msg("MouseOver", "Mouse-Over-Effect"));
-    mMouseOverCb.setSelected(Settings.propProgramTableMouseOver.getBoolean());
+    mMouseOverCb.setSelected(Settings.ProgramTable.MOUSE_OVER.getBoolean());
     mSettingsPn.add(mMouseOverCb, CC.xy(2, (currentRow += 2)));
     
-    mMouseOverColorLb = new ColorLabel(Settings.propProgramTableMouseOverColor.getColor());
-    mMouseOverColorLb.setStandardColor(Settings.propProgramTableMouseOverColor.getDefaultColor());
+    mMouseOverColorLb = new ColorLabel(Settings.ProgramTable.COLOR_MOUSE_OVER.getColor());
+    mMouseOverColorLb.setStandardColor(Settings.ProgramTable.COLOR_MOUSE_OVER.getDefaultColor());
     final ColorButton mouseOverColorChangeBtn = new ColorButton(mMouseOverColorLb);
     mMouseOverCb.addActionListener(e -> {
       boolean enabled = mMouseOverCb.isSelected();
@@ -448,7 +448,7 @@ public class ProgramTableSettingsTab implements SettingsTab, ActionListener {
     });
     mMouseOverCb.getActionListeners()[0].actionPerformed(null);
     
-    mTypeAsYouFind = new JCheckBox(mLocalizer.msg("typeAsYouFind", "Type-As-You-Find enabled"),Settings.propTypeAsYouFindEnabled.getBoolean());
+    mTypeAsYouFind = new JCheckBox(mLocalizer.msg("typeAsYouFind", "Type-As-You-Find enabled"),Settings.ProgramTable.FIND_AS_YOU_TYPE.getBoolean());
 
     mSettingsPn.add(mMouseOverColorLb, CC.xy(4, currentRow));
     mSettingsPn.add(mouseOverColorChangeBtn, CC.xy(6, currentRow));
@@ -456,26 +456,26 @@ public class ProgramTableSettingsTab implements SettingsTab, ActionListener {
     // auto scrolling
     mAutoScrollCb = new JCheckBox(mLocalizer.msg("mouseAutoScroll",
         "Throw'n scroll"));
-    mAutoScrollCb.setSelected(Settings.propProgramTableMouseAutoScroll
+    mAutoScrollCb.setSelected(Settings.ProgramTable.MOUSE_AUTO_SCROLL
         .getBoolean());
     mSettingsPn.add(mAutoScrollCb, CC.xyw(2, (currentRow += 2), 6));
         
     mScrollHorizontalCb = new JCheckBox(mLocalizer.msg("mouseScrollHorizontal", "Scroll horizontal with mouse wheel"));
-    mScrollHorizontalCb.setSelected(Settings.propProgramTableScrollHorizontal.getBoolean());
+    mScrollHorizontalCb.setSelected(Settings.ProgramTable.SCROLL_HORIZONTAL.getBoolean());
     mSettingsPn.add(mScrollHorizontalCb, CC.xyw(2, (currentRow += 2), 6));
     
     mAutoChangeDate = new JCheckBox(mLocalizer.msg("mouseAutoChangeDate",
         "Automatically change date when scrolling with mouse wheel against top and bottom"));
-    mAutoChangeDate.setSelected(Settings.propProgramTableAutoChangeDate.getBoolean());
+    mAutoChangeDate.setSelected(Settings.ProgramTable.AUTO_CHANGE_DATE.getBoolean());
     mSettingsPn.add(mAutoChangeDate, CC.xyw(2, (currentRow += 2), 6));
     
-    mShowScrollHighlight = new JCheckBox(mLocalizer.msg("activated","Activated"), Settings.propScrollToTimeMarkingActivated.getBoolean());
+    mShowScrollHighlight = new JCheckBox(mLocalizer.msg("activated","Activated"), Settings.ProgramTable.SCROLL_TO_TIME_MARKING.getBoolean());
     
-    mLightColorLb = new ColorLabel(Settings.propScrollToTimeProgramsLightBackground.getColor());
-    mLightColorLb.setStandardColor(Settings.propScrollToTimeProgramsLightBackground.getDefaultColor());
+    mLightColorLb = new ColorLabel(Settings.ProgramTable.COLOR_SCROLL_TO_TIME_PROGRAMS_BACKGROUND_LIGHT.getColor());
+    mLightColorLb.setStandardColor(Settings.ProgramTable.COLOR_SCROLL_TO_TIME_PROGRAMS_BACKGROUND_LIGHT.getDefaultColor());
     mLightColorLb.setEnabled(mShowScrollHighlight.isSelected());
-    mDarkColorLb = new ColorLabel(Settings.propScrollToTimeProgramsDarkBackground.getColor());
-    mDarkColorLb.setStandardColor(Settings.propScrollToTimeProgramsDarkBackground.getDefaultColor());
+    mDarkColorLb = new ColorLabel(Settings.ProgramTable.COLOR_SCROLL_TO_TIME_PROGRAMS_BACKGROUND_DARK.getColor());
+    mDarkColorLb.setStandardColor(Settings.ProgramTable.COLOR_SCROLL_TO_TIME_PROGRAMS_BACKGROUND_DARK.getDefaultColor());
     mDarkColorLb.setEnabled(mShowScrollHighlight.isSelected());
     
     mLight = new ColorButton(mLightColorLb);
@@ -508,12 +508,12 @@ public class ProgramTableSettingsTab implements SettingsTab, ActionListener {
     mSettingsPn.add(mDarkColorLb, CC.xy(4, currentRow));    
     mSettingsPn.add(mDark, CC.xy(6, currentRow));
         
-    mHighlightChannelScroll = new JCheckBox(mLocalizer.msg("highlightChannel.scroll","scrolled to"), Settings.propHighlightChannelColumnByScrolling.getBoolean());
-    mHighlightChannelMouse = new JCheckBox(mLocalizer.msg("highlightChannel.mouse","mouse pointer enters channel column header"), Settings.propHighlightChannelColumnByMouse.getBoolean());
+    mHighlightChannelScroll = new JCheckBox(mLocalizer.msg("highlightChannel.scroll","scrolled to"), Settings.ProgramTable.HIGHLIGHT_CHANNEL_COLUMN_BY_SCROLLING.getBoolean());
+    mHighlightChannelMouse = new JCheckBox(mLocalizer.msg("highlightChannel.mouse","mouse pointer enters channel column header"), Settings.ProgramTable.HIGHLIGHT_CHANNEL_COLUMN_BY_MOUSE.getBoolean());
     
     final JLabel highlightChannelColorLabel = new JLabel(mLocalizer.msg("highlightChannel.color","Color"));
-    mScrollChannelLb = new ColorLabel(Settings.propHighlightChannelProgramsBackground.getColor());
-    mScrollChannelLb.setStandardColor(Settings.propHighlightChannelProgramsBackground.getDefaultColor());
+    mScrollChannelLb = new ColorLabel(Settings.ProgramTable.COLOR_HIGHLIGHT_CHANNEL_PROGRAMS_BACKGROUND.getColor());
+    mScrollChannelLb.setStandardColor(Settings.ProgramTable.COLOR_HIGHLIGHT_CHANNEL_PROGRAMS_BACKGROUND.getDefaultColor());
     mScrollChannelLb.setEnabled(mHighlightChannelScroll.isSelected());
     
     mScrollChannelColor = new ColorButton(mScrollChannelLb);
@@ -588,19 +588,19 @@ public class ProgramTableSettingsTab implements SettingsTab, ActionListener {
   }
   
   private void setBackgroundStyleForTimeBlockLayout() {
-    if(!Settings.propTableLayout.getString().equals(Settings.LAYOUT_TIME_BLOCK) &&
-        !Settings.propTableLayout.getString().equals(Settings.LAYOUT_COMPACT_TIME_BLOCK)) {
-      Settings.propTableBackgroundStyle.setString("uiTimeBlock");      
-      Settings.propTimeBlockShowWest.setBoolean(true);
+    if(!Settings.ProgramTable.LAYOUT.getString().equals(Settings.ProgramTable.VALUE_LAYOUT_TIME_BLOCK) &&
+        !Settings.ProgramTable.LAYOUT.getString().equals(Settings.ProgramTable.VALUE_LAYOUT_COMPACT_TIME_BLOCK)) {
+      Settings.ProgramTable.STYLE_BACKGROUND.setString("uiTimeBlock");      
+      Settings.ProgramTable.TIME_BLOCK_SHOW_WEST.setBoolean(true);
     }
   }
   
   private void resetBackgroundStyle() {
-    if(Settings.propTableLayout.getString().equals(Settings.LAYOUT_TIME_BLOCK) ||
-        Settings.propTableLayout.getString().equals(Settings.LAYOUT_COMPACT_TIME_BLOCK) ||
-        Settings.propTableLayout.getString().equals(Settings.LAYOUT_OPTIMIZED_COMPACT_TIME_BLOCK)) {
-      Settings.propTableBackgroundStyle.setString("uiColor");
-      Settings.propTimeBlockShowWest.setBoolean(false);
+    if(Settings.ProgramTable.LAYOUT.getString().equals(Settings.ProgramTable.VALUE_LAYOUT_TIME_BLOCK) ||
+        Settings.ProgramTable.LAYOUT.getString().equals(Settings.ProgramTable.VALUE_LAYOUT_COMPACT_TIME_BLOCK) ||
+        Settings.ProgramTable.LAYOUT.getString().equals(Settings.ProgramTable.VALUE_LAYOUT_OPTIMIZED_COMPACT_TIME_BLOCK)) {
+      Settings.ProgramTable.STYLE_BACKGROUND.setString("uiColor");
+      Settings.ProgramTable.TIME_BLOCK_SHOW_WEST.setBoolean(false);
     }
   }
 
@@ -610,68 +610,68 @@ public class ProgramTableSettingsTab implements SettingsTab, ActionListener {
   public void saveSettings() {
     String backgroundStyle = ((TableBackgroundStyle) mBackgroundStyleCB.getSelectedItem()).getSettingsString();
 
-    Settings.propTableBackgroundStyle.setString(backgroundStyle);
+    Settings.ProgramTable.STYLE_BACKGROUND.setString(backgroundStyle);
     
     if (mProgramArrangementCB.getSelectedIndex() == 2 && mLastSelectedLayoutIndex != 2) {
       resetBackgroundStyle();
-      Settings.propTableLayout.setString(Settings.LAYOUT_COMPACT);
+      Settings.ProgramTable.LAYOUT.setString(Settings.ProgramTable.VALUE_LAYOUT_COMPACT);
     } else if (mProgramArrangementCB.getSelectedIndex() == 3 && mLastSelectedLayoutIndex != 3) {
       resetBackgroundStyle();
-      Settings.propTableLayout.setString(Settings.LAYOUT_REAL_COMPACT);
+      Settings.ProgramTable.LAYOUT.setString(Settings.ProgramTable.VALUE_LAYOUT_REAL_COMPACT);
     } else if (mProgramArrangementCB.getSelectedIndex() == 0 && mLastSelectedLayoutIndex != 0) {
       resetBackgroundStyle();
-      Settings.propTableLayout.setString(Settings.LAYOUT_TIME_SYNCHRONOUS);
+      Settings.ProgramTable.LAYOUT.setString(Settings.ProgramTable.VALUE_LAYOUT_TIME_SYNCHRONOUS);
     } else if (mProgramArrangementCB.getSelectedIndex() == 4 && mLastSelectedLayoutIndex != 4) {
       setBackgroundStyleForTimeBlockLayout();
-      Settings.propTableLayout.setString(Settings.LAYOUT_TIME_BLOCK);
+      Settings.ProgramTable.LAYOUT.setString(Settings.ProgramTable.VALUE_LAYOUT_TIME_BLOCK);
     } else if (mProgramArrangementCB.getSelectedIndex() == 5 && mLastSelectedLayoutIndex != 5) {
       setBackgroundStyleForTimeBlockLayout();
-      Settings.propTableLayout.setString(Settings.LAYOUT_COMPACT_TIME_BLOCK);
+      Settings.ProgramTable.LAYOUT.setString(Settings.ProgramTable.VALUE_LAYOUT_COMPACT_TIME_BLOCK);
     } else if (mProgramArrangementCB.getSelectedIndex() == 6 && mLastSelectedLayoutIndex != 6) {
       setBackgroundStyleForTimeBlockLayout();
-      Settings.propTableLayout.setString(Settings.LAYOUT_OPTIMIZED_COMPACT_TIME_BLOCK);
+      Settings.ProgramTable.LAYOUT.setString(Settings.ProgramTable.VALUE_LAYOUT_OPTIMIZED_COMPACT_TIME_BLOCK);
     } else if (mProgramArrangementCB.getSelectedIndex() == 1 && mLastSelectedLayoutIndex != 1){
       resetBackgroundStyle();
-      Settings.propTableLayout.setString(Settings.LAYOUT_REAL_SYNCHRONOUS);
+      Settings.ProgramTable.LAYOUT.setString(Settings.ProgramTable.VALUE_LAYOUT_REAL_SYNCHRONOUS);
     }
     
-    Settings.propColumnWidth.setInt((Integer)mColWidth.getValue());
-    Settings.propProgramPanelForegroundColor.setColor(mForegroundColorLb.getColor());
+    Settings.ProgramTable.COLUMN_WIDTH.setInt((Integer)mColWidth.getValue());
+    Settings.ProgramPanel.COLOR_FOREGROUND.setColor(mForegroundColorLb.getColor());
 
     Calendar cal = Calendar.getInstance();
     cal.setTime((Date) mStartOfDayTimeSp.getValue());
     int minutes = cal.get(Calendar.HOUR_OF_DAY) * 60 + cal.get(Calendar.MINUTE);
-    Settings.propProgramTableStartOfDay.setInt(minutes);
+    Settings.ProgramTable.START_OF_DAY.setInt(minutes);
 
     cal.setTime((Date) mEndOfDayTimeSp.getValue());
     minutes = cal.get(Calendar.HOUR_OF_DAY) * 60 + cal.get(Calendar.MINUTE);
-    Settings.propProgramTableEndOfDay.setInt(minutes);
+    Settings.ProgramTable.END_OF_DAY.setInt(minutes);
 
-    Settings.propProgramTableMouseOver.setBoolean(mMouseOverCb.isSelected());
-    Settings.propProgramTableScrollHorizontal.setBoolean(mScrollHorizontalCb.isSelected());
-    Settings.propProgramTableAutoChangeDate.setBoolean(mAutoChangeDate.isSelected());
+    Settings.ProgramTable.MOUSE_OVER.setBoolean(mMouseOverCb.isSelected());
+    Settings.ProgramTable.SCROLL_HORIZONTAL.setBoolean(mScrollHorizontalCb.isSelected());
+    Settings.ProgramTable.AUTO_CHANGE_DATE.setBoolean(mAutoChangeDate.isSelected());
     
-    Settings.propProgramTableMouseOverColor.setColor(mMouseOverColorLb.getColor());
-    Settings.propProgramTableCutTitle.setBoolean(mCutLongTitlesCB.isSelected());
-    Settings.propProgramTableCutTitleLines
+    Settings.ProgramTable.COLOR_MOUSE_OVER.setColor(mMouseOverColorLb.getColor());
+    Settings.ProgramPanel.TITLE_CUT.setBoolean(mCutLongTitlesCB.isSelected());
+    Settings.ProgramPanel.TITLE_CUT_LINES
         .setInt((Integer) mCutLongTitlesSelection.getValue());
-    Settings.propProgramTableMouseAutoScroll.setBoolean(mAutoScrollCb
+    Settings.ProgramTable.MOUSE_AUTO_SCROLL.setBoolean(mAutoScrollCb
         .isSelected());
-    Settings.propProgramPanelMaxLines.setInt((Integer) mDescriptionLines
+    Settings.ProgramPanel.MAX_LINES.setInt((Integer) mDescriptionLines
         .getValue());
-    Settings.propProgramPanelShortDurationActive.setBoolean(mShortProgramsCB
+    Settings.ProgramPanel.DESCRIPTION_LIMIT_BY_DURATION.setBoolean(mShortProgramsCB
         .isSelected());
-    Settings.propProgramPanelShortDurationMinutes
+    Settings.ProgramPanel.DESCRIPTION_LIMIT_BY_DURATION_MINUTES
         .setInt((Integer) mShortProgramsMinutes.getValue());
-    Settings.propScrollToTimeMarkingActivated.setBoolean(mShowScrollHighlight.isSelected());
-    Settings.propScrollToTimeProgramsLightBackground.setColor(mLightColorLb.getColor());
-    Settings.propScrollToTimeProgramsDarkBackground.setColor(mDarkColorLb.getColor());
+    Settings.ProgramTable.SCROLL_TO_TIME_MARKING.setBoolean(mShowScrollHighlight.isSelected());
+    Settings.ProgramTable.COLOR_SCROLL_TO_TIME_PROGRAMS_BACKGROUND_LIGHT.setColor(mLightColorLb.getColor());
+    Settings.ProgramTable.COLOR_SCROLL_TO_TIME_PROGRAMS_BACKGROUND_DARK.setColor(mDarkColorLb.getColor());
     
-    Settings.propHighlightChannelColumnByScrolling.setBoolean(mHighlightChannelScroll.isSelected());
-    Settings.propHighlightChannelColumnByMouse.setBoolean(mHighlightChannelMouse.isSelected());
-    Settings.propHighlightChannelProgramsBackground.setColor(mScrollChannelLb.getColor());
+    Settings.ProgramTable.HIGHLIGHT_CHANNEL_COLUMN_BY_SCROLLING.setBoolean(mHighlightChannelScroll.isSelected());
+    Settings.ProgramTable.HIGHLIGHT_CHANNEL_COLUMN_BY_MOUSE.setBoolean(mHighlightChannelMouse.isSelected());
+    Settings.ProgramTable.COLOR_HIGHLIGHT_CHANNEL_PROGRAMS_BACKGROUND.setColor(mScrollChannelLb.getColor());
     
-    Settings.propTypeAsYouFindEnabled.setBoolean(mTypeAsYouFind.isSelected());
+    Settings.ProgramTable.FIND_AS_YOU_TYPE.setBoolean(mTypeAsYouFind.isSelected());
     
     MainFrame.getInstance().getProgramTableScrollPane().getProgramTable().clearTimeMarkings();
   }

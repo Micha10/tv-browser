@@ -41,7 +41,7 @@ import tvbrowser.core.Settings;
  */
 public class UiTimeBlockBackgroundStyle implements TableBackgroundStyle {
 
-  private static final util.i18n.Localizer mLocalizer
+  private static final util.i18n.Localizer LOCALIZER
     = util.i18n.Localizer.getLocalizerFor(UiTimeBlockBackgroundStyle.class);
   
   private JSpinner mTimeBlockSizeSp;
@@ -58,11 +58,11 @@ public class UiTimeBlockBackgroundStyle implements TableBackgroundStyle {
   }
 
   public JPanel createSettingsContent() {
-    mTimeBlockSizeSp = new JSpinner(new SpinnerNumberModel(Settings.propTimeBlockSize.getInt(), 1, 23, 1));
-    mTimeBlockShowWestChB = new JCheckBox(TimeBlockBackgroundStyle.mLocalizer.msg("timeBlock.showWest", "Show left border"), Settings.propTimeBlockShowWest.getBoolean());
+    mTimeBlockSizeSp = new JSpinner(new SpinnerNumberModel(Settings.ProgramTable.TIME_BLOCK_SIZE.getInt(), 1, 23, 1));
+    mTimeBlockShowWestChB = new JCheckBox(TimeBlockBackgroundStyle.LOCALIZER.msg("timeBlock.showWest", "Show left border"), Settings.ProgramTable.TIME_BLOCK_SHOW_WEST.getBoolean());
     
     mContent = new JPanel(new FormLayout("default,5dlu,default:grow","default,2dlu,default"));
-    mContent.add(new JLabel(TimeBlockBackgroundStyle.mLocalizer.msg("timeBlock.blockSize", "Block size")), CC.xy(1,1));
+    mContent.add(new JLabel(TimeBlockBackgroundStyle.LOCALIZER.msg("timeBlock.blockSize", "Block size")), CC.xy(1,1));
     mContent.add(mTimeBlockSizeSp, CC.xy(3,1));
     mContent.add(mTimeBlockShowWestChB, CC.xyw(1,3,3));
     
@@ -75,12 +75,12 @@ public class UiTimeBlockBackgroundStyle implements TableBackgroundStyle {
     }
     
     Integer blockSize = (Integer) mTimeBlockSizeSp.getValue();
-    Settings.propTimeBlockSize.setInt(blockSize.intValue());
-    Settings.propTimeBlockShowWest.setBoolean(mTimeBlockShowWestChB.isSelected());
+    Settings.ProgramTable.TIME_BLOCK_SIZE.setInt(blockSize.intValue());
+    Settings.ProgramTable.TIME_BLOCK_SHOW_WEST.setBoolean(mTimeBlockShowWestChB.isSelected());
   }
 
   public String getName() {
-    return mLocalizer.msg("style","Theme color time block");
+    return LOCALIZER.msg("style","Theme color time block");
   }
 
 

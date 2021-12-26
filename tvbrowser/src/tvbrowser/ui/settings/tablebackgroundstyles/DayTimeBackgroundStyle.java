@@ -41,7 +41,7 @@ import util.ui.TabLayout;
  */
 public class DayTimeBackgroundStyle implements TableBackgroundStyle {
 
-  private static final util.i18n.Localizer mLocalizer
+  private static final util.i18n.Localizer LOCALIZER
      = util.i18n.Localizer.getLocalizerFor(DayTimeBackgroundStyle.class);
 
   private JTextField mTimeOfDayEdgeTF, mTimeOfDayEarlyTF, mTimeOfDayMiddayTF,
@@ -60,28 +60,28 @@ public class DayTimeBackgroundStyle implements TableBackgroundStyle {
   public JPanel createSettingsContent() {
     mContent = new JPanel(new TabLayout(3));
 
-    mContent.add(new JLabel(mLocalizer.msg("timeOfDay.edge", "Edge")));
-    mTimeOfDayEdgeTF = new JTextField(Settings.propTimeOfDayBackgroundEdge.getString(), 25);
+    mContent.add(new JLabel(LOCALIZER.msg("timeOfDay.edge", "Edge")));
+    mTimeOfDayEdgeTF = new JTextField(Settings.ProgramTable.TIME_OF_DAY_BACKGROUND_EDGE.getString(), 25);
     mContent.add(mTimeOfDayEdgeTF);
     mContent.add(ProgramTableSettingsTab.createBrowseButton(mContent, mTimeOfDayEdgeTF));
 
-    mContent.add(new JLabel(mLocalizer.msg("timeOfDay.early", "Early")));
-    mTimeOfDayEarlyTF = new JTextField(Settings.propTimeOfDayBackgroundEarly.getString(), 25);
+    mContent.add(new JLabel(LOCALIZER.msg("timeOfDay.early", "Early")));
+    mTimeOfDayEarlyTF = new JTextField(Settings.ProgramTable.TIME_OF_DAY_BACKGROUND_EARLY.getString(), 25);
     mContent.add(mTimeOfDayEarlyTF);
     mContent.add(ProgramTableSettingsTab.createBrowseButton(mContent, mTimeOfDayEarlyTF));
 
-    mContent.add(new JLabel(mLocalizer.msg("timeOfDay.midday", "Midday")));
-    mTimeOfDayMiddayTF = new JTextField(Settings.propTimeOfDayBackgroundMidday.getString(), 25);
+    mContent.add(new JLabel(LOCALIZER.msg("timeOfDay.midday", "Midday")));
+    mTimeOfDayMiddayTF = new JTextField(Settings.ProgramTable.TIME_OF_DAY_BACKGROUND_MIDDAY.getString(), 25);
     mContent.add(mTimeOfDayMiddayTF);
     mContent.add(ProgramTableSettingsTab.createBrowseButton(mContent, mTimeOfDayMiddayTF));
 
-    mContent.add(new JLabel(mLocalizer.msg("timeOfDay.afternoon", "Afternoon")));
-    mTimeOfDayAfternoonTF = new JTextField(Settings.propTimeOfDayBackgroundAfternoon.getString(), 25);
+    mContent.add(new JLabel(LOCALIZER.msg("timeOfDay.afternoon", "Afternoon")));
+    mTimeOfDayAfternoonTF = new JTextField(Settings.ProgramTable.TIME_OF_DAY_BACKGROUND_AFTERNOON.getString(), 25);
     mContent.add(mTimeOfDayAfternoonTF);
     mContent.add(ProgramTableSettingsTab.createBrowseButton(mContent, mTimeOfDayAfternoonTF));
 
-    mContent.add(new JLabel(mLocalizer.msg("timeOfDay.evening", "Evening")));
-    mTimeOfDayEveningTF = new JTextField(Settings.propTimeOfDayBackgroundEvening.getString(), 25);
+    mContent.add(new JLabel(LOCALIZER.msg("timeOfDay.evening", "Evening")));
+    mTimeOfDayEveningTF = new JTextField(Settings.ProgramTable.TIME_OF_DAY_BACKGROUND_EVENING.getString(), 25);
     mContent.add(mTimeOfDayEveningTF);
     mContent.add(ProgramTableSettingsTab.createBrowseButton(mContent, mTimeOfDayEveningTF));
 
@@ -92,15 +92,15 @@ public class DayTimeBackgroundStyle implements TableBackgroundStyle {
     if (mContent == null) {
       return;
     }
-    Settings.propTimeOfDayBackgroundEdge.setString(mTimeOfDayEdgeTF.getText());
-    Settings.propTimeOfDayBackgroundEarly.setString(mTimeOfDayEarlyTF.getText());
-    Settings.propTimeOfDayBackgroundMidday.setString(mTimeOfDayMiddayTF.getText());
-    Settings.propTimeOfDayBackgroundAfternoon.setString(mTimeOfDayAfternoonTF.getText());
-    Settings.propTimeOfDayBackgroundEvening.setString(mTimeOfDayEveningTF.getText());
+    Settings.ProgramTable.TIME_OF_DAY_BACKGROUND_EDGE.setString(mTimeOfDayEdgeTF.getText());
+    Settings.ProgramTable.TIME_OF_DAY_BACKGROUND_EARLY.setString(mTimeOfDayEarlyTF.getText());
+    Settings.ProgramTable.TIME_OF_DAY_BACKGROUND_MIDDAY.setString(mTimeOfDayMiddayTF.getText());
+    Settings.ProgramTable.TIME_OF_DAY_BACKGROUND_AFTERNOON.setString(mTimeOfDayAfternoonTF.getText());
+    Settings.ProgramTable.TIME_OF_DAY_BACKGROUND_EVENING.setString(mTimeOfDayEveningTF.getText());
   }
 
   public String getName() {
-    return mLocalizer.msg("style","Day time");
+    return LOCALIZER.msg("style","Day time");
   }
 
 

@@ -117,7 +117,7 @@ public class ConfigPluginSettingsTab extends AbstractSettingsTab implements Canc
       else {
         mPluginPanel.add(createEmptyPanel(LOCALIZER.msg("noSettings", "No settings"), LOCALIZER.msg("noSettings.text", "This plugin has no settings.")), BorderLayout.NORTH);
       }
-    } else if (Settings.propBlockedPluginArray.isBlocked(mPlugin)) {
+    } else if (Settings.Plugins.BLOCKED_ARRAY.isBlocked(mPlugin)) {
       mPluginPanel.add(createEmptyPanel(LOCALIZER.msg("blocked", "Blocked"), LOCALIZER.msg("blocked.text", "This plugin is blocked and cannot be activated.")), BorderLayout.NORTH);
     } else {
       // The plugin is not activated -> Tell it the user
@@ -141,7 +141,7 @@ public class ConfigPluginSettingsTab extends AbstractSettingsTab implements Canc
           MainFrame.getInstance().getToolbar().updatePluginButtons();
           // Update the settings
           String[] deactivatedPlugins = PluginProxyManager.getInstance().getDeactivatedPluginIds();
-          Settings.propDeactivatedPlugins.setStringArray(deactivatedPlugins);
+          Settings.Plugins.DEACTIVATED.setStringArray(deactivatedPlugins);
         } catch (TvBrowserException e1) {
           // TODO Auto-generated catch block
           e1.printStackTrace();

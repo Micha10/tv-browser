@@ -75,8 +75,8 @@ public class MarkingsSettingsTab implements SettingsTab {
     JPanel defaultMarkings = new JPanel(new FormLayout("default, 5dlu, default",
     "default,2dlu,default,2dlu,default"));
     
-    defaultMarkings.add(mProgramPanelUsesExtraSpaceForMarkIcons = new JCheckBox(LOCALIZER.msg("panel.extraSpace","Use additional space for the mark icons"), Settings.propProgramPanelUsesExtraSpaceForMarkIcons.getBoolean()), CC.xyw(1,1,3));
-    defaultMarkings.add(mProgramItemWithMarkingsIsShowingBorder = new JCheckBox(LOCALIZER.msg("color.showBorder","Show border for highlighted programs"), Settings.propProgramPanelWithMarkingsShowingBoder.getBoolean()), CC.xyw(1,3,3));
+    defaultMarkings.add(mProgramPanelUsesExtraSpaceForMarkIcons = new JCheckBox(LOCALIZER.msg("panel.extraSpace","Use additional space for the mark icons"), Settings.MarkingsProgramPanel.USES_EXTRA_SPACE_FOR_MARK_ICONS.getBoolean()), CC.xyw(1,1,3));
+    defaultMarkings.add(mProgramItemWithMarkingsIsShowingBorder = new JCheckBox(LOCALIZER.msg("color.showBorder","Show border for highlighted programs"), Settings.MarkingsProgramPanel.WITH_MARKINGS_SHOWING_BORDER.getBoolean()), CC.xyw(1,3,3));
     defaultMarkings.add(new JLabel(LOCALIZER.msg("color.showColor","Highlight with color (default color):")), CC.xy(1,5));
     defaultMarkings.add(mDefaultColor = new JComboBox<>(), CC.xy(3,5));
     mDefaultColor.setRenderer(new MarkPriorityComboBoxRenderer(mDefaultColor.getRenderer()));
@@ -109,8 +109,8 @@ public class MarkingsSettingsTab implements SettingsTab {
     
     mDefaultColor.addItem(LOCALIZER.msg("color.noPriority","Don't highlight"));
     
-    final int[] currentColors = Settings.propProgramPanelHighlightingColors.getIntArray();
-    final int[] currentDefaultColors = Settings.propProgramPanelHighlightingColors.getDefault();
+    final int[] currentColors = Settings.MarkingsProgramPanel.HIGHLIGHTING_COLORS.getIntArray();
+    final int[] currentDefaultColors = Settings.MarkingsProgramPanel.HIGHLIGHTING_COLORS.getDefault();
     
     for(mPriorityCount = 0; mPriorityCount < currentColors.length; mPriorityCount++) {
       Color defaultColor = new Color(currentDefaultColors[mPriorityCount < currentDefaultColors.length ? mPriorityCount : 0],true);
@@ -119,7 +119,7 @@ public class MarkingsSettingsTab implements SettingsTab {
       mHighlightings.add(new HighlightPanel(mPriorityCount+1, new Color(currentColors[mPriorityCount],true), defaultColor, false, mPriorityCount >= 5 ? delete : null));
     }
 
-    mDefaultColor.setSelectedIndex(Math.min(Settings.propProgramPanelUsedDefaultMarkPriority.getInt()+1,currentColors.length));
+    mDefaultColor.setSelectedIndex(Math.min(Settings.MarkingsProgramPanel.USED_DEFAULT_MARK_PRIORITY.getInt()+1,currentColors.length));
     
     JButton addColor = new JButton(LOCALIZER.msg("color.add","Add color/priority"));
     addColor.addActionListener(e -> {
@@ -152,9 +152,9 @@ public class MarkingsSettingsTab implements SettingsTab {
   }
 
   public void saveSettings() {
-    Settings.propProgramPanelUsesExtraSpaceForMarkIcons.setBoolean(mProgramPanelUsesExtraSpaceForMarkIcons.isSelected());
-    Settings.propProgramPanelWithMarkingsShowingBoder.setBoolean(mProgramItemWithMarkingsIsShowingBorder.isSelected());
-    Settings.propProgramPanelUsedDefaultMarkPriority.setInt(mDefaultColor.getSelectedIndex() - 1);
+    Settings.MarkingsProgramPanel.USES_EXTRA_SPACE_FOR_MARK_ICONS.setBoolean(mProgramPanelUsesExtraSpaceForMarkIcons.isSelected());
+    Settings.MarkingsProgramPanel.WITH_MARKINGS_SHOWING_BORDER.setBoolean(mProgramItemWithMarkingsIsShowingBorder.isSelected());
+    Settings.MarkingsProgramPanel.USED_DEFAULT_MARK_PRIORITY.setInt(mDefaultColor.getSelectedIndex() - 1);
     
     int[] colors = new int[mHighlightings.getComponentCount()];
     
@@ -163,7 +163,7 @@ public class MarkingsSettingsTab implements SettingsTab {
       colors[i] = panel.getColor().getRGB();
     }
     
-    Settings.propProgramPanelHighlightingColors.setIntArray(colors);
+    Settings.MarkingsProgramPanel.HIGHLIGHTING_COLORS.setIntArray(colors);
   }
   
   private static final class HighlightPanel extends JPanel {

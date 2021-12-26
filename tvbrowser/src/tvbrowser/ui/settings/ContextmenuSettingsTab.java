@@ -439,13 +439,13 @@ public class ContextmenuSettingsTab implements devplugin.SettingsTab {
       }
     }
     
-    Settings.propContextMenuDisabledSubItems.setStringArray(listDisabledSubMenus.toArray(new String[listDisabledSubMenus.size()]));
+    Settings.ContextMenu.DISABLED_SUB_ITEMS.setStringArray(listDisabledSubMenus.toArray(new String[listDisabledSubMenus.size()]));
     
     String[] pluginIDs = new String[pluginIDsList.size()];
     pluginIDsList.toArray(pluginIDs);
 
-    Settings.propContextMenuOrder.setStringArray(orderIDs);
-    Settings.propPluginOrder.setStringArray(pluginIDs);
+    Settings.ContextMenu.MENU_ORDER.setStringArray(orderIDs);
+    Settings.ContextMenu.PLUGIN_ORDER.setStringArray(pluginIDs);
 
     PluginProxyManager.getInstance().setPluginOrder(pluginIDs);
 
@@ -453,7 +453,7 @@ public class ContextmenuSettingsTab implements devplugin.SettingsTab {
     for (int i=0;i<mDeactivatedItems.size();i++) {
       deactivated[i] = (mDeactivatedItems.get(i)).getId();
     }
-    Settings.propContextMenuDisabledItems.setStringArray(deactivated);
+    Settings.ContextMenu.DISABLED_ITEMS.setStringArray(deactivated);
   }
 
   public Icon getIcon() {

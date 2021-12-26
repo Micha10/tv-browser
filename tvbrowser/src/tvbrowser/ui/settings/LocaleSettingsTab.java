@@ -83,8 +83,8 @@ import util.ui.customizableitems.SelectableItemRendererCenterComponentIf;
  */
 public class LocaleSettingsTab implements devplugin.CancelableSettingsTab {
   /** The localizer for this class. */
-  private static final util.i18n.Localizer mLocalizer = util.i18n.Localizer.getLocalizerFor(LocaleSettingsTab.class);
-  private static final Logger mLog =  Logger.getLogger(LocaleSettingsTab.class.getName());
+  private static final util.i18n.Localizer LOCALIZER = util.i18n.Localizer.getLocalizerFor(LocaleSettingsTab.class);
+  private static final Logger LOG =  Logger.getLogger(LocaleSettingsTab.class.getName());
   
   private JPanel mSettingsPn;
 
@@ -118,10 +118,10 @@ public class LocaleSettingsTab implements devplugin.CancelableSettingsTab {
     mSettingsPn = new JPanel(new FormLayout("5dlu, pref, 3dlu, default, 5dlu, default, fill:3dlu:grow, 3dlu",
         "default, 5dlu, default, 10dlu, default, 5dlu, default, 10dlu, default, 5dlu, default, 2dlu, default, 10dlu, default, 5dlu, default, fill:3dlu:grow, default"));
     mSettingsPn.setBorder(Borders.DIALOG);
-    mSettingsPn.add(DefaultComponentFactory.getInstance().createSeparator(mLocalizer.msg("titleLanguage", "Locale")), CC.xyw(1,1,7));
+    mSettingsPn.add(DefaultComponentFactory.getInstance().createSeparator(LOCALIZER.msg("titleLanguage", "Locale")), CC.xyw(1,1,7));
 
-    mSettingsPn.add(new JLabel(mLocalizer.msg("language", "Language:")), CC.xy(2,3));
-    Locale[] allLocales = mLocalizer.getAllAvailableLocales();
+    mSettingsPn.add(new JLabel(LOCALIZER.msg("language", "Language:")), CC.xy(2,3));
+    Locale[] allLocales = LOCALIZER.getAllAvailableLocales();
     ArrayList<Locale> localesList = new ArrayList<Locale>(Arrays.asList(allLocales));
     mSettingsPn.add(mLanguageCB = new JComboBox<>(allLocales), CC.xy(4,3));
 
@@ -135,7 +135,7 @@ public class LocaleSettingsTab implements devplugin.CancelableSettingsTab {
       }
     });
     
-    JButton downloadLanguages = new JButton(mLocalizer.msg("downloadLanguages", "Install additional languages"));
+    JButton downloadLanguages = new JButton(LOCALIZER.msg("downloadLanguages", "Install additional languages"));
     downloadLanguages.addActionListener(e -> {
       downloadAdditionalLanguages();
     });
@@ -161,25 +161,25 @@ public class LocaleSettingsTab implements devplugin.CancelableSettingsTab {
         zoneIds[i+12] = "GMT+"+i;
       }
       
-      mLog.log(Level.INFO, "TimeZone IDs not available, use default values", e);
+      LOG.log(Level.INFO, "TimeZone IDs not available, use default values", e);
     }
     
     mTimezoneCB = new JComboBox<>(zoneIds);
     selectTimeZoneFromSettings(zoneIds);
     
-    mTimezoneLB = new JLabel(mLocalizer.msg("timezone", "Timezone:"));
+    mTimezoneLB = new JLabel(LOCALIZER.msg("timezone", "Timezone:"));
 
-    mSettingsPn.add(DefaultComponentFactory.getInstance().createSeparator(mLocalizer.msg("titleTimezone", "Locale")), CC.xyw(1,5,7));
+    mSettingsPn.add(DefaultComponentFactory.getInstance().createSeparator(LOCALIZER.msg("titleTimezone", "Locale")), CC.xyw(1,5,7));
 
     mSettingsPn.add(mTimezoneLB, CC.xy(2,7));
     mSettingsPn.add(mTimezoneCB, CC.xyw(4,7,3));
 
-    mSettingsPn.add(DefaultComponentFactory.getInstance().createSeparator(mLocalizer.msg("titleTimeFormat", "Time format")), CC.xyw(1,9,7));
+    mSettingsPn.add(DefaultComponentFactory.getInstance().createSeparator(LOCALIZER.msg("titleTimeFormat", "Time format")), CC.xyw(1,9,7));
 
-    mSettingsPn.add(new JLabel(mLocalizer.msg("timeFormat", "Time format:")), CC.xy(2,11));
+    mSettingsPn.add(new JLabel(LOCALIZER.msg("timeFormat", "Time format:")), CC.xy(2,11));
 
-    mTwentyfourHourFormat = new JRadioButton(mLocalizer.msg("twentyFour", "24 hour format"));
-    mTwelveHourFormat = new JRadioButton(mLocalizer.msg("twelve", "12 hour format"));
+    mTwentyfourHourFormat = new JRadioButton(LOCALIZER.msg("twentyFour", "24 hour format"));
+    mTwelveHourFormat = new JRadioButton(LOCALIZER.msg("twelve", "12 hour format"));
     ButtonGroup group = new ButtonGroup();
     group.add(mTwentyfourHourFormat);
     group.add(mTwelveHourFormat);
@@ -187,7 +187,7 @@ public class LocaleSettingsTab implements devplugin.CancelableSettingsTab {
     mSettingsPn.add(mTwentyfourHourFormat, CC.xy(4, 11));
     mSettingsPn.add(mTwelveHourFormat, CC.xy(4, 13));
 
-    if (Settings.propTwelveHourFormat.getBoolean()) {
+    if (Settings.Locales.TWELVE_HOUR_FORMAT.getBoolean()) {
       mTwelveHourFormat.setSelected(true);
     } else {
       mTwentyfourHourFormat.setSelected(true);
@@ -212,10 +212,10 @@ public class LocaleSettingsTab implements devplugin.CancelableSettingsTab {
       }
     });
     
-    mFirstDayOfWeek.setSelectedItem(Settings.propFirstDayOfWeek.getInt());
+    mFirstDayOfWeek.setSelectedItem(Settings.Locales.FIRST_DAY_OF_WEEK.getInt());
     
-    mSettingsPn.add(DefaultComponentFactory.getInstance().createSeparator(mLocalizer.msg("firstDayOfWeek", "First day of week")), CC.xyw(1,15,7));
-    mSettingsPn.add(new JLabel(mLocalizer.msg("firstDayOfWeek", "First day of week")+":"), CC.xy(2,17));
+    mSettingsPn.add(DefaultComponentFactory.getInstance().createSeparator(LOCALIZER.msg("firstDayOfWeek", "First day of week")), CC.xyw(1,15,7));
+    mSettingsPn.add(new JLabel(LOCALIZER.msg("firstDayOfWeek", "First day of week")+":"), CC.xy(2,17));
     mSettingsPn.add(mFirstDayOfWeek, CC.xyw(4,17,3));
 
     if(!SOMETHING_CHANGED) {
@@ -245,13 +245,13 @@ public class LocaleSettingsTab implements devplugin.CancelableSettingsTab {
   
   private void selectLanguageFromSettings(ArrayList<Locale> localesList) {
     if(localesList == null) {
-      Locale[] allLocales = mLocalizer.getAllAvailableLocales();
+      Locale[] allLocales = LOCALIZER.getAllAvailableLocales();
       localesList = new ArrayList<Locale>(Arrays.asList(allLocales));
     }
     
-    String language = Settings.propLanguage.getString();
-    String country = Settings.propCountry.getString();
-    String variant = Settings.propVariant.getString();
+    String language = Settings.Locales.LANGUAGE.getString();
+    String country = Settings.Locales.COUNTRY.getString();
+    String variant = Settings.Locales.VARIANT.getString();
 
     Locale loc = new Locale(language, country, variant);
     if (localesList.contains(loc)) {
@@ -289,11 +289,11 @@ public class LocaleSettingsTab implements devplugin.CancelableSettingsTab {
           zoneIds[i+12] = "GMT+"+i;
         }
         
-        mLog.log(Level.INFO, "TimeZone IDs not available, use default values", e);
+        LOG.log(Level.INFO, "TimeZone IDs not available, use default values", e);
       }
     }
     
-    String zone = Settings.propTimezone.getString();
+    String zone = Settings.Locales.TIMEZONE.getString();
     if (zone == null) {
       try {
         zone = TimeZone.getDefault().getID();
@@ -316,24 +316,24 @@ public class LocaleSettingsTab implements devplugin.CancelableSettingsTab {
   public void saveSettings() {
     Locale loc = (Locale) mLanguageCB.getSelectedItem();
 
-    Settings.propLanguage.setString(loc.getLanguage());
-    Settings.propCountry.setString(loc.getCountry());
-    Settings.propVariant.setString(loc.getVariant());
+    Settings.Locales.LANGUAGE.setString(loc.getLanguage());
+    Settings.Locales.COUNTRY.setString(loc.getCountry());
+    Settings.Locales.VARIANT.setString(loc.getVariant());
 
     try {
-      Settings.propTimezone.setString((String) mTimezoneCB.getSelectedItem());
+      Settings.Locales.TIMEZONE.setString((String) mTimezoneCB.getSelectedItem());
     } catch (Exception e) {
       e.printStackTrace();
     }
 
-    Settings.propTwelveHourFormat.setBoolean(mTwelveHourFormat.isSelected());
+    Settings.Locales.TWELVE_HOUR_FORMAT.setBoolean(mTwelveHourFormat.isSelected());
     
     // remove all plugin proxies as their cached plugin description needs to adapt to the new locale
     if (SOMETHING_CHANGED) {
       PluginLoader.getInstance().deleteAllPluginProxies();
     }
     
-    Settings.propFirstDayOfWeek.setInt((Integer)mFirstDayOfWeek.getSelectedItem());
+    Settings.Locales.FIRST_DAY_OF_WEEK.setInt((Integer)mFirstDayOfWeek.getSelectedItem());
   }
   
 
@@ -344,8 +344,8 @@ public class LocaleSettingsTab implements devplugin.CancelableSettingsTab {
     
     SOMETHING_CHANGED = mLanguageCB.getSelectedIndex() != START_LANGUAGE_INDEX ||
         mTimezoneCB.getSelectedIndex() != START_TIME_ZONE_INDEX ||
-        (TWELVE_HOUR_FORMAT_IS_SELECTED != Settings.propTwelveHourFormat.getBoolean() ||
-            (int)mFirstDayOfWeek.getSelectedItem() != Settings.propFirstDayOfWeek.getInt());
+        (TWELVE_HOUR_FORMAT_IS_SELECTED != Settings.Locales.TWELVE_HOUR_FORMAT.getBoolean() ||
+            (int)mFirstDayOfWeek.getSelectedItem() != Settings.Locales.FIRST_DAY_OF_WEEK.getInt());
     
     Settings.setRestartInfo(LocaleSettingsTab.class.getCanonicalName(), SOMETHING_CHANGED);
   }
@@ -361,11 +361,11 @@ public class LocaleSettingsTab implements devplugin.CancelableSettingsTab {
    * Returns the title of the tab-sheet.
    */
   public String getTitle() {
-    return mLocalizer.msg("locale", "Locale");
+    return LOCALIZER.msg("locale", "Locale");
   }
 
   private void downloadAdditionalLanguages() {
-    int option = JOptionPane.showConfirmDialog(mSettingsPn, mLocalizer.msg("downloadInfo", "TV-Browser will try to find additional languages, therefor an internet connection is needed.\nDo you wish to proceed?"));
+    int option = JOptionPane.showConfirmDialog(mSettingsPn, LOCALIZER.msg("downloadInfo", "TV-Browser will try to find additional languages, therefor an internet connection is needed.\nDo you wish to proceed?"));
     
     if(option == JOptionPane.YES_OPTION) {
      ArrayList<LocaleLink> availableLocales = new ArrayList<LocaleLink>();
@@ -401,7 +401,7 @@ public class LocaleSettingsTab implements devplugin.CancelableSettingsTab {
       } catch (Exception e) {e.printStackTrace();}
       
       if(availableLocales.isEmpty()) {
-        JOptionPane.showMessageDialog(mSettingsPn, mLocalizer.msg("noAdditionalLang", "No additional languages available."));
+        JOptionPane.showMessageDialog(mSettingsPn, LOCALIZER.msg("noAdditionalLang", "No additional languages available."));
       }
       else {
         showLanguageDownloadDialog(availableLocales);
@@ -423,7 +423,7 @@ public class LocaleSettingsTab implements devplugin.CancelableSettingsTab {
     pb.border(Borders.DIALOG);
     
     final JDialog dialog = new JDialog(UiUtilities.getLastModalChildOf(MainFrame.getInstance()));
-    dialog.setTitle(mLocalizer.msg("downloadLanguages", "Install additional languages"));
+    dialog.setTitle(LOCALIZER.msg("downloadLanguages", "Install additional languages"));
     dialog.setContentPane(pb.getPanel());
     
     CellConstraints cc = new CellConstraints();
@@ -458,11 +458,11 @@ public class LocaleSettingsTab implements devplugin.CancelableSettingsTab {
       public void calculateSize(JList<? extends SelectableItem<LocaleLink>> list, int index, JPanel contentPane) {}
     });
     
-    pb.addLabel(mLocalizer.msg("additionalLanguagesFound", "The following languages were found:"), cc.xyw(1,1,4));
-    pb.addLabel(mLocalizer.msg("additionalLanguagesInfo", "(Bold language are installed but have possibly been updated.)"), cc.xyw(1,2,4));
+    pb.addLabel(LOCALIZER.msg("additionalLanguagesFound", "The following languages were found:"), cc.xyw(1,1,4));
+    pb.addLabel(LOCALIZER.msg("additionalLanguagesInfo", "(Bold language are installed but have possibly been updated.)"), cc.xyw(1,2,4));
     pb.add(list, cc.xyw(1,4,4));
     
-    final JButton download = new JButton(mLocalizer.msg("downloadSelectedLanguages", "Download selected languages"));
+    final JButton download = new JButton(LOCALIZER.msg("downloadSelectedLanguages", "Download selected languages"));
     download.setEnabled(false);
     download.addActionListener(e -> {
       for(LocaleLink localeLink : list.getSelectionList()) {

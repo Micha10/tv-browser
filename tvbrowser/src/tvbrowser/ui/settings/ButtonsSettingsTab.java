@@ -68,7 +68,7 @@ import devplugin.SettingsTab;
  */
 public class ButtonsSettingsTab implements SettingsTab {
 
-  private static final util.i18n.Localizer mLocalizer = util.i18n.Localizer.getLocalizerFor(ButtonsSettingsTab.class);
+  private static final util.i18n.Localizer LOCALIZER = util.i18n.Localizer.getLocalizerFor(ButtonsSettingsTab.class);
 
   private JPanel mSettingsPn;
 
@@ -85,9 +85,9 @@ public class ButtonsSettingsTab implements SettingsTab {
     CellConstraints cc = new CellConstraints();
 
     mSettingsPn.add(DefaultComponentFactory.getInstance().createSeparator(
-        mLocalizer.msg("buttons.time", "Time buttons")), cc.xyw(1, 1, 3));
+        LOCALIZER.msg("buttons.time", "Time buttons")), cc.xyw(1, 1, 3));
 
-    mTimeButtonsPn = new TimesListPanel(Settings.propTimeButtons.getIntArray());
+    mTimeButtonsPn = new TimesListPanel(Settings.Buttons.TIME_BUTTONS.getIntArray());
     
     JScrollPane pane = new JScrollPane(mTimeButtonsPn);
     pane.setBorder(BorderFactory.createEmptyBorder());
@@ -96,7 +96,7 @@ public class ButtonsSettingsTab implements SettingsTab {
     mSettingsPn.add(pane, cc.xy(2, 3));
     
     if(TVBrowser.isUsingSystemTray()) {
-      JEditorPane helpLabel = UiUtilities.createHtmlHelpTextArea(mLocalizer.msg("info","The times of the  buttons are also used for the '<a href=\"#link\">{0}</a>' in the tray menu.", TrayOnTimeSettingsTab.getName()), e -> {
+      JEditorPane helpLabel = UiUtilities.createHtmlHelpTextArea(LOCALIZER.msg("info","The times of the  buttons are also used for the '<a href=\"#link\">{0}</a>' in the tray menu.", TrayOnTimeSettingsTab.getName()), e -> {
         if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
           Plugin.getPluginManager().showSettings(SettingsItem.TRAY_ONTIME);
         }
@@ -115,7 +115,7 @@ public class ButtonsSettingsTab implements SettingsTab {
     int[] times = mTimeButtonsPn.getTimes();
     Arrays.sort(times);
     
-    Settings.propTimeButtons.setIntArray(times);
+    Settings.Buttons.TIME_BUTTONS.setIntArray(times);
   }
 
   /**
@@ -129,7 +129,7 @@ public class ButtonsSettingsTab implements SettingsTab {
    * Returns the title of the tab-sheet.
    */
   public String getTitle() {
-    return mLocalizer.msg("buttons", "Buttons");
+    return LOCALIZER.msg("buttons", "Buttons");
   }
 
   private static class TimePanel extends JPanel {
@@ -194,7 +194,7 @@ public class ButtonsSettingsTab implements SettingsTab {
           updateContent();
         });
       }
-      JButton newBtn = new JButton(mLocalizer.msg("new", "New"), TVBrowserIcons.newIcon(TVBrowserIcons.SIZE_SMALL));
+      JButton newBtn = new JButton(LOCALIZER.msg("new", "New"), TVBrowserIcons.newIcon(TVBrowserIcons.SIZE_SMALL));
       JPanel southPn = new JPanel(new BorderLayout());
       southPn.add(newBtn, BorderLayout.WEST);
 

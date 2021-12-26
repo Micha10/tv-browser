@@ -37,7 +37,7 @@ import util.ui.html.HTMLTextHelper;
  */
 public class PluginInfoDialog extends JDialog implements WindowClosingIf {
   /** Translation */
-  private static final util.i18n.Localizer mLocalizer
+  private static final util.i18n.Localizer LOCALIZER
   = util.i18n.Localizer.getLocalizerFor(PluginInfoDialog.class);
 
   /** Infos about the Plugin */
@@ -139,18 +139,18 @@ public class PluginInfoDialog extends JDialog implements WindowClosingIf {
 
     html.append("</td><td valign=\"top\"><b>").append(mPluginInfo.getName()).append("</b></td></tr></table>");
 
-    html.append("<i>").append(mLocalizer.msg("version", "Version")).append(' ')
+    html.append("<i>").append(LOCALIZER.msg("version", "Version")).append(' ')
         .append(mPluginInfo.getVersion()).append("</i><br>");
 
-    html.append("<h1>").append(mLocalizer.msg("author", "Author")).append("</h1>");
+    html.append("<h1>").append(LOCALIZER.msg("author", "Author")).append("</h1>");
     html.append(HTMLTextHelper.convertTextToHtml(mPluginInfo.getAuthor(), true));
 
     if (StringUtils.isNotEmpty(mPluginInfo.getLicense())) {
-      html.append("<h1>").append(mLocalizer.msg("licence", "Licence")).append("</h1>");
+      html.append("<h1>").append(LOCALIZER.msg("licence", "Licence")).append("</h1>");
       html.append(mPluginInfo.getLicense().toLowerCase().startsWith("<html>") ? mPluginInfo.getLicense() : HTMLTextHelper.convertTextToHtml(mPluginInfo.getLicense(), true));
     }
 
-    html.append("<h1>").append(mLocalizer.msg("description", "Description")).append("</h1>");
+    html.append("<h1>").append(LOCALIZER.msg("description", "Description")).append("</h1>");
     html.append(HTMLTextHelper.convertTextToHtml(mPluginInfo.getDescription(), true));
 
     if(mPluginInfo.getHelpUrl() != null) {

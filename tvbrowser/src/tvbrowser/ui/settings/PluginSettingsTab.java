@@ -99,7 +99,7 @@ public class PluginSettingsTab implements devplugin.SettingsTab, TableModelListe
   /** Localizer */
   private static final util.i18n.Localizer LOCALIZER = util.i18n.Localizer.getLocalizerFor(PluginSettingsTab.class);
   /** Logger */
-  private static final Logger mLog = Logger.getLogger(PluginSettingsTab.class.getName());
+  private static final Logger LOG = Logger.getLogger(PluginSettingsTab.class.getName());
   /** List of Plugins */
   private JTable mTable;
   /** Buttons of Panel */
@@ -138,9 +138,9 @@ public class PluginSettingsTab implements devplugin.SettingsTab, TableModelListe
 
     contentPanel.add(update, cc.xy(2,1));
     
-    mAutoUpdates = new JCheckBox(LOCALIZER.msg("autoUpdates","Find plugin updates automatically"), Settings.propAutoUpdatePlugins.getBoolean());
+    mAutoUpdates = new JCheckBox(LOCALIZER.msg("autoUpdates","Find plugin updates automatically"), Settings.Plugins.AUTO_UPDATE_ENABLED.getBoolean());
     mAutoUpdates.addItemListener(e -> {
-      Settings.propAutoUpdatePlugins.setBoolean(e.getStateChange() == ItemEvent.SELECTED);
+      Settings.Plugins.AUTO_UPDATE_ENABLED.setBoolean(e.getStateChange() == ItemEvent.SELECTED);
     });
 
     contentPanel.add(mAutoUpdates, cc.xy(1,1));
@@ -172,7 +172,7 @@ public class PluginSettingsTab implements devplugin.SettingsTab, TableModelListe
           Object value = getValueAt(row,1);
           
           if(value instanceof PluginProxy) {
-            return !Settings.propBlockedPluginArray.isBlocked(((PluginProxy)value));
+            return !Settings.Plugins.BLOCKED_ARRAY.isBlocked(((PluginProxy)value));
           }
         }
         
@@ -406,7 +406,7 @@ public class PluginSettingsTab implements devplugin.SettingsTab, TableModelListe
       }
       else {
         enableMI = new JMenuItem(LOCALIZER.msg("activate", "Activate"), TVBrowserIcons.refresh(TVBrowserIcons.SIZE_SMALL));
-        enableMI.setEnabled(!Settings.propBlockedPluginArray.isBlocked((PluginProxy)plugin));
+        enableMI.setEnabled(!Settings.Plugins.BLOCKED_ARRAY.isBlocked((PluginProxy)plugin));
       }
       enableMI.addActionListener(e -> {
         int row = mTable.getSelectedRow();
@@ -418,10 +418,10 @@ public class PluginSettingsTab implements devplugin.SettingsTab, TableModelListe
       
       JMenuItem reset;
       
-      if(Settings.propPluginResetIds.containsItem(plugin.getId())) {
+      if(Settings.Plugins.RESET_IDS.containsItem(plugin.getId())) {
         reset = new JMenuItem(LOCALIZER.msg("unreset", "Don't reset settings"), TVBrowserIcons.redo(TVBrowserIcons.SIZE_SMALL));
         reset.addActionListener(e -> {
-          Settings.propPluginResetIds.removeItem(plugin.getId());
+          Settings.Plugins.RESET_IDS.removeItem(plugin.getId());
           Settings.setRestartInfo(plugin.getId(), false);
         });
       }
@@ -429,7 +429,7 @@ public class PluginSettingsTab implements devplugin.SettingsTab, TableModelListe
         reset = new JMenuItem(LOCALIZER.msg("reset", "Reset settings"), TVBrowserIcons.reset(TVBrowserIcons.SIZE_SMALL));
         reset.addActionListener(e -> {
           DontShowAgainOptionBox.showOptionDialog("pluginSettingsResetMsg", UiUtilities.getLastModalChildOf(MainFrame.getInstance()), LOCALIZER.msg("resetInfo", "The settings of '{0}' will be reset when you restart TV-Browser.\n\nNOTE: TV-Browser will only delete the settings that are handled by it.\nShould '{0}' handle settings by itself the settings will not be reset.",plugin.getInfo().getName()));
-          Settings.propPluginResetIds.addItem(plugin.getId());
+          Settings.Plugins.RESET_IDS.addItem(plugin.getId());
           Settings.setRestartInfo(plugin.getId(), true);
         });
       }
@@ -792,7 +792,7 @@ public class PluginSettingsTab implements devplugin.SettingsTab, TableModelListe
             PluginProxyManager.getInstance().fireTvBrowserStartFinished(plugin);
           }catch(Throwable t) {
             /* Catch all possible not catched errors that occur in the plugin mehtod*/
-            mLog.log(Level.WARNING, "A not catched error occured in 'fireTvBrowserStartFinishedThread' of Plugin '" + plugin +"'.", t);
+            LOG.log(Level.WARNING, "A not catched error occured in 'fireTvBrowserStartFinishedThread' of Plugin '" + plugin +"'.", t);
           }
         }
       } catch (TvBrowserException exc) {
@@ -808,7 +808,7 @@ public class PluginSettingsTab implements devplugin.SettingsTab, TableModelListe
 
     // Update the settings
     String[] deactivatedPlugins = PluginProxyManager.getInstance().getDeactivatedPluginIds();
-    Settings.propDeactivatedPlugins.setStringArray(deactivatedPlugins);
+    Settings.Plugins.DEACTIVATED.setStringArray(deactivatedPlugins);
   }
 
   public void saveSettings() {

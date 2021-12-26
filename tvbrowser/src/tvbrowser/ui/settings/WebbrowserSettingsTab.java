@@ -59,7 +59,7 @@ import com.jgoodies.forms.layout.FormLayout;
  */
 public class WebbrowserSettingsTab implements devplugin.SettingsTab {
   /** The localizer for this class. */
-  private static final util.i18n.Localizer mLocalizer = util.i18n.Localizer.getLocalizerFor(WebbrowserSettingsTab.class);
+  private static final util.i18n.Localizer LOCALIZER = util.i18n.Localizer.getLocalizerFor(WebbrowserSettingsTab.class);
 
   private JPanel mSettingsPn;
   private JFileChooser mFileChooser;
@@ -79,34 +79,34 @@ public class WebbrowserSettingsTab implements devplugin.SettingsTab {
 
     CellConstraints cc = new CellConstraints();
 
-    mSettingsPn.add(DefaultComponentFactory.getInstance().createSeparator(mLocalizer.msg("browser", "Web browser")), cc.xyw(1,1,9));
+    mSettingsPn.add(DefaultComponentFactory.getInstance().createSeparator(LOCALIZER.msg("browser", "Web browser")), cc.xyw(1,1,9));
 
-    JButton testButton = new LinkButton(mLocalizer.msg("testBrowser", "Test Webbrowser"), "https://www.tvbrowser.org", SwingConstants.LEFT, false);
+    JButton testButton = new LinkButton(LOCALIZER.msg("testBrowser", "Test Webbrowser"), "https://www.tvbrowser.org", SwingConstants.LEFT, false);
     testButton.addActionListener(e -> {
-      String buffer = IOUtilities.translateRelativePath(Settings.propUserDefinedWebbrowser.getString());
-      String bufferParams = Settings.propUserDefinedWebbrowserParams.getString();
+      String buffer = IOUtilities.translateRelativePath(Settings.WebBrowser.USER_DEFINED.getString());
+      String bufferParams = Settings.WebBrowser.USER_DEFINED_PARAMS.getString();
       saveSettings();
       Launch.openURL("https://www.tvbrowser.org");
-      Settings.propUserDefinedWebbrowser.setString(IOUtilities.checkForRelativePath(buffer));
-      Settings.propUserDefinedWebbrowserParams.setString(bufferParams);
+      Settings.WebBrowser.USER_DEFINED.setString(IOUtilities.checkForRelativePath(buffer));
+      Settings.WebBrowser.USER_DEFINED_PARAMS.setString(bufferParams);
     });
 
-    mSettingsPn.add(UiUtilities.createHelpTextArea(mLocalizer.msg("help", "Help Text")), cc.xyw(2,3,7));
+    mSettingsPn.add(UiUtilities.createHelpTextArea(LOCALIZER.msg("help", "Help Text")), cc.xyw(2,3,7));
 
     mSettingsPn.add(testButton, cc.xyw(2, 5, 7));
 
-    mSettingsPn.add(new JLabel(mLocalizer.msg("whichBrowser", "which browser")), cc.xyw(2,7,7));
+    mSettingsPn.add(new JLabel(LOCALIZER.msg("whichBrowser", "which browser")), cc.xyw(2,7,7));
 
-    JRadioButton useDefault = new JRadioButton(mLocalizer.msg("defaultWebbrowser", "Default Webbrowser"));
-    useDefault.setSelected(Settings.propUserDefinedWebbrowser.getString() == null);
+    JRadioButton useDefault = new JRadioButton(LOCALIZER.msg("defaultWebbrowser", "Default Webbrowser"));
+    useDefault.setSelected(Settings.WebBrowser.USER_DEFINED.getString() == null);
     useDefault.addActionListener(e -> {
       updateInputFields();
     });
 
     mSettingsPn.add(useDefault, cc.xyw(2, 9, 4));
 
-    mUseWebbrowser = new JRadioButton(mLocalizer.msg("userDefinedWebbrowser","user defined webbrowser"));
-    mUseWebbrowser.setSelected(Settings.propUserDefinedWebbrowser.getString() != null);
+    mUseWebbrowser = new JRadioButton(LOCALIZER.msg("userDefinedWebbrowser","user defined webbrowser"));
+    mUseWebbrowser.setSelected(Settings.WebBrowser.USER_DEFINED.getString() != null);
 
     mUseWebbrowser.addActionListener(e -> {
       updateInputFields();
@@ -118,11 +118,11 @@ public class WebbrowserSettingsTab implements devplugin.SettingsTab {
 
     mSettingsPn.add(mUseWebbrowser, cc.xyw(2, 11, 7));
 
-    mSettingsPn.add(new JLabel(mLocalizer.msg("browserExecutable", "Executable") + ":"), cc.xy(3, 13));
+    mSettingsPn.add(new JLabel(LOCALIZER.msg("browserExecutable", "Executable") + ":"), cc.xy(3, 13));
 
 
     mFileTextField = new JTextField(30);
-    mFileTextField.setText(Settings.propUserDefinedWebbrowser.getString());
+    mFileTextField.setText(Settings.WebBrowser.USER_DEFINED.getString());
     mSettingsPn.add(mFileTextField, cc.xy(5, 13));
 
     mChooseButton = new JButton(Localizer.getLocalization(Localizer.I18N_SELECT));
@@ -147,13 +147,13 @@ public class WebbrowserSettingsTab implements devplugin.SettingsTab {
     });
     mSettingsPn.add(mChooseButton, cc.xy(7, 13));
 
-    mSettingsPn.add(new JLabel(mLocalizer.msg("browserParameter", "Parameter") + ":"), cc.xy(3,15));
+    mSettingsPn.add(new JLabel(LOCALIZER.msg("browserParameter", "Parameter") + ":"), cc.xy(3,15));
 
     mParams = new JTextField();
-    mParams.setText(Settings.propUserDefinedWebbrowserParams.getString());
+    mParams.setText(Settings.WebBrowser.USER_DEFINED_PARAMS.getString());
     mSettingsPn.add(mParams, cc.xy(5,15));
 
-    mSettingsPn.add(new JLabel(mLocalizer.msg("browserParameterHelp", "{0} will be replaced by the url.")), cc.xyw(5,17,4));
+    mSettingsPn.add(new JLabel(LOCALIZER.msg("browserParameterHelp", "{0} will be replaced by the url.")), cc.xyw(5,17,4));
 
     updateInputFields();
 
@@ -180,11 +180,11 @@ public class WebbrowserSettingsTab implements devplugin.SettingsTab {
       if (StringUtils.isEmpty(params)) {
         params = "{0}";
       }
-      Settings.propUserDefinedWebbrowserParams.setString(params);
+      Settings.WebBrowser.USER_DEFINED_PARAMS.setString(params);
     } else {
       webbrowser = null;
     }
-    Settings.propUserDefinedWebbrowser.setString(IOUtilities.checkForRelativePath(webbrowser));
+    Settings.WebBrowser.USER_DEFINED.setString(IOUtilities.checkForRelativePath(webbrowser));
   }
 
   /**
@@ -198,7 +198,7 @@ public class WebbrowserSettingsTab implements devplugin.SettingsTab {
    * Returns the title of the tab-sheet.
    */
   public String getTitle() {
-    return mLocalizer.msg("browser", "Web browser");
+    return LOCALIZER.msg("browser", "Web browser");
   }
 
 }

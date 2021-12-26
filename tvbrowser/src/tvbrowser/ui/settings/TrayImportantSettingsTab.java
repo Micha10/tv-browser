@@ -49,7 +49,7 @@ public class TrayImportantSettingsTab implements SettingsTab {
   private JComboBox<Object> mPriority;
   private JLabel mPriorityText;
   
-  private static boolean mTrayIsEnabled = Settings.propTrayIsEnabled.getBoolean();
+  private static boolean mTrayIsEnabled = Settings.Tray.ENABLED.getBoolean();
   private static TrayImportantSettingsTab mInstance;
   
   public JPanel createSettingsPanel() {
@@ -60,35 +60,35 @@ public class TrayImportantSettingsTab implements SettingsTab {
         "pref,pref,5dlu,pref,10dlu,pref,5dlu,pref,pref,pref,fill:pref:grow,pref"));
     builder.border(Borders.DIALOG);
     
-    mIsEnabled = new JCheckBox(LOCALIZER.msg("importantEnabled","Show important programs"),Settings.propTrayImportantProgramsEnabled.getBoolean());
+    mIsEnabled = new JCheckBox(LOCALIZER.msg("importantEnabled","Show important programs"),Settings.Tray.Important.ENABLED.getBoolean());
     mIsEnabled.setToolTipText(LOCALIZER.msg("importantToolTip","Important programs are all marked programs."));
     
     ButtonGroup bg = new ButtonGroup();
     
-    mShowInSubMenu = new JRadioButton(LOCALIZER.msg("inSubMenu","in a sub menu"),Settings.propTrayImportantProgramsInSubMenu.getBoolean());
+    mShowInSubMenu = new JRadioButton(LOCALIZER.msg("inSubMenu","in a sub menu"),Settings.Tray.Important.IN_SUB_MENU.getBoolean());
     mShowInTray = new JRadioButton(LOCALIZER.msg("inTray","in the tray menu"), !mShowInSubMenu.isSelected());
     
     bg.add(mShowInSubMenu);
     bg.add(mShowInTray);
     
-    int maxSizeValue = Settings.propTrayImportantProgramsInSubMenu.getBoolean() ? mMaxSizeSubmenu : mMaxSizeTray;
+    int maxSizeValue = Settings.Tray.Important.IN_SUB_MENU.getBoolean() ? mMaxSizeSubmenu : mMaxSizeTray;
     
-    mSize = new JSpinner(new SpinnerNumberModel(Settings.propTrayImportantProgramsSize.getInt(), 1, maxSizeValue, 1));
+    mSize = new JSpinner(new SpinnerNumberModel(Settings.Tray.Important.SIZE.getInt(), 1, maxSizeValue, 1));
     
-    mShowIconAndName = new JRadioButton(LOCALIZER.msg("showIconName","Show channel icon and channel name"),Settings.propTrayImportantProgramsContainsName.getBoolean() && Settings.propTrayImportantProgramsContainsIcon.getBoolean());
-    mShowName = new JRadioButton(LOCALIZER.msg("showName","Show channel name"),Settings.propTrayImportantProgramsContainsName.getBoolean() && !Settings.propTrayImportantProgramsContainsIcon.getBoolean());
-    mShowIcon = new JRadioButton(LOCALIZER.msg("showIcon","Show channel icon"),!Settings.propTrayImportantProgramsContainsName.getBoolean() && Settings.propTrayImportantProgramsContainsIcon.getBoolean());
+    mShowIconAndName = new JRadioButton(LOCALIZER.msg("showIconName","Show channel icon and channel name"),Settings.Tray.Important.CONTAINS_NAME.getBoolean() && Settings.Tray.Important.CONTAINS_ICON.getBoolean());
+    mShowName = new JRadioButton(LOCALIZER.msg("showName","Show channel name"),Settings.Tray.Important.CONTAINS_NAME.getBoolean() && !Settings.Tray.Important.CONTAINS_ICON.getBoolean());
+    mShowIcon = new JRadioButton(LOCALIZER.msg("showIcon","Show channel icon"),!Settings.Tray.Important.CONTAINS_NAME.getBoolean() && Settings.Tray.Important.CONTAINS_ICON.getBoolean());
     
     ButtonGroup bg1 = new ButtonGroup();
     bg1.add(mShowIconAndName);
     bg1.add(mShowIcon);
     bg1.add(mShowName);
     
-    mShowSortNumber = new JCheckBox(LOCALIZER.msg("showChannelNumber", "Show sort number"),Settings.propTrayImportantProgramsShowingSortNumber.getBoolean());
+    mShowSortNumber = new JCheckBox(LOCALIZER.msg("showChannelNumber", "Show sort number"),Settings.Tray.Important.SORT_NUMBER_SHOW.getBoolean());
     
-    mShowDate = new JCheckBox(LOCALIZER.msg("showDate","Show date"),Settings.propTrayImportantProgramsContainsDate.getBoolean());
-    mShowTime = new JCheckBox(LOCALIZER.msg("showTime","Show start time"),Settings.propTrayImportantProgramsContainsTime.getBoolean());
-    mShowToolTip = new JCheckBox(LOCALIZER.msg("showToolTip","Show additional information of the program in a tool tip"),Settings.propTrayImportantProgramsContainsToolTip.getBoolean());
+    mShowDate = new JCheckBox(LOCALIZER.msg("showDate","Show date"),Settings.Tray.Important.CONTAINS_DATE.getBoolean());
+    mShowTime = new JCheckBox(LOCALIZER.msg("showTime","Show start time"),Settings.Tray.Important.CONTAINS_TIME.getBoolean());
+    mShowToolTip = new JCheckBox(LOCALIZER.msg("showToolTip","Show additional information of the program in a tool tip"),Settings.Tray.Important.CONTAINS_TOOL_TIP.getBoolean());
     mShowToolTip.setToolTipText(LOCALIZER.msg("toolTipTip","Tool tips are small helper to something, like this one."));
         
     mHelpLabel = UiUtilities.createHtmlHelpTextArea(LOCALIZER.msg("help","The Tray is deactivated. To activate these settings activate the option <b>Tray activated</b> in the <a href=\"#link\">Tray Base settings</a>."), e -> {
@@ -110,7 +110,7 @@ public class TrayImportantSettingsTab implements SettingsTab {
     mPriorityText = new JLabel(LOCALIZER.msg("importantMarkPriority","Mark priority higher or the same like:"));
     
     mPriority = new JComboBox<>(colors);
-    mPriority.setSelectedIndex(Settings.propTrayImportantProgramsPriority.getInt());
+    mPriority.setSelectedIndex(Settings.Tray.Important.PRIORITY.getInt());
     mPriority.setRenderer(new MarkPriorityComboBoxRenderer(mPriority.getRenderer()));
 
     priority.add(mPriorityText, CC.xy(1,2));
@@ -189,32 +189,32 @@ public class TrayImportantSettingsTab implements SettingsTab {
   
   public void saveSettings() {
     if(mIsEnabled != null) {
-      Settings.propTrayImportantProgramsEnabled.setBoolean(mIsEnabled.isSelected());
+      Settings.Tray.Important.ENABLED.setBoolean(mIsEnabled.isSelected());
     }
     if(mShowInSubMenu != null) {
-      Settings.propTrayImportantProgramsInSubMenu.setBoolean(mShowInSubMenu.isSelected());
+      Settings.Tray.Important.IN_SUB_MENU.setBoolean(mShowInSubMenu.isSelected());
     }
     if(mSize != null) {
-      Settings.propTrayImportantProgramsSize.setInt(((Integer)mSize.getValue()).intValue());
+      Settings.Tray.Important.SIZE.setInt(((Integer)mSize.getValue()).intValue());
     }
     if(mShowIconAndName != null && mShowName != null && mShowIcon != null) {
-      Settings.propTrayImportantProgramsContainsName.setBoolean(mShowIconAndName.isSelected() || mShowName.isSelected());
-      Settings.propTrayImportantProgramsContainsIcon.setBoolean(mShowIconAndName.isSelected() || mShowIcon.isSelected());
+      Settings.Tray.Important.CONTAINS_NAME.setBoolean(mShowIconAndName.isSelected() || mShowName.isSelected());
+      Settings.Tray.Important.CONTAINS_ICON.setBoolean(mShowIconAndName.isSelected() || mShowIcon.isSelected());
     }
     if(mShowDate != null) {
-      Settings.propTrayImportantProgramsContainsDate.setBoolean(mShowDate.isSelected());
+      Settings.Tray.Important.CONTAINS_DATE.setBoolean(mShowDate.isSelected());
     }
     if(mShowTime != null) {
-      Settings.propTrayImportantProgramsContainsTime.setBoolean(mShowTime.isSelected());
+      Settings.Tray.Important.CONTAINS_TIME.setBoolean(mShowTime.isSelected());
     }
     if(mShowToolTip != null) {
-      Settings.propTrayImportantProgramsContainsToolTip.setBoolean(mShowToolTip.isSelected());
+      Settings.Tray.Important.CONTAINS_TOOL_TIP.setBoolean(mShowToolTip.isSelected());
     }
     if(mPriority != null) {
-      Settings.propTrayImportantProgramsPriority.setInt(mPriority.getSelectedIndex());
+      Settings.Tray.Important.PRIORITY.setInt(mPriority.getSelectedIndex());
     }
     if(mShowSortNumber != null) {
-      Settings.propTrayImportantProgramsShowingSortNumber.setBoolean(mShowSortNumber.isSelected());
+      Settings.Tray.Important.SORT_NUMBER_SHOW.setBoolean(mShowSortNumber.isSelected());
     }
   }
 

@@ -30,7 +30,7 @@ import javax.swing.UIManager;
 
 import tvbrowser.core.Settings;
 import tvbrowser.core.plugin.PluginManagerImpl;
-import tvbrowser.ui.settings.StartupSettingsTab;
+import tvbrowser.ui.settings.GeneralSettingsTab;
 
 /**
  * Working implementation of devplugin.TvBrowserSettings
@@ -94,11 +94,11 @@ public final class TvBrowserSettingsImpl implements TvBrowserSettings {
   }
   
   public Color getProgramPanelOnAirLightColor() {
-    return Settings.propProgramTableColorOnAirLight.getColor();
+    return Settings.propProgramPanelColorOnAirLight.getColor();
   }
   
   public Color getProgramPanelOnAirDarkColor() {
-    return Settings.propProgramTableColorOnAirDark.getColor();
+    return Settings.propProgramPanelColorOnAirDark.getColor();
   }
 
   public boolean isMarkingBorderPainted() {
@@ -135,7 +135,7 @@ public final class TvBrowserSettingsImpl implements TvBrowserSettings {
 
   @Override
   public boolean isChannelUpdateActivated() {
-    return Settings.propAutoChannelUpdatePeriod.getInt() > StartupSettingsTab.VALUE_AUTO_CHANNEL_UPDATE_DISABLED;
+    return Settings.propAutoChannelUpdatePeriod.getInt() > GeneralSettingsTab.VALUE_AUTO_CHANNEL_UPDATE_DISABLED;
   }
 
   @Override

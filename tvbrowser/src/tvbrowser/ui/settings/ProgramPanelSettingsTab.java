@@ -117,10 +117,10 @@ public class ProgramPanelSettingsTab implements SettingsTab {
         .createSeparator(LOCALIZER.msg("pluginIcons", "Plugin icons")), CC.xyw(1, panel.getRowCount(), 2));
 
     IconPlugin[] allPluginArr = getAvailableIconPlugins();
-    IconPlugin[] pluginOrderArr = getSelectedIconPlugins(allPluginArr, Settings.propProgramTableIconPlugins);
+    IconPlugin[] pluginOrderArr = getSelectedIconPlugins(allPluginArr, Settings.ProgramPanel.ICON_PLUGINS );
     mIconPluginOCh = createIconPluginChooser(allPluginArr, pluginOrderArr);
 
-    pluginOrderArr = getSelectedIconPlugins(allPluginArr, Settings.propProgramTableIconPluginsAlternative);
+    pluginOrderArr = getSelectedIconPlugins(allPluginArr, Settings.ProgramPanel.ICON_PLUGINS_ALTERNATIVE);
     mIconPluginOChAlt = createIconPluginChooser(allPluginArr, pluginOrderArr);
     
     // info text
@@ -128,8 +128,8 @@ public class ProgramPanelSettingsTab implements SettingsTab {
         .xyw(4, panel.getRowCount(), 2));
     
     ProgramFieldType[] allTypeArr = getAvailableTypes();
-    ProgramFieldType[] typeOrderArr = Settings.propProgramInfoFields.getProgramFieldTypeArray();
-    String[] separators = Settings.propProgramInfoFieldsSeparators.getStringArray();
+    ProgramFieldType[] typeOrderArr = Settings.ProgramPanel.INFO_FIELDS.getProgramFieldTypeArray();
+    String[] separators = Settings.ProgramPanel.INFO_FIELDS_SEPARATORS.getStringArray();
     
     mInfoTextOCh = new OrderChooser<>(typeOrderArr, allTypeArr);
 
@@ -145,8 +145,8 @@ public class ProgramPanelSettingsTab implements SettingsTab {
       }
     }
     
-    typeOrderArr = Settings.propProgramInfoFieldsAlternative.getProgramFieldTypeArray();
-    separators = Settings.propProgramInfoFieldsSeparatorsAlternative.getStringArray();
+    typeOrderArr = Settings.ProgramPanel.INFO_FIELDS_ALTERNATIVE.getProgramFieldTypeArray();
+    separators = Settings.ProgramPanel.INFO_FIELDS_SEPARATORS_ALTERNATIVE.getStringArray();
     
     mInfoTextOChAlt = new OrderChooser<>(typeOrderArr, allTypeArr);
 
@@ -170,7 +170,7 @@ public class ProgramPanelSettingsTab implements SettingsTab {
       }
     }
     
-    mShowOriginalTitles = new JCheckBox(LOCALIZER.msg("showOriginalTitles", "Show original title, if available, instead of title"), Settings.propProgramPanelShowOriginialTitles.getBoolean());
+    mShowOriginalTitles = new JCheckBox(LOCALIZER.msg("showOriginalTitles", "Show original title, if available, instead of title"), Settings.ProgramPanel.ORIGINIAL_TITLES_SHOW.getBoolean());
     
     JPanel filterPanel = new JPanel(new FormLayout("default","default"));
     JButton editFilter = new JButton("Filter editieren...");
@@ -212,25 +212,25 @@ public class ProgramPanelSettingsTab implements SettingsTab {
 
     panel.addRow();
     panel.add(mGradientHighlighting = new JCheckBox(LOCALIZER.msg("color.programGradientHighlighting",
-        "Highlight programs with gradient colors"),Settings.propProgramPanelGradientColorHighlighting.getBoolean()), CC.xyw(2, panel.getRowCount(), 3));
+        "Highlight programs with gradient colors"),Settings.ProgramPanel.HIGHLIGHTING_COLOR_GRADIENT.getBoolean()), CC.xyw(2, panel.getRowCount(), 3));
 
     panel.addRow();
     panel.add(mAllowProgramImportance = new JCheckBox(LOCALIZER.msg("color.allowTransparency","Allow plugins to set the transparency of a program"),
-        Settings.propProgramPanelAllowTransparency.getBoolean()), CC.xyw(2, panel.getRowCount() ,3));
+        Settings.ProgramPanel.TRANSPARENCY_ALLOW.getBoolean()), CC.xyw(2, panel.getRowCount() ,3));
     
     panel.addRow();
     panel.add(mBorderForOnAirPrograms = new JCheckBox(LOCALIZER.msg("color.programOnAirWithBorder",
-        "Border for programs on air"), Settings.propProgramTableOnAirProgramsShowingBorder.getBoolean()), CC.xyw(2, panel.getRowCount(),
+        "Border for programs on air"), Settings.ProgramPanel.BORDER_ON_AIR_PROGRAMS_SHOW.getBoolean()), CC.xyw(2, panel.getRowCount(),
         3));
     
     JPanel colors = new JPanel();
-    Color programItemProgressColor = Settings.propProgramTableColorOnAirDark.getColor();
-    Color programItemOnAirColor = Settings.propProgramTableColorOnAirLight.getColor();
-    Color programItemKeyboardSelectedColor = Settings.propKeyboardSelectedColor.getColor();
+    Color programItemProgressColor = Settings.ProgramPanel.COLOR_ON_AIR_DARK.getColor();
+    Color programItemOnAirColor = Settings.ProgramPanel.COLOR_ON_AIR_LIGHT.getColor();
+    Color programItemKeyboardSelectedColor = Settings.ProgramPanel.COLOR_KEYBOARD_SELECTED.getColor();
 
-    Color programItemDefaultProgressColor = Settings.propProgramTableColorOnAirDark.getDefaultColor();
-    Color programItemDefaultOnAirColor = Settings.propProgramTableColorOnAirLight.getDefaultColor();
-    Color programItemDefaultKeyboardSelectedColor = Settings.propKeyboardSelectedColor.getDefaultColor();
+    Color programItemDefaultProgressColor = Settings.ProgramPanel.COLOR_ON_AIR_DARK.getDefaultColor();
+    Color programItemDefaultOnAirColor = Settings.ProgramPanel.COLOR_ON_AIR_LIGHT.getDefaultColor();
+    Color programItemDefaultKeyboardSelectedColor = Settings.ProgramPanel.COLOR_KEYBOARD_SELECTED.getDefaultColor();
 
     FormLayout formLayout = new FormLayout("default, 5dlu, default, 5dlu, default, 5dlu, default",
         "5dlu, default, 3dlu, default, 3dlu, default");
@@ -257,10 +257,10 @@ public class ProgramPanelSettingsTab implements SettingsTab {
     
     panel.addParagraph(LOCALIZER.msg("text", "Text"));
     panel.addRow();
-    panel.add(mHyphenator = new JCheckBox(LOCALIZER.msg("hyphenation", "Use hyphenation"), Settings.propProgramPanelHyphenation.getBoolean()), CC.xyw(2, panel.getRowCount(), panel.getColumnCount() - 1));
+    panel.add(mHyphenator = new JCheckBox(LOCALIZER.msg("hyphenation", "Use hyphenation"), Settings.ProgramPanel.HYPHENATION.getBoolean()), CC.xyw(2, panel.getRowCount(), panel.getColumnCount() - 1));
     panel.addParagraph(LOCALIZER.msg("scrolling", "Scrolling"));
     panel.addRow();
-    panel.add(mSmootherScrolling = new JCheckBox(LOCALIZER.msg("scrolling.smoother", "Smoother scrolling in lists with programs"), Settings.propSmootherScrolling.getBoolean()), CC.xyw(2, panel.getRowCount(), panel.getColumnCount() - 1));
+    panel.add(mSmootherScrolling = new JCheckBox(LOCALIZER.msg("scrolling.smoother", "Smoother scrolling in lists with programs"), Settings.ProgramPanel.SMOOTHER_SCROLLING.getBoolean()), CC.xyw(2, panel.getRowCount(), panel.getColumnCount() - 1));
     
     return panel.getPanel();
   }
@@ -305,7 +305,7 @@ public class ProgramPanelSettingsTab implements SettingsTab {
     final ArrayList<IconPlugin> list = new ArrayList<IconPlugin>();
 
     list.addAll(getFormatIconNames());
-    list.add(new IconPlugin(PICTURE_ICON_NAME, InfoThemeLoader.getInstance().getIconThemeForIDOrDefault(Settings.propInfoIconThemeID.getString()).getInfoIcon(InfoIconTheme.INFO_HAS_PICTURE)));
+    list.add(new IconPlugin(PICTURE_ICON_NAME, InfoThemeLoader.getInstance().getIconThemeForIDOrDefault(Settings.LookAndFeel.INFO_ICON_THEME_ID.getString()).getInfoIcon(InfoIconTheme.INFO_HAS_PICTURE)));
 
     for (PluginProxy plugin : PluginProxyManager.getInstance().getActivatedPlugins()) {
       final String iconText = plugin.getProgramTableIconText();
@@ -429,24 +429,24 @@ public class ProgramPanelSettingsTab implements SettingsTab {
    */
   public void saveSettings() {
     // icons
-    savePluginIcons(mIconPluginOCh,Settings.propProgramTableIconPlugins);
-    savePluginIcons(mIconPluginOChAlt,Settings.propProgramTableIconPluginsAlternative);
+    savePluginIcons(mIconPluginOCh,Settings.ProgramPanel.ICON_PLUGINS );
+    savePluginIcons(mIconPluginOChAlt,Settings.ProgramPanel.ICON_PLUGINS_ALTERNATIVE);
     
     // info text
-    saveInfoText(mInfoTextOCh, Settings.propProgramInfoFields, Settings.propProgramInfoFieldsSeparators);
-    saveInfoText(mInfoTextOChAlt, Settings.propProgramInfoFieldsAlternative, Settings.propProgramInfoFieldsSeparatorsAlternative);
+    saveInfoText(mInfoTextOCh, Settings.ProgramPanel.INFO_FIELDS, Settings.ProgramPanel.INFO_FIELDS_SEPARATORS);
+    saveInfoText(mInfoTextOChAlt, Settings.ProgramPanel.INFO_FIELDS_ALTERNATIVE, Settings.ProgramPanel.INFO_FIELDS_SEPARATORS_ALTERNATIVE);
     
-    Settings.propProgramPanelShowOriginialTitles.setBoolean(mShowOriginalTitles.isSelected());
+    Settings.ProgramPanel.ORIGINIAL_TITLES_SHOW.setBoolean(mShowOriginalTitles.isSelected());
     
-    Settings.propProgramTableOnAirProgramsShowingBorder.setBoolean(mBorderForOnAirPrograms.isSelected());
-    Settings.propProgramPanelGradientColorHighlighting.setBoolean(mGradientHighlighting.isSelected());
+    Settings.ProgramPanel.BORDER_ON_AIR_PROGRAMS_SHOW.setBoolean(mBorderForOnAirPrograms.isSelected());
+    Settings.ProgramPanel.HIGHLIGHTING_COLOR_GRADIENT.setBoolean(mGradientHighlighting.isSelected());
     
-    Settings.propProgramTableColorOnAirDark.setColor(mProgramItemProgressColorLb.getColor());
-    Settings.propProgramTableColorOnAirLight.setColor(mProgramItemOnAirColorLb.getColor());
-    Settings.propKeyboardSelectedColor.setColor(mProgramItemKeyboardSelectedLb.getColor());
-    Settings.propProgramPanelAllowTransparency.setBoolean(mAllowProgramImportance.isSelected());
-    Settings.propProgramPanelHyphenation.setBoolean(mHyphenator.isSelected());
-    Settings.propSmootherScrolling.setBoolean(mSmootherScrolling.isSelected());
+    Settings.ProgramPanel.COLOR_ON_AIR_DARK.setColor(mProgramItemProgressColorLb.getColor());
+    Settings.ProgramPanel.COLOR_ON_AIR_LIGHT.setColor(mProgramItemOnAirColorLb.getColor());
+    Settings.ProgramPanel.COLOR_KEYBOARD_SELECTED.setColor(mProgramItemKeyboardSelectedLb.getColor());
+    Settings.ProgramPanel.TRANSPARENCY_ALLOW.setBoolean(mAllowProgramImportance.isSelected());
+    Settings.ProgramPanel.HYPHENATION.setBoolean(mHyphenator.isSelected());
+    Settings.ProgramPanel.SMOOTHER_SCROLLING.setBoolean(mSmootherScrolling.isSelected());
   }
 
   /**

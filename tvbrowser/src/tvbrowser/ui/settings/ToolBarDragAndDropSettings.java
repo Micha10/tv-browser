@@ -82,10 +82,10 @@ public class ToolBarDragAndDropSettings extends JDialog implements
     MouseListener, WindowClosingIf {
 
   /** The localizer for this class. */
-  public static final util.i18n.Localizer mLocalizer = util.i18n.Localizer
+  public static final util.i18n.Localizer LOCALIZER = util.i18n.Localizer
       .getLocalizerFor(ToolBarDragAndDropSettings.class);
 
-  private static final Logger mLog = java.util.logging.Logger
+  private static final Logger LOG = java.util.logging.Logger
   .getLogger(ToolBarDragAndDropSettings.class.getName());
 
   private static final long serialVersionUID = 1L;
@@ -164,16 +164,16 @@ public class ToolBarDragAndDropSettings extends JDialog implements
     tVisPanel.setBorder(new CompoundBorder(BorderFactory.createMatteBorder(0,
         0, 1, 0, Color.GRAY), BorderFactory.createEmptyBorder(10, 5, 9, 5)));
 
-    mShowToolbarCb = new JCheckBox(mLocalizer
+    mShowToolbarCb = new JCheckBox(LOCALIZER
         .msg("showToolbar", "Show toolbar"));
-    mShowToolbarCb.setSelected(Settings.propIsToolbarVisible.getBoolean());
+    mShowToolbarCb.setSelected(Settings.ToolBar.IS_VISIBLE.getBoolean());
 
     tVisPanel.add(mShowToolbarCb);
     tVisPanel.add(Box.createHorizontalGlue());
 
-    mShowSearchFieldCb = new JCheckBox(mLocalizer.msg("showSearchField",
+    mShowSearchFieldCb = new JCheckBox(LOCALIZER.msg("showSearchField",
         "Show Search field"));
-    mShowSearchFieldCb.setSelected(Settings.propIsSearchFieldVisible
+    mShowSearchFieldCb.setSelected(Settings.ToolBar.IS_SEARCH_FIELD_VISIBLE
         .getBoolean());
 
     tVisPanel.add(mShowSearchFieldCb);
@@ -182,10 +182,10 @@ public class ToolBarDragAndDropSettings extends JDialog implements
     JPanel tSetPanel = new JPanel(new FormLayout("default,5dlu,default,0dlu:grow,default,5dlu,default,5dlu,default","default"));
     tSetPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-    mLocationCB = new JComboBox<>(new String[] { mLocalizer.msg("top", "top"),
+    mLocationCB = new JComboBox<>(new String[] { LOCALIZER.msg("top", "top"),
         Localizer.getLocalization(Localizer.I18N_LEFT), });
 
-    if ("west".equals(Settings.propToolbarLocation.getString())) {
+    if ("west".equals(Settings.ToolBar.LOCATION.getString())) {
       mLocationCB.setSelectedIndex(1);
       mWest = true;
     } else {
@@ -197,7 +197,7 @@ public class ToolBarDragAndDropSettings extends JDialog implements
         ContextMenu.mLocalizer.msg("text", "text"),
         ContextMenu.mLocalizer.msg("icon", "icon") });
 
-    String style = Settings.propToolbarButtonStyle.getString();
+    String style = Settings.ToolBar.BUTTON_STYLE.getString();
     if ("text".equals(style)) {
       mShowCB.setSelectedIndex(1);
     } else if ("icon".equals(style)) {
@@ -208,13 +208,13 @@ public class ToolBarDragAndDropSettings extends JDialog implements
 
     mUseBigIconsCb = new JCheckBox(ContextMenu.mLocalizer.msg("bigIcons",
         "Use big icons"));
-    mUseBigIconsCb.setSelected(Settings.propToolbarUseBigIcons.getBoolean());
+    mUseBigIconsCb.setSelected(Settings.ToolBar.USE_BIG_ICONS.getBoolean());
 
     CellConstraints cc = new CellConstraints();
 
-    tSetPanel.add(new JLabel(mLocalizer.msg("location", "Location")),cc.xy(1,1));
+    tSetPanel.add(new JLabel(LOCALIZER.msg("location", "Location")),cc.xy(1,1));
     tSetPanel.add(mLocationCB,cc.xy(3,1));
-    tSetPanel.add(new JLabel(mLocalizer.msg("icons", "Icons")),cc.xy(5,1));
+    tSetPanel.add(new JLabel(LOCALIZER.msg("icons", "Icons")),cc.xy(5,1));
     tSetPanel.add(mShowCB,cc.xy(7,1));
     tSetPanel.add(mUseBigIconsCb,cc.xy(9,1));
 
@@ -245,12 +245,11 @@ public class ToolBarDragAndDropSettings extends JDialog implements
     this.getContentPane().add(pane, cc.xy(1,3));
     this.getContentPane().add(tSetPanel, cc.xy(1,5));
     this.getContentPane().add(okButtonPanel, cc.xy(1,7));
-
+    
     // Set up the windows attributes
-    this.setSize(630, 400);
+    Settings.layoutWindow("ToolBarDragAndDropSettings.class", this, new Dimension(630, 400), MainFrame.getInstance());
     this.addWindowListener(this);
-    this.setTitle(mLocalizer.msg("modifyToolbar", "Modify Toolbar"));
-    this.setLocationRelativeTo(MainFrame.getInstance());
+    this.setTitle(LOCALIZER.msg("modifyToolbar", "Modify Toolbar"));
     this.setVisible(true);
 
     buildButtonPanel();
@@ -299,7 +298,7 @@ public class ToolBarDragAndDropSettings extends JDialog implements
 
       Icon icon = (Icon) action.getValue(Plugin.BIG_ICON);
       if (icon == null) {
-        mLog.warning("Big icon missing for action " + action.getValue(Action.NAME));
+        LOG.warning("Big icon missing for action " + action.getValue(Action.NAME));
         icon = (Icon) action.getValue(Action.SMALL_ICON);
       }
       if ((icon != null) && (action.getValue(Plugin.NO_ICON_RESIZE) == null || !((Boolean)action.getValue(Plugin.NO_ICON_RESIZE)))
@@ -598,7 +597,7 @@ public class ToolBarDragAndDropSettings extends JDialog implements
       ids[i] = (String) action.getValue(ToolBar.ACTION_ID_KEY);
     }
     DefaultToolBarModel.getInstance().setButtonIds(ids);
-    Settings.propToolbarButtons.setStringArray(ids);
+    Settings.ToolBar.BUTTONS.setStringArray(ids);
 
     ToolBar toolbar = MainFrame.getInstance().getToolbar();
     int inx = mShowCB.getSelectedIndex();

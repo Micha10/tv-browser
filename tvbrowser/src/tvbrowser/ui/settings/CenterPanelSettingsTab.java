@@ -53,7 +53,7 @@ import util.ui.OrderChooser;
 import util.ui.UiUtilities;
 
 public class CenterPanelSettingsTab implements SettingsTab {
-  private static final Localizer mLocalizer = Localizer.getLocalizerFor(CenterPanelSettingsTab.class);
+  private static final Localizer LOCALIZER = Localizer.getLocalizerFor(CenterPanelSettingsTab.class);
 
   private OrderChooser<PluginCenterPanel> mPanelChooser;
   private JCheckBox mTabBarAlwaysVisible;
@@ -106,7 +106,7 @@ public class CenterPanelSettingsTab implements SettingsTab {
       }catch(Throwable t) {}
     }
     
-    for(String id : Settings.propCenterPanelArr.getStringArray()) {
+    for(String id : Settings.CenterPanels.CENTER_PANEL_ARR.getStringArray()) {
       for(PluginCenterPanel centerPanel : mAllPanelList) {
         if(id.equals(centerPanel.getId())) {
           currentOrderList.add(centerPanel);  
@@ -115,11 +115,11 @@ public class CenterPanelSettingsTab implements SettingsTab {
     }
     
     mPanelChooser = new OrderChooser<>(currentOrderList.toArray(new PluginCenterPanel[currentOrderList.size()]), mAllPanelList.toArray(new PluginCenterPanel[mAllPanelList.size()]));
-    mTabBarAlwaysVisible = new JCheckBox(mLocalizer.msg("alwaysShowTabs", "Always show tabs"), Settings.propAlwaysShowTabBarForCenterPanel.getBoolean());
+    mTabBarAlwaysVisible = new JCheckBox(LOCALIZER.msg("alwaysShowTabs", "Always show tabs"), Settings.CenterPanels.ALWAYS_SHOW_TAB_BAR_FOR_CENTER_PANEL.getBoolean());
     
-    mNameOnly = new JRadioButton(mLocalizer.msg("nameOnly", "Name only"), Settings.propTabBarCenterPanelNameIconConfig.getInt() == Settings.VALUE_NAME_ONLY);
-    mIconOnly = new JRadioButton(mLocalizer.msg("iconOnly", "Icon only (if available)"), Settings.propTabBarCenterPanelNameIconConfig.getInt() == Settings.VALUE_ICON_ONLY);
-    mNameAndIcon = new JRadioButton(mLocalizer.msg("nameAndIcon", "Name and icon"), Settings.propTabBarCenterPanelNameIconConfig.getInt() == Settings.VALUE_NAME_AND_ICON);
+    mNameOnly = new JRadioButton(LOCALIZER.msg("nameOnly", "Name only"), Settings.CenterPanels.TAB_BAR_CENTER_PANEL_NAME_ICON_CONFIG.getInt() == Settings.VALUE_NAME_ONLY);
+    mIconOnly = new JRadioButton(LOCALIZER.msg("iconOnly", "Icon only (if available)"), Settings.CenterPanels.TAB_BAR_CENTER_PANEL_NAME_ICON_CONFIG.getInt() == Settings.VALUE_ICON_ONLY);
+    mNameAndIcon = new JRadioButton(LOCALIZER.msg("nameAndIcon", "Name and icon"), Settings.CenterPanels.TAB_BAR_CENTER_PANEL_NAME_ICON_CONFIG.getInt() == Settings.VALUE_NAME_AND_ICON);
     
     final ButtonGroup bg = new ButtonGroup();
     
@@ -132,11 +132,11 @@ public class CenterPanelSettingsTab implements SettingsTab {
     
     pb.border(Borders.DIALOG);
     
-    pb.addSeparator(mLocalizer.msg("info", "Shown tabs in the main window"), CC.xyw(1, 1, 3));
+    pb.addSeparator(LOCALIZER.msg("info", "Shown tabs in the main window"), CC.xyw(1, 1, 3));
     pb.add(mPanelChooser, CC.xy(2,3));
     pb.add(mTabBarAlwaysVisible, CC.xy(2, 5));
     
-    pb.addSeparator(mLocalizer.msg("nameAndIconSep", "Name and icon display"), CC.xyw(1, 7, 3));
+    pb.addSeparator(LOCALIZER.msg("nameAndIconSep", "Name and icon display"), CC.xyw(1, 7, 3));
     pb.add(mNameOnly, CC.xy(2, 9));
     pb.add(mIconOnly, CC.xy(2, 11));
     pb.add(mNameAndIcon, CC.xy(2, 13));
@@ -157,9 +157,9 @@ public class CenterPanelSettingsTab implements SettingsTab {
     }
     
     if(!idList.contains(MainFrame.getInstance().getProgramTableScrollPaneWrapper().getId())) {
-      String[] options = new String[] {mLocalizer.msg("programTableTabKeepDeactivated", "Keep deactivated"),mLocalizer.msg("programTableTabActivate", "Activate program table tab again")};
+      String[] options = new String[] {LOCALIZER.msg("programTableTabKeepDeactivated", "Keep deactivated"),LOCALIZER.msg("programTableTabActivate", "Activate program table tab again")};
       
-      if(DontShowAgainOptionBox.showOptionDialog("CenterPanelSettings.programTableTabdeselected", UiUtilities.getLastModalChildOf(MainFrame.getInstance()), mLocalizer.msg("programTableDeselected", "You have deselected the program table you might miss some programs in the future.\nAre you sure?"),mLocalizer.msg("programTableDeselectedTitle", "Program table deselected"),JOptionPane.QUESTION_MESSAGE,JOptionPane.YES_NO_OPTION,options,options[1],null) == JOptionPane.NO_OPTION) {
+      if(DontShowAgainOptionBox.showOptionDialog("CenterPanelSettings.programTableTabdeselected", UiUtilities.getLastModalChildOf(MainFrame.getInstance()), LOCALIZER.msg("programTableDeselected", "You have deselected the program table you might miss some programs in the future.\nAre you sure?"),LOCALIZER.msg("programTableDeselectedTitle", "Program table deselected"),JOptionPane.QUESTION_MESSAGE,JOptionPane.YES_NO_OPTION,options,options[1],null) == JOptionPane.NO_OPTION) {
         idList.add(0, MainFrame.getInstance().getProgramTableScrollPaneWrapper().getId());
       }
     }
@@ -174,9 +174,9 @@ public class CenterPanelSettingsTab implements SettingsTab {
       disabledIdList.add(centerPanel.getId());
     }
     
-    Settings.propCenterPanelArr.setStringArray(idList.toArray(new String[idList.size()]));
-    Settings.propAlwaysShowTabBarForCenterPanel.setBoolean(mTabBarAlwaysVisible.isSelected());
-    Settings.propDisabledCenterPanelArr.setStringArray(disabledIdList.toArray(new String[disabledIdList.size()]));
+    Settings.CenterPanels.CENTER_PANEL_ARR.setStringArray(idList.toArray(new String[idList.size()]));
+    Settings.CenterPanels.ALWAYS_SHOW_TAB_BAR_FOR_CENTER_PANEL.setBoolean(mTabBarAlwaysVisible.isSelected());
+    Settings.CenterPanels.DISABLED_CENTER_PANEL_ARR.setStringArray(disabledIdList.toArray(new String[0]));
     
     int selection = Settings.VALUE_NAME_AND_ICON;
     
@@ -187,7 +187,7 @@ public class CenterPanelSettingsTab implements SettingsTab {
       selection = Settings.VALUE_ICON_ONLY;
     }
     
-    Settings.propTabBarCenterPanelNameIconConfig.setInt(selection);
+    Settings.CenterPanels.TAB_BAR_CENTER_PANEL_NAME_ICON_CONFIG.setInt(selection);
   }
 
   @Override
@@ -197,6 +197,6 @@ public class CenterPanelSettingsTab implements SettingsTab {
 
   @Override
   public String getTitle() {
-    return mLocalizer.msg("title", "Main window");
+    return LOCALIZER.msg("title", "Main window");
   }
 }

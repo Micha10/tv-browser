@@ -44,6 +44,7 @@ import devplugin.PluginManager;
 import devplugin.Program;
 import devplugin.ProgramFieldType;
 import devplugin.ProgramReceiveTarget;
+import devplugin.SettingsItem;
 import tvbrowser.TVBrowser;
 import tvbrowser.core.Settings;
 import tvbrowser.core.plugin.PluginManagerImpl;
@@ -418,7 +419,7 @@ public class ProtocolHandler {
     }
     else {
       String name = parts[1].substring(0,parts[1].indexOf("="));
-      String value = parts[1].substring(parts[1].indexOf("=")+1);
+      String value = parts[1].substring(parts[1].indexOf("=")+1).replace("startup", SettingsItem.GENRAL.substring(1));
       
       if(name.equals(MESSAGE_SETTINGS)) {
         SwingUtilities.invokeLater(() -> PluginManagerImpl.getInstance().showSettings((value.contains(".") ? "" : "#")+value));

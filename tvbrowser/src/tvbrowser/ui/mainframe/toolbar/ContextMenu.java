@@ -109,7 +109,7 @@ public class ContextMenu {
 
   private static JCheckBoxMenuItem createViewSearchMenu() {
     final JCheckBoxMenuItem showSearch = new JCheckBoxMenuItem(
-        ToolBarDragAndDropSettings.mLocalizer
+        ToolBarDragAndDropSettings.LOCALIZER
             .msg("showSearchField", "Show search field"));
     showSearch.setSelected(Settings.propIsSearchFieldVisible.getBoolean());
     showSearch.addActionListener(e -> {
@@ -156,7 +156,7 @@ public class ContextMenu {
   
   private static JCheckBoxMenuItem createViewMenu() {
     final JCheckBoxMenuItem show = new JCheckBoxMenuItem(
-        ToolBarDragAndDropSettings.mLocalizer
+        ToolBarDragAndDropSettings.LOCALIZER
             .msg("showToolbar", "Show toolbar"));
     show.setSelected(Settings.propIsToolbarVisible.getBoolean());
     show.addActionListener(e -> {

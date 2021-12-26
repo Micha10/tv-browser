@@ -53,7 +53,7 @@ import util.ui.TabLayout;
 public class ProxySettingsTab implements devplugin.SettingsTab {
 
   /** The localizer for this class. */
-  private static final util.i18n.Localizer mLocalizer
+  private static final util.i18n.Localizer LOCALIZER
     = util.i18n.Localizer.getLocalizerFor(ProxySettingsTab.class);
   
   private ProxySettingsPanel mHttpProxySettingsPanel;
@@ -80,15 +80,15 @@ public class ProxySettingsTab implements devplugin.SettingsTab {
     mSettingsPn.add(main, BorderLayout.CENTER);
     
     // HTTP proxy
-    String msgProxy = mLocalizer.msg("httpProxy", "HTTP Proxy");
-    String msgUseProxy = mLocalizer.msg("useHttpProxy", "Use proxy for HTTP");
+    String msgProxy = LOCALIZER.msg("httpProxy", "HTTP Proxy");
+    String msgUseProxy = LOCALIZER.msg("useHttpProxy", "Use proxy for HTTP");
     mHttpProxySettingsPanel = new ProxySettingsPanel(msgProxy, msgUseProxy);
-    mHttpProxySettingsPanel.setUseProxy(Settings.propHttpProxyUseProxy.getBoolean());
-    mHttpProxySettingsPanel.setHost(Settings.propHttpProxyHost.getString());
-    mHttpProxySettingsPanel.setPort(Settings.propHttpProxyPort.getString());
-    mHttpProxySettingsPanel.setAuthentifyAtProxy(Settings.propHttpProxyAuthentifyAtProxy.getBoolean());
-    mHttpProxySettingsPanel.setUser(Settings.propHttpProxyUser.getString());
-    mHttpProxySettingsPanel.setPassword(Settings.propHttpProxyPassword.getString());
+    mHttpProxySettingsPanel.setUseProxy(Settings.Proxy.USE_PROXY.getBoolean());
+    mHttpProxySettingsPanel.setHost(Settings.Proxy.HOST.getString());
+    mHttpProxySettingsPanel.setPort(Settings.Proxy.PORT.getString());
+    mHttpProxySettingsPanel.setAuthentifyAtProxy(Settings.Proxy.AUTHENTIFY_AT_PROXY.getBoolean());
+    mHttpProxySettingsPanel.setUser(Settings.Proxy.USER.getString());
+    mHttpProxySettingsPanel.setPassword(Settings.Proxy.PASSWORD.getString());
     main.add(mHttpProxySettingsPanel);
     
     return mSettingsPn;
@@ -100,12 +100,12 @@ public class ProxySettingsTab implements devplugin.SettingsTab {
    * Called by the host-application, if the user wants to save the settings.
    */
   public void saveSettings() {
-    Settings.propHttpProxyUseProxy.setBoolean(mHttpProxySettingsPanel.getUseProxy());
-    Settings.propHttpProxyHost.setString(mHttpProxySettingsPanel.getHost());
-    Settings.propHttpProxyPort.setString(mHttpProxySettingsPanel.getPort());
-    Settings.propHttpProxyAuthentifyAtProxy.setBoolean(mHttpProxySettingsPanel.getAuthentifyAtProxy());
-    Settings.propHttpProxyUser.setString(mHttpProxySettingsPanel.getUser());
-    Settings.propHttpProxyPassword.setString(mHttpProxySettingsPanel.getPassword());
+    Settings.Proxy.USE_PROXY.setBoolean(mHttpProxySettingsPanel.getUseProxy());
+    Settings.Proxy.HOST.setString(mHttpProxySettingsPanel.getHost());
+    Settings.Proxy.PORT.setString(mHttpProxySettingsPanel.getPort());
+    Settings.Proxy.AUTHENTIFY_AT_PROXY.setBoolean(mHttpProxySettingsPanel.getAuthentifyAtProxy());
+    Settings.Proxy.USER.setString(mHttpProxySettingsPanel.getUser());
+    Settings.Proxy.PASSWORD.setString(mHttpProxySettingsPanel.getPassword());
     TVBrowser.updateProxySettings();
   }
   
@@ -120,7 +120,7 @@ public class ProxySettingsTab implements devplugin.SettingsTab {
    * Returns the title of the tab-sheet.
    */
   public String getTitle() {
-    return mLocalizer.msg("name", "Proxy");
+    return LOCALIZER.msg("name", "Proxy");
   }
   
   // inner class ProxySettingsPanel
@@ -152,28 +152,28 @@ public class ProxySettingsTab implements devplugin.SettingsTab {
       mUseProxyChB.addActionListener(updateEnabledListener);
       add(mUseProxyChB, cc.xyw(2,3,6));
 
-      mHostLb = new JLabel(mLocalizer.msg("host", "Host"));
+      mHostLb = new JLabel(LOCALIZER.msg("host", "Host"));
       add(mHostLb, cc.xyw(3,5,1));
       mHostTF = new JTextField(20);
       add(mHostTF, cc.xy(5,5));
 
-      mPortLb = new JLabel(mLocalizer.msg("port", "Port"));
+      mPortLb = new JLabel(LOCALIZER.msg("port", "Port"));
       add(mPortLb, cc.xy(7,5));
       mPortTF = new JTextField(4);
       add(mPortTF, cc.xy(9,5));
 
-      msg = mLocalizer.msg("authentifyAtProxy", "Authentify at proxy");
+      msg = LOCALIZER.msg("authentifyAtProxy", "Authentify at proxy");
       mAuthentifyAtProxyChB = new JCheckBox(msg);
       mAuthentifyAtProxyChB.addActionListener(updateEnabledListener);
       add(mAuthentifyAtProxyChB, cc.xyw(3,7,5));
 
       JPanel panel = new JPanel(new FormLayout("10dlu, pref, 3dlu, fill:pref:grow", "pref, 3dlu, pref"));
       
-      mUserLb = new JLabel(mLocalizer.msg("user", "User"));
+      mUserLb = new JLabel(LOCALIZER.msg("user", "User"));
       panel.add(mUserLb, cc.xy(2,1));
       mUserTF = new JTextField(10);
       panel.add(mUserTF, cc.xy(4,1));
-      mPasswordLb = new JLabel(mLocalizer.msg("password", "Password"));
+      mPasswordLb = new JLabel(LOCALIZER.msg("password", "Password"));
       panel.add(mPasswordLb, cc.xy(2,3));
       mPasswordPF = new JPasswordField(10);
       panel.add(mPasswordPF, cc.xy(4,3));

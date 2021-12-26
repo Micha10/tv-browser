@@ -155,11 +155,11 @@ public class ProgramMenuItemUI extends BasicMenuItemUI {
       }
 
       if (!isMarked) {
-        g.setColor(mTime == -1 ? Settings.propProgramTableColorOnAirLight.getColor()
+        g.setColor(mTime == -1 ? Settings.propProgramPanelColorOnAirLight.getColor()
             : Settings.propTrayOnTimeProgramsLightBackground.getColor());
         g.fillRect(x + progressX - i.right - i.left, top, width - progressX + i.right + i.left, bottom);
       }
-      g.setColor(mTime == -1 ? Settings.propProgramTableColorOnAirDark.getColor() : isMarked ? new Color(markedColor
+      g.setColor(mTime == -1 ? Settings.propProgramPanelColorOnAirDark.getColor() : isMarked ? new Color(markedColor
           .darker().getRed(), markedColor.darker().getGreen(), markedColor.darker().getBlue(), (markedColor
           .darker().getAlpha() / 3)) : Settings.propTrayOnTimeProgramsDarkBackground.getColor());
 

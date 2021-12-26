@@ -42,7 +42,7 @@ import util.ui.TabLayout;
  */
 public class SingleImageBackgroundStyle implements TableBackgroundStyle {
 
-  private static final util.i18n.Localizer mLocalizer
+  private static final util.i18n.Localizer LOCALIZER
     = util.i18n.Localizer.getLocalizerFor(SingleImageBackgroundStyle.class);
 
   private JTextField mOneImageBackgroundTF;
@@ -61,8 +61,8 @@ public class SingleImageBackgroundStyle implements TableBackgroundStyle {
   public JPanel createSettingsContent() {
     mContent = new JPanel(new TabLayout(3));
 
-    mContent.add(new JLabel(mLocalizer.msg("oneImage.image", "Image")));
-    mOneImageBackgroundTF = new JTextField(Settings.propOneImageBackground.getString(), 25);
+    mContent.add(new JLabel(LOCALIZER.msg("oneImage.image", "Image")));
+    mOneImageBackgroundTF = new JTextField(Settings.ProgramTable.ONE_IMAGE_BACKGROUND.getString(), 25);
     mContent.add(mOneImageBackgroundTF);
     mContent.add(ProgramTableSettingsTab.createBrowseButton(mContent, mOneImageBackgroundTF));
 
@@ -72,12 +72,12 @@ public class SingleImageBackgroundStyle implements TableBackgroundStyle {
 
   public void storeSettings() {
     if (mContent != null) {
-      Settings.propOneImageBackground.setString(mOneImageBackgroundTF.getText());
+      Settings.ProgramTable.ONE_IMAGE_BACKGROUND.setString(mOneImageBackgroundTF.getText());
     }
   }
 
   public String getName() {
-    return mLocalizer.msg("style","One image");
+    return LOCALIZER.msg("style","One image");
   }
 
 

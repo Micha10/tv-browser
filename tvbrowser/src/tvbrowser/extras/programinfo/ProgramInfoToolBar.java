@@ -250,10 +250,10 @@ public class ProgramInfoToolBar extends JPanel implements ObjectSelectionListene
       }
       int progressX = (int)((component.getWidth())/(double)program.getLength() * runTime);
 
-      g.setColor(Settings.propProgramTableColorOnAirDark.getColor());
+      g.setColor(Settings.propProgramPanelColorOnAirDark.getColor());
       g.fillRect(0,1,progressX,component.getHeight()-2);
 
-      g.setColor(Settings.propProgramTableColorOnAirLight.getColor());
+      g.setColor(Settings.propProgramPanelColorOnAirLight.getColor());
       g.fillRect(0 + progressX,1,component.getWidth()-progressX,component.getHeight()-2);
       
       component.setForeground(Color.black);
