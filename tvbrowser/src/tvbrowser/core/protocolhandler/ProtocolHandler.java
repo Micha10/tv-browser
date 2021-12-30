@@ -318,8 +318,14 @@ public class ProtocolHandler {
         for(String prop : props) {
           String name = prop.substring(0,prop.indexOf("="));
           
-          if(!name.equals("CanReceiveProtocolMessages") && !name.equals("ServerRestoreEnabled")) {
-            Field f = Settings.class.getDeclaredField("prop"+name);
+          if(!name.equals("CanReceiveProtocolMessages") && !name.equals("ServerRestoreEnabled")
+              && !name.equals("General.CAN_RECEIVE_PROTOCOL_MESSAGE") && !name.equals("General.SERVER_RESTORE_ENABLED")
+              && name.indexOf(".") > 0) {
+            String className = name.substring(0,name.lastIndexOf(".")).replace(".", "$");
+            String propName = name.substring(name.indexOf(".")+1);
+            
+            Field f = Class.forName("tvbrowser.core.Settings$"+className).getDeclaredField(propName);
+            
             Object p = f.get(null);
             String value = prop.substring(prop.indexOf("=")+1);
             
