@@ -1537,7 +1537,7 @@ public class TVBrowser {
       Point p = mainFrame.getLocation();
       
       if((windowX < screen.getX()) || (windowY < screen.getY()) || windowX > (screen.getX() + screen.getWidth() - 30) || windowY > (screen.getY() + screen.getHeight() - 30)) {
-    	UiUtilities.centerAndShow(mainFrame, false);
+        UiUtilities.centerAndShow(mainFrame, false);
       }
       else if(!Settings.Window.MAXIMIZED.getBoolean() && (p.x != windowX || windowY != p.y)) {
         mainFrame.setLocation(windowX - Math.abs(p.x-windowX), windowY - Math.abs(p.y-windowY));
@@ -1649,8 +1649,8 @@ public class TVBrowser {
       LOG.info("Storing window size and location");
 
       int state = mainFrame.getExtendedState();
-
-      if(!mainFrame.isFullScreenMode()) {
+      
+      if(!mainFrame.isFullScreenMode() && MainFrame.getInstance().isVisible()) {
         boolean maximized = (state & JFrame.MAXIMIZED_BOTH) == JFrame.MAXIMIZED_BOTH;
         
         Settings.Window.MAXIMIZED.setBoolean(maximized);
@@ -1662,9 +1662,6 @@ public class TVBrowser {
           Settings.Window.X.setInt(mainFrame.getX());
           Settings.Window.Y.setInt(mainFrame.getY());
         }
-      }
-      else { 
-        
       }
     }
 
