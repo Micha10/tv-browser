@@ -183,7 +183,7 @@ public class ChannelGroupManager {
       }
     }
     
-    Settings.propLastChannelUpdate.setDate(new Date());
+    Settings.Channels.UPDATE_LAST.setDate(new Date());
   }
 
   private String createId(TvDataServiceProxy service, ChannelGroup group) {
@@ -249,6 +249,6 @@ public class ChannelGroupManager {
    * @since 2.3
    */
   private String[] getUsedGroupIds() {
-    return Settings.propUsedChannelGroups.getStringArray();
+    return Settings.Channels.USED_CHANNEL_GROUPS.getStringArray();
   }
 }

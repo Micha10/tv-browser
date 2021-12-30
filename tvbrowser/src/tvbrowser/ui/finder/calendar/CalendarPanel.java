@@ -44,7 +44,7 @@ public class CalendarPanel extends AbstractCalendarPanel {
   private int mFirstDayOfWeek = Calendar.MONDAY;
   
   public CalendarPanel(KeyListener keyListener) {
-    mFirstDayOfWeek = Settings.propFirstDayOfWeek.getInt();
+    mFirstDayOfWeek = Settings.Locales.FIRST_DAY_OF_WEEK.getInt();
     mKeyListener = keyListener;
     rebuildControls();
     addMouseListener(this);

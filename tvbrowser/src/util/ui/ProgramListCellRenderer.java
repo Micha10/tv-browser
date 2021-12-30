@@ -290,7 +290,7 @@ public class ProgramListCellRenderer extends DefaultListCellRenderer {
       }
       
       if (isSelected) {
-        mCenterPanel.setBackground(Settings.propKeyboardSelectedColor.getColor());
+        mCenterPanel.setBackground(Settings.ProgramPanel.COLOR_KEYBOARD_SELECTED.getColor());
       }
       else {
         mCenterPanel.setBackground(label.getBackground());

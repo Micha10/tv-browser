@@ -199,8 +199,8 @@ public class SelectFilterDlg extends JDialog implements ActionListener, WindowCl
         String id = node.getFilter().getClass().getName();
         String name = node.getFilter().getName();
         
-        mDefaultFilterBtn.setEnabled(!((Settings.propDefaultFilter.getString().equals(id + "###" + name)) ||
-            (Settings.propDefaultFilter.getString().trim().length() < 1 && node.getFilter() instanceof ShowAllFilter)));
+        mDefaultFilterBtn.setEnabled(!((Settings.General.FILTER_DEFAULT.getString().equals(id + "###" + name)) ||
+            (Settings.General.FILTER_DEFAULT.getString().trim().length() < 1 && node.getFilter() instanceof ShowAllFilter)));
         
         mEditBtn.setEnabled(!(node.getFilter() instanceof FavoriteFilter || node.getFilter() instanceof ShowAllFilter || node.getFilter() instanceof PluginFilter || node.getFilter() instanceof PluginsProgramFilter || node.getFilter() instanceof InfoBitFilter || node.getFilter() instanceof SingleChannelFilter));
         mCopyBtn.setEnabled(mEditBtn.isEnabled());
@@ -435,7 +435,7 @@ public class SelectFilterDlg extends JDialog implements ActionListener, WindowCl
   
   void setDefaultFilter(FilterNode node) {
     String defaultFilterId = node.getFilter().getClass().getName() + "###" + node.getFilter().getName();
-    Settings.propDefaultFilter.setString(defaultFilterId);
+    Settings.General.FILTER_DEFAULT.setString(defaultFilterId);
     mFilterTree.updateUI();
     mFilterTree.getModel().fireFilterDefaultChanged(node.getFilter());
   }

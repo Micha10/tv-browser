@@ -542,7 +542,7 @@ public class ChannelsSettingsTab implements SettingsTab, ListDropAction<Object> 
       
       if(plugin == null) {
         if(UiUtilities.showConfirmDialogOnMouseScreen(LOCALIZER.msg("syncInstallPluginMsg","You can synchronize your channels with the AndroidSync plugin, therefor it needs to be installed.\n\nDo you want to install the AndroidSync plugin now and synchronize the channels?"), LOCALIZER.msg("syncInstallPluginTitle","Install AndroidSync plugin?"), JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE) == JOptionPane.OK_OPTION) {
-          File target = new File(Settings.Channels.PLUGINS_DIRECTORY.getString(),"AndroidSync.jar");
+          File target = new File(Settings.Directories.PLUGINS.getString(),"AndroidSync.jar");
           boolean error = false;
           
           try {
@@ -1260,11 +1260,11 @@ public class ChannelsSettingsTab implements SettingsTab, ListDropAction<Object> 
     
     Settings.updateChannelFilters(channelArr);
     
-    if (!Settings.Channels.TRAY_USE_SPECIAL_CHANNELS.getBoolean()) {
+    if (!Settings.Tray.Channels.SPECIAL_USE.getBoolean()) {
       Channel[] tempArr = new Channel[channelArr.length > 10 ? 10
           : channelArr.length];
       System.arraycopy(channelArr, 0, tempArr, 0, tempArr.length);
-      Settings.Channels.TRAY_SPECIAL_CHANNELS.setChannelArray(tempArr);
+      Settings.Tray.Channels.SPECIAL.setChannelArray(tempArr);
     }
   }
 

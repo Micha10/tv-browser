@@ -89,7 +89,7 @@ public class PluginPictureSettings {
    */
   public boolean isShowingPictures() {
     if(mType == ALL_PLUGINS_SETTINGS_TYPE) {
-      return Settings.propPluginsPictureSetting.getInt() != NO_PICTURE_TYPE;
+      return Settings.Pictures.PLUGINS_SETTING.getInt() != NO_PICTURE_TYPE;
     }
     
     return mType != NO_PICTURE_TYPE;
@@ -103,7 +103,7 @@ public class PluginPictureSettings {
    */
   public boolean isShowingDescription() {
     if(mType == ALL_PLUGINS_SETTINGS_TYPE) {
-      return Settings.propPluginsPictureSetting.getInt() == PICTURE_AND_DISCRIPTION_TYPE;
+      return Settings.Pictures.PLUGINS_SETTING.getInt() == PICTURE_AND_DISCRIPTION_TYPE;
     }
     
     return mType == PICTURE_AND_DISCRIPTION_TYPE;

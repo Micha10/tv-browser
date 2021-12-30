@@ -732,7 +732,7 @@ public abstract class AbstractPluginProxy implements PluginProxy, ContextMenuIf 
 
         // Update the settings
         String[] deactivatedPlugins = PluginProxyManager.getInstance().getDeactivatedPluginIds();
-        Settings.propDeactivatedPlugins.setStringArray(deactivatedPlugins);
+        Settings.Plugins.DEACTIVATED.setStringArray(deactivatedPlugins);
       }
     });
   }

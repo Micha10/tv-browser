@@ -553,7 +553,7 @@ public class UserFilter implements devplugin.ProgramFilter {
             acceptable = !(component instanceof FavoritesFilterComponent) && !(component instanceof FilterComponentNewFavoritePrograms);
             
             if(acceptable) {
-              final String[] blocked = Settings.propFavoriteBlockedFilterComponents.getStringArray();
+              final String[] blocked = Settings.Other.FAVORITE_BLOCKED_FILTER_COMPONENTS.getStringArray();
               
               for(final String test : blocked) {
                 final String name = component.getClass().getCanonicalName();

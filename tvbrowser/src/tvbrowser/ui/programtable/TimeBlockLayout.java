@@ -77,8 +77,8 @@ public class TimeBlockLayout extends AbstractProgramTableLayout {
 
     // we need to check all the time from midnight to end of day because the filters may include
     // programs before the beginOfDay time
-    int blockSize = Settings.propTimeBlockSize.getInt() * 60;
-    int blockCount = ((Settings.propProgramTableEndOfDay.getInt() + 24 * 60) / blockSize) +1;
+    int blockSize = Settings.ProgramTable.TIME_BLOCK_SIZE.getInt() * 60;
+    int blockCount = ((Settings.ProgramTable.END_OF_DAY.getInt() + 24 * 60) / blockSize) +1;
     
     Date nextProgramTableDate = model.getDate().addDays(1);
     

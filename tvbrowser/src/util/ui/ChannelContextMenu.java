@@ -119,10 +119,10 @@ public class ChannelContextMenu implements ActionListener {
 
       // is the layout configuration for the channel chooser
       if (mSource instanceof ChannelChooserPanel) {
-        if (Settings.propShowChannelIconsInChannellist.getBoolean()
-            && Settings.propShowChannelNamesInChannellist.getBoolean()) {
+        if (Settings.IconAndNames.SHOW_ICONS_IN_CHANNEL_LIST.getBoolean()
+            && Settings.IconAndNames.SHOW_NAMES_IN_CHANNEL_LIST.getBoolean()) {
           layoutBoth.setSelected(true);
-        } else if (Settings.propShowChannelIconsInChannellist.getBoolean()) {
+        } else if (Settings.IconAndNames.SHOW_ICONS_IN_CHANNEL_LIST.getBoolean()) {
           layoutLogo.setSelected(true);
         } else {
           layoutName.setSelected(true);
@@ -130,10 +130,10 @@ public class ChannelContextMenu implements ActionListener {
       }
       // or is it for the program table?
       else if (mSource instanceof ChannelLabel) {
-        if (Settings.propShowChannelIconsInProgramTable.getBoolean()
-            && Settings.propShowChannelNamesInProgramTable.getBoolean()) {
+        if (Settings.IconAndNames.SHOW_ICONS_IN_PROGRAM_TABLE.getBoolean()
+            && Settings.IconAndNames.SHOW_NAMES_IN_PROGRAM_TABLE.getBoolean()) {
           layoutBoth.setSelected(true);
-        } else if (Settings.propShowChannelIconsInProgramTable.getBoolean()) {
+        } else if (Settings.IconAndNames.SHOW_ICONS_IN_PROGRAM_TABLE.getBoolean()) {
           layoutLogo.setSelected(true);
         } else {
           layoutName.setSelected(true);
@@ -194,13 +194,13 @@ public class ChannelContextMenu implements ActionListener {
           boolean showNames = e.getSource() == layoutBoth || e.getSource() == layoutName;
           boolean showIcons = e.getSource() == layoutBoth || e.getSource() == layoutLogo;
           if (mSource instanceof ChannelChooserPanel) {
-            Settings.propShowChannelNamesInChannellist.setBoolean(showNames);
-            Settings.propShowChannelIconsInChannellist.setBoolean(showIcons);
+            Settings.IconAndNames.SHOW_NAMES_IN_CHANNEL_LIST.setBoolean(showNames);
+            Settings.IconAndNames.SHOW_ICONS_IN_CHANNEL_LIST.setBoolean(showIcons);
             MainFrame.getInstance().updateChannelChooser();
           }
           else {
-            Settings.propShowChannelNamesInProgramTable.setBoolean(showNames);
-            Settings.propShowChannelIconsInProgramTable.setBoolean(showIcons);
+            Settings.IconAndNames.SHOW_NAMES_IN_PROGRAM_TABLE.setBoolean(showNames);
+            Settings.IconAndNames.SHOW_ICONS_IN_PROGRAM_TABLE.setBoolean(showIcons);
             MainFrame.getInstance().getProgramTableScrollPane().updateChannelPanel();
           }
         } else {

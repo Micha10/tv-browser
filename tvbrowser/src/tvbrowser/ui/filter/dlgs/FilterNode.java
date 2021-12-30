@@ -428,8 +428,8 @@ public class FilterNode extends DefaultMutableTreeNode {
             String id = test.getFilter().getClass().getName();
             String name = test.getFilter().getName();
             
-            if((Settings.propDefaultFilter.getString().equals(id + "###" + name)) ||
-                (Settings.propDefaultFilter.getString().trim().length() < 1 && test.getFilter() instanceof ShowAllFilter)) {
+            if((Settings.General.FILTER_DEFAULT.getString().equals(id + "###" + name)) ||
+                (Settings.General.FILTER_DEFAULT.getString().trim().length() < 1 && test.getFilter() instanceof ShowAllFilter)) {
               item.setFont(item.getFont().deriveFont(Font.BOLD));
             }
             

@@ -86,7 +86,7 @@ public class SelectableItemRenderer<E> implements ListCellRenderer<SelectableIte
     else if(selectableItem.getItem() instanceof Channel) {
       JLabel l = new JLabel();
       
-      if(Settings.propShowChannelNamesInChannellist.getBoolean()) {
+      if(Settings.IconAndNames.SHOW_NAMES_IN_CHANNEL_LIST.getBoolean()) {
         l.setText(selectableItem.getItem().toString());
       }
       
@@ -96,7 +96,7 @@ public class SelectableItemRenderer<E> implements ListCellRenderer<SelectableIte
       
       l.setOpaque(false);
       
-      if(Settings.propShowChannelIconsInChannellist.getBoolean()) {
+      if(Settings.IconAndNames.SHOW_ICONS_IN_CHANNEL_LIST.getBoolean()) {
         l.setIcon(UiUtilities.createChannelIcon(((Channel)selectableItem.getItem()).getIcon()));
       }
       

@@ -181,7 +181,7 @@ public final class SoftwareUpdater {
       }
 
       mIsRequestingBlockArrayClear = true;
-      Settings.propBlockedPluginArray.clear(this);
+      Settings.Plugins.BLOCKED_ARRAY.clear(this);
       mIsRequestingBlockArrayClear = false;
 
       // remove all items we can't use
@@ -206,7 +206,7 @@ public final class SoftwareUpdater {
             if(item instanceof PluginsSoftwareUpdateItem) {
               PluginsSoftwareUpdateItem blocked = (PluginsSoftwareUpdateItem)item;
               mBlockRequestingPluginId = blocked.getId();
-              Settings.propBlockedPluginArray.addBlockedPlugin(this, mBlockRequestingPluginId, blocked.getMaximumVersion(), blocked.getRequiredVersion());
+              Settings.Plugins.BLOCKED_ARRAY.addBlockedPlugin(this, mBlockRequestingPluginId, blocked.getMaximumVersion(), blocked.getRequiredVersion());
               mBlockRequestingPluginId = null;
               it.remove();
               continue;
@@ -218,11 +218,11 @@ public final class SoftwareUpdater {
           }
         }
         
-        if(item.isAccessControl() && !Settings.propAccessControl.containsItem(className.toLowerCase())) {
-          Settings.propAccessControl.addItem(className.toLowerCase());
+        if(item.isAccessControl() && !Settings.Plugins.ACCESS_CONTROL.containsItem(className.toLowerCase())) {
+          Settings.Plugins.ACCESS_CONTROL.addItem(className.toLowerCase());
         }
-        else if(!item.isAccessControl() && Settings.propAccessControl.containsItem(className.toLowerCase())) {
-          Settings.propAccessControl.removeItem(className.toLowerCase());
+        else if(!item.isAccessControl() && Settings.Plugins.ACCESS_CONTROL.containsItem(className.toLowerCase())) {
+          Settings.Plugins.ACCESS_CONTROL.removeItem(className.toLowerCase());
         }
 
         // remove already installed plugins

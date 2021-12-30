@@ -65,7 +65,7 @@ public class ChannelLabel extends JLabel {
    * Creates the ChannelLabel
    */
   public ChannelLabel() {
-    this(Settings.propShowChannelIconsInChannellist.getBoolean(), Settings.propShowChannelNamesInChannellist.getBoolean(), false, false, false, false, Settings.propShowSortNumberInProgramLists.getBoolean());
+    this(Settings.IconAndNames.SHOW_ICONS_IN_CHANNEL_LIST.getBoolean(), Settings.IconAndNames.SHOW_NAMES_IN_CHANNEL_LIST.getBoolean(), false, false, false, false, Settings.IconAndNames.SHOW_SORT_NUMBER_IN_PROGRAM_LISTS.getBoolean());
   }
 
   /**
@@ -153,7 +153,7 @@ public class ChannelLabel extends JLabel {
    * @since 3.2.1
    */
   public ChannelLabel(boolean channelIconsVisible, boolean textIsVisible, boolean showDefaultValues, boolean showCountry, boolean showJoinedChannelInfo, boolean showTimeLimitation) {
-    this(channelIconsVisible, textIsVisible, showDefaultValues, showCountry, showJoinedChannelInfo, showTimeLimitation, Settings.propShowSortNumberInProgramLists.getBoolean());
+    this(channelIconsVisible, textIsVisible, showDefaultValues, showCountry, showJoinedChannelInfo, showTimeLimitation, Settings.IconAndNames.SHOW_SORT_NUMBER_IN_PROGRAM_LISTS.getBoolean());
   }
   
   /**
@@ -213,7 +213,7 @@ public class ChannelLabel extends JLabel {
    * @param channel Channel to display
    */
   public ChannelLabel(Channel channel) {
-  	this(channel, Settings.propShowChannelIconsInChannellist.getBoolean(),Settings.propShowChannelNamesInChannellist.getBoolean());
+  	this(channel, Settings.IconAndNames.SHOW_ICONS_IN_CHANNEL_LIST.getBoolean(),Settings.IconAndNames.SHOW_NAMES_IN_CHANNEL_LIST.getBoolean());
   }
 
   /**
@@ -237,7 +237,7 @@ public class ChannelLabel extends JLabel {
    * @since 2.2
    */
   public ChannelLabel(Channel channel, boolean channelIconsVisible) {
-  	this(channel, channelIconsVisible, Settings.propShowChannelNamesInChannellist.getBoolean());
+  	this(channel, channelIconsVisible, Settings.IconAndNames.SHOW_NAMES_IN_CHANNEL_LIST.getBoolean());
   }
 
   /**

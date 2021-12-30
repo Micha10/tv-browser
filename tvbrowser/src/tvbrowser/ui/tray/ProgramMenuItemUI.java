@@ -103,7 +103,7 @@ public class ProgramMenuItemUI extends BasicMenuItemUI {
       g.setColor(bgColor);
     } else if (!isOnAir
         && !isMarked
-        && ((mTime != -1 && Settings.propTrayOnTimeProgramsLightBackground.getColor().getAlpha() == 0 && Settings.propTrayOnTimeProgramsDarkBackground
+        && ((mTime != -1 && Settings.Tray.OnTime.COLOR_PROGRESS_BACKGROUND_LIGHT.getColor().getAlpha() == 0 && Settings.Tray.OnTime.COLOR_PROGRESS_BACKGROUND_DARK
             .getColor().getAlpha() == 0) || mTime == -1)) {
       g.setColor(menuItem.getBackground());
     } else {
@@ -155,13 +155,13 @@ public class ProgramMenuItemUI extends BasicMenuItemUI {
       }
 
       if (!isMarked) {
-        g.setColor(mTime == -1 ? Settings.propProgramPanelColorOnAirLight.getColor()
-            : Settings.propTrayOnTimeProgramsLightBackground.getColor());
+        g.setColor(mTime == -1 ? Settings.ProgramPanel.COLOR_ON_AIR_LIGHT.getColor()
+            : Settings.Tray.OnTime.COLOR_PROGRESS_BACKGROUND_LIGHT.getColor());
         g.fillRect(x + progressX - i.right - i.left, top, width - progressX + i.right + i.left, bottom);
       }
-      g.setColor(mTime == -1 ? Settings.propProgramPanelColorOnAirDark.getColor() : isMarked ? new Color(markedColor
+      g.setColor(mTime == -1 ? Settings.ProgramPanel.COLOR_ON_AIR_DARK.getColor() : isMarked ? new Color(markedColor
           .darker().getRed(), markedColor.darker().getGreen(), markedColor.darker().getBlue(), (markedColor
-          .darker().getAlpha() / 3)) : Settings.propTrayOnTimeProgramsDarkBackground.getColor());
+          .darker().getAlpha() / 3)) : Settings.Tray.OnTime.COLOR_PROGRESS_BACKGROUND_DARK.getColor());
 
       g.fillRect(x, top, progressX - i.right - i.left, bottom);
     } else if (mProgram.isExpired()) {
@@ -174,7 +174,7 @@ public class ProgramMenuItemUI extends BasicMenuItemUI {
   }
 
   protected void paintText(Graphics g, JMenuItem menuItem, Rectangle textRect, String text) {
-    if (g instanceof Graphics2D && Settings.propTrayIsAntialiasing.getBoolean()) {
+    if (g instanceof Graphics2D && Settings.Tray.ANTIALIASING.getBoolean()) {
       Graphics2D g2d = (Graphics2D) g;
       g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
     }
@@ -190,7 +190,7 @@ public class ProgramMenuItemUI extends BasicMenuItemUI {
 
     if (mShowName) {
       mChannelName.paintIcon(null, g, x, y);
-      x += Settings.propTrayChannelWidth.getInt() + menuItem.getIconTextGap();
+      x += Settings.Tray.Channels.WIDTH.getInt() + menuItem.getIconTextGap();
     }
 
     int temp = y + (menuItem.getFont().getSize() * (mChannelName.getLineCount() / 2 + 1));

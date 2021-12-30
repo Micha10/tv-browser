@@ -361,7 +361,7 @@ public class ReminderListPanel extends TabListenerPanel implements PersonaListen
     
     mTable.setColumnModel(cModel);
     mTable.setModel(model);
-    mTable.setSelectionBackground(Settings.propKeyboardSelectedColor.getColor());
+    mTable.setSelectionBackground(Settings.ProgramPanel.COLOR_KEYBOARD_SELECTED.getColor());
     
     final ProgramTableCellRenderer backend = new ProgramTableCellRenderer(new PluginPictureSettings(PluginPictureSettings.ALL_PLUGINS_SETTINGS_TYPE));
     

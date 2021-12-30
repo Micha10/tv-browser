@@ -146,7 +146,7 @@ public class TvDataServiceProxyManager {
    */
   public void init() {
     try {
-      String tvdataRoot = Settings.propTVDataDirectory.getString();
+      String tvdataRoot = Settings.Directories.TV_DATA.getString();
       File rootDir = new File(tvdataRoot);
       if (!rootDir.exists()) {
         rootDir.mkdirs();
@@ -155,7 +155,7 @@ public class TvDataServiceProxyManager {
 
       // load only the settings of services with current subscription
       TvDataServiceProxy[] proxies = getDataServices();
-      String[] subscribedServices = Settings.propCurrentlyUsedDataServiceIds
+      String[] subscribedServices = Settings.Channels.DATA_SERVICE_IDS_USED_CURRENTLY
           .getStringArray();
       java.util.List<String> list = Arrays.asList(subscribedServices);
 
@@ -241,7 +241,7 @@ public class TvDataServiceProxyManager {
   public void loadNotSubscribed() {
     try {
       // load only the settings of services WITHOUT subscription
-      String[] subscribedServices = Settings.propCurrentlyUsedDataServiceIds
+      String[] subscribedServices = Settings.Channels.DATA_SERVICE_IDS_USED_CURRENTLY
           .getStringArray();
       if (subscribedServices.length == 0) {
         return;

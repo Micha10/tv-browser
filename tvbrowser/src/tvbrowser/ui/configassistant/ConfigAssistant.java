@@ -79,8 +79,8 @@ public class ConfigAssistant extends JDialog implements ActionListener, PrevNext
       }
     });
 
-    File tvDataDir = new File(Settings.propTVDataDirectory.getString().trim());
-    Settings.propTVDataDirectory.setString(tvDataDir.toString().replaceAll("\\\\","/"));
+    File tvDataDir = new File(Settings.Directories.TV_DATA.getString().trim());
+    Settings.Directories.TV_DATA.setString(tvDataDir.toString().replaceAll("\\\\","/"));
     TvDataServiceProxyManager.getInstance().setTvDataDir(tvDataDir);
 
     setTitle(mLocalizer.msg("title", "Setup assistant"));
@@ -197,7 +197,7 @@ public class ConfigAssistant extends JDialog implements ActionListener, PrevNext
         mCancelBt.setEnabled(true);
       } else if (o == mNextBt) {
         if (mCurCardPanel == mFinishedPanel) {
-          tvbrowser.core.Settings.propShowAssistant.setBoolean(false);
+          tvbrowser.core.Settings.Window.ASSISTANT_SHOW.setBoolean(false);
           setVisible(false);
         } else {
           if (!mCurCardPanel.onNext()) {
@@ -235,7 +235,7 @@ public class ConfigAssistant extends JDialog implements ActionListener, PrevNext
 
   private void cancel() {
     JCheckBox notShowAgain = new JCheckBox(mLocalizer.msg("notShowAgain", "Don't show assistant again."));
-    notShowAgain.setSelected(!tvbrowser.core.Settings.propShowAssistant.getBoolean());
+    notShowAgain.setSelected(!tvbrowser.core.Settings.Window.ASSISTANT_SHOW.getBoolean());
 
     Object[] values = { mLocalizer.msg("cancelDlg", "message"), notShowAgain };
     Object[] buttons = { mLocalizer.msg("button.1", "Close assistant"),
@@ -245,7 +245,7 @@ public class ConfigAssistant extends JDialog implements ActionListener, PrevNext
         JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, null, buttons, buttons[1]);
 
     if (selectedValue == 0) {
-      tvbrowser.core.Settings.propShowAssistant.setBoolean(!notShowAgain.isSelected());
+      tvbrowser.core.Settings.Window.ASSISTANT_SHOW.setBoolean(!notShowAgain.isSelected());
       setVisible(false);
     }
   }
@@ -268,7 +268,7 @@ public class ConfigAssistant extends JDialog implements ActionListener, PrevNext
 
   public void close() {
     if (mCurCardPanel == mFinishedPanel) {
-      tvbrowser.core.Settings.propShowAssistant.setBoolean(false);
+      tvbrowser.core.Settings.Window.ASSISTANT_SHOW.setBoolean(false);
       setVisible(false);
     } else {
       cancel();

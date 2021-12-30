@@ -578,8 +578,8 @@ public class FilterTree extends JTree implements DragGestureListener, DropTarget
       String id = last.getFilter().getClass().getName();
       String name = last.getFilter().getName();
       
-      if(!((Settings.propDefaultFilter.getString().equals(id + "###" + name)) ||
-          (Settings.propDefaultFilter.getString().trim().length() < 1 && last.getFilter() instanceof ShowAllFilter))) {
+      if(!((Settings.General.FILTER_DEFAULT.getString().equals(id + "###" + name)) ||
+          (Settings.General.FILTER_DEFAULT.getString().trim().length() < 1 && last.getFilter() instanceof ShowAllFilter))) {
         item = new JMenuItem(LOCALIZER.msg("setDefault","Set as default"),IconLoader.getInstance().getIconFromTheme("actions", "view-filter", 16));
         item.addActionListener(e -> {
           SelectFilterDlg.getInstance().setDefaultFilter(last);
@@ -735,8 +735,8 @@ public class FilterTree extends JTree implements DragGestureListener, DropTarget
           String id = test.getFilter().getClass().getName();
           String name = test.getFilter().getName();
           
-          if((Settings.propDefaultFilter.getString().equals(id + "###" + name)) ||
-              (Settings.propDefaultFilter.getString().trim().length() < 1 && test.getFilter() instanceof ShowAllFilter)) {
+          if((Settings.General.FILTER_DEFAULT.getString().equals(id + "###" + name)) ||
+              (Settings.General.FILTER_DEFAULT.getString().trim().length() < 1 && test.getFilter() instanceof ShowAllFilter)) {
             label = new JLabel(label.getText());
             label.setFont(label.getFont().deriveFont(Font.BOLD));
             

@@ -136,7 +136,7 @@ public class ProgramTable extends JPanel
     mCurrentRow = -1;
     mCurrentY = 0;
     
-    setColumnWidth(Settings.propColumnWidth.getInt());
+    setColumnWidth(Settings.ProgramTable.COLUMN_WIDTH.getInt());
     setModel(model);
     updateBackground();
 
@@ -172,17 +172,17 @@ public class ProgramTable extends JPanel
   public void setProgramTableLayout(ProgramTableLayout layout) {
     if (layout == null) {
       // Use the default layout
-      if (Settings.propTableLayout.getString().equals(Settings.TYPE_LAYOUT_COMPACT)) {
+      if (Settings.ProgramTable.LAYOUT.getString().equals(Settings.ProgramTable.VALUE_LAYOUT_COMPACT)) {
         layout = new CompactLayout();
-      } else if(Settings.propTableLayout.getString().equals(Settings.TYPE_LAYOUT_REAL_COMPACT)) {
+      } else if(Settings.ProgramTable.LAYOUT.getString().equals(Settings.ProgramTable.VALUE_LAYOUT_REAL_COMPACT)) {
         layout = new RealCompactLayout();
-      } else if(Settings.propTableLayout.getString().equals(Settings.TYPE_LAYOUT_TIME_SYNCHRONOUS)) {
+      } else if(Settings.ProgramTable.LAYOUT.getString().equals(Settings.ProgramTable.VALUE_LAYOUT_TIME_SYNCHRONOUS)) {
         layout = new TimeSynchronousLayout();
-      } else if(Settings.propTableLayout.getString().equals(Settings.TYPE_LAYOUT_TIME_BLOCK)) {
+      } else if(Settings.ProgramTable.LAYOUT.getString().equals(Settings.ProgramTable.VALUE_LAYOUT_TIME_BLOCK)) {
         layout = new TimeBlockLayout();
-      } else if(Settings.propTableLayout.getString().equals(Settings.TYPE_LAYOUT_COMPACT_TIME_BLOCK)) {
+      } else if(Settings.ProgramTable.LAYOUT.getString().equals(Settings.ProgramTable.VALUE_LAYOUT_COMPACT_TIME_BLOCK)) {
         layout = new CompactTimeBlockLayout();
-      } else if(Settings.propTableLayout.getString().equals(Settings.TYPE_LAYOUT_OPTIMIZED_COMPACT_TIME_BLOCK)) {
+      } else if(Settings.ProgramTable.LAYOUT.getString().equals(Settings.ProgramTable.VALUE_LAYOUT_OPTIMIZED_COMPACT_TIME_BLOCK)) {
         layout = new OptimizedCompactTimeBlockLayout();
       } else {
         layout = new RealTimeSynchronousLayout();
@@ -212,7 +212,7 @@ public class ProgramTable extends JPanel
   public void updateBackground() {
     BackgroundPainter oldPainter = mBackgroundPainter;
     
-    String background = Settings.propTableBackgroundStyle.getString();
+    String background = Settings.ProgramTable.STYLE_BACKGROUND.getString();
     
     if(oldPainter instanceof SingleColorBackPainter && !background.equals("singleColor")) {
       resetBackground();
@@ -241,11 +241,11 @@ public class ProgramTable extends JPanel
   }
   
   private void resetBackground() {
-    Color temp = Settings.propProgramTableBackgroundSingleColor.getColor();
+    Color temp = Settings.ProgramTable.COLOR_BACKGROUND_SINGLE.getColor();
     
-    Settings.propProgramTableBackgroundSingleColor.setColor(Color.white);
+    Settings.ProgramTable.COLOR_BACKGROUND_SINGLE.setColor(Color.white);
     repaint();
-    Settings.propProgramTableBackgroundSingleColor.setColor(temp);
+    Settings.ProgramTable.COLOR_BACKGROUND_SINGLE.setColor(temp);
   }
 
 
@@ -255,7 +255,7 @@ public class ProgramTable extends JPanel
 
 
   public void paintComponent(Graphics grp) {
-    if (Settings.propEnableAntialiasing.getBoolean()) {
+    if (Settings.Fonts.ANTIALIASING_ENABLED.getBoolean()) {
       final Graphics2D g2d = (Graphics2D) grp;
       if (null != g2d) {
         g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,
@@ -304,7 +304,7 @@ public class ProgramTable extends JPanel
               && (y < (clipBounds.y + clipBounds.height))) {
 
             Rectangle rec = new Rectangle(x, y, mColumnWidth, cellHeight);
-            if (Settings.propProgramTableMouseOver.getBoolean()) {
+            if (Settings.ProgramTable.MOUSE_OVER.getBoolean()) {
               if ((mMouse != null) && (rec.contains(mMouse))) {
                 mouseOver = true;
               } else {
@@ -346,8 +346,8 @@ public class ProgramTable extends JPanel
 
     // Paint the copyright notices
     
-    if(!Settings.propTableBackgroundStyle.getString().equals("uiColor") && !Settings.propTableBackgroundStyle.getString().equals("uiTimeBlock")) {
-      grp.setColor(Settings.propProgramPanelForegroundColor.getColor());
+    if(!Settings.ProgramTable.STYLE_BACKGROUND.getString().equals("uiColor") && !Settings.ProgramTable.STYLE_BACKGROUND.getString().equals("uiTimeBlock")) {
+      grp.setColor(Settings.ProgramPanel.COLOR_FOREGROUND.getColor());
     }
     else {
       grp.setColor(UIManager.getColor("List.foreground"));
@@ -396,7 +396,7 @@ public class ProgramTable extends JPanel
   public void markTime(int time) {
     clearTimeMarkings();
     
-    if(Settings.propScrollToTimeMarkingActivated.getBoolean()) {
+    if(Settings.ProgramTable.SCROLL_TO_TIME_MARKING.getBoolean()) {
       for(int column = 0; column < mModel.getColumnCount(); column++) {
         for(int row = 0; row < mModel.getRowCount(column); row++) {
           ProgramPanel panel = mModel.getProgramPanel(column, row);
@@ -453,14 +453,14 @@ public class ProgramTable extends JPanel
       for (int row = 0; row < rowCount; row++) {
         ProgramPanel panel = mModel.getProgramPanel(col, row);
         
-        if(!Settings.propTableBackgroundStyle.getString().equals("uiColor") && !Settings.propTableBackgroundStyle.getString().equals("uiTimeBlock")) {
-          panel.setTextColor(Settings.propProgramPanelForegroundColor.getColor());
+        if(!Settings.ProgramTable.STYLE_BACKGROUND.getString().equals("uiColor") && !Settings.ProgramTable.STYLE_BACKGROUND.getString().equals("uiTimeBlock")) {
+          panel.setTextColor(Settings.ProgramPanel.COLOR_FOREGROUND.getColor());
         }
         else {
           panel.setTextColor(UIManager.getColor("List.foreground"));
         }
         
-        panel.setProgramPanelSettings(new ProgramPanelSettings(Settings.propPictureType.getInt(), Settings.propPictureStartTime.getInt(), Settings.propPictureEndTime.getInt(), false, Settings.propIsPictureShowingDescription.getBoolean(), Settings.propPictureDuration.getInt(), Settings.propPicturePluginIds.getStringArray(), ProgramPanelSettings.Y_AXIS, false, Settings.propShowProgramTablePictureBorder.getBoolean(), false));
+        panel.setProgramPanelSettings(new ProgramPanelSettings(Settings.Pictures.TYPE.getInt(), Settings.Pictures.TIME_START.getInt(), Settings.Pictures.TIME_END.getInt(), false, Settings.Pictures.DESCRIPTION_SHOW.getBoolean(), Settings.Pictures.DURATION.getInt(), Settings.Pictures.PLUGIN_IDS.getStringArray(), ProgramPanelSettings.Y_AXIS, false, Settings.Pictures.BORDER_SHOW.getBoolean(), false));
         panel.forceRepaint();
       }
     }
@@ -512,7 +512,7 @@ public class ProgramTable extends JPanel
   }
 
   public void handleMouseMoved(MouseEvent evt) {
-    if (Settings.propProgramTableMouseOver.getBoolean()) {
+    if (Settings.ProgramTable.MOUSE_OVER.getBoolean()) {
       if ((mPopupMenu == null) || (!mPopupMenu.isVisible())) {
         mMouse = evt.getPoint();
         Point cellIndex = getMatrix(mMouse.x, mMouse.y);
@@ -557,7 +557,7 @@ public class ProgramTable extends JPanel
 
 
   public void handleMouseExited(MouseEvent evt) {
-    if (Settings.propProgramTableMouseOver.getBoolean()) {
+    if (Settings.ProgramTable.MOUSE_OVER.getBoolean()) {
       JViewport viewport = (JViewport) getParent();
       
       if (!ProgramInfo.getInstance().dialogWasClosedRecently() && ((mPopupMenu == null) || (!mPopupMenu.isVisible())) && !viewport.getViewRect().contains(evt.getPoint())) {
@@ -1304,7 +1304,7 @@ public class ProgramTable extends JPanel
 
   @Override
   public boolean isAutoScrollingEnabled() {
-    return Settings.propProgramTableMouseAutoScroll.getBoolean();
+    return Settings.ProgramTable.MOUSE_AUTO_SCROLL.getBoolean();
   }
 
   @Override

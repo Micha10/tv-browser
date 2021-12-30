@@ -712,7 +712,7 @@ public class ProgramUtilities {
    */
   public static byte getProgramImportance(Program program) {
     if (program.getProgramState() == Program.STATE_IS_VALID &&
-        Settings.propProgramPanelAllowTransparency.getBoolean()) {
+        Settings.ProgramPanel.TRANSPARENCY_ALLOW.getBoolean()) {
       int count = 0;
       int addValue = 0;
 

@@ -37,7 +37,7 @@ public class ProgramTableChannelLabel extends ChannelLabel {
   private boolean mIsRollover;
   
   public ProgramTableChannelLabel(Channel ch,KeyListener keyListener) {
-    super(Settings.propShowChannelIconsInProgramTable.getBoolean(),Settings.propShowChannelNamesInProgramTable.getBoolean(),false,false,true,false,Settings.propShowSortNumberInProgramTable.getBoolean());
+    super(Settings.IconAndNames.SHOW_ICONS_IN_PROGRAM_TABLE.getBoolean(),Settings.IconAndNames.SHOW_NAMES_IN_PROGRAM_TABLE.getBoolean(),false,false,true,false,Settings.IconAndNames.SHOW_SORT_NUMBER_IN_PROGRAM_TABLE.getBoolean());
     mChannel = ch;
     
     addKeyListener(keyListener);
@@ -88,7 +88,7 @@ public class ProgramTableChannelLabel extends ChannelLabel {
           
         e.getComponent().setForeground(new Color(r,g,b));
         
-        if(Settings.propHighlightChannelColumnByMouse.getBoolean()) {
+        if(Settings.ProgramTable.HIGHLIGHT_CHANNEL_COLUMN_BY_MOUSE.getBoolean()) {
           MainFrame.getInstance().getProgramTableScrollPane().highlightChannel(mChannel);
         }
       }
@@ -98,7 +98,7 @@ public class ProgramTableChannelLabel extends ChannelLabel {
         
         e.getComponent().setForeground(UIManager.getColor("List.selectionForeground"));
         
-        if(Settings.propHighlightChannelColumnByMouse.getBoolean()) {
+        if(Settings.ProgramTable.HIGHLIGHT_CHANNEL_COLUMN_BY_MOUSE.getBoolean()) {
           MainFrame.getInstance().getProgramTableScrollPane().unHighlightChannel(mChannel);
         }
       }
@@ -114,18 +114,18 @@ public class ProgramTableChannelLabel extends ChannelLabel {
   }
 
   public static void fontChanged() {
-    boolean useDefaults = Settings.propUseDefaultFonts.getBoolean();
+    boolean useDefaults = Settings.Fonts.USE_DEFAULT.getBoolean();
     if (useDefaults) {
-      channelNameFont = Settings.propChannelNameFont.getDefault();
+      channelNameFont = Settings.Fonts.CHANNEL_NAME.getDefault();
     } else {
-      channelNameFont = Settings.propChannelNameFont.getFont();
+      channelNameFont = Settings.Fonts.CHANNEL_NAME.getFont();
     }
   }
   
   @Override
   public JToolTip createToolTip() {
     // don't show tooltip, if disabled in settings
-    if (!Settings.propShowChannelTooltipInProgramTable.getBoolean()) {
+    if (!Settings.IconAndNames.SHOW_CHANNEL_TOOLTIP_IN_PROGRAM_TABLE.getBoolean()) {
       return new ToolTipWithIcon(null, null);
     }
     boolean showIcon = false;

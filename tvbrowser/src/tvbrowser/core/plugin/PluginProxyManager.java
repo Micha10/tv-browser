@@ -443,10 +443,10 @@ public class PluginProxyManager {
     // loadAllPlugins();
 
     // Get the plugin order
-    String[] pluginOrderArr = Settings.propPluginOrder.getStringArray();
+    String[] pluginOrderArr = Settings.Plugins.PLUGIN_ORDER.getStringArray();
 
     // Get the list of deactivated plugins
-    String[] deactivatedPluginArr = Settings.propDeactivatedPlugins.getStringArray();
+    String[] deactivatedPluginArr = Settings.Plugins.DEACTIVATED.getStringArray();
 
     // Check whether the plugin order is the old setting using class names
     if ((pluginOrderArr != null) && (pluginOrderArr.length > 0)) {
@@ -458,13 +458,13 @@ public class PluginProxyManager {
 
         // Create the list of deactivated plugins
         deactivatedPluginArr = installedClassNamesToDeactivatedIds(pluginOrderArr);
-        Settings.propDeactivatedPlugins.setStringArray(deactivatedPluginArr);
+        Settings.Plugins.DEACTIVATED.setStringArray(deactivatedPluginArr);
 
         // Convert the old array of class names into an array of IDs
         for (int i = 0; i < pluginOrderArr.length; i++) {
           pluginOrderArr[i] = "java." + pluginOrderArr[i];
         }
-        Settings.propPluginOrder.setStringArray(pluginOrderArr);
+        Settings.Plugins.PLUGIN_ORDER.setStringArray(pluginOrderArr);
 
         // Convert the default context menu plugin from class name to ID
         /*String defaultPluginClassName = Settings.propDoubleClickIf.getString();
@@ -609,7 +609,7 @@ public class PluginProxyManager {
         // Activate the plugin
         if (activated) {
           try {
-            if(!Settings.propBlockedPluginArray.isBlocked(item.getPlugin())) {
+            if(!Settings.Plugins.BLOCKED_ARRAY.isBlocked(item.getPlugin())) {
               activatePlugin(item,true);
             }
           } catch (TvBrowserException exc) {
@@ -667,7 +667,7 @@ public class PluginProxyManager {
    */
   public void firePluginBlockListRenewed() {
     for(PluginListItem item : mPluginList) {
-      if(Settings.propBlockedPluginArray.isBlocked(item.mPlugin) && getActivatedPluginForId(item.getPlugin().getId()) != null) {
+      if(Settings.Plugins.BLOCKED_ARRAY.isBlocked(item.mPlugin) && getActivatedPluginForId(item.getPlugin().getId()) != null) {
         try {
           deactivatePlugin(item.getPlugin());
         } catch (TvBrowserException e) {
@@ -684,7 +684,7 @@ public class PluginProxyManager {
    * @throws TvBrowserException If activating failed
    */
   private boolean activatePlugin(PluginListItem item, boolean start) throws TvBrowserException {
-    if(Settings.propBlockedPluginArray.isBlocked(item.getPlugin())) {
+    if(Settings.Plugins.BLOCKED_ARRAY.isBlocked(item.getPlugin())) {
       mLog.info("It was tried to actiavte blocked plugin '" + item.getPlugin().getInfo().getName() + "'. FORBIDDEN!");
       return false;
     }
@@ -749,7 +749,7 @@ public class PluginProxyManager {
 
       // Update the settings
       String[] deactivatedPlugins = getDeactivatedPluginIds();
-      Settings.propDeactivatedPlugins.setStringArray(deactivatedPlugins);
+      Settings.Plugins.DEACTIVATED.setStringArray(deactivatedPlugins);
       MainFrame.getInstance().getToolbar().updatePluginButtons();
     }
   }
@@ -1478,7 +1478,7 @@ public class PluginProxyManager {
   } // inner class PluginListItem
   
   private static ArrayList<PluginListItem> sortPluginProxiesForDataPostProcessing(ArrayList<PluginListItem> toSort) {
-    final String[] sortedPlugins = Settings.propDataPluginPostProcessingOrder.getStringArray();
+    final String[] sortedPlugins = Settings.DataPostProcessing.ORDER.getStringArray();
     
     Collections.sort(toSort, new Comparator<PluginListItem>() {
 

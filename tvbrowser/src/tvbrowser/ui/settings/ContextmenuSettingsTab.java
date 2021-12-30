@@ -445,7 +445,7 @@ public class ContextmenuSettingsTab implements devplugin.SettingsTab {
     pluginIDsList.toArray(pluginIDs);
 
     Settings.ContextMenu.MENU_ORDER.setStringArray(orderIDs);
-    Settings.ContextMenu.PLUGIN_ORDER.setStringArray(pluginIDs);
+    Settings.Plugins.PLUGIN_ORDER.setStringArray(pluginIDs);
 
     PluginProxyManager.getInstance().setPluginOrder(pluginIDs);
 

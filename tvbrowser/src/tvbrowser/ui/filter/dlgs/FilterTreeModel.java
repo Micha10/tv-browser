@@ -367,7 +367,7 @@ public class FilterTreeModel extends DefaultTreeModel {
     }
     
     if(isDefaultFilter(filter)) {
-      Settings.propDefaultFilter.resetToDefault();
+      Settings.General.FILTER_DEFAULT.resetToDefault();
       fireFilterDefaultChanged(FilterManagerImpl.getInstance().getAllFilter());
     }
   }
@@ -428,7 +428,7 @@ public class FilterTreeModel extends DefaultTreeModel {
   }
   
   private boolean isDefaultFilter(final ProgramFilter filter) {
-    String filterId = Settings.propDefaultFilter.getString();
+    String filterId = Settings.General.FILTER_DEFAULT.getString();
     String filterName = null;
   
     if (StringUtils.isNotEmpty(filterId) && filter != null) {

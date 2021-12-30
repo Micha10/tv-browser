@@ -60,7 +60,7 @@ public class JREUpdater {
 	public static boolean checkForUpdate(final JLabel infoLabel) {
 	  boolean result = false;
 	  
-		if(hasTvBrowserJRE() && Settings.propJreUpdateEnabled.getBoolean()) {
+		if(hasTvBrowserJRE() && Settings.General.JRE_UPDATE_ENABLED.getBoolean()) {
 			infoLabel.setText(LOCALIZER.msg("info.info","Searching for TV-Browser JRE updates..."));
 			final File temp = new File(System.getProperty("java.io.tmpdir"),"tvbjre");
 			
@@ -110,7 +110,7 @@ public class JREUpdater {
 			  }
 			  			  
 				if(parts != null && parts.length == 2) {
-					Settings.propJreUpdateDateLast.setDate(Date.getCurrentDate());
+					Settings.General.JRE_UPDATE_DATE_LAST.setDate(Date.getCurrentDate());
 					
 					final String currentVersion = System.getProperty("java.version");
 					final String[] sParts = parts[0].trim().split("\\.");
@@ -159,7 +159,7 @@ public class JREUpdater {
 						  }
 						  
 						  if(result) {
-							Settings.propJreUpdate.setString(target.getAbsolutePath());
+							Settings.General.JRE_UPDATE.setString(target.getAbsolutePath());
 							handlePossibleUpdate();
 						  }
 						  else {
@@ -198,9 +198,9 @@ public class JREUpdater {
 	}
 	
 	public static void handlePossibleUpdate() {
-		if(hasTvBrowserJRE() && !Settings.propJreUpdate.getString().equals(Settings.propJreUpdate.getDefault())) {
+		if(hasTvBrowserJRE() && !Settings.General.JRE_UPDATE.getString().equals(Settings.General.JRE_UPDATE.getDefault())) {
 			if(JOptionPane.showOptionDialog(UiUtilities.getLastModalChildOf(MainFrame.getInstance()), LOCALIZER.msg("info.message", "A New TV-Browser JRE is available for installation.\n\nIt's important to install JRE updates as soon as possible\nto prevent possible security risks.\n\nDo you want to install it now?"), LOCALIZER.msg("info.header", "New TV-Browser JRE available"), JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE, null, new String[] {LOCALIZER.msg("info.install","Install JRE now"),Localizer.getLocalization(Localizer.I18N_CANCEL)}, null) == JOptionPane.YES_OPTION) {
-				Settings.propJreUpdate.setString(Settings.propJreUpdate.getString()+";install");
+				Settings.General.JRE_UPDATE.setString(Settings.General.JRE_UPDATE.getString()+";install");
 				MainFrame.getInstance().quit();
 			}
 		}
@@ -218,9 +218,9 @@ public class JREUpdater {
 	}
 	
 	public static void doUpdateIfAvailable() {
-		if(hasTvBrowserJRE() && Settings.propJreUpdate.getString().endsWith(";install")) {
-			String file = Settings.propJreUpdate.getString().substring(0, Settings.propJreUpdate.getString().lastIndexOf(";"));
-			Settings.propJreUpdate.resetToDefault();
+		if(hasTvBrowserJRE() && Settings.General.JRE_UPDATE.getString().endsWith(";install")) {
+			String file = Settings.General.JRE_UPDATE.getString().substring(0, Settings.General.JRE_UPDATE.getString().lastIndexOf(";"));
+			Settings.General.JRE_UPDATE.resetToDefault();
 			try {
 				Settings.storeSettings(false);
 			} catch (TvBrowserException e1) {}

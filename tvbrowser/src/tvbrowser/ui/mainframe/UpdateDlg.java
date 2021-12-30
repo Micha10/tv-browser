@@ -78,7 +78,7 @@ public class UpdateDlg extends JDialog implements ActionListener, WindowClosingI
     return LAST_CLOSED + 500 < System.currentTimeMillis();
   }
   
-  private static final util.i18n.Localizer mLocalizer = util.i18n.Localizer
+  private static final util.i18n.Localizer LOCALIZER = util.i18n.Localizer
       .getLocalizerFor(UpdateDlg.class);
 
   protected static final int CANCEL = -1, GETALL = 28;
@@ -108,12 +108,12 @@ public class UpdateDlg extends JDialog implements ActionListener, WindowClosingI
     contentPane.setLayout(new BorderLayout());
     contentPane.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-    this.setTitle(mLocalizer.msg("dlgTitle", "TV data update"));
+    this.setTitle(LOCALIZER.msg("dlgTitle", "TV data update"));
     
     final JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.TRAILING));
     buttonPanel.setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 0));
 
-    mUpdateBtn = new JButton(mLocalizer.msg("updateNow", "Update now"));
+    mUpdateBtn = new JButton(LOCALIZER.msg("updateNow", "Update now"));
     mUpdateBtn.addActionListener(this);
     buttonPanel.add(mUpdateBtn);
     getRootPane().setDefaultButton(mUpdateBtn);
@@ -129,7 +129,7 @@ public class UpdateDlg extends JDialog implements ActionListener, WindowClosingI
 
     // first show reason of update
     if (reason != null && !reason.isEmpty()) {
-      final String question = mLocalizer.msg("question", "Do you want to update now?");
+      final String question = LOCALIZER.msg("question", "Do you want to update now?");
       final JLabel lbReason = new JLabel("<html>" + reason + "<br>" + question + "</html>");
       final JPanel panelReason = new JPanel(new BorderLayout(7, 0));
       
@@ -140,10 +140,10 @@ public class UpdateDlg extends JDialog implements ActionListener, WindowClosingI
 
     // then time selection
     final PanelBuilder panel1 = new PanelBuilder(new FormLayout("10dlu,default,5dlu:grow,5dlu","default,5dlu,default,default"));
-    panel1.addSeparator(mLocalizer.msg("period", "Update program for"), CC.xyw(1,1,4));
+    panel1.addSeparator(LOCALIZER.msg("period", "Update program for"), CC.xyw(1,1,4));
     
     mManuelDownloadPeriodSelection = new JComboBox<>(PeriodItem.getPeriodItems());
-    mSaveAsDefaultPeriod = new JCheckBox(mLocalizer.msg("saveDefault", "Save as default"), Settings.propSaveDefaultDataUpdateValuesDefault.getBoolean());
+    mSaveAsDefaultPeriod = new JCheckBox(LOCALIZER.msg("saveDefault", "Save as default"), Settings.Data.SAVE_DEFAULT_DATA_UPDATE_VALUES_DEFAULT.getBoolean());
     
     panel1.add(mManuelDownloadPeriodSelection, CC.xyw(2,3,2));
     panel1.add(mSaveAsDefaultPeriod, CC.xyw(2,4,2));
@@ -160,8 +160,7 @@ public class UpdateDlg extends JDialog implements ActionListener, WindowClosingI
           BoxLayout.Y_AXIS));
       mDataServiceCbArr = new TvDataServiceCheckBox[serviceArr.length];
 
-      final String[] checkedServiceNames = Settings.propDataServicesForUpdate
-          .getStringArray();
+      final String[] checkedServiceNames = Settings.Data.DATA_SERVICES_FOR_UPDATE.getStringArray();
 
       boolean expand = false;
       
@@ -178,7 +177,7 @@ public class UpdateDlg extends JDialog implements ActionListener, WindowClosingI
         dataServicePanel.add(mDataServiceCbArr[i]);
       }
       
-      mSaveAsDefaultDataservices = new JCheckBox(mLocalizer.msg("saveDefault", "Save as default"), Settings.propSaveDefaultDataUpdateValuesDefault.getBoolean());
+      mSaveAsDefaultDataservices = new JCheckBox(LOCALIZER.msg("saveDefault", "Save as default"), Settings.Data.SAVE_DEFAULT_DATA_UPDATE_VALUES_DEFAULT.getBoolean());
       
       dataServicePanel.add(Box.createRigidArea(new Dimension(0,Sizes.dialogUnitXAsPixel(5, dataServicePanel))));
       dataServicePanel.add(mSaveAsDefaultDataservices);
@@ -186,7 +185,7 @@ public class UpdateDlg extends JDialog implements ActionListener, WindowClosingI
       final PanelBuilder ds = new PanelBuilder(new FormLayout("10dlu,default:grow,5dlu,default","10dlu,default,5dlu,default"));
       ds.add(dataServicePanel, CC.xyw(2,4,3));
       
-      ds.addSeparator(mLocalizer.msg("dataSources", "Data sources"), CC.xyw(1,2,2));
+      ds.addSeparator(LOCALIZER.msg("dataSources", "Data sources"), CC.xyw(1,2,2));
       
       dataServicePanel.setVisible(expand);
       
@@ -197,30 +196,30 @@ public class UpdateDlg extends JDialog implements ActionListener, WindowClosingI
       northPanel.add(ds.getPanel());
     }
 
-    int period = Settings.propDownloadPeriod.getInt();
+    int period = Settings.Data.DOWNLOAD_PERIOD.getInt();
     
     PeriodItem pi = new PeriodItem(period);
     mManuelDownloadPeriodSelection.setSelectedItem(pi);
 
     final PanelBuilder pb = new PanelBuilder(new FormLayout("10dlu,default:grow,5dlu,default","10dlu,default,5dlu,default"));
     
-    pb.addSeparator(mLocalizer.msg("autoUpdateTitle", "Automatic update"), CC.xyw(1,2,2));
+    pb.addSeparator(LOCALIZER.msg("autoUpdateTitle", "Automatic update"), CC.xyw(1,2,2));
 
     final JPanel boxPanel = new JPanel(new FormLayout("10dlu,0dlu,default:grow","default,2dlu,default,default,4dlu,default,3dlu,default"));
     
-    mAutoUpdate = new JCheckBox(mLocalizer.msg("autoUpdateMessage", "Update data automatically"), !Settings.propAutoDownloadType.getString().equals("never"));
+    mAutoUpdate = new JCheckBox(LOCALIZER.msg("autoUpdateMessage", "Update data automatically"), !Settings.General.AUTO_DOWNLOAD_TYPE.getString().equals("never"));
     boxPanel.setVisible(!mAutoUpdate.isSelected());
     
-    mStartUpdate = new JRadioButton(mLocalizer.msg("onStartUp", "Only on TV-Browser startup"), !Settings.propAutoDataDownloadEnabled.getBoolean() && mAutoUpdate.isSelected());
-    mRecurrentUpdate = new JRadioButton(mLocalizer.msg("recurrent", "Recurrent"), Settings.propAutoDataDownloadEnabled.getBoolean());
+    mStartUpdate = new JRadioButton(LOCALIZER.msg("onStartUp", "Only on TV-Browser startup"), !Settings.General.AUTO_DATA_DOWNLOAD_ENABLED.getBoolean() && mAutoUpdate.isSelected());
+    mRecurrentUpdate = new JRadioButton(LOCALIZER.msg("recurrent", "Recurrent"), Settings.General.AUTO_DATA_DOWNLOAD_ENABLED.getBoolean());
     
     mAutoDownloadPeriodSelection = new JComboBox<>(PeriodItem.getPeriodItems());
     
-    period = Settings.propAutoDownloadPeriod.getInt();
+    period = Settings.General.AUTO_DOWNLOAD_PERIOD.getInt();
     pi = new PeriodItem(period);
     mAutoDownloadPeriodSelection.setSelectedItem(pi);
     
-    final JLabel label = new JLabel(mLocalizer.msg("period", "Update program for")+":");
+    final JLabel label = new JLabel(LOCALIZER.msg("period", "Update program for")+":");
     
     boxPanel.add(mAutoUpdate, CC.xyw(1,1,3));
     boxPanel.add(mStartUpdate, CC.xyw(2,3,2));
@@ -328,7 +327,7 @@ public class UpdateDlg extends JDialog implements ActionListener, WindowClosingI
       }
       
       if(mSaveAsDefaultPeriod.isSelected()) {
-        Settings.propDownloadPeriod.setInt(mResult);
+        Settings.Data.DOWNLOAD_PERIOD.setInt(mResult);
       }
       
       if(mSaveAsDefaultDataservices == null || mSaveAsDefaultDataservices.isSelected()) {
@@ -338,21 +337,21 @@ public class UpdateDlg extends JDialog implements ActionListener, WindowClosingI
           dataServiceArr[i] = mSelectedTvDataServiceArr[i].getId();
         }
         
-        Settings.propDataServicesForUpdate.setStringArray(dataServiceArr);
+        Settings.Data.DATA_SERVICES_FOR_UPDATE.setStringArray(dataServiceArr);
       }
       
       if (mAutoUpdate.isSelected()) {
-        if(Settings.propAutoDownloadType.getString().equals("never")) {
-          Settings.propAutoDownloadType.setString(Settings.propAutoDownloadType.getDefault());
+        if(Settings.General.AUTO_DOWNLOAD_TYPE.getString().equals("never")) {
+          Settings.General.AUTO_DOWNLOAD_TYPE.setString(Settings.General.AUTO_DOWNLOAD_TYPE.getDefault());
         }
         
-        Settings.propAutoDownloadPeriod.setInt(((PeriodItem)mAutoDownloadPeriodSelection.getSelectedItem()).getDays());
+        Settings.General.AUTO_DOWNLOAD_PERIOD.setInt(((PeriodItem)mAutoDownloadPeriodSelection.getSelectedItem()).getDays());
       }
       else {
-        Settings.propAutoDownloadType.setString("never");
+        Settings.General.AUTO_DOWNLOAD_TYPE.setString("never");
       }
       
-      Settings.propAutoDataDownloadEnabled.setBoolean(mAutoUpdate.isSelected() && mRecurrentUpdate.isSelected());
+      Settings.General.AUTO_DATA_DOWNLOAD_ENABLED.setBoolean(mAutoUpdate.isSelected() && mRecurrentUpdate.isSelected());
         
       setVisible(false);
     }

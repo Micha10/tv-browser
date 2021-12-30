@@ -521,6 +521,6 @@ public class ProgramPanelSettings {
    * @since 3.4.1
    */
   public boolean isShowingChannelLogo() {
-    return mShowChannelLogo && Settings.propShowChannelLogoForProgramPanel.getInt() == 0;
+    return mShowChannelLogo && Settings.IconAndNames.SHOW_LOGO_FOR_PROGRAM_PANEL.getInt() == 0;
   }
 }

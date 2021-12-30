@@ -110,57 +110,57 @@ public class ProgramMenuItem extends JMenuItem {
     boolean showIcon = true;
     
     if(type == NOW_TYPE) {
-      mShowStartTime = Settings.propTrayNowProgramsContainsTime.getBoolean();
+      mShowStartTime = Settings.Tray.Now.CONTAINS_TIME.getBoolean();
       mShowDate = false;
-      mShowName = Settings.propTrayNowProgramsContainsName.getBoolean();
-      showIcon = Settings.propTrayNowProgramsContainsIcon.getBoolean();
-      mShowToolTip = Settings.propTrayNowProgramsContainsToolTip.getBoolean();
-      mShowSortNumber = Settings.propTrayNowProgramsShowingSortNumber.getBoolean();
+      mShowName = Settings.Tray.Now.CONTAINS_NAME.getBoolean();
+      showIcon = Settings.Tray.Now.CONTAINS_ICON.getBoolean();
+      mShowToolTip = Settings.Tray.Now.CONTAINS_TOOL_TIP.getBoolean();
+      mShowSortNumber = Settings.Tray.Now.SORT_NUMBER_SHOW.getBoolean();
     }
     else if(type == SOON_TYPE) {
-      mShowStartTime = Settings.propTraySoonProgramsContainsTime.getBoolean();
+      mShowStartTime = Settings.Tray.Soon.CONTAINS_TIME.getBoolean();
       mShowDate = false;
-      mShowName = Settings.propTraySoonProgramsContainsName.getBoolean();
-      showIcon = Settings.propTraySoonProgramsContainsIcon.getBoolean();
-      mShowToolTip = Settings.propTraySoonProgramsContainsToolTip.getBoolean();
-      mShowSortNumber = Settings.propTraySoonProgramsShowingSortNumber.getBoolean();
+      mShowName = Settings.Tray.Soon.CONTAINS_NAME.getBoolean();
+      showIcon = Settings.Tray.Soon.CONTAINS_ICON.getBoolean();
+      mShowToolTip = Settings.Tray.Soon.CONTAINS_TOOL_TIP.getBoolean();
+      mShowSortNumber = Settings.Tray.Soon.SORT_NUMBER_SHOW.getBoolean();
     }
     else if(type == ON_TIME_TYPE) {
-      mShowStartTime = Settings.propTrayOnTimeProgramsContainsTime.getBoolean();
+      mShowStartTime = Settings.Tray.OnTime.CONTAINS_TIME.getBoolean();
       mShowDate = false;
-      mShowName = Settings.propTrayOnTimeProgramsContainsName.getBoolean();
-      showIcon = Settings.propTrayOnTimeProgramsContainsIcon.getBoolean();
-      mShowToolTip = Settings.propTrayOnTimeProgramsContainsToolTip.getBoolean();
-      mShowSortNumber = Settings.propTrayOnTimeProgramsShowingSortNumber.getBoolean();
+      mShowName = Settings.Tray.OnTime.CONTAINS_NAME.getBoolean();
+      showIcon = Settings.Tray.OnTime.CONTAINS_ICON.getBoolean();
+      mShowToolTip = Settings.Tray.OnTime.CONTAINS_TOOL_TIP.getBoolean();
+      mShowSortNumber = Settings.Tray.OnTime.SORT_NUMBER_SHOW.getBoolean();
       
-      if(!Settings.propTrayOnTimeProgramsShowProgress.getBoolean()) {
+      if(!Settings.Tray.OnTime.PROGRESS_SHOW.getBoolean()) {
         time = -1;
       }
     }
     else if (type == IMPORTANT_TYPE) {
-      mShowStartTime = Settings.propTrayImportantProgramsContainsTime.getBoolean();
-      mShowDate = Settings.propTrayImportantProgramsContainsDate.getBoolean();
-      mShowName = Settings.propTrayImportantProgramsContainsName.getBoolean();
-      showIcon = Settings.propTrayImportantProgramsContainsIcon.getBoolean();
-      mShowToolTip = Settings.propTrayImportantProgramsContainsToolTip.getBoolean();
-      mShowSortNumber = Settings.propTrayImportantProgramsShowingSortNumber.getBoolean();
+      mShowStartTime = Settings.Tray.Important.CONTAINS_TIME.getBoolean();
+      mShowDate = Settings.Tray.Important.CONTAINS_DATE.getBoolean();
+      mShowName = Settings.Tray.Important.CONTAINS_NAME.getBoolean();
+      showIcon = Settings.Tray.Important.CONTAINS_ICON.getBoolean();
+      mShowToolTip = Settings.Tray.Important.CONTAINS_TOOL_TIP.getBoolean();
+      mShowSortNumber = Settings.Tray.Important.SORT_NUMBER_SHOW.getBoolean();
     }
     else if(type == SOON_TYPE) {
       mShowStartTime = true;
       mShowDate = false;
-      mShowName = Settings.propTraySoonProgramsContainsName.getBoolean();
-      showIcon = Settings.propTraySoonProgramsContainsIcon.getBoolean();
-      mShowToolTip = Settings.propTraySoonProgramsContainsToolTip.getBoolean();
-      mShowSortNumber = Settings.propTraySoonProgramsShowingSortNumber.getBoolean();
+      mShowName = Settings.Tray.Soon.CONTAINS_NAME.getBoolean();
+      showIcon = Settings.Tray.Soon.CONTAINS_ICON.getBoolean();
+      mShowToolTip = Settings.Tray.Soon.CONTAINS_TOOL_TIP.getBoolean();
+      mShowSortNumber = Settings.Tray.Soon.SORT_NUMBER_SHOW.getBoolean();
     }
     else if (type == AFTER_TYPE) {
       mShowStartTime = true;
       mShowDate = false;
-      mShowName = Settings.propTrayImportantProgramsContainsName.getBoolean();
-      showIcon = Settings.propTrayImportantProgramsContainsIcon.getBoolean();
-      mShowToolTip = Settings.propTrayImportantProgramsContainsToolTip.getBoolean();
+      mShowName = Settings.Tray.Important.CONTAINS_NAME.getBoolean();
+      showIcon = Settings.Tray.Important.CONTAINS_ICON.getBoolean();
+      mShowToolTip = Settings.Tray.Important.CONTAINS_TOOL_TIP.getBoolean();
       time = -1;
-      mShowSortNumber = Settings.propTrayImportantProgramsShowingSortNumber.getBoolean();
+      mShowSortNumber = Settings.Tray.Important.SORT_NUMBER_SHOW.getBoolean();
     }
     else {
       mShowStartTime = true;
@@ -175,7 +175,7 @@ public class ProgramMenuItem extends JMenuItem {
       sortNumber = p.getChannel().getSortNumber() + ". ";
     }
     
-    mChannelName = new TextAreaIcon(sortNumber + (mShowName ? p.getChannel().getName() : ""), mBoldFont, Settings.propTrayChannelWidth.getInt());
+    mChannelName = new TextAreaIcon(sortNumber + (mShowName ? p.getChannel().getName() : ""), mBoldFont, Settings.Tray.Channels.WIDTH.getInt());
     mChannelName.setMaximumLineCount(2);
 
     if(mShowToolTip) {
@@ -252,7 +252,7 @@ public class ProgramMenuItem extends JMenuItem {
     }
     
     if(mShowName || mShowSortNumber) {
-      width += Settings.propTrayChannelWidth.getInt() + getIconTextGap();
+      width += Settings.Tray.Channels.WIDTH.getInt() + getIconTextGap();
     }
     if(mShowStartTime) {
       width += TIME_WIDTH;

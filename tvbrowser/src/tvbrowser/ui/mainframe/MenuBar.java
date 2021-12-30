@@ -210,13 +210,13 @@ public abstract class MenuBar extends JMenuBar implements ActionListener {
 
 		mToolbarMI = new JCheckBoxMenuItem(ToolBarDragAndDropSettings.LOCALIZER
 				.msg("showToolbar", "Show toolbar"));
-		mToolbarMI.setSelected(Settings.propIsToolbarVisible.getBoolean());
+		mToolbarMI.setSelected(Settings.ToolBar.IS_VISIBLE.getBoolean());
 		mToolbarMI.addActionListener(this);
 		MenuHelpTextAdapter.create(mToolbarMI, mLocalizer.msg("menuinfo.toolbar", ""),
 				mLabel);
 
     mMenubarMI = new JCheckBoxMenuItem(ContextMenu.mLocalizer.msg("showMenubar", "Show menubar"));
-    mMenubarMI.setSelected(Settings.propIsMenubarVisible.getBoolean());
+    mMenubarMI.setSelected(Settings.Window.MENU_BAR_VISIBLE.getBoolean());
     mMenubarMI.addActionListener(this);
     MenuHelpTextAdapter.create(mMenubarMI, mLocalizer.msg("menuinfo.menuBar", ""),
         mLabel);
@@ -237,32 +237,32 @@ public abstract class MenuBar extends JMenuBar implements ActionListener {
 		mToolbarMenu.add(mToolbarCustomizeMI);
 
 		mStatusbarMI = createCheckBoxItem("menuitem.viewStatusbar", "Statusbar");
-		mStatusbarMI.setSelected(Settings.propIsStatusbarVisible.getBoolean());
+		mStatusbarMI.setSelected(Settings.Window.STATUS_BAR_VISIBLE.getBoolean());
 		mStatusbarMI.addActionListener(this);
 		MenuHelpTextAdapter.create(mStatusbarMI, mLocalizer.msg("menuinfo.statusbar",
 				""), mLabel);
 
 		mTimeBtnsMI = createCheckBoxItem("menuitem.timebuttons", "Time buttons");
-		mTimeBtnsMI.setSelected(Settings.propShowTimeButtons.getBoolean());
+		mTimeBtnsMI.setSelected(Settings.Window.TIME_BUTTONS_SHOW.getBoolean());
 		mTimeBtnsMI.addActionListener(this);
 		MenuHelpTextAdapter.create(mTimeBtnsMI, mLocalizer.msg("menuinfo.timebuttons",
 				""), mLabel);
 
 		mDatelistMI = createCheckBoxItem("menuitem.datelist", "Date list");
-		mDatelistMI.setSelected(Settings.propShowDatelist.getBoolean());
+		mDatelistMI.setSelected(Settings.Window.DATE_SELECTION_SHOW.getBoolean());
 		mDatelistMI.addActionListener(this);
 		MenuHelpTextAdapter.create(mDatelistMI, mLocalizer
 				.msg("menuinfo.datelist", ""), mLabel);
 
 		mChannellistMI = createCheckBoxItem("menuitem.channellist", "channel list");
-		mChannellistMI.setSelected(Settings.propShowChannels.getBoolean());
+		mChannellistMI.setSelected(Settings.Window.CHANNEL_SELECTION_SHOW.getBoolean());
 		mChannellistMI.addActionListener(this);
 		MenuHelpTextAdapter.create(mChannellistMI, mLocalizer.msg(
 				"menuinfo.channellist", ""), mLabel);
 
 		mPluginOverviewMI = createCheckBoxItem("menuitem.pluginOverview",
 				"Plugin overview");
-		mPluginOverviewMI.setSelected(Settings.propShowPluginView.getBoolean());
+		mPluginOverviewMI.setSelected(Settings.Window.PLUGIN_VIEW_SHOW.getBoolean());
 		mPluginOverviewMI.addActionListener(this);
 		mPluginOverviewMI.setIcon(IconLoader.getInstance().getIconFromTheme(
 				"actions", "view-tree", 16));
@@ -271,7 +271,7 @@ public abstract class MenuBar extends JMenuBar implements ActionListener {
 
 		mViewFilterBarMI = createCheckBoxItem("menuitem.viewFilterBar",
 				"Filter bar");
-		mViewFilterBarMI.setSelected(Settings.propShowFilterBar.getBoolean());
+		mViewFilterBarMI.setSelected(Settings.Window.FILTER_BAR_SHOW.getBoolean());
 		mViewFilterBarMI.addActionListener(this);
 		MenuHelpTextAdapter.create(mViewFilterBarMI, mLocalizer.msg(
 				"menuinfo.filterbar", ""), mLabel);
@@ -571,7 +571,7 @@ public abstract class MenuBar extends JMenuBar implements ActionListener {
 
 	public void updateChannelGroupMenu(JMenu menu) {
 	  menu.removeAll();
-		String channelFilterName = Settings.propLastUsedChannelGroup.getString();
+		String channelFilterName = Settings.Channels.GROUP_LAST_USED.getString();
 		// all channels
 		JRadioButtonMenuItem menuItem = new JRadioButtonMenuItem(mLocalizer.msg(
 				"channelGroupAll", "All channels"));
@@ -664,13 +664,13 @@ public abstract class MenuBar extends JMenuBar implements ActionListener {
 	private JMenuItem createChannelMenuItem(final Channel channel) {
 		Icon icon = null;
 		
-		if (Settings.propShowChannelIconsInChannellist.getBoolean()) {
+		if (Settings.IconAndNames.SHOW_ICONS_IN_CHANNEL_LIST.getBoolean()) {
 			icon = UiUtilities.createChannelIcon(channel.getJointChannel() != null ? channel.getJointChannelIcon() : channel.getIcon());
 		}
 		
 		StringBuilder text = new StringBuilder();
 		
-		if(Settings.propShowSortNumberInProgramLists.getBoolean() && channel.getSortNumber().trim().length() > 0) {
+		if(Settings.IconAndNames.SHOW_SORT_NUMBER_IN_PROGRAM_LISTS.getBoolean() && channel.getSortNumber().trim().length() > 0) {
 		  text.append(channel.getSortNumber().trim()).append(". ");
 		}
 		
@@ -756,7 +756,7 @@ public abstract class MenuBar extends JMenuBar implements ActionListener {
 
 	public void updateTimeItems() {
 		mGotoTimeMenu.removeAll();
-		int[] times = Settings.propTimeButtons.getIntArray();
+		int[] times = Settings.Buttons.TIME_BUTTONS.getIntArray();
 		for (int time : times) {
 			mGotoTimeMenu.add(createTimeMenuItem(time));
 		}
@@ -768,14 +768,14 @@ public abstract class MenuBar extends JMenuBar implements ActionListener {
 	}
 
 	public void updateViewToolbarItem() {
-		mToolbarMI.setSelected(Settings.propIsToolbarVisible.getBoolean());
-		mMenubarMI.setSelected(Settings.propIsMenubarVisible.getBoolean());
+		mToolbarMI.setSelected(Settings.ToolBar.IS_VISIBLE.getBoolean());
+		mMenubarMI.setSelected(Settings.Window.MENU_BAR_VISIBLE.getBoolean());
 	}
 
 	public void updateChannelItems() {
 		mGotoChannelMenu.removeAll();
 		Channel[] channels = ChannelList.getSubscribedChannels();
-		String[] separatorArr = Settings.propSubscribedChannelsSeparators.getStringArray();
+		String[] separatorArr = Settings.Channels.SUBSCRIBED_SEPARATORS.getStringArray();
 		
 		Channel previousChannel = null;
 		int lastSeparatorIndex = 0;
@@ -1111,16 +1111,16 @@ public abstract class MenuBar extends JMenuBar implements ActionListener {
 		  infoBuilder.append("\nJava: ").append(System.getProperty("java.runtime.name")).append(" ").append(System.getProperty("java.version")).append(" ").append(System.getProperty("java.home"));
 		  infoBuilder.append("\nTV-Browser: ").append(TVBrowser.VERSION).append(" ").append(new File("").getAbsolutePath());
 		  infoBuilder.append("\nUser settings: ").append(System.getProperty("user.dir")).append(" ").append(System.getProperty("user.language")).append(" ").append(System.getProperty("user.country")).append(" ").append(System.getProperty("user.timezone"));
-		  infoBuilder.append("\nLookAndFeel: ").append(Settings.propLookAndFeel.getString());
-		  infoBuilder.append("\nPlastic-Theme: ").append(Settings.propJGoodiesTheme.getString());
+		  infoBuilder.append("\nLookAndFeel: ").append(Settings.LookAndFeel.SELECTED.getString());
+		  infoBuilder.append("\nPlastic-Theme: ").append(Settings.LookAndFeel.JGOODIES_THEME.getString());
 		  infoBuilder.append("\nPersona: ").append(Persona.getInstance().getName());
-		  infoBuilder.append("\nIcons: ").append(Settings.propIcontheme.getString());
-		  infoBuilder.append("\nInfo-Icons: ").append(Settings.propInfoIconThemeID.getString());
-		  infoBuilder.append("\nProgram table style: ").append(Settings.propTableBackgroundStyle.getString()).append(",").append(Settings.propTableLayout.getString());
-		  infoBuilder.append("\nProgram table times: ").append(Settings.propProgramTableStartOfDay.getInt()).append("-").append(Settings.propProgramTableEndOfDay.getInt());
+		  infoBuilder.append("\nIcons: ").append(Settings.LookAndFeel.ICON_THEME.getString());
+		  infoBuilder.append("\nInfo-Icons: ").append(Settings.LookAndFeel.INFO_ICON_THEME_ID.getString());
+		  infoBuilder.append("\nProgram table style: ").append(Settings.ProgramTable.STYLE_BACKGROUND.getString()).append(",").append(Settings.ProgramTable.LAYOUT.getString());
+		  infoBuilder.append("\nProgram table times: ").append(Settings.ProgramTable.START_OF_DAY.getInt()).append("-").append(Settings.ProgramTable.END_OF_DAY.getInt());
 		  infoBuilder.append("\nNumber of markings: ").append(MarkedProgramsMap.getInstance().getMarkedPrograms().length);
 		  infoBuilder.append("\nActive filter: ").append(mMainFrame.getProgramFilter());
-		  infoBuilder.append("\nDefault fonts: ").append(Settings.propUseDefaultFonts.getBoolean());
+		  infoBuilder.append("\nDefault fonts: ").append(Settings.Fonts.USE_DEFAULT.getBoolean());
 		  infoBuilder.append("\n\nInstalled plugins:");
 		  
 		  PluginProxy[] plugins = PluginProxyManager.getInstance().getAllPlugins();

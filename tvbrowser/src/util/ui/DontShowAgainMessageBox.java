@@ -94,7 +94,7 @@ public class DontShowAgainMessageBox {
    * @since 2.7
    */
   public static boolean isMessageBoxIdSet(Plugin plugin, String messageBoxId) {
-    return Settings.propHiddenMessageBoxes.containsItem(plugin.getId() + "."+ messageBoxId);
+    return Settings.Other.MESSAGE_BOXES_HIDDEN.containsItem(plugin.getId() + "."+ messageBoxId);
   }
 
   /**
@@ -107,9 +107,9 @@ public class DontShowAgainMessageBox {
    */
   public static void setMessageBoxId(Plugin plugin, String messageBoxId, boolean value) {
     if (value) {
-      Settings.propHiddenMessageBoxes.removeItem(plugin.getId() + "."+ messageBoxId);
+      Settings.Other.MESSAGE_BOXES_HIDDEN.removeItem(plugin.getId() + "."+ messageBoxId);
     } else {
-      Settings.propHiddenMessageBoxes.addItem(plugin.getId() + "."+ messageBoxId);
+      Settings.Other.MESSAGE_BOXES_HIDDEN.addItem(plugin.getId() + "."+ messageBoxId);
     }
   }
 

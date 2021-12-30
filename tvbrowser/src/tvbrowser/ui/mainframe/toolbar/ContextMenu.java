@@ -75,7 +75,7 @@ public class ContextMenu {
     
     menu.add(createViewMenu());
     
-    if(Settings.propIsToolbarVisible.getBoolean()) {
+    if(Settings.ToolBar.IS_VISIBLE.getBoolean()) {
       if(Persona.getInstance().getHeaderImage() != null) {
         menu.add(createMoreBorderTopMenu());
         menu.add(createMoreBorderBottomMenu());
@@ -94,7 +94,7 @@ public class ContextMenu {
       mMenu.add(createViewMenuBarMenu());
     }
     mMenu.add(createViewMenu());
-    if(Settings.propIsToolbarVisible.getBoolean()) {
+    if(Settings.ToolBar.IS_VISIBLE.getBoolean()) {
       if(Persona.getInstance().getHeaderImage() != null) {
         mMenu.add(createMoreBorderTopMenu());
         mMenu.add(createMoreBorderBottomMenu());
@@ -111,7 +111,7 @@ public class ContextMenu {
     final JCheckBoxMenuItem showSearch = new JCheckBoxMenuItem(
         ToolBarDragAndDropSettings.LOCALIZER
             .msg("showSearchField", "Show search field"));
-    showSearch.setSelected(Settings.propIsSearchFieldVisible.getBoolean());
+    showSearch.setSelected(Settings.ToolBar.IS_SEARCH_FIELD_VISIBLE.getBoolean());
     showSearch.addActionListener(e -> {
       MainFrame.getInstance().setShowSearchField(showSearch.isSelected());
     });
@@ -122,7 +122,7 @@ public class ContextMenu {
   private static JCheckBoxMenuItem createMoreBorderTopMenu() {
     final JCheckBoxMenuItem show = new JCheckBoxMenuItem(
         mLocalizer.msg("moreBorderTop", "Addtional free space above toolbar"));
-    show.setSelected(Settings.propIsToolbarAdditonalTopSpace.getBoolean());
+    show.setSelected(Settings.ToolBar.ADDITIONAL_TOP_SPACE.getBoolean());
     show.addActionListener(e -> {
       MainFrame.getInstance().setIsToolbarAdditonalTopSpace(show.isSelected());
     });
@@ -133,7 +133,7 @@ public class ContextMenu {
   private static JCheckBoxMenuItem createMoreBorderBottomMenu() {
     final JCheckBoxMenuItem show = new JCheckBoxMenuItem(
         mLocalizer.msg("moreBorderBottom", "Add free spcace below toolbar"));
-    show.setSelected(Settings.propIsToolbarAdditonalBottomSpace.getBoolean());
+    show.setSelected(Settings.ToolBar.ADDITIONAL_BOTTOM_SPACE.getBoolean());
     show.addActionListener(e -> {
       MainFrame.getInstance().setIsToolbarAdditonalBottomSpace(show.isSelected());
     });
@@ -145,7 +145,7 @@ public class ContextMenu {
   private static JCheckBoxMenuItem createViewMenuBarMenu() {
     final JCheckBoxMenuItem show = new JCheckBoxMenuItem(
         mLocalizer.msg("showMenubar", "Show menubar"));
-    show.setSelected(Settings.propIsMenubarVisible.getBoolean());
+    show.setSelected(Settings.Window.MENU_BAR_VISIBLE.getBoolean());
     show.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F7, 0));
     show.addActionListener(e -> {
       MainFrame.getInstance().setShowMenubar(show.isSelected());
@@ -158,7 +158,7 @@ public class ContextMenu {
     final JCheckBoxMenuItem show = new JCheckBoxMenuItem(
         ToolBarDragAndDropSettings.LOCALIZER
             .msg("showToolbar", "Show toolbar"));
-    show.setSelected(Settings.propIsToolbarVisible.getBoolean());
+    show.setSelected(Settings.ToolBar.IS_VISIBLE.getBoolean());
     show.addActionListener(e -> {
       MainFrame.getInstance().setShowToolbar(show.isSelected());
     });

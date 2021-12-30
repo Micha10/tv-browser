@@ -86,7 +86,7 @@ public class FontsSettingsTab implements devplugin.SettingsTab {
     
     mChannelNameFontLabel = new JLabel(LOCALIZER.msg("ChannelNames", "Channel name"));
     mainPanel.add(mChannelNameFontLabel, CC.xy(3,y));
-    mChannelNameFontPanel = new FontChooserPanel(Settings.Fonts.CHANNE_LNAME.getFont());
+    mChannelNameFontPanel = new FontChooserPanel(Settings.Fonts.CHANNEL_NAME.getFont());
     mainPanel.add(mChannelNameFontPanel, CC.xy(5,y));
     
     y += 2;
@@ -149,7 +149,7 @@ public class FontsSettingsTab implements devplugin.SettingsTab {
   public void saveSettings() {
     Settings.Fonts.PROGRAM_TITLE.setFont(mTitleFontPanel.getChosenFont());
     Settings.Fonts.PROGRAM_INFO.setFont(mInfoFontPanel.getChosenFont());
-    Settings.Fonts.CHANNE_LNAME.setFont(mChannelNameFontPanel.getChosenFont());
+    Settings.Fonts.CHANNEL_NAME.setFont(mChannelNameFontPanel.getChosenFont());
     Settings.Fonts.PROGRAM_TIME.setFont(mTimeFontPanel.getChosenFont());
     Settings.Fonts.USE_DEFAULT.setBoolean(!mUseUserDefindedFontsCB.isSelected());
     Settings.Fonts.ANTIALIASING_ENABLED.setBoolean(mEnableAntialiasingCB.isSelected());

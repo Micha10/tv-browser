@@ -124,7 +124,7 @@ public class ProgramPanel extends JComponent implements ChangeListener, PluginSt
   /** The width of the left part (the time). */
   public static int WIDTH_LEFT = -1;
   /** The width of the right part (the title and short info). */
-  private static int WIDTH_RIGHT = Settings.propColumnWidth.getInt() - WIDTH_LEFT/* - WIDTH_LOGO*/;
+  private static int WIDTH_RIGHT = Settings.ProgramTable.COLUMN_WIDTH.getInt() - WIDTH_LEFT/* - WIDTH_LOGO*/;
   /** The total width. */
   private static int WIDTH_TOTAL =/* WIDTH_LOGO +*/ WIDTH_LEFT + WIDTH_RIGHT;
   
@@ -167,7 +167,7 @@ public class ProgramPanel extends JComponent implements ChangeListener, PluginSt
   private Program mProgram;
 
   /** Color of the Text */
-  private Color mTextColor = (!Settings.propTableBackgroundStyle.getString().equals("uiColor") && !Settings.propTableBackgroundStyle.getString().equals("uiTimeBlock")) ? Settings.propProgramPanelForegroundColor.getColor() : UIManager.getColor("List.foreground");
+  private Color mTextColor = (!Settings.ProgramTable.STYLE_BACKGROUND.getString().equals("uiColor") && !Settings.ProgramTable.STYLE_BACKGROUND.getString().equals("uiTimeBlock")) ? Settings.ProgramPanel.COLOR_FOREGROUND.getColor() : UIManager.getColor("List.foreground");
 
   /** Panel under a Mouse ? */
   private boolean mMouseOver = false;
@@ -208,7 +208,7 @@ public class ProgramPanel extends JComponent implements ChangeListener, PluginSt
    * Creates a new instance of ProgramPanel.
    */
   public ProgramPanel() {
-    this(new ProgramPanelSettings(Settings.propPictureType.getInt(), Settings.propPictureStartTime.getInt(), Settings.propPictureEndTime.getInt(), false, Settings.propIsPictureShowingDescription.getBoolean(), Settings.propPictureDuration.getInt(), Settings.propPicturePluginIds.getStringArray(), ProgramPanelSettings.Y_AXIS, false, Settings.propShowProgramTablePictureBorder.getBoolean(), false));
+    this(new ProgramPanelSettings(Settings.Pictures.TYPE.getInt(), Settings.Pictures.TIME_START.getInt(), Settings.Pictures.TIME_END.getInt(), false, Settings.Pictures.DESCRIPTION_SHOW.getBoolean(), Settings.Pictures.DURATION.getInt(), Settings.Pictures.PLUGIN_IDS.getStringArray(), ProgramPanelSettings.Y_AXIS, false, Settings.Pictures.BORDER_SHOW.getBoolean(), false));
   }
   
   /**
@@ -296,7 +296,7 @@ public class ProgramPanel extends JComponent implements ChangeListener, PluginSt
       WIDTH_LEFT = getFontMetrics(mTimeFont).stringWidth(
           TIME_FORMATTER.formatTime(23, 59))
           + distance;
-      WIDTH_RIGHT = Settings.propColumnWidth.getInt() + columnWidthOffset
+      WIDTH_RIGHT = Settings.ProgramTable.COLUMN_WIDTH.getInt() + columnWidthOffset
           - WIDTH_LEFT;
       
       if(WIDTH_RIGHT-5 < 50) {
@@ -317,15 +317,15 @@ public class ProgramPanel extends JComponent implements ChangeListener, PluginSt
     Font oldTitleFont = mTitleFont;
     Font oldTimeFont = mTimeFont;
     Font oldNormalFont = mNormalFont;
-    boolean useDefaults = Settings.propUseDefaultFonts.getBoolean();
+    boolean useDefaults = Settings.Fonts.USE_DEFAULT.getBoolean();
     if (useDefaults) {
-      mTitleFont = Settings.propProgramTitleFont.getDefault();
-      mTimeFont = Settings.propProgramTimeFont.getDefault();
-      mNormalFont = Settings.propProgramInfoFont.getDefault();
+      mTitleFont = Settings.Fonts.PROGRAM_TITLE.getDefault();
+      mTimeFont = Settings.Fonts.PROGRAM_TIME.getDefault();
+      mNormalFont = Settings.Fonts.PROGRAM_INFO.getDefault();
     } else {
-      mTitleFont = Settings.propProgramTitleFont.getFont();
-      mTimeFont = Settings.propProgramTimeFont.getFont();
-      mNormalFont = Settings.propProgramInfoFont.getFont();
+      mTitleFont = Settings.Fonts.PROGRAM_TITLE.getFont();
+      mTimeFont = Settings.Fonts.PROGRAM_TIME.getFont();
+      mNormalFont = Settings.Fonts.PROGRAM_INFO.getFont();
     }
     if (newOffset == 0) {
       fontSizeOffset = 0;
@@ -379,7 +379,7 @@ private static Font getDynamicFontSize(Font font, int offset) {
     calculateWidth();
     mTitleIcon = new TextAreaIcon(null, mTitleFont, WIDTH_RIGHT - 5, getLineGap(mTitleFont));
     mDescriptionIcon = new TextAreaIcon(null, mNormalFont, WIDTH_RIGHT - 5, getLineGap(mNormalFont));
-    mDescriptionIcon.setMaximumLineCount(Settings.propProgramPanelMaxLines
+    mDescriptionIcon.setMaximumLineCount(Settings.ProgramPanel.MAX_LINES
         .getInt());
     
     if(mProgram != null) {
@@ -404,14 +404,14 @@ private static Font getDynamicFontSize(Font font, int offset) {
     else {
       columnWidthOffset += (20 * newOffset);
     }
-    int columnWidth = Settings.propColumnWidth.getInt() + columnWidthOffset;
-    if (columnWidth < Settings.MIN_COLUMN_WIDTH) {
-      columnWidthOffset = Settings.MIN_COLUMN_WIDTH - Settings.propColumnWidth.getInt();
+    int columnWidth = Settings.ProgramTable.COLUMN_WIDTH.getInt() + columnWidthOffset;
+    if (columnWidth < Settings.ProgramTable.COLUMN_WIDTH_MIN) {
+      columnWidthOffset = Settings.ProgramTable.COLUMN_WIDTH_MIN - Settings.ProgramTable.COLUMN_WIDTH.getInt();
     }
-    if (columnWidth > Settings.MAX_COLUMN_WIDTH) {
-      columnWidthOffset = Settings.MAX_COLUMN_WIDTH - Settings.propColumnWidth.getInt();
+    if (columnWidth > Settings.ProgramTable.COLUMN_WIDTH_MAX) {
+      columnWidthOffset = Settings.ProgramTable.COLUMN_WIDTH_MAX - Settings.ProgramTable.COLUMN_WIDTH.getInt();
     }
-    columnWidth = Settings.propColumnWidth.getInt() + columnWidthOffset;
+    columnWidth = Settings.ProgramTable.COLUMN_WIDTH.getInt() + columnWidthOffset;
     WIDTH_RIGHT = columnWidth - WIDTH_LEFT;
     WIDTH_TOTAL = WIDTH_LEFT + WIDTH_RIGHT;
     return columnWidth;
@@ -508,8 +508,8 @@ private static Font getDynamicFontSize(Font font, int offset) {
     Program oldProgram = mProgram;
     mProgram = program;
 
-    if (Settings.propProgramTableCutTitle.getBoolean()) {
-      mTitleIcon.setMaximumLineCount(Settings.propProgramTableCutTitleLines
+    if (Settings.ProgramPanel.TITLE_CUT.getBoolean()) {
+      mTitleIcon.setMaximumLineCount(Settings.ProgramPanel.TITLE_CUT_LINES
           .getInt());
     } else {
       mTitleIcon.setMaximumLineCount(-1);
@@ -528,12 +528,12 @@ private static Font getDynamicFontSize(Font font, int offset) {
     boolean programChanged = oldProgram == null || !oldProgram.equals(program);
     
     if (programChanged) {
-      mTextColor = (!Settings.propTableBackgroundStyle.getString().equals("uiColor") && !Settings.propTableBackgroundStyle.getString().equals("uiTimeBlock")) ? Settings.propProgramPanelForegroundColor.getColor() : UIManager.getColor("List.foreground");
+      mTextColor = (!Settings.ProgramTable.STYLE_BACKGROUND.getString().equals("uiColor") && !Settings.ProgramTable.STYLE_BACKGROUND.getString().equals("uiTimeBlock")) ? Settings.ProgramPanel.COLOR_FOREGROUND.getColor() : UIManager.getColor("List.foreground");
       setForeground(mTextColor);
       // Get the start time, filter duplicate strings
       mProgramTimeAsString = StringPool.getString(program.getTimeString());
       
-      if(Settings.propProgramPanelShowOriginialTitles.getBoolean()) {
+      if(Settings.ProgramPanel.ORIGINIAL_TITLES_SHOW.getBoolean()) {
         String test = program.getTextField(ProgramFieldType.ORIGINAL_TITLE_TYPE);
         
         if(test != null) {
@@ -581,16 +581,16 @@ private static Font getDynamicFontSize(Font font, int offset) {
     // Calculate the maximum description lines
     int titleHeight = mTitleIcon.getIconHeight();
     int maxDescLines;
-    if (Settings.propProgramPanelShortDurationActive.getBoolean()
+    if (Settings.ProgramPanel.DESCRIPTION_LIMIT_BY_DURATION.getBoolean()
         && length >= 0
-        && length <= Settings.propProgramPanelShortDurationMinutes.getInt()) {
+        && length <= Settings.ProgramPanel.DESCRIPTION_LIMIT_BY_DURATION_MINUTES.getInt()) {
       maxDescLines = 0;
       mDescriptionIcon.setText("");
       mDescriptionIcon.setMaximumLineCount(0);
     } else {
-      maxDescLines = Settings.propProgramPanelMaxLines.getInt();
+      maxDescLines = Settings.ProgramPanel.MAX_LINES.getInt();
     }
-    int additionalHeight = Settings.propProgramPanelUsesExtraSpaceForMarkIcons.getBoolean() && program.getMarkerArr().length > 0 ? 16 : 0;
+    int additionalHeight = Settings.Markings.USES_EXTRA_SPACE_FOR_MARK_ICONS.getBoolean() && program.getMarkerArr().length > 0 ? 16 : 0;
 
     if (maxHeight != -1) {
       maxDescLines = (maxHeight - titleHeight - mPictureAreaIcon.getIconHeight() - additionalHeight - V_GAP) / mDescriptionIcon.getHeightForLineCount(1);
@@ -602,10 +602,10 @@ private static Font getDynamicFontSize(Font font, int offset) {
       // (Re)set the description text
       if (!mSettings.isShowingOnlyDateAndTitle() && program.getProgramState() == Program.STATE_IS_VALID && maxDescLines > 0) {
         mDescriptionIcon.setMaximumLineCount(maxDescLines);
-        ProgramFieldType[] infoFieldArr = mIsAlternativeLayout ? Settings.propProgramInfoFieldsAlternative
-            .getProgramFieldTypeArray() : Settings.propProgramInfoFields
+        ProgramFieldType[] infoFieldArr = mIsAlternativeLayout ? Settings.ProgramPanel.INFO_FIELDS_ALTERNATIVE
+            .getProgramFieldTypeArray() : Settings.ProgramPanel.INFO_FIELDS
             .getProgramFieldTypeArray();
-        String[] infoFieldSeparatorArr = mIsAlternativeLayout ? Settings.propProgramInfoFieldsSeparatorsAlternative.getStringArray() : Settings.propProgramInfoFieldsSeparators.getStringArray();
+        String[] infoFieldSeparatorArr = mIsAlternativeLayout ? Settings.ProgramPanel.INFO_FIELDS_SEPARATORS_ALTERNATIVE.getStringArray() : Settings.ProgramPanel.INFO_FIELDS_SEPARATORS.getStringArray();
         Reader infoReader = new MultipleFieldReader(program, infoFieldArr, infoFieldSeparatorArr);
         try {
           mDescriptionIcon.setText(infoReader);
@@ -670,7 +670,7 @@ private static Font getDynamicFontSize(Font font, int offset) {
    * @return The icons for the program.
    */
   private Icon[] getPluginIcons(final Program program) {
-    String[] iconPluginArr = mIsAlternativeLayout ? Settings.propProgramTableIconPluginsAlternative.getStringArray() : Settings.propProgramTableIconPlugins
+    String[] iconPluginArr = mIsAlternativeLayout ? Settings.ProgramPanel.ICON_PLUGINS_ALTERNATIVE.getStringArray() : Settings.ProgramPanel.ICON_PLUGINS
         .getStringArray();
 
     if (program.getProgramState() != Program.STATE_IS_VALID || (iconPluginArr == null) || (iconPluginArr.length == 0)) {
@@ -697,7 +697,7 @@ private static Font getDynamicFontSize(Font font, int offset) {
         } else if (iconPluginArr[pluginIdx].equals(Settings.PICTURE_ID)) {
           // picture icon
           if (mProgram.hasFieldValue(ProgramFieldType.PICTURE_TYPE)) {
-            iconList.add(InfoThemeLoader.getInstance().getIconThemeForIDOrDefault(Settings.propInfoIconThemeID.getString()).getInfoIcon(InfoIconTheme.INFO_HAS_PICTURE));
+            iconList.add(InfoThemeLoader.getInstance().getIconThemeForIDOrDefault(Settings.LookAndFeel.INFO_ICON_THEME_ID.getString()).getInfoIcon(InfoIconTheme.INFO_HAS_PICTURE));
           }
         } else if (iconPluginArr[pluginIdx].startsWith("FORMAT")) {
           // new style format (each icon separately)
@@ -724,10 +724,10 @@ private static Font getDynamicFontSize(Font font, int offset) {
               iconPluginArr[pluginIdx] = asId;
               
               if(mIsAlternativeLayout) {
-                Settings.propProgramTableIconPluginsAlternative.setStringArray(iconPluginArr);
+                Settings.ProgramPanel.ICON_PLUGINS_ALTERNATIVE.setStringArray(iconPluginArr);
               }
               else {
-                Settings.propProgramTableIconPlugins.setStringArray(iconPluginArr);
+                Settings.ProgramPanel.ICON_PLUGINS.setStringArray(iconPluginArr);
               }
             }
           }
@@ -787,23 +787,23 @@ private static Font getDynamicFontSize(Font font, int offset) {
     Graphics2D grp = (Graphics2D) g;
 
     // if program table is anti-aliased, then this program panel too
-    if (Settings.propEnableAntialiasing.getBoolean()) {
+    if (Settings.Fonts.ANTIALIASING_ENABLED.getBoolean()) {
       grp.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,
           RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
     }
     
-    Color lightBackground = Settings.propProgramPanelColorOnAirLight.getColor();
-    Color darkBackground = Settings.propProgramPanelColorOnAirDark.getColor();
+    Color lightBackground = Settings.ProgramPanel.COLOR_ON_AIR_LIGHT.getColor();
+    Color darkBackground = Settings.ProgramPanel.COLOR_ON_AIR_DARK.getColor();
     int minutesAfterMidnight = IOUtilities.getMinutesAfterMidnight();
     
-    if(mMarkTime >= 0 && Settings.propScrollToTimeMarkingActivated.getBoolean()) {
+    if(mMarkTime >= 0 && Settings.ProgramTable.SCROLL_TO_TIME_MARKING.getBoolean()) {
       minutesAfterMidnight = mMarkTime;
-      lightBackground = Settings.propScrollToTimeProgramsLightBackground.getColor();
-      darkBackground = Settings.propScrollToTimeProgramsDarkBackground.getColor();
+      lightBackground = Settings.ProgramTable.COLOR_SCROLL_TO_TIME_PROGRAMS_BACKGROUND_LIGHT.getColor();
+      darkBackground = Settings.ProgramTable.COLOR_SCROLL_TO_TIME_PROGRAMS_BACKGROUND_DARK.getColor();
     }
     
     // Draw the background if this program is on air
-    if (mProgram.isOnAir() || mMarkTime >= 0 && Settings.propScrollToTimeMarkingActivated.getBoolean()) {
+    if (mProgram.isOnAir() || mMarkTime >= 0 && Settings.ProgramTable.SCROLL_TO_TIME_MARKING.getBoolean()) {
      // int minutesAfterMidnight = IOUtilities.getMinutesAfterMidnight();
       int progLength = mProgram.getLength();
       int startTime = mProgram.getStartTime();
@@ -824,7 +824,7 @@ private static Font getDynamicFontSize(Font font, int offset) {
         elapsedMinutes = Math.min(elapsedMinutes, progLength);
       }
 
-      int borderWidth = Settings.propProgramPanelOnAirProgramsShowingBorder
+      int borderWidth = Settings.ProgramPanel.BORDER_ON_AIR_PROGRAMS_SHOW
           .getBoolean() ? 1 : 0;
       if (mAxis == ProgramPanelSettings.X_AXIS) {
         // horizontal filling panel
@@ -883,7 +883,7 @@ private static Font getDynamicFontSize(Font font, int offset) {
           grp.fillRect(borderWidth, progressY, width - borderWidth * 2, fillHeight);
         }
       }
-      if (Settings.propProgramPanelOnAirProgramsShowingBorder.getBoolean()) {
+      if (Settings.ProgramPanel.BORDER_ON_AIR_PROGRAMS_SHOW.getBoolean()) {
         grp.draw3DRect(0, 0, width - 1, height - 1, true);
       }
     }
@@ -894,9 +894,9 @@ private static Font getDynamicFontSize(Font font, int offset) {
     paintHighlighting(grp,0,0,width,height,markedByPluginArr,mProgram,mProgramImportance);
 
     if (mMouseOver || mIsSelected) {
-      Color test = Settings.propProgramTableMouseOverColor.getColor();
+      Color test = Settings.ProgramTable.COLOR_MOUSE_OVER.getColor();
       if (mIsSelected) {
-        test = Settings.propKeyboardSelectedColor.getColor();
+        test = Settings.ProgramPanel.COLOR_KEYBOARD_SELECTED.getColor();
       }
       grp.setColor(test);
       
@@ -913,11 +913,11 @@ private static Font getDynamicFontSize(Font font, int offset) {
         BasicStroke dashed = new BasicStroke(lineWidth, BasicStroke.CAP_BUTT,
             BasicStroke.JOIN_MITER, 10.0f, dash, 0.0f);
         
-        if(Settings.propTableBackgroundStyle.getString().contains("ui")) {
+        if(Settings.ProgramTable.STYLE_BACKGROUND.getString().contains("ui")) {
           grp.setColor(UIManager.getColor("List.foreground"));
         }
         else {
-          grp.setColor(Settings.propProgramPanelForegroundColor.getColor());
+          grp.setColor(Settings.ProgramPanel.COLOR_FOREGROUND.getColor());
         }
         
         grp.setStroke(dashed);
@@ -988,7 +988,7 @@ private static Font getDynamicFontSize(Font font, int offset) {
         + mPictureAreaIcon.getIconHeight() + 18;
     y = Math.min(y, height - 1);
     
-    if(markedByPluginArr.length > 0 && Settings.propProgramPanelGradientColorHighlighting.getBoolean()) {
+    if(markedByPluginArr.length > 0 && Settings.ProgramPanel.HIGHLIGHTING_COLOR_GRADIENT.getBoolean()) {
       Arrays.parallelSort(markedByPluginArr, new Comparator<Marker>() {
         public int compare(Marker o1, Marker o2) {
           int p1 = o1.getMarkPriorityMaxForProgram(mProgram);
@@ -1236,7 +1236,7 @@ private static Font getDynamicFontSize(Font font, int offset) {
    * @return The smallest height possible.
    */
   public int getMinimumHeight() {
-    return mTitleIcon.getIconHeight() + mPictureAreaIcon.getIconHeight() + 3 + (Settings.propProgramPanelUsesExtraSpaceForMarkIcons.getBoolean() && mProgram.getMarkerArr().length > 0 ? 16 : 0);
+    return mTitleIcon.getIconHeight() + mPictureAreaIcon.getIconHeight() + 3 + (Settings.Markings.USES_EXTRA_SPACE_FOR_MARK_ICONS.getBoolean() && mProgram.getMarkerArr().length > 0 ? 16 : 0);
   }
 
   /**
@@ -1424,7 +1424,7 @@ private static Font getDynamicFontSize(Font font, int offset) {
   }
 
   public void setWidth(int newWidth) {
-    if(newWidth > Settings.MIN_COLUMN_WIDTH) {
+    if(newWidth > Settings.ProgramTable.COLUMN_WIDTH_MIN) {
       int oldWidth = getWidth();
       
       int textIconWidth = getTextIconWidth(newWidth);
@@ -1465,7 +1465,7 @@ private static Font getDynamicFontSize(Font font, int offset) {
   private int getLineGap(Font f) {
     int result = 1;
     
-    switch(Settings.propProgramTextLineGap.getInt()) {
+    switch(Settings.Fonts.PROGRAM_TEX_TLINE_GAP.getInt()) {
       case 1: result = f.getSize()/4;break;
       case 2: result = f.getSize()/2;break;
       case 3: result = (int)(f.getSize()*3/4.);break;
@@ -1493,7 +1493,7 @@ private static Font getDynamicFontSize(Font font, int offset) {
       Integer[] priorites = program.getMarkPriorities();  
       
       if(priorites != null && priorites.length > 0) {
-        boolean gradient = Settings.propProgramPanelGradientColorHighlighting.getBoolean() && priorites.length > 1;
+        boolean gradient = Settings.ProgramPanel.HIGHLIGHTING_COLOR_GRADIENT.getBoolean() && priorites.length > 1;
         
         Color c = Plugin.getPluginManager().getTvBrowserSettings().getColorForMarkingPriority(program.getMarkPriorityMax());
   
@@ -1554,7 +1554,7 @@ private static Font getDynamicFontSize(Font font, int offset) {
           grp.setPaint(paint);
         }
         
-        if(Settings.propProgramPanelWithMarkingsShowingBoder.getBoolean()) {
+        if(Settings.Markings.WITH_MARKINGS_SHOWING_BORDER.getBoolean()) {
           l = new Color(l.getRGB()).darker();
           r = new Color(r.getRGB()).brighter();
           

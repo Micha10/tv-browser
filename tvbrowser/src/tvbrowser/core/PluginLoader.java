@@ -121,7 +121,7 @@ public class PluginLoader {
    * old version was in use.
    */
   public void installPendingPlugins() {
-    File[] installableFiles = new File(Settings.propPluginsDirectory.getString()).listFiles(new FilenameFilter() {
+    File[] installableFiles = new File(Settings.Directories.PLUGINS.getString()).listFiles(new FilenameFilter() {
       @Override
       public boolean accept(File dir, String fileName) {
         return fileName.endsWith(PLUGIN_INSTALL_EXTENSION);
@@ -153,7 +153,7 @@ public class PluginLoader {
       
       if(oldFile.getName().equals("DegenderPlugin.jar")) {
         String id = "java.degenderplugin.DegenderPlugin";
-        final String[] sortedPlugins = Settings.propDataPluginPostProcessingOrder.getStringArray();
+        final String[] sortedPlugins = Settings.DataPostProcessing.ORDER.getStringArray();
         
         boolean found = false;
         
@@ -172,7 +172,7 @@ public class PluginLoader {
             System.arraycopy(sortedPlugins, 0, value, 1, sortedPlugins.length);
           }
           
-          Settings.propDataPluginPostProcessingOrder.setStringArray(value);
+          Settings.DataPostProcessing.ORDER.setStringArray(value);
         }
       }
 
@@ -200,7 +200,7 @@ public class PluginLoader {
         PluginProxyManager.getInstance().registerPlugin(proxy);
         File pluginFile = new File(proxy.getPluginFileName());
         
-        if (new File(proxy.getPluginFileName()).getParentFile().equals(new File(Settings.propPluginsDirectory.getString()))) {
+        if (new File(proxy.getPluginFileName()).getParentFile().equals(new File(Settings.Directories.PLUGINS.getString()))) {
           mDeleteablePlugin.put(proxy, pluginFile);
         }
         else {
@@ -254,23 +254,23 @@ public class PluginLoader {
           // add this plugin to the icon settings for program panels
           String iconText = ((Plugin)plugin).getProgramTableIconText();
           if (iconText != null && !iconText.isEmpty()) {
-            if (!Settings.propProgramTableIconPlugins.containsItem(((Plugin)plugin).getId())) {
-              Settings.propProgramTableIconPlugins.addItem(((Plugin)plugin).getId());
+            if (!Settings.ProgramPanel.ICON_PLUGINS.containsItem(((Plugin)plugin).getId())) {
+              Settings.ProgramPanel.ICON_PLUGINS.addItem(((Plugin)plugin).getId());
             }
             
-            if (!Settings.propProgramTableIconPluginsAlternative.containsItem(((Plugin)plugin).getId())) {
-              Settings.propProgramTableIconPluginsAlternative.addItem(((Plugin)plugin).getId());
+            if (!Settings.ProgramPanel.ICON_PLUGINS_ALTERNATIVE.containsItem(((Plugin)plugin).getId())) {
+              Settings.ProgramPanel.ICON_PLUGINS_ALTERNATIVE.addItem(((Plugin)plugin).getId());
             } 
           }
           
-          if(!Settings.propKnownContextMenuPlugins.containsItem(((Plugin)plugin).getId())) {
+          if(!Settings.ContextMenu.PLUGINS_KNOWN.containsItem(((Plugin)plugin).getId())) {
             ActionMenu test = ((Plugin)plugin).getContextMenuActions(PluginManagerImpl.getInstance().getExampleProgram());
             
             if(test != null) {
               mShowMouseInfo = true;
             }
             
-            Settings.propKnownContextMenuPlugins.addItem(((Plugin)plugin).getId());
+            Settings.ContextMenu.PLUGINS_KNOWN.addItem(((Plugin)plugin).getId());
           }
         }
         if (deleteable) {
@@ -459,7 +459,7 @@ public class PluginLoader {
     // check for plugin proxies only one time per run
     if (loadedProxies == null) {
       loadedProxies = new ArrayList<PluginProxy>();
-      final String[] deactivatedPluginArr = Settings.propDeactivatedPlugins.getStringArray();
+      final String[] deactivatedPluginArr = Settings.Plugins.DEACTIVATED.getStringArray();
 
       // only check proxies if at least one plugin is not active
       if (deactivatedPluginArr != null && deactivatedPluginArr.length > 0) {
@@ -541,7 +541,7 @@ public class PluginLoader {
 
     /* 0) delete all plugins the user doesn't want anymore */
 
-    String[] files = Settings.propDeleteFilesAtStart.getStringArray();
+    String[] files = Settings.Plugins.DELETE_FILES_AT_START.getStringArray();
 
     if ((files != null) && (files.length > 0)) {
       for (String file : files) {
@@ -553,10 +553,10 @@ public class PluginLoader {
         }
       }
 
-      Settings.propDeleteFilesAtStart.setStringArray(new String[0]);
+      Settings.Plugins.DELETE_FILES_AT_START.setStringArray(new String[0]);
     }
     
-    String[] pluginReset = Settings.propPluginResetIds.getStringArray();
+    String[] pluginReset = Settings.Plugins.RESET_IDS.getStringArray();
     
     if(pluginReset != null && pluginReset.length > 0) {
       File userDirectory = new File(Settings.getUserSettingsDirName());
@@ -579,12 +579,12 @@ public class PluginLoader {
         }
       }
       
-      Settings.propPluginResetIds.setStringArray(new String[0]);
+      Settings.Plugins.RESET_IDS.setStringArray(new String[0]);
     }
 
 
     /* 1) load all plugins from the plugins folder in the user's home directory */
-    String pluginsFolderName = Settings.propPluginsDirectory.getString();
+    String pluginsFolderName = Settings.Directories.PLUGINS.getString();
     File f = new File(pluginsFolderName);
     boolean success = true;
     if (!f.exists()) {
@@ -668,7 +668,7 @@ public class PluginLoader {
         version1 = (Version)getVersion.invoke(pluginClass);
 
         if(pluginClass.getSuperclass().equals(devplugin.AbstractTvDataService.class)) {
-          isBlockedDataService = Settings.propBlockedPluginArray.isBlocked(pluginKey, version1);
+          isBlockedDataService = Settings.Plugins.BLOCKED_ARRAY.isBlocked(pluginKey, version1);
         }
       }
 
@@ -738,11 +738,11 @@ public class PluginLoader {
     // mark plugin file for deletion
     File file = mDeleteablePlugin.get(plugin);
     if (file != null) {
-      Settings.propDeleteFilesAtStart.addItem(file.toString());
+      Settings.Plugins.DELETE_FILES_AT_START.addItem(file.toString());
 
       // mark proxy file for deletion
       String proxyFile = getProxyFileName(file);
-      Settings.propDeleteFilesAtStart.addItem(proxyFile);
+      Settings.Plugins.DELETE_FILES_AT_START.addItem(proxyFile);
 
       mDeleteablePlugin.remove(plugin);
       return true;
@@ -786,7 +786,7 @@ public class PluginLoader {
       }});
     if (proxyFiles != null) {
       for (File proxyFile : proxyFiles) {
-        Settings.propDeleteFilesAtStart.addItem(proxyFile.toString());
+        Settings.Plugins.DELETE_FILES_AT_START.addItem(proxyFile.toString());
       }
     }
   }
@@ -800,7 +800,7 @@ public class PluginLoader {
     ArrayList<PluginBaseInfo> availablePlugins = new ArrayList<PluginBaseInfo>();
     
     /* 1) get base info for plugins in user dir */
-    getBaseInfoOfPluginsInDirectory(new File(Settings.propPluginsDirectory.getString()),availablePlugins);
+    getBaseInfoOfPluginsInDirectory(new File(Settings.Directories.PLUGINS.getString()),availablePlugins);
     
     /* 2) get base info for plugins in the plugins folder */
     getBaseInfoOfPluginsInDirectory(new File(PluginProxyManager.PLUGIN_DIRECTORY),availablePlugins);

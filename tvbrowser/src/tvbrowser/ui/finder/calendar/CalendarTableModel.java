@@ -39,7 +39,7 @@ public final class CalendarTableModel extends AbstractTableModel {
   
   public void updateContent(final Date firstDate) {
     Date date = firstDate;
-    mFirstDayOfWeek = Settings.propFirstDayOfWeek.getInt();
+    mFirstDayOfWeek = Settings.Locales.FIRST_DAY_OF_WEEK.getInt();
     
     while (date.getDayOfWeek() != mFirstDayOfWeek) {
       date = date.addDays(-1);

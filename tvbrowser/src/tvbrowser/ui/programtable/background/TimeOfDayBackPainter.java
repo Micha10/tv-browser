@@ -49,19 +49,19 @@ public class TimeOfDayBackPainter extends AbstractCellBasedBackPainter {
 
   public TimeOfDayBackPainter() {
     mBackgroundImageEdge = ImageUtilities
-        .createImageAsynchronous(Settings.propTimeOfDayBackgroundEdge
+        .createImageAsynchronous(Settings.ProgramTable.TIME_OF_DAY_BACKGROUND_EDGE
             .getString());
     mBackgroundImageEarly = ImageUtilities
-        .createImageAsynchronous(Settings.propTimeOfDayBackgroundEarly
+        .createImageAsynchronous(Settings.ProgramTable.TIME_OF_DAY_BACKGROUND_EARLY
             .getString());
     mBackgroundImageMidday = ImageUtilities
-        .createImageAsynchronous(Settings.propTimeOfDayBackgroundMidday
+        .createImageAsynchronous(Settings.ProgramTable.TIME_OF_DAY_BACKGROUND_MIDDAY
             .getString());
     mBackgroundImageAfternoon = ImageUtilities
-        .createImageAsynchronous(Settings.propTimeOfDayBackgroundAfternoon
+        .createImageAsynchronous(Settings.ProgramTable.TIME_OF_DAY_BACKGROUND_AFTERNOON
             .getString());
     mBackgroundImageEvening = ImageUtilities
-        .createImageAsynchronous(Settings.propTimeOfDayBackgroundEvening
+        .createImageAsynchronous(Settings.ProgramTable.TIME_OF_DAY_BACKGROUND_EVENING
             .getString());
   }
 

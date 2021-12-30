@@ -133,7 +133,7 @@ public class DontShowAgainOptionBox {
    * @since 3.0
    */
   public static boolean isOptionBoxIdSet(Plugin plugin, String optionBoxId) {
-    return Settings.propHiddenMessageBoxes.containsItem(plugin.getId() + "."+ optionBoxId);
+    return Settings.Other.MESSAGE_BOXES_HIDDEN.containsItem(plugin.getId() + "."+ optionBoxId);
   }
 
   /**
@@ -146,9 +146,9 @@ public class DontShowAgainOptionBox {
    */
   public static void setOptionBoxId(Plugin plugin, String optionBoxId, boolean value) {
     if (value) {
-      Settings.propHiddenMessageBoxes.removeItem(plugin.getId() + "."+ optionBoxId);
+      Settings.Other.MESSAGE_BOXES_HIDDEN.removeItem(plugin.getId() + "."+ optionBoxId);
     } else {
-      Settings.propHiddenMessageBoxes.addItem(plugin.getId() + "."+ optionBoxId);
+      Settings.Other.MESSAGE_BOXES_HIDDEN.addItem(plugin.getId() + "."+ optionBoxId);
     }
   }
 }

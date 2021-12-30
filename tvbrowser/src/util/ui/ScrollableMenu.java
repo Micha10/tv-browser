@@ -607,7 +607,7 @@ public class ScrollableMenu extends JMenu {
       int height = jcomp.getPreferredSize().height;
 
       if(component instanceof JMenuItem && ((JMenuItem) component).getAccelerator() != null
-          && Settings.propLookAndFeel.getString().startsWith("com.jgoodies.looks")) {
+          && Settings.LookAndFeel.SELECTED.getString().startsWith("com.jgoodies.looks")) {
         KeyStroke s = ((JMenuItem) component).getAccelerator();
         
         if(s != null) {

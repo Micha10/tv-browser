@@ -530,7 +530,7 @@ public class Date implements Comparable<Date>
    * @since 2.6
    */
   public boolean isFirstDayOfWeek() {
-    return getDayOfWeek() == Settings.propFirstDayOfWeek.getInt();
+    return getDayOfWeek() == Settings.Locales.FIRST_DAY_OF_WEEK.getInt();
   }
 
   /**

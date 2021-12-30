@@ -51,7 +51,7 @@ public class PluginsSoftwareUpdateItem extends SoftwareUpdateItem {
   }
 
   protected boolean downloadFrom(final String url) throws TvBrowserException {
-    if(!isStable() && Settings.propPluginBetaWarning.getBoolean()) {
+    if(!isStable() && Settings.Plugins.BETA_WARNING.getBoolean()) {
       JOptionPane pane = new JOptionPane();
       
       String ok = mLocalizer.msg("betawarning.oktext","Install beta version");
@@ -75,7 +75,7 @@ public class PluginsSoftwareUpdateItem extends SoftwareUpdateItem {
       }
     }
 
-    final File toFile=new File(Settings.propPluginsDirectory.getString(),getClassName() + ".jar.inst");
+    final File toFile=new File(Settings.Directories.PLUGINS.getString(),getClassName() + ".jar.inst");
     try {
         IOUtilities.download(new URL(url),toFile);
     }catch (Exception exc) {

@@ -141,9 +141,9 @@ public final class Persona {
    * Applies the current selected Persona.
    */
   public void applyPersona() {
-    String id = Settings.propSelectedPersona.getString();
+    String id = Settings.LookAndFeel.PERSONA_SELECTED.getString();
     
-    if(Settings.propRandomPersona.getBoolean() && mPersonaMap.size() > 2) {
+    if(Settings.LookAndFeel.PERSONA_RANDOM.getBoolean() && mPersonaMap.size() > 2) {
       PersonaInfo[] installedPersonas = getInstalledPersonas();
       
       int index = 0;
@@ -159,8 +159,8 @@ public final class Persona {
       PersonaInfo personaInfo = mPersonaMap.get(id);
       
       if(personaInfo == null) {
-        Settings.propSelectedPersona.setString(new PersonaInfo().getId());
-        personaInfo = mPersonaMap.get(Settings.propSelectedPersona.getString());
+        Settings.LookAndFeel.PERSONA_SELECTED.setString(new PersonaInfo().getId());
+        personaInfo = mPersonaMap.get(Settings.LookAndFeel.PERSONA_SELECTED.getString());
       }
       
       if(personaInfo != null) {
@@ -398,11 +398,11 @@ public final class Persona {
   public void activatePersona(PersonaInfo info) {
     if(info != null && mPersonaMap.get(info.getId()) != null) {
       if(!info.getId().equals(PersonaInfo.RANDOM_ID)) {
-        Settings.propSelectedPersona.setString(info.getId());
-        Settings.propRandomPersona.setBoolean(false);
+        Settings.LookAndFeel.PERSONA_SELECTED.setString(info.getId());
+        Settings.LookAndFeel.PERSONA_RANDOM.setBoolean(false);
       }
       else {
-        Settings.propRandomPersona.setBoolean(true);
+        Settings.LookAndFeel.PERSONA_RANDOM.setBoolean(true);
       }
       
       applyPersona();

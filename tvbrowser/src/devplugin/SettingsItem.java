@@ -79,7 +79,7 @@ public class SettingsItem {
   public static final String DIRECTORIES = Settings.Directories.ID;
 
   public static final String PROGRAMPANELLOOK = Settings.ProgramPanel.ID;
-  public static final String PROGRAMPANELMARKING = Settings.MarkingsProgramPanel.ID;
+  public static final String PROGRAMPANELMARKING = Settings.Markings.ID;
   public static final String PROGRAMTABLELOOK = Settings.ProgramTable.ID;
   public static final String CENTERPANELSETUP = Settings.CenterPanels.ID;
   

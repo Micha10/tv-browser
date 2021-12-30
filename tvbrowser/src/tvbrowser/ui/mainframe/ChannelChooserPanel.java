@@ -168,12 +168,12 @@ public class ChannelChooserPanel extends JPanel implements ListDropAction<Object
   }
 
   public void updateChannelChooser() {
-    mList.setCellRenderer(new ChannelListCellRenderer(Settings.propShowChannelIconsInChannellist.getBoolean(),
-        Settings.propShowChannelNamesInChannellist.getBoolean(),false,false,true,true));
+    mList.setCellRenderer(new ChannelListCellRenderer(Settings.IconAndNames.SHOW_ICONS_IN_CHANNEL_LIST.getBoolean(),
+        Settings.IconAndNames.SHOW_NAMES_IN_CHANNEL_LIST.getBoolean(),false,false,true,true));
     mChannelChooserModel.removeAllElements();
     Channel[] channelList = tvbrowser.core.ChannelList.getSubscribedChannels();
     
-    String[] separatorArr = Settings.propSubscribedChannelsSeparators.getStringArray();
+    String[] separatorArr = Settings.Channels.SUBSCRIBED_SEPARATORS.getStringArray();
     Channel previousChannel = null;
     int lastSeparatorIndex = 0;
     
@@ -258,13 +258,13 @@ public class ChannelChooserPanel extends JPanel implements ListDropAction<Object
     Channel[] channelArr = tempList.toArray(new Channel[tempList.size()]);
 
     ChannelList.setSubscribeChannels(channelArr);
-    Settings.propSubscribedChannels.setChannelArray(channelArr);
-    Settings.propSubscribedChannelsSeparators.setStringArray(separators.toArray(new String[separators.size()]));
+    Settings.Channels.SUBSCRIBED.setChannelArray(channelArr);
+    Settings.Channels.SUBSCRIBED_SEPARATORS.setStringArray(separators.toArray(new String[separators.size()]));
 
-    if (!Settings.propTrayUseSpecialChannels.getBoolean()) {
+    if (!Settings.Tray.Channels.SPECIAL_USE.getBoolean()) {
       Channel[] tempArr = new Channel[channelArr.length > 10 ? 10 : channelArr.length];
       System.arraycopy(channelArr, 0, tempArr, 0, tempArr.length);
-      Settings.propTraySpecialChannels.setChannelArray(tempArr);
+      Settings.Tray.Channels.SPECIAL.setChannelArray(tempArr);
     }
 
     ChannelList.reload();

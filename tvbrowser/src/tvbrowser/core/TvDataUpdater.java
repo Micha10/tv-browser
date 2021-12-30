@@ -214,7 +214,7 @@ public class TvDataUpdater {
     daysToDownload += 2;
 
     // Ensure that the tvdata directory exists
-    File tvdataDir = new File(Settings.propTVDataDirectory.getString());
+    File tvdataDir = new File(Settings.Directories.TV_DATA.getString());
     if (! tvdataDir.exists()) {
       tvdataDir.mkdir();
     }
@@ -347,23 +347,23 @@ public class TvDataUpdater {
   }
   
   private void checkAndUpdateChannelList(ProgressMonitor monitor) {
-    final int channelAutoUpdatePeriod = Settings.propAutoChannelUpdatePeriod.getInt();
+    final int channelAutoUpdatePeriod = Settings.General.AUTO_CHANNEL_UPDATE_PERIOD.getInt();
     
     if(channelAutoUpdatePeriod > GeneralSettingsTab.VALUE_AUTO_CHANNEL_UPDATE_DISABLED) {
       final Date compare = new Date().addDays(-channelAutoUpdatePeriod+1);
       
-      if((Settings.propLastChannelUpdate.getDate() == null || Settings.propLastChannelUpdate.getDate().compareTo(compare) < 0)
+      if((Settings.Channels.UPDATE_LAST.getDate() == null || Settings.Channels.UPDATE_LAST.getDate().compareTo(compare) < 0)
           && NetworkUtilities.checkConnection()) {
         final Channel[] currentChannels = ChannelList.getAvailableChannels();
         
-        final int currentNetworkTimeout = Settings.propDefaultNetworkConnectionTimeout.getInt();
+        final int currentNetworkTimeout = Settings.Network.DEFAULT_CONNECTION_TIMEOUT.getInt();
         
-        Settings.propDefaultNetworkConnectionTimeout.setInt(5000);
+        Settings.Network.DEFAULT_CONNECTION_TIMEOUT.setInt(5000);
         
         ChannelGroupManager.getInstance().checkForAvailableGroupsAndChannels(monitor);
         ChannelList.reload();
         
-        Settings.propDefaultNetworkConnectionTimeout.setInt(currentNetworkTimeout);
+        Settings.Network.DEFAULT_CONNECTION_TIMEOUT.setInt(currentNetworkTimeout);
         
         ChannelListChangesDialog.showChannelChanges(UiUtilities.getLastModalChildOf(MainFrame.getInstance()), Arrays.asList(currentChannels), Arrays.asList(ChannelList.getAvailableChannels()),true);
         
@@ -548,9 +548,9 @@ public class TvDataUpdater {
 
 
   private void checkLocalDateUsingNTP() {
-    if (!tvDataWasChanged() && Settings.propNTPTimeCheck.getBoolean()) {
-      if (Settings.propLastNTPCheck.getDate() == null || Settings.propLastNTPCheck.getDate().compareTo(Date.getCurrentDate()) < 0) {
-        Settings.propLastNTPCheck.setDate(Date.getCurrentDate());
+    if (!tvDataWasChanged() && Settings.General.NTP_TIME_CHECK.getBoolean()) {
+      if (Settings.General.NTP_CHECK_LAST.getDate() == null || Settings.General.NTP_CHECK_LAST.getDate().compareTo(Date.getCurrentDate()) < 0) {
+        Settings.General.NTP_CHECK_LAST.setDate(Date.getCurrentDate());
         int serverNum = (int)(Math.random() * 4);
         int differenceSecs = NetworkUtilities
             .getTimeDifferenceSeconds(Integer.toString(serverNum) + ".tvbrowser.pool.ntp.org");

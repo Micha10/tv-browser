@@ -117,8 +117,8 @@ public class ProgramTableCellRenderer extends DefaultTableCellRenderer {
             
             mProgramPanel.setPaintExpiredProgramsPale(!isSelected);
             
-            if(!Settings.propTableBackgroundStyle.getString().equals("uiColor") && !Settings.propTableBackgroundStyle.getString().equals("uiTimeBlock")) {
-              mProgramPanel.setTextColor(Settings.propProgramPanelForegroundColor.getColor());
+            if(!Settings.ProgramTable.STYLE_BACKGROUND.getString().equals("uiColor") && !Settings.ProgramTable.STYLE_BACKGROUND.getString().equals("uiTimeBlock")) {
+              mProgramPanel.setTextColor(Settings.ProgramPanel.COLOR_FOREGROUND.getColor());
             }
             else {
               mProgramPanel.setTextColor(UIManager.getColor("List.foreground"));
@@ -152,7 +152,7 @@ public class ProgramTableCellRenderer extends DefaultTableCellRenderer {
             
             if(isSelected) {
               mHeaderLb.setOpaque(true);
-              mHeaderLb.setBackground(Settings.propKeyboardSelectedColor.getColor());
+              mHeaderLb.setBackground(Settings.ProgramPanel.COLOR_KEYBOARD_SELECTED.getColor());
             }
             else {
               mHeaderLb.setOpaque(false);

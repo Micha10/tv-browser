@@ -89,7 +89,7 @@ public class TextLineBreakerStringWidth {
     mSpaceWidth = 1;
     mMinusWidth = 1;
 
-    if (Settings.propProgramPanelHyphenation.getBoolean()) {
+    if (Settings.ProgramPanel.HYPHENATION.getBoolean()) {
       initializeHyphenator();
     }
   }
@@ -201,7 +201,7 @@ public class TextLineBreakerStringWidth {
     throws IOException
   {
     if (width <= 0) {
-      width = Settings.propColumnWidth.getInt();
+      width = Settings.ProgramTable.COLUMN_WIDTH.getInt();
     }
 
     mNextWordWidth = -1;

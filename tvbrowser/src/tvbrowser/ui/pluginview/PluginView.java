@@ -368,10 +368,10 @@ public class PluginView extends JPanel implements MouseListener, KeyListener {
         }
         int progressX = (int)((getWidth())/(double)mProgram.getLength() * runTime);
         
-        g.setColor(Settings.propProgramPanelColorOnAirDark.getColor());
+        g.setColor(Settings.ProgramPanel.COLOR_ON_AIR_DARK.getColor());
         g.fillRect(0,1,progressX,getHeight()-1);
 
-        g.setColor(Settings.propProgramPanelColorOnAirLight.getColor());
+        g.setColor(Settings.ProgramPanel.COLOR_ON_AIR_LIGHT.getColor());
         g.fillRect(0 + progressX,1,getWidth()-progressX,getHeight()-1);
       }
       else {

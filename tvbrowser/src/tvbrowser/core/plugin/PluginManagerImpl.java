@@ -201,9 +201,9 @@ public class PluginManagerImpl implements PluginManager {
   
   private boolean checkChannelAccess(Channel ch) {
     if(ch != null) {
-      if(ch.isAccessControl() && Settings.propAccessControl.getStringArray().length > 0) {
+      if(ch.isAccessControl() && Settings.Plugins.ACCESS_CONTROL.getStringArray().length > 0) {
         StackTraceElement[] stackTace = Thread.currentThread().getStackTrace();
-        String[] values = Settings.propAccessControl.getStringArray();
+        String[] values = Settings.Plugins.ACCESS_CONTROL.getStringArray();
         
         for(int i = 0; i < Math.min(5, stackTace.length); i++) {
           for(String testValue : values) {
@@ -427,9 +427,9 @@ public class PluginManagerImpl implements PluginManager {
    * @return all channels the user has subscribed.
    */
   public Channel[] getSubscribedChannels() {
-    if(Settings.propAccessControl.getStringArray().length > 0) {
+    if(Settings.Plugins.ACCESS_CONTROL.getStringArray().length > 0) {
       StackTraceElement[] stackTace = Thread.currentThread().getStackTrace();
-      String[] values = Settings.propAccessControl.getStringArray();
+      String[] values = Settings.Plugins.ACCESS_CONTROL.getStringArray();
       
       boolean isAccessControl = false;
       
@@ -689,7 +689,7 @@ public class PluginManagerImpl implements PluginManager {
   
   /** @deprecated since 3.3.1 Use {@link util.programmouseevent.ProgramMouseEventHandler} and/or {@link util.programkeyevent.ProgramKeyEventHandler} instead. */
   @Deprecated(since="3.3.1") public void handleProgramSingleClick(Program program, ContextMenuIf caller) {
-    ContextMenuMouseActionSetting[] leftSingleSetting = Settings.propLeftSingleClickIfArray.getContextMenuMouseActionArray();
+    ContextMenuMouseActionSetting[] leftSingleSetting = Settings.Mouse.LEFT_SINGLE_CLICK_IF_ARRAY.getContextMenuMouseActionArray();
     
     if (program == null || leftSingleSetting == null || leftSingleSetting.length == 0) {
       // Nothing to do
@@ -717,7 +717,7 @@ public class PluginManagerImpl implements PluginManager {
 
   /** @deprecated since 3.3.1 Use {@link util.programmouseevent.ProgramMouseEventHandler} and/or {@link util.programkeyevent.ProgramKeyEventHandler} instead. */
   @Deprecated(since="3.3.1") public void handleProgramSingleCtrlClick(Program program, ContextMenuIf caller) {
-    ContextMenuMouseActionSetting[] leftSingleSetting = Settings.propLeftSingleClickIfArray.getContextMenuMouseActionArray();
+    ContextMenuMouseActionSetting[] leftSingleSetting = Settings.Mouse.LEFT_SINGLE_CLICK_IF_ARRAY.getContextMenuMouseActionArray();
     
     if (program == null || leftSingleSetting == null || leftSingleSetting.length < 2) {
       // Nothing to do
@@ -771,7 +771,7 @@ public class PluginManagerImpl implements PluginManager {
    * @deprecated since 3.3.1 Use {@link util.programmouseevent.ProgramMouseEventHandler} and/or {@link util.programkeyevent.ProgramKeyEventHandler} instead.
    */
   @Deprecated(since="3.3.1") public void handleProgramDoubleClick(Program program, ContextMenuIf caller) {
-    ContextMenuMouseActionSetting[] leftDoubleSetting = Settings.propLeftDoubleClickIfArray.getContextMenuMouseActionArray();
+    ContextMenuMouseActionSetting[] leftDoubleSetting = Settings.Mouse.LEFT_DOUBLE_CLICK_IF_ARRAY.getContextMenuMouseActionArray();
     
     if (program == null || leftDoubleSetting == null || leftDoubleSetting.length == 0) {
       // Nothing to do
@@ -827,7 +827,7 @@ public class PluginManagerImpl implements PluginManager {
    * @deprecated since 3.3.1 Use {@link util.programmouseevent.ProgramMouseEventHandler} and/or {@link util.programkeyevent.ProgramKeyEventHandler} instead.
    */
   @Deprecated(since="3.3.1") public void handleProgramMiddleClick(Program program, ContextMenuIf caller) {
-    ContextMenuMouseActionSetting[] middleLeftSetting = Settings.propMiddleSingleClickIfArray.getContextMenuMouseActionArray();
+    ContextMenuMouseActionSetting[] middleLeftSetting = Settings.Mouse.MIDDLE_SINGLE_CLICK_IF_ARRAY.getContextMenuMouseActionArray();
     
     if (program == null || middleLeftSetting == null || middleLeftSetting.length == 0) {
       // Nothing to do
@@ -881,7 +881,7 @@ public class PluginManagerImpl implements PluginManager {
    * @deprecated since 3.3.1 Use {@link util.programmouseevent.ProgramMouseEventHandler} and/or {@link util.programkeyevent.ProgramKeyEventHandler} instead.
    */
   @Deprecated(since="3.3.1") public void handleProgramMiddleDoubleClick(Program program, ContextMenuIf caller) {
-    ContextMenuMouseActionSetting[] middleDoubleSetting = Settings.propMiddleDoubleClickIfArray.getContextMenuMouseActionArray();
+    ContextMenuMouseActionSetting[] middleDoubleSetting = Settings.Mouse.MIDDLE_DOUBLE_CLICK_IF_ARRAY.getContextMenuMouseActionArray();
     
     if (program == null || middleDoubleSetting == null || middleDoubleSetting.length == 0) {
       // Nothing to do
@@ -1229,7 +1229,7 @@ public class PluginManagerImpl implements PluginManager {
   }
 
   public void deleteFileOnNextStart(String path) {
-    Settings.propDeleteFilesAtStart.addItem(path);
+    Settings.Plugins.DELETE_FILES_AT_START.addItem(path);
   }
 
   @Override

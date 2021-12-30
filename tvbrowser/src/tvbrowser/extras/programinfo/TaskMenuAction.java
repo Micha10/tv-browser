@@ -191,8 +191,8 @@ public class TaskMenuAction {
         id + "_" + (String) menu.getAction().getValue(Action.NAME));
     group.setExpanded(expanded);
     
-    if(Settings.propTableBackgroundStyle.getString().equals("uiTimeBlock") || 
-        Settings.propTableBackgroundStyle.getString().equals("uiColor")) {
+    if(Settings.ProgramTable.STYLE_BACKGROUND.getString().equals("uiTimeBlock") || 
+        Settings.ProgramTable.STYLE_BACKGROUND.getString().equals("uiColor")) {
       ((JComponent)((JComponent)((JComponent)group.getComponent(0)).getComponent(0)).getComponent(0)).setBackground(UIManager.getColor("List.background"));
     }
     

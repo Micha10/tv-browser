@@ -225,7 +225,7 @@ public class ChannelList {
     }
     
     if(dummyRemoved) {
-      Settings.propSubscribedChannels.clearCacheExternal();
+      Settings.Channels.SUBSCRIBED.clearCacheExternal();
       
       if(!MainFrame.isStarting()) {
         SwingUtilities.invokeLater(() -> {
@@ -236,7 +236,7 @@ public class ChannelList {
       }
     }
         
-    Channel[] channelArr = Settings.propSubscribedChannels.getChannelArray();
+    Channel[] channelArr = Settings.Channels.SUBSCRIBED.getChannelArray();
     
     for(Channel channel : channelArr) {
       if(channel instanceof DummyChannel) {
@@ -264,7 +264,7 @@ public class ChannelList {
     }
 
     if(removed) {
-      Settings.propSubscribedChannels.setChannelArray(mSubscribedChannels.toArray(new Channel[mSubscribedChannels.size()]));
+      Settings.Channels.SUBSCRIBED.setChannelArray(mSubscribedChannels.toArray(new Channel[mSubscribedChannels.size()]));
       calculateChannelPositions();
     }
 
@@ -283,7 +283,7 @@ public class ChannelList {
    * Init the subscribed channels
    */
   public static void initSubscribedChannels() {
-    Channel[] channelArr = Settings.propSubscribedChannels.getChannelArray();
+    Channel[] channelArr = Settings.Channels.SUBSCRIBED.getChannelArray();
     if (channelArr.length == 0 && mSubscribedChannels.isEmpty()) {
       channelArr = getDefaultChannels(Settings.getCountry());
     }
@@ -977,7 +977,7 @@ public class ChannelList {
       
       if(subscribedServices != null) {
         // remember the currently active services for faster startup
-        Settings.propCurrentlyUsedDataServiceIds.setStringArray(subscribedServices.toArray(new String[subscribedServices.size()]));
+        Settings.Channels.DATA_SERVICE_IDS_USED_CURRENTLY.setStringArray(subscribedServices.toArray(new String[subscribedServices.size()]));
       }
       
       if(map != null && writeUnsubscribed) {

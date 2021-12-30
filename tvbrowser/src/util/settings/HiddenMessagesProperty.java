@@ -43,15 +43,15 @@ public class HiddenMessagesProperty extends Property {
   }
   
   public boolean isHidden() {
-    return Settings.propHiddenMessageBoxes.containsItem(getKey());
+    return Settings.Other.MESSAGE_BOXES_HIDDEN.containsItem(getKey());
   }
   
   public void setHidden(boolean hidden) {
     if(hidden && !isHidden()) {
-      Settings.propHiddenMessageBoxes.addItem(getKey());
+      Settings.Other.MESSAGE_BOXES_HIDDEN.addItem(getKey());
     }
     else if(!hidden && isHidden()) {
-      Settings.propHiddenMessageBoxes.removeItem(getKey());
+      Settings.Other.MESSAGE_BOXES_HIDDEN.removeItem(getKey());
     }
   }
   

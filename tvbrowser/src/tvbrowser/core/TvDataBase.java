@@ -148,7 +148,7 @@ public class TvDataBase {
     // Inventory prüfen
     boolean somethingChanged = false;
 
-    File tvDataDir = new File(Settings.propTVDataDirectory.getString());
+    File tvDataDir = new File(Settings.Directories.TV_DATA.getString());
     File[] tvDataArr = tvDataDir.listFiles();
     if (tvDataArr == null) {
       return;
@@ -552,7 +552,7 @@ public class TvDataBase {
    */
   private boolean deleteFiles(boolean informPlugins, FilenameFilter filter,
       Channel[] channelArr, String[] channelIdArr) {
-    File[] fileList = new File(Settings.propTVDataDirectory.getString())
+    File[] fileList = new File(Settings.Directories.TV_DATA.getString())
         .listFiles(filter);
     boolean somethingDeleted = false;
 
@@ -588,7 +588,7 @@ public class TvDataBase {
 
   private synchronized void correctDayProgramFile(Date date,
       Channel channel) {
-    boolean verbose = Settings.propVerboseLogging.getBoolean();
+    boolean verbose = Settings.General.LOGGING_VERBOSE.getBoolean();
     
     if(verbose) {
       LOG.info(new java.util.Date(System.currentTimeMillis()) + ": CorrectDayProgramFile " + date + " " + channel);
@@ -747,7 +747,7 @@ public class TvDataBase {
   private File getDayProgramFile(Date date, Channel channel) {
     String fileName = getDayProgramKey(date, channel);
 
-    String tvDataDir = Settings.propTVDataDirectory.getString();
+    String tvDataDir = Settings.Directories.TV_DATA.getString();
     return new File(tvDataDir, fileName);
   }
 
@@ -798,7 +798,7 @@ public class TvDataBase {
 
   private void updateAvailableDateSet() {
 
-    String tvDataDirStr = Settings.propTVDataDirectory.getString();
+    String tvDataDirStr = Settings.Directories.TV_DATA.getString();
     File tvDataDir = new File(tvDataDirStr);
     if (!tvDataDir.exists()) {
       return;
@@ -1097,7 +1097,7 @@ public class TvDataBase {
   }*/
   
   void sendNewProgramsToTvDataListener() {
-    boolean verbose = Settings.propVerboseLogging.getBoolean();
+    boolean verbose = Settings.General.LOGGING_VERBOSE.getBoolean();
     Enumeration<ChannelDayKey> keys = mSendToTvDataListener.keys();
     
     while(keys.hasMoreElements()) {

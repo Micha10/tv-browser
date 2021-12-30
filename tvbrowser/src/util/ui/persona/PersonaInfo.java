@@ -264,7 +264,7 @@ public final class PersonaInfo {
    * @return If this persona is currently activated.
    */
   public boolean isSelectedPersona() {
-    return Settings.propRandomPersona.getBoolean() ? getId().equals(RANDOM_ID) : getId().equals(Settings.propSelectedPersona.getString());
+    return Settings.LookAndFeel.PERSONA_RANDOM.getBoolean() ? getId().equals(RANDOM_ID) : getId().equals(Settings.LookAndFeel.PERSONA_SELECTED.getString());
   }
   
   /**

@@ -91,7 +91,7 @@ public class TrayProgramsChannelsSettingsTab implements SettingsTab {
    mChannelWidth = new JSlider(SwingConstants.HORIZONTAL, 40, 150, Settings.Tray.Channels.WIDTH.getInt());
     }catch(Exception e){e.printStackTrace();}
     
-    mUseUserChannels = new JCheckBox(LOCALIZER.msg("userChannels","Use user defined channels"),Settings.Tray.Channels.USE_SPECIAL.getBoolean());
+    mUseUserChannels = new JCheckBox(LOCALIZER.msg("userChannels","Use user defined channels"),Settings.Tray.Channels.SPECIAL_USE.getBoolean());
     mUseUserChannels.setToolTipText(LOCALIZER.msg("userChannelsToolTip","<html>If you select this you can choose the channels that will be used for<br><b>Programs at...</b> and <b>Now/Soon running programs</b>.<br>If this isn't selected the first 10 channels in default order will be used.</html>"));
     
     mChannelOCh = new OrderChooser<>(
@@ -168,7 +168,7 @@ public class TrayProgramsChannelsSettingsTab implements SettingsTab {
   }
   
   public void saveSettings() {
-    Settings.Tray.Channels.USE_SPECIAL.setBoolean(mUseUserChannels
+    Settings.Tray.Channels.SPECIAL_USE.setBoolean(mUseUserChannels
         .isSelected());
     
     List<Channel> order = mChannelOCh.getOrderList();

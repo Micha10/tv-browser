@@ -202,12 +202,12 @@ public class SendToPluginDialog extends JDialog implements WindowClosingIf {
     });
     
     // select same plugin and target like last time
-    String lastUsedPlugin = Settings.propLastUsedReceivePlugin.getString();
+    String lastUsedPlugin = Settings.Plugins.RECEIVE_PLUGIN_USED_LAST.getString();
     if (lastUsedPlugin != null) {
       for (ProgramReceiveIf programReceiveIf : installedPluginArr) {
         if (programReceiveIf.getId().equals(lastUsedPlugin)) {
           mPluginList.setSelectedItem(programReceiveIf);
-          String lastUsedTarget = Settings.propLastUsedReceiveTarget.getString();
+          String lastUsedTarget = Settings.Plugins.RECEIVE_TARGET_USED_LAST.getString();
           if (lastUsedTarget != null) {
             for (ProgramReceiveTarget target: programReceiveIf.getProgramReceiveTargets()) {
               if (target.getTargetId().equals(lastUsedTarget)) {
@@ -265,8 +265,8 @@ public class SendToPluginDialog extends JDialog implements WindowClosingIf {
     if (result == JOptionPane.YES_OPTION) {
       ProgramReceiveTarget target = (ProgramReceiveTarget)mTargetList.getSelectedItem();
       plug.receivePrograms(mSendType, mPrograms, target);
-      Settings.propLastUsedReceivePlugin.setString(plug.getId());
-      Settings.propLastUsedReceiveTarget.setString(target.getTargetId());
+      Settings.Plugins.RECEIVE_PLUGIN_USED_LAST.setString(plug.getId());
+      Settings.Plugins.RECEIVE_TARGET_USED_LAST.setString(target.getTargetId());
     }
   }
 

@@ -98,7 +98,7 @@ public class IOUtilities {
    * @see #loadFileFromHttpServer(URL)
    */
   public static void download(URL url, File targetFile) throws IOException {
-    download(url, targetFile, Settings.propDefaultNetworkConnectionTimeout.getInt());
+    download(url, targetFile, Settings.Network.DEFAULT_CONNECTION_TIMEOUT.getInt());
   }
   
   /**
@@ -149,7 +149,7 @@ public class IOUtilities {
   public static boolean saveStream(InputStream stream, File targetFile)
     throws IOException
   {
-    return saveStream(stream, targetFile, Settings.propDefaultNetworkConnectionTimeout.getInt());
+    return saveStream(stream, targetFile, Settings.Network.DEFAULT_CONNECTION_TIMEOUT.getInt());
   }
 
   /**
@@ -187,7 +187,7 @@ public class IOUtilities {
   /**
    * Gets an InputStream to the given URL.
    * <p>
-   * The connection has the Settings.propDefaultNetworkConnectionTimeout
+   * The connection has the Settings.Network.DEFAULT_CONNECTION_TIMEOUT
    * as connection timeout.
    *
    * @param page The page to get the stream to.
@@ -197,7 +197,7 @@ public class IOUtilities {
    * @throws IOException Thrown if something goes wrong.
    */
   public static InputStream getStream(URL page, boolean followRedirects) throws IOException {
-    return getStream(page, followRedirects, Settings.propDefaultNetworkConnectionTimeout.getInt());
+    return getStream(page, followRedirects, Settings.Network.DEFAULT_CONNECTION_TIMEOUT.getInt());
   }
 
 
@@ -346,7 +346,7 @@ public class IOUtilities {
   /**
    * Gets an InputStream to the given URL.
    * <p>
-   * The connection has the Settings.propDefaultNetworkConnectionTimeout
+   * The connection has the Settings.Network.DEFAULT_CONNECTION_TIMEOUT
    * as connection timeout.
    *
    * @param page The page to get the stream to.
@@ -356,7 +356,7 @@ public class IOUtilities {
   public static InputStream getStream(URL page)
     throws IOException
   {
-    return getStream(page, true, Settings.propDefaultNetworkConnectionTimeout.getInt());
+    return getStream(page, true, Settings.Network.DEFAULT_CONNECTION_TIMEOUT.getInt());
   }
 
   /**
@@ -379,7 +379,7 @@ public class IOUtilities {
   /**
    * Loads a file from a Http server.
    * <p>
-   * The connection has the Settings.propDefaultNetworkConnectionTimeout
+   * The connection has the Settings.Network.DEFAULT_CONNECTION_TIMEOUT
    * as connection timeout.
    *
    * @param url The URL of the file
@@ -388,7 +388,7 @@ public class IOUtilities {
    * @see #download(URL, File)
    */
   public static byte[] loadFileFromHttpServer(URL url) throws IOException {
-    return loadFileFromHttpServer(url, Settings.propDefaultNetworkConnectionTimeout.getInt());
+    return loadFileFromHttpServer(url, Settings.Network.DEFAULT_CONNECTION_TIMEOUT.getInt());
   }
 
   /**
@@ -433,7 +433,7 @@ public class IOUtilities {
   public static boolean pipeStreams(final InputStream from, final OutputStream to)
     throws IOException
   {
-    return pipeStreams(from, to, Settings.propDefaultNetworkConnectionTimeout.getInt());
+    return pipeStreams(from, to, Settings.Network.DEFAULT_CONNECTION_TIMEOUT.getInt());
   }
 
   /**
@@ -1372,8 +1372,8 @@ public class IOUtilities {
       GraphicsConfiguration result = null; 
       GraphicsEnvironment graphicsEnvironment = GraphicsEnvironment.getLocalGraphicsEnvironment();
       
-      if (Settings.propScreenNumber.getInt() != -1 && Settings.propScreenNumber.getInt() < graphicsEnvironment.getScreenDevices().length) {
-        result = graphicsEnvironment.getScreenDevices()[Settings.propScreenNumber.getInt()].getDefaultConfiguration();
+      if (Settings.Window.SCREEN_NUMBER.getInt() != -1 && Settings.Window.SCREEN_NUMBER.getInt() < graphicsEnvironment.getScreenDevices().length) {
+        result = graphicsEnvironment.getScreenDevices()[Settings.Window.SCREEN_NUMBER.getInt()].getDefaultConfiguration();
       }
       else {
         GraphicsDevice d = MouseInfo.getPointerInfo().getDevice();

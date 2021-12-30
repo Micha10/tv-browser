@@ -77,7 +77,7 @@ class CheckNetworkConnection {
    */
   public boolean checkConnection() {
     // if checking is disabled, always assume existing connection
-    if (!Settings.propInternetConnectionCheck.getBoolean()) {
+    if (!Settings.Network.INTERNET_CONNECTION_CHECK.getBoolean()) {
       return true;
     }
     
@@ -104,7 +104,7 @@ class CheckNetworkConnection {
    * @return true, if a connection can be established
    */
   public boolean checkConnection(final URL url) {
-    return checkConnection(url, Settings.propNetworkCheckTimeout.getInt()/100, true);
+    return checkConnection(url, Settings.Network.CHECK_TIMEOUT.getInt()/100, true);
   }
   
   /**
@@ -132,7 +132,7 @@ class CheckNetworkConnection {
    * @return true, if a connection can be established
    */
   private boolean checkConnectionInternal(final URL url) {
-    return checkConnectionInternal(url, Settings.propNetworkCheckTimeout.getInt()/100, true);
+    return checkConnectionInternal(url, Settings.Network.CHECK_TIMEOUT.getInt()/100, true);
   }
   
   /**
@@ -173,7 +173,7 @@ class CheckNetworkConnection {
     
     int num = 0;
     
-    // Wait till second Thread is finished or Settings.propNetworkCheckTimeout is reached
+    // Wait till second Thread is finished or Settings.Network.CHECK_TIMEOUT is reached
     while (mRunningCount.get() > 0 && (num < timeout)) {
       num++;
       if (num == 7) {
@@ -242,7 +242,7 @@ class CheckNetworkConnection {
       panel.add(header, cc.xy(2, 2));
 
       panel.add(
-          new JLabel(mLocalizer.msg("pleaseWait", "Checking the internet connection... This may take up to {0} seconds.", Settings.propNetworkCheckTimeout.getInt()/1000)), cc
+          new JLabel(mLocalizer.msg("pleaseWait", "Checking the internet connection... This may take up to {0} seconds.", Settings.Network.CHECK_TIMEOUT.getInt()/1000)), cc
               .xy(2, 4));
 
 //      JProgressBar bar = new JProgressBar();

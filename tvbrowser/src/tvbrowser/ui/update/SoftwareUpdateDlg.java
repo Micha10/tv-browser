@@ -251,9 +251,9 @@ public class SoftwareUpdateDlg extends JDialog implements ActionListener, ListSe
     ButtonBarBuilder builder = new ButtonBarBuilder();
 
     if(dialogType == SoftwareUpdater.ONLY_UPDATE_TYPE && !mIsVersionChange) {
-      mAutoUpdates = new JCheckBox(LOCALIZER.msg("autoUpdates","Find plugin updates automatically"), Settings.propAutoUpdatePlugins.getBoolean());
+      mAutoUpdates = new JCheckBox(LOCALIZER.msg("autoUpdates","Find plugin updates automatically"), Settings.Plugins.AUTO_UPDATE_ENABLED.getBoolean());
       mAutoUpdates.addItemListener(e -> {
-        Settings.propAutoUpdatePlugins.setBoolean(e.getStateChange() == ItemEvent.SELECTED);
+        Settings.Plugins.AUTO_UPDATE_ENABLED.setBoolean(e.getStateChange() == ItemEvent.SELECTED);
       });
 
       builder.addFixed(mAutoUpdates);
@@ -369,7 +369,7 @@ public class SoftwareUpdateDlg extends JDialog implements ActionListener, ListSe
         int width = parentScrollPane.getSize().width - parentScrollPane.getVerticalScrollBar().getWidth() - leftColumnWidth - Sizes.dialogUnitXAsPixel(5,pb.getPanel()) * 4 - parentScrollPane.getInsets().left - parentScrollPane.getInsets().right;
 
         if (width <= 0) {
-          width = Settings.propColumnWidth.getInt();
+          width = Settings.ProgramTable.COLUMN_WIDTH.getInt();
         }
 
         TextAreaIcon icon = new TextAreaIcon(HTMLTextHelper.convertHtmlToText(item.getDescription()), UIManager.getFont("Label.font"), width, 2);

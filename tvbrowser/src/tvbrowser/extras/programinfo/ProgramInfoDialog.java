@@ -294,8 +294,8 @@ class ProgramInfoDialog {
             .getInstance().getSettings().getZoomValue() : 100);
     config.setShowPluginIcons(true);
     config.setShowPersonLinks(ProgramInfo.getInstance().getSettings().getEnableSearch());
-    config.setUseThemeColors(Settings.propTableBackgroundStyle.getString().equals("uiTimeBlock") || 
-        Settings.propTableBackgroundStyle.getString().equals("uiColor"));
+    config.setUseThemeColors(Settings.ProgramTable.STYLE_BACKGROUND.getString().equals("uiTimeBlock") || 
+        Settings.ProgramTable.STYLE_BACKGROUND.getString().equals("uiColor"));
     config.setShowShortDescriptionOnlyIfNoDescription(ProgramInfo.getInstance().getSettings().getShowShortDescriptionOnlyWithoutDescription());
     
     mInfoEP.setText(ProgramTextCreator.createInfoText(mProgram, mDoc, config));
@@ -744,8 +744,8 @@ class ProgramInfoDialog {
     
     
     
-    if(Settings.propTableBackgroundStyle.getString().equals("uiTimeBlock") || 
-        Settings.propTableBackgroundStyle.getString().equals("uiColor")) {
+    if(Settings.ProgramTable.STYLE_BACKGROUND.getString().equals("uiTimeBlock") || 
+        Settings.ProgramTable.STYLE_BACKGROUND.getString().equals("uiColor")) {
       ((JComponent)((JComponent)((JComponent)mFunctionGroup.getComponent(0)).getComponent(0)).getComponent(0)).setBackground(UIManager.getColor("List.background"));
     }
 
@@ -772,8 +772,8 @@ class ProgramInfoDialog {
     final Rectangle oldVisibleRect = mInfoEP.getVisibleRect();
     mFunctionGroup.removeAll();
     
-    if(Settings.propTableBackgroundStyle.getString().equals("uiTimeBlock") || 
-        Settings.propTableBackgroundStyle.getString().equals("uiColor")) {
+    if(Settings.ProgramTable.STYLE_BACKGROUND.getString().equals("uiTimeBlock") || 
+        Settings.ProgramTable.STYLE_BACKGROUND.getString().equals("uiColor")) {
       ((JComponent)((JComponent)((JComponent)mFunctionGroup.getComponent(0)).getComponent(0)).getComponent(0)).setBackground(UIManager.getColor("List.background"));
     }
     

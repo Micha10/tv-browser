@@ -63,7 +63,7 @@ public class DontShowAgainOptionBox {
       Object message, String title, int messageType, int optionType, Object[] options,
       Object initialValue, String dontShowAgainLabel) {
 
-    if (Settings.propHiddenMessageBoxes.containsItem(messageBoxId)) {
+    if (Settings.Other.MESSAGE_BOXES_HIDDEN.containsItem(messageBoxId)) {
       return JOptionPane.YES_OPTION;
     }
     
@@ -91,7 +91,7 @@ public class DontShowAgainOptionBox {
     int result = UiUtilities.showOptionDialogOnBestScreen(parent, shownObjects.toArray(), title, optionType, messageType, null, options, initialValue);
 
     if (askAgain.isSelected()) {
-      Settings.propHiddenMessageBoxes.addItem(messageBoxId);
+      Settings.Other.MESSAGE_BOXES_HIDDEN.addItem(messageBoxId);
     }
 
     return result;
@@ -189,6 +189,6 @@ public class DontShowAgainOptionBox {
    * @since 4.2.2
    */
   public static boolean isHiddenMessageBox(final String messageBoxId) {
-    return Settings.propHiddenMessageBoxes.containsItem(messageBoxId);
+    return Settings.Other.MESSAGE_BOXES_HIDDEN.containsItem(messageBoxId);
   }
 }

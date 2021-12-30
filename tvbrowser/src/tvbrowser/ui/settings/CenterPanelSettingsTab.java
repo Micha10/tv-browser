@@ -117,9 +117,9 @@ public class CenterPanelSettingsTab implements SettingsTab {
     mPanelChooser = new OrderChooser<>(currentOrderList.toArray(new PluginCenterPanel[currentOrderList.size()]), mAllPanelList.toArray(new PluginCenterPanel[mAllPanelList.size()]));
     mTabBarAlwaysVisible = new JCheckBox(LOCALIZER.msg("alwaysShowTabs", "Always show tabs"), Settings.CenterPanels.ALWAYS_SHOW_TAB_BAR_FOR_CENTER_PANEL.getBoolean());
     
-    mNameOnly = new JRadioButton(LOCALIZER.msg("nameOnly", "Name only"), Settings.CenterPanels.TAB_BAR_CENTER_PANEL_NAME_ICON_CONFIG.getInt() == Settings.VALUE_NAME_ONLY);
-    mIconOnly = new JRadioButton(LOCALIZER.msg("iconOnly", "Icon only (if available)"), Settings.CenterPanels.TAB_BAR_CENTER_PANEL_NAME_ICON_CONFIG.getInt() == Settings.VALUE_ICON_ONLY);
-    mNameAndIcon = new JRadioButton(LOCALIZER.msg("nameAndIcon", "Name and icon"), Settings.CenterPanels.TAB_BAR_CENTER_PANEL_NAME_ICON_CONFIG.getInt() == Settings.VALUE_NAME_AND_ICON);
+    mNameOnly = new JRadioButton(LOCALIZER.msg("nameOnly", "Name only"), Settings.CenterPanels.TAB_BAR_CENTER_PANEL_NAME_ICON_CONFIG.getInt() == Settings.IconAndNames.VALUE_NAME_ONLY);
+    mIconOnly = new JRadioButton(LOCALIZER.msg("iconOnly", "Icon only (if available)"), Settings.CenterPanels.TAB_BAR_CENTER_PANEL_NAME_ICON_CONFIG.getInt() == Settings.IconAndNames.VALUE_ICON_ONLY);
+    mNameAndIcon = new JRadioButton(LOCALIZER.msg("nameAndIcon", "Name and icon"), Settings.CenterPanels.TAB_BAR_CENTER_PANEL_NAME_ICON_CONFIG.getInt() == Settings.IconAndNames.VALUE_NAME_AND_ICON);
     
     final ButtonGroup bg = new ButtonGroup();
     
@@ -178,13 +178,13 @@ public class CenterPanelSettingsTab implements SettingsTab {
     Settings.CenterPanels.ALWAYS_SHOW_TAB_BAR_FOR_CENTER_PANEL.setBoolean(mTabBarAlwaysVisible.isSelected());
     Settings.CenterPanels.DISABLED_CENTER_PANEL_ARR.setStringArray(disabledIdList.toArray(new String[0]));
     
-    int selection = Settings.VALUE_NAME_AND_ICON;
+    int selection = Settings.IconAndNames.VALUE_NAME_AND_ICON;
     
     if(mNameOnly.isSelected()) {
-      selection = Settings.VALUE_NAME_ONLY;
+      selection = Settings.IconAndNames.VALUE_NAME_ONLY;
     }
     else if(mIconOnly.isSelected()) {
-      selection = Settings.VALUE_ICON_ONLY;
+      selection = Settings.IconAndNames.VALUE_ICON_ONLY;
     }
     
     Settings.CenterPanels.TAB_BAR_CENTER_PANEL_NAME_ICON_CONFIG.setInt(selection);

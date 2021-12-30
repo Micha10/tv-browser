@@ -433,10 +433,10 @@ public class TVBrowser {
     
     // Load the settings
     Settings.loadSettings();
-    Locale.setDefault(new Locale(Settings.propLanguage.getString(), Settings.propCountry.getString()));
+    Locale.setDefault(new Locale(Settings.Locales.LANGUAGE.getString(), Settings.Locales.COUNTRY.getString()));
 
-    if (Settings.propFirstStartDate.getDate() == null) {
-      Settings.propFirstStartDate.setDate(Date.getCurrentDate());
+    if (Settings.General.DATE_FIRST_START.getDate() == null) {
+      Settings.General.DATE_FIRST_START.setDate(Date.getCurrentDate());
     }
     
     if (!createLockFile(mLockFile,mLock,".lock").mResult) {
@@ -472,7 +472,7 @@ public class TVBrowser {
       createLockGlobalToggle();
     }
     
-    String logDirectory = Settings.propLogdirectory.getString();
+    String logDirectory = Settings.Directories.LOG.getString();
     if (logDirectory != null) {
       try {
         File logDir = new File(logDirectory);
@@ -506,7 +506,7 @@ public class TVBrowser {
      */
     updateProxySettings();
     
-    VERSION_LAST = Settings.propTVBrowserVersion.getVersion();
+    VERSION_LAST = Settings.General.TV_BROWSER_VERSION_USED_LAST.getVersion();
     
     //Update plugin on version change
     if(VERSION.isNewerThan(VERSION_LAST)) {
@@ -514,12 +514,12 @@ public class TVBrowser {
       updatePluginsOnVersionChange();
       IS_TVB_UPDATE = true;
     }
-    else if(VERSION_LAST != null && (Settings.propDateOldSettingsCheckedLast.getDate() == null || Settings.propDateOldSettingsCheckedLast.getDate().addDays(180).compareTo(Date.getCurrentDate()) < 0)) {
+    else if(VERSION_LAST != null && (Settings.General.DATE_OLD_SETTINGS_CHECKED_LAST.getDate() == null || Settings.General.DATE_OLD_SETTINGS_CHECKED_LAST.getDate().addDays(180).compareTo(Date.getCurrentDate()) < 0)) {
       updateLookAndFeel();
       seachForOldVersionFiles();
     }
 
-    String timezone = Settings.propTimezone.getString();
+    String timezone = Settings.Locales.TIMEZONE.getString();
     if (timezone != null) {
       TimeZone.setDefault(TimeZone.getTimeZone(timezone));
     }
@@ -534,30 +534,30 @@ public class TVBrowser {
     Date.resetLocalizer();
     ProgramFieldType.resetLocalizer();
 
-    Version tmpVer = Settings.propTVBrowserVersion.getVersion();
-    final Version currentVersion = tmpVer != null ? new Version(tmpVer.getMajor(),tmpVer.getMinor(),tmpVer.getSubMinor(),Settings.propTVBrowserVersionIsStable.getBoolean()) : tmpVer;
+    Version tmpVer = Settings.General.TV_BROWSER_VERSION_USED_LAST.getVersion();
+    final Version currentVersion = tmpVer != null ? new Version(tmpVer.getMajor(),tmpVer.getMinor(),tmpVer.getSubMinor(),Settings.General.TV_BROWSER_VERSION_USED_LAST_IS_STABLE.getBoolean()) : tmpVer;
 
     /*TODO Create an update service for installed TV data services that doesn't
      *     work with TV-Browser 3.0 and updates for them are known.
      */
     if(!isTransportable() && Launch.isOsWindowsNtBranch() && new Version(3,0,true).isNewerThan(currentVersion)) {
-      String tvDataDir = Settings.propTVDataDirectory.getString().replace("/",File.separator);
+      String tvDataDir = Settings.Directories.TV_DATA.getString().replace("/",File.separator);
 
       if(!tvDataDir.startsWith(System.getenv("appdata"))) {
         StringBuilder oldDefaultTvDataDir = new StringBuilder(System.getProperty("user.home")).append(File.separator).append("TV-Browser").append(File.separator).append("tvdata");
 
         if(oldDefaultTvDataDir.toString().equals(tvDataDir)) {
-          Settings.propTVDataDirectory.setString(Settings.propTVDataDirectory.getDefault());
+          Settings.Directories.TV_DATA.setString(Settings.Directories.TV_DATA.getDefault());
         }
       }
     }
     
-    Settings.propTVBrowserVersion.setVersion(VERSION);
-    Settings.propTVBrowserVersionIsStable.setBoolean(VERSION.isStable());
+    Settings.General.TV_BROWSER_VERSION_USED_LAST.setVersion(VERSION);
+    Settings.General.TV_BROWSER_VERSION_USED_LAST_IS_STABLE.setBoolean(VERSION.isStable());
 
     final AtomicReference<Splash> splashRef = new AtomicReference<Splash>();
 
-    if (mShowStartScreen && Settings.propStartScreenShow.getBoolean()) {
+    if (mShowStartScreen && Settings.General.START_SCREEN_SHOW.getBoolean()) {
       splashRef.set(new SplashScreen());
       splashRef.get().showSplash();
     }
@@ -592,7 +592,7 @@ public class TVBrowser {
     
     TvDataServiceProxyManager.getInstance().init();
     
-    if(!Settings.propShowAssistant.getBoolean() && TvDataServiceProxyManager.getInstance().getDataServices().length < 1 && !mSafeMode) {
+    if(!Settings.Window.ASSISTANT_SHOW.getBoolean() && TvDataServiceProxyManager.getInstance().getDataServices().length < 1 && !mSafeMode) {
       splashRef.get().hideSplash();
       updateLookAndFeel();
       loadDataServicesAtStartup();
@@ -638,7 +638,7 @@ public class TVBrowser {
     Toolkit.getDefaultToolkit().getSystemEventQueue().push(new TextComponentPopupEventQueue());
     
     // Init the UI
-    final boolean fStartMinimized = Settings.propMinimizeAfterStartup.getBoolean() || mMinimized;
+    final boolean fStartMinimized = Settings.General.MINIMIZE_AFTER_STARTUP.getBoolean() || mMinimized;
     SwingUtilities.invokeLater(() -> {
       initUi(splashRef.get(), fStartMinimized);
 
@@ -779,14 +779,13 @@ public class TVBrowser {
           TvBrowserPictureSettingsUpdateDialog.createAndShow(mainFrame);
         } else if (currentVersion != null
             && currentVersion.compareTo(new Version(2, 51, true)) < 0) {
-          Settings.propAcceptedLicenseArrForServiceIds
-              .setStringArray(new String[0]);
+          Settings.Data.ACCEPTED_LICENSES.setStringArray(new String[0]);
         } else if(currentVersion != null && currentVersion.compareTo(new Version(4, 21, 96, false)) < 0) {
           final String refresh = GeneralSettingsTab.LOCALIZER.msg("titleRefresh", "Refresh");
           
           JCheckBox gradient = new JCheckBox(ProgramPanelSettingsTab.LOCALIZER.msg("color.programGradientHighlighting",
-              "Highlight programs with gradient colors"), Settings.propProgramPanelGradientColorHighlighting.getBoolean());
-          JCheckBox update = new JCheckBox(LOCALIZER.msg("update.primeTimeActivate","Activate prime time update"), Settings.propAutoUpdatePrimeTime.getBoolean());
+              "Highlight programs with gradient colors"), Settings.ProgramPanel.HIGHLIGHTING_COLOR_GRADIENT.getBoolean());
+          JCheckBox update = new JCheckBox(LOCALIZER.msg("update.primeTimeActivate","Activate prime time update"), Settings.General.AUTO_UPDATE_PRIME_TIME.getBoolean());
           
           EnhancedPanelBuilder pb = new EnhancedPanelBuilder("5dlu,10dlu,default,default:grow");
           pb.addRow("default",false);
@@ -831,7 +830,7 @@ public class TVBrowser {
           p.getProgram().mark(ReminderPluginProxy.getInstance());
           
           gradient.addItemListener(e -> {
-            Settings.propProgramPanelGradientColorHighlighting.setBoolean(ItemEvent.SELECTED == e.getStateChange());
+            Settings.ProgramPanel.HIGHLIGHTING_COLOR_GRADIENT.setBoolean(ItemEvent.SELECTED == e.getStateChange());
             p.repaint();
           });
           
@@ -851,17 +850,17 @@ public class TVBrowser {
           p.getProgram().unmark(FavoritesPluginProxy.getInstance());
           p.getProgram().unmark(ReminderPluginProxy.getInstance());
           
-          Settings.propProgramPanelGradientColorHighlighting.setBoolean(gradient.isSelected());
-          Settings.propAutoUpdatePrimeTime.setBoolean(update.isSelected());
+          Settings.ProgramPanel.HIGHLIGHTING_COLOR_GRADIENT.setBoolean(gradient.isSelected());
+          Settings.General.AUTO_UPDATE_PRIME_TIME.setBoolean(update.isSelected());
         }
 
         if (currentVersion != null
             && currentVersion.compareTo(new Version(2, 60, true)) < 0) {
-          int startOfDay = Settings.propProgramTableStartOfDay.getInt();
-          int endOfDay = Settings.propProgramTableEndOfDay.getInt();
+          int startOfDay = Settings.ProgramTable.START_OF_DAY.getInt();
+          int endOfDay = Settings.ProgramTable.END_OF_DAY.getInt();
 
           if (endOfDay - startOfDay < -1) {
-            Settings.propProgramTableEndOfDay.setInt(startOfDay);
+            Settings.ProgramTable.END_OF_DAY.setInt(startOfDay);
 
             JOptionPane
                 .showMessageDialog(
@@ -888,13 +887,13 @@ public class TVBrowser {
 
         if(currentVersion != null
             && currentVersion.compareTo(new Version(3,33,51,false)) < 0) {
-          Settings.propSubscribedChannels.setChannelArray(ChannelList.getSubscribedChannels());
+          Settings.Channels.SUBSCRIBED.setChannelArray(ChannelList.getSubscribedChannels());
         }
         
         if(currentVersion != null
             && currentVersion.compareTo(new Version(3,39,7,false)) < 0) {
-          ProgramFieldType[] typeArr = Settings.propProgramInfoFields.getProgramFieldTypeArray();
-          String[] separators = Settings.propProgramInfoFieldsSeparators.getStringArray();
+          ProgramFieldType[] typeArr = Settings.ProgramPanel.INFO_FIELDS.getProgramFieldTypeArray();
+          String[] separators = Settings.ProgramPanel.INFO_FIELDS_SEPARATORS.getStringArray();
           
           ArrayList<String> separatorList = new ArrayList<String>();
           
@@ -907,7 +906,7 @@ public class TVBrowser {
             }
           }
           
-          Settings.propProgramInfoFieldsSeparators.setStringArray(separatorList.toArray(new String[separatorList.size()]));
+          Settings.ProgramPanel.INFO_FIELDS_SEPARATORS.setStringArray(separatorList.toArray(new String[separatorList.size()]));
         }
         
         if(currentVersion != null
@@ -920,7 +919,7 @@ public class TVBrowser {
               Settings.propProgramPanelMarkedHigherMediumPriorityColor.getColor().getRGB(),
               Settings.propProgramPanelMarkedMaxPriorityColor.getColor().getRGB()
           };
-          Settings.propProgramPanelHighlightingColors.setIntArray(colors);
+          Settings.Markings.HIGHLIGHTING_COLORS.setIntArray(colors);
           Settings.updateColors();
         }
         
@@ -1192,7 +1191,7 @@ public class TVBrowser {
         }
   	  }
   	  
-  	  Settings.propDateOldSettingsCheckedLast.setDate(Date.getCurrentDate());
+  	  Settings.General.DATE_OLD_SETTINGS_CHECKED_LAST.setDate(Date.getCurrentDate());
 	  }
 	}
 	
@@ -1291,7 +1290,7 @@ public class TVBrowser {
   private static LockFileResult createLockGlobalToggle() {
     LockFileResult result = new LockFileResult(true, null);
     
-    if(Settings.propServerRestoreEnabled.getBoolean()) {
+    if(Settings.General.SERVER_RESTORE_ENABLED.getBoolean()) {
       String[] lines = null;
       
       try {
@@ -1319,12 +1318,12 @@ public class TVBrowser {
   }
   
   public static void updateLockGlobalToggle() {
-    if(Settings.propServerRestoreEnabled.getBoolean() && mToggleSocket.get() == null) {
+    if(Settings.General.SERVER_RESTORE_ENABLED.getBoolean() && mToggleSocket.get() == null) {
       if(createLockGlobalToggle().mResult) {
         mToggleSocket.get().start();
       }
     }
-    else if(!Settings.propServerRestoreEnabled.getBoolean() && mToggleSocket.get() != null) {
+    else if(!Settings.General.SERVER_RESTORE_ENABLED.getBoolean() && mToggleSocket.get() != null) {
       deleteLockGlobalToggle();
     }
   }
@@ -1514,11 +1513,11 @@ public class TVBrowser {
     // Set the right size
     LOG.info("Setting frame size and location");
     
-    final int windowWidth = Settings.propWindowWidth.getInt();
-    final int windowHeight = Settings.propWindowHeight.getInt();
+    final int windowWidth = Settings.Window.WIDTH.getInt();
+    final int windowHeight = Settings.Window.HEIGHT.getInt();
     mainFrame.setSize(windowWidth, windowHeight);
-    final int windowX = Settings.propWindowX.getInt();
-    final int windowY = Settings.propWindowY.getInt();
+    final int windowX = Settings.Window.X.getInt();
+    final int windowY = Settings.Window.Y.getInt();
 
     final Rectangle screen = mainFrame.getGraphicsConfiguration().getBounds();
     GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds();
@@ -1528,7 +1527,7 @@ public class TVBrowser {
     screen.width = screen.width - insets.left - insets.right;
     screen.height = screen.height - insets.top - insets.bottom;
     
-    if (Settings.propIsWindowMaximized.getBoolean() || (windowX == -1 && windowY == -1) || windowX + windowWidth < screen.getX() || windowX > (screen.getX() + screen.getWidth() - 30) || windowY + windowHeight < screen.getY() || windowY > (screen.getY() + screen.getHeight() - 30) || windowWidth < 200 || windowHeight < 200) {
+    if (Settings.Window.MAXIMIZED.getBoolean() || (windowX == -1 && windowY == -1) || windowX + windowWidth < screen.getX() || windowX > (screen.getX() + screen.getWidth() - 30) || windowY + windowHeight < screen.getY() || windowY > (screen.getY() + screen.getHeight() - 30) || windowWidth < 200 || windowHeight < 200) {
       UiUtilities.centerAndShow(mainFrame, false);
     } else {
       mainFrame.setLocation(windowX, windowY);
@@ -1540,7 +1539,7 @@ public class TVBrowser {
       if((windowX < screen.getX()) || (windowY < screen.getY()) || windowX > (screen.getX() + screen.getWidth() - 30) || windowY > (screen.getY() + screen.getHeight() - 30)) {
     	UiUtilities.centerAndShow(mainFrame, false);
       }
-      else if(!Settings.propIsWindowMaximized.getBoolean() && (p.x != windowX || windowY != p.y)) {
+      else if(!Settings.Window.MAXIMIZED.getBoolean() && (p.x != windowX || windowY != p.y)) {
         mainFrame.setLocation(windowX - Math.abs(p.x-windowX), windowY - Math.abs(p.y-windowY));
       }
     });
@@ -1553,7 +1552,7 @@ public class TVBrowser {
     mainFrame.repaint();
     
     // maximize the frame if wanted
-    if (Settings.propIsWindowMaximized.getBoolean()) {
+    if (Settings.Window.MAXIMIZED.getBoolean()) {
       SwingUtilities.invokeLater(() -> {
     	mainFrame.setExtendedState(Frame.MAXIMIZED_BOTH);
     	SwingUtilities.invokeLater(() -> {
@@ -1567,13 +1566,13 @@ public class TVBrowser {
       mainFrame.setExtendedState(Frame.ICONIFIED);
     }
 
-    if (mFullscreen || Settings.propIsUsingFullscreen.getBoolean()) {
+    if (mFullscreen || Settings.General.IS_USING_FULLSCREEN.getBoolean()) {
        SwingUtilities.invokeLater(() -> {
           mainFrame.switchFullscreenMode();
        });
     }
 
-    if (Settings.propShowAssistant.getBoolean()) {
+    if (Settings.Window.ASSISTANT_SHOW.getBoolean()) {
       LOG.info("Running setup assistant");
       mainFrame.runSetupAssistant();
     }
@@ -1583,7 +1582,7 @@ public class TVBrowser {
     	Class<? extends Object> fullScreenUtilities = Class.forName("com.apple.eawt.FullScreenUtilities");
     	fullScreenUtilities.getMethod("setWindowCanFullScreen", Window.class, Boolean.TYPE).invoke(null, mainFrame, true);
     	
-    	if(Settings.propIsInMacOSFullScreen.getBoolean()) {
+    	if(Settings.Window.MAC_OS_FULL_SCREEN.getBoolean()) {
     	  Class<? extends Object> app = Class.forName("com.apple.eawt.Application");
     	  Object o = app.getMethod("getApplication").invoke(app);
     	  app.getMethod("requestToggleFullScreen", Window.class).invoke(o,mainFrame);
@@ -1592,10 +1591,10 @@ public class TVBrowser {
 		Class<? extends Object> fullScreenListenerClass = Class.forName("com.apple.eawt.FullScreenListener");
 		Object fullScreenListener = Proxy.newProxyInstance(fullScreenListenerClass.getClassLoader(), new Class<?>[] {fullScreenListenerClass}, (proxy, method, methodArgs) -> {
 		  if(method.getName().equals("windowEnteredFullScreen")) {
-		    Settings.propIsInMacOSFullScreen.setBoolean(true);
+		    Settings.Window.MAC_OS_FULL_SCREEN.setBoolean(true);
 		  }
 		  else if(method.getName().equals("windowExitedFullScreen")) {
-		    Settings.propIsInMacOSFullScreen.setBoolean(false);
+		    Settings.Window.MAC_OS_FULL_SCREEN.setBoolean(false);
 	      }
 		  
 		  return null;
@@ -1613,7 +1612,7 @@ public class TVBrowser {
    * initialize the automatic download timer
    */
   private static void initializeAutomaticDownload() {
-    if (!Settings.propShowAssistant.getBoolean()) {
+    if (!Settings.Window.ASSISTANT_SHOW.getBoolean()) {
       SwingUtilities.invokeLater(() -> {
         boolean automaticDownloadStarted = handleAutomaticDownload(0);
         
@@ -1654,14 +1653,14 @@ public class TVBrowser {
       if(!mainFrame.isFullScreenMode()) {
         boolean maximized = (state & JFrame.MAXIMIZED_BOTH) == JFrame.MAXIMIZED_BOTH;
         
-        Settings.propIsWindowMaximized.setBoolean(maximized);
+        Settings.Window.MAXIMIZED.setBoolean(maximized);
   
-        if (! maximized && (!Launch.isMacOs() || !Settings.propIsInMacOSFullScreen.getBoolean())) {
+        if (! maximized && (!Launch.isMacOs() || !Settings.Window.MAC_OS_FULL_SCREEN.getBoolean())) {
           // Save the window size and location only when not maximized
-          Settings.propWindowWidth.setInt(mainFrame.getWidth());
-          Settings.propWindowHeight.setInt(mainFrame.getHeight());
-          Settings.propWindowX.setInt(mainFrame.getX());
-          Settings.propWindowY.setInt(mainFrame.getY());
+          Settings.Window.WIDTH.setInt(mainFrame.getWidth());
+          Settings.Window.HEIGHT.setInt(mainFrame.getHeight());
+          Settings.Window.X.setInt(mainFrame.getX());
+          Settings.Window.Y.setInt(mainFrame.getY());
         }
       }
       else { 
@@ -1683,7 +1682,7 @@ public class TVBrowser {
     if(mMainWindowAdapter == null) {
       mMainWindowAdapter = new java.awt.event.WindowAdapter() {
         public void windowClosing(java.awt.event.WindowEvent e) {
-          if (Settings.propOnlyMinimizeWhenWindowClosing.getBoolean()) {
+          if (Settings.General.ONLY_MINIMIZE_WHEN_WINDOW_CLOSING.getBoolean()) {
             MainFrame.getInstance().setExtendedState(JFrame.ICONIFIED);
           } else {
             mainFrame.quit();
@@ -1769,7 +1768,7 @@ public class TVBrowser {
       return true;
     }
 
-    if((autoDownloadTime != -1 && Settings.propAutoDownloadWaitingEnabled.getBoolean() && Settings.propAutoDownloadWaitingTime.getShort() > 0) || result.getResultForIndex(1)) {
+    if((autoDownloadTime != -1 && Settings.General.AUTO_DOWNLOAD_WAITING_ENABLED.getBoolean() && Settings.General.AUTO_DOWNLOAD_WAITING_TIME.getShort() > 0) || result.getResultForIndex(1)) {
       final long timerStart = Calendar.getInstance().getTimeInMillis();
       if(mAutoDownloadWaitingTimer == null) {
         mAutoDownloadWaitingTimer = new Timer(1000,
@@ -1781,7 +1780,7 @@ public class TVBrowser {
                   mIsProcessing = true;
                   try {
                     int seconds = (int) ((Calendar.getInstance().getTimeInMillis() - timerStart) / 1000.0);
-                    seconds = (!result.getResultForIndex(0) && result.getResultForIndex(1) ? 40 : Settings.propAutoDownloadWaitingTime.getShort()) - seconds;
+                    seconds = (!result.getResultForIndex(0) && result.getResultForIndex(1) ? 40 : Settings.General.AUTO_DOWNLOAD_WAITING_TIME.getShort()) - seconds;
                     
                     if (seconds <= 0) {
                       mAutoDownloadWaitingTimer.stop();
@@ -1820,8 +1819,8 @@ public class TVBrowser {
   }
   
   private static BooleanResult isAutomaticDownloadDateReached(int autoDownloadTime) {
-    String autoDLType = Settings.propAutoDownloadType.getString();
-    final Date lastDownloadDate = Settings.propLastDownloadDate.getDate();
+    String autoDLType = Settings.General.AUTO_DOWNLOAD_TYPE.getString();
+    final Date lastDownloadDate = Settings.Data.DOWNLOAD_DATE_LAST.getDate();
     Date today = Date.getCurrentDate();
     
     Date nextDownloadDate;
@@ -1840,12 +1839,12 @@ public class TVBrowser {
     }
     
     boolean download = autoDownloadTime != -1 && autoDownloadTime <= IOUtilities.getMinutesAfterMidnight() && !autoDLType.equals("never") && nextDownloadDate.getNumberOfDaysSince(today) <= 0;
-    boolean primeTime = Settings.propAutoUpdatePrimeTime.getBoolean();
+    boolean primeTime = Settings.General.AUTO_UPDATE_PRIME_TIME.getBoolean();
     
     if(primeTime) {
-      int compare = Date.getCurrentDate().compareTo(Settings.propLastDownloadDate.getDate());
+      int compare = Date.getCurrentDate().compareTo(Settings.Data.DOWNLOAD_DATE_LAST.getDate());
       
-      primeTime = (Math.random() > 0.8 || (IOUtilities.getMinutesAfterMidnight() >= 17*60+50 && IOUtilities.getMinutesAfterMidnight() <= 20*60+15)) && IOUtilities.getMinutesAfterMidnight() >= 60*17+30 && IOUtilities.getMinutesAfterMidnight() <= 60*20+15 && (compare > 0 || (compare == 0 && Settings.propLastDownloadTime.getInt() < 17*60+30));
+      primeTime = (Math.random() > 0.8 || (IOUtilities.getMinutesAfterMidnight() >= 17*60+50 && IOUtilities.getMinutesAfterMidnight() <= 20*60+15)) && IOUtilities.getMinutesAfterMidnight() >= 60*17+30 && IOUtilities.getMinutesAfterMidnight() <= 60*20+15 && (compare > 0 || (compare == 0 && Settings.Data.DOWNLOAD_TIME_LAST.getInt() < 17*60+30));
     }
     
     BooleanResult result = new BooleanResult(download, primeTime);
@@ -1859,11 +1858,11 @@ public class TVBrowser {
     
     if(!mainFrame.isUpdatingData()) {
       if (resultInfo.getResultForIndex(0)) {
-        if (Settings.propAskForAutoDownload.getBoolean()) {
+        if (Settings.General.ASK_FOR_AUTO_DOWNLOAD.getBoolean()) {
           mainFrame.updateTvData();
         }
         else {
-          String[] dataServiceIDs = Settings.propDataServicesForUpdate.getStringArray();
+          String[] dataServiceIDs = Settings.Data.DATA_SERVICES_FOR_UPDATE.getStringArray();
           TvDataServiceProxy[] proxies;
           if (dataServiceIDs == null) {
             proxies = UpdateDlg.getActiveDataServices();
@@ -1872,7 +1871,7 @@ public class TVBrowser {
             proxies = TvDataServiceProxyManager.getInstance().getTvDataServices(dataServiceIDs);
           }
           if(mainFrame.licenseForTvDataServicesWasAccepted(proxies)) {
-            mainFrame.runUpdateThread(Settings.propAutoDownloadPeriod.getInt(), proxies, true);
+            mainFrame.runUpdateThread(Settings.General.AUTO_DOWNLOAD_PERIOD.getInt(), proxies, true);
           }
         }
         
@@ -1881,7 +1880,7 @@ public class TVBrowser {
       else if(resultInfo.getResultForIndex(1)) {
         HashSet<TvDataServiceProxy> dataServices = new HashSet<TvDataServiceProxy>();
   
-        Channel[] channels = Settings.propSubscribedChannels.getChannelArray();
+        Channel[] channels = Settings.Channels.SUBSCRIBED.getChannelArray();
   
         for(Channel channel : channels) {
           if(!(channel instanceof DummyChannel) && channel.getDataServiceProxy() != null && !dataServices.contains(channel.getDataServiceProxy())) {
@@ -1893,7 +1892,7 @@ public class TVBrowser {
           TvDataServiceProxy[] proxies = dataServices.toArray(new TvDataServiceProxy[0]);
         
           if(mainFrame.licenseForTvDataServicesWasAccepted(proxies)) {
-            mainFrame.runUpdateThread(Settings.propAutoDownloadPeriod.getInt(), proxies, true);
+            mainFrame.runUpdateThread(Settings.General.AUTO_DOWNLOAD_PERIOD.getInt(), proxies, true);
           }
         }
         
@@ -1950,7 +1949,7 @@ public class TVBrowser {
             
             while((line = in.readLine()) != null) {
               if(!line.trim().startsWith("#") && line.contains("assistive_technologies") && line.contains("org.GNOME.Accessibility.AtkWrapper")) {
-                Settings.propLookAndFeel.setDefault(UiUtilities.getDefaultLookAndFeelClassName(true));
+                Settings.LookAndFeel.SELECTED.setDefault(UiUtilities.getDefaultLookAndFeelClassName(true));
                 
                 LookAndFeelInfo[] lnfs = UIManager.getInstalledLookAndFeels();
                 
@@ -1982,9 +1981,9 @@ public class TVBrowser {
     }
     
     
-    if (Settings.propLookAndFeel.getString().equals(
+    if (Settings.LookAndFeel.SELECTED.getString().equals(
         "com.l2fprod.gui.plaf.skin.SkinLookAndFeel")) {
-    	Settings.propLookAndFeel.setString(Settings.propLookAndFeel.getDefault());
+    	Settings.LookAndFeel.SELECTED.setString(Settings.LookAndFeel.SELECTED.getDefault());
     	/*
       String themepack = Settings.propSkinLFThemepack.getString();
       try {
@@ -2002,23 +2001,23 @@ public class TVBrowser {
         ErrorHandler.handle(
           "Could not load themepack.\nSkinLF is disabled now",
           exc);
-        Settings.propLookAndFeel.setString(Settings.propLookAndFeel.getDefault());
+        Settings.LookAndFeel.SELECTED.setString(Settings.LookAndFeel.SELECTED.getDefault());
       }*/
-    } else if (Settings.propLookAndFeel.getString().startsWith("com.jgoodies") && !Settings.propLookAndFeel.getString().startsWith("com.jgoodies.looks.windows.WindowsLookAndFeel")) {
-      com.jgoodies.looks.Options.setPopupDropShadowEnabled(Settings.propJGoodiesShadow.getBoolean());
+    } else if (Settings.LookAndFeel.SELECTED.getString().startsWith("com.jgoodies") && !Settings.LookAndFeel.SELECTED.getString().startsWith("com.jgoodies.looks.windows.WindowsLookAndFeel")) {
+      com.jgoodies.looks.Options.setPopupDropShadowEnabled(Settings.LookAndFeel.JGOODIES_SHADOW.getBoolean());
       UIManager.put("jgoodies.popupDropShadowEnabled", Boolean
-          .valueOf(Settings.propJGoodiesShadow.getBoolean()));
+          .valueOf(Settings.LookAndFeel.JGOODIES_SHADOW.getBoolean()));
       try {
-        LookUtils.setLookAndTheme((LookAndFeel) Class.forName(Settings.propLookAndFeel.getString()).getConstructor().newInstance(), Class.forName(Settings.propJGoodiesTheme.getString()).getConstructor().newInstance());
+        LookUtils.setLookAndTheme((LookAndFeel) Class.forName(Settings.LookAndFeel.SELECTED.getString()).getConstructor().newInstance(), Class.forName(Settings.LookAndFeel.JGOODIES_THEME.getString()).getConstructor().newInstance());
       } catch (Throwable e) {
         ErrorHandler.handle("Could not load themepack.\nJGoodies is disabled now", e);
-        Settings.propLookAndFeel.setString(Settings.propLookAndFeel.getDefault());
+        Settings.LookAndFeel.SELECTED.setString(Settings.LookAndFeel.SELECTED.getDefault());
       }
     }
 
-    if (CUR_LOOK_AND_FEEL == null || !CUR_LOOK_AND_FEEL.equals(Settings.propLookAndFeel.getString())) {
+    if (CUR_LOOK_AND_FEEL == null || !CUR_LOOK_AND_FEEL.equals(Settings.LookAndFeel.SELECTED.getString())) {
       try {
-        CUR_LOOK_AND_FEEL = Settings.propLookAndFeel.getString();
+        CUR_LOOK_AND_FEEL = Settings.LookAndFeel.SELECTED.getString();
         // check if LnF is still available
         boolean foundCurrent = lookAndFeelExists(CUR_LOOK_AND_FEEL);
         // reset look and feel?
@@ -2033,8 +2032,8 @@ public class TVBrowser {
                           CUR_LOOK_AND_FEEL),
                   LOCALIZER.msg("lnfMissing.title", "Look and feel missing"),
                   JOptionPane.WARNING_MESSAGE | JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
-            Settings.propLookAndFeel.resetToDefault();
-            CUR_LOOK_AND_FEEL = Settings.propLookAndFeel.getString();
+            Settings.LookAndFeel.SELECTED.resetToDefault();
+            CUR_LOOK_AND_FEEL = Settings.LookAndFeel.SELECTED.getString();
             foundCurrent = true;
           }
         }
@@ -2133,13 +2132,13 @@ public class TVBrowser {
   public static void updateProxySettings() {
     String httpHost = "", httpPort = "", httpUser = "", httpPassword = "";
 
-    if (Settings.propHttpProxyUseProxy.getBoolean()) {
-      httpHost = Settings.propHttpProxyHost.getString();
-      httpPort = Settings.propHttpProxyPort.getString();
+    if (Settings.Proxy.USE.getBoolean()) {
+      httpHost = Settings.Proxy.HOST.getString();
+      httpPort = Settings.Proxy.PORT.getString();
 
-      if (Settings.propHttpProxyAuthentifyAtProxy.getBoolean()) {
-        httpUser     = Settings.propHttpProxyUser.getString();
-        httpPassword = Settings.propHttpProxyPassword.getString();
+      if (Settings.Proxy.AUTHENTIFY_AT_PROXY.getBoolean()) {
+        httpUser     = Settings.Proxy.USER.getString();
+        httpPassword = Settings.Proxy.PASSWORD.getString();
         if (httpPassword == null) {
           httpPassword="";
         }
@@ -2228,14 +2227,14 @@ public class TVBrowser {
       SoftwareUpdateItem[] updateItems = PluginAutoUpdater.getDataServicesForFirstStartup();
       
       if(updateItems.length > 0) {
-        final boolean oldValue = Settings.propPluginBetaWarning.getBoolean();
+        final boolean oldValue = Settings.Plugins.BETA_WARNING.getBoolean();
         
-        Settings.propPluginBetaWarning.setBoolean(false);
+        Settings.Plugins.BETA_WARNING.setBoolean(false);
         SoftwareUpdateDlg updateDlg = new SoftwareUpdateDlg(UiUtilities.getLastModalChildOf(mainFrame),SoftwareUpdater.ONLY_DATA_SERVICE_TYPE,updateItems,false,null);
         updateDlg.setLocationRelativeTo(null);
         updateDlg.setVisible(true);
         
-        Settings.propPluginBetaWarning.setBoolean(oldValue);
+        Settings.Plugins.BETA_WARNING.setBoolean(oldValue);
         PluginLoader.getInstance().installPendingPlugins();
         PluginLoader.getInstance().loadAllPlugins();
         
@@ -2288,7 +2287,7 @@ public class TVBrowser {
         String[] deactivatedPlugins = PluginProxyManager.getInstance().getDeactivatedPluginIds();
         
         if(deactivatedPlugins.length > 0) {
-          String[] propDeactivatedPlugins = Settings.propDeactivatedPlugins.getStringArray();
+          String[] propDeactivatedPlugins = Settings.Plugins.DEACTIVATED.getStringArray();
           
           for(String deactivatedPlugin : deactivatedPlugins) {
             boolean activate = true;
@@ -2317,12 +2316,12 @@ public class TVBrowser {
 }
 
   private static void updatePluginsOnVersionChange() {
-    final boolean oldBetaWarning = Settings.propPluginBetaWarning.getBoolean();
+    final boolean oldBetaWarning = Settings.Plugins.BETA_WARNING.getBoolean();
     try {
       UIThreadRunner.invokeAndWait(() -> {
         Version obligartoryUpdate = new Version(4,22,96,false);
         
-        TvBrowserVersionChangeDlg versionChange = new TvBrowserVersionChangeDlg(Settings.propTVBrowserVersion.getVersion(),obligartoryUpdate);
+        TvBrowserVersionChangeDlg versionChange = new TvBrowserVersionChangeDlg(Settings.General.TV_BROWSER_VERSION_USED_LAST.getVersion(),obligartoryUpdate);
         versionChange.setIconImages(ICONS_WINDOW);
         versionChange.pack();
         versionChange.setLocationRelativeTo(null);
@@ -2330,7 +2329,7 @@ public class TVBrowser {
         versionChange.toFront();
         versionChange.requestFocus();
 
-        Settings.propPluginBetaWarning.setBoolean(oldBetaWarning);
+        Settings.Plugins.BETA_WARNING.setBoolean(oldBetaWarning);
 
         if(versionChange.getIsToCloseTvBrowser()) {
           System.exit(0);

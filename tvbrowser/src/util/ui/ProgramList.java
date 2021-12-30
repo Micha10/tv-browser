@@ -947,7 +947,7 @@ public class ProgramList extends JList<Program> implements ChangeListener,
   
   @Override
 	public int getScrollableUnitIncrement(Rectangle visibleRect, int orientation, int direction) {
-    if(Settings.propSmootherScrolling.getBoolean()) {
+    if(Settings.ProgramPanel.SMOOTHER_SCROLLING.getBoolean()) {
   		int increment = super.getScrollableUnitIncrement(visibleRect, orientation, direction);
   		int valueDefault = 10;
   		  

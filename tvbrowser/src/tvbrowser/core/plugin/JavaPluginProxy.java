@@ -788,10 +788,10 @@ public class JavaPluginProxy extends AbstractPluginProxy {
   }
   
   private boolean accessControl() {
-    if(Settings.propAccessControl.getStringArray().length > 0) {
+    if(Settings.Plugins.ACCESS_CONTROL.getStringArray().length > 0) {
       int startIndex = mPlugin.getId().indexOf(".")+1;
       
-      if(Settings.propAccessControl.containsItem(mPlugin.getId().substring(startIndex, mPlugin.getId().indexOf(".", startIndex)))) {
+      if(Settings.Plugins.ACCESS_CONTROL.containsItem(mPlugin.getId().substring(startIndex, mPlugin.getId().indexOf(".", startIndex)))) {
         return true;
       }
     }

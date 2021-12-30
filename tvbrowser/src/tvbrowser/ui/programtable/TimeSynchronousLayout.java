@@ -144,7 +144,7 @@ public class TimeSynchronousLayout extends AbstractProgramTableLayout {
       if(count > 0) {
         ProgramPanel panel = model.getProgramPanel(col, count-1);
         Program program = panel.getProgram();
-        if (program.getStartTime() <= Settings.propProgramTableEndOfDay.getInt() && program.getStartTime() + program.getLength() >= Settings.propProgramTableEndOfDay.getInt()) {
+        if (program.getStartTime() <= Settings.ProgramTable.END_OF_DAY.getInt() && program.getStartTime() + program.getLength() >= Settings.ProgramTable.END_OF_DAY.getInt()) {
           panel.setHeight(maxY - colYArr[col] + panel.getHeight());
         }
       }

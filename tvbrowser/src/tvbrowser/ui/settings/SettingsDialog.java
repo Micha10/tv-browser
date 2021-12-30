@@ -210,7 +210,7 @@ public class SettingsDialog implements WindowClosingIf {
     scrollPane.setBorder(null);
     mSplitPane.setLeftComponent(scrollPane);
 
-    mSplitPane.setDividerLocation(Settings.propSettingsDialogDividerLocation.getInt());
+    mSplitPane.setDividerLocation(Settings.Other.SETTINGS_DIALOG_DIVIDER_LOCATION.getInt());
 
     int categoryCount = mRootNode.getChildCount();
     // Let the tree collapse
@@ -355,7 +355,7 @@ public class SettingsDialog implements WindowClosingIf {
       for (int i = 0; i < selection.getPathCount(); i++) {
         path.append(selection.getPathComponent(i));
       }
-      Settings.propLastUsedSettingsPath.setString(path.toString());
+      Settings.Other.SETTINGS_LAST_USED_PATH.setString(path.toString());
     }
   }
 
@@ -906,7 +906,7 @@ public class SettingsDialog implements WindowClosingIf {
   public void close() {
     Settings.removeRestartInfoListener(mRestartListener);
     ChannelLabel.clearIconCache();
-    Settings.propSettingsDialogDividerLocation.setInt(mSplitPane.getDividerLocation());
+    Settings.Other.SETTINGS_DIALOG_DIVIDER_LOCATION.setInt(mSplitPane.getDividerLocation());
     mDialog.dispose();
     mInstance = null;
   }

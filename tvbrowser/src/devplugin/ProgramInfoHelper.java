@@ -105,7 +105,7 @@ public class ProgramInfoHelper {
      * @return the info icon array
      */
     public static final Icon[] getInfoIcons() {
-      return InfoThemeLoader.getInstance().getIconThemeForIDOrDefault(Settings.propInfoIconThemeID.getString()).getInfoIcons();
+      return InfoThemeLoader.getInstance().getIconThemeForIDOrDefault(Settings.LookAndFeel.INFO_ICON_THEME_ID.getString()).getInfoIcons();
     }
     
     /**
@@ -122,7 +122,7 @@ public class ProgramInfoHelper {
      * @return The info icon URLs array
      */
     public static final String[] getInfoIconURLs() {
-      return InfoThemeLoader.getInstance().getIconThemeForIDOrDefault(Settings.propInfoIconThemeID.getString()).getInfoIconURLs();
+      return InfoThemeLoader.getInstance().getIconThemeForIDOrDefault(Settings.LookAndFeel.INFO_ICON_THEME_ID.getString()).getInfoIconURLs();
     }
     
     /**

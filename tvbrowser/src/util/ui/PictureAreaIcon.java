@@ -97,7 +97,7 @@ public class PictureAreaIcon implements Icon {
     mShowPictureBorder = showPictureBorder;
     mIsGrayFilter = grayFilter;
     if (showDescription) {
-      mDescriptionLines = Settings.propPictureDescriptionLines.getInt();
+      mDescriptionLines = Settings.Pictures.DESCRIPTION_LINES.getInt();
     }
     else {
       mDescriptionLines = 0;
@@ -176,11 +176,11 @@ public class PictureAreaIcon implements Icon {
       ((Graphics2D) g).setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
     }
     
-    if(!Settings.propTableBackgroundStyle.getString().equals("uiColor") && !Settings.propTableBackgroundStyle.getString().equals("uiTimeBlock") && !UiUtilities.colorsInEqualRange(c.getBackground(),c.getForeground(),MAX_COLOR_DIFF) && !mProgram.isExpired()) {
+    if(!Settings.ProgramTable.STYLE_BACKGROUND.getString().equals("uiColor") && !Settings.ProgramTable.STYLE_BACKGROUND.getString().equals("uiTimeBlock") && !UiUtilities.colorsInEqualRange(c.getBackground(),c.getForeground(),MAX_COLOR_DIFF) && !mProgram.isExpired()) {
       g.setColor(c.getBackground());
       g.fillRect(x,y,getIconWidth(),getIconHeight()-2);
     }
-    else if(Settings.propTableBackgroundStyle.getString().equals("uiColor") || Settings.propTableBackgroundStyle.getString().equals("uiTimeBlock") && !mProgram.isExpired()) {
+    else if(Settings.ProgramTable.STYLE_BACKGROUND.getString().equals("uiColor") || Settings.ProgramTable.STYLE_BACKGROUND.getString().equals("uiTimeBlock") && !mProgram.isExpired()) {
       g.setColor(UIManager.getColor("List.background"));
       g.fillRect(x,y,getIconWidth(),getIconHeight()-2);
     }

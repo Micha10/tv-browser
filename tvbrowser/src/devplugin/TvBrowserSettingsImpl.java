@@ -57,15 +57,15 @@ public final class TvBrowserSettingsImpl implements TvBrowserSettings {
   }
 
   public int[] getTimeButtonTimes() {
-    return Settings.propTimeButtons.getIntArray();
+    return Settings.Buttons.TIME_BUTTONS.getIntArray();
   }
 
   public Date getLastDownloadDate() {
-    return Settings.propLastDownloadDate.getDate();
+    return Settings.Data.DOWNLOAD_DATE_LAST.getDate();
   }
   
   public int getDefaultNetworkConnectionTimeout(){
-    return Settings.propDefaultNetworkConnectionTimeout.getInt();
+    return Settings.Network.DEFAULT_CONNECTION_TIMEOUT.getInt();
   }
   
   public Color getColorForMarkingPriority(int priority) {
@@ -86,46 +86,46 @@ public final class TvBrowserSettingsImpl implements TvBrowserSettings {
   }
   
   public int getProgramTableEndOfDay() {
-    return Settings.propProgramTableEndOfDay.getInt();
+    return Settings.ProgramTable.END_OF_DAY.getInt();
   }
 
   public int getProgramTableStartOfDay() {
-    return Settings.propProgramTableStartOfDay.getInt();
+    return Settings.ProgramTable.START_OF_DAY.getInt();
   }
   
   public Color getProgramPanelOnAirLightColor() {
-    return Settings.propProgramPanelColorOnAirLight.getColor();
+    return Settings.ProgramPanel.COLOR_ON_AIR_LIGHT.getColor();
   }
   
   public Color getProgramPanelOnAirDarkColor() {
-    return Settings.propProgramPanelColorOnAirDark.getColor();
+    return Settings.ProgramPanel.COLOR_ON_AIR_DARK.getColor();
   }
 
   public boolean isMarkingBorderPainted() {
-    return Settings.propProgramPanelWithMarkingsShowingBoder.getBoolean();
+    return Settings.Markings.WITH_MARKINGS_SHOWING_BORDER.getBoolean();
   }
 
   public boolean isUsingExtraSpaceForMarkIcons() {
-    return Settings.propProgramPanelUsesExtraSpaceForMarkIcons.getBoolean();
+    return Settings.Markings.USES_EXTRA_SPACE_FOR_MARK_ICONS.getBoolean();
   }
 
   public short getAutoDownloadWaitingTime() {
-    return Settings.propAutoDownloadWaitingTime.getShort();
+    return Settings.General.AUTO_DOWNLOAD_WAITING_TIME.getShort();
   }
 
   @Override
   public Color getProgramTableMouseOverColor() {
-    return Settings.propProgramTableMouseOver.getBoolean() ? Settings.propProgramTableMouseOverColor.getColor() : null;
+    return Settings.ProgramTable.MOUSE_OVER.getBoolean() ? Settings.ProgramTable.COLOR_MOUSE_OVER.getColor() : null;
   }
   
   @Override
   public Color getProgramTableForegroundColor() {
-    return Settings.propTableBackgroundStyle.getString().contains("ui") ? UIManager.getColor("List.foreground") : Settings.propProgramPanelForegroundColor.getColor();
+    return Settings.ProgramTable.STYLE_BACKGROUND.getString().contains("ui") ? UIManager.getColor("List.foreground") : Settings.ProgramPanel.COLOR_FOREGROUND.getColor();
   }
   
   @Override
   public Color getProgramPanelSelectionColor() {
-    return Settings.propKeyboardSelectedColor.getColor();
+    return Settings.ProgramPanel.COLOR_KEYBOARD_SELECTED.getColor();
   }
 
   @Override
@@ -135,41 +135,41 @@ public final class TvBrowserSettingsImpl implements TvBrowserSettings {
 
   @Override
   public boolean isChannelUpdateActivated() {
-    return Settings.propAutoChannelUpdatePeriod.getInt() > GeneralSettingsTab.VALUE_AUTO_CHANNEL_UPDATE_DISABLED;
+    return Settings.General.AUTO_CHANNEL_UPDATE_PERIOD.getInt() > GeneralSettingsTab.VALUE_AUTO_CHANNEL_UPDATE_DISABLED;
   }
 
   @Override
   public Color getScrollColorTimeLight() {
-    return Settings.propScrollToTimeProgramsLightBackground.getColor();
+    return Settings.ProgramTable.COLOR_SCROLL_TO_TIME_PROGRAMS_BACKGROUND_LIGHT.getColor();
   }
 
   @Override
   public Color getScrollColorTimeDark() {
-    return Settings.propScrollToTimeProgramsDarkBackground.getColor();
+    return Settings.ProgramTable.COLOR_SCROLL_TO_TIME_PROGRAMS_BACKGROUND_DARK.getColor();
   }
 
   @Override
   public Color getScrollColorChannel() {
-    return Settings.propHighlightChannelProgramsBackground.getColor();
+    return Settings.ProgramTable.COLOR_HIGHLIGHT_CHANNEL_PROGRAMS_BACKGROUND.getColor();
   }
 
   @Override
   public boolean isScrollToTimeHighlightActivated() {
-    return Settings.propScrollToTimeMarkingActivated.getBoolean();
+    return Settings.ProgramTable.SCROLL_TO_TIME_MARKING.getBoolean();
   }
 
   @Override
   public boolean isScrollToChannelHighlightActivated() {
-    return Settings.propHighlightChannelColumnByScrolling.getBoolean();
+    return Settings.ProgramTable.HIGHLIGHT_CHANNEL_COLUMN_BY_SCROLLING.getBoolean();
   }
 
   @Override
   public String getDataDirectory() {
-    return Settings.propTVDataDirectory.getString();
+    return Settings.Directories.TV_DATA.getString();
   }
 
   @Override
   public boolean getCanReceiveProtocolMessages() {
-    return Settings.propCanReceiveProtocolMessages.getBoolean();
+    return Settings.General.CAN_RECEIVE_PROTOCOL_MESSAGE.getBoolean();
   }
 }

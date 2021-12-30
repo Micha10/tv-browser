@@ -87,7 +87,7 @@ class NetworkCardPanel extends AbstractCardPanel {
     content.add(UiUtilities.createHtmlHelpTextArea(mLocalizer.msg("preambel", "Preambel")), cc.xy(2, 2));
 
     mProxyCB = new JCheckBox(mLocalizer.msg("usingProxy", "Using Proxy"));
-    mProxyCB.setSelected(Settings.propHttpProxyUseProxy.getBoolean());
+    mProxyCB.setSelected(Settings.Proxy.USE.getBoolean());
 
     content.add(mProxyCB, cc.xy(2, 6));
 
@@ -103,18 +103,18 @@ class NetworkCardPanel extends AbstractCardPanel {
     mHostLB = new JLabel(mLocalizer.msg("host", "Host"));
     hostPanel.add(mHostLB, cc.xy(1, 1));
     mHostTF = new JTextField(20);
-    mHostTF.setText(Settings.propHttpProxyHost.getString());
+    mHostTF.setText(Settings.Proxy.HOST.getString());
     hostPanel.add(mHostTF, cc.xy(3, 1));
     mPortLB = new JLabel(mLocalizer.msg("port", "Port"));
     hostPanel.add(mPortLB, cc.xy(5, 1));
     mPortTF = new JTextField(4);
     hostPanel.add(mPortTF, cc.xy(7, 1));
-    mPortTF.setText(Settings.propHttpProxyPort.getString());
+    mPortTF.setText(Settings.Proxy.PORT.getString());
 
     proxyPanel.add(hostPanel, cc.xy(1, 3));
 
     mAuthCB = new JCheckBox(mLocalizer.msg("auth", "authentification"));
-    mAuthCB.setSelected(Settings.propHttpProxyAuthentifyAtProxy.getBoolean());
+    mAuthCB.setSelected(Settings.Proxy.AUTHENTIFY_AT_PROXY.getBoolean());
     proxyPanel.add(mAuthCB, cc.xy(1, 5));
 
     JPanel userPanel = new JPanel(new FormLayout("10dlu, pref, 3dlu, pref, 3dlu, pref, 3dlu, pref", "pref"));
@@ -122,12 +122,12 @@ class NetworkCardPanel extends AbstractCardPanel {
     mUserLB = new JLabel(mLocalizer.msg("user", "User"));
     userPanel.add(mUserLB, cc.xy(2, 1));
     mUserTF = new JTextField(10);
-    mUserTF.setText(Settings.propHttpProxyUser.getString());
+    mUserTF.setText(Settings.Proxy.USER.getString());
     userPanel.add(mUserTF, cc.xy(4, 1));
     mPasswordLB = new JLabel(mLocalizer.msg("password", "Password"));
     userPanel.add(mPasswordLB, cc.xy(6, 1));
     mPasswordTF = new JPasswordField(10);
-    mPasswordTF.setText(Settings.propHttpProxyPassword.getString());
+    mPasswordTF.setText(Settings.Proxy.PASSWORD.getString());
     userPanel.add(mPasswordTF, cc.xy(8, 1));
 
     proxyPanel.add(userPanel, cc.xy(1, 7));
@@ -196,12 +196,12 @@ class NetworkCardPanel extends AbstractCardPanel {
   }
 
   public boolean onNext() {
-    Settings.propHttpProxyUseProxy.setBoolean(mProxyCB.isSelected());
-    Settings.propHttpProxyHost.setString(mHostTF.getText());
-    Settings.propHttpProxyPort.setString(mPortTF.getText());
-    Settings.propHttpProxyAuthentifyAtProxy.setBoolean(mAuthCB.isSelected());
-    Settings.propHttpProxyUser.setString(mUserTF.getText());
-    Settings.propHttpProxyPassword.setString(new String(mPasswordTF.getPassword()));
+    Settings.Proxy.USE.setBoolean(mProxyCB.isSelected());
+    Settings.Proxy.HOST.setString(mHostTF.getText());
+    Settings.Proxy.PORT.setString(mPortTF.getText());
+    Settings.Proxy.AUTHENTIFY_AT_PROXY.setBoolean(mAuthCB.isSelected());
+    Settings.Proxy.USER.setString(mUserTF.getText());
+    Settings.Proxy.PASSWORD.setString(new String(mPasswordTF.getPassword()));
 
     TVBrowser.updateProxySettings();
 

@@ -107,10 +107,10 @@ public class ContextMenuManager {
     mContextMenuMiddleDoubleClickTable.clear();
     
     
-    setContextMenuValues(mContextMenuLeftSingleClickTable,Settings.propLeftSingleClickIfArray.getContextMenuMouseActionArray());
-    setContextMenuValues(mContextMenuLeftDoubleClickTable,Settings.propLeftDoubleClickIfArray.getContextMenuMouseActionArray());
-    setContextMenuValues(mContextMenuMiddleSingleClickTable,Settings.propMiddleSingleClickIfArray.getContextMenuMouseActionArray());
-    setContextMenuValues(mContextMenuMiddleDoubleClickTable,Settings.propMiddleDoubleClickIfArray.getContextMenuMouseActionArray());
+    setContextMenuValues(mContextMenuLeftSingleClickTable,Settings.Mouse.LEFT_SINGLE_CLICK_IF_ARRAY.getContextMenuMouseActionArray());
+    setContextMenuValues(mContextMenuLeftDoubleClickTable,Settings.Mouse.LEFT_DOUBLE_CLICK_IF_ARRAY.getContextMenuMouseActionArray());
+    setContextMenuValues(mContextMenuMiddleSingleClickTable,Settings.Mouse.MIDDLE_SINGLE_CLICK_IF_ARRAY.getContextMenuMouseActionArray());
+    setContextMenuValues(mContextMenuMiddleDoubleClickTable,Settings.Mouse.MIDDLE_DOUBLE_CLICK_IF_ARRAY.getContextMenuMouseActionArray());
   }
 
 	/**
@@ -258,7 +258,7 @@ public ContextMenuIf[] getAvailableContextMenuIfs(boolean includingDisabledItems
     InternalPluginProxyIf[] internalPluginProxies = InternalPluginProxyList.getInstance().getAvailableProxys();
     PluginProxy[] pluginArr = PluginProxyManager.getInstance().getActivatedPlugins();
     TvDataServiceProxy[] dataServiceArr = TvDataServiceProxyManager.getInstance().getDataServices();
-    String[] order = Settings.propContextMenuOrder.getStringArray();
+    String[] order = Settings.ContextMenu.MENU_ORDER.getStringArray();
     List<ContextMenuIf> disabledList = getDisabledContextMenuIfs();
     
     ArrayList<ContextMenuIf> ifList = new ArrayList<ContextMenuIf>();
@@ -552,7 +552,7 @@ public ContextMenuIf[] getAvailableContextMenuIfs(boolean includingDisabledItems
    * @return disabled ContextMenuIfs
    */
   public static List<ContextMenuIf> getDisabledContextMenuIfs() {
-    String[] disabled = Settings.propContextMenuDisabledItems.getStringArray();
+    String[] disabled = Settings.ContextMenu.DISABLED_ITEMS.getStringArray();
     
     ArrayList<ContextMenuIf> list = new ArrayList<ContextMenuIf>();
     if (disabled == null) {
@@ -576,7 +576,7 @@ public ContextMenuIf[] getAvailableContextMenuIfs(boolean includingDisabledItems
   public static HashMap<ContextMenuIf, HashSet<Integer>> getDisabledSubMenuMap() {
     final HashMap<ContextMenuIf, HashSet<Integer>> disabledSubMenusMap = new HashMap<>();
     
-    final String[] disabledSubMenus = Settings.propContextMenuDisabledSubItems.getStringArray();
+    final String[] disabledSubMenus = Settings.ContextMenu.DISABLED_SUB_ITEMS.getStringArray();
     
     if(disabledSubMenus != null) {
       for(String menuInfo : disabledSubMenus) {

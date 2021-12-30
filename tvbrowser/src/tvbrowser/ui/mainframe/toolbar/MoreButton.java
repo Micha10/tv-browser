@@ -250,11 +250,11 @@ public class MoreButton extends JToggleButton implements ActionListener {
           }
         }
         
-        if(Settings.propToolbarButtonStyle.getString().equals("text&icon")) {
+        if(Settings.ToolBar.BUTTON_STYLE.getString().equals("text&icon")) {
           getIcon().paintIcon(this,g,getWidth()/2-getIcon().getIconWidth()/2,getInsets().top);
         }
         
-        if(Settings.propToolbarButtonStyle.getString().contains("text")) {
+        if(Settings.ToolBar.BUTTON_STYLE.getString().contains("text")) {
           FontMetrics metrics = g.getFontMetrics(getFont());
           int textWidth = metrics.stringWidth(getText());
         

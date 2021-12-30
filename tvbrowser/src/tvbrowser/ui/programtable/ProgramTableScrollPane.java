@@ -98,7 +98,7 @@ public class ProgramTableScrollPane extends JScrollPane implements ProgramTableM
     setWheelScrollingEnabled(false);
     addMouseWheelListener(this);
 
-    getHorizontalScrollBar().setUnitIncrement(Settings.propColumnWidth.getInt());
+    getHorizontalScrollBar().setUnitIncrement(Settings.ProgramTable.COLUMN_WIDTH.getInt());
     getVerticalScrollBar().setUnitIncrement(50);
 
     getHorizontalScrollBar().setFocusable(false);
@@ -279,7 +279,7 @@ public class ProgramTableScrollPane extends JScrollPane implements ProgramTableM
         }
       }
     }
-    else if(Settings.propHighlightChannelColumnByScrolling.getBoolean()) {
+    else if(Settings.ProgramTable.HIGHLIGHT_CHANNEL_COLUMN_BY_SCROLLING.getBoolean()) {
       final Channel[] shownChannelArr = mProgramTable.getModel().getShownChannels();
       
       for (int col = 0; col < shownChannelArr.length; col++) {
@@ -289,7 +289,7 @@ public class ProgramTableScrollPane extends JScrollPane implements ProgramTableM
       }
     }
     
-    if(Settings.propHighlightChannelColumnByScrolling.getBoolean()) {
+    if(Settings.ProgramTable.HIGHLIGHT_CHANNEL_COLUMN_BY_SCROLLING.getBoolean()) {
       mProgramTable.getBackgroundPainter().setSelectedColumn(column);
       mProgramTable.repaint();
       
@@ -376,7 +376,7 @@ public class ProgramTableScrollPane extends JScrollPane implements ProgramTableM
 
   public void tableDataChanged(Runnable callback) {
     mChannelPanel.setShownChannels(mProgramTable.getModel().getShownChannels(),mKeyListener);
-    if (Settings.propTableBackgroundStyle.getString().equals("timeBlock") && Settings.propTimeBlockShowWest.getBoolean()) {
+    if (Settings.ProgramTable.STYLE_BACKGROUND.getString().equals("timeBlock") && Settings.ProgramTable.TIME_BLOCK_SHOW_WEST.getBoolean()) {
       getRowHeader().getView().repaint();
     }
     
@@ -389,7 +389,7 @@ public class ProgramTableScrollPane extends JScrollPane implements ProgramTableM
   }
 
   public void mouseWheelMoved(final MouseWheelEvent e) {
-    if(Settings.propProgramTableAutoChangeDate.getBoolean()) {
+    if(Settings.ProgramTable.AUTO_CHANGE_DATE.getBoolean()) {
       if(getVerticalScrollBar().getValue() + getVerticalScrollBar().getVisibleAmount() >= getVerticalScrollBar().getMaximum() || getVerticalScrollBar().getValue() == getVerticalScrollBar().getMinimum()) {
         if(System.currentTimeMillis()-mLastScrollTime <= 500 && System.currentTimeMillis()-mLastScrollTime >= 200) {
           if(e.getWheelRotation() < 0) {
@@ -399,7 +399,7 @@ public class ProgramTableScrollPane extends JScrollPane implements ProgramTableM
           }
           else {
             MainFrame.getInstance().goToNextDay(() -> {
-              MainFrame.getInstance().scrollToTime(Settings.propProgramTableEndOfDay.getInt(),false);
+              MainFrame.getInstance().scrollToTime(Settings.ProgramTable.END_OF_DAY.getInt(),false);
             });
           }
           
@@ -415,8 +415,8 @@ public class ProgramTableScrollPane extends JScrollPane implements ProgramTableM
     JScrollBar scrollBar = null;
     int amount = 0;
     
-    if (((e.getModifiersEx() & InputEvent.SHIFT_DOWN_MASK) != 0 && !Settings.propProgramTableScrollHorizontal.getBoolean()) || getComponentAt(e.getPoint()).equals(getColumnHeader()) ||
-        getComponentAt(e.getPoint()).equals(getHorizontalScrollBar()) || (Settings.propProgramTableScrollHorizontal.getBoolean() && !getComponentAt(e.getPoint()).equals(getVerticalScrollBar()) 
+    if (((e.getModifiersEx() & InputEvent.SHIFT_DOWN_MASK) != 0 && !Settings.ProgramTable.SCROLL_HORIZONTAL.getBoolean()) || getComponentAt(e.getPoint()).equals(getColumnHeader()) ||
+        getComponentAt(e.getPoint()).equals(getHorizontalScrollBar()) || (Settings.ProgramTable.SCROLL_HORIZONTAL.getBoolean() && !getComponentAt(e.getPoint()).equals(getVerticalScrollBar()) 
             && ((e.getModifiersEx() & InputEvent.SHIFT_DOWN_MASK) == 0))) {
       scrollBar = getHorizontalScrollBar();
     } else {

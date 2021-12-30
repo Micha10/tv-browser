@@ -103,11 +103,11 @@ public class IconLoader {
     mDefaultIconTheme = getIconTheme(mDefaultIconDir);
     mDefaultIconTheme.loadTheme();
 
-    String iconTheme = Settings.propIcontheme.getString();
+    String iconTheme = Settings.LookAndFeel.ICON_THEME.getString();
 		if (iconTheme != null) {
 			if (iconTheme != null && !iconTheme.endsWith(".zip")) {
 				if (new File(iconTheme + ".zip").canRead()) {
-					Settings.propIcontheme.setString(iconTheme + ".zip");
+					Settings.LookAndFeel.ICON_THEME.setString(iconTheme + ".zip");
 				}
 			}
       File themeFile = getIconThemeFile(iconTheme);

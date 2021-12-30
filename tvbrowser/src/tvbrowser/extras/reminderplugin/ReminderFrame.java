@@ -246,7 +246,7 @@ public class ReminderFrame implements WindowClosingIf, ChangeListener {
       
       String sortNumber = "";
       
-      if(Settings.propShowSortNumberInProgramLists.getBoolean() && program.getChannel().getSortNumber().trim().length() > 0) {
+      if(Settings.IconAndNames.SHOW_SORT_NUMBER_IN_PROGRAM_LISTS.getBoolean() && program.getChannel().getSortNumber().trim().length() > 0) {
         sortNumber = program.getChannel().getSortNumber() + ". ";
       }
       

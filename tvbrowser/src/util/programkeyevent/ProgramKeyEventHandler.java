@@ -83,16 +83,16 @@ public class ProgramKeyEventHandler extends KeyAdapter {
         }
         else {
           if(e.getKeyCode() == LEFT_SINGLE_KEY) {
-            handleKeyEventFor(Settings.propLeftSingleClickIfArray.getContextMenuMouseActionArray(), e, program);
+            handleKeyEventFor(Settings.Mouse.LEFT_SINGLE_CLICK_IF_ARRAY.getContextMenuMouseActionArray(), e, program);
           }
           else if(e.getKeyCode() == MIDDLE_SINGLE_KEY) {
-            handleKeyEventFor(Settings.propMiddleSingleClickIfArray.getContextMenuMouseActionArray(), e, program);
+            handleKeyEventFor(Settings.Mouse.MIDDLE_SINGLE_CLICK_IF_ARRAY.getContextMenuMouseActionArray(), e, program);
           }
           else if(e.getKeyCode() == LEFT_DOUBLE_KEY) {
-            handleKeyEventFor(Settings.propLeftDoubleClickIfArray.getContextMenuMouseActionArray(), e, program);
+            handleKeyEventFor(Settings.Mouse.LEFT_DOUBLE_CLICK_IF_ARRAY.getContextMenuMouseActionArray(), e, program);
           }
           else if(e.getKeyCode() == MIDDLE_DOUBLE_KEY) {
-            handleKeyEventFor(Settings.propMiddleDoubleClickIfArray.getContextMenuMouseActionArray(), e, program);
+            handleKeyEventFor(Settings.Mouse.MIDDLE_DOUBLE_CLICK_IF_ARRAY.getContextMenuMouseActionArray(), e, program);
           }
         }
       }

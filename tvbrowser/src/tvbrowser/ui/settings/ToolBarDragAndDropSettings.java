@@ -208,7 +208,7 @@ public class ToolBarDragAndDropSettings extends JDialog implements
 
     mUseBigIconsCb = new JCheckBox(ContextMenu.mLocalizer.msg("bigIcons",
         "Use big icons"));
-    mUseBigIconsCb.setSelected(Settings.ToolBar.USE_BIG_ICONS.getBoolean());
+    mUseBigIconsCb.setSelected(Settings.ToolBar.BIG_ICONS_USE.getBoolean());
 
     CellConstraints cc = new CellConstraints();
 

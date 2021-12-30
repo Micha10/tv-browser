@@ -215,7 +215,7 @@ public abstract class AbstractSearcher implements ProgramSearcher {
     
     // Should we search in all channels?
     if (channels == null) {
-      channels = Settings.propSubscribedChannels.getChannelArray();
+      channels = Settings.Channels.SUBSCRIBED.getChannelArray();
     }
 
     if (nrDays < 0) {
@@ -317,7 +317,7 @@ public abstract class AbstractSearcher implements ProgramSearcher {
     
     // Should we search in all channels?
     if (channels == null) {
-      channels = Settings.propSubscribedChannels.getChannelArray();
+      channels = Settings.Channels.SUBSCRIBED.getChannelArray();
     }
 
     if (nrDays < 0) {

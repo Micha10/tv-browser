@@ -242,7 +242,7 @@ public final class PluginInfo {
       if (url == null) {
         url = "https://www.tvbrowser.org/showHelpFor.php?id="
           + id + "&lang="
-          + Settings.propLanguage.getString();
+          + Settings.Locales.LANGUAGE.getString();
       }
       return url;
     }

@@ -45,7 +45,7 @@ public class OneImageBackPainter extends AbstractBackPainter {
 
   public OneImageBackPainter() {
     mBackgroundImage = ImageUtilities
-        .createImageAsynchronous(Settings.propOneImageBackground.getString());
+        .createImageAsynchronous(Settings.ProgramTable.ONE_IMAGE_BACKGROUND.getString());
   }
 
   /**

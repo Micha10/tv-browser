@@ -102,10 +102,10 @@ public class Launch {
       ProtocolHandler.getInstance().handleMessage(url);
     }
     else {
-      String browserExecutable = IOUtilities.translateRelativePath(Settings.propUserDefinedWebbrowser.getString());
+      String browserExecutable = IOUtilities.translateRelativePath(Settings.WebBrowser.USER_DEFINED.getString());
       try {
         if (browserExecutable != null) {
-          String params = Settings.propUserDefinedWebbrowserParams.getString().replace("{0}", url);
+          String params = Settings.WebBrowser.USER_DEFINED_PARAMS.getString().replace("{0}", url);
   
           // Test if the JVM is a Mac-VM and the Application is an .app-File.
           // These Files must be launched differently
@@ -135,14 +135,14 @@ public class Launch {
           }
         }
   
-        if (Settings.propShowBrowserOpenDialog.getBoolean()){
+        if (Settings.WebBrowser.OPEN_BROWSER_DIALOG_SHOW.getBoolean()){
           final JDialog dialog = new JDialog(MainFrame.getInstance(), true);
           dialog.setTitle(mLocalizer.msg("okTitle", "okTitle"));
   
           UiUtilities.registerForClosing(new WindowClosingIf() {
             public void close() {
               dialog.setVisible(false);
-              Settings.propShowBrowserOpenDialog.setBoolean(true);
+              Settings.WebBrowser.OPEN_BROWSER_DIALOG_SHOW.setBoolean(true);
             }
             public JRootPane getRootPane() {
               return dialog.getRootPane();
@@ -166,9 +166,9 @@ public class Launch {
           ok.addActionListener(e -> {
             dialog.setVisible(false);
             if (showBrowserDialog.isSelected()) {
-              Settings.propShowBrowserOpenDialog.setBoolean(false);
+              Settings.WebBrowser.OPEN_BROWSER_DIALOG_SHOW.setBoolean(false);
             } else {
-              Settings.propShowBrowserOpenDialog.setBoolean(true);
+              Settings.WebBrowser.OPEN_BROWSER_DIALOG_SHOW.setBoolean(true);
             }
           });
   

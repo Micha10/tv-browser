@@ -119,7 +119,7 @@ public class ProtocolHandler {
   
   private ProtocolHandler() {
     INSTANCE = this;
-    mIsEnabled = Settings.propCanReceiveProtocolMessages.getBoolean();
+    mIsEnabled = Settings.General.CAN_RECEIVE_PROTOCOL_MESSAGE.getBoolean();
     
     if(mIsEnabled) {
       if(Launch.getOs() == Launch.OS_LINUX) {
@@ -171,7 +171,7 @@ public class ProtocolHandler {
             enable(false);
           }
           else {
-            Settings.propCanReceiveProtocolMessages.setBoolean(false);
+            Settings.General.CAN_RECEIVE_PROTOCOL_MESSAGE.setBoolean(false);
             mIsEnabled = false;
             try {
               Settings.storeSettings(true);
@@ -216,7 +216,7 @@ public class ProtocolHandler {
       e1.printStackTrace();
     }
     
-    if(Settings.propCanReceiveProtocolMessages.getBoolean() && message != null && message.startsWith("tvb://")) {
+    if(Settings.General.CAN_RECEIVE_PROTOCOL_MESSAGE.getBoolean() && message != null && message.startsWith("tvb://")) {
       final String[] parts = message.substring(6).strip().split("/");
       
       if(parts.length > 1) {
@@ -514,7 +514,7 @@ public class ProtocolHandler {
     
     // Update the settings
     String[] deactivatedPlugins = PluginProxyManager.getInstance().getDeactivatedPluginIds();
-    Settings.propDeactivatedPlugins.setStringArray(deactivatedPlugins);
+    Settings.Plugins.DEACTIVATED.setStringArray(deactivatedPlugins);
 
     try {
       Settings.storeSettings(true);
@@ -540,10 +540,10 @@ public class ProtocolHandler {
   }
   
   public void handleSettingsChanged() {
-    if(mIsEnabled && !Settings.propCanReceiveProtocolMessages.getBoolean()) {
+    if(mIsEnabled && !Settings.General.CAN_RECEIVE_PROTOCOL_MESSAGE.getBoolean()) {
       disable(true);
     }
-    else if(!mIsEnabled && Settings.propCanReceiveProtocolMessages.getBoolean()) {
+    else if(!mIsEnabled && Settings.General.CAN_RECEIVE_PROTOCOL_MESSAGE.getBoolean()) {
       enable(true);
     }
   }
@@ -558,7 +558,7 @@ public class ProtocolHandler {
         enableWindows();
       }
       else {
-        Settings.propCanReceiveProtocolMessages.setBoolean(false);
+        Settings.General.CAN_RECEIVE_PROTOCOL_MESSAGE.setBoolean(false);
         mIsEnabled = false;
         try {
           Settings.storeSettings(true);

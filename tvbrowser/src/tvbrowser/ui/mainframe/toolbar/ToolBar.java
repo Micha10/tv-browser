@@ -310,11 +310,11 @@ public class ToolBar extends JToolBar {
             }
           }
           
-          if(Settings.propToolbarButtonStyle.getString().equals("text&icon")) {
+          if(Settings.ToolBar.BUTTON_STYLE.getString().equals("text&icon")) {
             getIcon().paintIcon(this,g,getWidth()/2-getIcon().getIconWidth()/2,getInsets().top);
           }
           
-          if(Settings.propToolbarButtonStyle.getString().contains("text")) {
+          if(Settings.ToolBar.BUTTON_STYLE.getString().contains("text")) {
             FontMetrics metrics = g.getFontMetrics(getFont());
             int textWidth = metrics.stringWidth(getText());
           
@@ -399,11 +399,11 @@ public class ToolBar extends JToolBar {
             g.fillRect(0, 0, getWidth(), getHeight());
           }
           
-          if(Settings.propToolbarButtonStyle.getString().equals("text&icon")) {
+          if(Settings.ToolBar.BUTTON_STYLE.getString().equals("text&icon")) {
             getIcon().paintIcon(this,g,getWidth()/2-getIcon().getIconWidth()/2,getInsets().top);
           }
           
-          if(Settings.propToolbarButtonStyle.getString().contains("text")) {
+          if(Settings.ToolBar.BUTTON_STYLE.getString().contains("text")) {
             FontMetrics metrics = g.getFontMetrics(getFont());
             int textWidth = metrics.stringWidth(getText());
           
@@ -579,7 +579,7 @@ public class ToolBar extends JToolBar {
       idList.toArray(ids);
       DefaultToolBarModel.getInstance().setButtonIds(ids);
       MainFrame.getInstance().updateToolbar();
-      Settings.propToolbarButtons.setStringArray(ids);
+      Settings.ToolBar.BUTTONS.setStringArray(ids);
     });
     
     menu.add(item);
@@ -659,7 +659,7 @@ public class ToolBar extends JToolBar {
 
   private void loadSettings() {
 
-    String styleStr = Settings.propToolbarButtonStyle.getString();
+    String styleStr = Settings.ToolBar.BUTTON_STYLE.getString();
     if ("text".equals(styleStr)) {
       mStyle = STYLE_TEXT;
     } else if ("icon".equals(styleStr)) {
@@ -668,9 +668,9 @@ public class ToolBar extends JToolBar {
       mStyle = STYLE_ICON | STYLE_TEXT;
     }
 
-    setUseBigIcons(Settings.propToolbarUseBigIcons.getBoolean());
+    setUseBigIcons(Settings.ToolBar.BIG_ICONS_USE.getBoolean());
 
-    String locationStr = Settings.propToolbarLocation.getString();
+    String locationStr = Settings.ToolBar.LOCATION.getString();
     mLocation = null;
     if ("west".equals(locationStr)) {
       mLocation = BorderLayout.WEST;
@@ -690,21 +690,21 @@ public class ToolBar extends JToolBar {
   public void storeSettings() {
 
     if (mStyle == STYLE_TEXT) {
-      Settings.propToolbarButtonStyle.setString("text");
+      Settings.ToolBar.BUTTON_STYLE.setString("text");
     } else if (mStyle == STYLE_ICON) {
-      Settings.propToolbarButtonStyle.setString("icon");
+      Settings.ToolBar.BUTTON_STYLE.setString("icon");
     } else {
-      Settings.propToolbarButtonStyle.setString("text&icon");
+      Settings.ToolBar.BUTTON_STYLE.setString("text&icon");
     }
 
-    Settings.propToolbarUseBigIcons.setBoolean(mIconSize == ICON_BIG);
+    Settings.ToolBar.BIG_ICONS_USE.setBoolean(mIconSize == ICON_BIG);
 
     if (mLocation == null) {
-      Settings.propToolbarLocation.setString("hidden");
+      Settings.ToolBar.LOCATION.setString("hidden");
     } else if (mLocation.equals(BorderLayout.WEST)) {
-      Settings.propToolbarLocation.setString("west");
+      Settings.ToolBar.LOCATION.setString("west");
     } else {
-      Settings.propToolbarLocation.setString("north");
+      Settings.ToolBar.LOCATION.setString("north");
     }
 
   }

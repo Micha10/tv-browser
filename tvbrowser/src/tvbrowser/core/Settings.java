@@ -28,7 +28,6 @@ package tvbrowser.core;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.Window;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.FileFilter;
@@ -133,13 +132,8 @@ import util.ui.view.SplitViewProperty;
  * @author Martin Oberhauser
  */
 public class Settings {
-  public static final String TYPE_LAYOUT_OPTIMIZED_COMPACT_TIME_BLOCK = "optimizedCompactTimeBlock";
-  public static final String TYPE_LAYOUT_COMPACT_TIME_BLOCK = "compactTimeBlock";
-  public static final String TYPE_LAYOUT_TIME_BLOCK = "timeBlock";
-  public static final String TYPE_LAYOUT_REAL_COMPACT = "realCompact";
-  public static final String TYPE_LAYOUT_REAL_SYNCHRONOUS = "realSynchronous";
-  public static final String TYPE_LAYOUT_COMPACT = "compact";
-  public static final String TYPE_LAYOUT_TIME_SYNCHRONOUS = "timeSynchronous";
+
+
   public static final String INFO_ID = "info.id";
   public static final String PICTURE_ID = "picture.id";
   private static final short INFO_DIALOG_WAITING_TIME = 1500;
@@ -889,13 +883,13 @@ public class Settings {
 
     loadWindowSettings();
     
-    ((DeferredFontProperty)propProgramTitleFont).resetDefault();
-    ((DeferredFontProperty)propProgramInfoFont).resetDefault();
-    ((DeferredFontProperty)propChannelNameFont).resetDefault();
-    ((DeferredFontProperty)propProgramTimeFont).resetDefault();
+    ((DeferredFontProperty)Fonts.PROGRAM_TITLE).resetDefault();
+    ((DeferredFontProperty)Fonts.PROGRAM_INFO).resetDefault();
+    ((DeferredFontProperty)Fonts.CHANNEL_NAME).resetDefault();
+    ((DeferredFontProperty)Fonts.PROGRAM_TIME).resetDefault();
     
-    if(propColumnWidth.getInt() < MIN_COLUMN_WIDTH) {
-      propColumnWidth.setInt(MIN_COLUMN_WIDTH);
+    if(ProgramTable.COLUMN_WIDTH.getInt() < ProgramTable.COLUMN_WIDTH_MIN) {
+      ProgramTable.COLUMN_WIDTH.setInt(ProgramTable.COLUMN_WIDTH_MIN);
     }
     
     updateColors();
@@ -904,7 +898,7 @@ public class Settings {
   private static Color[] mHighlightingColors;
   
   public static void updateColors() {
-    int[] colors = propProgramPanelHighlightingColors.getIntArray();
+    int[] colors = Markings.HIGHLIGHTING_COLORS.getIntArray();
     mHighlightingColors = new Color[colors.length];
     
     for(int i = 0; i < colors.length; i++) {
@@ -932,19 +926,19 @@ public class Settings {
     if(mProp.getProperty("contextmenudefaultplugin") != null) {
       StringProperty propDoubleClickIf = new StringProperty(
           mProp, "contextmenudefaultplugin", ProgramInfo.getProgramInfoPluginId());
-      propLeftDoubleClickIfArray.setContextMenuMouseActionArray(new ContextMenuMouseActionSetting[] {new ContextMenuMouseActionSetting(ContextMenuManager.NO_MOUSE_MODIFIER_EX, propDoubleClickIf.getString(), ActionMenu.ID_ACTION_NONE)});
+      Mouse.LEFT_DOUBLE_CLICK_IF_ARRAY.setContextMenuMouseActionArray(new ContextMenuMouseActionSetting[] {new ContextMenuMouseActionSetting(ContextMenuManager.NO_MOUSE_MODIFIER_EX, propDoubleClickIf.getString(), ActionMenu.ID_ACTION_NONE)});
       propDoubleClickIf.setString(propDoubleClickIf.getDefault());
     }
     if(mProp.getProperty("middleclickplugin") != null) {
       StringProperty propMiddleClickIf = new StringProperty(
           mProp, "middleclickplugin", ReminderPlugin.getReminderPluginId());
-      propMiddleSingleClickIfArray.setContextMenuMouseActionArray(new ContextMenuMouseActionSetting[] {new ContextMenuMouseActionSetting(ContextMenuManager.NO_MOUSE_MODIFIER_EX, propMiddleClickIf.getString(), ActionMenu.ID_ACTION_NONE)});
+      Mouse.MIDDLE_SINGLE_CLICK_IF_ARRAY.setContextMenuMouseActionArray(new ContextMenuMouseActionSetting[] {new ContextMenuMouseActionSetting(ContextMenuManager.NO_MOUSE_MODIFIER_EX, propMiddleClickIf.getString(), ActionMenu.ID_ACTION_NONE)});
       propMiddleClickIf.setString(propMiddleClickIf.getDefault());
     }
     if(mProp.getProperty("middledoubleclickplugin") != null) {
       StringProperty propMiddleDoubleClickIf = new StringProperty(
           mProp, "middledoubleclickplugin", FavoritesPlugin.getFavoritesPluginId());
-      propMiddleDoubleClickIfArray.setContextMenuMouseActionArray(new ContextMenuMouseActionSetting[] {new ContextMenuMouseActionSetting(ContextMenuManager.NO_MOUSE_MODIFIER_EX, propMiddleDoubleClickIf.getString(), ActionMenu.ID_ACTION_NONE)});
+      Mouse.MIDDLE_DOUBLE_CLICK_IF_ARRAY.setContextMenuMouseActionArray(new ContextMenuMouseActionSetting[] {new ContextMenuMouseActionSetting(ContextMenuManager.NO_MOUSE_MODIFIER_EX, propMiddleDoubleClickIf.getString(), ActionMenu.ID_ACTION_NONE)});
       propMiddleDoubleClickIf.setString(propMiddleDoubleClickIf.getDefault());
     }
     if(mProp.getProperty("leftSingleCtrlClickIf") != null) {
@@ -955,7 +949,7 @@ public class Settings {
     }
     
     if(!leftSingleList.isEmpty()) {
-      propLeftSingleClickIfArray.setContextMenuMouseActionArray(leftSingleList.toArray(new ContextMenuMouseActionSetting[leftSingleList.size()]));
+      Mouse.LEFT_SINGLE_CLICK_IF_ARRAY.setContextMenuMouseActionArray(leftSingleList.toArray(new ContextMenuMouseActionSetting[leftSingleList.size()]));
     }
     
     try {
@@ -1131,18 +1125,18 @@ public class Settings {
     
     MainFrame mainFrame = MainFrame.getInstance();
 
-    propArr = new Property[] { propProgramPanelOnAirProgramsShowingBorder,
-        propProgramPanelUsesExtraSpaceForMarkIcons,
-        propProgramPanelWithMarkingsShowingBoder, propProgramPanelUsedDefaultMarkPriority,
-        propProgramPanelColorOnAirLight, propProgramPanelColorOnAirDark, propProgramPanelForegroundColor,
-        propProgramTableBackgroundSingleColor, propProgramPanelAllowTransparency, propAlwaysShowTabBarForCenterPanel,
-        propProgramPanelShowOriginialTitles, propProgramPanelHighlightingColors};
+    propArr = new Property[] { ProgramPanel.BORDER_ON_AIR_PROGRAMS_SHOW,
+        Markings.USES_EXTRA_SPACE_FOR_MARK_ICONS,
+        Markings.WITH_MARKINGS_SHOWING_BORDER, Markings.USED_DEFAULT_MARK_PRIORITY,
+        ProgramPanel.COLOR_ON_AIR_LIGHT, ProgramPanel.COLOR_ON_AIR_DARK, ProgramPanel.COLOR_FOREGROUND,
+        ProgramTable.COLOR_BACKGROUND_SINGLE, ProgramPanel.TRANSPARENCY_ALLOW, CenterPanels.ALWAYS_SHOW_TAB_BAR_FOR_CENTER_PANEL,
+        ProgramPanel.ORIGINIAL_TITLES_SHOW, Markings.HIGHLIGHTING_COLORS};
 
     mainFrame.updateCenterPanels();
     
-    Property[] propArrFont = new Property[] { propProgramTitleFont, propProgramInfoFont,
-        propProgramTimeFont, propChannelNameFont, propUseDefaultFonts,
-        propEnableAntialiasing, propProgramTextLineGap};
+    Property[] propArrFont = new Property[] { Fonts.PROGRAM_TITLE, Fonts.PROGRAM_INFO,
+        Fonts.PROGRAM_TIME, Fonts.CHANNEL_NAME, Fonts.USE_DEFAULT,
+        Fonts.ANTIALIASING_ENABLED, Fonts.PROGRAM_TEX_TLINE_GAP};
     
     boolean fontChanged = mProp.hasChanged(propArrFont);
     
@@ -1159,97 +1153,97 @@ public class Settings {
       scrollPane.forceRepaintAll();
     }
 
-    propArr = new Property[] {propPictureType, propPictureStartTime,
-        propPictureEndTime, propIsPictureShowingDescription, propPicturePluginIds,
-        propPictureDuration, propProgramTableCutTitle,
-        propProgramTableCutTitleLines, propPictureDescriptionLines,
-        propProgramPanelMaxLines, propProgramPanelShortDurationActive,
-        propProgramPanelShortDurationMinutes, propShowProgramTablePictureBorder};
+    propArr = new Property[] {Pictures.TYPE, Pictures.TIME_START,
+        Pictures.TIME_END, Pictures.DESCRIPTION_SHOW, Pictures.PLUGIN_IDS,
+        Pictures.DURATION, ProgramPanel.TITLE_CUT_LINES,
+        ProgramPanel.TITLE_CUT, Pictures.DESCRIPTION_LINES,
+        ProgramPanel.MAX_LINES, ProgramPanel.DESCRIPTION_LIMIT_BY_DURATION,
+        ProgramPanel.DESCRIPTION_LIMIT_BY_DURATION_MINUTES, Pictures.BORDER_SHOW};
 
     if(mProp.hasChanged(propArr)) {
       mainFrame.getProgramTableScrollPane().forceRepaintAll();
     }
 
-    if(mProp.hasChanged(propProgramPanelHyphenation)) {
+    if(mProp.hasChanged(ProgramPanel.HYPHENATION)) {
       TextLineBreakerStringWidth.resetHyphenator();
       mainFrame.getProgramTableScrollPane().forceRepaintAll();
     }
     
-    if (mProp.hasChanged(propColumnWidth)) {
+    if (mProp.hasChanged(ProgramTable.COLUMN_WIDTH)) {
       util.ui.ProgramPanel.updateColumnWidth();
       ProgramTableScrollPane scrollPane = mainFrame.getProgramTableScrollPane();
-      scrollPane.setColumnWidth(propColumnWidth.getInt());
+      scrollPane.setColumnWidth(ProgramTable.COLUMN_WIDTH.getInt());
       scrollPane.forceRepaintAll();
     }
 
-    if (mProp.hasChanged(propTableLayout)) {
+    if (mProp.hasChanged(ProgramTable.LAYOUT)) {
       ProgramTableScrollPane scrollPane = mainFrame.getProgramTableScrollPane();
       scrollPane.getProgramTable().setProgramTableLayout(null);
       scrollPane.getProgramTable().updateBackground();
       scrollPane.forceRepaintAll();
     }
 
-    if (mProp.hasChanged(propDeactivatedPlugins)) {
+    if (mProp.hasChanged(Plugins.DEACTIVATED)) {
       mainFrame.updatePluginsMenu();
       mainFrame.updateToolbar();
     }
 
-    propArr = new Property[] { propTableBackgroundStyle,
-        propOneImageBackground, propTimeBlockSize, propTimeBlockBackground1,
-        propTimeBlockBackground2, propTimeBlockShowWest,
-        propTimeBlockWestImage1, propTimeBlockWestImage2,
-        propTimeOfDayBackgroundEdge, propTimeOfDayBackgroundEarly,
-        propTimeOfDayBackgroundMidday, propTimeOfDayBackgroundAfternoon,
-        propTimeOfDayBackgroundEvening };
+    propArr = new Property[] { ProgramTable.STYLE_BACKGROUND,
+        ProgramTable.ONE_IMAGE_BACKGROUND, ProgramTable.TIME_BLOCK_SIZE, ProgramTable.TIME_BLOCK_BACKGROUND1,
+        ProgramTable.TIME_BLOCK_BACKGROUND2, ProgramTable.TIME_BLOCK_SHOW_WEST,
+        ProgramTable.TIME_BLOCK_WEST_IMAGE1, ProgramTable.TIME_BLOCK_WEST_IMAGE2,
+        ProgramTable.TIME_OF_DAY_BACKGROUND_EDGE, ProgramTable.TIME_OF_DAY_BACKGROUND_EARLY,
+        ProgramTable.TIME_OF_DAY_BACKGROUND_MIDDAY, ProgramTable.TIME_OF_DAY_BACKGROUND_AFTERNOON,
+        ProgramTable.TIME_OF_DAY_BACKGROUND_EVENING };
     if (mProp.hasChanged(propArr)) {
       ProgramTableScrollPane scrollPane = mainFrame.getProgramTableScrollPane();
       scrollPane.getProgramTable().updateBackground();
       mainFrame.getProgramTableScrollPane().forceRepaintAll();
     }
 
-    if(mProp.hasChanged(propTimeBlockSize)) {
+    if(mProp.hasChanged(ProgramTable.TIME_BLOCK_SIZE)) {
       mainFrame.getProgramTableScrollPane().forceRepaintAll();
     }
 
-    propArr = new Property[] { propToolbarButtonStyle, propToolbarButtons,
-        propToolbarLocation, propIsToolbarVisible, propToolbarUseBigIcons };
+    propArr = new Property[] { ToolBar.BUTTON_STYLE, ToolBar.BUTTONS,
+        ToolBar.LOCATION, ToolBar.IS_VISIBLE, ToolBar.BIG_ICONS_USE};
     if (mProp.hasChanged(propArr)) {
       mainFrame.updateToolbar();
     }
 
-    if (mProp.hasChanged(propTimeButtons)) {
+    if (mProp.hasChanged(Buttons.TIME_BUTTONS)) {
       mainFrame.updateTimeButtons();
     }
 
-    if (mProp.hasChanged(propSubscribedChannels)) {
+    if (mProp.hasChanged(Channels.SUBSCRIBED)) {
       ChannelList.reload();
       DefaultProgramTableModel model = mainFrame.getProgramTableModel();
       model.setChannels(ChannelList.getSubscribedChannels());
       mainFrame.updateChannellist();
     }
     
-    if(mProp.hasChanged(propRandomPersona) && !mProp.hasChanged(propSelectedPersona)) {
+    if(mProp.hasChanged(LookAndFeel.PERSONA_RANDOM) && !mProp.hasChanged(LookAndFeel.PERSONA_SELECTED)) {
       Persona.getInstance().applyPersona();
     }
     
-    if(mProp.hasChanged(propSelectedPersona)) {
+    if(mProp.hasChanged(LookAndFeel.PERSONA_SELECTED)) {
       Persona.getInstance().applyPersona();
     }
 
-    propArr = new Property[] { propProgramTableStartOfDay,
-        propProgramTableEndOfDay };
+    propArr = new Property[] { ProgramTable.START_OF_DAY,
+        ProgramTable.END_OF_DAY };
     if (mProp.hasChanged(propArr)) {
       DefaultProgramTableModel model = mainFrame.getProgramTableModel();
-      int startOfDay = propProgramTableStartOfDay.getInt();
-      int endOfDay = propProgramTableEndOfDay.getInt();
+      int startOfDay = ProgramTable.START_OF_DAY.getInt();
+      int endOfDay = ProgramTable.END_OF_DAY.getInt();
       model.setTimeRange(startOfDay, endOfDay);
       model.setDate(mainFrame.getCurrentSelectedDate(), null, null);
     }
 
-    propArr = new Property[] { propProgramTableIconPlugins,
-        propProgramInfoFields, propProgramInfoFieldsSeparators,
-        propProgramTableIconPluginsAlternative,
-        propProgramInfoFieldsAlternative, propProgramInfoFieldsSeparatorsAlternative};
+    propArr = new Property[] { ProgramPanel.ICON_PLUGINS,
+        ProgramPanel.INFO_FIELDS, ProgramPanel.INFO_FIELDS_SEPARATORS,
+        ProgramPanel.ICON_PLUGINS_ALTERNATIVE,
+        ProgramPanel.INFO_FIELDS_ALTERNATIVE, ProgramPanel.INFO_FIELDS_SEPARATORS_ALTERNATIVE};
     if (mProp.hasChanged(propArr)) {
       // Force a recreation of the table content
       DefaultProgramTableModel model = mainFrame.getProgramTableModel();
@@ -1257,16 +1251,16 @@ public class Settings {
     }
 
     propArr = new Property[] {
-        propShowChannelIconsInProgramTable, propShowChannelIconsInChannellist,
-        propShowChannelNamesInProgramTable, propShowChannelNamesInChannellist,
-        propShowSortNumberInProgramTable, propShowSortNumberInProgramLists};
+        IconAndNames.SHOW_ICONS_IN_PROGRAM_TABLE, IconAndNames.SHOW_ICONS_IN_CHANNEL_LIST,
+        IconAndNames.SHOW_NAMES_IN_PROGRAM_TABLE, IconAndNames.SHOW_NAMES_IN_CHANNEL_LIST,
+        IconAndNames.SHOW_SORT_NUMBER_IN_PROGRAM_TABLE, IconAndNames.SHOW_SORT_NUMBER_IN_PROGRAM_LISTS};
     if (mProp.hasChanged(propArr)) {
       mainFrame.getProgramTableScrollPane().updateChannelPanel();
       mainFrame.updateChannelChooser();
     }
 
-    if(mProp.hasChanged(propTVDataDirectory)) {
-      TvDataServiceProxyManager.getInstance().setTvDataDir(new File(propTVDataDirectory.getString()));
+    if(mProp.hasChanged(Directories.TV_DATA)) {
+      TvDataServiceProxyManager.getInstance().setTvDataDir(new File(Directories.TV_DATA.getString()));
 
       TvDataBase.getInstance().updateTvDataBase();
       TvDataBase.getInstance().checkTvDataInventory(TvDataBase.DEFAULT_DATA_LIFESPAN);
@@ -1274,12 +1268,12 @@ public class Settings {
       MainFrame.getInstance().handleChangedTvDataDir();
     }
 
-    if (mProp.hasChanged(propViewDateLayout)) {
+    if (mProp.hasChanged(LookAndFeel.VIEW_DATE_LAYOUT)) {
       MainFrame.getInstance().createDateSelector();
       MainFrame.getInstance().setShowDatelist(true, true); // set date list visible (and save), otherwise the setting has no effect on restart
     }
 
-    if(mProp.hasChanged(propCanReceiveProtocolMessages)) {
+    if(mProp.hasChanged(General.CAN_RECEIVE_PROTOCOL_MESSAGE)) {
       ProtocolHandler.getInstance().handleSettingsChanged();
     }
 
@@ -1296,25 +1290,13 @@ public class Settings {
    * @return The Time-Pattern for SimpleFormatter's
    */
   public static String getTimePattern() {
-    if (propTwelveHourFormat.getBoolean()) {
+    if (Locales.TWELVE_HOUR_FORMAT.getBoolean()) {
       return "hh:mm a";
     } else {
       return "HH:mm";
     }
   }
-
-  public static final VersionProperty propTVBrowserVersion = new VersionProperty(
-      mProp, "version", null);
-
-  public static final BooleanProperty propTVBrowserVersionIsStable = new BooleanProperty(
-      mProp, "versionIsStable", false);
-
-  public static final BooleanProperty propUseDefaultFonts = new BooleanProperty(
-      mProp, "usedefaultfonts", true);
-
-  public static final BooleanProperty propEnableAntialiasing = new BooleanProperty(
-      mProp, "enableantialiasing", true);
-
+  
   private static String getDefaultTvDataDir() {
     return (TVBrowser.isTransportable() && !mCopyToSystem) ? "./settings/tvdata" : getUserDirectoryName() + File.separator + "tvdata";
   }
@@ -1322,15 +1304,7 @@ public class Settings {
   private static String getDefaultPluginsDir() {
     return getUserSettingsDirName() + "/plugins";
   }
-
-  public static final StringProperty propTVDataDirectory = new StringProperty(
-      mProp, "dir.tvdata", mDefaultSettings.getProperty("tvdatadir",
-          getDefaultTvDataDir()));
-
-  public static final StringProperty propPluginsDirectory = new StringProperty(
-      mProp, "dir.plugins", mDefaultSettings.getProperty("pluginsdir",
-          getDefaultPluginsDir()));
-
+  
   public static final String getCountry() {
     final String country = Locale.getDefault().getCountry();
     String result = Locale.getDefault().getLanguage();
@@ -1348,517 +1322,7 @@ public class Settings {
     return result.toLowerCase();
   }
   
-  /**
-   * selected channel country filter in channel settings
-   * @since 3.0
-   */
-  public static final StringProperty propSelectedChannelCountry = new StringProperty(
-      mProp, "selectedChannelCountry", "");
-
-  /**
-   * selected plugin filter in channel settings
-   * @since 3.1.1
-   */
-  public static final StringProperty propSelectedChannelPlugin = new StringProperty(
-      mProp, "selectedChannelPlugin", "");
-
-  /**
-   * subscribed channels
-   */
-  public static final ChannelArrayProperty propSubscribedChannels = new ChannelArrayProperty(
-      mProp, "subscribedchannels", new Channel[0]);
-  
-  public static final StringArrayProperty propSubscribedChannelsSeparators =  new StringArrayProperty(
-      mProp, "subscribedChannelsSeparators", new String[0]);
-
-  public static final ChoiceProperty propTableLayout = new ChoiceProperty(
-      mProp, "table.layout", TYPE_LAYOUT_OPTIMIZED_COMPACT_TIME_BLOCK, new String[] {
-          TYPE_LAYOUT_TIME_SYNCHRONOUS, TYPE_LAYOUT_COMPACT, TYPE_LAYOUT_REAL_SYNCHRONOUS , TYPE_LAYOUT_REAL_COMPACT,
-          TYPE_LAYOUT_TIME_BLOCK, TYPE_LAYOUT_COMPACT_TIME_BLOCK, TYPE_LAYOUT_OPTIMIZED_COMPACT_TIME_BLOCK});
-
-  public static final ChoiceProperty propTableBackgroundStyle = new ChoiceProperty(
-      mProp, "tablebackground.style", "uiTimeBlock", new String[] { "singleColor",
-          "oneImage", TYPE_LAYOUT_TIME_BLOCK, "timeOfDay", "uiColor" , "uiTimeBlock" });
-
-  public static final StringProperty propOneImageBackground = new StringProperty(
-      mProp, "tablebackground.oneImage.image", "imgs/columns_evening.jpg");
-
-  public static final IntProperty propTimeBlockSize = new IntProperty(mProp,
-      "tablebackground.timeBlock.size", 2);
-
-  public static final StringProperty propTimeBlockBackground1 = new StringProperty(
-      mProp, "tablebackground.timeBlock.image1", "imgs/time_block_white.png");
-
-  public static final StringProperty propTimeBlockBackground2 = new StringProperty(
-      mProp, "tablebackground.timeBlock.image2", "imgs/time_block_gray.png");
-
-  public static final StringProperty propTimeBlockWestImage1 = new StringProperty(
-      mProp, "tablebackground.timeBlock.west1", "imgs/time_block_white.png");
-
-  public static final StringProperty propTimeBlockWestImage2 = new StringProperty(
-      mProp, "tablebackground.timeBlock.west2", "imgs/time_block_gray.png");
-
-  public static final BooleanProperty propTimeBlockShowWest = new BooleanProperty(
-      mProp, "tablebackground.timeBlock.showWest", true);
-
-  public static final StringProperty propTimeOfDayBackgroundEdge = new StringProperty(
-      mProp, "tablebackground.timeofday.edge", "imgs/columns_edge.jpg");
-
-  public static final StringProperty propTimeOfDayBackgroundEarly = new StringProperty(
-      mProp, "tablebackground.timeofday.early", "imgs/columns_early.jpg");
-
-  public static final StringProperty propTimeOfDayBackgroundMidday = new StringProperty(
-      mProp, "tablebackground.timeofday.midday", "imgs/columns_midday.jpg");
-
-  public static final StringProperty propTimeOfDayBackgroundAfternoon = new StringProperty(
-      mProp, "tablebackground.timeofday.afternoon",
-      "imgs/columns_afternoon.jpg");
-
-  public static final StringProperty propTimeOfDayBackgroundEvening = new StringProperty(
-      mProp, "tablebackground.timeofday.evening", "imgs/columns_evening.jpg");
-
-  public static final BooleanProperty propShowAssistant = new BooleanProperty(
-      mProp, "showassistant", true);
-
-  public static final StringProperty propUserDefinedWebbrowser = new StringProperty(
-      mProp, "webbrowser", null);
-
-  public static final StringProperty propUserDefinedWebbrowserParams = new StringProperty(
-      mProp, "webbrowserParams", "{0}");
-
-  public static final ColorProperty propProgramTableBackgroundSingleColor = new ColorProperty(
-      mProp, "backgroundSingleColor", Color.white);
-
-  /*
-   * Basic tray settings
-   */
-
-  public static final BooleanProperty propTrayIsEnabled = new BooleanProperty(
-      mProp, "trayIsEnabled", true);
-
-  public static final BooleanProperty propTrayIsAntialiasing = new BooleanProperty(
-      mProp, "trayIsAntialiasing", true);
-
-  public static final BooleanProperty propTrayMinimizeTo = new BooleanProperty(
-      mProp, "MinimizeToTray", false);
-  
-  public static final BooleanProperty propOnlyMinimizeWhenWindowClosing = new BooleanProperty(
-      mProp, "onlyMinimizeWhenWindowClosing", false);
-
-  public static final BooleanProperty propNowOnRestore = new BooleanProperty(
-  		mProp, "jumpNowOnRestore",true);
-
-  public static final BooleanProperty propTrayFilterNotMarked = new BooleanProperty(
-      mProp, "trayFilterNotMarked",false);
-
-  public static final BooleanProperty propTrayFilterNot = new BooleanProperty(
-      mProp, "trayFilterAll",false);
-
-  /*
-   * Channel settings for the tray.
-   */
-
-  public static final BooleanProperty propTrayUseSpecialChannels = new BooleanProperty(
-      mProp, "trayUseSpecialChannels", false);
-
-  public static final ChannelArrayProperty propTraySpecialChannels = new ChannelArrayProperty(
-      mProp, "traySpecialChannels", new devplugin.Channel[] {});
-
-  public static final IntProperty propTrayChannelWidth = new IntProperty(
-      mProp, "trayChannelWidth", 78);
-
-  /*
-   * Settings for the ON_TIME_TYPE of the ProgramMenuItem.
-   */
-
-  public static final BooleanProperty propTrayOnTimeProgramsEnabled = new BooleanProperty(
-      mProp, "trayOnTimeProgramsEnabled", true);
-
-  public static final BooleanProperty propTrayOnTimeProgramsInSubMenu = new BooleanProperty(
-      mProp, "trayOnTimeProgramsInSubMenus", true);
-
-  public static final BooleanProperty propTrayOnTimeProgramsContainsTime = new BooleanProperty(
-      mProp, "trayOnTimeProgramsContainsTime", false);
-
-  public static final BooleanProperty propTrayOnTimeProgramsContainsIcon = new BooleanProperty(
-      mProp, "trayOnTimeProgramsContainsIcon", true);
-
-  public static final BooleanProperty propTrayOnTimeProgramsContainsName = new BooleanProperty(
-      mProp, "trayOnTimeProgramsContainsName", true);
-  
-  public static final BooleanProperty propTrayOnTimeProgramsShowingSortNumber = new BooleanProperty(
-      mProp, "trayOnTimeProgramsShowingSortNumber", true);
-
-  public static final BooleanProperty propTrayOnTimeProgramsContainsToolTip = new BooleanProperty(
-      mProp, "trayOnTimeProgramsContainsToolTip", true);
-
-  public static final BooleanProperty propTrayOnTimeProgramsShowProgress = new BooleanProperty(
-      mProp, "trayOnTimeProgramsShowProgress", true);
-
-  public static final ColorProperty propTrayOnTimeProgramsDarkBackground = new ColorProperty(
-      mProp, "trayOnTimeProgramsDarkBackground", new Color(255, 150, 0, 80));
-
-  public static final ColorProperty propTrayOnTimeProgramsLightBackground = new ColorProperty(
-      mProp, "trayOnTimeProgramsLightBackground", new Color(255, 150, 0, 40));
-  
-  public static final BooleanProperty propScrollToTimeMarkingActivated = new BooleanProperty(
-      mProp, "scrollToTimeMarkingActivated", true);
-  
-  public static final ColorProperty propScrollToTimeProgramsDarkBackground = new ColorProperty(
-      mProp, "scrollToTimeProgramsDarkBackground", new Color(255, 150, 0, 80));
-
-  public static final ColorProperty propScrollToTimeProgramsLightBackground = new ColorProperty(
-      mProp, "scrollToTimeProgramsLightBackground", new Color(255, 150, 0, 40));
-
-  public static final ColorProperty propHighlightChannelProgramsBackground = new ColorProperty(
-      mProp, "scrollToChannelProgramsBackground", new Color(255, 150, 0, 40));
-
-  public static final BooleanProperty propHighlightChannelColumnByScrolling = new BooleanProperty(
-      mProp, "scrollToChannelMarkingActivated", true);
-  /**
-   * @since 4.2.4
-   */
-  public static final BooleanProperty propHighlightChannelColumnByMouse = new BooleanProperty(
-      mProp, "highlightChannelColumnByMouse", true);
-  /*
-   * Settings for the NOW_TYPE of the ProgramMenuItem.
-   */
-
-  public static final BooleanProperty propTrayNowProgramsEnabled = new BooleanProperty(
-      mProp, "trayNowProgramsEnabled", true);
-
-  public static final BooleanProperty propTrayNowProgramsInSubMenu = new BooleanProperty(
-      mProp, "trayNowProgramsInSubMenus", false);
-
-  public static final BooleanProperty propTrayNowProgramsContainsTime = new BooleanProperty(
-      mProp, "trayNowProgramsContainsTime", false);
-
-  public static final BooleanProperty propTrayNowProgramsContainsIcon = new BooleanProperty(
-      mProp, "trayNowProgramsContainsIcon", true);
-
-  public static final BooleanProperty propTrayNowProgramsContainsName = new BooleanProperty(
-      mProp, "trayNowProgramsContainsName", true);
-
-  public static final BooleanProperty propTrayNowProgramsContainsToolTip = new BooleanProperty(
-      mProp, "trayNowProgramsContainsToolTip", true);
-  
-  public static final BooleanProperty propTrayNowProgramsShowingSortNumber = new BooleanProperty(
-      mProp, "trayNowProgramsShowingSortNumber", true);
-
-  /*
-   * Settings for the SOON_TYPE of the ProgramMenuItem.
-   */
-
-  public static final BooleanProperty propTraySoonProgramsEnabled = new BooleanProperty(
-      mProp, "traySoonProgramsEnabled", true);
-
-  public static final BooleanProperty propTraySoonProgramsContainsTime = new BooleanProperty(
-      mProp, "traySoonProgramsContainsTime", true);
-
-  public static final BooleanProperty propTraySoonProgramsContainsIcon = new BooleanProperty(
-      mProp, "traySoonProgramsContainsIcon", true);
-
-  public static final BooleanProperty propTraySoonProgramsContainsName = new BooleanProperty(
-      mProp, "traySoonProgramsContainsName", true);
-
-  public static final BooleanProperty propTraySoonProgramsContainsToolTip = new BooleanProperty(
-      mProp, "traySoonProgramsContainsToolTip", true);
-  
-  public static final BooleanProperty propTraySoonProgramsShowingSortNumber = new BooleanProperty(
-      mProp, "traySoonProgramsShowingSortNumber", true);
-  /*
-   * Settings for the IMPORTANT_TYPE of the ProgramMenuItem.
-   */
-
-  public static final IntProperty propTrayImportantProgramsPriority = new IntProperty(
-      mProp, "trayImportantProgramsPriority", 0
-      );
-
-  public static final BooleanProperty propTrayImportantProgramsEnabled = new BooleanProperty(
-      mProp, "trayImportantProgramsEnabled", true);
-
-  public static final BooleanProperty propTrayImportantProgramsInSubMenu = new BooleanProperty(
-      mProp, "trayImportantProgramsInSubMenu", false);
-
-  public static final IntProperty propTrayImportantProgramsSize = new IntProperty(
-      mProp, "trayImportantProgramsSize", 5);
-
-  public static final BooleanProperty propTrayImportantProgramsContainsIcon = new BooleanProperty(
-      mProp, "trayImportantProgramsContainsIcon", true);
-
-  public static final BooleanProperty propTrayImportantProgramsContainsName = new BooleanProperty(
-      mProp, "trayImportantProgramsContainsName", true);
-
-  public static final BooleanProperty propTrayImportantProgramsContainsDate = new BooleanProperty(
-      mProp, "trayImportantProgramsContainsDate", true);
-
-  public static final BooleanProperty propTrayImportantProgramsContainsTime = new BooleanProperty(
-      mProp, "trayImportantProgramsContainsTime", true);
-
-  public static final BooleanProperty propTrayImportantProgramsContainsToolTip = new BooleanProperty(
-      mProp, "trayImportantProgramsContainsToolTip", true);
-  
-  public static final BooleanProperty propTrayImportantProgramsShowingSortNumber = new BooleanProperty(
-      mProp, "trayImportantProgramsShowingSortNumber", true);
-
-  /*
-   * Toolbar settings
-   */
-
-  public static final ChoiceProperty propToolbarButtonStyle = new ChoiceProperty(
-      mProp, "buttontype", "icon", new String[] { "text&icon", "text", "icon" });
-
-  public static final BooleanProperty propIsToolbarVisible = new BooleanProperty(
-      mProp, "isToolbarVisible", true);
-  
-  /**
-   * Property to store visibility state of menu bar.
-   */
-  public static final BooleanProperty propIsMenubarVisible = new BooleanProperty(
-      mProp, "isMenubarVisible", true);
-  
-  /**
-   * Property to store if additonal space should be inserted above toolbar.
-   */
-  public static final BooleanProperty propIsToolbarAdditonalTopSpace = new BooleanProperty(
-      mProp, "isToolbarAdditonalTopSpace", false);
-
-  /**
-  * Property to store if additonal space should be inserted below toolbar.
-  */
- public static final BooleanProperty propIsToolbarAdditonalBottomSpace = new BooleanProperty(
-     mProp, "isToolbarAddtionalBottomSpace", false);
-  
-  public static final BooleanProperty propIsStatusbarVisible = new BooleanProperty(
-      mProp, "isStatusbarVisible", true);
-  
-  public static final StringProperty propJGoodiesTheme = new JGoodiesThemeProperty(
-      mProp, "jgoodies.theme");
-
-  public static final BooleanProperty propJGoodiesShadow = new BooleanProperty(
-      mProp, "jgoodies.dropshadow", false);
-
-  public static final StringProperty propLookAndFeel = new StringProperty(
-      mProp, "lookandfeel1_1", mDefaultSettings.getProperty("lookandfeel",
-          UiUtilities.getDefaultLookAndFeelClassName(false)));
-
-  public static final IntProperty propColumnWidth = new VariableIntProperty(mProp,
-      "columnwidth", 200);
-
-  public static final IntArrayProperty propTimeButtons = new IntArrayProperty(
-      mProp, "timeButtons", new int[] { 6 * 60, 12 * 60, 18 * 60, 20 * 60 + 15 });
-
-  public static final StringArrayProperty propToolbarButtons = new StringArrayProperty(
-      mProp, "toolbarButtons_2.0", null // we show all buttons, if this property
-  // is not set
-  );
-
-  public static final BooleanProperty propToolbarUseBigIcons = new BooleanProperty(
-      mProp, "toolbarUseBigIcons", true);
-
-  public static final StringProperty propToolbarLocation = new StringProperty(
-      mProp, "toolbarLocation", "north");  
-  
-  public static final ContextMenuMouseActionArrayProperty propLeftSingleClickIfArray = new ContextMenuMouseActionArrayProperty(
-      mProp, "leftSingleClickIfArray", new ContextMenuMouseActionSetting[] {new ContextMenuMouseActionSetting(ContextMenuManager.NO_MOUSE_MODIFIER_EX,ProgramInfo.getProgramInfoPluginId(),ActionMenu.ID_ACTION_NONE)});
-  
-  public static final ContextMenuMouseActionArrayProperty propLeftDoubleClickIfArray = new ContextMenuMouseActionArrayProperty(
-      mProp, "leftDoubleClickIfArray", new ContextMenuMouseActionSetting[] {new ContextMenuMouseActionSetting(ContextMenuManager.NO_MOUSE_MODIFIER_EX,ProgramInfo.getProgramInfoPluginId(),ActionMenu.ID_ACTION_NONE)});
-
-  public static final ContextMenuMouseActionArrayProperty propMiddleSingleClickIfArray = new ContextMenuMouseActionArrayProperty(
-      mProp, "middleSingleClickIfArray", new ContextMenuMouseActionSetting[] {new ContextMenuMouseActionSetting(ContextMenuManager.NO_MOUSE_MODIFIER_EX,ReminderPlugin.getReminderPluginId(),ActionMenu.ID_ACTION_NONE)});
-  
-  public static final ContextMenuMouseActionArrayProperty propMiddleDoubleClickIfArray = new ContextMenuMouseActionArrayProperty(
-      mProp, "middleDoubleClickIfArray", new ContextMenuMouseActionSetting[] {new ContextMenuMouseActionSetting(ContextMenuManager.NO_MOUSE_MODIFIER_EX,FavoritesPlugin.getFavoritesPluginId(),1)});
-  
-  /**
-   * the last active program filter
-   */
-  public static final StringProperty propLastUsedFilter = new StringProperty(
-      mProp, "lastusedfilter", null);
-
-  /**
-   * the last active channel group for filtering the channel list
-   */
-  public static final StringProperty propLastUsedChannelGroup = new StringProperty(
-      mProp, "lastchannelgroup", null);
-
-  /**
-   * The order of the plugin IDs.
-   * <p>
-   * In former times this property hold the list of plugin class names that
-   * should be activated on startup (in the right order). Now it holds IDs, not
-   * class names and activation is controlled by {@link #propDeactivatedPlugins}.
-   */
-  public static final StringArrayProperty propPluginOrder = new StringArrayProperty(
-      mProp, "plugins", null);
-
-  /**
-   * Order of the Plugins in the Context-Menu.
-   */
-  public static final StringArrayProperty propContextMenuOrder = new StringArrayProperty(mProp, "contextMenuOrder",
-      new String[] { "programinfo.ProgramInfo", "searchplugin.SearchPlugin", "reminderplugin.ReminderPlugin",
-          "favoritesplugin.FavoritesPlugin", SeparatorMenuItem.SEPARATOR, "java.webplugin.WebPlugin",
-          "java.simplemarkerplugin.SimpleMarkerPlugin", "java.captureplugin.CapturePlugin" });
-  
-  
-
-  /**
-   * All disabled Items of the ContextMenu
-   */
-  public static final StringArrayProperty propContextMenuDisabledItems = new StringArrayProperty(
-      mProp, "contextMenuDisabledItems", null);
-  
-  /**
-   * All sub actions of plugins that are disabled
-   * @since 3.4.5
-   */
-  public static final StringArrayProperty propContextMenuDisabledSubItems = new StringArrayProperty(
-      mProp, "propContextMenuDisabledSubItems", null);
-
-  /**
-   * some plugins are installed by default, but not activated
-   */
-  private static final String[] DEFAULT_DISABLED_PLUGINS;
-  static {
-    ArrayList<String> plugins = new ArrayList<String>();
-    plugins.add("java.showviewplugin.ShowviewPlugin"); // no longer available
-    plugins.add("java.i18nplugin.I18NPlugin"); // developers only
-    if (!OperatingSystem.isMacOs()) {
-      plugins.add("java.growlplugin.GrowlPlugin"); // needs Growl for Windows
-    }
-    plugins.add("java.blogthisplugin.BlogThisPlugin"); // typical users don't blog
-    DEFAULT_DISABLED_PLUGINS = plugins.toArray(new String[plugins.size()]);
-  }
-
-  /**
-   * The ID's of the plugins that have been deactivated.
-   * <p>
-   * NOTE: By remembering the deactivated plugins rather then the activated plugins
-   * new plugins are activated automatically.
-   */
-  public static final StringArrayProperty propDeactivatedPlugins = new StringArrayProperty(
-      mProp, "deactivatedPlugins", DEFAULT_DISABLED_PLUGINS);
-
-  public static final IntProperty propDownloadPeriod = new IntProperty(mProp,
-      "downloadperiod", 1);
-
-  public static final ChoiceProperty propAutoDownloadType = new ChoiceProperty(
-      mProp, "autodownload", "daily", new String[] { "startup", "daily",
-          "every3days", "weekly", "never" });
-  
-  /**@since 4.2.2*/
-  public static final BooleanProperty propAutoUpdatePrimeTime = new BooleanProperty(
-      mProp, "autoUpdatePrimeTime", false);
-
-  public static final IntProperty propAutoDownloadPeriod = new IntProperty(
-      mProp, "autodownloadperiod", 0);
-
-  public static final BooleanProperty propAskForAutoDownload = new BooleanProperty(
-      mProp, "askForAutoDownload", false);
-  
-  public static final BooleanProperty propSaveDefaultDataUpdateValuesDefault = new BooleanProperty(
-      mProp, "saveDefaultDataUpdateValuesDefault", true);
-
-  public static final DateProperty propLastDownloadDate = new DateProperty(
-      mProp, "lastdownload", Date.getCurrentDate().addDays(-100));
-  
-  /**@since 4.2.2*/
-  public static final IntProperty propLastDownloadTime = new IntProperty(
-      mProp, "lastdownloadTime", 0);
-
-  public static final FontProperty propProgramTitleFont = new DeferredFontProperty(
-      mProp, "font.programtitle", DEFAULT_PROGRAMTITLEFONT);
-
-  public static final FontProperty propProgramInfoFont = new DeferredFontProperty(
-      mProp, "font.programinfo", DEFAULT_PROGRAMINFOFONT);
-
-  public static final FontProperty propChannelNameFont = new DeferredFontProperty(
-      mProp, "font.channelname", DEFAULT_CHANNELNAMEFONT);
-
-  public static final FontProperty propProgramTimeFont = new DeferredFontProperty(
-      mProp, "font.programtime", DEFAULT_PROGRAMTIMEFONT);
-  
-  public static final IntProperty propProgramTextLineGap = new IntProperty(
-      mProp, "font.lineGap", 0);
-
-  public static final ProgramFieldTypeArrayProperty propProgramInfoFields = new ProgramFieldTypeArrayProperty(
-      mProp, "programpanel.infoFields", new ProgramFieldType[] {
-          ProgramFieldType.GENRE_TYPE, ProgramFieldType.EPISODE_TYPE,
-          ProgramFieldType.ORIGIN_TYPE, ProgramFieldType.PRODUCTION_YEAR_TYPE,
-          ProgramFieldType.SHORT_DESCRIPTION_TYPE });
-  
-  /** Contains the separators for the selected program info filed of a program panel */
-  public static final StringArrayProperty propProgramInfoFieldsSeparators = new StringArrayProperty(
-      mProp, "programpanel.infoFieldsSeparators", new String[] {
-         " - "," - ",
-         " - "," - "
-      });
-  
-  public static final ProgramFieldTypeArrayProperty propProgramInfoFieldsAlternative = new ProgramFieldTypeArrayProperty(
-      mProp, "programpanel.infoFieldsAlternative", new ProgramFieldType[] {
-          ProgramFieldType.GENRE_TYPE, ProgramFieldType.EPISODE_TYPE,
-          ProgramFieldType.ORIGIN_TYPE, ProgramFieldType.PRODUCTION_YEAR_TYPE,
-          ProgramFieldType.SHORT_DESCRIPTION_TYPE });
-  
-  /** Contains the separators for the selected program info filed of a program panel */
-  public static final StringArrayProperty propProgramInfoFieldsSeparatorsAlternative = new StringArrayProperty(
-      mProp, "programpanel.infoFieldsSeparatorsAlternative", new String[] {
-         " - "," - ",
-         " - "," - "
-      });
-
-  public static final StringArrayProperty propProgramTableIconPlugins = new StringArrayProperty(
-      mProp, "programpanel.iconPlugins", new String[] { PICTURE_ID,INFO_ID,
-          "tvraterplugin.TVRaterPlugin", });
-  
-  public static final StringArrayProperty propProgramTableIconPluginsAlternative = new StringArrayProperty(
-      mProp, "programpanel.iconPluginsAlternative", new String[] { PICTURE_ID,INFO_ID,
-          "tvraterplugin.TVRaterPlugin", });
-  
-  /** Used to enable border for on air programs */
-  public static final BooleanProperty propProgramPanelOnAirProgramsShowingBorder = new BooleanProperty(
-      mProp, "programpanel.onAirProgramsShowingBorder", false);
-  /** Color for Program on Air - This shows how much was shown until now */
-  public static final ColorProperty propProgramPanelColorOnAirDark = new ColorProperty(
-      mProp, "programpanel.ColorOnAirDark", new Color(0, 0, 255, 60));
-  /** Color for Program on Air - This shows how much is not shown until now */
-  public static final ColorProperty propProgramPanelColorOnAirLight = new ColorProperty(
-      mProp, "programpanel.ColorOnAirLight", new Color(0, 0, 255, 30));
-
-  /**
-   * Used to track if a program panel should use additional space for the mark
-   * icons
-   */
-  public static final BooleanProperty propProgramPanelUsesExtraSpaceForMarkIcons = new BooleanProperty(
-      mProp, "programpanel.usesExtraSpaceForMarkIcons", true
-      );
-  /** Used to enable border on marked programs */
-  public static final BooleanProperty propProgramPanelWithMarkingsShowingBoder = new BooleanProperty(
-      mProp, "programpanel.markingsShowingBorder", false);
-  /** Used default mark priority for markings of plugins. */
-  public static final IntProperty propProgramPanelUsedDefaultMarkPriority = new IntProperty(
-      mProp, "programpanel.defaultMarkPriority", 0);
-
-  /**
-   * Flag to set highlighting to gradient instead of priority based coloring.
-   * @since 4.2.2
-   */
-  public static final BooleanProperty propProgramPanelGradientColorHighlighting = new BooleanProperty(
-      mProp, "programpanel.programPanelGradientColorHighlighting", true);
-  
-  /** Array with in representations of the highlighting colors for Programs 
-   * @since 4.2.2 */
-  public static final IntArrayProperty propProgramPanelHighlightingColors = new IntArrayProperty(
-      mProp, "programpanel.HighlightingColors", new int[] {
-          new Color(140, 255, 0, 60).getRGB(),
-          new Color(0, 255, 255, 50).getRGB(),
-          new Color(255, 255, 0, 60).getRGB(),
-          new Color(255, 180, 0, 110).getRGB(),
-          new Color(255, 0, 0, 30).getRGB()
-      });
-  
-  /** Color for Programs marked with MIN_PRIORITY 
+   /** Color for Programs marked with MIN_PRIORITY 
    * @deprecated since 4.2.2 */
   @Deprecated(since="4.2.2") public static final ColorProperty propProgramPanelMarkedMinPriorityColor = new ColorProperty(
       mProp, "programpanel.ColorMarked", new Color(140, 255, 0, 60));
@@ -1880,559 +1344,6 @@ public class Settings {
       mProp, "programpanel.ColorMarkedMax", new Color(255, 0, 0, 30));
   /** Color of the foreground of a program panel */
   
-  public static final ColorProperty propProgramPanelForegroundColor = new ColorProperty(
-      mProp, "programpanel.ColorForeground", Color.black);
-  /** If plugins are allowed to set the transparency of a program */
-  public static final BooleanProperty propProgramPanelAllowTransparency = new BooleanProperty(
-      mProp, "programpanel.AllowTransparency", true);
-  /**
-   * use hyphenation to break strings in a program panel
-   */
-  public static final BooleanProperty propProgramPanelHyphenation = new BooleanProperty(
-      mProp, "programpanel.Hyphenation", false);
-
-  /**
-   * number of description lines show in program panel
-   */
-  public static final IntProperty propProgramPanelMaxLines = new IntProperty(
-      mProp, "programpanel.MaxLines", 3);
-
-  /**
-   * show less description lines for very short programs
-   */
-  public static final BooleanProperty propProgramPanelShortDurationActive = new BooleanProperty(
-      mProp, "programpanel.ShortActive", true);
-
-  /**
-   * maximum duration in minutes to show no description
-   */
-  public static final IntProperty propProgramPanelShortDurationMinutes = new IntProperty(
-      mProp, "programpanel.ShortMinutes", 10);
-  
-  /**
-   * if the original title show be shown instead of title if original is available
-   * @since 3.4.5 
-   */
-  public static final BooleanProperty propProgramPanelShowOriginialTitles = new BooleanProperty(
-      mProp, "programpanel.ShowOriginalTitles", false);
-
-  public static final BooleanProperty propProgramTableMouseOver = new BooleanProperty(
-      mProp, "programpanel.MouseOver", true);
-  
-  public static final BooleanProperty propProgramTableScrollHorizontal = new BooleanProperty(
-      mProp, "programpanel.scrollHorizontal", false);
-
-  /** Color for Mouse-Over */
-  public static final ColorProperty propProgramTableMouseOverColor = new ColorProperty(
-      mProp, "programpanel.MouseOverColor", new Color(200, 200, 0, 60));
-
-  /** Color for selected Program */
-  public static final ColorProperty propKeyboardSelectedColor = new ColorProperty(
-      mProp, "programpanel.KeyboardSelectedColor", new Color(130, 255, 0, 120));
-
-  public static final BooleanProperty propIsWindowMaximized = new BooleanProperty(
-      mProp, "window.isMaximized", false);
-
-  /**
-   * Store if TV-Browser window is in native full screen mode of macOS
-   * @since 4.2.4
-   */
-  public static final BooleanProperty propIsInMacOSFullScreen = new BooleanProperty(
-	      mProp, "window.isInMacOSFullScreen", false);
-
-  public static final BooleanProperty propIsUsingFullscreen = new BooleanProperty(
-      mProp, "isUsingFullscreen", false);
-
-  public static final IntProperty propWindowWidth = new IntProperty(mProp,
-      "window.width", 770);
-
-  public static final IntProperty propWindowHeight = new IntProperty(mProp,
-      "window.height", 550);
-
-  public static final IntProperty propWindowX = new IntProperty(mProp,
-      "window.x", -1);
-
-  public static final IntProperty propWindowY = new IntProperty(mProp,
-      "window.y", -1);
-
-  public static final IntProperty propSettingsDialogDividerLocation = new IntProperty(mProp,
-      "settingsDialogDividerLocation", 200);
-
-  /**
-   * start of day in minutes after midnight
-   */
-  public static final MinutesProperty propProgramTableStartOfDay = new MinutesProperty(
-      mProp, "programtable.startofday", 0);
-
-  /**
-   * end of day in minutes after midnight
-   */
-  public static final MinutesProperty propProgramTableEndOfDay = new MinutesProperty(
-      mProp, "programtable.endofday", 5 * 60);
-  public static final BooleanProperty propHttpProxyUseProxy = new BooleanProperty(
-      mProp, "proxy.http.useProxy", false);
-
-  public static final IntProperty propDefaultNetworkConnectionTimeout = new IntProperty(
-      mProp, "network.defaultConnectionTimeout", 60000);
-
-  public static final IntProperty propNetworkCheckTimeout = new IntProperty(
-      mProp, "network.checkTimeout", 10000);
-
-  public static final IntProperty propPictureType = new IntProperty(
-      mProp, "pictures.type", ProgramPanelSettings.SHOW_PICTURES_FOR_DURATION);
-
-  public static final IntProperty propPictureDescriptionLines = new IntProperty(
-	  mProp, "pictures.lines", 6);
-
-  public static final StringArrayProperty propPicturePluginIds = new StringArrayProperty(
-      mProp, "pictures.pluginIds", new String[0]);
-
-  public static final MinutesProperty propPictureStartTime = new MinutesProperty(
-      mProp, "pictures.startTime", 18 * 60);
-
-  public static final MinutesProperty propPictureEndTime = new MinutesProperty(
-      mProp, "pictures.endTime", 23 * 60);
-
-  public static final IntProperty propPictureDuration = new IntProperty(
-      mProp, "pictures.duration", 90);
-
-  public static final BooleanProperty propIsPictureShowingDescription = new BooleanProperty(
-      mProp, "pictures.showDescription", true);
-
-  public static final StringProperty propHttpProxyHost = new StringProperty(
-      mProp, "proxy.http.host", "");
-
-  public static final StringProperty propHttpProxyPort = new StringProperty(
-      mProp, "proxy.http.port", "");
-
-  public static final BooleanProperty propHttpProxyAuthentifyAtProxy = new BooleanProperty(
-      mProp, "proxy.http.authentifyAtProxy", false);
-
-  public static final StringProperty propHttpProxyUser = new StringProperty(
-      mProp, "proxy.http.user", "");
-
-  public static final EncodedStringProperty propHttpProxyPassword = new EncodedStringProperty(
-      mProp, "proxy.http.password", "", PROXY_PASSWORD_SEED);
-
-  public static final StringArrayProperty propDataServicesForUpdate = new StringArrayProperty(
-      mProp, "tvdataservices.update", null);
-
-  public static final BooleanProperty propShowPluginView = new BooleanProperty(
-      mProp, "show.pluginview", false);
-
-  public static final BooleanProperty propShowTimeButtons = new BooleanProperty(
-      mProp, "show.timebuttons", true);
-
-  public static final BooleanProperty propShowChannels = new BooleanProperty(
-      mProp, "show.channels", true);
-
-  public static final BooleanProperty propShowDatelist = new BooleanProperty(
-      mProp, "show.datelist", true);
-
-  public static final BooleanProperty propShowFilterBar = new BooleanProperty(
-      mProp, "show.filterbar", true);
-
-  public static final SplitViewProperty propViewRoot = new SplitViewProperty(
-      mProp, "view.root", false, true, 200);
-
-  public static final SplitViewProperty propViewMainframe = new SplitViewProperty(
-      mProp, "view.mainframe", false, false, 150);
-
-  public static final SplitViewProperty propViewNavigation = new SplitViewProperty(
-      mProp, "view.navigation", true, true, 150);
-
-  public static final SplitViewProperty propViewDateChannel = new SplitViewProperty(
-      mProp, "view.date_channel", true, true, 150);
-
-  public static final BooleanProperty propStartScreenShow = new BooleanProperty(
-      mProp, "splash.show", true);
-
-  public static final StringProperty propLanguage = new StringProperty(mProp,
-      "language", System.getProperty("user.language"));
-
-  public static final StringProperty propCountry = new StringProperty(mProp,
-      "country", System.getProperty("user.country", ""));
-
-  public static final StringProperty propVariant = new StringProperty(mProp,
-      "variant", System.getProperty("user.variant",""));
-
-  public static final StringProperty propTimezone = new StringProperty(mProp,
-      "timeZone", null);
-
-  public static final BooleanProperty propMinimizeAfterStartup = new BooleanProperty(
-      mProp, "minimizeAfterStartup", false);
-
-  public static final StringProperty propLogdirectory = new StringProperty(
-      mProp, "logdirectory", mDefaultSettings.getProperty("logdirectory", null));
-
-  public static final BooleanProperty propShowChannelIconsInProgramTable = new BooleanProperty(
-      mProp, "showChannelIconsInProgramtable", true);
-
-  public static final BooleanProperty propShowChannelNamesInProgramTable = new BooleanProperty(
-      mProp, "showChannelNamesInProgramtable", true);
-
-  public static final BooleanProperty propShowChannelIconsInChannellist = new BooleanProperty(
-      mProp, "showChannelIconsInChannellist", true);
-
-  public static final BooleanProperty propShowChannelNamesInChannellist = new BooleanProperty(
-      mProp, "showChannelNamesInChannellist", true);
-
-  public static final StringArrayProperty propUsedChannelGroups = new StringArrayProperty(
-      mProp, "usedChannelGroups", null);
-
-  public static final StringArrayProperty propDeleteFilesAtStart = new StringArrayProperty(
-      mProp, "deleteFilesAtStart", new String[0]);
-
-  /**
-   * The IconTheme
-   */
-  public static final StringProperty propIcontheme = new StringProperty(mProp,
-      "icontheme", mDefaultSettings.getProperty("icontheme", null));
-
-  /**
-   * Show the "The Browser was opened"-Dialog
-   */
-  public static final BooleanProperty propShowBrowserOpenDialog = new BooleanProperty(
-      mProp, "showBrowserOpenDialog", true);
-
-  /**
-   * Show the SearchField in the Toolbar
-   */
-  public static final BooleanProperty propIsSearchFieldVisible = new BooleanProperty(
-      mProp, "isSearchFieldVisible", true);
-
-  /**
-   * Use 12-Hour Format?
-   */
-  public static final BooleanProperty propTwelveHourFormat = new BooleanProperty(
-      mProp, "uswTwelveHourFormat", false);
-  
-  public static final IntProperty propFirstDayOfWeek = new IntProperty(
-      mProp, "firstDayOfWeek", Calendar.getInstance().getFirstDayOfWeek());
-
-  /** An array with the ids of the TV data service which license was accepted. */
-  public static final StringArrayProperty propAcceptedLicenseArrForServiceIds = new StringArrayProperty(
-      mProp, "licnseIds", new String[] {});
-
-  /** the class name of the last settings tab that has been closed with OK before */
-  public static final StringProperty propLastUsedSettingsPath = new StringProperty(mProp, "lastUsedSettingsTabClassName", "#channels");
-
-  /**
-   * maximum width of the program table columns
-   */
-  public static final int MAX_COLUMN_WIDTH = 2000;
-
-  /**
-   * minimum width of the program table columns
-   */
-  public static final int MIN_COLUMN_WIDTH = 100;
-
-  /** The setting that contains the global picture settings value */
-  public static final IntProperty propPluginsPictureSetting = new IntProperty(
-      mProp, "pluginsPictureSetting", PluginPictureSettings.PICTURE_AND_DISCRIPTION_TYPE);
-
-  /** The user selected default filter */
-  public static final StringProperty propDefaultFilter = new StringProperty(
-      mProp, "defaultFilter", "");
-
-  /** If the plugin updates should be found automatically */
-  public static final BooleanProperty propAutoUpdatePlugins = new BooleanProperty(
-      mProp, "autoUpdatePlugins", true);
-
-  public static final DateProperty propLastPluginsUpdate = new DateProperty(
-      mProp, "lastPluginsUpdate", null);
-
-  /**
-   * enable checking date and time via NTP if no TV data can be downloaded
-   */
-  public static final BooleanProperty propNTPTimeCheck = new BooleanProperty(mProp, "ntpTimeCheckEnabled", true);
-
-  /**
-   * date of last NTP internet time check
-   */
-  public static final DateProperty propLastNTPCheck = new DateProperty(mProp, "lastNTPCheck", null);
-
-  /** If the internet connection should be checked before accessing internet */
-  public static final BooleanProperty propInternetConnectionCheck = new BooleanProperty(
-      mProp, "internetConnectionCheck", true);
-
-  /**
-   * If the plugin view is on the left side and the channel list on the right side.
-   * @since 2.7
-   */
-  public static final BooleanProperty propPluginViewIsLeft = new BooleanProperty(
-      mProp, "pluginViewIsLeft", true);
-
-  /**
-   * if calendar view is active
-   *
-   * @since 3.0
-   */
-  public static final IntProperty propViewDateLayout = new IntProperty(
-      mProp, "propViewDateLayout", 1);
-
-  /**
-   * The time between auto updates of data services
-   * @since 2.7
-   */
-  public static final IntProperty propDataServiceAutoUpdateTime = new IntProperty(
-      mProp, "dataServiceAutoUpdateTime", 30);
-
-  /**
-   * list of hidden message boxes
-   * @since 2.7
-   */
-  public static final StringArrayProperty propHiddenMessageBoxes = new StringArrayProperty(mProp, "hideMessageBox", new String[] {});
-
-  /**
-   * show sort number in program table?
-   * @since 3.3.4
-   */
-  public static final BooleanProperty propShowSortNumberInProgramTable = new BooleanProperty(
-      mProp, "showSortNumberInProgramTable", true);
-
-  /**
-   * show sort number in program lists?
-   * @since 3.3.4
-   */
-  public static final BooleanProperty propShowSortNumberInProgramLists = new BooleanProperty(
-      mProp, "showSortNumberInProgramLists", true);
-  
-  /**
-   * show tooltip with large channel icon
-   * @since 2.7
-   */
-  public static final BooleanProperty propShowChannelTooltipInProgramTable = new BooleanProperty(
-      mProp, "showChannelTooltipInProgramtable", true);
-
-  /** Saves the date of the very first TV-Browser start */
-  public static final DateProperty propFirstStartDate = new DateProperty(
-      mProp, "firstStartDate", null);
-
-  /** Saves if the plugin info dialog was already shown */
-  public static final BooleanProperty propPluginInfoDialogWasShown = new BooleanProperty(
-      mProp, "pluginInfoDialogWasShown", false);
-
-  /** Saves the selected channel category filter index */
-  public static final ByteProperty propSelectedChannelCategoryIndex = new ByteProperty(
-      mProp, "selectedChannelCategoryIndex", (byte)1);
-
-  public static final BooleanProperty propAutoDataDownloadEnabled = new BooleanProperty(
-      mProp, "autoDataDownloadEnabled", true);
-
-  public static final ShortProperty propAutoDownloadWaitingTime = new ShortProperty(
-      mProp, "autoDownloadWaitingTime", (short) 5);
-
-  public static final BooleanProperty propAutoDownloadWaitingEnabled = new BooleanProperty(
-      mProp, "autoDownloadWaitingEnabled", true);
-  
-  /** check for channel changes every 14 days by default */
-  public static final IntProperty propAutoChannelUpdatePeriod = new IntProperty(
-      mProp, "autoChannelUpdatePeriod", 14);
-  
-  public static final DateProperty propLastChannelUpdate = new DateProperty(
-      mProp, "lastChannelUpdate", null);
-
-  /**
-   * if a long program title is to be shown in the program table, shall it be
-   * cut?
-   *
-   * @since 3.0
-   */
-  public static final BooleanProperty propProgramTableCutTitle = new BooleanProperty(
-      mProp, "programTableCutTitle", true);
-
-  /**
-   * how many lines of the title shall be shown if it is cut
-   *
-   * @since 3.0
-   */
-  public static final IntProperty propProgramTableCutTitleLines = new IntProperty(
-      mProp, "programTableCutTitleLines", 2);
-
-  /**
-   * auto scroll table after panning?
-   *
-   * @since 3.0
-   */
-  public static final BooleanProperty propProgramTableMouseAutoScroll = new BooleanProperty(
-      mProp, "programTableMouseAutoScroll", true);
-
-  /**
-   * @since 3.0
-   */
-  public static final StringArrayProperty propCurrentlyUsedDataServiceIds = new StringArrayProperty(mProp, "currentDataServices", new String[0]);
-
-  @SuppressWarnings("exports")
-  public static final BlockedPluginArrayProperty propBlockedPluginArray = new BlockedPluginArrayProperty(mProp, "blockedPlugins");
-
-  /**
-   * id of the  active program receive target plugin
-   * @since 3.0
-   */
-  public static final StringProperty propLastUsedReceivePlugin = new StringProperty(
-      mProp, "lastusedreceiveplugin", null);
-
-  /**
-   * id of the last active program receive target
-   * @since 3.0
-   */
-  public static final StringProperty propLastUsedReceiveTarget = new StringProperty(
-      mProp, "lastusedreceivetarget", null);
-
-  /**
-   * saves if the channels were configured
-   * @since 3.0
-   */
-  public static final BooleanProperty propChannelsWereConfigured = new BooleanProperty(
-      mProp, "channelsWereConfigured", false);
-
-  /**
-   * Stores if beta warining is enabled for plugin update.
-   * @since 3.0
-   */
-  public static final BooleanProperty propPluginBetaWarning = new BooleanProperty(
-      mProp, "pluginBetaWarning", true);
-
-  /**
-   * Stores the id of the selected Persona.
-   * @since 3.1
-   */
-  public static final StringProperty propSelectedPersona = new StringProperty(
-      mProp, "persona", "51b73c81-7d61-4626-b230-89627c9f5ce7");
-
-  /**
-   * Stores if the Persona should be selected randomly at start.
-   * @since 3.1
-   */
-  public static final BooleanProperty propRandomPersona = new BooleanProperty(
-      mProp, "randomPersona", false);
-  
-  /**
-   * Stores if the picture borders should be painted.
-   * @since 3.1
-   */
-  public static final BooleanProperty propShowProgramTablePictureBorder = new BooleanProperty(
-      mProp, "showPictureBorder", true);
-  
-  /**
-   * Type as you find in the program table enabled?
-   * @since 3.1.1
-   */
-  public static final BooleanProperty propTypeAsYouFindEnabled = new BooleanProperty(
-      mProp, "typeAsYouFindEnabled", true);
-  
-  /**
-   * If the tab bar in the center of the TV-Browser window should always be shown.
-   * @since 3.2
-   */
-  public static final BooleanProperty propAlwaysShowTabBarForCenterPanel = new BooleanProperty(
-      mProp, "alwaysShowTabBarForCenterPanel", true);
-  
-  /** Value for name only settings */
-  public static final int VALUE_NAME_ONLY = 0;
-  
-  /** Value for icon only settings */
-  public static final int VALUE_ICON_ONLY = 1;
-  
-  /** Value for name and icon settings */
-  public static final int VALUE_NAME_AND_ICON = 2;
-  
-  /**
-   * Property of name and icon showing of tab bar in center panel.
-   * @since 3.4.5
-   */
-  public static final IntProperty propTabBarCenterPanelNameIconConfig = new IntProperty(
-      mProp, "pbBarCenterPanelNameIconConfig", 2);
-  
-  /**
-   * Array with the panel IDs shown in the center panel of TV-Browser main window.
-   * @since 3.2
-   */
-  public static final StringArrayProperty propCenterPanelArr = new StringArrayProperty(
-      mProp, "centerPanelArr", new String[] {"tvbrowser.ui.programtable.ProgramTableScrollPaneWrapper"});
-  
-  /**
-   * Array with the deselected IDs of the center panels.
-   */
-  public static final StringArrayProperty propDisabledCenterPanelArr = new StringArrayProperty(
-      mProp, "disabledCenterPanelArr", new String[0]);
-  
-  public static final BooleanProperty propProgramTableAutoChangeDate = new BooleanProperty(
-      mProp, "autoScrollToNextDay", true);
-  
-  public static final StringProperty propInfoIconThemeID = new StringProperty(
-      mProp, "infoIconThemeName", "tvb_default.zip");
-  
-  public static final BooleanProperty propVerboseLogging = new BooleanProperty(
-      mProp, "verboseLogging", false);
-  
-  public static final StringArrayProperty propKnownContextMenuPlugins = new StringArrayProperty(
-      mProp, "knownContextMenuPlugins", new String[0]);
-  
-  public static final StringArrayProperty propAccessControl = new StringArrayProperty(
-      mProp, "accessControl", new String[0]);
-  
-  public static final IntProperty propShowChannelLogoForProgramPanel = new IntProperty(
-      mProp, "showChannelLogoForProgramPanel", ProgramPanelSettings.SHOW_CHANNEL_LOGO_PLUGINS_CONTROL);
-  
-  public static final StringProperty propLastChannelExportFile = new StringProperty(
-      mProp, "lastChannelExportFile", System.getProperty("user.home") + "/TVB-channel-export.txt");
-  
-  public static final StringArrayProperty propDataPluginPostProcessingOrder = new StringArrayProperty(
-      mProp, "dataPluginPostProcessingOrder", new String[0]);
-  
-  public static final BooleanProperty propSmootherScrolling = new BooleanProperty(
-	      mProp, "smootherScrolling", true);
-  
-  public static final IntProperty propScreenNumber = new IntProperty(
-	      mProp, "screenNumber", -1);
-  
-  /**
-   * Hidden property for blocked filter components for Favorite usage.
-   * Add the property favoriteBlockedFilterComponents to the settings.prop
-   * to change the blocked filter components.
-   * <p>
-   * @since 3.4.5 */
-  public static final StringArrayProperty propFavoriteBlockedFilterComponents = new StringArrayProperty(
-      mProp, "favoriteBlockedFilterComponents", new String[] {"tvbrowser.core.filters.filtercomponents.BeanShellFilterComponent","tvbrowser.core.filters.filtercomponents.ProgramMarkingPriorityFilterComponent","tvbrowser.core.filters.filtercomponents.ReminderFilterComponent","tvbrowser.core.filters.filtercomponents.PluginFilterComponent"});
-  
-  /**
-   * Property to allow handling of tvb:// protocol events. 
-   * 
-   * @since 4.2.3
-   */
-  public static final BooleanProperty propCanReceiveProtocolMessages = new BooleanProperty(mProp, "canReceiveProtocolMessages", true);
-  
-  /**
-   * TV-Browser JRE update package path.
-   * <p>
-   * @since 4.1
-   */
-  public static final StringProperty propJreUpdate = new StringProperty(mProp, "jreUpdate", "");
-  public static final DateProperty propJreUpdateDateLast = new DateProperty(mProp, "jreUpdateDateLast", null);
-  public static final BooleanProperty propJreUpdateEnabled = new BooleanProperty(mProp, "jreUpdateEnabled", true);
-  
-  /**
-   * Date when TV-Browser has searched for settings of old versions of TV-Browser last.
-   * @since 4.2.2
-   */
-  public static final DateProperty propDateOldSettingsCheckedLast = new DateProperty(mProp, "dateOldSettingsCheckedLast", null);
-  
-  /** 
-   * Sets the availability of the restore server.
-   * <p>
-   * @since 4.1
-   */
-  public static final BooleanProperty propServerRestoreEnabled = new BooleanProperty(mProp, "serverRestoreEnabled", true);
-  
-  /**
-   * Ids of plugins which settings should be reset on next startup.
-   * <p>
-   * @since 4.2.3
-   */
-  public static final StringArrayProperty propPluginResetIds = new StringArrayProperty(mProp, "propPluginReset", null);
-  
   /**
    * Sets the window position and size for the given window with the values of
    * the given id.
@@ -2444,7 +1355,7 @@ public class Settings {
    *
    * @since 2.7
    */
-  public static final void layoutWindow(String windowId, Window window) {
+  public static final void layoutWindow(String windowId, java.awt.Window window) {
     layoutWindow(windowId, window, null);
   }
 
@@ -2457,7 +1368,7 @@ public class Settings {
    *
    * @since 2.7
    */
-  public static final void layoutWindow(String windowId, Window window, Dimension defaultSize) {
+  public static final void layoutWindow(String windowId, java.awt.Window window, Dimension defaultSize) {
     layoutWindow(windowId,window,defaultSize,null);
   }
   
@@ -2471,7 +1382,7 @@ public class Settings {
    *
    * @since 3.3
    */
-  public static final void layoutWindow(String windowId, Window window, Dimension defaultSize, Window parent) {
+  public static final void layoutWindow(String windowId, java.awt.Window window, Dimension defaultSize, java.awt.Window parent) {
     layoutWindow(windowId, window, defaultSize, parent, false);
   }
 
@@ -2486,7 +1397,7 @@ public class Settings {
   *
   * @since 4.0.1
   */
-  public static final void layoutWindow(String windowId, Window window, Dimension defaultSize, Window parent, boolean ignoreAndMinSizeLocation) {
+  public static final void layoutWindow(String windowId, java.awt.Window window, Dimension defaultSize, java.awt.Window parent, boolean ignoreAndMinSizeLocation) {
     WindowSetting setting = mWindowSettings.get(windowId);
 
     if(setting == null) {
@@ -2566,37 +1477,117 @@ public class Settings {
     
     MainFrame.updateFilterPanelLabel();
   }
-    
+  
+  public static final class Other {
+  
+    public static final IntProperty SETTINGS_DIALOG_DIVIDER_LOCATION = new IntProperty(mProp,
+      "settingsDialogDividerLocation", 200);
+  
+    /** the class name of the last settings tab that has been closed with OK before */
+    public static final StringProperty SETTINGS_LAST_USED_PATH = new StringProperty(mProp, "lastUsedSettingsTabClassName", "#channels");
+  
+    /**
+     * list of hidden message boxes
+     * @since 2.7
+     */
+    public static final StringArrayProperty MESSAGE_BOXES_HIDDEN = new StringArrayProperty(mProp, "hideMessageBox", new String[] {});
+  
+    /**
+     * Hidden property for blocked filter components for Favorite usage.
+     * Add the property favoriteBlockedFilterComponents to the settings.prop
+     * to change the blocked filter components.
+     * <p>
+     * @since 3.4.5 */
+    public static final StringArrayProperty FAVORITE_BLOCKED_FILTER_COMPONENTS = new StringArrayProperty(
+      mProp, "favoriteBlockedFilterComponents", new String[] {"tvbrowser.core.filters.filtercomponents.BeanShellFilterComponent","tvbrowser.core.filters.filtercomponents.ProgramMarkingPriorityFilterComponent","tvbrowser.core.filters.filtercomponents.ReminderFilterComponent","tvbrowser.core.filters.filtercomponents.PluginFilterComponent"});
+  
+  
+    private Other() {}
+  }
+  
   public static final class Buttons {
     public static final String ID = "#timebuttons";
   
-    public static final IntArrayProperty TIME_BUTTONS = Settings.propTimeButtons;
+    public static final IntArrayProperty TIME_BUTTONS = new IntArrayProperty(
+      mProp, "timeButtons", new int[] { 6 * 60, 12 * 60, 18 * 60, 20 * 60 + 15 });;
     
     private Buttons() {};
   }
   
   public static final class CenterPanels {
     public static final String ID = "#centerpanelsetup";
+    /**
+     * Array with the panel IDs shown in the center panel of TV-Browser main window.
+     * @since 3.2
+     */
+    public static final StringArrayProperty CENTER_PANEL_ARR = new StringArrayProperty(
+      mProp, "centerPanelArr", new String[] {"tvbrowser.ui.programtable.ProgramTableScrollPaneWrapper"});
     
-    public static final StringArrayProperty CENTER_PANEL_ARR = Settings.propCenterPanelArr;
-    public static final StringArrayProperty DISABLED_CENTER_PANEL_ARR = Settings.propDisabledCenterPanelArr;
-    public static final BooleanProperty ALWAYS_SHOW_TAB_BAR_FOR_CENTER_PANEL = Settings.propAlwaysShowTabBarForCenterPanel;
-    public static final IntProperty TAB_BAR_CENTER_PANEL_NAME_ICON_CONFIG = Settings.propTabBarCenterPanelNameIconConfig;
+    /**
+     * Array with the deselected IDs of the center panels.
+     */
+    public static final StringArrayProperty DISABLED_CENTER_PANEL_ARR = new StringArrayProperty(
+      mProp, "disabledCenterPanelArr", new String[0]);
+    /**
+     * If the tab bar in the center of the TV-Browser window should always be shown.
+     * @since 3.2
+     */
+    public static final BooleanProperty ALWAYS_SHOW_TAB_BAR_FOR_CENTER_PANEL = new BooleanProperty(
+      mProp, "alwaysShowTabBarForCenterPanel", true);
+    
+    /**
+     * Property of name and icon showing of tab bar in center panel.
+     * @since 3.4.5
+     */
+    public static final IntProperty TAB_BAR_CENTER_PANEL_NAME_ICON_CONFIG = new IntProperty(
+      mProp, "pbBarCenterPanelNameIconConfig", 2);
     
     public CenterPanels() {}
   }
   
   public static final class IconAndNames {
+    /** Value for name only settings */
+    public static final int VALUE_NAME_ONLY = 0;
+  
+    /** Value for icon only settings */
+    public static final int VALUE_ICON_ONLY = 1;
+    
+    /** Value for name and icon settings */
+    public static final int VALUE_NAME_AND_ICON = 2;
+  
     public static final String ID = "#channelIconName";
     
-    public static final BooleanProperty SHOW_ICONS_IN_PROGRAM_TABLE = Settings.propShowChannelIconsInProgramTable;
-    public static final BooleanProperty SHOW_NAMES_IN_PROGRAM_TABLE = Settings.propShowChannelNamesInProgramTable;
-    public static final IntProperty SHOW_LOGO_FOR_PROGRAM_PANEL = Settings.propShowChannelLogoForProgramPanel;
-    public static final BooleanProperty SHOW_ICONS_IN_CHANNEL_LIST = Settings.propShowChannelIconsInChannellist;
-    public static final BooleanProperty SHOW_NAMES_IN_CHANNEL_LIST = Settings.propShowChannelNamesInChannellist;
-    public static final BooleanProperty SHOW_SORT_NUMBER_IN_PROGRAM_TABLE = Settings.propShowSortNumberInProgramTable;
-    public static final BooleanProperty SHOW_CHANNEL_TOOLTIP_IN_PROGRAM_TABLE = Settings.propShowChannelTooltipInProgramTable;
-    public static final BooleanProperty SHOW_SORT_NUMBER_IN_PROGRAM_LISTS = Settings.propShowSortNumberInProgramLists;
+    public static final BooleanProperty SHOW_ICONS_IN_PROGRAM_TABLE = new BooleanProperty(
+      mProp, "showChannelIconsInProgramtable", true);
+    public static final BooleanProperty SHOW_NAMES_IN_PROGRAM_TABLE = new BooleanProperty(
+      mProp, "showChannelNamesInProgramtable", true);
+    public static final IntProperty SHOW_LOGO_FOR_PROGRAM_PANEL = new IntProperty(
+      mProp, "showChannelLogoForProgramPanel", ProgramPanelSettings.SHOW_CHANNEL_LOGO_PLUGINS_CONTROL);
+    public static final BooleanProperty SHOW_ICONS_IN_CHANNEL_LIST = new BooleanProperty(
+      mProp, "showChannelIconsInChannellist", true);
+    public static final BooleanProperty SHOW_NAMES_IN_CHANNEL_LIST = new BooleanProperty(
+      mProp, "showChannelNamesInChannellist", true);
+    
+    /**
+     * show sort number in program table?
+     * @since 3.3.4
+     */
+    public static final BooleanProperty SHOW_SORT_NUMBER_IN_PROGRAM_TABLE = new BooleanProperty(
+      mProp, "showSortNumberInProgramTable", true);
+    
+    /**
+     * show tooltip with large channel icon
+     * @since 2.7
+     */
+    public static final BooleanProperty SHOW_CHANNEL_TOOLTIP_IN_PROGRAM_TABLE = new BooleanProperty(
+      mProp, "showChannelTooltipInProgramtable", true);
+    
+    /**
+     * show sort number in program lists?
+     * @since 3.3.4
+     */
+    public static final BooleanProperty SHOW_SORT_NUMBER_IN_PROGRAM_LISTS = new BooleanProperty(
+      mProp, "showSortNumberInProgramLists", true);
     
     private IconAndNames() {} 
   }
@@ -2604,17 +1595,58 @@ public class Settings {
   public static final class Channels {
     public static final String ID = "#channels";
     
-    public static final ByteProperty SELECTED_CATEGORY_INDEX = Settings.propSelectedChannelCategoryIndex;
-    public static final StringProperty SELECTED_COUNTRY = Settings.propSelectedChannelCountry;
-    public static final StringProperty PLUGINS_DIRECTORY = Settings.propPluginsDirectory;
-    public static final StringProperty LAST_EXPORT_FILE = Settings.propLastChannelExportFile;
-    public static final StringProperty SELECTED_PLUGIN = Settings.propSelectedChannelPlugin;
-    public static final StringArrayProperty SUBSCRIBED_SEPARATORS = Settings.propSubscribedChannelsSeparators;
-    public static final ChannelArrayProperty SUBSCRIBED = Settings.propSubscribedChannels;
-    public static final StringArrayProperty USED_CHANNEL_GROUPS = Settings.propUsedChannelGroups;
-    public static final BooleanProperty WERE_CONFIGURED = Settings.propChannelsWereConfigured;
-    public static final BooleanProperty TRAY_USE_SPECIAL_CHANNELS = Settings.propTrayUseSpecialChannels;
-    public static final ChannelArrayProperty TRAY_SPECIAL_CHANNELS = Settings.propTraySpecialChannels;
+    /**
+     * subscribed channels
+     */
+    public static final ChannelArrayProperty SUBSCRIBED = new ChannelArrayProperty(
+      mProp, "subscribedchannels", new Channel[0]);
+
+    /**
+     * the last active channel group for filtering the channel list
+     */
+    public static final StringProperty GROUP_LAST_USED = new StringProperty(
+        mProp, "lastchannelgroup", null);
+
+    /**
+     * selected plugin filter in channel settings
+     * @since 3.1.1
+     */
+    public static final StringArrayProperty SUBSCRIBED_SEPARATORS = new StringArrayProperty(
+      mProp, "subscribedChannelsSeparators", new String[0]);    
+
+    /** Saves the selected channel category filter index */
+    public static final ByteProperty SELECTED_CATEGORY_INDEX = new ByteProperty(
+      mProp, "selectedChannelCategoryIndex", (byte)1);
+      
+    /**
+     * selected channel country filter in channel settings
+     * @since 3.0
+     */
+    public static final StringProperty SELECTED_COUNTRY = new StringProperty(
+      mProp, "selectedChannelCountry", "");
+    
+    public static final StringProperty LAST_EXPORT_FILE = new StringProperty(
+      mProp, "lastChannelExportFile", System.getProperty("user.home") + "/TVB-channel-export.txt");
+    public static final StringProperty SELECTED_PLUGIN = new StringProperty(
+      mProp, "selectedChannelPlugin", "");;
+    
+    public static final StringArrayProperty USED_CHANNEL_GROUPS = new StringArrayProperty(
+      mProp, "usedChannelGroups", null);
+    
+    /**
+     * saves if the channels were configured
+     * @since 3.0
+     */
+    public static final BooleanProperty WERE_CONFIGURED = new BooleanProperty(
+      mProp, "channelsWereConfigured", false);
+    
+    public static final DateProperty UPDATE_LAST = new DateProperty(
+      mProp, "lastChannelUpdate", null);
+    
+    /**
+     * @since 3.0
+     */
+    public static final StringArrayProperty DATA_SERVICE_IDS_USED_CURRENTLY = new StringArrayProperty(mProp, "currentDataServices", new String[0]);    
     
     private Channels() {}
   }
@@ -2622,10 +1654,29 @@ public class Settings {
   public static final class ContextMenu {
     public static final String ID = "#contextmenu";
     
-    public static final StringArrayProperty DISABLED_SUB_ITEMS = Settings.propContextMenuDisabledSubItems;
-    public static final StringArrayProperty MENU_ORDER = Settings.propContextMenuOrder;
-    public static final StringArrayProperty PLUGIN_ORDER = Settings.propPluginOrder;
-    public static final StringArrayProperty DISABLED_ITEMS = Settings.propContextMenuDisabledItems;
+    /**
+     * All sub actions of plugins that are disabled
+     * @since 3.4.5
+     */
+    public static final StringArrayProperty DISABLED_SUB_ITEMS = new StringArrayProperty(
+      mProp, "propContextMenuDisabledSubItems", null);
+
+    /**
+     * Order of the Plugins in the Context-Menu.
+     */
+    public static final StringArrayProperty MENU_ORDER = new StringArrayProperty(mProp, "contextMenuOrder",
+      new String[] { "programinfo.ProgramInfo", "searchplugin.SearchPlugin", "reminderplugin.ReminderPlugin",
+          "favoritesplugin.FavoritesPlugin", SeparatorMenuItem.SEPARATOR, "java.webplugin.WebPlugin",
+          "java.simplemarkerplugin.SimpleMarkerPlugin", "java.captureplugin.CapturePlugin" });
+    
+    /**
+     * All disabled Items of the ContextMenu
+     */
+    public static final StringArrayProperty DISABLED_ITEMS = new StringArrayProperty(
+      mProp, "contextMenuDisabledItems", null);
+    
+    public static final StringArrayProperty PLUGINS_KNOWN = new StringArrayProperty(
+      mProp, "knownContextMenuPlugins", new String[0]);
     
     private ContextMenu() {}
   }
@@ -2633,7 +1684,8 @@ public class Settings {
   public static final class DataPostProcessing {
     public static final String ID = "#dataPluginPostProcessing";
     
-    public static final StringArrayProperty ORDER = Settings.propDataPluginPostProcessingOrder;
+    public static final StringArrayProperty ORDER = new StringArrayProperty(
+      mProp, "dataPluginPostProcessingOrder", new String[0]);
     
     private DataPostProcessing() {}
   }
@@ -2641,7 +1693,14 @@ public class Settings {
   public static final class Directories {
     public static final String ID = "#directories";
     
-    public static final StringProperty TV_DATA = Settings.propTVDataDirectory;
+    public static final StringProperty TV_DATA = new StringProperty(
+      mProp, "dir.tvdata", mDefaultSettings.getProperty("tvdatadir",
+          getDefaultTvDataDir()));
+    public static final StringProperty PLUGINS = new StringProperty(
+      mProp, "dir.plugins", mDefaultSettings.getProperty("pluginsdir",
+          getDefaultPluginsDir()));
+    public static final StringProperty LOG = new StringProperty(
+      mProp, "logdirectory", mDefaultSettings.getProperty("logdirectory", null));
     
     private Directories() {}
   }
@@ -2649,13 +1708,20 @@ public class Settings {
   public static final class Fonts {
     public static final String ID = "#fonts";
     
-    public static final BooleanProperty ANTIALIASING_ENABLED = Settings.propEnableAntialiasing;
-    public static final BooleanProperty USE_DEFAULT = Settings.propUseDefaultFonts;
-    public static final FontProperty CHANNE_LNAME = Settings.propChannelNameFont;
-    public static final FontProperty PROGRAM_TITLE = Settings.propProgramTitleFont;
-    public static final FontProperty PROGRAM_INFO = Settings.propProgramInfoFont;
-    public static final FontProperty PROGRAM_TIME = Settings.propProgramTimeFont;
-    public static final IntProperty PROGRAM_TEX_TLINE_GAP = Settings.propProgramTextLineGap;
+    public static final BooleanProperty ANTIALIASING_ENABLED = new BooleanProperty(
+      mProp, "enableantialiasing", true);
+    public static final BooleanProperty USE_DEFAULT = new BooleanProperty(
+      mProp, "usedefaultfonts", true);
+    public static final FontProperty CHANNEL_NAME = new DeferredFontProperty(
+      mProp, "font.channelname", DEFAULT_CHANNELNAMEFONT);
+    public static final FontProperty PROGRAM_TITLE = new DeferredFontProperty(
+      mProp, "font.programtitle", DEFAULT_PROGRAMTITLEFONT);
+    public static final FontProperty PROGRAM_INFO = new DeferredFontProperty(
+      mProp, "font.programinfo", DEFAULT_PROGRAMINFOFONT);
+    public static final FontProperty PROGRAM_TIME = new DeferredFontProperty(
+      mProp, "font.programtime", DEFAULT_PROGRAMTIMEFONT);
+    public static final IntProperty PROGRAM_TEX_TLINE_GAP = new IntProperty(
+      mProp, "font.lineGap", 0);
     
     private Fonts() {}
   }
@@ -2663,37 +1729,117 @@ public class Settings {
   public static final class General {
     public static final String ID = "#startup";
   
-    public static final BooleanProperty MINIMIZE_AFTER_STARTUP = Settings.propMinimizeAfterStartup;
-    public static final BooleanProperty START_SCREEN_SHOW = Settings.propStartScreenShow;
-    public static final BooleanProperty IS_USING_FULLSCREEN = Settings.propIsUsingFullscreen;
-    public static final BooleanProperty SERVER_RESTORE_ENABLED = Settings.propServerRestoreEnabled;
-    public static final BooleanProperty CAN_RECEIVE_PROTOCOL_MESSAGE = Settings.propCanReceiveProtocolMessages;
-    public static final BooleanProperty JRE_UPDATE_ENABLED = Settings.propJreUpdateEnabled;
-    public static final BooleanProperty ONLY_MINIMIZE_WHEN_WINDOW_CLOSING = Settings.propOnlyMinimizeWhenWindowClosing;
+    public static final BooleanProperty MINIMIZE_AFTER_STARTUP = new BooleanProperty(
+      mProp, "minimizeAfterStartup", false);
+    public static final BooleanProperty START_SCREEN_SHOW = new BooleanProperty(
+      mProp, "splash.show", true);
+    public static final BooleanProperty IS_USING_FULLSCREEN = new BooleanProperty(
+      mProp, "isUsingFullscreen", false);
+
+    /** 
+     * Sets the availability of the restore server.
+     * <p>
+     * @since 4.1
+     */
+    public static final BooleanProperty SERVER_RESTORE_ENABLED = new BooleanProperty(mProp, "serverRestoreEnabled", true);
+
+    /**
+     * Property to allow handling of tvb:// protocol events. 
+     * 
+     * @since 4.2.3
+     */
+    public static final BooleanProperty CAN_RECEIVE_PROTOCOL_MESSAGE = new BooleanProperty(mProp, "canReceiveProtocolMessages", true);
+    public static final BooleanProperty ONLY_MINIMIZE_WHEN_WINDOW_CLOSING = new BooleanProperty(
+      mProp, "onlyMinimizeWhenWindowClosing", false);
     public static final HiddenMessagesProperty ASK_FOR_EXIT_CONFIRMATION = new HiddenMessagesProperty("MainFrame.askForExitConfirm", true);
-    public static final IntProperty AUTO_CHANNEL_UPDATE_PERIOD = Settings.propAutoChannelUpdatePeriod;
-    public static final BooleanProperty AUTO_UPDATE_PRIME_TIME = Settings.propAutoUpdatePrimeTime;
-    public static final ChoiceProperty AUTO_DOWNLOAD_TYPE = Settings.propAutoDownloadType;
+    
+    /** check for channel changes every 14 days by default */
+    public static final IntProperty AUTO_CHANNEL_UPDATE_PERIOD = new IntProperty(
+      mProp, "autoChannelUpdatePeriod", 14);
+    
+    /**@since 4.2.2*/
+    public static final BooleanProperty AUTO_UPDATE_PRIME_TIME = new BooleanProperty(
+      mProp, "autoUpdatePrimeTime", false);
+    public static final ChoiceProperty AUTO_DOWNLOAD_TYPE = new ChoiceProperty(
+      mProp, "autodownload", "daily", new String[] { "startup", "daily",
+          "every3days", "weekly", "never" });
     public static final HiddenMessagesProperty DOWNLOAD_DONE = new HiddenMessagesProperty("downloadDone", true);
-    public static final BooleanProperty AUTO_DATA_DOWNLOAD_ENABLED = Settings.propAutoDataDownloadEnabled;
-    public static final BooleanProperty ASK_FOR_AUTO_DOWNLOAD = Settings.propAskForAutoDownload;
-    public static final IntProperty AUTO_DOWNLOAD_PERIOD = Settings.propAutoDownloadPeriod;
-    public static final ShortProperty AUTO_DOWNLOAD_WAITING_TIME = Settings.propAutoDownloadWaitingTime;
-    public static final BooleanProperty AUTO_DOWNLOAD_WAITING_ENABLED = Settings.propAutoDownloadWaitingEnabled;
-    public static final BooleanProperty NTP_TIME_CHECK = Settings.propNTPTimeCheck;
+    public static final BooleanProperty AUTO_DATA_DOWNLOAD_ENABLED = new BooleanProperty(
+      mProp, "autoDataDownloadEnabled", true);
+    public static final BooleanProperty ASK_FOR_AUTO_DOWNLOAD = new BooleanProperty(
+      mProp, "askForAutoDownload", false);
+    public static final IntProperty AUTO_DOWNLOAD_PERIOD = new IntProperty(
+      mProp, "autodownloadperiod", 0);
+    public static final ShortProperty AUTO_DOWNLOAD_WAITING_TIME = new ShortProperty(
+      mProp, "autoDownloadWaitingTime", (short) 5);
+    public static final BooleanProperty AUTO_DOWNLOAD_WAITING_ENABLED = new BooleanProperty(
+      mProp, "autoDownloadWaitingEnabled", true);
+    
+    /**
+     * enable checking date and time via NTP if no TV data can be downloaded
+     */
+    public static final BooleanProperty NTP_TIME_CHECK = new BooleanProperty(mProp, "ntpTimeCheckEnabled", true);
+    
+    /**
+     * TV-Browser JRE update package path.
+     * <p>
+     * @since 4.1
+     */
+    public static final StringProperty JRE_UPDATE = new StringProperty(mProp, "jreUpdate", "");
+    public static final DateProperty JRE_UPDATE_DATE_LAST = new DateProperty(mProp, "jreUpdateDateLast", null);
+    public static final BooleanProperty JRE_UPDATE_ENABLED = new BooleanProperty(mProp, "jreUpdateEnabled", true);
+    
+    public static final VersionProperty TV_BROWSER_VERSION_USED_LAST = new VersionProperty(
+      mProp, "version", null);
+  
+    public static final BooleanProperty TV_BROWSER_VERSION_USED_LAST_IS_STABLE = new BooleanProperty(
+      mProp, "versionIsStable", false);
+    
+    /** Saves the date of the very first TV-Browser start */
+    public static final DateProperty DATE_FIRST_START = new DateProperty(
+      mProp, "firstStartDate", null);
+  
+  
+    
+    /**
+     * date of last NTP internet time check
+     */
+    public static final DateProperty NTP_CHECK_LAST = new DateProperty(mProp, "lastNTPCheck", null);
+  
+    public static final BooleanProperty LOGGING_VERBOSE = new BooleanProperty(
+      mProp, "verboseLogging", false);
+    
+    /**
+     * Date when TV-Browser has searched for settings of old versions of TV-Browser last.
+     * @since 4.2.2
+     */
+    public static final DateProperty DATE_OLD_SETTINGS_CHECKED_LAST = new DateProperty(mProp, "dateOldSettingsCheckedLast", null);
+    
+    /** The user selected default filter */
+    public static final StringProperty FILTER_DEFAULT = new StringProperty(
+      mProp, "defaultFilter", "");
     
     private General() {}
   }
   
   public static final class Locales {
     public static final String ID = "#local";
-  
-    public static final BooleanProperty TWELVE_HOUR_FORMAT = Settings.propTwelveHourFormat;
-    public static final IntProperty FIRST_DAY_OF_WEEK = Settings.propFirstDayOfWeek;
-    public static final StringProperty LANGUAGE = Settings.propLanguage;
-    public static final StringProperty COUNTRY = Settings.propCountry;
-    public static final StringProperty VARIANT = Settings.propVariant;
-    public static final StringProperty TIMEZONE = Settings.propTimezone;
+
+    /**
+     * Use 12-Hour Format?
+     */
+    public static final BooleanProperty TWELVE_HOUR_FORMAT = new BooleanProperty(
+      mProp, "uswTwelveHourFormat", false);
+    public static final IntProperty FIRST_DAY_OF_WEEK = new IntProperty(
+      mProp, "firstDayOfWeek", Calendar.getInstance().getFirstDayOfWeek());
+    public static final StringProperty LANGUAGE = new StringProperty(mProp,
+      "language", System.getProperty("user.language"));
+    public static final StringProperty COUNTRY = new StringProperty(mProp,
+      "country", System.getProperty("user.country", ""));
+    public static final StringProperty VARIANT = new StringProperty(mProp,
+      "variant", System.getProperty("user.variant",""));
+    public static final StringProperty TIMEZONE = new StringProperty(mProp,
+      "timeZone", null);
     
     private Locales() {}
   }
@@ -2701,37 +1847,96 @@ public class Settings {
   public static final class LookAndFeel {
     public static final String ID = "#lookandfeel";
     
-    public static final BooleanProperty PLUGIN_VIEW_IS_LEFT = Settings.propPluginViewIsLeft;
-    public static final IntProperty VIEW_DATE_LAYOUT = Settings.propViewDateLayout;
-    public static final BooleanProperty PERSONA_RANDOM = Settings.propRandomPersona;
-    public static final StringProperty PERSONA_SELECTED = Settings.propSelectedPersona;
-    public static final StringProperty JGOODIES_THEME = Settings.propJGoodiesTheme;
-    public static final BooleanProperty JGOODIES_SHADOW = Settings.propJGoodiesShadow;
-    public static final StringProperty SELECTED = Settings.propLookAndFeel;
-    public static final StringProperty INFO_ICON_THEME_ID = Settings.propInfoIconThemeID;
-    public static final StringProperty ICON_THEME = Settings.propIcontheme;
+    /**
+     * If the plugin view is on the left side and the channel list on the right side.
+     * @since 2.7
+     */
+    public static final BooleanProperty PLUGIN_VIEW_IS_LEFT = new BooleanProperty(
+      mProp, "pluginViewIsLeft", true);
+    
+    /**
+     * if calendar view is active
+     *
+     * @since 3.0
+     */
+    public static final IntProperty VIEW_DATE_LAYOUT = new IntProperty(
+      mProp, "propViewDateLayout", 1);
+      
+    /**
+     * Stores if the Persona should be selected randomly at start.
+     * @since 3.1
+     */
+    public static final BooleanProperty PERSONA_RANDOM = new BooleanProperty(
+      mProp, "randomPersona", false);
+
+    /**
+     * Stores the id of the selected Persona.
+     * @since 3.1
+     */
+    public static final StringProperty PERSONA_SELECTED = new StringProperty(
+      mProp, "persona", "51b73c81-7d61-4626-b230-89627c9f5ce7");
+    public static final StringProperty JGOODIES_THEME = new JGoodiesThemeProperty(
+      mProp, "jgoodies.theme");
+    public static final BooleanProperty JGOODIES_SHADOW = new BooleanProperty(
+      mProp, "jgoodies.dropshadow", false);
+    public static final StringProperty SELECTED = new StringProperty(
+      mProp, "lookandfeel1_1", mDefaultSettings.getProperty("lookandfeel",
+          UiUtilities.getDefaultLookAndFeelClassName(false)));
+    public static final StringProperty INFO_ICON_THEME_ID = new StringProperty(
+      mProp, "infoIconThemeName", "tvb_default.zip");
+
+    /**
+     * The IconTheme
+     */
+    public static final StringProperty ICON_THEME = new StringProperty(mProp,
+      "icontheme", mDefaultSettings.getProperty("icontheme", null));
     
     private LookAndFeel() {}
   }
   
-  public static final class MarkingsProgramPanel {
+  public static final class Markings {
     public static final String ID = "#programpanelmarking";
     
-    public static final BooleanProperty USES_EXTRA_SPACE_FOR_MARK_ICONS = Settings.propProgramPanelUsesExtraSpaceForMarkIcons;
-    public static final BooleanProperty WITH_MARKINGS_SHOWING_BORDER = Settings.propProgramPanelWithMarkingsShowingBoder;
-    public static final IntProperty USED_DEFAULT_MARK_PRIORITY = Settings.propProgramPanelUsedDefaultMarkPriority;
-    public static final IntArrayProperty HIGHLIGHTING_COLORS = Settings.propProgramPanelHighlightingColors;
+    /**
+     * Used to track if a program panel should use additional space for the mark
+     * icons
+     */
+    public static final BooleanProperty USES_EXTRA_SPACE_FOR_MARK_ICONS = new BooleanProperty(
+      mProp, "programpanel.usesExtraSpaceForMarkIcons", true);
+      
+    /** Used to enable border on marked programs */
+    public static final BooleanProperty WITH_MARKINGS_SHOWING_BORDER = new BooleanProperty(
+      mProp, "programpanel.markingsShowingBorder", false);
     
-    private MarkingsProgramPanel() {}
+    /** Used default mark priority for markings of plugins. */
+    public static final IntProperty USED_DEFAULT_MARK_PRIORITY = new IntProperty(
+      mProp, "programpanel.defaultMarkPriority", 0);
+    
+    /** Array with in representations of the highlighting colors for Programs 
+     * @since 4.2.2 */
+    public static final IntArrayProperty HIGHLIGHTING_COLORS = new IntArrayProperty(
+      mProp, "programpanel.HighlightingColors", new int[] {
+          new Color(140, 255, 0, 60).getRGB(),
+          new Color(0, 255, 255, 50).getRGB(),
+          new Color(255, 255, 0, 60).getRGB(),
+          new Color(255, 180, 0, 110).getRGB(),
+          new Color(255, 0, 0, 30).getRGB()
+      });
+    
+    private Markings() {}
   }
   
   public static final class Mouse {
     public static final String ID = "#mouse";
     
-    public static final ContextMenuMouseActionArrayProperty LEFT_SINGLE_CLICK_IF_ARRAY = Settings.propLeftSingleClickIfArray;
-    public static final ContextMenuMouseActionArrayProperty LEFT_DOUBLE_CLICK_IF_ARRAY = Settings.propLeftDoubleClickIfArray;
-    public static final ContextMenuMouseActionArrayProperty MIDDLE_SINGLE_CLICK_IF_ARRAY = Settings.propMiddleSingleClickIfArray;
-    public static final ContextMenuMouseActionArrayProperty MIDDLE_DOUBLE_CLICK_IF_ARRAY = Settings.propMiddleDoubleClickIfArray;
+    public static final ContextMenuMouseActionArrayProperty LEFT_SINGLE_CLICK_IF_ARRAY = new ContextMenuMouseActionArrayProperty(
+      mProp, "leftSingleClickIfArray", new ContextMenuMouseActionSetting[] {new ContextMenuMouseActionSetting(ContextMenuManager.NO_MOUSE_MODIFIER_EX,ProgramInfo.getProgramInfoPluginId(),ActionMenu.ID_ACTION_NONE)});
+    public static final ContextMenuMouseActionArrayProperty LEFT_DOUBLE_CLICK_IF_ARRAY = new ContextMenuMouseActionArrayProperty(
+      mProp, "leftDoubleClickIfArray", new ContextMenuMouseActionSetting[] {new ContextMenuMouseActionSetting(ContextMenuManager.NO_MOUSE_MODIFIER_EX,ProgramInfo.getProgramInfoPluginId(),ActionMenu.ID_ACTION_NONE)});
+    public static final ContextMenuMouseActionArrayProperty MIDDLE_SINGLE_CLICK_IF_ARRAY = new ContextMenuMouseActionArrayProperty(
+      mProp, "middleSingleClickIfArray", new ContextMenuMouseActionSetting[] {new ContextMenuMouseActionSetting(ContextMenuManager.NO_MOUSE_MODIFIER_EX,ReminderPlugin.getReminderPluginId(),ActionMenu.ID_ACTION_NONE)});
+    public static final ContextMenuMouseActionArrayProperty MIDDLE_DOUBLE_CLICK_IF_ARRAY = new ContextMenuMouseActionArrayProperty(
+      mProp, "middleDoubleClickIfArray", new ContextMenuMouseActionSetting[] {new ContextMenuMouseActionSetting(ContextMenuManager.NO_MOUSE_MODIFIER_EX,FavoritesPlugin.getFavoritesPluginId(),1)});
     
     private Mouse() {}
   }
@@ -2739,9 +1944,13 @@ public class Settings {
   public static final class Network {
     public static final String ID = "#network";
     
-    public static final BooleanProperty INTERNET_CONNECTION_CHECK = Settings.propInternetConnectionCheck;
-    public static final IntProperty DEFAULT_CONNECTION_TIMEOUT = Settings.propDefaultNetworkConnectionTimeout;
-    public static final IntProperty CHECK_TIMEOUT = Settings.propNetworkCheckTimeout;
+    /** If the internet connection should be checked before accessing internet */
+    public static final BooleanProperty INTERNET_CONNECTION_CHECK = new BooleanProperty(
+      mProp, "internetConnectionCheck", true);
+    public static final IntProperty DEFAULT_CONNECTION_TIMEOUT = new IntProperty(
+      mProp, "network.defaultConnectionTimeout", 60000);
+    public static final IntProperty CHECK_TIMEOUT = new IntProperty(
+      mProp, "network.checkTimeout", 10000);
     
     private Network() {}
   }
@@ -2749,15 +1958,31 @@ public class Settings {
   public static final class Pictures {
     public static final String ID = "#pictures";
     
-    public static final IntProperty TYPE = Settings.propPictureType;
-    public static final MinutesProperty TIME_START = Settings.propPictureStartTime;
-    public static final MinutesProperty TIME_END = Settings.propPictureEndTime;
-    public static final IntProperty DURATION = Settings.propPictureDuration;
-    public static final BooleanProperty DESCRIPTION_SHOW = Settings.propIsPictureShowingDescription;
-    public static final BooleanProperty BORDER_SHOW = Settings.propShowProgramTablePictureBorder;
-    public static final StringArrayProperty PLUGIN_IDS = Settings.propPicturePluginIds;
-    public static final IntProperty PLUGINS_SETTING = Settings.propPluginsPictureSetting;
-    public static final IntProperty DESCRIPTION_LINES = Settings.propPictureDescriptionLines;
+    public static final IntProperty TYPE = new IntProperty(
+      mProp, "pictures.type", ProgramPanelSettings.SHOW_PICTURES_FOR_DURATION);
+    public static final MinutesProperty TIME_START = new MinutesProperty(
+      mProp, "pictures.startTime", 18 * 60);
+    public static final MinutesProperty TIME_END = new MinutesProperty(
+      mProp, "pictures.endTime", 23 * 60);
+    public static final IntProperty DURATION = new IntProperty(
+      mProp, "pictures.duration", 90);
+    public static final BooleanProperty DESCRIPTION_SHOW = new BooleanProperty(
+      mProp, "pictures.showDescription", true);
+    
+    /**
+     * Stores if the picture borders should be painted.
+     * @since 3.1
+     */
+    public static final BooleanProperty BORDER_SHOW = new BooleanProperty(
+      mProp, "showPictureBorder", true);
+    public static final StringArrayProperty PLUGIN_IDS = new StringArrayProperty(
+      mProp, "pictures.pluginIds", new String[0]);
+    
+    /** The setting that contains the global picture settings value */
+    public static final IntProperty PLUGINS_SETTING = new IntProperty(
+      mProp, "pluginsPictureSetting", PluginPictureSettings.PICTURE_AND_DISCRIPTION_TYPE);
+    public static final IntProperty DESCRIPTION_LINES = new IntProperty(
+    mProp, "pictures.lines", 6);
     
     private Pictures() {}
   }
@@ -2766,89 +1991,324 @@ public class Settings {
     public static final String ID = "#plugins";
     
     @SuppressWarnings("exports")
-    public static final BlockedPluginArrayProperty BLOCKED_ARRAY = Settings.propBlockedPluginArray;
-    public static final StringArrayProperty DEACTIVATED = Settings.propDeactivatedPlugins;
-    public static final BooleanProperty AUTO_UPDATE_ENABLED = Settings.propAutoUpdatePlugins;
-    public static final StringArrayProperty RESET_IDS = Settings.propPluginResetIds;
+    public static final BlockedPluginArrayProperty BLOCKED_ARRAY = new BlockedPluginArrayProperty(mProp, "blockedPlugins");
     
+    /**
+     * some plugins are installed by default, but not activated
+     */
+    private static final String[] DEFAULT_DISABLED_PLUGINS;
+    static {
+      ArrayList<String> plugins = new ArrayList<String>();
+      plugins.add("java.showviewplugin.ShowviewPlugin"); // no longer available
+      plugins.add("java.i18nplugin.I18NPlugin"); // developers only
+      if (!OperatingSystem.isMacOs()) {
+        plugins.add("java.growlplugin.GrowlPlugin"); // needs Growl for Windows
+      }
+      plugins.add("java.blogthisplugin.BlogThisPlugin"); // typical users don't blog
+      DEFAULT_DISABLED_PLUGINS = plugins.toArray(new String[plugins.size()]);
+    }
+    
+    /**
+     * The ID's of the plugins that have been deactivated.
+     * <p>
+     * NOTE: By remembering the deactivated plugins rather then the activated plugins
+     * new plugins are activated automatically.
+     */
+    public static final StringArrayProperty DEACTIVATED = new StringArrayProperty(
+      mProp, "deactivatedPlugins", DEFAULT_DISABLED_PLUGINS);
+    
+    /** If the plugin updates should be found automatically */
+    public static final BooleanProperty AUTO_UPDATE_ENABLED = new BooleanProperty(
+      mProp, "autoUpdatePlugins", true);
+    
+    /**
+     * Ids of plugins which settings should be reset on next startup.
+     * <p>
+     * @since 4.2.3
+     */
+    public static final StringArrayProperty RESET_IDS = new StringArrayProperty(mProp, "propPluginReset", null);
+    
+    
+    /**
+     * The order of the plugin IDs.
+     * <p>
+     * In former times this property hold the list of plugin class names that
+     * should be activated on startup (in the right order). Now it holds IDs, not
+     * class names and activation is controlled by {@link #propDeactivatedPlugins}.
+     */
+    public static final StringArrayProperty PLUGIN_ORDER = new StringArrayProperty(
+      mProp, "plugins", null);
+    
+    public static final StringArrayProperty DELETE_FILES_AT_START = new StringArrayProperty(
+      mProp, "deleteFilesAtStart", new String[0]);
+    
+    public static final DateProperty UPDATE_LAST = new DateProperty(
+      mProp, "lastPluginsUpdate", null);
+
+    /**
+     * id of the  active program receive target plugin
+     * @since 3.0
+     */
+    public static final StringProperty RECEIVE_PLUGIN_USED_LAST = new StringProperty(
+      mProp, "lastusedreceiveplugin", null);
+  
+    /**
+     * id of the last active program receive target
+     * @since 3.0
+     */
+    public static final StringProperty RECEIVE_TARGET_USED_LAST = new StringProperty(
+      mProp, "lastusedreceivetarget", null);
+  
+    /**
+     * Stores if beta warining is enabled for plugin update.
+     * @since 3.0
+     */
+    public static final BooleanProperty BETA_WARNING = new BooleanProperty(
+      mProp, "pluginBetaWarning", true);
+    
+    public static final StringArrayProperty ACCESS_CONTROL = new StringArrayProperty(
+      mProp, "accessControl", new String[0]);
+    
+    /** Saves if the plugin info dialog was already shown */
+    public static final BooleanProperty INFO_DIALOG_WAS_SHOWN = new BooleanProperty(
+      mProp, "pluginInfoDialogWasShown", false);
+      
     private Plugins() {}
   }
   
   public static final class ProgramPanel {
     public static final String ID = "#programpanellook";
     
-    public static final StringArrayProperty ICON_PLUGINS = Settings.propProgramTableIconPlugins;
-    public static final StringArrayProperty ICON_PLUGINS_ALTERNATIVE = Settings.propProgramTableIconPluginsAlternative;
-    public static final ProgramFieldTypeArrayProperty INFO_FIELDS = Settings.propProgramInfoFields;
-    public static final StringArrayProperty INFO_FIELDS_SEPARATORS = Settings.propProgramInfoFieldsSeparators;
-    public static final ProgramFieldTypeArrayProperty INFO_FIELDS_ALTERNATIVE = Settings.propProgramInfoFieldsAlternative;
-    public static final StringArrayProperty INFO_FIELDS_SEPARATORS_ALTERNATIVE = Settings.propProgramInfoFieldsSeparatorsAlternative;
-    public static final BooleanProperty ORIGINIAL_TITLES_SHOW = Settings.propProgramPanelShowOriginialTitles;
-    public static final BooleanProperty BORDER_ON_AIR_PROGRAMS_SHOW = Settings.propProgramPanelOnAirProgramsShowingBorder;
-    public static final BooleanProperty HIGHLIGHTING_COLOR_GRADIENT = Settings.propProgramPanelGradientColorHighlighting;
-    public static final ColorProperty COLOR_ON_AIR_DARK = Settings.propProgramPanelColorOnAirDark;
-    public static final ColorProperty COLOR_ON_AIR_LIGHT = Settings.propProgramPanelColorOnAirLight;
-    public static final ColorProperty COLOR_KEYBOARD_SELECTED = Settings.propKeyboardSelectedColor;
-    public static final BooleanProperty TRANSPARENCY_ALLOW = Settings.propProgramPanelAllowTransparency;
-    public static final BooleanProperty HYPHENATION = Settings.propProgramPanelHyphenation;
-    public static final BooleanProperty SMOOTHER_SCROLLING = Settings.propSmootherScrolling;
+    public static final StringArrayProperty ICON_PLUGINS = new StringArrayProperty(
+      mProp, "programpanel.iconPlugins", new String[] { PICTURE_ID,INFO_ID,
+          "tvraterplugin.TVRaterPlugin", });
+    public static final StringArrayProperty ICON_PLUGINS_ALTERNATIVE = new StringArrayProperty(
+      mProp, "programpanel.iconPluginsAlternative", new String[] { PICTURE_ID,INFO_ID,
+          "tvraterplugin.TVRaterPlugin", });
+    public static final ProgramFieldTypeArrayProperty INFO_FIELDS = new ProgramFieldTypeArrayProperty(
+      mProp, "programpanel.infoFields", new ProgramFieldType[] {
+          ProgramFieldType.GENRE_TYPE, ProgramFieldType.EPISODE_TYPE,
+          ProgramFieldType.ORIGIN_TYPE, ProgramFieldType.PRODUCTION_YEAR_TYPE,
+          ProgramFieldType.SHORT_DESCRIPTION_TYPE });
     
-    public static final BooleanProperty TITLE_CUT = Settings.propProgramTableCutTitle;
-    public static final IntProperty TITLE_CUT_LINES = Settings.propProgramTableCutTitleLines;
-    public static final IntProperty MAX_LINES  = Settings.propProgramPanelMaxLines;
-    public static final BooleanProperty DESCRIPTION_LIMIT_BY_DURATION = Settings.propProgramPanelShortDurationActive;
-    public static final IntProperty DESCRIPTION_LIMIT_BY_DURATION_MINUTES = Settings.propProgramPanelShortDurationMinutes;
+    /** Contains the separators for the selected program info filed of a program panel */
+    public static final StringArrayProperty INFO_FIELDS_SEPARATORS = new StringArrayProperty(
+      mProp, "programpanel.infoFieldsSeparators", new String[] {
+         " - "," - ",
+         " - "," - "
+      });
+    public static final ProgramFieldTypeArrayProperty INFO_FIELDS_ALTERNATIVE = new ProgramFieldTypeArrayProperty(
+      mProp, "programpanel.infoFieldsAlternative", new ProgramFieldType[] {
+          ProgramFieldType.GENRE_TYPE, ProgramFieldType.EPISODE_TYPE,
+          ProgramFieldType.ORIGIN_TYPE, ProgramFieldType.PRODUCTION_YEAR_TYPE,
+          ProgramFieldType.SHORT_DESCRIPTION_TYPE });
     
-    public static final ColorProperty COLOR_FOREGROUND= Settings.propProgramPanelForegroundColor;
+    /** Contains the separators for the selected program info filed of a program panel */
+    public static final StringArrayProperty INFO_FIELDS_SEPARATORS_ALTERNATIVE = new StringArrayProperty(
+      mProp, "programpanel.infoFieldsSeparatorsAlternative", new String[] {
+         " - "," - ",
+         " - "," - "
+      });
+    
+    /**
+     * if the original title show be shown instead of title if original is available
+     * @since 3.4.5 
+     */
+    public static final BooleanProperty ORIGINIAL_TITLES_SHOW = new BooleanProperty(
+      mProp, "programpanel.ShowOriginalTitles", false);
+    
+    /** Used to enable border for on air programs */
+    public static final BooleanProperty BORDER_ON_AIR_PROGRAMS_SHOW = new BooleanProperty(
+      mProp, "programpanel.onAirProgramsShowingBorder", false);
+    
+    /**
+     * Flag to set highlighting to gradient instead of priority based coloring.
+     * @since 4.2.2
+     */
+    public static final BooleanProperty HIGHLIGHTING_COLOR_GRADIENT = new BooleanProperty(
+      mProp, "programpanel.programPanelGradientColorHighlighting", true);
+    
+    /** Color for Program on Air - This shows how much was shown until now */
+    public static final ColorProperty COLOR_ON_AIR_DARK = new ColorProperty(
+      mProp, "programpanel.ColorOnAirDark", new Color(0, 0, 255, 60));
+    
+    /** Color for Program on Air - This shows how much is not shown until now */
+    public static final ColorProperty COLOR_ON_AIR_LIGHT = new ColorProperty(
+      mProp, "programpanel.ColorOnAirLight", new Color(0, 0, 255, 30));
+    
+    /** Color for selected Program */
+    public static final ColorProperty COLOR_KEYBOARD_SELECTED = new ColorProperty(
+      mProp, "programpanel.KeyboardSelectedColor", new Color(130, 255, 0, 120));
+    
+    /** If plugins are allowed to set the transparency of a program */
+    public static final BooleanProperty TRANSPARENCY_ALLOW = new BooleanProperty(
+      mProp, "programpanel.AllowTransparency", true);
+
+    /**
+     * use hyphenation to break strings in a program panel
+     */
+    public static final BooleanProperty HYPHENATION = new BooleanProperty(
+      mProp, "programpanel.Hyphenation", false);
+    public static final BooleanProperty SMOOTHER_SCROLLING = new BooleanProperty(
+        mProp, "smootherScrolling", true);
+    
+    
+    /**
+     * if a long program title is to be shown in the program table, shall it be
+     * cut?
+     *
+     * @since 3.0
+     */
+    public static final BooleanProperty TITLE_CUT = new BooleanProperty(
+      mProp, "programTableCutTitle", true);
+    
+    /**
+     * how many lines of the title shall be shown if it is cut
+     *
+     * @since 3.0
+     */
+    public static final IntProperty TITLE_CUT_LINES = new IntProperty(
+      mProp, "programTableCutTitleLines", 2);
+    
+    /**
+     * number of description lines show in program panel
+     */
+    public static final IntProperty MAX_LINES  = new IntProperty(
+      mProp, "programpanel.MaxLines", 3);
+    
+    /**
+     * show less description lines for very short programs
+     */
+    public static final BooleanProperty DESCRIPTION_LIMIT_BY_DURATION = new BooleanProperty(
+      mProp, "programpanel.ShortActive", true);
+    
+    /**
+     * maximum duration in minutes to show no description
+     */
+    public static final IntProperty DESCRIPTION_LIMIT_BY_DURATION_MINUTES = new IntProperty(
+      mProp, "programpanel.ShortMinutes", 10);
+    
+    public static final ColorProperty COLOR_FOREGROUND = new ColorProperty(
+      mProp, "programpanel.ColorForeground", Color.black);
      
     private ProgramPanel() {}
   }
   
   public static final class ProgramTable {
     public static final String ID = "#programtablelook";
+    
+    /**
+     * maximum width of the program table columns
+     */
+    public static final int COLUMN_WIDTH_MAX = 2000;
   
-    public static final String VALUE_LAYOUT_COMPACT = Settings.TYPE_LAYOUT_COMPACT;
-    public static final String VALUE_LAYOUT_REAL_COMPACT = Settings.TYPE_LAYOUT_REAL_COMPACT;
-    public static final String VALUE_LAYOUT_TIME_SYNCHRONOUS = Settings.TYPE_LAYOUT_TIME_SYNCHRONOUS;
-    public static final String VALUE_LAYOUT_TIME_BLOCK = Settings.TYPE_LAYOUT_TIME_BLOCK;
-    public static final String VALUE_LAYOUT_COMPACT_TIME_BLOCK = Settings.TYPE_LAYOUT_COMPACT_TIME_BLOCK;
-    public static final String VALUE_LAYOUT_OPTIMIZED_COMPACT_TIME_BLOCK = Settings.TYPE_LAYOUT_OPTIMIZED_COMPACT_TIME_BLOCK;
-    public static final String VALUE_LAYOUT_REAL_SYNCHRONOUS = Settings.TYPE_LAYOUT_REAL_SYNCHRONOUS;
+    /**
+     * minimum width of the program table columns
+     */
+    public static final int COLUMN_WIDTH_MIN = 100;
     
-    public static final ChoiceProperty STYLE_BACKGROUND = Settings.propTableBackgroundStyle;
-    public static final ChoiceProperty LAYOUT = Settings.propTableLayout;
-    public static final IntProperty COLUMN_WIDTH = Settings.propColumnWidth;
-    public static final MinutesProperty START_OF_DAY = Settings.propProgramTableStartOfDay;
-    public static final MinutesProperty END_OF_DAY = Settings.propProgramTableEndOfDay;
-    public static final BooleanProperty MOUSE_OVER = Settings.propProgramTableMouseOver;
-    public static final ColorProperty COLOR_MOUSE_OVER = Settings.propProgramTableMouseOverColor;
-    public static final BooleanProperty SCROLL_HORIZONTAL = Settings.propProgramTableScrollHorizontal;
-    public static final BooleanProperty AUTO_CHANGE_DATE = Settings.propProgramTableAutoChangeDate;
-    public static final BooleanProperty MOUSE_AUTO_SCROLL = Settings.propProgramTableMouseAutoScroll;
-    public static final BooleanProperty SCROLL_TO_TIME_MARKING = Settings.propScrollToTimeMarkingActivated;
-    public static final ColorProperty COLOR_SCROLL_TO_TIME_PROGRAMS_BACKGROUND_LIGHT = Settings.propScrollToTimeProgramsLightBackground;
-    public static final ColorProperty COLOR_SCROLL_TO_TIME_PROGRAMS_BACKGROUND_DARK = Settings.propScrollToTimeProgramsDarkBackground;
-    public static final BooleanProperty HIGHLIGHT_CHANNEL_COLUMN_BY_SCROLLING = Settings.propHighlightChannelColumnByScrolling;
-    public static final BooleanProperty HIGHLIGHT_CHANNEL_COLUMN_BY_MOUSE = Settings.propHighlightChannelColumnByMouse;
-    public static final ColorProperty COLOR_HIGHLIGHT_CHANNEL_PROGRAMS_BACKGROUND = Settings.propHighlightChannelProgramsBackground;
-    public static final BooleanProperty FIND_AS_YOU_TYPE = Settings.propTypeAsYouFindEnabled;
+    public static final String VALUE_LAYOUT_COMPACT = "compact";
+    public static final String VALUE_LAYOUT_REAL_COMPACT = "realCompact";
+    public static final String VALUE_LAYOUT_TIME_SYNCHRONOUS = "timeSynchronous";
+    public static final String VALUE_LAYOUT_TIME_BLOCK = "timeBlock";
+    public static final String VALUE_LAYOUT_COMPACT_TIME_BLOCK = "compactTimeBlock";
+    public static final String VALUE_LAYOUT_OPTIMIZED_COMPACT_TIME_BLOCK = "optimizedCompactTimeBlock";
+    public static final String VALUE_LAYOUT_REAL_SYNCHRONOUS = "realSynchronous";
     
-    public static final StringProperty TIME_OF_DAY_BACKGROUND_EDGE = Settings.propTimeOfDayBackgroundEdge;
-    public static final StringProperty TIME_OF_DAY_BACKGROUND_EARLY = Settings.propTimeOfDayBackgroundEarly;
-    public static final StringProperty TIME_OF_DAY_BACKGROUND_MIDDAY = Settings.propTimeOfDayBackgroundMidday;
-    public static final StringProperty TIME_OF_DAY_BACKGROUND_AFTERNOON = Settings.propTimeOfDayBackgroundAfternoon;
-    public static final StringProperty TIME_OF_DAY_BACKGROUND_EVENING = Settings.propTimeOfDayBackgroundEvening;
+    public static final ChoiceProperty STYLE_BACKGROUND = new ChoiceProperty(
+      mProp, "tablebackground.style", "uiTimeBlock", new String[] { "singleColor",
+          "oneImage", ProgramTable.VALUE_LAYOUT_TIME_BLOCK, "timeOfDay", "uiColor" , "uiTimeBlock" });
+    public static final ChoiceProperty LAYOUT = new ChoiceProperty(
+      mProp, "table.layout", ProgramTable.VALUE_LAYOUT_OPTIMIZED_COMPACT_TIME_BLOCK, new String[] {
+          ProgramTable.VALUE_LAYOUT_TIME_SYNCHRONOUS, ProgramTable.VALUE_LAYOUT_COMPACT, ProgramTable.VALUE_LAYOUT_REAL_SYNCHRONOUS,
+          ProgramTable.VALUE_LAYOUT_REAL_COMPACT, ProgramTable.VALUE_LAYOUT_TIME_BLOCK, ProgramTable.VALUE_LAYOUT_COMPACT_TIME_BLOCK, 
+          ProgramTable.VALUE_LAYOUT_OPTIMIZED_COMPACT_TIME_BLOCK});
+    public static final IntProperty COLUMN_WIDTH = new VariableIntProperty(mProp,
+      "columnwidth", 200);
     
-    public static final ColorProperty COLOR_BACKGROUND_SINGLE = Settings.propProgramTableBackgroundSingleColor;
+    /**
+     * start of day in minutes after midnight
+     */
+    public static final MinutesProperty START_OF_DAY = new MinutesProperty(
+      mProp, "programtable.startofday", 0);
     
-    public static final StringProperty ONE_IMAGE_BACKGROUND = Settings.propOneImageBackground;
+    /**
+     * end of day in minutes after midnight
+     */
+    public static final MinutesProperty END_OF_DAY = new MinutesProperty(
+      mProp, "programtable.endofday", 5 * 60);
+    public static final BooleanProperty MOUSE_OVER = new BooleanProperty(
+      mProp, "programpanel.MouseOver", true);
     
-    public static final IntProperty TIME_BLOCK_SIZE = Settings.propTimeBlockSize;
-    public static final StringProperty TIME_BLOCK_BACKGROUND1 = Settings.propTimeBlockBackground1;
-    public static final StringProperty TIME_BLOCK_BACKGROUND2 = Settings.propTimeBlockBackground2;
-    public static final BooleanProperty TIME_BLOCK_SHOW_WEST = Settings.propTimeBlockShowWest;
-    public static final StringProperty TIME_BLOCK_WEST_IMAGE1 = Settings.propTimeBlockWestImage1;
-    public static final StringProperty TIME_BLOCK_WEST_IMAGE2 = Settings.propTimeBlockWestImage2;
+    /** Color for Mouse-Over */
+    public static final ColorProperty COLOR_MOUSE_OVER = new ColorProperty(
+      mProp, "programpanel.MouseOverColor", new Color(200, 200, 0, 60));
+    public static final BooleanProperty SCROLL_HORIZONTAL = new BooleanProperty(
+      mProp, "programpanel.scrollHorizontal", false);
+    public static final BooleanProperty AUTO_CHANGE_DATE = new BooleanProperty(
+      mProp, "autoScrollToNextDay", true);
+    
+    /**
+     * auto scroll table after panning?
+     *
+     * @since 3.0
+     */
+    public static final BooleanProperty MOUSE_AUTO_SCROLL = new BooleanProperty(
+      mProp, "programTableMouseAutoScroll", true);
+    public static final BooleanProperty SCROLL_TO_TIME_MARKING = new BooleanProperty(
+      mProp, "scrollToTimeMarkingActivated", true);
+    public static final ColorProperty COLOR_SCROLL_TO_TIME_PROGRAMS_BACKGROUND_LIGHT = new ColorProperty(
+      mProp, "scrollToTimeProgramsLightBackground", new Color(255, 150, 0, 40));
+    public static final ColorProperty COLOR_SCROLL_TO_TIME_PROGRAMS_BACKGROUND_DARK = new ColorProperty(
+      mProp, "scrollToTimeProgramsDarkBackground", new Color(255, 150, 0, 80));
+    public static final BooleanProperty HIGHLIGHT_CHANNEL_COLUMN_BY_SCROLLING = new BooleanProperty(
+      mProp, "scrollToChannelMarkingActivated", true);
+    
+    /**
+     * @since 4.2.4
+     */
+    public static final BooleanProperty HIGHLIGHT_CHANNEL_COLUMN_BY_MOUSE = new BooleanProperty(
+      mProp, "highlightChannelColumnByMouse", true);
+    public static final ColorProperty COLOR_HIGHLIGHT_CHANNEL_PROGRAMS_BACKGROUND = new ColorProperty(
+      mProp, "scrollToChannelProgramsBackground", new Color(255, 150, 0, 40));
+    
+    /**
+     * Find as you type in the program table enabled?
+     * @since 3.1.1
+     */    
+    public static final BooleanProperty FIND_AS_YOU_TYPE = new BooleanProperty(
+      mProp, "typeAsYouFindEnabled", true);
+    
+    public static final StringProperty TIME_OF_DAY_BACKGROUND_EDGE = new StringProperty(
+      mProp, "tablebackground.timeofday.edge", "imgs/columns_edge.jpg");
+    public static final StringProperty TIME_OF_DAY_BACKGROUND_EARLY = new StringProperty(
+      mProp, "tablebackground.timeofday.early", "imgs/columns_early.jpg");
+    public static final StringProperty TIME_OF_DAY_BACKGROUND_MIDDAY = new StringProperty(
+      mProp, "tablebackground.timeofday.midday", "imgs/columns_midday.jpg");
+    public static final StringProperty TIME_OF_DAY_BACKGROUND_AFTERNOON = new StringProperty(
+      mProp, "tablebackground.timeofday.afternoon",
+      "imgs/columns_afternoon.jpg");
+    public static final StringProperty TIME_OF_DAY_BACKGROUND_EVENING = new StringProperty(
+      mProp, "tablebackground.timeofday.evening", "imgs/columns_evening.jpg");
+    
+    public static final ColorProperty COLOR_BACKGROUND_SINGLE = new ColorProperty(
+      mProp, "backgroundSingleColor", Color.white);
+    
+    public static final StringProperty ONE_IMAGE_BACKGROUND = new StringProperty(
+      mProp, "tablebackground.oneImage.image", "imgs/columns_evening.jpg");
+    
+    public static final IntProperty TIME_BLOCK_SIZE = new IntProperty(mProp,
+      "tablebackground.timeBlock.size", 2);
+    public static final StringProperty TIME_BLOCK_BACKGROUND1 = new StringProperty(
+      mProp, "tablebackground.timeBlock.image1", "imgs/time_block_white.png");
+    public static final StringProperty TIME_BLOCK_BACKGROUND2 = new StringProperty(
+      mProp, "tablebackground.timeBlock.image2", "imgs/time_block_gray.png");
+    public static final BooleanProperty TIME_BLOCK_SHOW_WEST = new BooleanProperty(
+      mProp, "tablebackground.timeBlock.showWest", true);
+    public static final StringProperty TIME_BLOCK_WEST_IMAGE1 = new StringProperty(
+      mProp, "tablebackground.timeBlock.west1", "imgs/time_block_white.png");
+    public static final StringProperty TIME_BLOCK_WEST_IMAGE2 = new StringProperty(
+      mProp, "tablebackground.timeBlock.west2", "imgs/time_block_gray.png");
     
     private ProgramTable() {}
   }
@@ -2856,12 +2316,18 @@ public class Settings {
   public static final class Proxy {
     public static final String ID = "#proxy";
     
-    public static final BooleanProperty USE_PROXY = Settings.propHttpProxyUseProxy;
-    public static final StringProperty HOST = Settings.propHttpProxyHost;
-    public static final StringProperty PORT = Settings.propHttpProxyPort;
-    public static final BooleanProperty AUTHENTIFY_AT_PROXY = Settings.propHttpProxyAuthentifyAtProxy;
-    public static final StringProperty USER = Settings.propHttpProxyUser;
-    public static final EncodedStringProperty PASSWORD = Settings.propHttpProxyPassword;
+    public static final BooleanProperty USE = new BooleanProperty(
+      mProp, "proxy.http.useProxy", false);
+    public static final StringProperty HOST = new StringProperty(
+      mProp, "proxy.http.host", "");
+    public static final StringProperty PORT = new StringProperty(
+      mProp, "proxy.http.port", "");
+    public static final BooleanProperty AUTHENTIFY_AT_PROXY = new BooleanProperty(
+      mProp, "proxy.http.authentifyAtProxy", false);
+    public static final StringProperty USER = new StringProperty(
+      mProp, "proxy.http.user", "");
+    public static final EncodedStringProperty PASSWORD = new EncodedStringProperty(
+      mProp, "proxy.http.password", "", PROXY_PASSWORD_SEED);
     
     private Proxy() {}
   }
@@ -2869,12 +2335,36 @@ public class Settings {
   public static final class ToolBar {
     public static final String ID = "#toolbar";
     
-    public static final BooleanProperty IS_VISIBLE = Settings.propIsToolbarVisible;
-    public static final BooleanProperty IS_SEARCH_FIELD_VISIBLE = Settings.propIsSearchFieldVisible;
-    public static final StringProperty LOCATION = Settings.propToolbarLocation;
-    public static final ChoiceProperty BUTTON_STYLE = Settings.propToolbarButtonStyle;
-    public static final BooleanProperty USE_BIG_ICONS = Settings.propToolbarUseBigIcons;
-    public static final StringArrayProperty BUTTONS = Settings.propToolbarButtons;
+    public static final BooleanProperty IS_VISIBLE = new BooleanProperty(
+      mProp, "isToolbarVisible", true);
+    
+    /**
+     * Show the SearchField in the Toolbar
+     */
+    public static final BooleanProperty IS_SEARCH_FIELD_VISIBLE = new BooleanProperty(
+      mProp, "isSearchFieldVisible", true);
+    public static final StringProperty LOCATION = new StringProperty(
+      mProp, "toolbarLocation", "north");
+    public static final ChoiceProperty BUTTON_STYLE = new ChoiceProperty(
+      mProp, "buttontype", "icon", new String[] { "text&icon", "text", "icon" });
+    public static final BooleanProperty BIG_ICONS_USE = new BooleanProperty(
+      mProp, "toolbarUseBigIcons", true);
+    public static final StringArrayProperty BUTTONS = new StringArrayProperty(
+      mProp, "toolbarButtons_2.0", null // we show all buttons, if this property
+      // is not set
+      );
+      
+    /**
+     * Property to store if additonal space should be inserted above toolbar.
+     */
+    public static final BooleanProperty ADDITIONAL_TOP_SPACE = new BooleanProperty(
+        mProp, "isToolbarAdditonalTopSpace", false);
+  
+    /**
+    * Property to store if additonal space should be inserted below toolbar.
+    */
+   public static final BooleanProperty ADDITIONAL_BOTTOM_SPACE = new BooleanProperty(
+       mProp, "isToolbarAddtionalBottomSpace", false);
     
     private ToolBar() {}
   }
@@ -2882,28 +2372,44 @@ public class Settings {
   public static final class Tray {
     public static final String ID = "#tray";
     
-    public static final BooleanProperty ENABLED = Settings.propTrayIsEnabled;
-    public static final BooleanProperty MINIMIZE_TO = Settings.propTrayMinimizeTo;
-    public static final BooleanProperty NOW_ON_RESTORE = Settings.propNowOnRestore;
-    public static final BooleanProperty ANTIALIASING = Settings.propTrayIsAntialiasing;
-    public static final BooleanProperty FILTER_NOT_MARKED = Settings.propTrayFilterNotMarked;
-    public static final BooleanProperty FILTER_NOT = Settings.propTrayFilterNot;
+    public static final BooleanProperty ENABLED = new BooleanProperty(
+      mProp, "trayIsEnabled", true);
+    public static final BooleanProperty MINIMIZE_TO = new BooleanProperty(
+      mProp, "MinimizeToTray", false);
+    public static final BooleanProperty NOW_ON_RESTORE = new BooleanProperty(
+      mProp, "jumpNowOnRestore",true);
+    public static final BooleanProperty ANTIALIASING = new BooleanProperty(
+      mProp, "trayIsAntialiasing", true);
+    public static final BooleanProperty FILTER_NOT_MARKED = new BooleanProperty(
+      mProp, "trayFilterNotMarked",false);
+    public static final BooleanProperty FILTER_NOT = new BooleanProperty(
+      mProp, "trayFilterAll",false);
     
     private Tray() {}
     
     public static final class Important {
       public static final String ID = "#trayImportant";
       
-      public static final BooleanProperty ENABLED = Settings.propTrayImportantProgramsEnabled;
-      public static final BooleanProperty IN_SUB_MENU = Settings.propTrayImportantProgramsInSubMenu;
-      public static final IntProperty SIZE = Settings.propTrayImportantProgramsSize;
-      public static final BooleanProperty CONTAINS_NAME = Settings.propTrayImportantProgramsContainsName;
-      public static final BooleanProperty CONTAINS_ICON = Settings.propTrayImportantProgramsContainsIcon;
-      public static final BooleanProperty CONTAINS_DATE = Settings.propTrayImportantProgramsContainsDate;
-      public static final BooleanProperty CONTAINS_TIME = Settings.propTrayImportantProgramsContainsTime;
-      public static final BooleanProperty CONTAINS_TOOL_TIP = Settings.propTrayImportantProgramsContainsToolTip;
-      public static final IntProperty PRIORITY = Settings.propTrayImportantProgramsPriority;
-      public static final BooleanProperty SORT_NUMBER_SHOW = Settings.propTrayImportantProgramsShowingSortNumber;
+      public static final BooleanProperty ENABLED = new BooleanProperty(
+        mProp, "trayImportantProgramsEnabled", true);
+      public static final BooleanProperty IN_SUB_MENU = new BooleanProperty(
+        mProp, "trayImportantProgramsInSubMenu", false);
+      public static final IntProperty SIZE = new IntProperty(
+        mProp, "trayImportantProgramsSize", 5);
+      public static final BooleanProperty CONTAINS_NAME = new BooleanProperty(
+        mProp, "trayImportantProgramsContainsName", true);
+      public static final BooleanProperty CONTAINS_ICON = new BooleanProperty(
+        mProp, "trayImportantProgramsContainsIcon", true);
+      public static final BooleanProperty CONTAINS_DATE = new BooleanProperty(
+        mProp, "trayImportantProgramsContainsDate", true);
+      public static final BooleanProperty CONTAINS_TIME = new BooleanProperty(
+        mProp, "trayImportantProgramsContainsTime", true);
+      public static final BooleanProperty CONTAINS_TOOL_TIP = new BooleanProperty(
+        mProp, "trayImportantProgramsContainsToolTip", true);
+      public static final IntProperty PRIORITY = new IntProperty(
+        mProp, "trayImportantProgramsPriority", 0);
+      public static final BooleanProperty SORT_NUMBER_SHOW = new BooleanProperty(
+        mProp, "trayImportantProgramsShowingSortNumber", true);
       
       private Important() {}
     }
@@ -2911,13 +2417,20 @@ public class Settings {
     public static final class Now {
       public static final String ID = "#trayNow";
       
-      public static final BooleanProperty ENABLED = Settings.propTrayNowProgramsEnabled;
-      public static final BooleanProperty IN_SUB_MENU = Settings.propTrayNowProgramsInSubMenu;
-      public static final BooleanProperty CONTAINS_NAME = Settings.propTrayNowProgramsContainsName;
-      public static final BooleanProperty CONTAINS_ICON = Settings.propTrayNowProgramsContainsIcon;
-      public static final BooleanProperty CONTAINS_TIME = Settings.propTrayNowProgramsContainsTime;
-      public static final BooleanProperty CONTAINS_TOOL_TIP = Settings.propTrayNowProgramsContainsToolTip;
-      public static final BooleanProperty SORT_NUMBER_SHOW = Settings.propTrayNowProgramsShowingSortNumber;
+      public static final BooleanProperty ENABLED = new BooleanProperty(
+        mProp, "trayNowProgramsEnabled", true);
+      public static final BooleanProperty IN_SUB_MENU = new BooleanProperty(
+        mProp, "trayNowProgramsInSubMenus", false);
+      public static final BooleanProperty CONTAINS_NAME = new BooleanProperty(
+        mProp, "trayNowProgramsContainsName", true);
+      public static final BooleanProperty CONTAINS_ICON = new BooleanProperty(
+        mProp, "trayNowProgramsContainsIcon", true);
+      public static final BooleanProperty CONTAINS_TIME = new BooleanProperty(
+        mProp, "trayNowProgramsContainsTime", false);
+      public static final BooleanProperty CONTAINS_TOOL_TIP = new BooleanProperty(
+        mProp, "trayNowProgramsContainsToolTip", true);
+      public static final BooleanProperty SORT_NUMBER_SHOW = new BooleanProperty(
+        mProp, "trayNowProgramsShowingSortNumber", true);
       
       private Now() {}
     }
@@ -2925,27 +2438,40 @@ public class Settings {
     public static final class OnTime {
       public static final String ID = "#trayOnTime";
       
-      public static final BooleanProperty ENABLED = Settings.propTrayOnTimeProgramsEnabled;
-      public static final BooleanProperty IN_SUB_MENU = Settings.propTrayOnTimeProgramsInSubMenu;
-      public static final BooleanProperty CONTAINS_NAME = Settings.propTrayOnTimeProgramsContainsName;
-      public static final BooleanProperty CONTAINS_ICON = Settings.propTrayOnTimeProgramsContainsIcon;
-      public static final BooleanProperty CONTAINS_TIME = Settings.propTrayOnTimeProgramsContainsTime;
-      public static final BooleanProperty CONTAINS_TOOL_TIP = Settings.propTrayOnTimeProgramsContainsToolTip;
-      public static final BooleanProperty SORT_NUMBER_SHOW = Settings.propTrayOnTimeProgramsShowingSortNumber;
-      public static final BooleanProperty PROGRESS_SHOW = Settings.propTrayOnTimeProgramsShowProgress;
+      public static final BooleanProperty ENABLED = new BooleanProperty(
+        mProp, "trayOnTimeProgramsEnabled", true);
+      public static final BooleanProperty IN_SUB_MENU = new BooleanProperty(
+        mProp, "trayOnTimeProgramsInSubMenus", true);
+      public static final BooleanProperty CONTAINS_NAME = new BooleanProperty(
+        mProp, "trayOnTimeProgramsContainsName", true);
+      public static final BooleanProperty CONTAINS_ICON = new BooleanProperty(
+        mProp, "trayOnTimeProgramsContainsIcon", true);
+      public static final BooleanProperty CONTAINS_TIME = new BooleanProperty(
+        mProp, "trayOnTimeProgramsContainsTime", false);
+      public static final BooleanProperty CONTAINS_TOOL_TIP = new BooleanProperty(
+        mProp, "trayOnTimeProgramsContainsToolTip", true);
+      public static final BooleanProperty SORT_NUMBER_SHOW = new BooleanProperty(
+        mProp, "trayOnTimeProgramsShowingSortNumber", true);
+      public static final BooleanProperty PROGRESS_SHOW = new BooleanProperty(
+        mProp, "trayOnTimeProgramsShowProgress", true);
       
-      public static final ColorProperty COLOR_PROGRESS_BACKGROUND_LIGHT = Settings.propTrayOnTimeProgramsLightBackground;
-      public static final ColorProperty COLOR_PROGRESS_BACKGROUND_DARK = Settings.propTrayOnTimeProgramsDarkBackground;
+      public static final ColorProperty COLOR_PROGRESS_BACKGROUND_LIGHT = new ColorProperty(
+        mProp, "trayOnTimeProgramsLightBackground", new Color(255, 150, 0, 40));
+      public static final ColorProperty COLOR_PROGRESS_BACKGROUND_DARK = new ColorProperty(
+        mProp, "trayOnTimeProgramsDarkBackground", new Color(255, 150, 0, 80));
       
       private OnTime() {}
     }
     
     public static final class Channels {
       public static final String ID = "#trayChannels";
-      
-      public static final BooleanProperty USE_SPECIAL = Settings.propTrayUseSpecialChannels;
-      public static final ChannelArrayProperty SPECIAL = Settings.propTraySpecialChannels;
-      public static final IntProperty WIDTH = Settings.propTrayChannelWidth;
+            
+      public static final BooleanProperty SPECIAL_USE = new BooleanProperty(
+        mProp, "trayUseSpecialChannels", false);
+      public static final ChannelArrayProperty SPECIAL = new ChannelArrayProperty(
+        mProp, "traySpecialChannels", new devplugin.Channel[] {});
+      public static final IntProperty WIDTH = new IntProperty(
+        mProp, "trayChannelWidth", 78);
       
       private Channels() {}
     }
@@ -2953,12 +2479,18 @@ public class Settings {
     public static final class Soon {
       public static final String ID = "#traySoon";
       
-      public static final BooleanProperty ENABLED = Settings.propTraySoonProgramsEnabled;
-      public static final BooleanProperty CONTAINS_NAME = Settings.propTraySoonProgramsContainsName;
-      public static final BooleanProperty CONTAINS_ICON = Settings.propTraySoonProgramsContainsIcon;
-      public static final BooleanProperty CONTAINS_TIME = Settings.propTraySoonProgramsContainsTime;
-      public static final BooleanProperty CONTAINS_TOOL_TIP = Settings.propTraySoonProgramsContainsToolTip;
-      public static final BooleanProperty SORT_NUMBER_SHOW = Settings.propTraySoonProgramsShowingSortNumber;
+      public static final BooleanProperty ENABLED = new BooleanProperty(
+        mProp, "traySoonProgramsEnabled", true);
+      public static final BooleanProperty CONTAINS_NAME = new BooleanProperty(
+        mProp, "traySoonProgramsContainsName", true);
+      public static final BooleanProperty CONTAINS_ICON = new BooleanProperty(
+        mProp, "traySoonProgramsContainsIcon", true);
+      public static final BooleanProperty CONTAINS_TIME = new BooleanProperty(
+        mProp, "traySoonProgramsContainsTime", true);
+      public static final BooleanProperty CONTAINS_TOOL_TIP = new BooleanProperty(
+        mProp, "traySoonProgramsContainsToolTip", true);
+      public static final BooleanProperty SORT_NUMBER_SHOW = new BooleanProperty(
+        mProp, "traySoonProgramsShowingSortNumber", true);
       
       private Soon() {}
     }    
@@ -2966,10 +2498,128 @@ public class Settings {
   
   public static final class WebBrowser {
     public static final String ID = "#webbrowser";
-      
-    public static final StringProperty USER_DEFINED_PARAMS = Settings.propUserDefinedWebbrowserParams;
-    public static final StringProperty USER_DEFINED = Settings.propUserDefinedWebbrowser;
+    
+    public static final StringProperty USER_DEFINED = new StringProperty(
+      mProp, "webbrowser", null);  
+    public static final StringProperty USER_DEFINED_PARAMS = new StringProperty(
+      mProp, "webbrowserParams", "{0}");
+    
+    /**
+     * Show the "The Browser was opened"-Dialog
+     */
+    public static final BooleanProperty OPEN_BROWSER_DIALOG_SHOW = new BooleanProperty(
+      mProp, "showBrowserOpenDialog", true);
     
     private WebBrowser() {}
   }
+  
+  public static final class Window {
+    public static final BooleanProperty MAXIMIZED = new BooleanProperty(
+      mProp, "window.isMaximized", false);
+
+    /**
+     * Store if TV-Browser window is in native full screen mode of macOS
+     * @since 4.2.4
+     */
+    public static final BooleanProperty MAC_OS_FULL_SCREEN = new BooleanProperty(
+          mProp, "window.isInMacOSFullScreen", false);
+  
+  
+    public static final IntProperty WIDTH = new IntProperty(mProp,
+        "window.width", 770);
+  
+    public static final IntProperty HEIGHT = new IntProperty(mProp,
+        "window.height", 550);
+  
+    public static final IntProperty X = new IntProperty(mProp,
+        "window.x", -1);
+  
+    public static final IntProperty Y = new IntProperty(mProp,
+        "window.y", -1);
+        
+   /**
+     * Property to store visibility state of menu bar.
+     */
+    public static final BooleanProperty MENU_BAR_VISIBLE = new BooleanProperty(
+        mProp, "isMenubarVisible", true);
+  
+    
+    public static final BooleanProperty STATUS_BAR_VISIBLE = new BooleanProperty(
+        mProp, "isStatusbarVisible", true);
+    
+    public static final BooleanProperty PLUGIN_VIEW_SHOW = new BooleanProperty(
+        mProp, "show.pluginview", false);
+  
+    public static final BooleanProperty TIME_BUTTONS_SHOW = new BooleanProperty(
+        mProp, "show.timebuttons", true);
+  
+    public static final BooleanProperty CHANNEL_SELECTION_SHOW = new BooleanProperty(
+        mProp, "show.channels", true);
+  
+    public static final BooleanProperty DATE_SELECTION_SHOW = new BooleanProperty(
+        mProp, "show.datelist", true);
+  
+    public static final BooleanProperty FILTER_BAR_SHOW = new BooleanProperty(
+        mProp, "show.filterbar", true);
+        
+    public static final BooleanProperty ASSISTANT_SHOW = new BooleanProperty(
+      mProp, "showassistant", true);
+  
+    /**
+     * the last active program filter
+     */
+    public static final StringProperty FILTER_LAST_USED = new StringProperty(
+      mProp, "lastusedfilter", null);
+  
+    public static final SplitViewProperty VIEW_ROOT = new SplitViewProperty(
+      mProp, "view.root", false, true, 200);
+
+    public static final SplitViewProperty VIEW_MAIN_FRAME = new SplitViewProperty(
+      mProp, "view.mainframe", false, false, 150);
+
+    public static final SplitViewProperty VIEW_NAVIGATION = new SplitViewProperty(
+      mProp, "view.navigation", true, true, 150);
+
+    public static final SplitViewProperty VIEW_DATE_CHANNEL = new SplitViewProperty(
+      mProp, "view.date_channel", true, true, 150);
+    
+    public static final IntProperty SCREEN_NUMBER = new IntProperty(
+        mProp, "screenNumber", -1);
+    
+    
+    private Window() {}
+  }
+  
+  public static final class Data {
+    public static final IntProperty DOWNLOAD_PERIOD = new IntProperty(mProp,
+      "downloadperiod", 1);
+
+    public static final BooleanProperty SAVE_DEFAULT_DATA_UPDATE_VALUES_DEFAULT = new BooleanProperty(
+        mProp, "saveDefaultDataUpdateValuesDefault", true);
+  
+    public static final DateProperty DOWNLOAD_DATE_LAST = new DateProperty(
+        mProp, "lastdownload", Date.getCurrentDate().addDays(-100));
+        
+    public static final StringArrayProperty DATA_SERVICES_FOR_UPDATE = new StringArrayProperty(
+      mProp, "tvdataservices.update", null);
+    
+    /**@since 4.2.2*/
+    public static final IntProperty DOWNLOAD_TIME_LAST = new IntProperty(
+        mProp, "lastdownloadTime", 0);
+        
+    /** An array with the ids of the TV data service which license was accepted. */
+    public static final StringArrayProperty ACCEPTED_LICENSES = new StringArrayProperty(
+      mProp, "licnseIds", new String[] {});
+    
+    /**
+     * The time between auto updates of data services
+     * @since 2.7
+     */
+    public static final IntProperty DATA_SERVICE_AUTO_UPDATE_TIME = new IntProperty(
+      mProp, "dataServiceAutoUpdateTime", 30);
+    
+    private Data() {}
+  }
+  
+  
 }

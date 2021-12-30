@@ -68,13 +68,13 @@ public class UiTimeBlockBackPainter extends AbstractBackPainter {
   private static final int EXPIRED_ALPHA = 20;
 
   public UiTimeBlockBackPainter() {
-    if (Settings.propTwelveHourFormat.getBoolean()) {
+    if (Settings.Locales.TWELVE_HOUR_FORMAT.getBoolean()) {
       mFormatter = new TimeFormatter("hh a");
     } else {
       mFormatter = new TimeFormatter("HH");
     }
 
-    if (Settings.propTimeBlockShowWest.getBoolean()) {
+    if (Settings.ProgramTable.TIME_BLOCK_SHOW_WEST.getBoolean()) {
       mTableWest = new TimeBlockTableWest();
     } else {
       mTableWest = null;
@@ -99,7 +99,7 @@ public class UiTimeBlockBackPainter extends AbstractBackPainter {
       mLineColor = mLineColor.darker();
     }
     
-    mBlockSize = Settings.propTimeBlockSize.getInt();
+    mBlockSize = Settings.ProgramTable.TIME_BLOCK_SIZE.getInt();
   }
 
   /**
@@ -293,7 +293,7 @@ public class UiTimeBlockBackPainter extends AbstractBackPainter {
     }
 
     public void paintComponent(Graphics grp) {
-      if(Settings.propEnableAntialiasing.getBoolean() && grp instanceof Graphics2D) {
+      if(Settings.Fonts.ANTIALIASING_ENABLED.getBoolean() && grp instanceof Graphics2D) {
         ((Graphics2D) grp).setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
       }
     	

@@ -144,7 +144,7 @@ public class InfoThemeLoader {
    * @return The default info icon theme.
    */
   public InfoIconTheme getDefaultTheme() {
-    InfoIconTheme test = mInfoIconThemeMap.get(Settings.propInfoIconThemeID.getDefault());
+    InfoIconTheme test = mInfoIconThemeMap.get(Settings.LookAndFeel.INFO_ICON_THEME_ID.getDefault());
     
     if(test == null && !mInfoIconThemeMap.isEmpty()) {
       test = getAvailableInfoIconThemes()[0];

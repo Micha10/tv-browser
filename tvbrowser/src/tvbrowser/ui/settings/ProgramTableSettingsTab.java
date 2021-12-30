@@ -256,16 +256,16 @@ public class ProgramTableSettingsTab implements SettingsTab, ActionListener {
     // column width
     int width = Settings.ProgramTable.COLUMN_WIDTH.getInt();
 
-    if (width > Settings.MAX_COLUMN_WIDTH) {
-      width = Settings.MAX_COLUMN_WIDTH;
+    if (width > Settings.ProgramTable.COLUMN_WIDTH_MAX) {
+      width = Settings.ProgramTable.COLUMN_WIDTH_MAX;
     }
 
-    if (width < Settings.MIN_COLUMN_WIDTH) {
-      width = Settings.MIN_COLUMN_WIDTH;
+    if (width < Settings.ProgramTable.COLUMN_WIDTH_MIN) {
+      width = Settings.ProgramTable.COLUMN_WIDTH_MIN;
     }
 
     mColWidth = new JSpinner(new SpinnerNumberModel(
-            width, Settings.MIN_COLUMN_WIDTH, Settings.MAX_COLUMN_WIDTH, 1));
+            width, Settings.ProgramTable.COLUMN_WIDTH_MIN, Settings.ProgramTable.COLUMN_WIDTH_MAX, 1));
 
     mSettingsPn.add(new JLabel(mLocalizer.msg("widthInPixels", "Width in Pixels")), CC.xy(2, (currentRow += 2)));
     mSettingsPn.add(mColWidth, CC.xy(4, currentRow));
@@ -317,17 +317,14 @@ public class ProgramTableSettingsTab implements SettingsTab, ActionListener {
         + ")"), CC.xy(6, currentRow));
     CaretPositionCorrector.createCorrector(dateEditor.getTextField(), new char[] {':'}, -1);
     
-    int minutes;
+    
     Calendar cal = Calendar.getInstance();
-    minutes = Settings.ProgramTable.START_OF_DAY.getInt();
-    cal.set(Calendar.HOUR_OF_DAY, minutes / 60);
-    cal.set(Calendar.MINUTE, minutes % 60);
+    cal.set(Calendar.HOUR_OF_DAY, Settings.ProgramTable.START_OF_DAY.getDefaultHourOfDay());
+    cal.set(Calendar.MINUTE, Settings.ProgramTable.START_OF_DAY.getDefaultMinutesOfHour());
     mStartOfDayTimeSp.setValue(cal.getTime());
     
-    
-    minutes = Settings.ProgramTable.END_OF_DAY.getInt();
-    cal.set(Calendar.HOUR_OF_DAY, minutes / 60);
-    cal.set(Calendar.MINUTE, minutes % 60);
+    cal.set(Calendar.HOUR_OF_DAY, Settings.ProgramTable.END_OF_DAY.getDefaultHourOfDay());
+    cal.set(Calendar.MINUTE, Settings.ProgramTable.END_OF_DAY.getDefaultMinutesOfHour());
     mEndOfDayTimeSp.setValue(cal.getTime());
     
     

@@ -119,7 +119,7 @@ public class DefaultToolBarModel implements ToolBarModel, DateListener {
 
   public static DefaultToolBarModel getInstance() {
     if (sInstance == null) {
-      sInstance = new DefaultToolBarModel(Settings.propToolbarButtons
+      sInstance = new DefaultToolBarModel(Settings.ToolBar.BUTTONS
           .getStringArray());
     }
     return sInstance;
@@ -242,7 +242,7 @@ public class DefaultToolBarModel implements ToolBarModel, DateListener {
       if(!mAvailableActions.containsKey(activatedPlugins[i].getId())) {
         createPluginAction(activatedPlugins[i]);
 
-        String[] buttonNames = Settings.propToolbarButtons.getStringArray();
+        String[] buttonNames = Settings.ToolBar.BUTTONS.getStringArray();
 
         if(buttonNames != null) {
           for (int j = 0; j < buttonNames.length; j++) {
@@ -285,7 +285,7 @@ public class DefaultToolBarModel implements ToolBarModel, DateListener {
     String scrollTo = MainFrame.LOCALIZER
         .msg("menuinfo.scrollTo", "Scroll to")
         + ": ";
-    for (final int timeMinutes : Settings.propTimeButtons.getIntArray()) {
+    for (final int timeMinutes : Settings.Buttons.TIME_BUTTONS.getIntArray()) {
       int hour = timeMinutes / 60;
       String time = String.valueOf(timeMinutes % 60);
 
@@ -664,9 +664,9 @@ public class DefaultToolBarModel implements ToolBarModel, DateListener {
       ScrollableMenu menu = new ScrollableMenu();
       popup = menu.getPopupMenu();
 
-      Channel[] channels = Settings.propSubscribedChannels.getChannelArray();
+      Channel[] channels = Settings.Channels.SUBSCRIBED.getChannelArray();
       int lastSeparatorIndex = 0;
-      String[] separatorArr = Settings.propSubscribedChannelsSeparators.getStringArray();
+      String[] separatorArr = Settings.Channels.SUBSCRIBED_SEPARATORS.getStringArray();
       Channel previousChannel = null;
       
       for (int i = 0; i < channels.length; i++) {
@@ -691,7 +691,7 @@ public class DefaultToolBarModel implements ToolBarModel, DateListener {
     } else if (item == mScrollToTimeAction) {
       popup = new JPopupMenu();
 
-      int[] array = Settings.propTimeButtons.getIntArray();
+      int[] array = Settings.Buttons.TIME_BUTTONS.getIntArray();
 
       for (int element : array) {
         popup.add(createTimeMenuItem(element, btn));
@@ -774,17 +774,17 @@ public class DefaultToolBarModel implements ToolBarModel, DateListener {
     
     StringBuilder text = new StringBuilder();
     
-    if(Settings.propShowSortNumberInProgramLists.getBoolean() && ch.getSortNumber().trim().length() > 0) {
+    if(Settings.IconAndNames.SHOW_SORT_NUMBER_IN_PROGRAM_LISTS.getBoolean() && ch.getSortNumber().trim().length() > 0) {
       text.append(ch.getSortNumber()).append(". ");
     }
     
-    if (Settings.propShowChannelNamesInChannellist.getBoolean()) {
+    if (Settings.IconAndNames.SHOW_NAMES_IN_CHANNEL_LIST.getBoolean()) {
       text.append(ch.getJointChannel() != null ? ch.getJointChannelName() : ch.getName());
     }
     
     item.setText(text.toString());
 
-    if (Settings.propShowChannelIconsInChannellist.getBoolean()) {
+    if (Settings.IconAndNames.SHOW_ICONS_IN_CHANNEL_LIST.getBoolean()) {
       item.setIcon(UiUtilities.createChannelIcon(ch.getJointChannel() != null ? ch.getJointChannelIcon() : ch.getIcon()));
       item.setPreferredSize(new Dimension(item.getPreferredSize().width, item
           .getIcon().getIconHeight()));

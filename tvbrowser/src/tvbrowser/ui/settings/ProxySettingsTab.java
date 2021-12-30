@@ -83,7 +83,7 @@ public class ProxySettingsTab implements devplugin.SettingsTab {
     String msgProxy = LOCALIZER.msg("httpProxy", "HTTP Proxy");
     String msgUseProxy = LOCALIZER.msg("useHttpProxy", "Use proxy for HTTP");
     mHttpProxySettingsPanel = new ProxySettingsPanel(msgProxy, msgUseProxy);
-    mHttpProxySettingsPanel.setUseProxy(Settings.Proxy.USE_PROXY.getBoolean());
+    mHttpProxySettingsPanel.setUseProxy(Settings.Proxy.USE.getBoolean());
     mHttpProxySettingsPanel.setHost(Settings.Proxy.HOST.getString());
     mHttpProxySettingsPanel.setPort(Settings.Proxy.PORT.getString());
     mHttpProxySettingsPanel.setAuthentifyAtProxy(Settings.Proxy.AUTHENTIFY_AT_PROXY.getBoolean());
@@ -100,7 +100,7 @@ public class ProxySettingsTab implements devplugin.SettingsTab {
    * Called by the host-application, if the user wants to save the settings.
    */
   public void saveSettings() {
-    Settings.Proxy.USE_PROXY.setBoolean(mHttpProxySettingsPanel.getUseProxy());
+    Settings.Proxy.USE.setBoolean(mHttpProxySettingsPanel.getUseProxy());
     Settings.Proxy.HOST.setString(mHttpProxySettingsPanel.getHost());
     Settings.Proxy.PORT.setString(mHttpProxySettingsPanel.getPort());
     Settings.Proxy.AUTHENTIFY_AT_PROXY.setBoolean(mHttpProxySettingsPanel.getAuthentifyAtProxy());

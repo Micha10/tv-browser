@@ -319,7 +319,7 @@ public class MarkedProgramsMap {
         boolean dontAccept = !filter.accept(p);
 
         if(dontAccept && useTrayFilterSettings) {
-          dontAccept = !(Settings.propTrayFilterNot.getBoolean() || (Settings.propTrayFilterNotMarked.getBoolean() && p.getMarkerArr().length > 0));
+          dontAccept = !(Settings.Tray.FILTER_NOT.getBoolean() || (Settings.Tray.FILTER_NOT_MARKED.getBoolean() && p.getMarkerArr().length > 0));
         }
 
         if((p.isOnAir() && !includeOnAirPrograms) || p.isExpired() || dontAccept || p.getMarkPriorityMax() < markPriority) {
@@ -335,7 +335,7 @@ public class MarkedProgramsMap {
 
     Collections.sort(programs, ProgramUtilities.getProgramComparator());
 
-    int maxCount = Math.min(programs.size(), Settings.propTrayImportantProgramsSize.getInt());
+    int maxCount = Math.min(programs.size(), Settings.Tray.Important.SIZE.getInt());
     if (numberOfPrograms > 0) {
       maxCount = Math.min(maxCount, numberOfPrograms);
     }

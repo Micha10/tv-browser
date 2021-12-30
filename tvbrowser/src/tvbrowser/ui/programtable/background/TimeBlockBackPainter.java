@@ -64,27 +64,27 @@ public class TimeBlockBackPainter extends AbstractBackPainter {
   private TimeFormatter mFormatter;
 
   public TimeBlockBackPainter() {
-    if (Settings.propTwelveHourFormat.getBoolean()) {
+    if (Settings.Locales.TWELVE_HOUR_FORMAT.getBoolean()) {
       mFormatter = new TimeFormatter("hh a");
     } else {
       mFormatter = new TimeFormatter("HH");
     }
     mBackgroundImage1 = ImageUtilities
-        .createImageAsynchronous(Settings.propTimeBlockBackground1.getString());
+        .createImageAsynchronous(Settings.ProgramTable.TIME_BLOCK_BACKGROUND1.getString());
     mBackgroundImage2 = ImageUtilities
-        .createImageAsynchronous(Settings.propTimeBlockBackground2.getString());
+        .createImageAsynchronous(Settings.ProgramTable.TIME_BLOCK_BACKGROUND2.getString());
 
     mTableWestImage1 = ImageUtilities
-        .createImageAsynchronous(Settings.propTimeBlockWestImage1.getString());
+        .createImageAsynchronous(Settings.ProgramTable.TIME_BLOCK_WEST_IMAGE1.getString());
     mTableWestImage2 = ImageUtilities
-        .createImageAsynchronous(Settings.propTimeBlockWestImage2.getString());
+        .createImageAsynchronous(Settings.ProgramTable.TIME_BLOCK_WEST_IMAGE2.getString());
 
-    if (Settings.propTimeBlockShowWest.getBoolean()) {
+    if (Settings.ProgramTable.TIME_BLOCK_SHOW_WEST.getBoolean()) {
       mTableWest = new TimeBlockTableWest();
     } else {
       mTableWest = null;
     }
-    mBlockSize = Settings.propTimeBlockSize.getInt();
+    mBlockSize = Settings.ProgramTable.TIME_BLOCK_SIZE.getInt();
   }
 
   /**

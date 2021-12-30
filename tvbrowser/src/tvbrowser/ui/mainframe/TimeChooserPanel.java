@@ -116,7 +116,7 @@ public class TimeChooserPanel extends JPanel implements ChangeListener, MouseLis
       
       TimeFormatter formatter = new TimeFormatter();
       
-      int[] times = Settings.propTimeButtons.getIntArray();
+      int[] times = Settings.Buttons.TIME_BUTTONS.getIntArray();
       
       for (final int time : times) {
         int h = time/60;

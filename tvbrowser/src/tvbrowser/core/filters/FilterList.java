@@ -406,7 +406,7 @@ public class FilterList {
     try {
     ProgramFilter allFilter = null;
 
-    String filterId = Settings.propDefaultFilter.getString();
+    String filterId = Settings.General.FILTER_DEFAULT.getString();
     String filterName = null;
 
     if (StringUtils.isNotEmpty(filterId)) {
