@@ -1518,7 +1518,12 @@ public class TVBrowser {
     mainFrame.setSize(windowWidth, windowHeight);
     final int windowX = Settings.Window.X.getInt();
     final int windowY = Settings.Window.Y.getInt();
-
+    final boolean maximized = Settings.Window.MAXIMIZED.getBoolean();
+    
+    if(!IS_STABLE) {
+      LOG.info("Window values: " + windowWidth + "x" + windowHeight + " at " + windowX +"," +windowY+" isMaximized: " + maximized);
+    }
+    
     final Rectangle screen = mainFrame.getGraphicsConfiguration().getBounds();
     GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds();
     final Insets insets = Toolkit.getDefaultToolkit().getScreenInsets(mainFrame.getGraphicsConfiguration());
@@ -1527,7 +1532,7 @@ public class TVBrowser {
     screen.width = screen.width - insets.left - insets.right;
     screen.height = screen.height - insets.top - insets.bottom;
     
-    if (Settings.Window.MAXIMIZED.getBoolean() || (windowX == -1 && windowY == -1) || windowX + windowWidth < screen.getX() || windowX > (screen.getX() + screen.getWidth() - 30) || windowY + windowHeight < screen.getY() || windowY > (screen.getY() + screen.getHeight() - 30) || windowWidth < 200 || windowHeight < 200) {
+    if (maximized || (windowX == -1 && windowY == -1) || windowX + windowWidth < screen.getX() || windowX > (screen.getX() + screen.getWidth() - 30) || windowY + windowHeight < screen.getY() || windowY > (screen.getY() + screen.getHeight() - 30) || windowWidth < 200 || windowHeight < 200) {
       UiUtilities.centerAndShow(mainFrame, false);
     } else {
       mainFrame.setLocation(windowX, windowY);
@@ -1539,7 +1544,7 @@ public class TVBrowser {
       if((windowX < screen.getX()) || (windowY < screen.getY()) || windowX > (screen.getX() + screen.getWidth() - 30) || windowY > (screen.getY() + screen.getHeight() - 30)) {
         UiUtilities.centerAndShow(mainFrame, false);
       }
-      else if(!Settings.Window.MAXIMIZED.getBoolean() && (p.x != windowX || windowY != p.y)) {
+      else if(!maximized && (p.x != windowX || windowY != p.y)) {
         mainFrame.setLocation(windowX - Math.abs(p.x-windowX), windowY - Math.abs(p.y-windowY));
       }
     });
@@ -1552,7 +1557,7 @@ public class TVBrowser {
     mainFrame.repaint();
     
     // maximize the frame if wanted
-    if (Settings.Window.MAXIMIZED.getBoolean()) {
+    if (maximized) {
       SwingUtilities.invokeLater(() -> {
     	mainFrame.setExtendedState(Frame.MAXIMIZED_BOTH);
     	SwingUtilities.invokeLater(() -> {
