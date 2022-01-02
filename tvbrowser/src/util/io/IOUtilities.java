@@ -447,6 +447,7 @@ public class IOUtilities {
    * @param timeout Timeout in milliseconds.
    * @throws IOException Thrown if something goes wrong.
    * @return <code>true</code> if stream were successfully piped, <code>false</code> otherwise.
+   * @since 3.4.1
    */
   public static boolean pipeStreams(final InputStream from, final OutputStream to, final int timeout)
     throws IOException
