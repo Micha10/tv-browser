@@ -34,6 +34,7 @@ import javax.swing.table.TableCellEditor;
 import devplugin.Program;
 import simplemarkerplugin.MarkList;
 import simplemarkerplugin.SimpleMarkerPlugin;
+import util.ui.DefaultMarkingPrioritySelectionPanel;
 import util.ui.MarkPriorityComboBoxRenderer;
 
 /**
@@ -64,12 +65,12 @@ public class MarkListPriorityCellEditor extends AbstractCellEditor implements
       // ignore
     }
     
-    mComboBox.addItem(SimpleMarkerPlugin.getLocalizer().msg("settings.noPriority","None"));
+    String[] names = DefaultMarkingPrioritySelectionPanel.getMarkingColorNames(true);
     
-    final String text = SimpleMarkerPlugin.getLocalizer().msg("settings.highlightingPriority","Color/priority");
+    mComboBox.addItem(names[0]);
     
     for(int i = 0; i <= maxPriority; i++) {
-      mComboBox.addItem((i+1)+". "+text);
+      mComboBox.addItem(names[i+1]);
     }
     
     mComboBox.setRenderer(new MarkPriorityComboBoxRenderer());

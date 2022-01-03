@@ -33,6 +33,7 @@ import javax.swing.table.DefaultTableCellRenderer;
 import devplugin.Plugin;
 import simplemarkerplugin.MarkList;
 import simplemarkerplugin.SimpleMarkerPlugin;
+import util.ui.DefaultMarkingPrioritySelectionPanel;
 
 /**
  * The cell renderer for the priority column
@@ -58,11 +59,13 @@ public class MarkerPriorityRenderer extends DefaultTableCellRenderer {
 
     int priority = ((MarkList)value).getMarkPriority();
     
+    String[] names = DefaultMarkingPrioritySelectionPanel.getMarkingColorNames(true);
+    
     if(priority == -1) {
-      mLabel.setText(SimpleMarkerPlugin.getLocalizer().msg("settings.noPriority","None"));
+      mLabel.setText(names[0]);
     }
     else {
-      mLabel.setText((priority+1)+". " +SimpleMarkerPlugin.getLocalizer().msg("settings.highlightingPriority","Color/priority"));
+      mLabel.setText(names[priority+1]);
     }
     
     Color testColor = Plugin.getPluginManager().getTvBrowserSettings().getColorForMarkingPriority(priority);

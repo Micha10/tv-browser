@@ -97,7 +97,7 @@ import util.ui.WindowClosingIf;
 public class SimpleMarkerPlugin extends Plugin {
   public static boolean HANDLE_SEPARATORS = true;
   
-  private static final Version mVersion = new Version(3,33,0,true);
+  private static final Version mVersion = new Version(3,33,1,true);
 
   /** The localizer for this class. */
   private static final util.ui.Localizer LOCALIZER = util.ui.Localizer.getLocalizerFor(SimpleMarkerPlugin.class);

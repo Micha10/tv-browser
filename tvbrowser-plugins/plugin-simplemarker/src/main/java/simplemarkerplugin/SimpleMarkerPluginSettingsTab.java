@@ -196,7 +196,7 @@ public class SimpleMarkerPluginSettingsTab implements SettingsTab,
     mListTable.getColumnModel().getColumn(1).setMinWidth(setColumnWidth(mListTable.getColumnModel().getColumn(1),mModel.getColumnName(1)));
 
     mListTable.getColumnModel().getColumn(2).setCellRenderer(new MarkerPriorityRenderer());
-    mListTable.getColumnModel().getColumn(2).setMinWidth(setColumnWidth(mListTable.getColumnModel().getColumn(2),mModel.getColumnName(2)));
+    mListTable.getColumnModel().getColumn(2).setMinWidth(setColumnWidth(mListTable.getColumnModel().getColumn(2),mModel.getColumnName(2),20));
 
     mListTable.getColumnModel().getColumn(3).setCellRenderer(new MarkerProgramImportanceRenderer());
     mListTable.getColumnModel().getColumn(3).setMinWidth(setColumnWidth(mListTable.getColumnModel().getColumn(3),mModel.getColumnName(3)));
@@ -416,6 +416,10 @@ public class SimpleMarkerPluginSettingsTab implements SettingsTab,
   }
   
   private int setColumnWidth(TableColumn column, String name) {
+    return setColumnWidth(column, name, 0);
+  }
+  
+  private int setColumnWidth(TableColumn column, String name, int add) {
     int columnWidth = 0;
     
     String[] nameParts = name.replace("<html>", "").split("<br>");
@@ -424,10 +428,10 @@ public class SimpleMarkerPluginSettingsTab implements SettingsTab,
       columnWidth = Math.max(columnWidth,UiUtilities.getStringWidth(mListTable.getFont(),part) + 10);
     }
     
-    column.setMaxWidth(columnWidth);
-    column.setPreferredWidth(columnWidth);
+    column.setMaxWidth(columnWidth+add);
+    column.setPreferredWidth(columnWidth+add);
     
-    return columnWidth;
+    return columnWidth+add;
   }
 
   public void saveSettings() {
