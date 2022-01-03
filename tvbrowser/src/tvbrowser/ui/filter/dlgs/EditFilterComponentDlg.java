@@ -168,7 +168,7 @@ public class EditFilterComponentDlg extends JDialog implements ActionListener, D
     mCenterPanel = new JPanel(new BorderLayout());
     JScrollPane scrollPane = new JScrollPane(mCenterPanel);
     scrollPane.setBorder(BorderFactory.createEmptyBorder());
-    scrollPane.getViewport().setBorder(null);
+    scrollPane.setViewportBorder(BorderFactory.createEmptyBorder());
     
     PanelBuilder pb = new PanelBuilder(new FormLayout("5dlu,default,5dlu,default:grow,5dlu,",
         "default,5dlu,default,2dlu,default,2dlu,default,10dlu,default,5dlu,fill:min:grow,5dlu,default,5dlu,default"),mContentPane);

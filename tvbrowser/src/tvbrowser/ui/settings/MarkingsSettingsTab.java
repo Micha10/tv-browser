@@ -45,6 +45,7 @@ import devplugin.SettingsTab;
 import tvbrowser.core.Settings;
 import tvbrowser.ui.settings.util.ColorButton;
 import tvbrowser.ui.settings.util.ColorLabel;
+import util.ui.DefaultMarkingPrioritySelectionPanel;
 import util.ui.EnhancedPanelBuilder;
 import util.i18n.Localizer;
 import util.i18n.PooledLocalizer;
@@ -107,14 +108,16 @@ public class MarkingsSettingsTab implements SettingsTab {
       }
     };
     
-    mDefaultColor.addItem(LOCALIZER.msg("color.noPriority","Don't highlight"));
+    String[] names = DefaultMarkingPrioritySelectionPanel.getMarkingColorNames(true);
+    
+    mDefaultColor.addItem(names[0]);
     
     final int[] currentColors = Settings.Markings.HIGHLIGHTING_COLORS.getIntArray();
     final int[] currentDefaultColors = Settings.Markings.HIGHLIGHTING_COLORS.getDefault();
     
     for(mPriorityCount = 0; mPriorityCount < currentColors.length; mPriorityCount++) {
       Color defaultColor = new Color(currentDefaultColors[mPriorityCount < currentDefaultColors.length ? mPriorityCount : 0],true);
-      mDefaultColor.addItem(mPriorityCount+1+". "+LOCALIZER.msg("color.colorPriority", "Color/priority"));
+      mDefaultColor.addItem(names[mPriorityCount+1]);
       
       mHighlightings.add(new HighlightPanel(mPriorityCount+1, new Color(currentColors[mPriorityCount],true), defaultColor, false, mPriorityCount >= 5 ? delete : null));
     }

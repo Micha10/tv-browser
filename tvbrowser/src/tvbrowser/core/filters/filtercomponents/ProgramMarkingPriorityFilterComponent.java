@@ -30,14 +30,13 @@ import java.io.ObjectOutputStream;
 import javax.swing.JComboBox;
 import javax.swing.JPanel;
 
-import tvbrowser.ui.settings.MarkingsSettingsTab;
-import util.i18n.Localizer;
-import util.ui.MarkPriorityComboBoxRenderer;
-
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 
 import devplugin.Program;
+import util.i18n.Localizer;
+import util.ui.DefaultMarkingPrioritySelectionPanel;
+import util.ui.MarkPriorityComboBoxRenderer;
 
 /**
  * A filter component for tracking programs that have a selected mark priority.
@@ -81,16 +80,8 @@ public class ProgramMarkingPriorityFilterComponent extends
   public JPanel getSettingsPanel() {
     CellConstraints cc = new CellConstraints();
     JPanel p = new JPanel(new FormLayout("default", "pref"));
-
-    Localizer localizer = MarkingsSettingsTab.LOCALIZER;
-    String[] values = {
-        localizer.msg("color.minPriority", "1. Color (minimum priority)"),
-        localizer.msg("color.lowerMediumPriority",
-            "2. Color (lower medium priority)"),
-        localizer.msg("color.mediumPriority", "3. Color (Medium priority)"),
-        localizer.msg("color.higherMediumPriority",
-            "4. Color (higher medium priority)"),
-        localizer.msg("color.maxPriority", "5. Color (maximum priority)") };
+    
+    String[] values = DefaultMarkingPrioritySelectionPanel.getMarkingColorNames(false);
 
     mValueSelection = new JComboBox<>(values);
     mValueSelection.setSelectedIndex(mMarkPriority);

@@ -140,12 +140,7 @@ public final class DefaultMarkingPrioritySelectionPanel extends JPanel {
       mPrioritySelection.add(box);
       box.setSelectedIndex(Math.min(priority[i],Settings.getHighlightingPriorityMaximum()) + 1);
       box.setRenderer(new MarkPriorityComboBoxRenderer(box.getRenderer()));
-      /*
-      mPrioritySelection[i] = new JComboBox(getMarkingColorNames(true));
-      mPrioritySelection[i].setSelectedIndex(priority[i] + 1);
-      mPrioritySelection[i].setRenderer(new MarkPriorityComboBoxRenderer(mPrioritySelection[i].getRenderer()));
-
-      pb.add(mPrioritySelection[i], cc.xy(4, pb.getRowCount()));*/
+      
       pb.add(box, cc.xy(4, pb.getRowCount()));
     }
 
@@ -264,6 +259,18 @@ public final class DefaultMarkingPrioritySelectionPanel extends JPanel {
     
     for(;i < colors.length; i++) {
       colors[i] = (i+offset) +". "+ MarkingsSettingsTab.LOCALIZER.msg("color.colorPriority","Color/priority");
+    }
+    
+    if(withNoMarkPriority) {
+      i = 1;
+    }
+    else {
+      i = 0;
+    }
+    
+    if(colors.length > 2 || (!withNoMarkPriority && colors.length > 1)) {
+      colors[i] += MarkingsSettingsTab.LOCALIZER.msg("color.colorPriority.min"," (minimum)");
+      colors[colors.length-1] += MarkingsSettingsTab.LOCALIZER.msg("color.colorPriority.max"," (maximum)");
     }
     
     return colors;

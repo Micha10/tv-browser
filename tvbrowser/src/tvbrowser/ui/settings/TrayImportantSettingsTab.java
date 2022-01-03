@@ -21,6 +21,7 @@ import devplugin.SettingsItem;
 import devplugin.SettingsTab;
 import tvbrowser.core.Settings;
 import util.i18n.Localizer;
+import util.ui.DefaultMarkingPrioritySelectionPanel;
 import util.ui.MarkPriorityComboBoxRenderer;
 import util.ui.UiUtilities;
 
@@ -99,13 +100,7 @@ public class TrayImportantSettingsTab implements SettingsTab {
     
     JPanel priority = new JPanel(new FormLayout("pref,5dlu,pref","1dlu,pref"));
     
-    String txt = MarkingsSettingsTab.LOCALIZER.msg("color.colorPriority", "Color/priority");
-    
-    String[] colors = new String[Settings.getHighlightingPriorityMaximum()];
-    
-    for(int i = 0; i < colors.length; i++) {
-      colors[i] = (i+1)+". "+txt;
-    }
+    String[] colors = DefaultMarkingPrioritySelectionPanel.getMarkingColorNames(false);
     
     mPriorityText = new JLabel(LOCALIZER.msg("importantMarkPriority","Mark priority higher or the same like:"));
     
