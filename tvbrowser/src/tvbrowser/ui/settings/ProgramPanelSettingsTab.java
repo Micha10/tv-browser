@@ -36,11 +36,16 @@ import javax.swing.DefaultListCellRenderer;
 import javax.swing.Icon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JEditorPane;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JSpinner;
+import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingConstants;
+import javax.swing.event.HyperlinkEvent;
+import javax.swing.event.HyperlinkListener;
 
 import com.jgoodies.forms.factories.Borders;
 import com.jgoodies.forms.factories.CC;
@@ -49,6 +54,7 @@ import com.jgoodies.forms.layout.FormLayout;
 
 import devplugin.ProgramFieldType;
 import devplugin.ProgramInfoHelper;
+import devplugin.SettingsItem;
 import devplugin.SettingsTab;
 import tvbrowser.core.Settings;
 import tvbrowser.core.filters.FilterList;
@@ -64,10 +70,10 @@ import tvbrowser.ui.filter.dlgs.EditFilterDlg;
 import tvbrowser.ui.mainframe.MainFrame;
 import tvbrowser.ui.settings.util.ColorButton;
 import tvbrowser.ui.settings.util.ColorLabel;
+import util.i18n.Localizer;
 import util.settings.ProgramFieldTypeArrayProperty;
 import util.settings.StringArrayProperty;
 import util.ui.EnhancedPanelBuilder;
-import util.i18n.Localizer;
 import util.ui.OrderChooser;
 import util.ui.TVBrowserIcons;
 import util.ui.UiUtilities;
@@ -103,6 +109,19 @@ public class ProgramPanelSettingsTab implements SettingsTab {
   private JCheckBox mShowOriginalTitles;
   
   private JCheckBox mSmootherScrolling;
+  
+  private JCheckBox mCutLongTitlesCB;
+
+  private JSpinner mCutLongTitlesSelection;
+  private JSpinner mDescriptionLines;
+
+  private JLabel mCutLongTitlesLabel;
+
+  private JCheckBox mShortProgramsCB;
+
+  private JSpinner mShortProgramsMinutes;
+
+  private JLabel mShortProgramsLabel;
 
   /**
    * Creates the settings panel for this tab.
@@ -145,11 +164,6 @@ public class ProgramPanelSettingsTab implements SettingsTab {
       }
     }
     
-    typeOrderArr = Settings.ProgramPanel.INFO_FIELDS_ALTERNATIVE.getProgramFieldTypeArray();
-    separators = Settings.ProgramPanel.INFO_FIELDS_SEPARATORS_ALTERNATIVE.getStringArray();
-    
-    mInfoTextOChAlt = new OrderChooser<>(typeOrderArr, allTypeArr);
-
     JButton addLineBreak = new JButton(IconLoader.getInstance().getIconFromTheme("actions", "add-line-break", TVBrowserIcons.SIZE_LARGE));
     addLineBreak.setToolTipText(LOCALIZER.msg("addLineBreakTooltip", "Adds line break"));
     addLineBreak.addActionListener(e -> {
@@ -157,6 +171,19 @@ public class ProgramPanelSettingsTab implements SettingsTab {
     });
     
     mInfoTextOCh.addButton(addLineBreak);
+    
+    typeOrderArr = Settings.ProgramPanel.INFO_FIELDS_ALTERNATIVE.getProgramFieldTypeArray();
+    separators = Settings.ProgramPanel.INFO_FIELDS_SEPARATORS_ALTERNATIVE.getStringArray();
+    
+    mInfoTextOChAlt = new OrderChooser<>(typeOrderArr, allTypeArr);
+
+    JButton addLineBreakAlt = new JButton(IconLoader.getInstance().getIconFromTheme("actions", "add-line-break", TVBrowserIcons.SIZE_LARGE));
+    addLineBreakAlt.setToolTipText(LOCALIZER.msg("addLineBreakTooltip", "Adds line break"));
+    addLineBreakAlt.addActionListener(e -> {
+      mInfoTextOChAlt.addElement("\n",mInfoTextOChAlt.getSelectedIndex()+1,true);
+    });
+    
+    mInfoTextOChAlt.addButton(addLineBreakAlt);
     
     for(int i = separators.length-1; i >= 0; i--) {
       if(separators[i].replace(" ", "").length() > 0) {
@@ -208,8 +235,57 @@ public class ProgramPanelSettingsTab implements SettingsTab {
     panel.add(mIconPluginOChAlt, CC.xy(2, panel.getRowCount()));
     panel.add(mInfoTextOChAlt, CC.xy(4, panel.getRowCount()));
     
-    panel.addParagraph(LOCALIZER.msg("Colors", "Colors"));
+    panel.addParagraph(LOCALIZER.msg("layout", "Layout"));
+    
+    JPanel layoutPanel = new JPanel(new FormLayout("default,3dlu,default,3dlu,default","default,3dlu,default,3dlu,default"));
+    
+    // Cut long titles
+    mCutLongTitlesCB = new JCheckBox(LOCALIZER.msg("cutTitle",
+        "Cut long titles"), Settings.ProgramPanel.TITLE_CUT.getBoolean());
+    layoutPanel.add(mCutLongTitlesCB, CC.xy(1, 1));
+    mCutLongTitlesSelection = new JSpinner(new SpinnerNumberModel(
+        Settings.ProgramPanel.TITLE_CUT_LINES.getInt(), 1, 3, 1));
+    layoutPanel.add(mCutLongTitlesSelection, CC.xy(3, 1));
+    mCutLongTitlesLabel = new JLabel(LOCALIZER.msg("lines", "Lines"));
+    layoutPanel.add(mCutLongTitlesLabel, CC.xy(5, 1));
+    
+    mCutLongTitlesCB.addActionListener(e -> {
+      mCutLongTitlesSelection.setEnabled(mCutLongTitlesCB.isSelected());
+      mCutLongTitlesLabel.setEnabled(mCutLongTitlesCB.isSelected());
+    });
+    mCutLongTitlesCB.getActionListeners()[0].actionPerformed(null);
+    
+    // Short descriptions N lines
+    mDescriptionLines = new JSpinner(new SpinnerNumberModel(
+        Settings.ProgramPanel.MAX_LINES.getInt(), 1, 5, 1));
+    layoutPanel.add(new JLabel(LOCALIZER.msg("shortDescription",
+        "Short description")), CC.xy(1, 3));
+    layoutPanel.add(mDescriptionLines, CC.xy(3, 3));
+    layoutPanel.add(new JLabel(LOCALIZER.msg("lines", "Lines")), CC.xy(5, 3));
+    
+    // Short programs no description
+    mShortProgramsCB = new JCheckBox(LOCALIZER.msg("shortPrograms",
+        "If duration less than"),
+        Settings.ProgramPanel.DESCRIPTION_LIMIT_BY_DURATION.getBoolean());
+    layoutPanel.add(mShortProgramsCB, CC.xy(1, 5));
+    mShortProgramsMinutes = new JSpinner(new SpinnerNumberModel(
+        Settings.ProgramPanel.DESCRIPTION_LIMIT_BY_DURATION_MINUTES.getInt(), 1, 30, 1));
+    layoutPanel.add(mShortProgramsMinutes, CC.xy(3, 5));
+    mShortProgramsLabel = new JLabel(LOCALIZER.msg("shortPrograms2",
+        "minutes, then hide description"));
+    layoutPanel.add(mShortProgramsLabel, CC.xy(5, 5));
 
+    mShortProgramsCB.addActionListener(e -> {
+      mShortProgramsMinutes.setEnabled(mShortProgramsCB.isSelected());
+      mShortProgramsLabel.setEnabled(mShortProgramsCB.isSelected());
+    });
+    mShortProgramsCB.getActionListeners()[0].actionPerformed(null);
+    
+    panel.addRow();
+    panel.add(layoutPanel, CC.xyw(2, panel.getRowCount(),4));
+      
+    panel.addParagraph(LOCALIZER.msg("Colors", "Colors"));
+    
     panel.addRow();
     panel.add(mGradientHighlighting = new JCheckBox(LOCALIZER.msg("color.programGradientHighlighting",
         "Highlight programs with gradient colors"),Settings.ProgramPanel.HIGHLIGHTING_COLOR_GRADIENT.getBoolean()), CC.xyw(2, panel.getRowCount(), 3));
@@ -254,6 +330,19 @@ public class ProgramPanelSettingsTab implements SettingsTab {
 
     panel.addRow();
     panel.add(colors, CC.xyw(2, panel.getRowCount(), panel.getColumnCount() - 1));
+    
+    panel.addRow();
+    
+    JEditorPane programTableLink = UiUtilities.createHtmlHelpTextArea(LOCALIZER.msg("programTableLink","<html>Font color configurable in <a href=\"\">program table settings</a></html>"), new HyperlinkListener() {
+      @Override
+      public void hyperlinkUpdate(HyperlinkEvent e) {
+        if(e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
+          PluginManagerImpl.getInstance().showSettings(SettingsItem.PROGRAMTABLELOOK);
+        }
+      }
+    });
+    
+    panel.add(programTableLink, CC.xyw(2, panel.getRowCount(), 4));
     
     panel.addParagraph(LOCALIZER.msg("text", "Text"));
     panel.addRow();
@@ -447,6 +536,12 @@ public class ProgramPanelSettingsTab implements SettingsTab {
     Settings.ProgramPanel.TRANSPARENCY_ALLOW.setBoolean(mAllowProgramImportance.isSelected());
     Settings.ProgramPanel.HYPHENATION.setBoolean(mHyphenator.isSelected());
     Settings.ProgramPanel.SMOOTHER_SCROLLING.setBoolean(mSmootherScrolling.isSelected());
+    
+    Settings.ProgramPanel.TITLE_CUT.setBoolean(mCutLongTitlesCB.isSelected());
+    Settings.ProgramPanel.TITLE_CUT_LINES.setInt((Integer) mCutLongTitlesSelection.getValue());
+    Settings.ProgramPanel.MAX_LINES.setInt((Integer) mDescriptionLines.getValue());
+    Settings.ProgramPanel.DESCRIPTION_LIMIT_BY_DURATION.setBoolean(mShortProgramsCB.isSelected());
+    Settings.ProgramPanel.DESCRIPTION_LIMIT_BY_DURATION_MINUTES.setInt((Integer) mShortProgramsMinutes.getValue());
   }
 
   /**
