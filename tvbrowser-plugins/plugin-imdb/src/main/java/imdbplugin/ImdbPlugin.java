@@ -20,9 +20,9 @@ import java.io.File;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.net.URL;
 import java.security.CodeSource;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -52,12 +52,12 @@ import devplugin.PluginsFilterComponent;
 import devplugin.Program;
 import devplugin.ProgramFieldType;
 import devplugin.ProgramFilter;
+import devplugin.ProgramInfo;
 import devplugin.ProgramRatingIf;
 import devplugin.SettingsTab;
 import devplugin.ToolTipIcon;
 import devplugin.Version;
 import tvbrowser.core.icontheme.IconLoader;
-import util.io.IOUtilities;
 import util.misc.SoftReferenceCache;
 import util.ui.Localizer;
 import util.ui.UiUtilities;
@@ -68,12 +68,11 @@ public final class ImdbPlugin extends Plugin {
    * Translator
    */
   private static final Localizer mLocalizer = Localizer.getLocalizerFor(ImdbPlugin.class);
-  private static final java.util.logging.Logger mLog = java.util.logging.Logger
-	      .getLogger(ImdbPlugin.class.getName());
+  //private static final java.util.logging.Logger mLog = java.util.logging.Logger.getLogger(ImdbPlugin.class.getName());
 
   private static final boolean IS_STABLE = false;
 
-  private static final Version mVersion = new Version(1, 15, IS_STABLE);
+  private static final Version mVersion = new Version(1, 16, IS_STABLE);
 
   // Empty Rating for Cache
   private static final ImdbRating DUMMY_RATING = new ImdbRating(0, 0, "", false);
@@ -199,6 +198,31 @@ public final class ImdbPlugin extends Plugin {
       }
       return rating;
     }
+  }
+  
+  private static final String ID_MOVIE_ID = "imdbMovieId";
+  private static final String NAME_MOVIE_ID = "IMDB movie ID";
+  
+  @Override
+  public ProgramInfo[] getAddtionalProgramInfoForProgram(Program p, String uniqueId) {
+    ProgramInfo[] result = null;
+    
+    if(p != null) {
+      if(p.equals(getPluginManager().getExampleProgram())) {
+        result = new ProgramInfo[1];
+        result[0] = new ProgramInfo(ImdbPlugin.this, ID_MOVIE_ID, NAME_MOVIE_ID, "");
+      }
+      else if(uniqueId != null && uniqueId.equals(ID_MOVIE_ID)) {
+        ImdbRating rating = getRatingFor(p);
+        
+        if(rating != null) {
+          result = new ProgramInfo[1];
+          result[0] = new ProgramInfo(ImdbPlugin.this, ID_MOVIE_ID, NAME_MOVIE_ID, rating.getMovieId());
+        }
+      }
+    }
+    
+    return result;
   }
 
   /**
@@ -528,7 +552,7 @@ public final class ImdbPlugin extends Plugin {
 
   @Override
   public Class<? extends PluginsFilterComponent>[] getAvailableFilterComponentClasses() {
-    return (Class<? extends PluginsFilterComponent>[]) new Class[] { ImdbFilterComponent.class, VoteCountFilterComponent.class};
+    return (Class<? extends PluginsFilterComponent>[]) new Class[] { ImdbFilterComponent.class, VoteCountFilterComponent.class, ImdbMovieIdFilterComponent.class};
   }
 
   public ImdbDatabase getDatabase() {

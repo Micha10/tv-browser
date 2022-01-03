@@ -904,6 +904,7 @@ tvbrowser-plugins/plugin-imdb/src/main/java/imdbplugin/ImdbFilterComponent.java 
 tvbrowser-plugins/plugin-imdb/src/main/java/imdbplugin/ImdbHistogram.java -text
 tvbrowser-plugins/plugin-imdb/src/main/java/imdbplugin/ImdbIcon.java -text
 tvbrowser-plugins/plugin-imdb/src/main/java/imdbplugin/ImdbMovie.java -text
+tvbrowser-plugins/plugin-imdb/src/main/java/imdbplugin/ImdbMovieIdFilterComponent.java -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-imdb/src/main/java/imdbplugin/ImdbParser.java -text
 tvbrowser-plugins/plugin-imdb/src/main/java/imdbplugin/ImdbPlugin.java -text
 tvbrowser-plugins/plugin-imdb/src/main/java/imdbplugin/ImdbRating.java -text
