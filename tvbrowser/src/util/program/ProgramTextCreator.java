@@ -655,23 +655,27 @@ public class ProgramTextCreator {
         if(plugin != null) {
           devplugin.ProgramInfo[] infos = plugin.getAddtionalProgramInfoForProgram(prog,((devplugin.ProgramInfo)id).getUniqueId());
           
-          for(devplugin.ProgramInfo info : infos) {
-            buffer.append("<tr><td valign=\"top\" style=\"color:").append(HTMLTextHelper.getCssRgbColorEntry(infoColor)).append("; font-size:");
-    
-            buffer.append(mBodyFontSize);
+          if(infos != null) {
+            for(devplugin.ProgramInfo info : infos) {
+              if(info != null) {
+                buffer.append("<tr><td valign=\"top\" style=\"color:").append(HTMLTextHelper.getCssRgbColorEntry(infoColor)).append("; font-size:");
         
-            buffer.append("\"><b>");
-            buffer.append(info.getName());
-            buffer.append("</b></td><td style=\"color:").append(HTMLTextHelper.getCssRgbColorEntry(foreground)).append("; font-size:");
-        
-            buffer.append(mBodyFontSize);
-        
-            buffer.append("\">");
+                buffer.append(mBodyFontSize);
             
-            buffer.append(info.getValue());
-    
-            buffer.append("</td></tr>");
-            addSeparator(doc, buffer);
+                buffer.append("\"><b>");
+                buffer.append(info.getName());
+                buffer.append("</b></td><td style=\"color:").append(HTMLTextHelper.getCssRgbColorEntry(foreground)).append("; font-size:");
+            
+                buffer.append(mBodyFontSize);
+            
+                buffer.append("\">");
+                
+                buffer.append(HTMLTextHelper.convertTextToHtml(info.getValue(), true));
+        
+                buffer.append("</td></tr>");
+                addSeparator(doc, buffer);
+              }
+            }
           }
         }
       } else if(id instanceof CompoundedProgramFieldType) {
