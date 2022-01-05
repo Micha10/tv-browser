@@ -67,6 +67,8 @@ public class PropertyManager {
 
 
   public void writeToFile(File settingsFile) throws IOException {
+    removeUnknownEntries();
+    
     if(TVBrowser.isTransportable()) {
       mProperties.remove("dir.tvdata");
       mProperties.remove("dir.plugins");
@@ -106,7 +108,6 @@ public class PropertyManager {
       }
             
       clearCaches();
-      removeUnknownEntries();
     }
 
     finally {
