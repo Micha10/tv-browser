@@ -2659,7 +2659,10 @@ public class MainFrame extends JFrame implements DateListener,DropTargetListener
             dlg.setNumberOfDays(numberOfDays);
           }
           dlg.pack();
-          UiUtilities.centerAndShow(dlg);
+          
+          if(!UpdateDlg.isToKeepHidden()) {
+            UiUtilities.centerAndShow(dlg);
+          }
 
           int daysToDownload = dlg.getResult();
                     

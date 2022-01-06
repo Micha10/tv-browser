@@ -72,10 +72,15 @@ import util.ui.WindowClosingIf;
  */
 public class UpdateDlg extends JDialog implements ActionListener, WindowClosingIf {
   private static long LAST_CLOSED = 0;
+  private static boolean SHOW = true;
   
   // Workaround to prevent dialog from appearing more than once shortly
   public static final boolean isToShow() {
     return LAST_CLOSED + 500 < System.currentTimeMillis();
+  }
+  
+  public static final boolean isToKeepHidden() {
+    return !SHOW;
   }
   
   private static final util.i18n.Localizer LOCALIZER = util.i18n.Localizer
@@ -93,7 +98,8 @@ public class UpdateDlg extends JDialog implements ActionListener, WindowClosingI
   private JCheckBox mAutoUpdate;
   private JCheckBox mSaveAsDefaultPeriod;
   private JCheckBox mSaveAsDefaultDataservices;
-
+  private JCheckBox mHideForSession;
+  
   private JRadioButton mStartUpdate;
   private JRadioButton mRecurrentUpdate;
 
@@ -139,14 +145,18 @@ public class UpdateDlg extends JDialog implements ActionListener, WindowClosingI
     }
 
     // then time selection
-    final PanelBuilder panel1 = new PanelBuilder(new FormLayout("10dlu,default,5dlu:grow,5dlu","default,5dlu,default,default"));
+    final PanelBuilder panel1 = new PanelBuilder(new FormLayout("10dlu,default,5dlu:grow,5dlu","default,5dlu,default,default,5dlu,default"));
     panel1.addSeparator(LOCALIZER.msg("period", "Update program for"), CC.xyw(1,1,4));
     
     mManuelDownloadPeriodSelection = new JComboBox<>(PeriodItem.getPeriodItems());
     mSaveAsDefaultPeriod = new JCheckBox(LOCALIZER.msg("saveDefault", "Save as default"), Settings.Data.SAVE_DEFAULT_DATA_UPDATE_VALUES_DEFAULT.getBoolean());
     
+    mHideForSession = new JCheckBox(LOCALIZER.msg("hideForSession", "Don't ask again in this session."));
+    mHideForSession.addActionListener(this);
+    
     panel1.add(mManuelDownloadPeriodSelection, CC.xyw(2,3,2));
     panel1.add(mSaveAsDefaultPeriod, CC.xyw(2,4,2));
+    panel1.add(mHideForSession, CC.xyw(2,6,2));
     
     northPanel.add(panel1.getPanel());
 
@@ -292,7 +302,7 @@ public class UpdateDlg extends JDialog implements ActionListener, WindowClosingI
   }
 
   public int getResult() {
-    return mResult;
+    return SHOW ? mResult : ((PeriodItem)mManuelDownloadPeriodSelection.getSelectedItem()).getDays();
   }
 
   public TvDataServiceProxy[] getSelectedTvDataServices() {
@@ -307,6 +317,8 @@ public class UpdateDlg extends JDialog implements ActionListener, WindowClosingI
     Object source = event.getSource();
     if (source == mCancelBtn) {
       close();
+    } else if(source == mHideForSession) {
+      SHOW = !mHideForSession.isSelected();
     } else if (source == mUpdateBtn) {
       PeriodItem pi = (PeriodItem) mManuelDownloadPeriodSelection.getSelectedItem();
       mResult = pi.getDays();
