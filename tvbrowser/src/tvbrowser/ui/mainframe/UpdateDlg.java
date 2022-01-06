@@ -306,6 +306,10 @@ public class UpdateDlg extends JDialog implements ActionListener, WindowClosingI
   }
 
   public TvDataServiceProxy[] getSelectedTvDataServices() {
+    if(!SHOW) {
+      selectDataServices();
+    }
+    
     if (mSelectedTvDataServiceArr == null) {
       mSelectedTvDataServiceArr = getActiveDataServices();
     }
@@ -313,6 +317,22 @@ public class UpdateDlg extends JDialog implements ActionListener, WindowClosingI
     return mSelectedTvDataServiceArr;
   }
 
+  private void selectDataServices() {
+    if (mDataServiceCbArr == null) { // there is only one tvdataservice
+            // available
+      mSelectedTvDataServiceArr = getActiveDataServices();
+    } else {
+      ArrayList<TvDataServiceProxy> dataServiceList = new ArrayList<TvDataServiceProxy>();
+      for (TvDataServiceCheckBox element : mDataServiceCbArr) {
+        if (element.isSelected()) {
+          dataServiceList.add(element.getTvDataService());
+        }
+      }
+      mSelectedTvDataServiceArr = new TvDataServiceProxy[dataServiceList.size()];
+      dataServiceList.toArray(mSelectedTvDataServiceArr);
+    }
+  }
+  
   public void actionPerformed(ActionEvent event) {
     Object source = event.getSource();
     if (source == mCancelBtn) {
@@ -323,20 +343,7 @@ public class UpdateDlg extends JDialog implements ActionListener, WindowClosingI
       PeriodItem pi = (PeriodItem) mManuelDownloadPeriodSelection.getSelectedItem();
       mResult = pi.getDays();
 
-      if (mDataServiceCbArr == null) { // there is only one tvdataservice
-                                        // available
-        mSelectedTvDataServiceArr = getActiveDataServices();
-      } else {
-        ArrayList<TvDataServiceProxy> dataServiceList = new ArrayList<TvDataServiceProxy>();
-        for (TvDataServiceCheckBox element : mDataServiceCbArr) {
-          if (element.isSelected()) {
-            dataServiceList.add(element.getTvDataService());
-          }
-        }
-        mSelectedTvDataServiceArr = new TvDataServiceProxy[dataServiceList
-            .size()];
-        dataServiceList.toArray(mSelectedTvDataServiceArr);
-      }
+      selectDataServices();
       
       if(mSaveAsDefaultPeriod.isSelected()) {
         Settings.Data.DOWNLOAD_PERIOD.setInt(mResult);
