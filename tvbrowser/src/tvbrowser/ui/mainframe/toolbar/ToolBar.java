@@ -500,7 +500,7 @@ public class ToolBar extends JToolBar {
       }
       else if(name.startsWith("#filter")) {
         configItemEnabled = true;
-        label = FilterButtons.mLocalizer.ellipsisMsg("createFilter", "Create filter");
+        label = FilterButtons.LOCALIZER.ellipsisMsg("createFilter", "Create filter");
       }
       else if(name.startsWith("#scrollToChannel")) {
         configItemEnabled = true;

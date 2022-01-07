@@ -29,11 +29,12 @@ package tvbrowser.ui.filter.dlgs;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
-
+import javax.swing.KeyStroke;
 
 import tvbrowser.core.filters.FilterList;
 import tvbrowser.core.filters.ShowAllFilter;
@@ -41,6 +42,7 @@ import tvbrowser.ui.mainframe.MainFrame;
 import tvbrowser.ui.programtable.ProgramTableModel;
 import util.ui.ProgramPanel;
 import util.ui.SendToPluginDialog;
+import util.ui.UiUtilities;
 import devplugin.Program;
 import devplugin.ProgramFilter;
 
@@ -49,11 +51,11 @@ import devplugin.ProgramFilter;
  */
 public class FilterButtons implements ActionListener {
     /** The localizer for this class. */
-    public static final util.i18n.Localizer mLocalizer
+    public static final util.i18n.Localizer LOCALIZER
       = util.i18n.Localizer.getLocalizerFor(FilterButtons.class);
 
     /** Menu-Items */
-    private JMenuItem mCreateFilterMI, mSendFilterMI;
+    private JMenuItem mEditFilterMI, mEditFilterComponentsMI, mSendFilterMI;
 
     
     /**
@@ -75,13 +77,18 @@ public class FilterButtons implements ActionListener {
     private void createFilterMenuItems(JMenu filterMenu, MainFrame mainFrame) {
         ProgramFilter curFilter = mainFrame.getProgramFilter();
                 
-        mCreateFilterMI = new JMenuItem(mLocalizer.ellipsisMsg("createFilter", "Create filter"));
-        mCreateFilterMI.addActionListener(this);
+        mEditFilterMI = new JMenuItem(LOCALIZER.ellipsisMsg("createFilter", "Edit filter"));
+        mEditFilterMI.addActionListener(this);
         
-        filterMenu.add(mCreateFilterMI);
+        filterMenu.add(mEditFilterMI);
+        
+        mEditFilterComponentsMI = new JMenuItem(FilterComponentsDlg.LOCALIZER.ellipsisMsg("title", "Edit filter components"));
+        mEditFilterComponentsMI.addActionListener(this);
+        
+        filterMenu.add(mEditFilterComponentsMI);
         
         if ((curFilter != null) && !(curFilter instanceof ShowAllFilter)){
-            mSendFilterMI = new JMenuItem(mLocalizer.msg("sendPrograms", "Send visible Programs to another Plugin"));
+            mSendFilterMI = new JMenuItem(LOCALIZER.msg("sendPrograms", "Send visible Programs to another Plugin"));
             mSendFilterMI.addActionListener(this);
             filterMenu.add(mSendFilterMI);
         }
@@ -89,13 +96,19 @@ public class FilterButtons implements ActionListener {
         filterMenu.addSeparator();
         
         FilterList.getInstance().createFilterMenu(filterMenu,curFilter);
+        
+        mEditFilterMI.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_L, KeyEvent.CTRL_DOWN_MASK));
+        mEditFilterComponentsMI.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_K, KeyEvent.CTRL_DOWN_MASK));
     }
 
     public void actionPerformed(ActionEvent e) {
-        if (e.getSource() == mCreateFilterMI) {
-            MainFrame.getInstance().showFilterDialog();
+        if (e.getSource() == mEditFilterMI) {
+          MainFrame.getInstance().showFilterDialog();
+        }
+        else if (e.getSource() == mEditFilterComponentsMI) {
+          new FilterComponentsDlg(UiUtilities.getLastModalChildOf(MainFrame.getInstance()));
         } else if (e.getSource() == mSendFilterMI) {
-            sendPrograms();
+          sendPrograms();
         }
     }
 

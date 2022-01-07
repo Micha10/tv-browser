@@ -130,7 +130,7 @@ public class UiUtilities {
    *          The window to center and show.
    */
   public static void centerAndShow(Window win) {
-	centerAndShow(win, true);
+    centerAndShow(win, true);
   }
   
   /**

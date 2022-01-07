@@ -2580,6 +2580,8 @@ tvbrowser/src/tvbrowser/ui/configassistant/configassistant_hr.properties -text s
 tvbrowser/src/tvbrowser/ui/configassistant/configassistant_it.properties -text
 tvbrowser/src/tvbrowser/ui/configassistant/configassistant_pl.properties -text svneol=unset#text/plain
 tvbrowser/src/tvbrowser/ui/configassistant/configassistant_sk.properties -text
+tvbrowser/src/tvbrowser/ui/filter/dlgs/FilterComponentPanel.java svneol=native#text/plain
+tvbrowser/src/tvbrowser/ui/filter/dlgs/FilterComponentsDlg.java svneol=native#text/plain
 tvbrowser/src/tvbrowser/ui/filter/dlgs/FilterItem.java -text svneol=unset#text/plain
 tvbrowser/src/tvbrowser/ui/filter/dlgs/Utilities.java -text
 tvbrowser/src/tvbrowser/ui/filter/dlgs/dlgs_cs.properties -text svneol=unset#text/plain
