@@ -69,6 +69,7 @@ import tvbrowser.core.plugin.PluginProxy;
 import tvbrowser.core.plugin.PluginProxyManager;
 import tvbrowser.extras.common.InternalPluginProxyList;
 import tvbrowser.ui.filter.dlgs.FilterButtons;
+import tvbrowser.ui.filter.dlgs.FilterComponentsDlg;
 import tvbrowser.ui.mainframe.MainFrame;
 import tvbrowser.ui.mainframe.actions.TVBrowserAction;
 import tvbrowser.ui.settings.ToolBarDragAndDropSettings;
@@ -507,7 +508,7 @@ public class ToolBar extends JToolBar {
         label = ChannelContextMenu.LOCALIZER.ellipsisMsg("addChannels", "Add/Remove channels");
       }
       else if (name.indexOf("##") != -1) {
-    	String id = name.substring(0,name.indexOf("##"));
+        String id = name.substring(0,name.indexOf("##"));
         PluginProxy plugin = PluginProxyManager.getInstance().getActivatedPluginForId(id);
         
         if(plugin != null) {
@@ -550,6 +551,18 @@ public class ToolBar extends JToolBar {
       }
     });
     menu.add(item);
+    
+    if(name.startsWith("#filter")) {
+      item = new JMenuItem(FilterComponentsDlg.LOCALIZER.ellipsisMsg("title", "Edit filter components"));
+      item.setActionCommand("#filterComponentEdit");
+      
+      item.addActionListener(e1 -> {
+        new FilterComponentsDlg(UiUtilities.getLastModalChildOf(MainFrame.getInstance()));
+      });
+      
+      menu.add(item);
+    }
+    
     menu.addSeparator();
 
     item = new JMenuItem(mLocalizer.msg("removeButton", "Remove button"));

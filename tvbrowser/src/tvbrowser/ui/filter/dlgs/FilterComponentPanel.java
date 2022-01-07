@@ -159,13 +159,11 @@ public class FilterComponentPanel extends JPanel implements ActionListener {
         mFilterComponentList.requestFocus();
       }
       public void mouseClicked(MouseEvent e) {
-        try {
         if (SwingUtilities.isLeftMouseButton(e) && e.getClickCount() == 2) {
           int index = mFilterComponentList.locationToIndex(e.getPoint());
           mFilterComponentList.setSelectedIndex(index);
           editSelectedFilterComponent();
         }
-        }catch(Throwable t) {t.printStackTrace();}
       }
     });
   }
@@ -174,7 +172,7 @@ public class FilterComponentPanel extends JPanel implements ActionListener {
     if (mFilterComponentList == null) {
       return;
     }
-    if(mFilterComponentList.getSelectedIndex() > 0) {
+    if(mFilterComponentList.getSelectedIndex() >= 0) {
       FilterItem item = (FilterItem)mFilterComponentList.getSelectedValue();
       
       mRemoveBtn.setEnabled(!item.isAndItem() && !item.isOrItem() && !item.isNotItem() && !item.isOpenBracketItem() && !item.isCloseBracketItem() && !(item.getComponent() instanceof SingleChannelFilterComponent));
