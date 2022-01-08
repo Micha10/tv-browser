@@ -1542,6 +1542,12 @@ public class Settings {
     public static final IntProperty TAB_BAR_CENTER_PANEL_NAME_ICON_CONFIG = new IntProperty(
       mProp, "pbBarCenterPanelNameIconConfig", 2);
     
+    /**
+    * @since 4.2.5
+    */
+   public static final BooleanProperty PLUGIN_FUNCTIONS_IN_MENU_SHOW = new BooleanProperty(
+       mProp, "showPluginFunctionsInTabpaneMenu", true);
+    
     public CenterPanels() {}
   }
   
@@ -2365,6 +2371,12 @@ public class Settings {
     */
    public static final BooleanProperty ADDITIONAL_BOTTOM_SPACE = new BooleanProperty(
        mProp, "isToolbarAddtionalBottomSpace", false);
+   
+   /**
+    * @since 4.2.5
+    */
+   public static final BooleanProperty PLUGIN_FUNCTIONS_IN_MENU_SHOW = new BooleanProperty(
+       mProp, "showPluginFunctionsInToolbarMenu", true);
     
     private ToolBar() {}
   }

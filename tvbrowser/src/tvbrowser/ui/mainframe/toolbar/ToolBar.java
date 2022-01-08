@@ -63,14 +63,27 @@ import javax.swing.JToolBar;
 import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 import javax.swing.border.Border;
+import javax.swing.event.PopupMenuEvent;
+import javax.swing.event.PopupMenuListener;
 
+import com.jgoodies.forms.layout.CellConstraints;
+import com.jgoodies.forms.layout.FormLayout;
+
+import devplugin.ActionMenu;
+import devplugin.Date;
+import devplugin.Plugin;
+import devplugin.ProgressMonitor;
+import devplugin.SettingsItem;
 import tvbrowser.core.Settings;
+import tvbrowser.core.plugin.ButtonActionIf;
 import tvbrowser.core.plugin.PluginProxy;
 import tvbrowser.core.plugin.PluginProxyManager;
+import tvbrowser.extras.common.InternalPluginProxyIf;
 import tvbrowser.extras.common.InternalPluginProxyList;
 import tvbrowser.ui.filter.dlgs.FilterButtons;
 import tvbrowser.ui.filter.dlgs.FilterComponentsDlg;
 import tvbrowser.ui.mainframe.MainFrame;
+import tvbrowser.ui.mainframe.MenuBar;
 import tvbrowser.ui.mainframe.actions.TVBrowserAction;
 import tvbrowser.ui.settings.ToolBarDragAndDropSettings;
 import util.ui.ChannelContextMenu;
@@ -79,20 +92,12 @@ import util.ui.TVBrowserIcons;
 import util.ui.UiUtilities;
 import util.ui.persona.Persona;
 
-import com.jgoodies.forms.layout.CellConstraints;
-import com.jgoodies.forms.layout.FormLayout;
-
-import devplugin.Date;
-import devplugin.Plugin;
-import devplugin.ProgressMonitor;
-import devplugin.SettingsItem;
-
 public class ToolBar extends JToolBar {
 
-  private static final util.i18n.Localizer mLocalizer = util.i18n.Localizer
+  private static final util.i18n.Localizer LOCALIZER = util.i18n.Localizer
       .getLocalizerFor(ToolBar.class);
 
-  private static final Logger mLog = java.util.logging.Logger
+  private static final Logger LOG = java.util.logging.Logger
   .getLogger(ToolBar.class.getName());
 
   public static final String ACTION_VALUE = "ActionValue";
@@ -488,7 +493,9 @@ public class ToolBar extends JToolBar {
 
   private void showPopupMenu(MouseEvent e) {
     JPopupMenu menu = new JPopupMenu();
-    String label = mLocalizer.ellipsisMsg("configure", "Configure");
+    String label = LOCALIZER.ellipsisMsg("configure", "Configure");
+    ActionMenu buttonAction = null;
+    ButtonActionIf buttonActionIf = null; 
     String name = null;
     boolean configItemEnabled = false;
 
@@ -497,7 +504,7 @@ public class ToolBar extends JToolBar {
 
       if (name.startsWith("#scrollTo") && name.indexOf("Channel") == -1) {
         configItemEnabled = true;
-        label = mLocalizer.ellipsisMsg("configureTime", "Configure time buttons");
+        label = LOCALIZER.ellipsisMsg("configureTime", "Configure time buttons");
       }
       else if(name.startsWith("#filter")) {
         configItemEnabled = true;
@@ -512,27 +519,47 @@ public class ToolBar extends JToolBar {
         PluginProxy plugin = PluginProxyManager.getInstance().getActivatedPluginForId(id);
         
         if(plugin != null) {
+          buttonAction = plugin.getButtonAction();
           configItemEnabled =  plugin.getSettingsTab() != null;
         }
         else {
-          if(InternalPluginProxyList.getInstance().getProxyForId(id) != null) {
-        	configItemEnabled = true;
-            name = InternalPluginProxyList.getInstance().getProxyForId(id).getSettingsId();        	  
+          InternalPluginProxyIf internal = InternalPluginProxyList.getInstance().getProxyForId(id);
+          
+          if(internal != null) {
+            if(internal instanceof ButtonActionIf) {
+              buttonAction = ((ButtonActionIf) internal).getButtonAction();
+            }
+            configItemEnabled = true;
+            name = internal.getSettingsId();        	  
           }
         }
       }
       else if (PluginProxyManager.getInstance().getActivatedPluginForId(name) != null) {
-        configItemEnabled = PluginProxyManager.getInstance().getActivatedPluginForId(name).getSettingsTab() != null;
+        PluginProxy plugin = PluginProxyManager.getInstance().getActivatedPluginForId(name);
+        buttonAction = plugin.getButtonAction();
+        configItemEnabled = plugin.getSettingsTab() != null;
       }
       else if (InternalPluginProxyList.getInstance().getProxyForId(name) != null) {
-        configItemEnabled = InternalPluginProxyList.getInstance().getProxyForId(name).getSettingsTab() != null;
-        name = InternalPluginProxyList.getInstance().getProxyForId(name).getSettingsId();
+        InternalPluginProxyIf internal = InternalPluginProxyList.getInstance().getProxyForId(name);
+        
+        if(internal instanceof ButtonActionIf) {
+          buttonAction = ((ButtonActionIf) internal).getButtonAction();
+        }
+        
+        configItemEnabled = internal.getSettingsTab() != null;
+        name = internal.getSettingsId();
       }
     } else {
       return;
     }
-
-
+    
+    if(Settings.ToolBar.PLUGIN_FUNCTIONS_IN_MENU_SHOW.getBoolean() && buttonAction != null) {
+      JMenuItem pluginMenu = MenuBar.createMenuItem(buttonAction, buttonActionIf, MainFrame.getInstance().getStatusBarLabel());
+      if(pluginMenu != null) {
+        menu.add(pluginMenu);
+      }
+    }
+    
     JMenuItem item = new JMenuItem(label);
     item.setActionCommand(name);
     item.setEnabled(configItemEnabled);
@@ -550,6 +577,7 @@ public class ToolBar extends JToolBar {
         MainFrame.getInstance().showSettingsDialog(e1.getActionCommand());
       }
     });
+    
     menu.add(item);
     
     if(name.startsWith("#filter")) {
@@ -565,7 +593,7 @@ public class ToolBar extends JToolBar {
     
     menu.addSeparator();
 
-    item = new JMenuItem(mLocalizer.msg("removeButton", "Remove button"));
+    item = new JMenuItem(LOCALIZER.msg("removeButton", "Remove button"));
     final String buttonName = ((AbstractButton) e.getSource()).getName();
     item.addActionListener(e1 -> {
       Action[] actions = mModel.getActions();
@@ -597,6 +625,20 @@ public class ToolBar extends JToolBar {
     
     menu.add(item);
     menu.add(ContextMenu.getSubMenu());
+    menu.addPopupMenuListener(new PopupMenuListener() {
+      @Override
+      public void popupMenuWillBecomeVisible(PopupMenuEvent e) {}
+      
+      @Override
+      public void popupMenuWillBecomeInvisible(PopupMenuEvent pe) {
+        if (e.getSource() instanceof AbstractButton) {
+          ((AbstractButton)e.getSource()).doClick();
+        }
+      }
+      
+      @Override
+      public void popupMenuCanceled(PopupMenuEvent e) {}
+    });
 
     menu.show(e.getComponent(), e.getX(), e.getY());
   }
@@ -640,7 +682,7 @@ public class ToolBar extends JToolBar {
       if (mIconSize == ICON_BIG) {
         icon = (Icon) action.getValue(Plugin.BIG_ICON);
         if (icon == null) {
-          mLog.warning("Big icon missing for action " + action.getValue(Action.NAME));
+          LOG.warning("Big icon missing for action " + action.getValue(Action.NAME));
           icon = (Icon) action.getValue(Action.SMALL_ICON);
         }
         if ((icon != null) && (action.getValue(Plugin.NO_ICON_RESIZE) == null || !((Boolean)action.getValue(Plugin.NO_ICON_RESIZE)))

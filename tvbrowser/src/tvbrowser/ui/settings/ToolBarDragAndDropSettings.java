@@ -67,6 +67,7 @@ import util.ui.TVBrowserIcons;
 import util.ui.UiUtilities;
 import util.ui.WindowClosingIf;
 
+import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 
@@ -94,7 +95,7 @@ public class ToolBarDragAndDropSettings extends JDialog implements
   /** Actions the user can add to the ToolBar */
   private Vector<Action> mAvailableActions = new Vector<Action>();
   private JComboBox<String> mShowCB, mLocationCB;
-  private JCheckBox mShowToolbarCb, mUseBigIconsCb, mShowSearchFieldCb;
+  private JCheckBox mShowToolbarCb, mShowPluginActionsCb, mUseBigIconsCb, mShowSearchFieldCb;
   private JPanel mButtonPanel;
   private boolean mWest;
 
@@ -160,23 +161,24 @@ public class ToolBarDragAndDropSettings extends JDialog implements
     // Initialize the Panel for selecting toolBars visibility
     final JPanel tVisPanel = new JPanel();
     tVisPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
-    tVisPanel.setLayout(new BoxLayout(tVisPanel, BoxLayout.X_AXIS));
+    tVisPanel.setLayout(new FormLayout("default,10dlu:grow,default","default,default"));
     tVisPanel.setBorder(new CompoundBorder(BorderFactory.createMatteBorder(0,
         0, 1, 0, Color.GRAY), BorderFactory.createEmptyBorder(10, 5, 9, 5)));
 
-    mShowToolbarCb = new JCheckBox(LOCALIZER
-        .msg("showToolbar", "Show toolbar"));
+    mShowToolbarCb = new JCheckBox(LOCALIZER.msg("showToolbar", "Show toolbar"));
     mShowToolbarCb.setSelected(Settings.ToolBar.IS_VISIBLE.getBoolean());
 
-    tVisPanel.add(mShowToolbarCb);
-    tVisPanel.add(Box.createHorizontalGlue());
+    tVisPanel.add(mShowToolbarCb, CC.xy(1, 1));
+    
+    mShowSearchFieldCb = new JCheckBox(LOCALIZER.msg("showSearchField","Show Search field"));
+    mShowSearchFieldCb.setSelected(Settings.ToolBar.IS_SEARCH_FIELD_VISIBLE.getBoolean());
 
-    mShowSearchFieldCb = new JCheckBox(LOCALIZER.msg("showSearchField",
-        "Show Search field"));
-    mShowSearchFieldCb.setSelected(Settings.ToolBar.IS_SEARCH_FIELD_VISIBLE
-        .getBoolean());
-
-    tVisPanel.add(mShowSearchFieldCb);
+    tVisPanel.add(mShowSearchFieldCb, CC.xy(3, 1));
+    
+    mShowPluginActionsCb = new JCheckBox(LOCALIZER.msg("showPluginAction", "Show plugin actions in context menu"));
+    mShowPluginActionsCb.setSelected(Settings.ToolBar.PLUGIN_FUNCTIONS_IN_MENU_SHOW.getBoolean());
+    
+    tVisPanel.add(mShowPluginActionsCb, CC.xyw(1, 2, 3));
 
     // Initialize the panel for the ToolBar settings
     JPanel tSetPanel = new JPanel(new FormLayout("default,5dlu,default,0dlu:grow,default,5dlu,default,5dlu,default","default"));
@@ -235,6 +237,7 @@ public class ToolBarDragAndDropSettings extends JDialog implements
 
     // Register ActionListener to the settings
     mShowToolbarCb.addActionListener(this);
+    mShowPluginActionsCb.addActionListener(this);
     mShowSearchFieldCb.addActionListener(this);
     mShowCB.addActionListener(this);
     mUseBigIconsCb.addActionListener(this);
@@ -598,6 +601,7 @@ public class ToolBarDragAndDropSettings extends JDialog implements
     }
     DefaultToolBarModel.getInstance().setButtonIds(ids);
     Settings.ToolBar.BUTTONS.setStringArray(ids);
+    Settings.ToolBar.PLUGIN_FUNCTIONS_IN_MENU_SHOW.setBoolean(mShowPluginActionsCb.isSelected());
 
     ToolBar toolbar = MainFrame.getInstance().getToolbar();
     int inx = mShowCB.getSelectedIndex();

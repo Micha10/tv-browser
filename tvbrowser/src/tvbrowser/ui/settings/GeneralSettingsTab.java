@@ -390,7 +390,7 @@ public class GeneralSettingsTab implements devplugin.SettingsTab {
    * Returns the title of the tab-sheet.
    */
   public String getTitle() {
-    return LOCALIZER.msg("general", "General");
+    return LOCALIZER.msg("general", "General settings");
   }
 
   private JPanel createRefreshPanel() {

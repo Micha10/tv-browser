@@ -130,6 +130,7 @@ import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.Sizes;
 
+import devplugin.ActionMenu;
 import devplugin.Channel;
 import devplugin.ChannelDayProgram;
 import devplugin.ChannelFilter;
@@ -158,6 +159,7 @@ import tvbrowser.core.contextmenu.ContextMenuManager.ContextMenuAction;
 import tvbrowser.core.filters.FilterList;
 import tvbrowser.core.filters.FilterManagerImpl;
 import tvbrowser.core.filters.ShowAllFilter;
+import tvbrowser.core.plugin.ButtonActionIf;
 import tvbrowser.core.plugin.PluginManagerImpl;
 import tvbrowser.core.plugin.PluginProxy;
 import tvbrowser.core.plugin.PluginProxyManager;
@@ -622,23 +624,56 @@ public class MainFrame extends JFrame implements DateListener,DropTargetListener
         popup.add(settings);
         
         try {
-        int index = mCenterTabPane.indexAtLocation(e.getX(), e.getY());
-        
-        if(index >= 0) {
-          final String settingsId = ((JComponent)mCenterTabPane.getComponentAt(index)).getName();
+          int index = mCenterTabPane.indexAtLocation(e.getX(), e.getY());
           
-          if(settingsId != null) {
-            final String name = SettingsItem.PROGRAMTABLELOOK.equals(settingsId) ? LOCALIZER.msg("configProgramTable","Configure program table...") : LOCALIZER.msg("configPlugins","Configure plugin..."); 
+          if(index >= 0) {
+            final String[] ids = ((JComponent)mCenterTabPane.getComponentAt(index)).getName().split("&&&&");
             
-            JMenuItem settingsPlugin = new JMenuItem(name);
-            settingsPlugin.addActionListener(evt -> {
-              showSettingsDialog(settingsId);
-            });
+            if(Settings.CenterPanels.PLUGIN_FUNCTIONS_IN_MENU_SHOW.getBoolean() && ids[0] != null && !ids[0].equals("null")) {
+              PluginProxy plugin = PluginProxyManager.getInstance().getActivatedPluginForId(ids[0]);
+              
+              ButtonActionIf buttonActionIf = null;
+              
+              if(plugin != null) {
+                buttonActionIf = plugin;
+              }
+              else {
+                InternalPluginProxyIf internal = InternalPluginProxyList.getInstance().getProxyForId(ids[0]);
+                
+                if(internal != null && internal instanceof ButtonActionIf) {
+                  buttonActionIf = (ButtonActionIf)internal;
+                }
+              }
+              
+              if(buttonActionIf != null) {
+                ActionMenu buttonAction = buttonActionIf.getButtonAction();
+                
+                if(buttonAction != null) {
+                  JMenuItem item = MenuBar.createMenuItem(buttonAction, buttonActionIf, getStatusBarLabel());
+                  
+                  if(item != null) {
+                    popup.addSeparator();
+                    popup.add(item);
+                  }
+                }
+              }
+            }
             
-            popup.addSeparator();
-            popup.add(settingsPlugin);
+            if(ids[1] != null && !ids[1].equals("null")) {
+              final String name = SettingsItem.PROGRAMTABLELOOK.equals(ids[1]) ? LOCALIZER.msg("configProgramTable","Configure program table...") : LOCALIZER.msg("configPlugins","Configure plugin..."); 
+              
+              JMenuItem settingsPlugin = new JMenuItem(name);
+              settingsPlugin.addActionListener(evt -> {
+                showSettingsDialog(ids[1]);
+              });
+              
+              if(popup.getComponentCount() == 1) {
+                popup.addSeparator();
+              }
+              
+              popup.add(settingsPlugin);
+            }
           }
-        }
         }catch(Throwable t) {t.printStackTrace();}
         
         
@@ -3568,6 +3603,7 @@ public class MainFrame extends JFrame implements DateListener,DropTargetListener
             for(PluginCenterPanel panel : panels) {
               if(panel != null && panel.getPanel() != null && panel.getName() != null && panel.getId() != null) {
                 panel.setSettingsId(plugin.getId());
+                panel.setPluginId(plugin.getId());
                 
                 if(panel.getIcon() == null) {
                   panel.setIcon(plugin.getPluginIcon());
@@ -3593,6 +3629,7 @@ public class MainFrame extends JFrame implements DateListener,DropTargetListener
             for(PluginCenterPanel panel : panels) {
               if(panel != null && panel.getPanel() != null && panel.getName() != null && panel.getId() != null) {
                 panel.setSettingsId(internalPlugin.getSettingsId());
+                panel.setPluginId(internalPlugin.getId());
                 
                 if(panel.getIcon() == null) {
                   panel.setIcon(internalPlugin.getIcon());
@@ -3657,7 +3694,7 @@ public class MainFrame extends JFrame implements DateListener,DropTargetListener
         
         for(PluginCenterPanel panel : usedCenterPanelList) {
           final JPanel jPanel = panel.getPanel();
-          jPanel.setName(panel.getSettingsId());
+          jPanel.setName(panel.getPluginId()+"&&&&"+panel.getSettingsId());
           
           String name = panel.getName();
           Icon icon = panel.getIcon();

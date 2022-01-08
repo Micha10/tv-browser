@@ -863,7 +863,7 @@ public abstract class MenuBar extends JMenuBar implements ActionListener {
     mPluginsMenu.add(mPluginManagerMI);
   }
 
-	private JMenuItem createMenuItem(ActionMenu menu, ButtonActionIf buttonActionIf) {
+	public static JMenuItem createMenuItem(ActionMenu menu, ButtonActionIf buttonActionIf, JLabel label) {
 		JMenuItem result;
 		Icon icon = (Icon) menu.getAction().getValue(Action.SMALL_ICON);
 		if (icon != null) {
@@ -881,7 +881,7 @@ public abstract class MenuBar extends JMenuBar implements ActionListener {
 
 			ActionMenu[] subItems = menu.getSubItems();
 			for (ActionMenu subItem : subItems) {
-				final JMenuItem menuItem = createMenuItem(subItem, null);
+				final JMenuItem menuItem = createMenuItem(subItem, null, label);
 				if (menuItem != null) {
 					result.add(menuItem);
 				} else {
@@ -908,7 +908,7 @@ public abstract class MenuBar extends JMenuBar implements ActionListener {
 		final String desc = buttonActionIf != null ? buttonActionIf.getButtonActionDescription() : (String)menu.getAction().getValue(Action.SHORT_DESCRIPTION);
 		
 		if(desc != null) {
-		  MenuHelpTextAdapter.create(result, desc, mLabel);
+		  MenuHelpTextAdapter.create(result, desc, label);
 		}
 
 		return result;
@@ -951,7 +951,7 @@ public abstract class MenuBar extends JMenuBar implements ActionListener {
 			ButtonActionIf buttonActionIf) {
 		ActionMenu actionMenu = buttonActionIf.getButtonAction();
 		if (actionMenu != null) {
-			JMenuItem item = createMenuItem(actionMenu, buttonActionIf);
+			JMenuItem item = createMenuItem(actionMenu, buttonActionIf, mLabel);
 			setMnemonic(item);
 			list.add(item);
 			/*MenuHelpTextAdapter.create(item,

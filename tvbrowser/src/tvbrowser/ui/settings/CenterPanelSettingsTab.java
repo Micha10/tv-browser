@@ -56,7 +56,7 @@ public class CenterPanelSettingsTab implements SettingsTab {
   private static final Localizer LOCALIZER = Localizer.getLocalizerFor(CenterPanelSettingsTab.class);
 
   private OrderChooser<PluginCenterPanel> mPanelChooser;
-  private JCheckBox mTabBarAlwaysVisible;
+  private JCheckBox mTabBarAlwaysVisible,mShowPluginActionsInMenu;
   private ArrayList<PluginCenterPanel> mAllPanelList;
   
   private JRadioButton mNameOnly, mIconOnly, mNameAndIcon;
@@ -116,6 +116,7 @@ public class CenterPanelSettingsTab implements SettingsTab {
     
     mPanelChooser = new OrderChooser<>(currentOrderList.toArray(new PluginCenterPanel[currentOrderList.size()]), mAllPanelList.toArray(new PluginCenterPanel[mAllPanelList.size()]));
     mTabBarAlwaysVisible = new JCheckBox(LOCALIZER.msg("alwaysShowTabs", "Always show tabs"), Settings.CenterPanels.ALWAYS_SHOW_TAB_BAR_FOR_CENTER_PANEL.getBoolean());
+    mShowPluginActionsInMenu = new JCheckBox(ToolBarDragAndDropSettings.LOCALIZER.msg("showPluginAction", "Show plugin actions in context menu"), Settings.CenterPanels.PLUGIN_FUNCTIONS_IN_MENU_SHOW.getBoolean());
     
     mNameOnly = new JRadioButton(LOCALIZER.msg("nameOnly", "Name only"), Settings.CenterPanels.TAB_BAR_CENTER_PANEL_NAME_ICON_CONFIG.getInt() == Settings.IconAndNames.VALUE_NAME_ONLY);
     mIconOnly = new JRadioButton(LOCALIZER.msg("iconOnly", "Icon only (if available)"), Settings.CenterPanels.TAB_BAR_CENTER_PANEL_NAME_ICON_CONFIG.getInt() == Settings.IconAndNames.VALUE_ICON_ONLY);
@@ -128,18 +129,19 @@ public class CenterPanelSettingsTab implements SettingsTab {
     bg.add(mNameAndIcon);
     
     PanelBuilder pb = new PanelBuilder(new FormLayout("5dlu,default:grow,5dlu",
-        "default,5dlu,fill:default:grow,5dlu,default,10dlu,default,5dlu,default,1dlu,default,1dlu,default"));
+        "default,5dlu,fill:default:grow,5dlu,default,1dlu,default,10dlu,default,5dlu,default,1dlu,default,1dlu,default"));
     
     pb.border(Borders.DIALOG);
     
     pb.addSeparator(LOCALIZER.msg("info", "Shown tabs in the main window"), CC.xyw(1, 1, 3));
     pb.add(mPanelChooser, CC.xy(2,3));
     pb.add(mTabBarAlwaysVisible, CC.xy(2, 5));
+    pb.add(mShowPluginActionsInMenu, CC.xy(2, 7));
     
-    pb.addSeparator(LOCALIZER.msg("nameAndIconSep", "Name and icon display"), CC.xyw(1, 7, 3));
-    pb.add(mNameOnly, CC.xy(2, 9));
-    pb.add(mIconOnly, CC.xy(2, 11));
-    pb.add(mNameAndIcon, CC.xy(2, 13));
+    pb.addSeparator(LOCALIZER.msg("nameAndIconSep", "Name and icon display"), CC.xyw(1, 9, 3));
+    pb.add(mNameOnly, CC.xy(2, 11));
+    pb.add(mIconOnly, CC.xy(2, 13));
+    pb.add(mNameAndIcon, CC.xy(2, 15));
     
     return pb.getPanel();
   }
@@ -176,6 +178,7 @@ public class CenterPanelSettingsTab implements SettingsTab {
     
     Settings.CenterPanels.CENTER_PANEL_ARR.setStringArray(idList.toArray(new String[idList.size()]));
     Settings.CenterPanels.ALWAYS_SHOW_TAB_BAR_FOR_CENTER_PANEL.setBoolean(mTabBarAlwaysVisible.isSelected());
+    Settings.CenterPanels.PLUGIN_FUNCTIONS_IN_MENU_SHOW.setBoolean(mShowPluginActionsInMenu.isSelected());
     Settings.CenterPanels.DISABLED_CENTER_PANEL_ARR.setStringArray(disabledIdList.toArray(new String[0]));
     
     int selection = Settings.IconAndNames.VALUE_NAME_AND_ICON;

@@ -39,6 +39,7 @@ import javax.swing.JPanel;
  * @since 3.2
  */
 public abstract class PluginCenterPanel {
+  private String mPluginId;
   private String mSettingsId;
   private Icon mIcon;
   
@@ -57,6 +58,24 @@ public abstract class PluginCenterPanel {
    */
   public final String getSettingsId() {
     return mSettingsId;
+  }
+  
+  /**
+   * @return The plugin ID of this center panels plugin or <code>null</code>
+   * if this is no plugin panel.
+   * @since 3.4.5 
+   */  
+  public void setPluginId(String pluginId) {
+    mPluginId = pluginId;
+  }
+  
+  /**
+   * @return The plugin ID of this center panels plugin or <code>null</code>
+   * if this isn't a plugin panel.
+   * @since 4.2.5 
+   */
+  public String getPluginId() {
+    return mPluginId;
   }
   
   /**
