@@ -118,6 +118,8 @@ public class DreamboxConfigDialog extends JDialog implements WindowClosingIf {
     private JButton mRefreshButton;
 
     private ProgramReceiveTargetSelectionPanel mProgramReceiveTargetSelection;
+    
+    private DreamboxConnector mConnector;
 
   /**
    * Create the Dialog
@@ -130,12 +132,13 @@ public class DreamboxConfigDialog extends JDialog implements WindowClosingIf {
    *          Config for the Device
    */
     public DreamboxConfigDialog(Window parent, DreamboxDevice device,
-      DreamboxConfig config) {
-    super(parent);
-    setModal(true);
-        mConfig = config;
-        mDevice = device;
-        createGui();
+      DreamboxConnector connector) {
+      super(parent);
+      setModal(true);
+      mConnector = connector;
+      mConfig = connector.getConfig();
+      mDevice = device;
+      createGui();
     }
 
     /**
@@ -404,8 +407,9 @@ public class DreamboxConfigDialog extends JDialog implements WindowClosingIf {
                 if (tabs.getSelectedIndex() == 0) {
                     currentDefaultLocation = (String) mDefaultLocation.getSelectedItem();
                 } else if (tabs.getSelectedIndex() == 1) {
+                    mConfig.setDreamboxAddress(mDreamboxAddress.getText());
                     mDefaultLocation.removeAllItems();
-                    List<String> locations = E2LocationHelper.getInstance(mConfig, null).getLocations(mDreamboxAddress.getText());
+                    List<String> locations = E2LocationHelper.getInstance(mConnector, null).getLocations(mDreamboxAddress.getText());
                     
                     Iterator<String> it = locations.iterator();
                     while(it.hasNext()) {
@@ -472,14 +476,12 @@ public class DreamboxConfigDialog extends JDialog implements WindowClosingIf {
                     public void run() {
                         mConfig.setDreamboxAddress(mDreamboxAddress.getText());
 
-                        DreamboxConnector connect = new DreamboxConnector(mConfig);
-
                         try {
-                          if (connect.testDreamboxVersion()) {
+                          if (mConnector.testDreamboxVersion()) {
                             Collection<DreamboxChannel> channels = null;
 
                             try {
-                                channels = connect.getChannels();
+                                channels = mConnector.getChannels();
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }

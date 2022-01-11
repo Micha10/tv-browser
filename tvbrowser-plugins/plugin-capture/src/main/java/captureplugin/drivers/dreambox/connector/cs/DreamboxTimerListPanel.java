@@ -11,14 +11,11 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.URL;
-import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -57,7 +54,6 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
-import org.apache.commons.codec.binary.Base64;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
@@ -452,23 +448,8 @@ try {
 
     String data = "";
     try {
-      String userpassword = mConnector.getConfig().getUserName() + ":"
-          + mConnector.getConfig().getPassword();
-      String encoded = new String(Base64.encodeBase64(userpassword.getBytes()));
-
-      URL url = new URL("http://" + mConnector.getConfig().getDreamboxAddress()
-          + "/web/timercleanup?cleanup=true");
-      URLConnection connection = url.openConnection();
-      connection.setRequestProperty("Authorization", "Basic " + encoded);
-      connection.setConnectTimeout(mConnector.getConfig().getTimeout());
-      InputStream stream = connection.getInputStream();
-      byte[] buf = new byte[1024];
-      int len;
-      while ((len = stream.read(buf)) != -1) {
-        data += new String(buf, 0, len, "UTF-8");
-      }
-      stream.close();
-
+      data = mConnector.getDataForLocalUrl("/web/timercleanup?cleanup=true", "Error removing expired timers.");
+      
       DreamboxStateHandler handler = new DreamboxStateHandler();
       SAXParser saxParser = SAXParserFactory.newInstance().newSAXParser();
       saxParser.parse(new InputSource(new StringReader(data)), handler);
@@ -564,12 +545,10 @@ try {
     endPanel.setBorder(BorderFactory.createTitledBorder(mLocalizer.msg(
         "EndTime", "End-Time")));
 
-    DreamboxConfig config = mConnector.getConfig();
-
     String serviceRef = oldTimer.get(E2TimerHelper.SERVICEREFERENCE);
     boolean useHdService = E2ServiceHelper.isHdService(serviceRef);
     ProgramOptionPanel pgmOptPanel = new ProgramOptionPanel(E2LocationHelper
-        .getInstance(config, null), E2MovieHelper.getInstance(config, null));
+        .getInstance(mConnector, null), E2MovieHelper.getInstance(mConnector, null));
 
     pgmOptPanel.setRepeated(Integer.parseInt(oldTimer
         .get(E2TimerHelper.REPEATED)));

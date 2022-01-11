@@ -1,12 +1,9 @@
 package captureplugin.drivers.dreambox.connector.cs;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.StringReader;
 import java.net.MalformedURLException;
 import java.net.SocketTimeoutException;
-import java.net.URL;
-import java.net.URLConnection;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
@@ -19,11 +16,10 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
-import org.apache.commons.codec.binary.Base64;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
-import captureplugin.drivers.dreambox.DreamboxConfig;
+import captureplugin.drivers.dreambox.connector.DreamboxConnector;
 
 /**
  * @author fishhead
@@ -36,14 +32,14 @@ public class E2LocationHelper {
   private static final Map<String, E2LocationHelper> singletonMap = new HashMap<String, E2LocationHelper>();
   // Member
   private List<String> mLocations = null;
-  private final DreamboxConfig mConfig;
+  private final DreamboxConnector mConnector;
   private final Thread mThreadWaitFor;
   private Thread mThread;
 
   /**
    * Factory
    * 
-   * @param config
+   * @param connector
    *          for dreambox
    * @param thread
    *          to wait for
@@ -51,13 +47,13 @@ public class E2LocationHelper {
    * @return locationThread
    * 
    */
-  public static E2LocationHelper getInstance(DreamboxConfig config, Thread thread) {
-    String id = config.getId();
+  public static E2LocationHelper getInstance(DreamboxConnector connector, Thread thread) {
+    String id = connector.getConfig().getId();
     E2LocationHelper singleton = null;
     synchronized (singletonMap) {
       singleton = singletonMap.get(id);
       if (singleton == null) {
-        singleton = new E2LocationHelper(config, thread);
+        singleton = new E2LocationHelper(connector, thread);
         singletonMap.put(id, singleton);
       }
     }
@@ -67,19 +63,19 @@ public class E2LocationHelper {
   /**
    * Konstruktor
    * 
-   * @param config
+   * @param connector
    * @param thread
    */
-  private E2LocationHelper(DreamboxConfig config, Thread thread) {
+  private E2LocationHelper(DreamboxConnector connector, Thread thread) {
     mLog.setLevel(Level.INFO);    
-    this.mConfig = config;
+    this.mConnector = connector;
     this.mThreadWaitFor = thread;
     this.mLocations = null;
-    run(mConfig.getDreamboxAddress());
+    run(connector.getConfig().getDreamboxAddress());
   }
   
   public String getDefaultLocation() {
-      return mConfig.getDefaultLocation();
+      return mConnector.getConfig().getDefaultLocation();
   }
 
   /**
@@ -111,7 +107,7 @@ public class E2LocationHelper {
         }
     }
     if (mLocations == null) {
-      run(mConfig.getDreamboxAddress());
+      run(mConnector.getConfig().getDreamboxAddress());
     }
     try {
       mThread.join();
@@ -180,21 +176,8 @@ public class E2LocationHelper {
           String data = "";
 
           try {
-            URL url = new URL("http://" + dreamboxAddress + "/web/getlocations");
-            URLConnection connection = url.openConnection();
-
-            String userpassword = mConfig.getUserName() + ":" + mConfig.getPassword();
-            String encoded = new String(Base64.encodeBase64(userpassword.getBytes()));
-            connection.setRequestProperty("Authorization", "Basic " + encoded);
-
-            connection.setConnectTimeout(mConfig.getTimeout());
-            InputStream stream = connection.getInputStream();
-            byte[] buf = new byte[1024];
-            int len;
-            while ((len = stream.read(buf)) != -1) {
-              data += new String(buf, 0, len, "UTF-8");
-            }
-            stream.close();
+            data = mConnector.getDataForLocalUrl("/web/getlocations", "Error getting location from box "+mConnector.getConfig().getDreamboxAddress());
+            
             E2ListItemHandler handler;
             if (data.indexOf("e2location") != -1) {
               handler = new E2ListItemHandler("e2location");
@@ -224,7 +207,7 @@ public class E2LocationHelper {
             mLog.log(Level.WARNING, "IllegalArgumentException", e);
           }
 
-          mLog.info("[" + mConfig.getDreamboxAddress() + "] " + "GET getlocations - "
+          mLog.info("[" + mConnector.getConfig().getDreamboxAddress() + "] " + "GET getlocations - "
               + (new GregorianCalendar().getTimeInMillis() - cal.getTimeInMillis()) + " ms");
         }
     };

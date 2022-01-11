@@ -172,7 +172,7 @@ public class ProgramTimeDialog extends JDialog {
       final ProgramRangeSelectionPanel programSelection = ProgramRangeSelectionPanel.createPanel(mPrgTime.getProgram(),(short)6);
       
       panel.addParagraph(mLocalizer.msg("programSelection","Program selection"));
-      panel.addRow();
+      panel.addRow("fill:50dlu:grow");
       panel.add(programSelection, cc.xyw(2, panel.getRow(), panel.getColumnCount() - 1));
 
       programSelection.addListSelectionListener(new ListSelectionListener() {

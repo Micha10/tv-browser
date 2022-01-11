@@ -1,13 +1,10 @@
 package captureplugin.drivers.dreambox.connector.cs;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.SocketTimeoutException;
-import java.net.URL;
-import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -26,22 +23,24 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
-import org.apache.commons.codec.binary.Base64;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
-import captureplugin.drivers.dreambox.DreamboxConfig;
 import captureplugin.drivers.dreambox.connector.DreamboxChannel;
+import captureplugin.drivers.dreambox.connector.DreamboxConnector;
 import captureplugin.drivers.dreambox.connector.DreamboxStateHandler;
 import captureplugin.drivers.utils.ProgramTime;
+import devplugin.Plugin;
 import devplugin.ProgramFieldType;
+import util.ui.Localizer;
 
 /**
  * @author fishhead
  * 
  */
 public class E2TimerHelper {
-
+  public static final Localizer LOCALIZER = Localizer.getLocalizerFor(E2TimerHelper.class);
+  
   // Konstanten
   /** Sendername */
   public static final String SERVICENAME = "e2servicename";
@@ -83,25 +82,25 @@ public class E2TimerHelper {
   private static final Map<String, E2TimerHelper> singletonMap = new HashMap<String, E2TimerHelper>();
   // Member
   private List<Map<String, String>> mTimers;
-  private final DreamboxConfig mConfig;
+  private final DreamboxConnector mConnector;
   private Thread mThread;
 
   /**
    * Factory
    * 
-   * @param config
+   * @param connector
    *          for dreambox
    * 
    * @return timerHelper
    * 
    */
-  public static E2TimerHelper getInstance(DreamboxConfig config) {
-    String id = config.getId();
+  public static E2TimerHelper getInstance(DreamboxConnector connector) {
+    String id = connector.getConfig().getId();
     E2TimerHelper singleton = null;
     synchronized (singletonMap) {
       singleton = singletonMap.get(id);
       if (singleton == null) {
-        singleton = new E2TimerHelper(config);
+        singleton = new E2TimerHelper(connector);
         singletonMap.put(id, singleton);
       }
     }
@@ -111,12 +110,12 @@ public class E2TimerHelper {
   /**
    * Konstruktor
    * 
-   * @param config
+   * @param connector
    * @param thread
    */
-  private E2TimerHelper(DreamboxConfig config) {
+  private E2TimerHelper(DreamboxConnector connector) {
     mLog.setLevel(Level.INFO);    
-    this.mConfig = config;
+    this.mConnector = connector;
     this.mTimers = null;
     run();
   }
@@ -295,7 +294,7 @@ public class E2TimerHelper {
         }
       }
     }
-    mLog.fine(" getTimers(" + (mTimers == null ? "null" : mTimers.size()) + ") " + mConfig.getDreamboxAddress());
+    mLog.fine(" getTimers(" + (mTimers == null ? "null" : mTimers.size()) + ") " + mConnector.getConfig().getDreamboxAddress());
     
     return mTimers != null ? mTimers : new ArrayList<Map<String,String>>(0);
   }
@@ -307,7 +306,7 @@ public class E2TimerHelper {
    */
   public int getTimerCount() {
     List<Map<String, String>> timers = getTimers();
-    mLog.info("[" + mConfig.getDreamboxAddress() + "] " + "  getTimerCount(): " + (timers == null ? "0" : timers.size()));
+    mLog.info("[" + mConnector.getConfig().getDreamboxAddress() + "] " + "  getTimerCount(): " + (timers == null ? "0" : timers.size()));
     return (timers == null ? 0 : timers.size());
   }
 
@@ -325,34 +324,22 @@ public class E2TimerHelper {
 
           String data = "";
           try {
-            URL url = new URL("http://" + mConfig.getDreamboxAddress() + "/web/timerlist");
-            URLConnection connection = url.openConnection();
-
-            String userpassword = mConfig.getUserName() + ":" + mConfig.getPassword();
-            String encoded = new String(Base64.encodeBase64(userpassword.getBytes()));
-            connection.setRequestProperty("Authorization", "Basic " + encoded);
-
-            connection.setConnectTimeout(mConfig.getTimeout());
-            InputStream stream = connection.getInputStream();
-            byte[] buf = new byte[1024];
-            int len;
-            while ((len = stream.read(buf)) != -1) {
-              data += new String(buf, 0, len, "UTF-8");
-            }
-            stream.close();
-            E2ListMapHandler handler = new E2ListMapHandler("e2timerlist", "e2timer");
-            SAXParser saxParser = SAXParserFactory.newInstance().newSAXParser();
-            saxParser.parse(new InputSource(new StringReader(data)), handler);
-
-            mTimers = handler.getList();
-
-            // fix e2dirname / e2location
-            for (Map<String, String> timer : mTimers) {
-              if (timer.containsKey(DIRNAME)) {
-                timer.put(LOCATION, timer.get(DIRNAME));
+            data = mConnector.getDataForLocalUrl("/web/timerlist", "Error reading timers from box " + mConnector.getConfig().getDreamboxAddress());
+            
+            if(mConnector.isAccessible()) {
+              E2ListMapHandler handler = new E2ListMapHandler("e2timerlist", "e2timer");
+              SAXParser saxParser = SAXParserFactory.newInstance().newSAXParser();
+              saxParser.parse(new InputSource(new StringReader(data)), handler);
+  
+              mTimers = handler.getList();
+  
+              // fix e2dirname / e2location
+              for (Map<String, String> timer : mTimers) {
+                if (timer.containsKey(DIRNAME)) {
+                  timer.put(LOCATION, timer.get(DIRNAME));
+                }
               }
             }
-
           } catch (ParserConfigurationException e) {
             mLog.log(Level.WARNING, "ParserConfigurationException", e);
           } catch (SAXException e) {
@@ -369,7 +356,7 @@ public class E2TimerHelper {
           }
         }
 
-        mLog.info("[" + mConfig.getDreamboxAddress() + "] " + "GET timerlist - "
+        mLog.info("[" + mConnector.getConfig().getDreamboxAddress() + "] " + "GET timerlist - "
             + (new GregorianCalendar().getTimeInMillis() - cal.getTimeInMillis()) + " ms");
       }
     };
@@ -583,51 +570,25 @@ public class E2TimerHelper {
     String data = "";
     try {
 
-      URL url = new URL("http://" + mConfig.getDreamboxAddress() + "/web/timeradd?"
-
+      String localUrl = "/web/timeradd?"
       + "&sRef=" + URLEncoder.encode(timer.get(SERVICEREFERENCE), "UTF-8")
-
       + "&begin=" + timer.get(TIMEBEGIN)
-
       + "&end=" + timer.get(TIMEEND)
-
       + "&name=" + URLEncoder.encode(timer.get(NAME), "UTF-8")
-
       + "&description=" + URLEncoder.encode(timer.get(DESCRIPTION), "UTF-8")
-
       + "&dirname=" + URLEncoder.encode(timer.get(LOCATION), "UTF-8")
-
       + "&tags=" + URLEncoder.encode(timer.get(TAGS), "UTF-8")
-
       + "&afterevent=" + timer.get(AFTEREVENT)
-
       + "&eit=" + timer.get(EIT)
-
       + "&disabled=" + timer.get(DISABLED)
-
       + "&justplay=" + timer.get(JUSTPLAY)
-
-      + "&repeated=" + timer.get(REPEATED)
-
-      );
-
-      URLConnection connection = url.openConnection();
-
-      String userpassword = mConfig.getUserName() + ":" + mConfig.getPassword();
-      String encoded = new String(Base64.encodeBase64(userpassword.getBytes()));
-      connection.setRequestProperty("Authorization", "Basic " + encoded);
+      + "&repeated=" + timer.get(REPEATED);
 
       boolean state = false;
       try {
+        data = mConnector.getDataForLocalUrl(localUrl, "Error adding timer to box " + mConnector.getConfig().getDreamboxAddress());
         // Web-Interface AAF
-        connection.setConnectTimeout(mConfig.getTimeout());
-        InputStream stream = connection.getInputStream();
-        byte[] buf = new byte[1024];
-        int len;
-        while ((len = stream.read(buf)) != -1) {
-          data += new String(buf, 0, len, "UTF-8");
-        }
-        stream.close();
+        
         DreamboxStateHandler handler = new DreamboxStateHandler();
         SAXParser saxParser = SAXParserFactory.newInstance().newSAXParser();
         saxParser.parse(new InputSource(new StringReader(data)), handler);
@@ -637,7 +598,7 @@ public class E2TimerHelper {
           getTimers().add(timer);
           Collections.sort(getTimers(), TIMER_COMPARE);
           // Log
-          mLog.info("[" + mConfig.getDreamboxAddress() + "] " + String.format("ADD %s - %s - %d ms", // msg
+          mLog.info("[" + mConnector.getConfig().getDreamboxAddress() + "] " + String.format("ADD %s - %s - %d ms", // msg
               "1".equals(timer.get(JUSTPLAY)) ? "ZAP" : "REC", // justplay
               handler.getStatetext(), // Fehlermeldung
               (new GregorianCalendar().getTimeInMillis() - cal.getTimeInMillis())) // Dauer
@@ -648,7 +609,7 @@ public class E2TimerHelper {
 
       } catch (IOException e) {
         // Web-Interface TDT
-        mLog.info("[" + mConfig.getDreamboxAddress() + "] " + e.getLocalizedMessage());
+        mLog.info("[" + mConnector.getConfig().getDreamboxAddress() + "] " + e.getLocalizedMessage());
         state = true;
       }
 
@@ -656,10 +617,6 @@ public class E2TimerHelper {
 
     } catch (UnsupportedEncodingException e) {
       mLog.log(Level.WARNING, "UnsupportedEncodingException", e);
-    } catch (MalformedURLException e) {
-      mLog.log(Level.WARNING, "MalformedURLException", e);
-    } catch (IOException e) {
-      mLog.log(Level.WARNING, "IOException", e);
     } catch (ParserConfigurationException e) {
       mLog.log(Level.WARNING, "ParserConfigurationException", e);
     } catch (SAXException e) {
@@ -685,59 +642,28 @@ public class E2TimerHelper {
     String data = "";
     try {
 
-      URL url = new URL("http://" + mConfig.getDreamboxAddress() + "/web/timerchange?"
-
+      String localUrl = "/web/timerchange?"
       + "&channelOld=" + URLEncoder.encode(oldTimer.get(SERVICEREFERENCE), "UTF-8")
-
       + "&beginOld=" + oldTimer.get(TIMEBEGIN)
-
       + "&endOld=" + oldTimer.get(TIMEEND)
-
       + "&deleteOldOnSave=1"
-
       + "&sRef=" + URLEncoder.encode(newTimer.get(SERVICEREFERENCE), "UTF-8")
-
       + "&begin=" + newTimer.get(TIMEBEGIN)
-
       + "&end=" + newTimer.get(TIMEEND)
-
       + "&name=" + URLEncoder.encode(newTimer.get(NAME), "UTF-8")
-
       + "&description=" + URLEncoder.encode(newTimer.get(DESCRIPTION), "UTF-8")
-
       + "&dirname=" + URLEncoder.encode(newTimer.get(LOCATION), "UTF-8")
-
       + "&tags=" + URLEncoder.encode(newTimer.get(TAGS), "UTF-8")
-
       + "&afterevent=" + newTimer.get(AFTEREVENT)
-
       + "&eit=" + newTimer.get(EIT)
-
       + "&disabled=" + newTimer.get(DISABLED)
-
       + "&justplay=" + newTimer.get(JUSTPLAY)
-
-      + "&repeated=" + newTimer.get(REPEATED)
-
-      );
-
-      URLConnection connection = url.openConnection();
-
-      String userpassword = mConfig.getUserName() + ":" + mConfig.getPassword();
-      String encoded = new String(Base64.encodeBase64(userpassword.getBytes()));
-      connection.setRequestProperty("Authorization", "Basic " + encoded);
-
+      + "&repeated=" + newTimer.get(REPEATED);
+      
       boolean state = false;
       try {
-        // Web-Interface AAF
-        connection.setConnectTimeout(mConfig.getTimeout());
-        InputStream stream = connection.getInputStream();
-        byte[] buf = new byte[1024];
-        int len;
-        while ((len = stream.read(buf)) != -1) {
-          data += new String(buf, 0, len, "UTF-8");
-        }
-        stream.close();
+        data = mConnector.getDataForLocalUrl(localUrl, "Error changing timer on box " + mConnector.getConfig().getDreamboxAddress());
+        
         DreamboxStateHandler handler = new DreamboxStateHandler();
         SAXParser saxParser = SAXParserFactory.newInstance().newSAXParser();
         saxParser.parse(new InputSource(new StringReader(data)), handler);
@@ -748,7 +674,7 @@ public class E2TimerHelper {
           Collections.sort(getTimers(), TIMER_COMPARE);
 
           // Log
-          mLog.info("[" + mConfig.getDreamboxAddress() + "] " + String.format("CHG %s - %s - %d ms", // msg
+          mLog.info("[" + mConnector.getConfig().getDreamboxAddress() + "] " + String.format("CHG %s - %s - %d ms", // msg
               "1".equals(oldTimer.get(JUSTPLAY)) ? "ZAP" : "REC", // justplay
               handler.getStatetext(), // Fehlermeldung
               (new GregorianCalendar().getTimeInMillis() - cal.getTimeInMillis())) // Dauer
@@ -759,7 +685,7 @@ public class E2TimerHelper {
 
       } catch (IOException e) {
         // Web-Interface TDT
-        mLog.info("[" + mConfig.getDreamboxAddress() + "] " + e.getLocalizedMessage());
+        mLog.info("[" + mConnector.getConfig().getDreamboxAddress() + "] " + e.getLocalizedMessage());
         state = true;
       }
 
@@ -767,10 +693,6 @@ public class E2TimerHelper {
 
     } catch (UnsupportedEncodingException e) {
       mLog.log(Level.WARNING, "UnsupportedEncodingException", e);
-    } catch (MalformedURLException e) {
-      mLog.log(Level.WARNING, "MalformedURLException", e);
-    } catch (IOException e) {
-      mLog.log(Level.WARNING, "IOException", e);
     } catch (ParserConfigurationException e) {
       mLog.log(Level.WARNING, "ParserConfigurationException", e);
     } catch (SAXException e) {
@@ -795,28 +717,13 @@ public class E2TimerHelper {
 
     String data = "";
     try {
-      String userpassword = mConfig.getUserName() + ":" + mConfig.getPassword();
-      String encoded = new String(Base64.encodeBase64(userpassword.getBytes()));
-
-      URL url = new URL("http://" + mConfig.getDreamboxAddress() + "/web/timerdelete?"
-
+      String localUrl = "/web/timerdelete?"
       + "&sRef=" + URLEncoder.encode(timer.get(SERVICEREFERENCE), "UTF-8")
-
       + "&begin=" + timer.get(TIMEBEGIN)
+      + "&end=" + timer.get(TIMEEND);
 
-      + "&end=" + timer.get(TIMEEND));
-
-      URLConnection connection = url.openConnection();
-      connection.setRequestProperty("Authorization", "Basic " + encoded);
-      connection.setConnectTimeout(mConfig.getTimeout());
-      InputStream stream = connection.getInputStream();
-      byte[] buf = new byte[1024];
-      int len;
-      data = "";
-      while ((len = stream.read(buf)) != -1) {
-        data += new String(buf, 0, len, "UTF-8");
-      }
-      stream.close();
+      data = mConnector.getDataForLocalUrl(localUrl, "Error deleting timer on box " + mConnector.getConfig().getDreamboxAddress());
+      
       DreamboxStateHandler handler = new DreamboxStateHandler();
       SAXParser saxParser = SAXParserFactory.newInstance().newSAXParser();
       saxParser.parse(new InputSource(new StringReader(data)), handler);
@@ -826,7 +733,7 @@ public class E2TimerHelper {
         getTimers().remove(indexOfTimer(timer));
         Collections.sort(getTimers(), TIMER_COMPARE);
         // Log
-        mLog.info("[" + mConfig.getDreamboxAddress() + "] " + String.format("DEL %s - %s - %d ms", // msg
+        mLog.info("[" + mConnector.getConfig().getDreamboxAddress() + "] " + String.format("DEL %s - %s - %d ms", // msg
             "1".equals(timer.get(JUSTPLAY)) ? "ZAP" : "REC", // justplay
             handler.getStatetext(), // Fehlermeldung
             (new GregorianCalendar().getTimeInMillis() - cal.getTimeInMillis())) // Dauer

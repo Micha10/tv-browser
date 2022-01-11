@@ -36,34 +36,33 @@ public class DreamboxOptionPane {
   /**
    * Anzeige der Timer-Belegung
    * 
-   * @param mConnector
+   * @param connector
    * @param parent
    */
-  public static void showTimer(final DreamboxConnector mConnector) {
-
+  public static void showTimer(final DreamboxConnector connector) {
     // Config ermitteln
-    final DreamboxConfig config = mConnector.getConfig();
+    final DreamboxConfig config = connector.getConfig();
 
     // Timer einlesen
-    E2TimerHelper timerHelper = E2TimerHelper.getInstance(config);
+    E2TimerHelper timerHelper = E2TimerHelper.getInstance(connector);
 
     // Movies einlesen
-    E2MovieHelper movieHelper = E2MovieHelper.getInstance(config, timerHelper.getThread());
+    E2MovieHelper movieHelper = E2MovieHelper.getInstance(connector, timerHelper.getThread());
 
     // Locations einlesen
-    E2LocationHelper locationHelper = E2LocationHelper.getInstance(config, movieHelper.getThread());
+    E2LocationHelper locationHelper = E2LocationHelper.getInstance(connector, movieHelper.getThread());
 
     // Info einlesen
-    E2InfoHelper infoThread = E2InfoHelper.getInstance(config, locationHelper.getThread());
+    E2InfoHelper infoThread = E2InfoHelper.getInstance(connector, locationHelper.getThread());
 
     // Panel erstellen
-    final DreamboxTimerListPanel dreamboxTimerListPanel = new DreamboxTimerListPanel(mConnector, timerHelper);
+    final DreamboxTimerListPanel dreamboxTimerListPanel = new DreamboxTimerListPanel(connector, timerHelper);
     // Panel fuer Timer-Chart
     final DreamboxTimerChartPanel dreamboxTimerChartPanel = new DreamboxTimerChartPanel(timerHelper);
     // Panel fuer Movie-Liste ohne Sorter
-    final DreamboxMovieListPanel dreamboxMovieListPanel = new DreamboxMovieListPanel(mConnector, movieHelper);
+    final DreamboxMovieListPanel dreamboxMovieListPanel = new DreamboxMovieListPanel(connector, movieHelper);
     // Panel fuer Info-Liste ohne Sorter
-    final DreamboxInfoListPanel dreamboxInfoListPanel = new DreamboxInfoListPanel(mConnector, infoThread);
+    final DreamboxInfoListPanel dreamboxInfoListPanel = new DreamboxInfoListPanel(connector, infoThread);
 
     // TabbedPane
     final JTabbedPaneRefresh tabbedPane = new JTabbedPaneRefresh();
@@ -172,7 +171,7 @@ public class DreamboxOptionPane {
         dreamboxConfig.setUserName("root");
         dreamboxConfig.setPassword(new char[0]);
         dreamboxConfig.setMediaplayer("D:\\MultiMedia\\VLC\\vlc.exe");
-        showTimer(new DreamboxConnector(dreamboxConfig));
+        showTimer(new DreamboxConnector(dreamboxConfig,"TEST"));
       }
 
     });

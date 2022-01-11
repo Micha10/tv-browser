@@ -26,6 +26,7 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 import captureplugin.drivers.dreambox.DreamboxConfig;
+import captureplugin.drivers.dreambox.connector.DreamboxConnector;
 
 /**
  * @author fishhead
@@ -38,7 +39,7 @@ public class E2InfoHelper {
   private static Map<String, E2InfoHelper> singletonMap = new HashMap<String, E2InfoHelper>();
 
   // Member
-  private final DreamboxConfig mConfig;
+  private final DreamboxConnector mConnector;
   private final Thread mThreadWaitFor;
   private Thread mThread;
   private List<Map<String, String>> mInfos = null;
@@ -53,13 +54,13 @@ public class E2InfoHelper {
    * 
    * @return infoThread
    */
-  public static E2InfoHelper getInstance(DreamboxConfig config, Thread thread) {
-    String id = config.getId();
+  public static E2InfoHelper getInstance(DreamboxConnector connector, Thread thread) {
+    String id = connector.getConfig().getId();
     E2InfoHelper singleton = null;
     synchronized (singletonMap) {
       singleton = singletonMap.get(id);
       if (singleton == null) {
-        singleton = new E2InfoHelper(config, thread);
+        singleton = new E2InfoHelper(connector, thread);
         singletonMap.put(id, singleton);
       }
     }
@@ -71,12 +72,12 @@ public class E2InfoHelper {
   /**
    * Konstruktor
    * 
-   * @param config
+   * @param connector
    * @param thread
    */
-  private E2InfoHelper(DreamboxConfig config, Thread thread) {
+  private E2InfoHelper(DreamboxConnector connector, Thread thread) {
     mLog.setLevel(Level.INFO);    
-    this.mConfig = config;
+    this.mConnector = connector;
     this.mThreadWaitFor = thread;
   }
 
@@ -137,27 +138,13 @@ public class E2InfoHelper {
           String data = "";
 
           try {
-            URL url = new URL("http://" + mConfig.getDreamboxAddress() + "/web/about");
-            URLConnection connection = url.openConnection();
-
-            String userpassword = mConfig.getUserName() + ":" + mConfig.getPassword();
-            String encoded = new String(Base64.encodeBase64(userpassword.getBytes()));
-            connection.setRequestProperty("Authorization", "Basic " + encoded);
-
-            connection.setConnectTimeout(mConfig.getTimeout());
-            InputStream stream = connection.getInputStream();
-            byte[] buf = new byte[1024];
-            int len;
-            while ((len = stream.read(buf)) != -1) {
-              data += new String(buf, 0, len, "UTF-8");
-            }
-            stream.close();
+            data = mConnector.getDataForLocalUrl("/web/about", "Error getting info from box "+mConnector.getConfig().getDreamboxAddress());
+            
             E2ListMapHandler handler = new E2ListMapHandler("e2abouts", "e2about");
             SAXParser saxParser = SAXParserFactory.newInstance().newSAXParser();
             saxParser.parse(new InputSource(new StringReader(data)), handler);
 
             mInfos = handler.getList();
-
           } catch (ParserConfigurationException e) {
             mLog.log(Level.WARNING, "ParserConfigurationException", e);
           } catch (SAXException e) {
@@ -176,7 +163,7 @@ public class E2InfoHelper {
             mLog.log(Level.WARNING, "IllegalArgumentException", e);
           }
 
-          mLog.info("[" + mConfig.getDreamboxAddress() + "] " + "GET about - "
+          mLog.info("[" + mConnector.getConfig().getDreamboxAddress() + "] " + "GET about - "
               + (new GregorianCalendar().getTimeInMillis() - cal.getTimeInMillis()) + " ms");
         }
       }

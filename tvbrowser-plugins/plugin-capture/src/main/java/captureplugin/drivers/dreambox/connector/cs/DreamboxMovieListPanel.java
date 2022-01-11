@@ -7,15 +7,12 @@ import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.SocketTimeoutException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.URL;
-import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -52,14 +49,14 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
-import org.apache.commons.codec.binary.Base64;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
-import util.ui.Localizer;
 import captureplugin.drivers.dreambox.DreamboxConfig;
 import captureplugin.drivers.dreambox.connector.DreamboxConnector;
 import captureplugin.drivers.dreambox.connector.DreamboxStateHandler;
+import util.io.ExecutionHandler;
+import util.ui.Localizer;
 
 /**
  * 
@@ -265,20 +262,21 @@ public class DreamboxMovieListPanel extends JPanelRefreshAbstract implements
    * @param modelRow
    */
   private void cmdStream(int modelRow) {
-    DreamboxConfig config = mConnector.getConfig();
-    String filename = ((String) mTable.getModel().getValueAt(modelRow,
-        COL_FILENAME));
-    filename = filename.substring(mRootLocation.length());
-    try {
-      String url = "http://" + config.getDreamboxAddress() + "/file/?file="
-          + URLEncoder.encode(filename, "UTF-8");
-      String cmd = "\"" + config.getMediaplayer() + "\" " + url;
-      mLog.info(cmd);
-      Runtime.getRuntime().exec(cmd);
-    } catch (UnsupportedEncodingException e) {
-      mLog.log(Level.WARNING, "UnsupportedEncodingException", e);
-    } catch (IOException e) {
-      mLog.log(Level.WARNING, "IOException", e);
+    if(mConnector.isAccessible()) {
+      DreamboxConfig config = mConnector.getConfig();
+      String filename = ((String) mTable.getModel().getValueAt(modelRow,
+          COL_FILENAME));
+      filename = filename.substring(mRootLocation.length());
+      try {
+        String url = "http://" + config.getDreamboxAddress() + "/file/?file="
+            + URLEncoder.encode(filename, "UTF-8");
+        ExecutionHandler exec = new ExecutionHandler(new String[] {config.getMediaplayer(),url});
+        exec.execute();
+      } catch (UnsupportedEncodingException e) {
+        mLog.log(Level.WARNING, "UnsupportedEncodingException", e);
+      } catch (IOException e) {
+        mLog.log(Level.WARNING, "IOException", e);
+      }
     }
   }
 
@@ -288,22 +286,25 @@ public class DreamboxMovieListPanel extends JPanelRefreshAbstract implements
    * @param modelRow
    */
   private void cmdDownload(int modelRow) {
-    DreamboxConfig config = mConnector.getConfig();
-    String filename = ((String) mTable.getModel().getValueAt(modelRow,
-        COL_FILENAME));
-    filename = filename.substring(mRootLocation.length());
-    try {
-      String url = "http://" + config.getDreamboxAddress() + "/file/?file="
-          + URLEncoder.encode(filename, "UTF-8") + "&root="
-          + URLEncoder.encode(mRootLocation, "UTF-8");
-      mLog.info(url);
-      Desktop.getDesktop().browse(new URI(url));
-    } catch (UnsupportedEncodingException e) {
-      mLog.log(Level.WARNING, "UnsupportedEncodingException", e);
-    } catch (IOException e) {
-      mLog.log(Level.WARNING, "IOException", e);
-    } catch (URISyntaxException e) {
-      mLog.log(Level.WARNING, "URISyntaxException", e);
+    if(mConnector.isAccessible()) {
+      DreamboxConfig config = mConnector.getConfig();
+      String filename = ((String) mTable.getModel().getValueAt(modelRow,
+          COL_FILENAME));
+      filename = filename.substring(mRootLocation.length());
+      try {
+       // mConnector.getDataForURL(url, errorMsg)
+        String url = "http://" + config.getDreamboxAddress() + "/file/?file="
+            + URLEncoder.encode(filename, "UTF-8") + "&root="
+            + URLEncoder.encode(mRootLocation, "UTF-8");
+        mLog.info(url);
+        Desktop.getDesktop().browse(new URI(url));
+      } catch (UnsupportedEncodingException e) {
+        mLog.log(Level.WARNING, "UnsupportedEncodingException", e);
+      } catch (IOException e) {
+        mLog.log(Level.WARNING, "IOException", e);
+      } catch (URISyntaxException e) {
+        mLog.log(Level.WARNING, "URISyntaxException", e);
+      }
     }
   }
 
@@ -322,28 +323,11 @@ public class DreamboxMovieListPanel extends JPanelRefreshAbstract implements
         "deleteMovie", "Delete Movie..."), JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
 
       Calendar cal = new GregorianCalendar();
-      DreamboxConfig config = mConnector.getConfig();
       String sRef = S_REF + filename;
       String data = "";
-
+      
       try {
-        URL url = new URL("http://" + config.getDreamboxAddress()
-            + "/web/moviedelete?sRef=" + URLEncoder.encode(sRef, "UTF-8"));
-        URLConnection connection = url.openConnection();
-
-        String userpassword = config.getUserName() + ":" + config.getPassword();
-        String encoded = new String(Base64
-            .encodeBase64(userpassword.getBytes()));
-        connection.setRequestProperty("Authorization", "Basic " + encoded);
-
-        connection.setConnectTimeout(config.getTimeout());
-        InputStream stream = connection.getInputStream();
-        byte[] buf = new byte[1024];
-        int len;
-        while ((len = stream.read(buf)) != -1) {
-          data += new String(buf, 0, len, "UTF-8");
-        }
-        stream.close();
+        data = mConnector.getDataForLocalUrl("/web/moviedelete?sRef=" + URLEncoder.encode(sRef, "UTF-8"), "Error deleting movie '"+title+"'");
 
         DreamboxStateHandler handler = new DreamboxStateHandler();
         SAXParser saxParser = SAXParserFactory.newInstance().newSAXParser();
@@ -570,7 +554,7 @@ public class DreamboxMovieListPanel extends JPanelRefreshAbstract implements
 
     // ComboBox Location
     JComboBox cmbLocation = new JComboBox(E2LocationHelper.getInstance(
-        mConnector.getConfig(), null).getLocations().toArray());
+        mConnector, null).getLocations().toArray());
     cmbLocation.setSelectedItem(mLocation);
     cmbLocation.setActionCommand(CMD_LOCATION_CHANGED);
     cmbLocation.addActionListener(this);

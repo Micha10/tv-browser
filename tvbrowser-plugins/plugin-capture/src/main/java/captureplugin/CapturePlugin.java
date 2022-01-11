@@ -83,7 +83,7 @@ import util.ui.UiUtilities;
  *         adopted by fishhead
  */
 public class CapturePlugin extends devplugin.Plugin {
-  private static final Version mVersion = new Version(3,19,1,true);
+  private static final Version mVersion = new Version(3,20,0,false);
   
     /**
      * Translator
@@ -108,6 +108,7 @@ public class CapturePlugin extends devplugin.Plugin {
 
     private boolean mAllowedToShowDialog = false;
     private boolean mNeedsUpdate = false;
+    private static boolean IS_PIPE_TIMEOUT_SUPPORTED = false;
 
     private Properties mSettings;
     
@@ -125,6 +126,7 @@ public class CapturePlugin extends devplugin.Plugin {
      */
     public CapturePlugin() {
         mInstance = this;
+        System.setProperty("ftp4j.activeDataTransfer.acceptTimeout", "5000");
     }
 
     /**
@@ -136,6 +138,11 @@ public class CapturePlugin extends devplugin.Plugin {
         return mInstance;
     }
     
+    @Override
+    public void onActivation() {
+      IS_PIPE_TIMEOUT_SUPPORTED = getPluginManager().getTVBrowserVersion().compareTo(new Version(3,41,true)) >= 0;
+    }
+    
     /**
      * Called by the host-application during start-up. Implement this method to
      * load any objects from the file system.
@@ -145,7 +152,6 @@ public class CapturePlugin extends devplugin.Plugin {
     public void readData(ObjectInputStream in) throws IOException, ClassNotFoundException {
         mConfig = new CapturePluginData();
         mConfig.readData(in, this);
-        updateMarkedPrograms();
     }
 
     /**
@@ -594,6 +600,8 @@ public class CapturePlugin extends devplugin.Plugin {
       if(mNeedsUpdate) {
         handleTvDataUpdateFinished();
       }
+      
+      updateMarkedPrograms();
     }
 
     /**
@@ -783,5 +791,9 @@ public class CapturePlugin extends devplugin.Plugin {
     
     public void save() {
       saveMe();
+    }
+    
+    public static boolean isPipeTimeoutSupported() {
+      return IS_PIPE_TIMEOUT_SUPPORTED;
     }
 }

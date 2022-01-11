@@ -64,7 +64,7 @@ public final class DreamboxDevice implements DeviceIf {
     /**
      * Translator
      */
-    private static final Localizer mLocalizer = Localizer.getLocalizerFor(DreamboxDevice.class);
+    private static final Localizer LOCALIZER = Localizer.getLocalizerFor(DreamboxDevice.class);
     
     /**
      * Driver
@@ -86,7 +86,7 @@ public final class DreamboxDevice implements DeviceIf {
      * List of Recordings
      */
     private ArrayList<Program> mProgramList = new ArrayList<Program>();
-
+    private DreamboxConnector mConnector;
     /**
      * Creates this Device
      *
@@ -97,6 +97,7 @@ public final class DreamboxDevice implements DeviceIf {
         mDriver = dreamboxDriver;
         mName = name;
         mConfig = new DreamboxConfig();
+        mConnector = new DreamboxConnector(mConfig,mName);
     }
 
     /**
@@ -108,6 +109,7 @@ public final class DreamboxDevice implements DeviceIf {
         mDriver = (DreamboxDriver) dreamboxDevice.getDriver();
         mName = dreamboxDevice.getName();
         mConfig = dreamboxDevice.getConfig().clone();
+        mConnector = new DreamboxConnector(mConfig,mName);
     }
 
     /**
@@ -155,14 +157,14 @@ public final class DreamboxDevice implements DeviceIf {
      * @param parent Parent for the dialog
      */
     public void configDevice(Window parent) {
-        DreamboxConfigDialog dialog = new DreamboxConfigDialog(parent, this,
-        mConfig);
+        DreamboxConfigDialog dialog = new DreamboxConfigDialog(parent, this, mConnector);
 
         UiUtilities.centerAndShow(dialog);
 
         if (dialog.wasOkPressed()) {
             mName = dialog.getDeviceName();
             mConfig = dialog.getConfig();
+            mConnector.setConfi(mConfig);
         }
     }
 
@@ -184,11 +186,18 @@ public final class DreamboxDevice implements DeviceIf {
      * @see captureplugin.drivers.DeviceIf#add(java.awt.Window,devplugin.Program)
      */
     public boolean add(Window parent, Program program) {
-
+        if(!mConnector.isAccessible()) {
+          JOptionPane.showMessageDialog(parent,
+              LOCALIZER.msg("boxNotAccessible.msg","The box '{0}' with the address '{1}' is not accessible.\nAction '{2}' not possible.",mName,mConfig.getDreamboxAddress(),LOCALIZER.msg("boxNotAccessible.addTimer","Add Timer")),
+              LOCALIZER.msg("boxNotAccessible.title","Box not accessible"),
+              JOptionPane.ERROR_MESSAGE);
+          return false;
+        }
+        
         if (program.isExpired()) {
             JOptionPane.showMessageDialog(parent,
-                    mLocalizer.msg("expiredText","This program has expired. It's not possible to record it.\nWell, unless you have a time-machine."),
-                    mLocalizer.msg("expiredTitle","Expired"),
+                    LOCALIZER.msg("expiredText","This program has expired. It's not possible to record it.\nWell, unless you have a time-machine."),
+                    LOCALIZER.msg("expiredTitle","Expired"),
                     JOptionPane.INFORMATION_MESSAGE);
             return false;
         }
@@ -197,8 +206,8 @@ public final class DreamboxDevice implements DeviceIf {
 
         if (channel == null) {
             int ret = JOptionPane.showConfirmDialog(parent,
-                    mLocalizer.msg("notConfiguredText", "Channel not configured, do\nyou want to do this now?"),
-                    mLocalizer.msg("notConfiguredTitle", "Configure"), JOptionPane.YES_NO_OPTION);
+                    LOCALIZER.msg("notConfiguredText", "Channel not configured, do\nyou want to do this now?"),
+                    LOCALIZER.msg("notConfiguredTitle", "Configure"), JOptionPane.YES_NO_OPTION);
 
             if (ret == JOptionPane.YES_OPTION) {
                 configDevice(parent);
@@ -208,9 +217,9 @@ public final class DreamboxDevice implements DeviceIf {
 
             // fishhead ------------------------
             // read actual timers
-            E2TimerHelper timerHelper = E2TimerHelper.getInstance(mConfig);
-            E2LocationHelper locationHelper = E2LocationHelper.getInstance(mConfig, timerHelper.getThread());
-            E2MovieHelper movieThread = E2MovieHelper.getInstance(mConfig, locationHelper.getThread());
+            E2TimerHelper timerHelper = E2TimerHelper.getInstance(mConnector);
+            E2LocationHelper locationHelper = E2LocationHelper.getInstance(mConnector, timerHelper.getThread());
+            E2MovieHelper movieThread = E2MovieHelper.getInstance(mConnector, locationHelper.getThread());
             // fishhead ------------------------
 
             ProgramTime time = new ProgramTime(program);
@@ -234,15 +243,13 @@ public final class DreamboxDevice implements DeviceIf {
                 pgmOptPanel.hideUseHdService();
             }
 
-            dialog = new ProgramTimeDialog(parent, time, false, mLocalizer.msg("afterEventTitle", "After recording"),
+            dialog = new ProgramTimeDialog(parent, time, false, LOCALIZER.msg("afterEventTitle", "After recording"),
                     pgmOptPanel);
 
             UiUtilities.centerAndShow(dialog);
 
             ProgramTime prgTime = dialog.getPrgTime();
             if (prgTime != null) {
-                DreamboxConnector connector = new DreamboxConnector(mConfig);
-
                 boolean added = false;
 
                 // REC
@@ -253,7 +260,7 @@ public final class DreamboxDevice implements DeviceIf {
 
                 if (!pgmOptPanel.isOnlyCreateZapTimer()) {
                     // Timer programmieren
-                    added = connector.addRecording(timerRec, timerHelper);
+                    added = mConnector.addRecording(timerRec, timerHelper);
                 }
 
                 // ZAP before
@@ -285,36 +292,47 @@ public final class DreamboxDevice implements DeviceIf {
      * @see captureplugin.drivers.DeviceIf#remove(java.awt.Window,devplugin.Program)
      */
     public boolean remove(Window parent, Program program) {
+      if(!mConnector.isAccessible()) {
+        JOptionPane.showMessageDialog(parent,
+            LOCALIZER.msg("boxNotAccessible.msg","The box '{0}' with the address '{1}' is not accessible.\nAction '{2}' not possible.",mName,mConfig.getDreamboxAddress(),LOCALIZER.msg("boxNotAccessible.removeTimer","Remove Timer")),
+            LOCALIZER.msg("boxNotAccessible.title","Box not accessible"),
+            JOptionPane.ERROR_MESSAGE);
+      }
+      else {
         for (ProgramTime time : mProgramTimeList) {
             if (time.getProgram().equals(program)) {
                 ExternalChannelIf channel = mConfig.getExternalChannel(program.getChannel());
                 if (channel != null) {
-                    DreamboxConnector connector = new DreamboxConnector(mConfig);
-                    return connector.removeRecording((DreamboxChannel) channel, time, mConfig.getTimeZone());
+                    return mConnector.removeRecording((DreamboxChannel) channel, time, mConfig.getTimeZone());
                 }
             }
         }
-
-        return false;
+      }
+      
+      return false;
     }
 
     /**
      * @see captureplugin.drivers.DeviceIf#getProgramList()
      */
     public Program[] getProgramList() {
-        DreamboxConnector con = new DreamboxConnector(mConfig);
-        
-        if (mConfig.hasValidAddress()) {
-            ProgramTime[] times = con.getRecordings(mConfig);
+        if (mConnector.isAccessible()) {
+            ProgramTime[] times = mConnector.getRecordings(mConfig);
             mProgramTimeList = new ArrayList<ProgramTime>(Arrays.asList(times));
 
             mProgramList = new ArrayList<Program>();
 
             for (ProgramTime time : times) {
-                mProgramList.add(time.getProgram());
+              Program[] progs = time.getAllPrograms();
+              
+              for(Program p : progs) {
+                if(!mProgramList.contains(p)) {
+                  mProgramList.add(time.getProgram());
+                }
+              }
             }
 
-            return mProgramList.toArray(new Program[mProgramList.size()]);
+            return mProgramList.toArray(new Program[0]);
         }
 
         return null;
@@ -325,11 +343,11 @@ public final class DreamboxDevice implements DeviceIf {
      */
     public String[] getAdditionalCommands() {
         return new String[] { 
-                mLocalizer.msg("switch", "Switch channel"),
-                mLocalizer.msg("sendMessage", "Send as Message"),
-                mLocalizer.msg("streamChannel", "Open channel with mediaplayer"),
+                LOCALIZER.msg("switch", "Switch channel"),
+                LOCALIZER.msg("sendMessage", "Send as Message"),
+                LOCALIZER.msg("streamChannel", "Open channel with mediaplayer"),
                 // fishhead ------------------------
-                mLocalizer.msg("timerlist", "Show Timerlist") };
+                LOCALIZER.msg("timerlist", "Show Timerlist") };
                 // fishhead ------------------------
     }
 
@@ -337,52 +355,55 @@ public final class DreamboxDevice implements DeviceIf {
      * @see captureplugin.drivers.DeviceIf#executeAdditionalCommand(java.awt.Window,int,devplugin.Program)
      */
     public boolean executeAdditionalCommand(Window parent, int num, Program program) {
-        if (num == 0) {
-            final DreamboxChannel channel = (DreamboxChannel) mConfig.getExternalChannel(program.getChannel());
-
-            if (channel != null) {
-                new Thread(new Runnable() {
-                    public void run() {
-                        DreamboxConnector connect = new DreamboxConnector(mConfig);
-                        connect.switchToChannel(channel);
-                    }
-                }).start();
-            } else {
-                int ret = JOptionPane.showConfirmDialog(parent,
-                        mLocalizer.msg("notConfiguredText", "Channel not configured, do\nyou want to do this now?"),
-                        mLocalizer.msg("notConfiguredTitle", "Configure"), JOptionPane.YES_NO_OPTION);
-
-                if (ret == JOptionPane.YES_OPTION) {
-                    configDevice(parent);
-                }
-            }
-            return true;
-        } else if (num == 1) {
-            DreamboxConnector connect = new DreamboxConnector(mConfig);
-
-            ParamParser parser = new ParamParser();
-
-            connect.sendMessage(parser.analyse("{channel_name} - {leadingZero(start_hour,\"2\")}:{leadingZero(start_minute,\"2\")}-{leadingZero(end_hour,\"2\")}:{leadingZero(end_minute,\"2\")}\n{title}", program));
-        } else if (num == 2) {
-            final DreamboxChannel channel = (DreamboxChannel) mConfig.getExternalChannel(program.getChannel());
-          
-            if (channel != null) {
-                DreamboxConnector connect = new DreamboxConnector(mConfig);
-                if (!connect.streamChannel(channel)) {
-                    int ret = JOptionPane.showConfirmDialog(parent,
-                        mLocalizer.msg("mediaplayerNotConfiguredText", "Unfortunately, a problem occurred during executing the mediaplayer,\ndo you want to correct the configuration now?"),
-                        mLocalizer.msg("mediaplayerNotConfiguredTitle", "Configure"), JOptionPane.YES_NO_OPTION);
-                    if (ret == JOptionPane.YES_OPTION) {
-                        configDevice(parent);
-                    }
-                }
-            }
-            // fishhead ------------------------
-        } else if (num == 3) {
-            DreamboxConnector connector = new DreamboxConnector(mConfig);
-            DreamboxOptionPane.showTimer(connector);
-            return true;
-            // fishhead ------------------------
+        if(!mConnector.isAccessible()) {
+          JOptionPane.showMessageDialog(parent,
+              LOCALIZER.msg("boxNotAccessible.msg","The box '{0}' with the address '{1}' is not accessible.\nAction '{2}' not possible.",mName,mConfig.getDreamboxAddress(),getAdditionalCommands()[num]),
+              LOCALIZER.msg("boxNotAccessible.title","Box not accessible"),
+              JOptionPane.ERROR_MESSAGE);
+        }
+        else {
+          if (num == 0) {
+              final DreamboxChannel channel = (DreamboxChannel) mConfig.getExternalChannel(program.getChannel());
+  
+              if (channel != null) {
+                  new Thread(new Runnable() {
+                      public void run() {
+                          mConnector.switchToChannel(channel);
+                      }
+                  }).start();
+              } else {
+                  int ret = JOptionPane.showConfirmDialog(parent,
+                          LOCALIZER.msg("notConfiguredText", "Channel not configured, do\nyou want to do this now?"),
+                          LOCALIZER.msg("notConfiguredTitle", "Configure"), JOptionPane.YES_NO_OPTION);
+  
+                  if (ret == JOptionPane.YES_OPTION) {
+                      configDevice(parent);
+                  }
+              }
+              return true;
+          } else if (num == 1) {
+              ParamParser parser = new ParamParser();
+  
+              mConnector.sendMessage(parser.analyse("{channel_name} - {leadingZero(start_hour,\"2\")}:{leadingZero(start_minute,\"2\")}-{leadingZero(end_hour,\"2\")}:{leadingZero(end_minute,\"2\")}\n{title}", program));
+          } else if (num == 2) {
+              final DreamboxChannel channel = (DreamboxChannel) mConfig.getExternalChannel(program.getChannel());
+            
+              if (channel != null) {
+                  if (!mConnector.streamChannel(channel)) {
+                      int ret = JOptionPane.showConfirmDialog(parent,
+                          LOCALIZER.msg("mediaplayerNotConfiguredText", "Unfortunately, a problem occurred during executing the mediaplayer,\ndo you want to correct the configuration now?"),
+                          LOCALIZER.msg("mediaplayerNotConfiguredTitle", "Configure"), JOptionPane.YES_NO_OPTION);
+                      if (ret == JOptionPane.YES_OPTION) {
+                          configDevice(parent);
+                      }
+                  }
+              }
+              // fishhead ------------------------
+          } else if (num == 3) {
+              DreamboxOptionPane.showTimer(mConnector);
+              return true;
+              // fishhead ------------------------
+          }
         }
         return false;
     }
@@ -403,6 +424,7 @@ public final class DreamboxDevice implements DeviceIf {
      */
     public void readData(ObjectInputStream stream, boolean importDevice) throws IOException, ClassNotFoundException {
         mConfig = new DreamboxConfig(stream);
+        mConnector.setConfi(mConfig);
     }
 
     /**
@@ -427,8 +449,7 @@ public final class DreamboxDevice implements DeviceIf {
             if (time.getProgram().equals(p)) {
                 DreamboxChannel channel = (DreamboxChannel) mConfig.getExternalChannel(p.getChannel());
                 if (channel != null) {
-                    DreamboxConnector connector = new DreamboxConnector(mConfig);
-                    connector.removeRecording(channel, time, mConfig.getTimeZone());
+                    mConnector.removeRecording(channel, time, mConfig.getTimeZone());
                 }
             }
         }

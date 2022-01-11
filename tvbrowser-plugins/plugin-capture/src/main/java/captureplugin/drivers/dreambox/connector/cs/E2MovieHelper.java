@@ -27,6 +27,7 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 import captureplugin.drivers.dreambox.DreamboxConfig;
+import captureplugin.drivers.dreambox.connector.DreamboxConnector;
 
 /**
  * @author fishhead
@@ -62,7 +63,7 @@ public class E2MovieHelper {
   // Member
   private List<Map<String, String>> mMovies = null;
   private Set<String> mTags = null;
-  private final DreamboxConfig mConfig;
+  private final DreamboxConnector mConnector;
   private Thread mThread;
   private final Thread mThreadWaitFor;
   private String mDirname;
@@ -70,20 +71,20 @@ public class E2MovieHelper {
   /**
    * Factory
    * 
-   * @param config
+   * @param connector
    *          for dreambox
    * @param thread
    *          to wait for
    * 
    * @return movieThread
    */
-  public static E2MovieHelper getInstance(DreamboxConfig config, Thread thread) {
-    String id = config.getId();
+  public static E2MovieHelper getInstance(DreamboxConnector connector, Thread thread) {
+    String id = connector.getConfig().getId();
     E2MovieHelper singleton = null;
     synchronized (singletonMap) {
       singleton = singletonMap.get(id);
       if (singleton == null) {
-        singleton = new E2MovieHelper(config, thread);
+        singleton = new E2MovieHelper(connector, thread);
         singletonMap.put(id, singleton);
       }
     }
@@ -93,12 +94,12 @@ public class E2MovieHelper {
   /**
    * Konstruktor
    * 
-   * @param config
+   * @param connector
    * @param thread
    */
-  private E2MovieHelper(DreamboxConfig config, Thread thread) {
+  private E2MovieHelper(DreamboxConnector connector, Thread thread) {
     mLog.setLevel(Level.INFO);    
-    this.mConfig = config;
+    this.mConnector = connector;
     this.mThreadWaitFor = thread;
     this.mDirname = "/hdd/movie/";
     this.mTags = null;
@@ -152,7 +153,7 @@ public class E2MovieHelper {
         }
       }
       // Timer-Tags
-      List<Map<String, String>> timers = E2TimerHelper.getInstance(mConfig).getTimers();
+      List<Map<String, String>> timers = E2TimerHelper.getInstance(mConnector).getTimers();
       if (timers != null) {
         for (Map<String, String> timer : timers) {
           if ((timer != null) && (timer.containsKey(E2TimerHelper.TAGS))) {
@@ -197,42 +198,29 @@ public class E2MovieHelper {
           String data = "";
 
           try {
-            URL url = new URL("http://" + mConfig.getDreamboxAddress() + "/web/movielist?dirname="
-                + URLEncoder.encode(mDirname, "UTF-8") + "&tag=");
-            URLConnection connection = url.openConnection();
-
-            String userpassword = mConfig.getUserName() + ":" + mConfig.getPassword();
-            String encoded = new String(Base64.encodeBase64(userpassword.getBytes()));
-            connection.setRequestProperty("Authorization", "Basic " + encoded);
-
-            connection.setConnectTimeout(mConfig.getTimeout());
-            InputStream stream = connection.getInputStream();
-            byte[] buf = new byte[1024];
-            int len;
-            while ((len = stream.read(buf)) != -1) {
-              data += new String(buf, 0, len, "UTF-8");
-            }
-            stream.close();
-            E2ListMapHandler handler = new E2ListMapHandler("e2movielist", "e2movie");
-            SAXParser saxParser = SAXParserFactory.newInstance().newSAXParser();
-            saxParser.parse(new InputSource(new StringReader(data)), handler);
-
-            mMovies = handler.getList();
-
-            // correct filesize
-            FtpHelper ftpHelper = new FtpHelper();
-            ftpHelper.cmd("OPEN", mConfig.getDreamboxAddress());
-            ftpHelper.cmd("LOGIN", mConfig.getUserName(), mConfig.getPassword());
-            Map<String, String> mapFileSize = ftpHelper.getFileSize(mDirname);
-            ftpHelper.cmd("CLOSE");
-
-            for (Map<String, String> movie : mMovies) {
-              String e2filename = movie.get(FILENAME);
-              if (mapFileSize.containsKey(e2filename)) {
-                movie.put(FILESIZE, mapFileSize.get(e2filename));
+            data = mConnector.getDataForLocalUrl("", "Error reading movies from box " + mConnector.getConfig().getDreamboxAddress());
+            
+            if(mConnector.isAccessible()) {
+              E2ListMapHandler handler = new E2ListMapHandler("e2movielist", "e2movie");
+              SAXParser saxParser = SAXParserFactory.newInstance().newSAXParser();
+              saxParser.parse(new InputSource(new StringReader(data)), handler);
+  
+              mMovies = handler.getList();
+  
+              // correct filesize
+              FtpHelper ftpHelper = new FtpHelper();
+              ftpHelper.cmd("OPEN", mConnector.getConfig().getDreamboxAddress());
+              ftpHelper.cmd("LOGIN", mConnector.getConfig().getUserName(), mConnector.getConfig().getPassword());
+              Map<String, String> mapFileSize = ftpHelper.getFileSize(mDirname);
+              ftpHelper.cmd("CLOSE");
+  
+              for (Map<String, String> movie : mMovies) {
+                String e2filename = movie.get(FILENAME);
+                if (mapFileSize.containsKey(e2filename)) {
+                  movie.put(FILESIZE, mapFileSize.get(e2filename));
+                }
               }
             }
-
           } catch (ParserConfigurationException e) {
             mLog.log(Level.WARNING, "ParserConfigurationException", e);
           } catch (SAXException e) {
@@ -248,7 +236,7 @@ public class E2MovieHelper {
             mLog.log(Level.WARNING, "IllegalArgumentException", e);
           }
 
-          mLog.info("[" + mConfig.getDreamboxAddress() + "] " + "GET movielist - "
+          mLog.info("[" + mConnector.getConfig().getDreamboxAddress() + "] " + "GET movielist - "
               + (new GregorianCalendar().getTimeInMillis() - cal.getTimeInMillis()) + " ms - " + mDirname);
         }
       }
