@@ -492,8 +492,8 @@ public class DreamboxConnector {
                 int progTime = prog.getHours() * 60 + prog.getMinutes()
                     + (i * 24 * 60);
                 
-                String nameTimer = timer.get(E2TimerHelper.NAME).replaceAll("\\p{Punct}|\\p{Space}", "");
-                String nameProg = prog.getTitle().replaceAll("\\p{Punct}|\\p{Space}", "");
+                String nameTimer = timer.get(E2TimerHelper.NAME).replaceAll("\\p{Punct}|\\p{Space}", "").toLowerCase();
+                String nameProg = prog.getTitle().replaceAll("\\p{Punct}|\\p{Space}", "").toLowerCase();
                 
                 if (progTime >= beginMinutes - 15
                     && progTime <= endMinutes + 15
@@ -749,6 +749,18 @@ public class DreamboxConnector {
     return mConfig.hasValidAddress() && !mTimeout.isTimedOut(mConfig.getDreamboxAddress());
   }
   
+  public boolean isTimedOut() {
+    return mTimeout.isTimedOut(mConfig.getDreamboxAddress());
+  }
+  
+  public void resetTimeout() {
+    mTimeout.reset();
+  }
+  
+  public int getTimeoutResetSeconds(final String url) {
+    return mTimeout.getResetSeconds(url);
+  }
+  
   private static final class Timeout {
     private static final int MINUTES_LOCKED = 10;
     
@@ -763,7 +775,7 @@ public class DreamboxConnector {
     }
     
     private void postTimeout(final String url) {
-      if(System.currentTimeMillis() - mLast > 10 * 60000l) {
+      if(System.currentTimeMillis() - mLast > MINUTES_LOCKED * 60000l) {
         mCount = 1;
       }
       else {
@@ -786,6 +798,19 @@ public class DreamboxConnector {
       }
       
       return mCount >= 1;
+    }
+    
+    private void reset() {
+      mCount = 0;
+      mLast = 0;
+    }
+    
+    private int getResetSeconds(final String url) {
+      if(url != null && mUrl != null && mUrl.equals(url)) {
+        return (int)((MINUTES_LOCKED * 60000l - (System.currentTimeMillis() - mLast)) / 1000);
+      }
+      
+      return -1;
     }
   }
 
