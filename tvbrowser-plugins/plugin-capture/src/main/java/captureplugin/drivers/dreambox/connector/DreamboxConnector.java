@@ -88,7 +88,7 @@ import util.ui.UiUtilities;
 public class DreamboxConnector {
   // fishhead -------------------------
   // Logger
-  private static final Logger mLog = Logger.getLogger(DreamboxConnector.class
+  private static final Logger LOG = Logger.getLogger(DreamboxConnector.class
       .getName());
   /**
    * Translator
@@ -138,7 +138,7 @@ public class DreamboxConnector {
       SAXParser saxParser = SAXParserFactory.newInstance().newSAXParser();
       DreamboxHandler handler = new DreamboxHandler();
       saxParser.parse(stream, handler);
-      mLog.info("[" + mConfig.getDreamboxAddress() + "] " + "GET bouquets - "
+      LOG.info("[" + mConfig.getDreamboxAddress() + "] " + "GET bouquets - "
           + (new GregorianCalendar().getTimeInMillis() - cal.getTimeInMillis())
           + " ms");
       return handler.getData();
@@ -163,7 +163,7 @@ public class DreamboxConnector {
       @Override
       public void run() {
         try {
-          if(mConfig.getDreamboxAddress() == null || mConfig.getDreamboxAddress().isBlank()) {
+          if(mConfig.getDreamboxAddress() == null || mConfig.getDreamboxAddress().trim().isEmpty()) {
             exc.set(new MalformedURLException("Dreambox address malformed: " + mConfig.getDreamboxAddress()));
           }
           else {
@@ -179,7 +179,7 @@ public class DreamboxConnector {
             connection.setConnectTimeout(mConfig.getTimeout());
             stream.set(connection.getInputStream());
           }
-        }catch(Throwable t) {
+        }catch(Throwable t) {t.printStackTrace();
           exc.set(t);
         }
       }
@@ -273,24 +273,34 @@ public class DreamboxConnector {
             result = new String(out.toByteArray(), "UTF-8");
           }
         } catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-          mLog.log(Level.WARNING, "Method pipeStream not accessible using fallback.");
-          IOUtilities.pipeStreams(in, out);
-
-          if(out.size() > 0) {
-            result = new String(out.toByteArray(),"UTF-8");
-          }
+          LOG.log(Level.WARNING, "Method pipeStream not accessible using fallback.");
+          result = readInputFallback(in,out);
         }
       }
       else {
-        IOUtilities.pipeStreams(in, out);
-        
-        if(out.size() > 0) {
-          result = new String(out.toByteArray(),"UTF-8");
-        }
+        result = readInputFallback(in,out);
       }
     } catch (IOException e) {
-      mLog.log(Level.WARNING, errorMsg, e);
+      LOG.log(Level.WARNING, errorMsg, e);
       e.printStackTrace();
+    }
+    
+    return result;
+  }
+    
+  private String readInputFallback(final InputStream in, final ByteArrayOutputStream out) {
+    String result = "";
+    
+    try {
+      Method m = IOUtilities.class.getDeclaredMethod("pipeStreams", InputStream.class, OutputStream.class);
+      m.setAccessible(true);
+      m.invoke(null, in, out);
+      
+      if(out.size() > 0) {
+        result = new String(out.toByteArray(),"UTF-8");
+      }
+    }catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | UnsupportedEncodingException e) {
+      LOG.log(Level.SEVERE, "Method pipeStream fallback not working", e);
     }
     
     return result;
@@ -328,7 +338,7 @@ public class DreamboxConnector {
       SAXParser saxParser = SAXParserFactory.newInstance().newSAXParser();
       DreamboxHandler handler = new DreamboxHandler();
       saxParser.parse(stream, handler);
-      mLog.info("[" + mConfig.getDreamboxAddress() + "] " + "GET services - "
+      LOG.info("[" + mConfig.getDreamboxAddress() + "] " + "GET services - "
           + (new GregorianCalendar().getTimeInMillis() - cal.getTimeInMillis())
           + " ms");
       return handler.getData();
@@ -370,7 +380,7 @@ public class DreamboxConnector {
         
         return allChannels;
       } catch (Exception e) {
-        mLog.log(Level.SEVERE, "Could not load channels for Dreambox: "+mConfig.getDreamboxAddress(), e);
+        LOG.log(Level.SEVERE, "Could not load channels for Dreambox: "+mConfig.getDreamboxAddress(), e);
       }
     }
 

@@ -198,7 +198,8 @@ public class E2MovieHelper {
           String data = "";
 
           try {
-            data = mConnector.getDataForLocalUrl("", "Error reading movies from box " + mConnector.getConfig().getDreamboxAddress());
+            data = mConnector.getDataForLocalUrl("/web/movielist?dirname="
+                + URLEncoder.encode(mDirname, "UTF-8") + "&tag=", "Error reading movies from box " + mConnector.getConfig().getDreamboxAddress());
             
             if(mConnector.isAccessible()) {
               E2ListMapHandler handler = new E2ListMapHandler("e2movielist", "e2movie");
