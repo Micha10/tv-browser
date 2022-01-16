@@ -155,7 +155,7 @@ public class DreamboxConnector {
     return null;
   }
 
-  private InputStream openStreamForLocalUrl(final String localUrl) throws MalformedURLException, IOException {
+  private synchronized InputStream openStreamForLocalUrl(final String localUrl) throws MalformedURLException, IOException {
     final AtomicReference<InputStream> stream = new AtomicReference<InputStream>(null);
     final AtomicReference<Throwable> exc = new AtomicReference<Throwable>(null);
     
@@ -179,7 +179,21 @@ public class DreamboxConnector {
             connection.setConnectTimeout(mConfig.getTimeout());
             stream.set(connection.getInputStream());
           }
-        }catch(Throwable t) {t.printStackTrace();
+        }catch(Throwable t) {
+          /*JTextArea area = new JTextArea(t.getMessage());
+          area.append("\n");
+          
+          StackTraceElement[] els = t.getStackTrace();
+          
+          for(StackTraceElement e : els) {
+            area.append(e.toString());
+            area.append("\n");
+          }
+          
+          JScrollPane pane = new JScrollPane(area);
+          pane.setPreferredSize(new Dimension(800, 400));
+          pane.setMaximumSize(new Dimension(800, 400));
+          JOptionPane.showMessageDialog(UiUtilities.getLastModalChildOf(CapturePlugin.getInstance().getSuperFrame()), pane, Localizer.getLocalization(Localizer.I18N_ERROR), JOptionPane.ERROR_MESSAGE);*/
           exc.set(t);
         }
       }
@@ -206,11 +220,8 @@ public class DreamboxConnector {
       if(exc.get() instanceof MalformedURLException) {
         throw (MalformedURLException)exc.get();
       }
-      else if(exc.get() instanceof SocketTimeoutException) {
-        showTimeout();
-        throw (SocketTimeoutException)exc.get();
-      }
       else if(exc.get() instanceof IOException) {
+        showTimeout();
         throw (IOException)exc.get();
       }
     }
@@ -282,7 +293,6 @@ public class DreamboxConnector {
       }
     } catch (IOException e) {
       LOG.log(Level.WARNING, errorMsg, e);
-      e.printStackTrace();
     }
     
     return result;
@@ -291,16 +301,18 @@ public class DreamboxConnector {
   private String readInputFallback(final InputStream in, final ByteArrayOutputStream out) {
     String result = "";
     
-    try {
-      Method m = IOUtilities.class.getDeclaredMethod("pipeStreams", InputStream.class, OutputStream.class);
-      m.setAccessible(true);
-      m.invoke(null, in, out);
-      
-      if(out.size() > 0) {
-        result = new String(out.toByteArray(),"UTF-8");
+    if(isAccessible()) {
+      try {
+        Method m = IOUtilities.class.getDeclaredMethod("pipeStreams", InputStream.class, OutputStream.class);
+        m.setAccessible(true);
+        m.invoke(null, in, out);
+        
+        if(out.size() > 0) {
+          result = new String(out.toByteArray(),"UTF-8");
+        }
+      }catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | UnsupportedEncodingException e) {
+        LOG.log(Level.SEVERE, "Method pipeStream fallback not working", e);
       }
-    }catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | UnsupportedEncodingException e) {
-      LOG.log(Level.SEVERE, "Method pipeStream fallback not working", e);
     }
     
     return result;
@@ -313,10 +325,9 @@ public class DreamboxConnector {
       try(InputStream in = openStreamForLocalUrl(localUrl)) {
         result = readDataFromStream(in, errorMsg);
       } catch (Exception e) {
-        if(e instanceof SocketTimeoutException) {
+        if(e instanceof IOException) {
           mTimeout.postTimeout(mConfig.getDreamboxAddress());
         }
-        e.printStackTrace();
       }
     }
     
