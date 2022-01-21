@@ -464,7 +464,7 @@ public class ManagePanel extends TabListenerPanel implements PersonaCompatListen
     }
   }
   
-  synchronized void selectPrograms(boolean scroll) {
+  synchronized void selectPrograms(boolean scroll) {try {
     mProgramsList.clearSelection();
     mProgramListModel.clear();
     
@@ -488,28 +488,24 @@ public class ManagePanel extends TabListenerPanel implements PersonaCompatListen
           added++;
         }
       }
-      
-      mProgramsList.setModel(mProgramListModel);
-      
-      if(SimpleMarkerPlugin.HANDLE_SEPARATORS) {
-        if(!mProgramListModel.isEmpty() && SimpleMarkerPlugin.getInstance().getSettings().isShowingDateSeperators()) {
-          try {
-            ProgramListCompat.addDateSeparators(mProgramsList);
-          } catch (Throwable e) {
-            e.printStackTrace();
-          }
-        }
-      }
     } else {
       Hashtable<String, LinkedList<Program>> table = list.getSortedPrograms();
       Enumeration<String> keys = table.keys();
-
+      
       while (keys.hasMoreElements()) {
         mProgramListModel.addElement(keys.nextElement());
       }
-      
-      if(SimpleMarkerPlugin.HANDLE_SEPARATORS) {
-        mProgramsList.setModel(mProgramListModel);
+    }
+    
+    mProgramsList.setModel(mProgramListModel);
+    
+    if(SimpleMarkerPlugin.HANDLE_SEPARATORS) {
+      if(!mProgramListModel.isEmpty() && SimpleMarkerPlugin.getInstance().getSettings().isShowingDateSeperators()) {
+        try {
+          ProgramListCompat.addDateSeparators(mProgramsList);
+        } catch (Throwable e) {
+          e.printStackTrace();
+        }
       }
     }
     
@@ -524,6 +520,7 @@ public class ManagePanel extends TabListenerPanel implements PersonaCompatListen
     if (isVisible()) {
       mMarkListsList.repaint();
     }
+  }catch(Throwable t) {t.printStackTrace();}
   }
   
   private void scroll(final int scrollIndex) {
