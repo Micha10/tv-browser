@@ -294,7 +294,7 @@ public final class DefaultMarkingPrioritySelectionPanel extends JPanel {
     for (int i = 0; i < mLabel.length; i++)
     {
       mLabel[i].setEnabled(enabled);
-      ((JComboBox<Object>)mPrioritySelection.get(0)).setEnabled(enabled);
+      ((JComboBox<Object>)mPrioritySelection.get(i)).setEnabled(enabled);
     }
   }
 }

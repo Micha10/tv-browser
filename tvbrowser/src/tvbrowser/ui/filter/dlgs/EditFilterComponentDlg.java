@@ -95,7 +95,7 @@ public class EditFilterComponentDlg extends JDialog implements ActionListener, D
 
   private static final String REGEX_INVALID_CHARACTERS = "[\\p{Punct}\\s&&[^_]]";
 
-  private static final util.i18n.Localizer mLocalizer = util.i18n.Localizer.getLocalizerFor(EditFilterComponentDlg.class);
+  private static final util.i18n.Localizer LOCALIZER = util.i18n.Localizer.getLocalizerFor(EditFilterComponentDlg.class);
 
   private tvbrowser.core.filters.FilterComponent mSelectedFilterComponent;
 
@@ -143,7 +143,7 @@ public class EditFilterComponentDlg extends JDialog implements ActionListener, D
   
   private void init(Window parent, FilterComponent comp, Class<? extends FilterComponent> filterComponentClass) {
     UiUtilities.registerForClosing(this);
-    setTitle(mLocalizer.msg("title", "Edit filter component"));
+    setTitle(LOCALIZER.msg("title", "Edit filter component"));
     mContentPane = new JPanel();
     
     mNameTF = new JTextField(new PlainDocument() {
@@ -158,7 +158,7 @@ public class EditFilterComponentDlg extends JDialog implements ActionListener, D
     
     mRuleCb = new JComboBox<>();
     mRuleCb.addActionListener(this);
-    mRuleCb.addItem(mLocalizer.msg("hint", "must choose one"));
+    mRuleCb.addItem(LOCALIZER.msg("hint", "must choose one"));
     
     mFilterComponentDescription = UiUtilities.createHtmlHelpTextArea("");
     
@@ -174,14 +174,14 @@ public class EditFilterComponentDlg extends JDialog implements ActionListener, D
         "default,5dlu,default,2dlu,default,2dlu,default,10dlu,default,5dlu,fill:min:grow,5dlu,default,5dlu,default"),mContentPane);
     pb.border(Borders.DIALOG);
     
-    pb.addSeparator(mLocalizer.msg("component", "Component"), CC.xyw(1,1,5));
-    pb.addLabel(mLocalizer.msg("name","Name:"), CC.xy(2,3));
+    pb.addSeparator(LOCALIZER.msg("component", "Component"), CC.xyw(1,1,5));
+    pb.addLabel(LOCALIZER.msg("name","Name:"), CC.xy(2,3));
     pb.add(mNameTF, CC.xy(4,3));
-    pb.addLabel(mLocalizer.msg("description", "Description:"), CC.xy(2,5));
+    pb.addLabel(LOCALIZER.msg("description", "Description:"), CC.xy(2,5));
     pb.add(mDescTF, CC.xy(4,5));
-    pb.addLabel(mLocalizer.msg("type", "Type:"), CC.xy(2,7));
+    pb.addLabel(LOCALIZER.msg("type", "Type:"), CC.xy(2,7));
     pb.add(mRuleCb, CC.xy(4,7));
-    pb.addSeparator(mLocalizer.msg("componentSettings", "Component settings:"), CC.xyw(1,9,5));
+    pb.addSeparator(LOCALIZER.msg("componentSettings", "Component settings:"), CC.xyw(1,9,5));
     pb.add(scrollPane, CC.xyw(2,11,3));
     pb.add(new JSeparator(JSeparator.HORIZONTAL), CC.xyw(1,13,5));
 
@@ -223,14 +223,14 @@ public class EditFilterComponentDlg extends JDialog implements ActionListener, D
             } catch (IllegalAccessException e) {
               e.printStackTrace();
             } catch (IllegalArgumentException e) {
-				e.printStackTrace();
-			} catch (InvocationTargetException e) {
-				e.printStackTrace();
-			} catch (NoSuchMethodException e) {
-				e.printStackTrace();
-			} catch (SecurityException e) {
-				e.printStackTrace();
-			}
+      				e.printStackTrace();
+      			} catch (InvocationTargetException e) {
+      				e.printStackTrace();
+      			} catch (NoSuchMethodException e) {
+      				e.printStackTrace();
+      			} catch (SecurityException e) {
+      				e.printStackTrace();
+      			}
           }
         }
       }
@@ -243,14 +243,14 @@ public class EditFilterComponentDlg extends JDialog implements ActionListener, D
       } catch (IllegalAccessException e) {
         e.printStackTrace();
       } catch (IllegalArgumentException e) {
-		e.printStackTrace();
-	} catch (InvocationTargetException e) {
-		e.printStackTrace();
-	} catch (NoSuchMethodException e) {
-		e.printStackTrace();
-	} catch (SecurityException e) {
-		e.printStackTrace();
-	}
+    		e.printStackTrace();
+    	} catch (InvocationTargetException e) {
+    		e.printStackTrace();
+    	} catch (NoSuchMethodException e) {
+    		e.printStackTrace();
+    	} catch (SecurityException e) {
+    		e.printStackTrace();
+    	}
     }
 
     Iterator<FilterComponent> it = set.iterator();

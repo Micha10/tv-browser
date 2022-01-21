@@ -971,7 +971,7 @@ abstract public class Plugin implements Marker, ContextMenuIf, ProgramReceiveIf 
    * @deprecated since 4.2.2 use {@link #getMarkPriorityMaxForProgram(Program)} instead.
    */
   @Deprecated(since="4.2.2") public int getMarkPriorityForProgram(Program p) {
-    return Settings.Markings.USED_DEFAULT_MARK_PRIORITY.getInt();
+    return Settings.Markings.MARK_PRIORITY_DEFAULT.getInt();
   }
   
   /**

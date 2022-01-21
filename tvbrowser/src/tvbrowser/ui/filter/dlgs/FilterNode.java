@@ -433,6 +433,10 @@ public class FilterNode extends DefaultMutableTreeNode {
               item.setFont(item.getFont().deriveFont(Font.BOLD));
             }
             
+            if(Settings.Markings.HIGHLIGHTING_FILTERS.containsItem(name)) {
+              item.setFont(item.getFont().deriveFont(item.getFont().getStyle() | Font.ITALIC));
+            }
+            
             if(test.getFilter() instanceof UserFilter) {
               item.setText(((UserFilter)test.getFilter()).getViewString());
             }

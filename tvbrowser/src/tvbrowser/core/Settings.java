@@ -1127,7 +1127,7 @@ public class Settings {
 
     propArr = new Property[] { ProgramPanel.BORDER_ON_AIR_PROGRAMS_SHOW,
         Markings.USES_EXTRA_SPACE_FOR_MARK_ICONS,
-        Markings.WITH_MARKINGS_SHOWING_BORDER, Markings.USED_DEFAULT_MARK_PRIORITY,
+        Markings.WITH_MARKINGS_SHOWING_BORDER, Markings.MARK_PRIORITY_DEFAULT,
         ProgramPanel.COLOR_ON_AIR_LIGHT, ProgramPanel.COLOR_ON_AIR_DARK, ProgramPanel.COLOR_FOREGROUND,
         ProgramTable.COLOR_BACKGROUND_SINGLE, ProgramPanel.TRANSPARENCY_ALLOW, CenterPanels.ALWAYS_SHOW_TAB_BAR_FOR_CENTER_PANEL,
         ProgramPanel.ORIGINIAL_TITLES_SHOW, Markings.HIGHLIGHTING_COLORS};
@@ -1915,8 +1915,12 @@ public class Settings {
       mProp, "programpanel.markingsShowingBorder", false);
     
     /** Used default mark priority for markings of plugins. */
-    public static final IntProperty USED_DEFAULT_MARK_PRIORITY = new IntProperty(
+    public static final IntProperty MARK_PRIORITY_DEFAULT = new IntProperty(
       mProp, "programpanel.defaultMarkPriority", 0);
+    
+    /** Used mark priority for markings of filters. */
+    public static final IntProperty MARK_PRIORITY_FILTERS = new IntProperty(
+      mProp, "programpanel.filtersMarkPriority", 0);
     
     /** Array with in representations of the highlighting colors for Programs 
      * @since 4.2.2 */
@@ -1928,6 +1932,9 @@ public class Settings {
           new Color(255, 180, 0, 110).getRGB(),
           new Color(255, 0, 0, 30).getRGB()
       });
+    
+    public static final StringArrayProperty HIGHLIGHTING_FILTERS = new StringArrayProperty(
+        mProp, "highlightingFilters", new String[0]);
     
     private Markings() {}
   }

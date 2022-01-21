@@ -740,6 +740,17 @@ public class FilterTree extends JTree implements DragGestureListener, DropTarget
             label = new JLabel(label.getText());
             label.setFont(label.getFont().deriveFont(Font.BOLD));
             
+            if(sel) {
+              label.setOpaque(true);
+              label.setBackground(UIManager.getColor("Tree.selectionBackground"));
+              label.setForeground(UIManager.getColor("Tree.selectionForeground"));
+            }
+          }
+          
+          if(Settings.Markings.HIGHLIGHTING_FILTERS.containsItem(name)) {
+            int style = label.getFont().getStyle();
+            label = new JLabel(label.getText());
+            label.setFont(label.getFont().deriveFont(style | Font.ITALIC));
             
             if(sel) {
               label.setOpaque(true);

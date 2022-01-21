@@ -31,7 +31,6 @@ import javax.swing.BoxLayout;
 import javax.swing.Icon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
 import javax.swing.JEditorPane;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -45,11 +44,10 @@ import devplugin.SettingsTab;
 import tvbrowser.core.Settings;
 import tvbrowser.ui.settings.util.ColorButton;
 import tvbrowser.ui.settings.util.ColorLabel;
-import util.ui.DefaultMarkingPrioritySelectionPanel;
-import util.ui.EnhancedPanelBuilder;
 import util.i18n.Localizer;
 import util.i18n.PooledLocalizer;
-import util.ui.MarkPriorityComboBoxRenderer;
+import util.ui.DefaultMarkingPrioritySelectionPanel;
+import util.ui.EnhancedPanelBuilder;
 import util.ui.TVBrowserIcons;
 import util.ui.UiUtilities;
 
@@ -64,23 +62,21 @@ public class MarkingsSettingsTab implements SettingsTab {
   public static final Localizer LOCALIZER = PooledLocalizer.getLocalizerFor(MarkingsSettingsTab.class);
 
   private JCheckBox mProgramItemWithMarkingsIsShowingBorder, mProgramPanelUsesExtraSpaceForMarkIcons;
-  private JComboBox<Object> mDefaultColor;
   private JEditorPane mHelpLabel;
   private int mPriorityCount;
   private JPanel mHighlightings;
+  private DefaultMarkingPrioritySelectionPanel mDefaultColors;
   
   public JPanel createSettingsPanel() {
-    PanelBuilder pb = new PanelBuilder(new FormLayout("5dlu,default:grow,default","pref,5dlu,pref,10dlu,pref,5dlu,pref,fill:10dlu:grow,default,default"));
+    PanelBuilder pb = new PanelBuilder(new FormLayout("5dlu,default:grow,default","default,5dlu,default,10dlu,default,5dlu,default,10dlu,default,5dlu,pref,fill:10dlu:grow,default,default"));
     pb.border(Borders.DIALOG);
     
-    JPanel defaultMarkings = new JPanel(new FormLayout("default, 5dlu, default",
-    "default,2dlu,default,2dlu,default"));
+    JPanel defaultMarkings = new JPanel(new FormLayout("default:grow","default,2dlu,default"));
     
-    defaultMarkings.add(mProgramPanelUsesExtraSpaceForMarkIcons = new JCheckBox(LOCALIZER.msg("panel.extraSpace","Use additional space for the mark icons"), Settings.Markings.USES_EXTRA_SPACE_FOR_MARK_ICONS.getBoolean()), CC.xyw(1,1,3));
-    defaultMarkings.add(mProgramItemWithMarkingsIsShowingBorder = new JCheckBox(LOCALIZER.msg("color.showBorder","Show border for highlighted programs"), Settings.Markings.WITH_MARKINGS_SHOWING_BORDER.getBoolean()), CC.xyw(1,3,3));
-    defaultMarkings.add(new JLabel(LOCALIZER.msg("color.showColor","Highlight with color (default color):")), CC.xy(1,5));
-    defaultMarkings.add(mDefaultColor = new JComboBox<>(), CC.xy(3,5));
-    mDefaultColor.setRenderer(new MarkPriorityComboBoxRenderer(mDefaultColor.getRenderer()));
+    defaultMarkings.add(mProgramPanelUsesExtraSpaceForMarkIcons = new JCheckBox(LOCALIZER.msg("panel.extraSpace","Use additional space for the mark icons"), Settings.Markings.USES_EXTRA_SPACE_FOR_MARK_ICONS.getBoolean()), CC.xy(1,1));
+    defaultMarkings.add(mProgramItemWithMarkingsIsShowingBorder = new JCheckBox(LOCALIZER.msg("color.showBorder","Show border for highlighted programs"), Settings.Markings.WITH_MARKINGS_SHOWING_BORDER.getBoolean()), CC.xy(1,3));
+    
+    mDefaultColors = DefaultMarkingPrioritySelectionPanel.createPanel(new int[] {Settings.Markings.MARK_PRIORITY_DEFAULT.getInt(),Settings.Markings.MARK_PRIORITY_FILTERS.getInt()}, new String[] {LOCALIZER.msg("color.highlightedByPlugins","Highlighted by plugins:"),LOCALIZER.msg("color.highlightedByFilters","Highlighted by filters:")}, false, false, false);
     
     mHelpLabel = UiUtilities.createHtmlHelpTextArea(LOCALIZER.msg("color.help","The priority that a plugin uses for a program is used to decide which color have to be used for the marking. A higher priority color replaces a lower priority color. The setting for the default color is only for plugins that do not care about the priority. But it works like for plugins that uses the priorities, so if you select the highest priority color there, all marking of plugin which do not care about the priority will replace lower marking colors."), e -> {
     });
@@ -103,27 +99,21 @@ public class MarkingsSettingsTab implements SettingsTab {
             lastPanel.setDeleteEnabled(true);
           }
           
-          mHighlightings.updateUI();
+          
+          mHighlightings.revalidate();
         }
       }
     };
-    
-    String[] names = DefaultMarkingPrioritySelectionPanel.getMarkingColorNames(true);
-    
-    mDefaultColor.addItem(names[0]);
     
     final int[] currentColors = Settings.Markings.HIGHLIGHTING_COLORS.getIntArray();
     final int[] currentDefaultColors = Settings.Markings.HIGHLIGHTING_COLORS.getDefault();
     
     for(mPriorityCount = 0; mPriorityCount < currentColors.length; mPriorityCount++) {
       Color defaultColor = new Color(currentDefaultColors[mPriorityCount < currentDefaultColors.length ? mPriorityCount : 0],true);
-      mDefaultColor.addItem(names[mPriorityCount+1]);
       
       mHighlightings.add(new HighlightPanel(mPriorityCount+1, new Color(currentColors[mPriorityCount],true), defaultColor, false, mPriorityCount >= 5 ? delete : null));
     }
 
-    mDefaultColor.setSelectedIndex(Math.min(Settings.Markings.USED_DEFAULT_MARK_PRIORITY.getInt()+1,currentColors.length));
-    
     JButton addColor = new JButton(LOCALIZER.msg("color.add","Add color/priority"));
     addColor.addActionListener(e -> {
       HighlightPanel lastPanel = (HighlightPanel)mHighlightings.getComponent(mHighlightings.getComponentCount()-1);
@@ -138,10 +128,12 @@ public class MarkingsSettingsTab implements SettingsTab {
     
     pb.addSeparator(LOCALIZER.msg("color.programMarked","Highlighting by plugins"), CC.xyw(1,1,3));
     pb.add(defaultMarkings, CC.xyw(2,3,2));
-    pb.addSeparator(LOCALIZER.msg("color.programMarkedAdditional","Additional colors (replacing default color)"), CC.xyw(1,5,3));
-    pb.add(mHighlightings, CC.xyw(1,7,3));
-    pb.add(addColor, CC.xy(3, 9));
-    pb.add(mHelpLabel, CC.xyw(2,10,2));
+    pb.addSeparator(LOCALIZER.msg("color.default","Default colors"), CC.xyw(1,5,3));
+    pb.add(mDefaultColors, CC.xyw(2,7,2));
+    pb.addSeparator(LOCALIZER.msg("color.programMarkedAdditional","Additional colors (replacing default color)"), CC.xyw(1,9,3));
+    pb.add(mHighlightings, CC.xyw(1,11,3));
+    pb.add(addColor, CC.xy(3, 13));
+    pb.add(mHelpLabel, CC.xyw(2,14,2));
     
     return pb.getPanel();
   }
@@ -157,7 +149,8 @@ public class MarkingsSettingsTab implements SettingsTab {
   public void saveSettings() {
     Settings.Markings.USES_EXTRA_SPACE_FOR_MARK_ICONS.setBoolean(mProgramPanelUsesExtraSpaceForMarkIcons.isSelected());
     Settings.Markings.WITH_MARKINGS_SHOWING_BORDER.setBoolean(mProgramItemWithMarkingsIsShowingBorder.isSelected());
-    Settings.Markings.USED_DEFAULT_MARK_PRIORITY.setInt(mDefaultColor.getSelectedIndex() - 1);
+    Settings.Markings.MARK_PRIORITY_DEFAULT.setInt(mDefaultColors.getSelectedPriority(0));
+    Settings.Markings.MARK_PRIORITY_FILTERS.setInt(mDefaultColors.getSelectedPriority(1));
     
     int[] colors = new int[mHighlightings.getComponentCount()];
     

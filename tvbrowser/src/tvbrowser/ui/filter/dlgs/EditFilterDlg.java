@@ -39,6 +39,7 @@ import javax.swing.BorderFactory;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JList;
@@ -102,6 +103,8 @@ public class EditFilterDlg extends JDialog implements ActionListener, DocumentLi
   
   private DefaultListModel<FilterItem> mFilterConstructionListModel;
   
+  private JCheckBox mFilterHighlight;
+  
   private boolean mFromFilterList;
   private boolean mOkWasPressed;
   
@@ -142,7 +145,7 @@ public class EditFilterDlg extends JDialog implements ActionListener, DocumentLi
     mFilterRuleTF.getDocument().addDocumentListener(this);
     mFilterRuleTF.addCaretListener(this);  
     
-    FormLayout layout = new FormLayout("5dlu,fill:min:grow,5dlu,default,5dlu","default,5dlu,default,default,5dlu,default,5dlu,fill:min:grow,5dlu,default,5dlu,default,5dlu,default");
+    FormLayout layout = new FormLayout("5dlu,fill:min:grow,5dlu,default,5dlu","default,5dlu,default,default,5dlu,default,5dlu,fill:min:grow,5dlu,default,5dlu,default,5dlu,default,5dlu,default");
     PanelBuilder filterCreation = new PanelBuilder(layout);
     filterCreation.border(Borders.DIALOG);
     
@@ -165,6 +168,12 @@ public class EditFilterDlg extends JDialog implements ActionListener, DocumentLi
     mColLb = filterCreation.addLabel("0", CC.xy(4,y+2));
     mFilterRuleErrorLb = filterCreation.addLabel(LOCALIZER.msg("ruleExample",
     "example: component1 or (component2 and not component3)"), CC.xy(2,y+3));
+    
+    mFilterHighlight = new JCheckBox(LOCALIZER.msg("highlight", "Highlight all matching programs"));
+    
+    if(mFilter != null) {
+      mFilterHighlight.setSelected(Settings.Markings.HIGHLIGHTING_FILTERS.containsItem(mFilter.getName()));
+    }
     
     ButtonBarBuilder bottomBar = Utilities.createFilterButtonBar();
 
@@ -289,8 +298,9 @@ public class EditFilterDlg extends JDialog implements ActionListener, DocumentLi
     
     filterCreation.add(listPanel.getPanel(), CC.xyw(1,y+7,4));
     filterCreation.add(UiUtilities.createHelpTextArea(LOCALIZER.msg("help","To create or edit a filter you can enter the rules in the text field or drag and drop the rules to the left side.")), CC.xyw(2,y+9,4));
-    filterCreation.add(new JSeparator(JSeparator.HORIZONTAL), CC.xyw(1,y+11,4));
-    filterCreation.add(bottomBar.getPanel(), CC.xyw(1,y+13,4));
+    filterCreation.add(mFilterHighlight, CC.xyw(2, y+11, 3));
+    filterCreation.add(new JSeparator(JSeparator.HORIZONTAL), CC.xyw(1,y+13,4));
+    filterCreation.add(bottomBar.getPanel(), CC.xyw(1,y+15,4));
     
     updateBtns();
 
@@ -325,6 +335,7 @@ public class EditFilterDlg extends JDialog implements ActionListener, DocumentLi
     }
     
     mOkBtn.setEnabled(StringUtils.isNotBlank(mFilterNameTF.getText()) && mFilterComponent.getList().getModel().getSize() > 0 && validRule);
+    mFilterHighlight.setEnabled(mOkBtn.isEnabled());
   }
 
   public void actionPerformed(ActionEvent e) {
@@ -364,6 +375,15 @@ public class EditFilterDlg extends JDialog implements ActionListener, DocumentLi
         } catch (ParserException e1) {
           mOkWasPressed = false;
           JOptionPane.showMessageDialog(this, LOCALIZER.msg("invalidRule", "Invalid rule: ") + e1.getMessage());
+        }
+      }
+      
+      if(mOkWasPressed) {
+        if(mFilterHighlight.isSelected()) {
+          Settings.Markings.HIGHLIGHTING_FILTERS.addItem(mFilter.getName());
+        }
+        else {
+          Settings.Markings.HIGHLIGHTING_FILTERS.removeItem(mFilter.getName());
         }
       }
     } else if (o == mCancelBtn) {

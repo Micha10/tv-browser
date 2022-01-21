@@ -61,9 +61,11 @@ import devplugin.Plugin;
 import devplugin.PluginAccess;
 import devplugin.Program;
 import devplugin.ProgramFieldType;
+import devplugin.ProgramFilter;
 import devplugin.ProgramInfoHelper;
 import devplugin.ToolTipIcon;
 import tvbrowser.core.Settings;
+import tvbrowser.core.filters.FilterManagerImpl;
 import tvbrowser.core.filters.GenericFilterMap;
 import tvbrowser.core.filters.UserFilter;
 import tvbrowser.core.icontheme.InfoIconTheme;
@@ -1488,19 +1490,61 @@ private static Font getDynamicFontSize(Font font, int offset) {
     setSelected(isSelected);
   }
   
-  public static final void paintHighlighting(Graphics2D grp, int x, int y, int width, int height, Marker[] markedByPluginArr, Program program, byte programImportance) {
-    if (markedByPluginArr.length != 0 && program.getMarkPriorityMax() > Program.PRIORITY_MARK_NONE) {
-      Integer[] priorites = program.getMarkPriorities();  
+  private static int getFilterHighlightingPriority(Program program) {
+    int result = Program.PRIORITY_MARK_NONE;
+    
+    String[] filterNames = Settings.Markings.HIGHLIGHTING_FILTERS.getStringArray();
+    
+    for(String filterName : filterNames) {
+      ProgramFilter filter = FilterManagerImpl.getInstance().getFilterByName(filterName);
       
+      if(filter != null && filter.accept(program)) {
+        result = Settings.Markings.MARK_PRIORITY_FILTERS.getInt();
+        break;
+      }
+    }
+    
+    return result;
+  }
+  
+  public static final void paintHighlighting(Graphics2D grp, int x, int y, int width, int height, Marker[] markedByPluginArr, Program program, byte programImportance) {
+    int filterHighlightingPriority = getFilterHighlightingPriority(program);
+    
+    if ((markedByPluginArr.length != 0 && program.getMarkPriorityMax() > Program.PRIORITY_MARK_NONE) || filterHighlightingPriority > Program.PRIORITY_MARK_NONE) {
+      Integer[] priorites = program.getMarkPriorities();
+      
+      if((priorites == null || priorites.length == 0) && filterHighlightingPriority > Program.PRIORITY_MARK_NONE) {
+        priorites = new Integer[1];
+        priorites[0] = filterHighlightingPriority;
+      }
+      else if(filterHighlightingPriority > Program.PRIORITY_MARK_NONE) {
+        boolean found = false;
+        Integer[] prios = new Integer[priorites.length+1];
+            
+        for(int i = 0; i < priorites.length; i++) {
+          if(priorites[i] == filterHighlightingPriority) {
+            found = true;
+          }
+          
+          prios[i] = priorites[i]; 
+        }
+        
+        if(!found) {
+          prios[prios.length-1] = filterHighlightingPriority;
+          priorites = prios;
+          Arrays.sort(priorites);
+        }
+      }
+        
       if(priorites != null && priorites.length > 0) {
         boolean gradient = Settings.ProgramPanel.HIGHLIGHTING_COLOR_GRADIENT.getBoolean() && priorites.length > 1;
         
-        Color c = Plugin.getPluginManager().getTvBrowserSettings().getColorForMarkingPriority(program.getMarkPriorityMax());
+        Color c = Plugin.getPluginManager().getTvBrowserSettings().getColorForMarkingPriority(Math.max(program.getMarkPriorityMax(),filterHighlightingPriority));
   
         if(c == null) {
           c = Settings.getHighlightingColorForPriority(0);
         }
-  
+        
         int alphaValue = (int)(c.getAlpha()*programImportance/10.);
   
         if(program.isExpired()) {
@@ -1514,7 +1558,7 @@ private static Font getDynamicFontSize(Font font, int offset) {
         int lAlpha = alphaValue;
         int rAlpha = alphaValue;
         
-        if(gradient) {
+        if(gradient && priorites.length > 1) {
           Color[] colors = new Color[priorites.length];
           float[] fractions = new float[priorites.length];
           
