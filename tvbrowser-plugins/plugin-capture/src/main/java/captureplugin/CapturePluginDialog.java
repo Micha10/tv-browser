@@ -77,7 +77,7 @@ public class CapturePluginDialog extends JDialog implements WindowClosingIf {
         this.setTitle(mLocalizer.msg("Title", "Capture Plugin - Settings"));
 
         
-        mPanel = new CapturePluginPanel(parent, mData);
+        mPanel = new CapturePluginPanel(parent, mData, false);
         this.getContentPane().add(mPanel, BorderLayout.CENTER);
 
         JButton okButton = new JButton(Localizer.getLocalization(Localizer.I18N_OK));

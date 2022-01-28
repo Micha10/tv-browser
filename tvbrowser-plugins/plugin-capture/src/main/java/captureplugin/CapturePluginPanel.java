@@ -75,13 +75,18 @@ public class CapturePluginPanel extends JPanel {
      * @param owner The parent window.
      * @param data Data to use
      */
-    public CapturePluginPanel(Window owner, CapturePluginData data) {
+    public CapturePluginPanel(Window owner, CapturePluginData data, boolean isInSettingsTab) {
         this.setLayout(new BorderLayout());
 
         mTabPane = new JTabbedPane();
 
-        ProgramListPanel programListPanel = new ProgramListPanel(owner, data);
-        mTabPane.addTab(LOCALIZER.msg("ProgramList", "Programlist"), programListPanel);
+        ProgramListPanel programListPanel = null;
+        
+        if(!isInSettingsTab) {
+          programListPanel = new ProgramListPanel(owner, data);
+          mTabPane.addTab(LOCALIZER.msg("ProgramList", "Programlist"), programListPanel);
+        }
+        
         mTabPane.addTab(LOCALIZER.msg("Devices", "Devices"), new DevicePanel(owner, data, programListPanel));
         
         if(Plugin.getPluginManager().getTVBrowserVersion().compareTo(new Version(4,20,50,false)) > 0) {

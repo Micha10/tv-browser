@@ -18,10 +18,10 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.ToolTipManager;
 
-import util.ui.Localizer;
 import captureplugin.CapturePlugin;
 import captureplugin.drivers.dreambox.DreamboxConfig;
 import captureplugin.drivers.dreambox.connector.DreamboxConnector;
+import util.ui.Localizer;
 
 /**
  * @author fishhead
@@ -46,14 +46,14 @@ public class DreamboxOptionPane {
     // Timer einlesen
     E2TimerHelper timerHelper = E2TimerHelper.getInstance(connector);
 
+    // Info einlesen
+    E2InfoHelper infoThread = E2InfoHelper.getInstance(connector, timerHelper.getThread());
+    
     // Movies einlesen
-    E2MovieHelper movieHelper = E2MovieHelper.getInstance(connector, timerHelper.getThread());
-
+    E2MovieHelper movieHelper = E2MovieHelper.getInstance(connector, infoThread.getThread());
+    
     // Locations einlesen
     E2LocationHelper locationHelper = E2LocationHelper.getInstance(connector, movieHelper.getThread());
-
-    // Info einlesen
-    E2InfoHelper infoThread = E2InfoHelper.getInstance(connector, locationHelper.getThread());
 
     // Panel erstellen
     final DreamboxTimerListPanel dreamboxTimerListPanel = new DreamboxTimerListPanel(connector, timerHelper);
@@ -120,7 +120,7 @@ public class DreamboxOptionPane {
         FtpHelper ftpHelper = new FtpHelper();
         ftpHelper.cmd("OPEN", config.getDreamboxAddress());
         ftpHelper.cmd("LOGIN", config.getUserName(), config.getPassword());
-        String s = ftpHelper.cmd("GET", remote);
+        String s = ftpHelper.cmd(false, "GET", remote);
         if (s == null) {
           remote = "/etc/enigma2/timers.xml"; // Image 0.5.1
           s = ftpHelper.cmd("GET", remote);

@@ -25,15 +25,13 @@ import it.sauronsoftware.ftp4j.FTPFile;
 public class FtpHelper implements FTPCommunicationListener {
 
   // Logger
-  private static final Logger mLog = Logger
+  private static final Logger LOG = Logger
       .getLogger(FtpHelper.class.getName());
 
   private static final String ENCODING = "UTF-8";
 
   private static final String NAME = "name";
   private static final String SIZE = "size";
-  /*private static final String[] FTP_COLS = new String[] { "rights", "type",
-      "user", "group", SIZE, "date", "date", "date", NAME };*/
   
   private FTPClient mClient;
   private StringBuilder mReceived;
@@ -44,29 +42,11 @@ public class FtpHelper implements FTPCommunicationListener {
     mReceived = new StringBuilder();
     mSent = new StringBuilder();
   }
-
-/*  public static void main(String[] args) {
-    FtpHelper ftpHelper = new FtpHelper();
-    System.out.println(ftpHelper.cmd("OPEN", server));
-    System.out.println(ftpHelper.cmd("LOGIN", user, password));
-    System.out.println(ftpHelper.cmd("CD", "/bodostv/"));
-    
-    System.out.println(ftpHelper.cmd("LIST", "/bodostv/"));
-    /*try {
-      for (Entry<String, String> entry : ftpHelper.getFileSize("/bodostv/")
-          .entrySet()) {
-        System.out.println(entry.toString());
-      }
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
-    /*String s = ftpHelper.cmd("GET", 
-        "/hdd/movie/20101225 1439 - Das Erste HD - Rapunzel.ts.meta");
-    String t = s;*/
-    //mLog.info(t);
-/*   System.out.println(ftpHelper.cmd("CLOSE"));
-  }*/
-
+  
+  String cmd(String... args) {
+    return cmd(true, args);
+  }
+  
   /**
    * ftp Commands ausfuehren
    * 
@@ -74,7 +54,7 @@ public class FtpHelper implements FTPCommunicationListener {
    * 
    * @return
    */
-  String cmd(String... args) {
+  String cmd(boolean log, String... args) {
     mReceived.setLength(0);
     mSent.setLength(0);
     
@@ -99,7 +79,9 @@ public class FtpHelper implements FTPCommunicationListener {
           
           s = getString(false);
         }catch(Exception e) {
-          mLog.log(Level.SEVERE, "Could not connect to server: " + args[1], e);
+          if(log) {
+            LOG.log(Level.SEVERE, "Could not connect to server: " + args[1], e);
+          }
           s = "Could not connect to server: " + args[1];
         }
       } else if (cmd.equalsIgnoreCase("CLOSE")) {
@@ -110,7 +92,9 @@ public class FtpHelper implements FTPCommunicationListener {
           
           s = getString(false);
         }catch(Exception e) {
-          mLog.log(Level.SEVERE, "Error at disconnection from server", e);
+          if(log) {
+            LOG.log(Level.SEVERE, "Error at disconnection from server", e);
+          }
           s = "Error at disconnecting from server";
         }
       } else if (cmd.equalsIgnoreCase("SYSTEM")) {
@@ -131,7 +115,9 @@ public class FtpHelper implements FTPCommunicationListener {
           mClient.login(user, password);
           s = getString(false);
         }catch(Exception e) {
-          mLog.log(Level.SEVERE, "Could not login to server", e);
+          if(log) {
+            LOG.log(Level.SEVERE, "Could not login to server", e);
+          }
           s = "Could not login to server";
         }
       } else if (cmd.equalsIgnoreCase("CD")) {
@@ -140,7 +126,9 @@ public class FtpHelper implements FTPCommunicationListener {
           mClient.changeDirectory(args[1]);
           s = getString(false);
         }catch(Exception e) {
-          mLog.log(Level.SEVERE, "Could not change directory", e);
+          if(log) {
+            LOG.log(Level.SEVERE, "Could not change directory", e);
+          }
           s = "Could not change directory";
         }
       } else if (cmd.equalsIgnoreCase("PWD")) {
@@ -148,7 +136,9 @@ public class FtpHelper implements FTPCommunicationListener {
         try {
           s = mClient.currentDirectory().trim();
         }catch(Exception e) {
-          mLog.log(Level.SEVERE, "Could not get current directory from server", e);
+          if(log) {
+            LOG.log(Level.SEVERE, "Could not get current directory from server", e);
+          }
         }
       } else if (cmd.equalsIgnoreCase("LIST")) {
         // LIST
@@ -192,7 +182,9 @@ public class FtpHelper implements FTPCommunicationListener {
 	          s = new String(out.toByteArray(),ENCODING);
 	        }
         }catch(Exception e) {
-          mLog.log(Level.SEVERE, "Could not download file from server: " + args[1], e);
+          if(log) {
+            LOG.log(Level.SEVERE, "Could not download file from server: " + args[1], e);
+          }
         }finally {
 			if(out != null){
 				try {
@@ -229,7 +221,9 @@ public class FtpHelper implements FTPCommunicationListener {
               public void aborted() {}
             });
         }catch(Exception e) {
-          mLog.log(Level.SEVERE, "Could not upload file: " + args[1], e);
+          if(log) {
+            LOG.log(Level.SEVERE, "Could not upload file: " + args[1], e);
+          }
         }finally {
         	if(in != null) {
         		try {
@@ -238,15 +232,19 @@ public class FtpHelper implements FTPCommunicationListener {
         	}
         }
       } else {
-        mLog.warning("unkown command : " + cmd);
-        for (int i = 1; i < args.length; i++) {
-          mLog.warning(String.format("parameter %4d : %s", i, args[i]));
+        if(log) {
+          LOG.warning("unkown command : " + cmd);
+          for (int i = 1; i < args.length; i++) {
+            LOG.warning(String.format("parameter %4d : %s", i, args[i]));
+          }
         }
       }
     } catch (FileNotFoundException e) {
       s = null;
     } catch (IOException e) {
-      mLog.log(Level.WARNING, "IOException", e);
+      if(log) {
+        LOG.log(Level.WARNING, "IOException", e);
+      }
     }
 
     return s;
@@ -291,7 +289,7 @@ public class FtpHelper implements FTPCommunicationListener {
         }
       }
     }catch(Exception e) {
-      mLog.log(Level.SEVERE, "Could not retrieve files for directory: " + dir, e);
+      LOG.log(Level.SEVERE, "Could not retrieve files for directory: " + dir, e);
     }
     return list;
   }

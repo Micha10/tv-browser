@@ -164,7 +164,7 @@ public final class DreamboxDevice implements DeviceIf {
         if (dialog.wasOkPressed()) {
             mName = dialog.getDeviceName();
             mConfig = dialog.getConfig();
-            mConnector.setConfi(mConfig);
+            mConnector.setConfig(mConfig);
         }
     }
 
@@ -424,7 +424,7 @@ public final class DreamboxDevice implements DeviceIf {
      */
     public void readData(ObjectInputStream stream, boolean importDevice) throws IOException, ClassNotFoundException {
         mConfig = new DreamboxConfig(stream);
-        mConnector.setConfi(mConfig);
+        mConnector.setConfig(mConfig);
     }
 
     /**

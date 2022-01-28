@@ -71,7 +71,7 @@ public class CapturePluginSettingsTab implements SettingsTab {
      * @return Panel
      */
     public JPanel createSettingsPanel() {
-      mPanel = new CapturePluginPanel(mOwner, mCloneData);
+      mPanel = new CapturePluginPanel(mOwner, mCloneData, true);
       mPanel.setBorder(Borders.createEmptyBorder(Sizes.DLUY5,Sizes.DLUX5,Sizes.DLUY5,Sizes.DLUX5));
       mPanel.setSelectedTab(mCurrentPanel);
       return mPanel;

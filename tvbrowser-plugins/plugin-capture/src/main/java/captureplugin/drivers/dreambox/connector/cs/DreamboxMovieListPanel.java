@@ -195,6 +195,8 @@ public class DreamboxMovieListPanel extends JPanelRefreshAbstract implements
     mLog.setLevel(Level.INFO);    
     this.mConnector = connector;
     this.mMovieHelper = movieHelper;
+    mMovieHelper.reset();
+    mLocation = connector.getConfig().getDefaultLocation();
     this.setPreferredSize(new Dimension(900, 600));
     this.add(new JLabel(mLocalizer.msg("panel", "Reading Movies ...")));
     // Popup erweitern
@@ -327,18 +329,20 @@ public class DreamboxMovieListPanel extends JPanelRefreshAbstract implements
       String data = "";
       
       try {
-        data = mConnector.getDataForLocalUrl("/web/moviedelete?sRef=" + URLEncoder.encode(sRef, "UTF-8"), "Error deleting movie '"+title+"'");
+        data = mConnector.getDataForLocalUrl("/web/moviedelete?sRef=" + URLEncoder.encode(sRef, "UTF-8"), "Error deleting movie '"+title+"'", true);
 
-        DreamboxStateHandler handler = new DreamboxStateHandler();
-        SAXParser saxParser = SAXParserFactory.newInstance().newSAXParser();
-        saxParser.parse(new InputSource(new StringReader(data)), handler);
-        boolean state = handler.getState().equalsIgnoreCase("true");
-        if (state == true) {
-
-          // Movie-Liste im Thread aktualisieren
-          mMovieHelper.getMovies().remove(modelRow);
-        } else {
-          mLog.warning(state + " " + handler.getStatetext());
+        if(DreamboxConnector.testXmlData(data)) {
+          DreamboxStateHandler handler = new DreamboxStateHandler();
+          SAXParser saxParser = SAXParserFactory.newInstance().newSAXParser();
+          saxParser.parse(new InputSource(new StringReader(data)), handler);
+          boolean state = handler.getState().equalsIgnoreCase("true");
+          if (state == true) {
+  
+            // Movie-Liste im Thread aktualisieren
+            mMovieHelper.getMovies().remove(modelRow);
+          } else {
+            mLog.warning(state + " " + handler.getStatetext());
+          }
         }
       } catch (ParserConfigurationException e) {
         mLog.log(Level.WARNING, "ParserConfigurationException", e);
@@ -440,9 +444,7 @@ public class DreamboxMovieListPanel extends JPanelRefreshAbstract implements
       String e2servicename = movie.get(E2MovieHelper.SERVICENAME);
       String e2title = movie.get(E2MovieHelper.TITLE);
       String e2length = movie.get(E2MovieHelper.LENGTH);
-      if (e2length.length() == 5) {
-        e2length = "0" + e2length;
-      }
+      
       String e2description = movie.get(E2MovieHelper.DESCRIPTION);
       String e2descriptionextended = movie
           .get(E2MovieHelper.DESCRIPTIONEXTENDED);

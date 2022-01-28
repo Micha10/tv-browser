@@ -47,6 +47,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TimeZone;
 import java.util.TreeMap;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -90,6 +91,8 @@ public class DreamboxConnector {
   // Logger
   private static final Logger LOG = Logger.getLogger(DreamboxConnector.class
       .getName());
+  
+  private static final String RESULT_TIMEOUT = "timeout";
   /**
    * Translator
    */
@@ -118,7 +121,7 @@ public class DreamboxConnector {
     mName = name;
   }
   
-  public void setConfi(DreamboxConfig config) {
+  public void setConfig(DreamboxConfig config) {
     mConfig = config;
   }
 
@@ -134,7 +137,7 @@ public class DreamboxConnector {
     try {
       final Calendar cal = new GregorianCalendar();
       // Radiohoerer: bRef replaced by sRef to support TV and radio bouquets; see https://dream.reichholf.net/e2web/#getservices
-      InputStream stream = openStreamForLocalUrl("/web/getservices?sRef=" + service);
+      InputStream stream = openStreamForLocalUrl("/web/getservices?sRef=" + service, true);
       SAXParser saxParser = SAXParserFactory.newInstance().newSAXParser();
       DreamboxHandler handler = new DreamboxHandler();
       saxParser.parse(stream, handler);
@@ -155,13 +158,16 @@ public class DreamboxConnector {
     return null;
   }
 
-  private synchronized InputStream openStreamForLocalUrl(final String localUrl) throws MalformedURLException, IOException {
+  private synchronized InputStream openStreamForLocalUrl(final String localUrl, boolean handleTimeout) throws MalformedURLException, IOException {
     final AtomicReference<InputStream> stream = new AtomicReference<InputStream>(null);
     final AtomicReference<Throwable> exc = new AtomicReference<Throwable>(null);
+    final AtomicLong start = new AtomicLong();
     
     Thread openStream = new Thread() {
       @Override
       public void run() {
+        start.set(System.currentTimeMillis());
+        
         try {
           if(mConfig.getDreamboxAddress() == null || mConfig.getDreamboxAddress().trim().isEmpty()) {
             exc.set(new MalformedURLException("Dreambox address malformed: " + mConfig.getDreamboxAddress()));
@@ -180,7 +186,8 @@ public class DreamboxConnector {
             stream.set(connection.getInputStream());
           }
         }catch(Throwable t) {
-          /*JTextArea area = new JTextArea(t.getMessage());
+          LOG.log(Level.WARNING, "Error connecting to box at " + mConfig.getDreamboxAddress() + " ", t);
+        /*  JTextArea area = new JTextArea(t.getMessage());
           area.append("\n");
           
           StackTraceElement[] els = t.getStackTrace();
@@ -221,14 +228,16 @@ public class DreamboxConnector {
         throw (MalformedURLException)exc.get();
       }
       else if(exc.get() instanceof IOException) {
-        showTimeout();
+        showTimeout(handleTimeout);
         throw (IOException)exc.get();
       }
     }
     
     if(stream.get() == null) {
-      showTimeout();
-      throw new SocketTimeoutException("Box at " + mConfig.getDreamboxAddress()+" not accessible.");
+      showTimeout(handleTimeout);
+      SocketTimeoutException ste = new SocketTimeoutException("Box at " + mConfig.getDreamboxAddress()+" not accessible.");
+      LOG.log(Level.WARNING, "Box at " + mConfig.getDreamboxAddress()+" not accessible. Timeout: " + (System.currentTimeMillis()-start.get()) + " ms", ste);
+      throw ste; 
     }
     
     return stream.get();
@@ -236,28 +245,30 @@ public class DreamboxConnector {
     
   private Thread mShowTimeoutThread;
   
-  private synchronized void showTimeout() {
-    mTimeout.postTimeout(mConfig.getDreamboxAddress());
-    mTimeout.mCount = 100;
-    
-    if(mShowTimeoutThread == null || !mShowTimeoutThread.isAlive()) {
-      mShowTimeoutThread = new Thread("SHOW TIMEOUT THREAD") {
-        public void run() {
-          while(!Plugin.getPluginManager().isTvBrowserStartFinished()) {
-            try {
-              Thread.sleep(200);
-            } catch (InterruptedException e) {
-              // ignore
+  private synchronized void showTimeout(boolean handleTimeout) {
+    if(handleTimeout) {
+      mTimeout.postTimeout(mConfig.getDreamboxAddress());
+      mTimeout.mCount = 100;
+      
+      if(mShowTimeoutThread == null || !mShowTimeoutThread.isAlive()) {
+        mShowTimeoutThread = new Thread("SHOW TIMEOUT THREAD") {
+          public void run() {
+            while(!Plugin.getPluginManager().isTvBrowserStartFinished()) {
+              try {
+                Thread.sleep(200);
+              } catch (InterruptedException e) {
+                // ignore
+              }
             }
-          }
-          
-          SwingUtilities.invokeLater(() -> {
-            DontShowAgainMessageBox.dontShowAgainMessageBox(CapturePlugin.getInstance(), "connectionTimedOut", UiUtilities.getLastModalChildOf(CapturePlugin.getInstance().getSuperFrame()), E2TimerHelper.LOCALIZER.msg("error.noConnection.msg", "No connection to box '{0}' with the address '{1}'.\nTry increasing the timeout (currently {2} ms)\nfor the box in the settings.", mName, mConfig.getDreamboxAddress(), mConfig.getTimeout()), Localizer.getLocalization(Localizer.I18N_ERROR), JOptionPane.ERROR_MESSAGE);
-            mShowTimeoutThread = null;
-          });
+            
+            SwingUtilities.invokeLater(() -> {
+              DontShowAgainMessageBox.dontShowAgainMessageBox(CapturePlugin.getInstance(), "connectionTimedOut", UiUtilities.getLastModalChildOf(CapturePlugin.getInstance().getSuperFrame()), E2TimerHelper.LOCALIZER.msg("error.noConnection.msg", "No connection to box '{0}' with the address '{1}'.\nTry increasing the timeout (currently {2} ms)\nfor the box in the settings.", mName, mConfig.getDreamboxAddress(), mConfig.getTimeout()), Localizer.getLocalization(Localizer.I18N_ERROR), JOptionPane.ERROR_MESSAGE);
+              mShowTimeoutThread = null;
+            });
+          };
         };
-      };
-      mShowTimeoutThread.start();
+        mShowTimeoutThread.start();
+      }
     }
   }
   
@@ -318,15 +329,19 @@ public class DreamboxConnector {
     return result;
   }
   
-  public String getDataForLocalUrl(final String localUrl, final String errorMsg) {
+  public String getDataForLocalUrl(final String localUrl, final String errorMsg, boolean handleTimeout) {
     String result = "";
     
     if(!mTimeout.isTimedOut(mConfig.getDreamboxAddress())) {
-      try(InputStream in = openStreamForLocalUrl(localUrl)) {
+      try(InputStream in = openStreamForLocalUrl(localUrl,handleTimeout)) {
         result = readDataFromStream(in, errorMsg);
       } catch (Exception e) {
         if(e instanceof IOException) {
-          mTimeout.postTimeout(mConfig.getDreamboxAddress());
+          result = RESULT_TIMEOUT;
+          
+          if(handleTimeout) {
+            mTimeout.postTimeout(mConfig.getDreamboxAddress());
+          }
         }
       }
     }
@@ -345,7 +360,7 @@ public class DreamboxConnector {
     }
     try {
       final Calendar cal = new GregorianCalendar();
-      InputStream stream = openStreamForLocalUrl("/web/getservices?sRef=" + service);
+      InputStream stream = openStreamForLocalUrl("/web/getservices?sRef=" + service, true);
       SAXParser saxParser = SAXParserFactory.newInstance().newSAXParser();
       DreamboxHandler handler = new DreamboxHandler();
       saxParser.parse(stream, handler);
@@ -406,7 +421,7 @@ public class DreamboxConnector {
    */
   public void switchToChannel(DreamboxChannel channel) {
     try {
-      InputStream stream = openStreamForLocalUrl("/web/zap?sRef=" + URLEncoder.encode(channel.getReference(), "UTF8"));
+      InputStream stream = openStreamForLocalUrl("/web/zap?sRef=" + URLEncoder.encode(channel.getReference(), "UTF8"),false);
       stream.close();
     } catch (MalformedURLException e) {
       e.printStackTrace();
@@ -455,6 +470,8 @@ public class DreamboxConnector {
     // prefetch
     E2TimerHelper timerHelper = E2TimerHelper.getInstance(this);
     List<Map<String, String>> timers = timerHelper.getRepeatedTimers();
+    E2MovieHelper.getInstance(this, timerHelper.getThread());
+    
     // fishhead -----------------------
     if (timers == null) {
       return new ProgramTime[0];
@@ -692,7 +709,7 @@ public class DreamboxConnector {
   public void sendMessage(String message) {
     try {
       openStreamForLocalUrl("/web/message?type=2&timeout=" + mConfig.getTimeout() + "&text="
-          + URLEncoder.encode(message, "UTF8")).close();
+          + URLEncoder.encode(message, "UTF8"),false).close();
     } catch (MalformedURLException e) {
       e.printStackTrace();
     } catch (IOException e) {
@@ -708,14 +725,16 @@ public class DreamboxConnector {
    */
   public boolean testDreamboxVersion() throws IOException {
     if(!mTimeout.isTimedOut(mConfig.getDreamboxAddress())) {
-      String version = getDataForLocalUrl("/ipkg?command=info&package=enigma2-plugin-extensions-webinterface", "Error testing version of box " + mConfig.getDreamboxAddress());
+      String version = getDataForLocalUrl("/ipkg?command=info&package=enigma2-plugin-extensions-webinterface", "Error testing version of box " + mConfig.getDreamboxAddress(), true);
   
-      Pattern p = Pattern.compile("Version:.*cvs(\\d{8}).*");
-      Matcher match = p.matcher(version);
-  
-      if (match.find()) {
-        if (Integer.parseInt(match.group(1)) >= WEBIF_MINIMUM_VERSION) {
-          return true;
+      if(DreamboxConnector.testXmlData(version)) {
+        Pattern p = Pattern.compile("Version:.*cvs(\\d{8}).*");
+        Matcher match = p.matcher(version);
+    
+        if (match.find()) {
+          if (Integer.parseInt(match.group(1)) >= WEBIF_MINIMUM_VERSION) {
+            return true;
+          }
         }
       }
     }
@@ -834,6 +853,17 @@ public class DreamboxConnector {
       return -1;
     }
   }
-
+  
+  public static final boolean isXmlDataTimeout(String data) {
+    return data != null && data.equals(RESULT_TIMEOUT);
+  }
+  
+  public static final boolean testXmlData(String data) {
+    return testXmlData(data, null);
+  }
+  
+  public static final boolean testXmlData(String data, String value) {
+    return data != null && ((value == null && data.contains("<?xml")) || (value != null && data.contains(value)));
+  }
   // fishhead -------------------------
 }

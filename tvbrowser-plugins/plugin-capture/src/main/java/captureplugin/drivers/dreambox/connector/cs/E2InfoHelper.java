@@ -1,12 +1,9 @@
 package captureplugin.drivers.dreambox.connector.cs;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.StringReader;
 import java.net.MalformedURLException;
 import java.net.SocketTimeoutException;
-import java.net.URL;
-import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -21,11 +18,9 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
-import org.apache.commons.codec.binary.Base64;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
-import captureplugin.drivers.dreambox.DreamboxConfig;
 import captureplugin.drivers.dreambox.connector.DreamboxConnector;
 
 /**
@@ -43,7 +38,7 @@ public class E2InfoHelper {
   private final Thread mThreadWaitFor;
   private Thread mThread;
   private List<Map<String, String>> mInfos = null;
-
+  
   /**
    * Factory
    * 
@@ -91,9 +86,9 @@ public class E2InfoHelper {
   }
 
   /**
-   * get movies
+   * get about info
    * 
-   * @return movies
+   * @return about info
    */
   public synchronized List<Map<String, String>> getInfos() {
     if (!mThread.isAlive() && (mInfos == null)) {
@@ -138,13 +133,17 @@ public class E2InfoHelper {
           String data = "";
 
           try {
-            data = mConnector.getDataForLocalUrl("/web/about", "Error getting info from box "+mConnector.getConfig().getDreamboxAddress());
-            
-            E2ListMapHandler handler = new E2ListMapHandler("e2abouts", "e2about");
-            SAXParser saxParser = SAXParserFactory.newInstance().newSAXParser();
-            saxParser.parse(new InputSource(new StringReader(data)), handler);
-
-            mInfos = handler.getList();
+            if(mConnector.isAccessible()) {
+              data = mConnector.getDataForLocalUrl("/web/about", "Error getting info from box "+mConnector.getConfig().getDreamboxAddress(), true);
+              
+              if(DreamboxConnector.testXmlData(data,"<e2abouts>")) {
+                E2ListMapHandler handler = new E2ListMapHandler("e2abouts", "e2about");
+                SAXParser saxParser = SAXParserFactory.newInstance().newSAXParser();
+                saxParser.parse(new InputSource(new StringReader(data)), handler);
+    
+                mInfos = handler.getList();
+              }
+            }
           } catch (ParserConfigurationException e) {
             mLog.log(Level.WARNING, "ParserConfigurationException", e);
           } catch (SAXException e) {
@@ -171,4 +170,24 @@ public class E2InfoHelper {
     mThread.start();
   }
 
+  public boolean isNewNigma2() {
+    //reset infos
+    mInfos = null;
+    boolean result = false;
+    
+    List<Map<String,String>> infos = getInfos();
+    
+    if(infos != null) {
+      for(Map<String,String> info : infos) {
+        String version = info.get("e2imageversion");
+        
+        if(version != null) {
+          result = version.toLowerCase().startsWith("newnigma2");
+          break;
+        }
+      }
+    }
+    
+    return result;
+  }
 }

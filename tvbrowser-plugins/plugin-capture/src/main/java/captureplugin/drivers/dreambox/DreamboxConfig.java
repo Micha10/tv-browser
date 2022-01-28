@@ -34,14 +34,15 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.TimeZone;
 
-import util.io.IOUtilities;
-import util.misc.OperatingSystem;
 import captureplugin.drivers.dreambox.connector.DreamboxChannel;
+import captureplugin.drivers.dreambox.connector.cs.E2LocationHelper;
 import captureplugin.drivers.utils.IDGenerator;
 import captureplugin.utils.ConfigIf;
 import captureplugin.utils.ExternalChannelIf;
 import devplugin.Channel;
 import devplugin.ProgramReceiveTarget;
+import util.io.IOUtilities;
+import util.misc.OperatingSystem;
 
 /**
  * The configuration for the dreambox
@@ -82,6 +83,13 @@ public final class DreamboxConfig implements ConfigIf, Cloneable {
     
     /** The default recording path */
     private String mDefaultLocation = "";
+    
+    /** Show expired timers in timer list */
+    private boolean mShowExpired = true;
+    
+    /** Show zap timers in timer list */
+    private boolean mShowZapTimer = false;
+    
     /**
      * Constructor
      */
@@ -125,6 +133,8 @@ public final class DreamboxConfig implements ConfigIf, Cloneable {
         mReceiveTargets = dreamboxConfig.getProgramReceiveTargets();
 //        mIsOpkg = dreamboxConfig.isOpkg();
         mDefaultLocation = dreamboxConfig.getDefaultLocation();
+        mShowZapTimer = dreamboxConfig.isShowingZapTimer();
+        mShowExpired = dreamboxConfig.isShowingExpired();
     }
 
     /**
@@ -157,7 +167,7 @@ public final class DreamboxConfig implements ConfigIf, Cloneable {
      * @throws IOException io errors
      */
     public void writeData(ObjectOutputStream stream) throws IOException {
-        stream.writeInt(11); // version
+        stream.writeInt(15); // version
         stream.writeUTF(getId());
 
         stream.writeUTF(mDreamboxAddress);
@@ -212,6 +222,9 @@ public final class DreamboxConfig implements ConfigIf, Cloneable {
             DreamboxChannel dch = mChannels.get(channel);
             dch.writeData(stream);
         }
+        
+        stream.writeBoolean(mShowExpired);
+        stream.writeBoolean(mShowZapTimer);
     }
 
     /**
@@ -292,6 +305,10 @@ public final class DreamboxConfig implements ConfigIf, Cloneable {
           mDefaultLocation = stream.readUTF();
         }
         
+        if(version < 15 && mDefaultLocation.equals("/hdd/movie/")) {
+          mDefaultLocation = E2LocationHelper.LOCATION_DEFAULT;
+        }
+        
         if(version > 8) {
 	        // new for version 9
           count = stream.readInt();
@@ -312,6 +329,14 @@ public final class DreamboxConfig implements ConfigIf, Cloneable {
                 mDChannels.put(dch.getReference(), ch);
               }
             }
+          }
+          
+          if(version > 11) {
+            mShowExpired = stream.readBoolean();
+          }
+          
+          if(version > 12) {
+            mShowZapTimer = stream.readBoolean();
           }
         }
     }
@@ -552,10 +577,28 @@ public final class DreamboxConfig implements ConfigIf, Cloneable {
     }
     
     public String getDefaultLocation() {
-        return mDefaultLocation;
+        return mDefaultLocation != null && !mDefaultLocation.trim().isEmpty() ? mDefaultLocation : E2LocationHelper.LOCATION_DEFAULT;
     }
 
     public void setDefaultLocation(String defaultLocation) {
+      if(defaultLocation != null && !defaultLocation.trim().isEmpty()) {
         mDefaultLocation = defaultLocation;
+      }
+    }
+
+    public boolean isShowingExpired() {
+      return mShowExpired;
+    }
+
+    public void setShowExpired(boolean showExpired) {
+      mShowExpired = showExpired;
+    }
+
+    public boolean isShowingZapTimer() {
+      return mShowZapTimer;
+    }
+
+    public void setShowZapTimer(boolean showZapTimer) {
+      mShowZapTimer = showZapTimer;
     }
 }

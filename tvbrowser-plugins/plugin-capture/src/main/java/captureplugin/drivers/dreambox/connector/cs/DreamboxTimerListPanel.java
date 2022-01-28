@@ -57,7 +57,9 @@ import javax.xml.parsers.SAXParserFactory;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
-import captureplugin.drivers.dreambox.DreamboxConfig;
+import com.jgoodies.forms.factories.CC;
+import com.jgoodies.forms.layout.FormLayout;
+
 import captureplugin.drivers.dreambox.connector.DreamboxConnector;
 import captureplugin.drivers.dreambox.connector.DreamboxStateHandler;
 import captureplugin.drivers.utils.TimeDateSpinner;
@@ -113,17 +115,17 @@ public class DreamboxTimerListPanel extends JPanelRefreshAbstract implements
       String afterEventText = "";
       switch (afterEvent) {
       case 0:
-        afterEventText = mLocalizer.msg("afterEventNothing", "Nothing");
+        afterEventText = LOCALIZER.msg("afterEventNothing", "Nothing");
         break;
       case 1:
-        afterEventText = mLocalizer.msg("afterEventStandby", "Standby");
+        afterEventText = LOCALIZER.msg("afterEventStandby", "Standby");
         break;
       case 2:
-        afterEventText = mLocalizer
+        afterEventText = LOCALIZER
             .msg("afterEventDeepstandby", "Deep Standby");
         break;
       case 3:
-        afterEventText = mLocalizer.msg("afterEventAuto", "Auto");
+        afterEventText = LOCALIZER.msg("afterEventAuto", "Auto");
         break;
       }
       return " [ " + afterEventText + " ]";
@@ -287,18 +289,18 @@ try {
           "padding-top:1px; color:black; font-size:x-small;");
       // AfterEvent
       String afterEventText = getAfterEventText(afterEvent);
-      toolTipText += fmtStyle(mLocalizer.msg("afterEventText",
+      toolTipText += fmtStyle(LOCALIZER.msg("afterEventText",
           "After Recording")
           + ": " + afterEventText,
           "padding-top:3px; color:green; font-size:x-small;");
       // Wiederholung
       if (repeated > 0) {
-        toolTipText += fmtStyle(mLocalizer.msg("Repeating", "Repeating") + ": "
+        toolTipText += fmtStyle(LOCALIZER.msg("Repeating", "Repeating") + ": "
             + getRepeatedText(repeated),
             "padding-top:0px; color:blue; font-size:x-small;");
       }
       // Aufzeichnungsort
-      toolTipText += fmtStyle(mLocalizer.msg("Location", "Location") + ": [ "
+      toolTipText += fmtStyle(LOCALIZER.msg("Location", "Location") + ": [ "
           + location + " ]", "padding-top:0px; color:gray; font-size:x-small;");
       // HTML
       return fmtToolTip(toolTipText);
@@ -323,7 +325,7 @@ try {
   private static final Logger mLog = Logger
       .getLogger(DreamboxTimerListPanel.class.getName());
   // Translator
-  private static final Localizer mLocalizer = Localizer
+  private static final Localizer LOCALIZER = Localizer
       .getLocalizerFor(DreamboxTimerListPanel.class);
 
   // Konstanten
@@ -336,16 +338,18 @@ try {
   private static final String CMD_FILTER_CHANGED = "FilterChanged";
 
   private static final String WEEKDAYS[] = new String[] {
-      mLocalizer.msg("Mon", "Mon"), mLocalizer.msg("Tue", "Tue"),
-      mLocalizer.msg("Wed", "Wed"), mLocalizer.msg("Thu", "Thu"),
-      mLocalizer.msg("Fri", "Fri"), mLocalizer.msg("Sat", "Sat"),
-      mLocalizer.msg("Sun", "Sun") };
+      LOCALIZER.msg("Mon", "Mon"), LOCALIZER.msg("Tue", "Tue"),
+      LOCALIZER.msg("Wed", "Wed"), LOCALIZER.msg("Thu", "Thu"),
+      LOCALIZER.msg("Fri", "Fri"), LOCALIZER.msg("Sat", "Sat"),
+      LOCALIZER.msg("Sun", "Sun") };
 
   // Member
   private DreamboxConnector mConnector = null;
   private final E2TimerHelper mTimerHelper;
-  private final JCheckBox mCbShowZap = new JCheckBox(mLocalizer.msg("showZap",
+  private final JCheckBox mCbShowZap = new JCheckBox(LOCALIZER.msg("showZap",
       "Show Zap-Timer"));
+  private final JCheckBox mCbShowExpired = new JCheckBox(LOCALIZER.msg("showExpired",
+      "Show expired Timers"));
   private TableRowSorter<TableModel> mRowSorter;
 
   /**
@@ -357,15 +361,17 @@ try {
   public DreamboxTimerListPanel(DreamboxConnector connector,
       E2TimerHelper timerHelper) {
     super();
-
+    
+    mCbShowExpired.setSelected(connector.getConfig().isShowingExpired());
+    mCbShowZap.setSelected(connector.getConfig().isShowingZapTimer());
     mLog.setLevel(Level.INFO);    
     this.mConnector = connector;
     this.mTimerHelper = timerHelper;
 try {
     this.setPreferredSize(new Dimension(800, 600));
-    this.add(new JLabel(mLocalizer.msg("panel", "Reading Timers ...")));
+    this.add(new JLabel(LOCALIZER.msg("panel", "Reading Timers ...")));
     // Edit
-    JMenuItem menuItemEdit = new JMenuItem(mLocalizer.msg("EditTimer", "Edit"));
+    JMenuItem menuItemEdit = new JMenuItem(LOCALIZER.msg("EditTimer", "Edit"));
     menuItemEdit.setActionCommand(CMD_EDIT_MENU);
     menuItemEdit.addActionListener(this);
     menuItemEdit.setIcon(new ImageIcon(getClass()
@@ -380,7 +386,7 @@ try {
         "images/delete.gif")));
     mPopupMenu.insert(menuItemDelete, 1);
     // zelluloid
-    JMenuItem menuItemUrl = new JMenuItem("zelluliod.de");
+    JMenuItem menuItemUrl = new JMenuItem(LOCALIZER.msg("searchOmdb", "Search for title at omdb"));
     menuItemUrl.setActionCommand(CMD_URL_MENU);
     menuItemUrl.addActionListener(this);
     menuItemUrl.setIcon(new ImageIcon(getClass()
@@ -389,7 +395,7 @@ try {
     // Separator
     mPopupMenu.insert(new JSeparator(), 3);
     // Clean Timer
-    JMenuItem menuItemClean = new JMenuItem(mLocalizer.msg("CleanupTimer",
+    JMenuItem menuItemClean = new JMenuItem(LOCALIZER.msg("CleanupTimer",
         "Cleanup"));
     menuItemClean.setActionCommand(CMD_CLEANUP_MENU);
     menuItemClean.addActionListener(this);
@@ -437,6 +443,8 @@ try {
   }
 
   private void cmdFilter() {
+    mConnector.getConfig().setShowExpired(mCbShowExpired.isSelected());
+    mConnector.getConfig().setShowZapTimer(mCbShowZap.isSelected());
     mRowSorter.sort();
   }
 
@@ -448,19 +456,20 @@ try {
 
     String data = "";
     try {
-      data = mConnector.getDataForLocalUrl("/web/timercleanup?cleanup=true", "Error removing expired timers.");
+      data = mConnector.getDataForLocalUrl("/web/timercleanup?cleanup=true", "Error removing expired timers.", true);
       
-      DreamboxStateHandler handler = new DreamboxStateHandler();
-      SAXParser saxParser = SAXParserFactory.newInstance().newSAXParser();
-      saxParser.parse(new InputSource(new StringReader(data)), handler);
-
-      mLog.info("[" + mConnector.getConfig().getDreamboxAddress() + "] " + "CLEANUP - " + handler.getStatetext() + " - "
-          + (new GregorianCalendar().getTimeInMillis() - cal.getTimeInMillis())
-          + " ms");
-
-      mTimerHelper.refresh();
-      refresh();
-
+      if(DreamboxConnector.testXmlData(data)) {
+        DreamboxStateHandler handler = new DreamboxStateHandler();
+        SAXParser saxParser = SAXParserFactory.newInstance().newSAXParser();
+        saxParser.parse(new InputSource(new StringReader(data)), handler);
+  
+        mLog.info("[" + mConnector.getConfig().getDreamboxAddress() + "] " + "CLEANUP - " + handler.getStatetext() + " - "
+            + (new GregorianCalendar().getTimeInMillis() - cal.getTimeInMillis())
+            + " ms");
+  
+        mTimerHelper.refresh();
+        refresh();
+      }
     } catch (UnsupportedEncodingException e) {
       mLog.log(Level.WARNING, "UnsupportedEncodingException", e);
     } catch (MalformedURLException e) {
@@ -481,8 +490,7 @@ try {
   private void cmdUrl(int modelRow) {
     String title = (String) mTable.getModel().getValueAt(modelRow, COL_TITLE);
     try {
-      String url = "http://zelluloid.de/suche/index.php3?qstring="
-          + URLEncoder.encode(title, "UTF-8");
+      String url = URLEncoder.encode("https://www.omdb.org/de/de/search?search[text]=" + title, "UTF-8");
       Desktop.getDesktop().browse(new URI(url));
     } catch (IOException e) {
       e.printStackTrace();
@@ -506,7 +514,7 @@ try {
 
     JPanel programPanel = new JPanel(new GridBagLayout());
     programPanel.add(new JLabel(oldTimer.get(E2TimerHelper.NAME)), c);
-    programPanel.setBorder(BorderFactory.createTitledBorder(mLocalizer.msg(
+    programPanel.setBorder(BorderFactory.createTitledBorder(LOCALIZER.msg(
         "Title", "Title")));
 
     JPanel descrPanel = new JPanel(new GridBagLayout());
@@ -520,7 +528,7 @@ try {
     JScrollPane scrollPane = new JScrollPane(area);
     scrollPane.setPreferredSize(new Dimension(360, 130));
     descrPanel.add(scrollPane, c);
-    descrPanel.setBorder(BorderFactory.createTitledBorder(mLocalizer.msg(
+    descrPanel.setBorder(BorderFactory.createTitledBorder(LOCALIZER.msg(
         "Description", "Description")));
 
     Calendar beginTime = E2TimerHelper.getAsCalendar(oldTimer
@@ -534,7 +542,7 @@ try {
         .getPreferredSize().height));
     JPanel beginPanel = new JPanel(new GridBagLayout());
     beginPanel.add(beginSpinner, c);
-    beginPanel.setBorder(BorderFactory.createTitledBorder(mLocalizer.msg(
+    beginPanel.setBorder(BorderFactory.createTitledBorder(LOCALIZER.msg(
         "StartTime", "Start-Time")));
 
     JPanel endPanel = new JPanel(new GridBagLayout());
@@ -542,7 +550,7 @@ try {
     endSpinner.setPreferredSize(new Dimension(145, endSpinner
         .getPreferredSize().height));
     endPanel.add(endSpinner, c);
-    endPanel.setBorder(BorderFactory.createTitledBorder(mLocalizer.msg(
+    endPanel.setBorder(BorderFactory.createTitledBorder(LOCALIZER.msg(
         "EndTime", "End-Time")));
 
     String serviceRef = oldTimer.get(E2TimerHelper.SERVICEREFERENCE);
@@ -556,7 +564,7 @@ try {
         .get(E2TimerHelper.AFTEREVENT)));
     pgmOptPanel.setSelectedTag(oldTimer.get(E2TimerHelper.TAGS));
     pgmOptPanel.setSelectedLocation(oldTimer.get(E2TimerHelper.LOCATION));
-    pgmOptPanel.setBorder(BorderFactory.createTitledBorder(mLocalizer.msg(
+    pgmOptPanel.setBorder(BorderFactory.createTitledBorder(LOCALIZER.msg(
         "afterEventTitle", "afterEventTitle")));
     pgmOptPanel.setZapBeforeEvent(mTimerHelper.indexOfTimer(mTimerHelper
         .createZapBeforeTimer(oldTimer)) != -1);
@@ -716,29 +724,29 @@ try {
 
     // Header
     List<String> columnNames = new ArrayList<String>();
-    columnNames.add(mLocalizer.msg("column0", "No.")); // 0
-    columnNames.add(mLocalizer.msg("column1", "Date")); // 1
-    columnNames.add(mLocalizer.msg("column2", "Day")); // 2
-    columnNames.add(mLocalizer.msg("column3", "From")); // 3
-    columnNames.add(mLocalizer.msg("column4", "Until")); // 4
-    columnNames.add(mLocalizer.msg("column5", "Title")); // 5
-    columnNames.add(mLocalizer.msg("column6", "Dis")); // 6
-    columnNames.add(mLocalizer.msg("column7", "Edt")); // 7
-    columnNames.add(mLocalizer.msg("column8", "Del")); // 8
+    columnNames.add(LOCALIZER.msg("column0", "No.")); // 0
+    columnNames.add(LOCALIZER.msg("column1", "Date")); // 1
+    columnNames.add(LOCALIZER.msg("column2", "Day")); // 2
+    columnNames.add(LOCALIZER.msg("column3", "From")); // 3
+    columnNames.add(LOCALIZER.msg("column4", "Until")); // 4
+    columnNames.add(LOCALIZER.msg("column5", "Title")); // 5
+    columnNames.add(LOCALIZER.msg("column6", "Dis")); // 6
+    columnNames.add(LOCALIZER.msg("column7", "Edt")); // 7
+    columnNames.add(LOCALIZER.msg("column8", "Del")); // 8
     columnNames.add(Localizer.getLocalization(Localizer.I18N_CHANNEL)); // 9
-    columnNames.add(mLocalizer.msg("column10", "Tags")); // 10
+    columnNames.add(LOCALIZER.msg("column10", "Tags")); // 10
     columnNames.add("Timer"); // 11
 
     // Data
     List<List<Object>> data = new ArrayList<List<Object>>();
 
     JButton btnEdit = new JButton();
-    btnEdit.setToolTipText(mLocalizer.msg("ToolTipEditTimer", "Edit Timer"));
+    btnEdit.setToolTipText(LOCALIZER.msg("ToolTipEditTimer", "Edit Timer"));
     btnEdit.setActionCommand(CMD_EDIT_BTN);
     btnEdit.setIcon(new ImageIcon(getClass().getResource("images/edit.gif")));
 
     JButton btnDelete = new JButton();
-    btnDelete.setToolTipText(mLocalizer.msg("ToolTipDeleteTimer",
+    btnDelete.setToolTipText(LOCALIZER.msg("ToolTipDeleteTimer",
         "Delete Timer"));
     btnDelete.setActionCommand(CMD_DELETE_BTN);
     btnDelete
@@ -810,7 +818,7 @@ try {
         col.setCellRenderer(new TitleCellRenderer());
         break;
       case COL_ACTION_DISABLE:
-        col.setCellRenderer(new BooleanCellRenderer(mLocalizer.msg(
+        col.setCellRenderer(new BooleanCellRenderer(LOCALIZER.msg(
             "ToolTipDisableTimer", "Disable/Enable Timer")));
         break;
       case COL_ACTION_EDIT:
@@ -849,7 +857,9 @@ try {
           if (o instanceof Map) {
             Map<String, String> timer = (Map<String, String>) o;
             boolean justplay = timer.get(E2TimerHelper.JUSTPLAY).equals("1");
-            return mCbShowZap.isSelected() || !justplay;
+            boolean expired = E2TimerHelper.getAsCalendar(timer.get(E2TimerHelper.TIMEEND)).getTimeInMillis() < System.currentTimeMillis();
+            
+            return (mCbShowZap.isSelected() || !justplay) && (mCbShowExpired.isSelected() || !expired);
           }
           return false;
         }
@@ -861,10 +871,15 @@ try {
     // Scrollpane fuer Tabelle
     JScrollPane scrollpane = new JScrollPane(mTable);
 
-    JPanel panelFilter = new JPanel(new BorderLayout());
+    mCbShowExpired.setActionCommand(CMD_FILTER_CHANGED);
+    mCbShowExpired.addActionListener(this);
+    
     mCbShowZap.setActionCommand(CMD_FILTER_CHANGED);
     mCbShowZap.addActionListener(this);
-    panelFilter.add(mCbShowZap, BorderLayout.EAST);
+    
+    JPanel panelFilter = new JPanel(new FormLayout("0dlu:grow,default,3dlu,default","default"));
+    panelFilter.add(mCbShowExpired, CC.xy(2, 1));
+    panelFilter.add(mCbShowZap, CC.xy(4, 1));
 
     // Panel fuer Timer-Chart
     this.removeAll();

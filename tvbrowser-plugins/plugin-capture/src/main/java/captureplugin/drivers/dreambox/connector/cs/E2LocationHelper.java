@@ -26,8 +26,9 @@ import captureplugin.drivers.dreambox.connector.DreamboxConnector;
  * 
  */
 public class E2LocationHelper {
+  public static final String LOCATION_DEFAULT = "/media/hdd/movie/";
   // Logger
-  private static final Logger mLog = Logger.getLogger(E2LocationHelper.class.getName());
+  private static final Logger LOG = Logger.getLogger(E2LocationHelper.class.getName());
   // Class
   private static final Map<String, E2LocationHelper> singletonMap = new HashMap<String, E2LocationHelper>();
   // Member
@@ -67,7 +68,7 @@ public class E2LocationHelper {
    * @param thread
    */
   private E2LocationHelper(DreamboxConnector connector, Thread thread) {
-    mLog.setLevel(Level.INFO);    
+    LOG.setLevel(Level.INFO);    
     this.mConnector = connector;
     this.mThreadWaitFor = thread;
     this.mLocations = null;
@@ -101,7 +102,7 @@ public class E2LocationHelper {
                 try {
                     Thread.sleep(100);
                 } catch (InterruptedException e1) {
-                    mLog.log(Level.WARNING, "InterruptedException", e1);
+                    LOG.log(Level.WARNING, "InterruptedException", e1);
                 }
             }
         }
@@ -116,7 +117,7 @@ public class E2LocationHelper {
         try {
           Thread.sleep(100);
         } catch (InterruptedException e1) {
-          mLog.log(Level.WARNING, "InterruptedException", e1);
+          LOG.log(Level.WARNING, "InterruptedException", e1);
         }
       }
     }
@@ -133,7 +134,7 @@ public class E2LocationHelper {
                 try {
                   Thread.sleep(100);
                 } catch (InterruptedException e1) {
-                  mLog.log(Level.WARNING, "InterruptedException", e1);
+                  LOG.log(Level.WARNING, "InterruptedException", e1);
                 }
             }
         }
@@ -146,7 +147,7 @@ public class E2LocationHelper {
         try {
           Thread.sleep(100);
         } catch (InterruptedException e1) {
-          mLog.log(Level.WARNING, "InterruptedException", e1);
+          LOG.log(Level.WARNING, "InterruptedException", e1);
         }
       }
     }
@@ -168,7 +169,7 @@ public class E2LocationHelper {
             try {
               mThreadWaitFor.join();
             } catch (InterruptedException e) {
-              mLog.log(Level.WARNING, "InterruptedException", e);
+              LOG.log(Level.WARNING, "InterruptedException", e);
             }
           }
 
@@ -176,38 +177,44 @@ public class E2LocationHelper {
           String data = "";
 
           try {
-            data = mConnector.getDataForLocalUrl("/web/getlocations", "Error getting location from box "+mConnector.getConfig().getDreamboxAddress());
+            data = mConnector.getDataForLocalUrl("/web/getlocations", "Error getting location from box "+mConnector.getConfig().getDreamboxAddress(), true);
             
-            E2ListItemHandler handler;
-            if (data.indexOf("e2location") != -1) {
-              handler = new E2ListItemHandler("e2location");
-            } else if (data.indexOf("e2simplexmlitem") != -1) {
-              handler = new E2ListItemHandler("e2simplexmlitem");
-            } else {
-              data = "<e2locations><e2location>/hdd/movie/</e2location></e2locations>";
-              handler = new E2ListItemHandler("e2location");
+            if(DreamboxConnector.testXmlData(data,"<e2location>")) {
+              E2ListItemHandler handler;
+              if (data.indexOf("e2location") != -1) {
+                handler = new E2ListItemHandler("e2location");
+              } else if (data.indexOf("e2simplexmlitem") != -1) {
+                handler = new E2ListItemHandler("e2simplexmlitem");
+              } else {
+                data = "<e2locations><e2location>"+LOCATION_DEFAULT+"</e2location></e2locations>";
+                handler = new E2ListItemHandler("e2location");
+              }
+              SAXParser saxParser = SAXParserFactory.newInstance().newSAXParser();
+              saxParser.parse(new InputSource(new StringReader(data)), handler);
+  
+              mLocations = handler.getList();
+              mLocations.remove("/hdd/movie/");
+              
+              if(mLocations.isEmpty()) {
+                mLocations.add(LOCATION_DEFAULT);
+              }
             }
-            SAXParser saxParser = SAXParserFactory.newInstance().newSAXParser();
-            saxParser.parse(new InputSource(new StringReader(data)), handler);
-
-            mLocations = handler.getList();
-
           } catch (ParserConfigurationException e) {
-            mLog.log(Level.WARNING, "ParserConfigurationException", e);
+            LOG.log(Level.WARNING, "ParserConfigurationException", e);
           } catch (SAXException e) {
-            mLog.warning(data);
-            mLog.log(Level.WARNING, "SAXException", e);
+            LOG.warning(data);
+            LOG.log(Level.WARNING, "SAXException", e);
           } catch (MalformedURLException e) {
-            mLog.log(Level.WARNING, "MalformedURLException", e);
+            LOG.log(Level.WARNING, "MalformedURLException", e);
           } catch (SocketTimeoutException e) {
-            mLog.log(Level.WARNING, "SocketTimeoutException", e);
+            LOG.log(Level.WARNING, "SocketTimeoutException", e);
           } catch (IOException e) {
-            mLog.log(Level.WARNING, "IOException", e);
+            LOG.log(Level.WARNING, "IOException", e);
           } catch (IllegalArgumentException e) {
-            mLog.log(Level.WARNING, "IllegalArgumentException", e);
+            LOG.log(Level.WARNING, "IllegalArgumentException", e);
           }
 
-          mLog.info("[" + mConnector.getConfig().getDreamboxAddress() + "] " + "GET getlocations - "
+          LOG.info("[" + mConnector.getConfig().getDreamboxAddress() + "] " + "GET getlocations - "
               + (new GregorianCalendar().getTimeInMillis() - cal.getTimeInMillis()) + " ms");
         }
     };

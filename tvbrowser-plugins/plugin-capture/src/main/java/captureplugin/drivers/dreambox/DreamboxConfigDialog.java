@@ -35,7 +35,6 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.TimeZone;
-import java.util.concurrent.atomic.AtomicReference;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -436,6 +435,7 @@ public class DreamboxConfigDialog extends JDialog implements WindowClosingIf {
         final JScrollPane scroll = new JScrollPane(extendedPanel.getPanel());
         scroll.getViewport().setOpaque(false);
         scroll.setOpaque(false);
+        scroll.setBorder(BorderFactory.createEmptyBorder());
         scroll.setViewportBorder(BorderFactory.createEmptyBorder());
         
         final JTabbedPane tabs = new JTabbedPane();
@@ -602,7 +602,7 @@ public class DreamboxConfigDialog extends JDialog implements WindowClosingIf {
         mConfig.setTimeout(mTimeoutModel.getNumber().intValue());
 
         mConfig.setDreamboxAddress(mDreamboxAddress.getText());
-
+        
         mConfig.setTimeZone(((String) mTimezone.getSelectedItem()));
 
         mConfig.setUserName(mUserName.getText());
@@ -610,9 +610,7 @@ public class DreamboxConfigDialog extends JDialog implements WindowClosingIf {
 
         mConfig.setMediaplayer(mMediaplayer.getText());
         mConfig.setProgramReceiveTargets(mProgramReceiveTargetSelection.getCurrentSelection());
-
-//        mConfig.setIsOpkg(mSoftwareSelection.getSelectedIndex() == 1);
-
+        
         String defaultLocation = (String) mDefaultLocation.getSelectedItem();
         mConfig.setDefaultLocation(defaultLocation != null ? defaultLocation : "");
         

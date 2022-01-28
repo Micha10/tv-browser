@@ -227,7 +227,10 @@ public class DevicePanel extends JPanel {
             mData.getDevices().add(device);
             device.configDevice(UiUtilities.getLastModalChildOf(mOwner));
             mDeviceList.setListData(new Vector<DeviceIf>(mData.getDevices()));
-            mProgramListPanel.createPanel();
+            
+            if(mProgramListPanel != null) {
+              mProgramListPanel.createPanel();
+            }
         }
     }
 
@@ -259,7 +262,10 @@ public class DevicePanel extends JPanel {
                 mData.getDevices().remove(device);
                 mDeviceList.setListData(new Vector<DeviceIf>(mData.getDevices()));
             }
-            mProgramListPanel.createPanel();
+            
+            if(mProgramListPanel != null) {
+              mProgramListPanel.createPanel();
+            }
         }
     }
     
@@ -285,7 +291,10 @@ public class DevicePanel extends JPanel {
         }
 
         mDeviceList.setListData(new Vector<DeviceIf>(mData.getDevices()));
-        mProgramListPanel.createPanel();
+        
+        if(mProgramListPanel != null) {
+          mProgramListPanel.createPanel();
+        }
       }
     }
 

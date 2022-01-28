@@ -30,7 +30,6 @@ import captureplugin.drivers.dreambox.connector.DreamboxChannel;
 import captureplugin.drivers.dreambox.connector.DreamboxConnector;
 import captureplugin.drivers.dreambox.connector.DreamboxStateHandler;
 import captureplugin.drivers.utils.ProgramTime;
-import devplugin.Plugin;
 import devplugin.ProgramFieldType;
 import util.ui.Localizer;
 
@@ -324,9 +323,9 @@ public class E2TimerHelper {
 
           String data = "";
           try {
-            data = mConnector.getDataForLocalUrl("/web/timerlist", "Error reading timers from box " + mConnector.getConfig().getDreamboxAddress());
+            data = mConnector.getDataForLocalUrl("/web/timerlist", "Error reading timers from box " + mConnector.getConfig().getDreamboxAddress(), true);
             
-            if(mConnector.isAccessible()) {
+            if(DreamboxConnector.testXmlData(data,"<e2timerlist>")) {
               E2ListMapHandler handler = new E2ListMapHandler("e2timerlist", "e2timer");
               SAXParser saxParser = SAXParserFactory.newInstance().newSAXParser();
               saxParser.parse(new InputSource(new StringReader(data)), handler);
@@ -586,27 +585,27 @@ public class E2TimerHelper {
 
       boolean state = false;
       try {
-        data = mConnector.getDataForLocalUrl(localUrl, "Error adding timer to box " + mConnector.getConfig().getDreamboxAddress());
+        data = mConnector.getDataForLocalUrl(localUrl, "Error adding timer to box " + mConnector.getConfig().getDreamboxAddress(), true);
         // Web-Interface AAF
-        
-        DreamboxStateHandler handler = new DreamboxStateHandler();
-        SAXParser saxParser = SAXParserFactory.newInstance().newSAXParser();
-        saxParser.parse(new InputSource(new StringReader(data)), handler);
-        state = handler.getState().equalsIgnoreCase("true");
-        if (state) {
-          // Modell aktualisieren
-          getTimers().add(timer);
-          Collections.sort(getTimers(), TIMER_COMPARE);
-          // Log
-          mLog.info("[" + mConnector.getConfig().getDreamboxAddress() + "] " + String.format("ADD %s - %s - %d ms", // msg
-              "1".equals(timer.get(JUSTPLAY)) ? "ZAP" : "REC", // justplay
-              handler.getStatetext(), // Fehlermeldung
-              (new GregorianCalendar().getTimeInMillis() - cal.getTimeInMillis())) // Dauer
-              );
-        } else {
-          mLog.warning(handler.getStatetext());
+        if(DreamboxConnector.testXmlData(data)) {
+          DreamboxStateHandler handler = new DreamboxStateHandler();
+          SAXParser saxParser = SAXParserFactory.newInstance().newSAXParser();
+          saxParser.parse(new InputSource(new StringReader(data)), handler);
+          state = handler.getState().equalsIgnoreCase("true");
+          if (state) {
+            // Modell aktualisieren
+            getTimers().add(timer);
+            Collections.sort(getTimers(), TIMER_COMPARE);
+            // Log
+            mLog.info("[" + mConnector.getConfig().getDreamboxAddress() + "] " + String.format("ADD %s - %s - %d ms", // msg
+                "1".equals(timer.get(JUSTPLAY)) ? "ZAP" : "REC", // justplay
+                handler.getStatetext(), // Fehlermeldung
+                (new GregorianCalendar().getTimeInMillis() - cal.getTimeInMillis())) // Dauer
+                );
+          } else {
+            mLog.warning(handler.getStatetext());
+          }
         }
-
       } catch (IOException e) {
         // Web-Interface TDT
         mLog.info("[" + mConnector.getConfig().getDreamboxAddress() + "] " + e.getLocalizedMessage());
@@ -662,27 +661,28 @@ public class E2TimerHelper {
       
       boolean state = false;
       try {
-        data = mConnector.getDataForLocalUrl(localUrl, "Error changing timer on box " + mConnector.getConfig().getDreamboxAddress());
+        data = mConnector.getDataForLocalUrl(localUrl, "Error changing timer on box " + mConnector.getConfig().getDreamboxAddress(), true);
         
-        DreamboxStateHandler handler = new DreamboxStateHandler();
-        SAXParser saxParser = SAXParserFactory.newInstance().newSAXParser();
-        saxParser.parse(new InputSource(new StringReader(data)), handler);
-        state = handler.getState().equalsIgnoreCase("true");
-        if (state) {
-          // Modell aktualisieren
-          getTimers().set(indexOfTimer(oldTimer), newTimer);
-          Collections.sort(getTimers(), TIMER_COMPARE);
-
-          // Log
-          mLog.info("[" + mConnector.getConfig().getDreamboxAddress() + "] " + String.format("CHG %s - %s - %d ms", // msg
-              "1".equals(oldTimer.get(JUSTPLAY)) ? "ZAP" : "REC", // justplay
-              handler.getStatetext(), // Fehlermeldung
-              (new GregorianCalendar().getTimeInMillis() - cal.getTimeInMillis())) // Dauer
-              );
-        } else {
-          mLog.warning(handler.getStatetext());
+        if(DreamboxConnector.testXmlData(data)) {
+          DreamboxStateHandler handler = new DreamboxStateHandler();
+          SAXParser saxParser = SAXParserFactory.newInstance().newSAXParser();
+          saxParser.parse(new InputSource(new StringReader(data)), handler);
+          state = handler.getState().equalsIgnoreCase("true");
+          if (state) {
+            // Modell aktualisieren
+            getTimers().set(indexOfTimer(oldTimer), newTimer);
+            Collections.sort(getTimers(), TIMER_COMPARE);
+  
+            // Log
+            mLog.info("[" + mConnector.getConfig().getDreamboxAddress() + "] " + String.format("CHG %s - %s - %d ms", // msg
+                "1".equals(oldTimer.get(JUSTPLAY)) ? "ZAP" : "REC", // justplay
+                handler.getStatetext(), // Fehlermeldung
+                (new GregorianCalendar().getTimeInMillis() - cal.getTimeInMillis())) // Dauer
+                );
+          } else {
+            mLog.warning(handler.getStatetext());
+          }
         }
-
       } catch (IOException e) {
         // Web-Interface TDT
         mLog.info("[" + mConnector.getConfig().getDreamboxAddress() + "] " + e.getLocalizedMessage());
@@ -722,27 +722,30 @@ public class E2TimerHelper {
       + "&begin=" + timer.get(TIMEBEGIN)
       + "&end=" + timer.get(TIMEEND);
 
-      data = mConnector.getDataForLocalUrl(localUrl, "Error deleting timer on box " + mConnector.getConfig().getDreamboxAddress());
-      
-      DreamboxStateHandler handler = new DreamboxStateHandler();
-      SAXParser saxParser = SAXParserFactory.newInstance().newSAXParser();
-      saxParser.parse(new InputSource(new StringReader(data)), handler);
-      boolean state = handler.getState().equalsIgnoreCase("true");
-      if (state) {
-        // Modell aktualisieren
-        getTimers().remove(indexOfTimer(timer));
-        Collections.sort(getTimers(), TIMER_COMPARE);
-        // Log
-        mLog.info("[" + mConnector.getConfig().getDreamboxAddress() + "] " + String.format("DEL %s - %s - %d ms", // msg
-            "1".equals(timer.get(JUSTPLAY)) ? "ZAP" : "REC", // justplay
-            handler.getStatetext(), // Fehlermeldung
-            (new GregorianCalendar().getTimeInMillis() - cal.getTimeInMillis())) // Dauer
-            );
-      } else {
-        mLog.warning(handler.getStatetext());
+      if(mConnector.isAccessible()) {
+        data = mConnector.getDataForLocalUrl(localUrl, "Error deleting timer on box " + mConnector.getConfig().getDreamboxAddress(), true);
+        
+        if(DreamboxConnector.testXmlData(data)) {
+          DreamboxStateHandler handler = new DreamboxStateHandler();
+          SAXParser saxParser = SAXParserFactory.newInstance().newSAXParser();
+          saxParser.parse(new InputSource(new StringReader(data)), handler);
+          boolean state = handler.getState().equalsIgnoreCase("true");
+          if (state) {
+            // Modell aktualisieren
+            getTimers().remove(indexOfTimer(timer));
+            Collections.sort(getTimers(), TIMER_COMPARE);
+            // Log
+            mLog.info("[" + mConnector.getConfig().getDreamboxAddress() + "] " + String.format("DEL %s - %s - %d ms", // msg
+                "1".equals(timer.get(JUSTPLAY)) ? "ZAP" : "REC", // justplay
+                handler.getStatetext(), // Fehlermeldung
+                (new GregorianCalendar().getTimeInMillis() - cal.getTimeInMillis())) // Dauer
+                );
+          } else {
+            mLog.warning(handler.getStatetext());
+          }
+          return state;
+        }
       }
-      return state;
-
     } catch (UnsupportedEncodingException e) {
       mLog.log(Level.WARNING, "UnsupportedEncodingException", e);
     } catch (MalformedURLException e) {

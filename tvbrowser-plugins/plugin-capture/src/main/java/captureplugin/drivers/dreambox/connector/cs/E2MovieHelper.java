@@ -1,12 +1,9 @@
 package captureplugin.drivers.dreambox.connector.cs;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.StringReader;
 import java.net.MalformedURLException;
 import java.net.SocketTimeoutException;
-import java.net.URL;
-import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -22,11 +19,9 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
-import org.apache.commons.codec.binary.Base64;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
-import captureplugin.drivers.dreambox.DreamboxConfig;
 import captureplugin.drivers.dreambox.connector.DreamboxConnector;
 
 /**
@@ -101,7 +96,7 @@ public class E2MovieHelper {
     mLog.setLevel(Level.INFO);    
     this.mConnector = connector;
     this.mThreadWaitFor = thread;
-    this.mDirname = "/hdd/movie/";
+    this.mDirname = null;
     this.mTags = null;
     this.mMovies = null;
     run();
@@ -113,7 +108,7 @@ public class E2MovieHelper {
    * @return movies
    */
   public synchronized List<Map<String, String>> getMovies() {
-    if (!mThread.isAlive() && (mMovies == null)) {
+    if (mThread == null || (!mThread.isAlive() && mMovies == null)) {
       run();
     }
     try {
@@ -175,11 +170,15 @@ public class E2MovieHelper {
     }
     return mTags;
   }
+  
+  private String getCurrentDirectory() {
+    return mDirname != null ? mDirname : mConnector.getConfig().getDefaultLocation();
+  }
 
   /**
    * read movies from dreambox
    */
-  private void run() {
+  private synchronized void run() {
     mThread = new Thread() {
       @Override
       public void run() {
@@ -196,27 +195,36 @@ public class E2MovieHelper {
 
           final Calendar cal = new GregorianCalendar();
           String data = "";
-
+          String url = "";
+          String directory = getCurrentDirectory();
+          
           try {
-            data = mConnector.getDataForLocalUrl("/web/movielist?dirname="
-                + URLEncoder.encode(mDirname, "UTF-8") + "&tag=", "Error reading movies from box " + mConnector.getConfig().getDreamboxAddress());
-            
-            if(mConnector.isAccessible()) {
+            url = "/web/movielist?dirname=" + URLEncoder.encode(directory, "UTF-8");
+            data = mConnector.getDataForLocalUrl(url, "Error reading movies from box " + mConnector.getConfig().getDreamboxAddress(), false);
+                        
+            if(DreamboxConnector.testXmlData(data,"<e2movielist>")) {
               E2ListMapHandler handler = new E2ListMapHandler("e2movielist", "e2movie");
               SAXParser saxParser = SAXParserFactory.newInstance().newSAXParser();
               saxParser.parse(new InputSource(new StringReader(data)), handler);
   
               mMovies = handler.getList();
-  
+              Map<String, String> mapFileSize = null;
+              
               // correct filesize
-              FtpHelper ftpHelper = new FtpHelper();
-              ftpHelper.cmd("OPEN", mConnector.getConfig().getDreamboxAddress());
-              ftpHelper.cmd("LOGIN", mConnector.getConfig().getUserName(), mConnector.getConfig().getPassword());
-              Map<String, String> mapFileSize = ftpHelper.getFileSize(mDirname);
-              ftpHelper.cmd("CLOSE");
-  
-              for (Map<String, String> movie : mMovies) {
+              try {
+                FtpHelper ftpHelper = new FtpHelper();
+                ftpHelper.cmd("OPEN", mConnector.getConfig().getDreamboxAddress());
+                ftpHelper.cmd("LOGIN", mConnector.getConfig().getUserName(), mConnector.getConfig().getPassword());
+                mapFileSize = ftpHelper.getFileSize(directory);
+                ftpHelper.cmd("CLOSE");
+              }catch(Exception ftpe) {
+                mapFileSize = new HashMap<String, String>(0);
+              }
+              
+              for (int i = mMovies.size()-1; i >= 0; i-- ) {
+                Map<String,String> movie = mMovies.get(i);
                 String e2filename = movie.get(FILENAME);
+                
                 if (mapFileSize.containsKey(e2filename)) {
                   movie.put(FILESIZE, mapFileSize.get(e2filename));
                 }
@@ -237,8 +245,8 @@ public class E2MovieHelper {
             mLog.log(Level.WARNING, "IllegalArgumentException", e);
           }
 
-          mLog.info("[" + mConnector.getConfig().getDreamboxAddress() + "] " + "GET movielist - "
-              + (new GregorianCalendar().getTimeInMillis() - cal.getTimeInMillis()) + " ms - " + mDirname);
+          mLog.info("[" + mConnector.getConfig().getDreamboxAddress() + "] " + "GET movielist " + url + " - "
+              + (new GregorianCalendar().getTimeInMillis() - cal.getTimeInMillis()) + " ms - " + getCurrentDirectory());
         }
       }
     };
@@ -265,5 +273,10 @@ public class E2MovieHelper {
     mDirname = location;
     run();
   }
-
+  
+  public void reset() {
+    mMovies = null;
+    mTags = null;
+    run();
+  }
 }
