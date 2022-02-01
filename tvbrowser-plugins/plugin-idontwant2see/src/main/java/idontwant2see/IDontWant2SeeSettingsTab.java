@@ -24,6 +24,10 @@
 package idontwant2see;
 
 
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.lang.reflect.InvocationTargetException;
+
 import javax.swing.ButtonGroup;
 import javax.swing.Icon;
 import javax.swing.JCheckBox;
@@ -34,10 +38,12 @@ import javax.swing.JTextField;
 
 import com.jgoodies.forms.builder.PanelBuilder;
 import com.jgoodies.forms.factories.CC;
-import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
+import com.jgoodies.forms.layout.RowSpec;
 
 import compat.VersionCompat;
+import devplugin.Plugin;
+import devplugin.ProgramFilter;
 import devplugin.SettingsTab;
 import util.ui.DefaultProgramImportanceSelectionPanel;
 import util.ui.Localizer;
@@ -52,6 +58,7 @@ import util.ui.UiUtilities;
 public class IDontWant2SeeSettingsTab implements SettingsTab {
   private JCheckBox mAutoSwitchToMyFilter;
   private JCheckBox mAutoCaseSensitive;
+  private JCheckBox mAdditionalFilter;
   
   private JRadioButton mSimpleContextMenu;
   private JRadioButton mCascadedContextMenu;
@@ -62,6 +69,7 @@ public class IDontWant2SeeSettingsTab implements SettingsTab {
   
   private JTextField mUserName;
   private JPasswordField mUserPassword;
+  private JPanel mFilterSelectionPanel;
   
   /**
    * Create an instance of this class.
@@ -73,11 +81,9 @@ public class IDontWant2SeeSettingsTab implements SettingsTab {
   }
 
   public JPanel createSettingsPanel() {
-    final CellConstraints cc = new CellConstraints();
-    final PanelBuilder pb = new PanelBuilder(
-        new FormLayout("5dlu,default,0dlu:grow,default,5dlu",
-            "default,2dlu,default,10dlu,default,5dlu,default,1dlu,default,7dlu,default,10dlu,default,5dlu,default,5dlu,default,5dlu,fill:default:grow,10dlu,fill:default:grow"),
-            new ScrollableJPanel());
+    final FormLayout layoutMain = new FormLayout("5dlu,default,0dlu:grow,default,5dlu",
+        "5dlu,default,2dlu,default,10dlu,default,5dlu,default,1dlu,default,7dlu,default,10dlu,default,5dlu,default,5dlu,default,5dlu,fill:default:grow,10dlu,fill:default:grow");
+    final PanelBuilder pb = new PanelBuilder(layoutMain,new ScrollableJPanel());
 
     final FormLayout layout = new FormLayout("default,2dlu,0dlu:grow", "default,1dlu,default,default");
     
@@ -112,26 +118,26 @@ public class IDontWant2SeeSettingsTab implements SettingsTab {
 
     int y = 1;
     
-    pb2.add(mSimpleContextMenu, cc.xy(1, y));
+    pb2.add(mSimpleContextMenu, CC.xy(1, y));
     
     if(!VersionCompat.isAtLeastTvBrowser4()) {
       pb2.addLabel("-"
           + mLocalizer.msg("name", "I don't want to see!")
           + " ("
           + mLocalizer.msg("menu.completeCaseSensitive",
-              "Instant exclusion with title") + ")", cc.xy(3, y));
+              "Instant exclusion with title") + ")", CC.xy(3, y));
     }
     
     y += 2;
     
-    pb2.add(mCascadedContextMenu, cc.xy(1, y));
+    pb2.add(mCascadedContextMenu, CC.xy(1, y));
     
     if(!VersionCompat.isAtLeastTvBrowser4()) {
       pb2.addLabel("-"
           + mLocalizer.msg("menu.completeCaseSensitive",
-              "Instant exclusion with title"), cc.xy(3, y++));
+              "Instant exclusion with title"), CC.xy(3, y++));
       pb2.addLabel(
-          "-" + mLocalizer.msg("menu.userEntered", "User entered value"), cc.xy(
+          "-" + mLocalizer.msg("menu.userEntered", "User entered value"), CC.xy(
               3, y));
     }
     else {
@@ -145,24 +151,54 @@ public class IDontWant2SeeSettingsTab implements SettingsTab {
     mAutoCaseSensitive = new JCheckBox(mLocalizer.msg("settings.autoCaseSensitive", "Case sensitive by default"),
         mSettings.isDefaultCaseSensitive());
     
-    y = 1;
+    mAdditionalFilter = new JCheckBox(mLocalizer.msg("settings.additionalFilter", "Use additonal Filter"), mSettings.isUsingAdditionalFilter());
+    
+    try {
+      ProgramFilter filter = (ProgramFilter)Plugin.getPluginManager().getFilterManager().getClass().getDeclaredMethod("getFilterByName", String.class).invoke(Plugin.getPluginManager().getFilterManager(), mSettings.getAdditionalFilterName());
+      Class clazz = Class.forName("util.ui.FilterSelectionPanel");
+      mFilterSelectionPanel = (JPanel)clazz.getConstructor(String.class,ProgramFilter.class,boolean.class).newInstance("",filter,true);
+      
+      for(int i = 0; i < mFilterSelectionPanel.getComponentCount(); i++) {
+        mFilterSelectionPanel.getComponent(i).setEnabled(mAdditionalFilter.isSelected());
+      }
+      
+      mAdditionalFilter.addItemListener(new ItemListener() {
+        @Override
+        public void itemStateChanged(ItemEvent e) {
+          for(int i = 0; i < mFilterSelectionPanel.getComponentCount(); i++) {
+            mFilterSelectionPanel.getComponent(i).setEnabled(e.getStateChange() == ItemEvent.SELECTED);
+          }
+        }
+      });
+    } catch (ClassNotFoundException | NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+    
+    y = 2;
 
-    pb.add(mAutoSwitchToMyFilter, cc.xyw(2, y++, 3));
-    pb.add(mAutoCaseSensitive, cc.xyw(2,++y,3));
+    pb.add(mAutoSwitchToMyFilter, CC.xyw(2, y++, 3));
+    pb.add(mAutoCaseSensitive, CC.xyw(2,++y,3));
+    
+    if(mFilterSelectionPanel != null) {
+      layoutMain.insertRow(++y, RowSpec.decode("default"));
+      pb.add(mAdditionalFilter, CC.xy(2, y));
+      pb.add(mFilterSelectionPanel, CC.xyw(3, y, 2));
+    }
     
     y += 2;
     
-    pb.addSeparator(mLocalizer.msg("settings.synchronization","Android synchronization"), cc.xyw(1, y, 5));
+    pb.addSeparator(mLocalizer.msg("settings.synchronization","Android synchronization"), CC.xyw(1, y, 5));
     
     y += 2;
     
-    pb.addLabel(mLocalizer.msg("settings.userName","User name:") + " ", cc.xy(2, y));
-    pb.add(mUserName, cc.xy(3,y));
+    pb.addLabel(mLocalizer.msg("settings.userName","User name:") + " ", CC.xy(2, y));
+    pb.add(mUserName, CC.xy(3,y));
     
     y += 2;
     
-    pb.addLabel(mLocalizer.msg("settings.passWord","Password:") + " ", cc.xy(2, y));
-    pb.add(mUserPassword, cc.xy(3,y));
+    pb.addLabel(mLocalizer.msg("settings.passWord","Password:") + " ", CC.xy(2, y));
+    pb.add(mUserPassword, CC.xy(3,y));
     
     y += 2;
     
@@ -170,27 +206,27 @@ public class IDontWant2SeeSettingsTab implements SettingsTab {
     
     y += 2;
     
-    pb.addSeparator(mLocalizer.msg("settings.contextMenu", "Context menu"), cc
+    pb.addSeparator(mLocalizer.msg("settings.contextMenu", "Context menu"), CC
         .xyw(1, y, 5));
     
     y += 2;
     
-    pb.add(pb2.getPanel(), cc.xyw(2, y, 3));
+    pb.add(pb2.getPanel(), CC.xyw(2, y, 3));
     
     y += 2;
     
-    pb.addSeparator(mLocalizer.msg("settings.search", "Search"), cc
+    pb.addSeparator(mLocalizer.msg("settings.search", "Search"), CC
         .xyw(1, y, 5));
     
     y += 2;
     
-    pb.add(mExclusionPanel = new ExclusionTablePanel(mSettings), cc.xyw(2, y, 3));
+    pb.add(mExclusionPanel = new ExclusionTablePanel(mSettings), CC.xyw(2, y, 3));
 
     mProgramImportancePanel = DefaultProgramImportanceSelectionPanel.createPanel(mSettings.getProgramImportance(),true,false);
 
     y += 2;
     
-    pb.add(mProgramImportancePanel, cc.xyw(1,y,5));
+    pb.add(mProgramImportancePanel, CC.xyw(1,y,5));
 
     return pb.getPanel();
   }
@@ -210,6 +246,18 @@ public class IDontWant2SeeSettingsTab implements SettingsTab {
     mSettings.setUserName(mUserName.getText());
     mSettings.setPassword(new String(mUserPassword.getPassword()));
     mSettings.setDefaultCaseSensitive(mAutoCaseSensitive.isSelected());
+    mSettings.setUseAdditionalFilter(mAdditionalFilter.isSelected());
+    
+    if(mFilterSelectionPanel != null) {
+      try {
+        ProgramFilter filter = (ProgramFilter)mFilterSelectionPanel.getClass().getDeclaredMethod("getSelectedFilter").invoke(mFilterSelectionPanel);
+        mSettings.setAdditionalFilterName(filter.getName());
+        IDontWant2See.getInstance().updateAdditonalFilter();
+      } catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+      }
+    }
     
     mExclusionPanel.saveSettings(mSettings);
   }

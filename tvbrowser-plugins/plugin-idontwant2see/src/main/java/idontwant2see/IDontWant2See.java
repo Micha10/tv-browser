@@ -42,6 +42,7 @@ import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
+import java.lang.reflect.InvocationTargetException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
@@ -78,6 +79,8 @@ import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 
+import compat.FilterCompat;
+import compat.FilterCompat.FilterChangeListener;
 import compat.MenuCompat;
 import compat.VersionCompat;
 import devplugin.ActionMenu;
@@ -89,6 +92,7 @@ import devplugin.PluginInfo;
 import devplugin.PluginsFilterComponent;
 import devplugin.PluginsProgramFilter;
 import devplugin.Program;
+import devplugin.ProgramFilter;
 import devplugin.ProgramReceiveTarget;
 import devplugin.SettingsTab;
 import devplugin.Version;
@@ -109,7 +113,7 @@ public final class IDontWant2See extends Plugin implements AWTEventListener {
   private static final String DONT_WANT_TO_SEE_IMPORT_SYNC_ADDRESS = "https://www.tvbrowser-app.de/data/scripts/syncDown.php?type=dontWantToSee";
   
   private static final boolean PLUGIN_IS_STABLE = true;
-  private static final Version PLUGIN_VERSION = new Version(0, 18, 0, PLUGIN_IS_STABLE);
+  private static final Version PLUGIN_VERSION = new Version(0, 19, 0, PLUGIN_IS_STABLE);
 
   private static final String RECEIVE_TARGET_EXCLUDE_EXACT = "target_exclude_exact";
 
@@ -123,6 +127,9 @@ public final class IDontWant2See extends Plugin implements AWTEventListener {
   private IDontWant2SeeSettings mSettings;
 
   private boolean mCtrlPressed;
+  
+  private ProgramFilter mAddtionalFilter;
+  private FilterChangeListener mFilterChangeListener;
 
   private HashMap<Program, Boolean> mMatchCache = new HashMap<Program, Boolean>(
 			1000);
@@ -204,36 +211,42 @@ public final class IDontWant2See extends Plugin implements AWTEventListener {
   }
   
   boolean acceptInternal(final Program program) {
-    if(program == null) {
-      return false;
-    }
-    else {
+    boolean result = false;
+    
+    if(program != null) {
       if(!mDateWasSet) {
         mSettings.setLastUsedDate(getCurrentDate());
         mDateWasSet = true;
       }
       
-      Boolean result = null;
+      Boolean result1 = null;
       
       synchronized (mMatchCache) {
-        result = mMatchCache.get(program);;
+        result1 = mMatchCache.get(program);;
       }
       
-  		if (result != null) {
-  			return result;
+  		if (result1 != null) {
+  			result = result1;
   		}
-  
-      // calculate lower case title only once, not for each entry again
-      final String title = program.getTitle();
-      final String lowerCaseTitle = title.toLowerCase();
-      for(IDontWant2SeeListEntry entry : mSettings.getSearchList()) {
-        if (entry.matchesProgramTitle(title, lowerCaseTitle)) {
-          return putCache(program, false);
+  		else {
+        // calculate lower case title only once, not for each entry again
+        final String title = program.getTitle();
+        final String lowerCaseTitle = title.toLowerCase();
+        for(IDontWant2SeeListEntry entry : mSettings.getSearchList()) {
+          if (entry.matchesProgramTitle(title, lowerCaseTitle)) {
+            return putCache(program, false);
+          }
         }
-      }
-  
-      return putCache(program, true);
+    
+        result = putCache(program, true);
+  		}
+  		
+  		if(result && mSettings.isUsingAdditionalFilter() && mAddtionalFilter != null) {
+  		  result = mAddtionalFilter.accept(program);
+  		}
     }
+    
+    return result;
   }
 
   private boolean putCache(final Program program, final boolean matches) {
@@ -957,6 +970,7 @@ public final class IDontWant2See extends Plugin implements AWTEventListener {
 
   @Override
   public void onActivation() {
+    updateAdditonalFilter();
     mFilter = new PluginsProgramFilter(this) {
       public String getSubName() {
         return "";
@@ -1033,5 +1047,56 @@ public final class IDontWant2See extends Plugin implements AWTEventListener {
     }
     
     return haystack;
+  }
+  
+  void updateAdditonalFilter() {
+    if(mSettings.isUsingAdditionalFilter()) {
+      FilterCompat.getInstance().unregisterFilterChangeListener(mFilterChangeListener);
+      
+      try {
+        mAddtionalFilter = (ProgramFilter)Plugin.getPluginManager().getFilterManager().getClass().getDeclaredMethod("getFilterByName", String.class).invoke(Plugin.getPluginManager().getFilterManager(), mSettings.getAdditionalFilterName());
+        
+        if(mAddtionalFilter instanceof PluginsProgramFilter && ((PluginsProgramFilter) mAddtionalFilter).getPluginAccessOfFilter().getId().equals(getId())) {
+          mAddtionalFilter = null;
+          mSettings.setUseAdditionalFilter(false);
+          return;
+        }
+        
+        if(mFilterChangeListener == null) {
+          mFilterChangeListener = new FilterChangeListener() {
+            @Override
+            public void filterTouched(ProgramFilter filter) {}
+            
+            @Override
+            public void filterRemoved(ProgramFilter filter) {
+              if(filter.getName().equals(mSettings.getAdditionalFilterName())) {
+                mAddtionalFilter = null;
+                mSettings.setUseAdditionalFilter(false);
+                FilterCompat.getInstance().unregisterFilterChangeListener(mFilterChangeListener);
+                mFilterChangeListener = null;
+              }
+            }
+            
+            @Override
+            public void filterDefaultChanged(ProgramFilter filter) {}
+            
+            @Override
+            public void filterAdded(ProgramFilter filter) {}
+          };
+        }
+        
+        FilterCompat.getInstance().registerFilterChangeListener(mFilterChangeListener);
+        //Plugin.getPluginManager().getFilterManager().reg
+      } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException
+          | SecurityException e) {
+        mAddtionalFilter = null;
+        mSettings.setUseAdditionalFilter(false);
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+      }
+    } else if(mAddtionalFilter != null) {
+      FilterCompat.getInstance().registerFilterChangeListener(mFilterChangeListener);
+      mAddtionalFilter = null;
+    }
   }
 }

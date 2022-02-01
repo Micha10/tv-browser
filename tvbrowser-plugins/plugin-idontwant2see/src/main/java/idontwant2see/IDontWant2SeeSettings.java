@@ -26,6 +26,7 @@ package idontwant2see;
 import java.util.ArrayList;
 
 import devplugin.Date;
+import devplugin.Plugin;
 import devplugin.Program;
 
 /**
@@ -39,6 +40,8 @@ public class IDontWant2SeeSettings {
   private boolean mSimpleMenu = true;
   private boolean mSwitchToMyFilter = true;
   private boolean mDefaultCaseSensitive = true;
+  private boolean mUseAdditionalFilter = false;
+  private String mAdditionalFilterName;
   private String mLastEnteredExclusionString = "";
   private Date mLastUsedDate = Date.getCurrentDate();
   private ArrayList<IDontWant2SeeListEntry> mSearchList = new IDontWant2SeeEntryList<IDontWant2SeeListEntry>();
@@ -54,8 +57,11 @@ public class IDontWant2SeeSettings {
     mPassword = "";
     mOutdatedFirst = Integer.valueOf(IDontWant2SeeSettings.OUTDATED_DAY_COUNT_DEFAULT_FIRST);
     mOutdatedSecond = Integer.valueOf(IDontWant2SeeSettings.OUTDATED_DAY_COUNT_DEFAULT_SECOND);
+    setAdditionalFilterName(null);
   }
 
+  
+  
   public void setSimpleMenu(final boolean value) {
     mSimpleMenu = value;
   }
@@ -154,5 +160,21 @@ public class IDontWant2SeeSettings {
       case IDontWant2SeeSettings.OUTDATED_DAY_COUNT_DEFAULT_FIRST: mOutdatedFirst = value;break;
       case IDontWant2SeeSettings.OUTDATED_DAY_COUNT_DEFAULT_SECOND: mOutdatedSecond = value;break;
     }
+  }
+
+  public boolean isUsingAdditionalFilter() {
+    return mUseAdditionalFilter;
+  }
+
+  public void setUseAdditionalFilter(boolean value) {
+    mUseAdditionalFilter = value;
+  }
+
+  public String getAdditionalFilterName() {
+    return mAdditionalFilterName == null ?  Plugin.getPluginManager().getFilterManager().getDefaultFilter().getName() : mAdditionalFilterName;
+  }
+
+  public void setAdditionalFilterName(String additionalFilterName) {
+    mAdditionalFilterName = additionalFilterName;
   }
 }
