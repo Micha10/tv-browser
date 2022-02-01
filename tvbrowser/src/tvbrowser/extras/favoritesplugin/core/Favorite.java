@@ -137,8 +137,8 @@ public abstract class Favorite {
 
     // Don't save the programs but only their date and id
     int size = in.readInt();
-    ArrayList<Program> programList = new ArrayList<Program>(size);
-    readProgramsToList(programList, size, in, version);
+    mPrograms = new ArrayList<Program>(size);
+    readProgramsToList(mPrograms, size, in, version);
 
     if(version >= 2) {
       size = in.readInt();
@@ -154,7 +154,7 @@ public abstract class Favorite {
       Collections.sort(mBlackList, ProgramUtilities.getProgramComparator());
     }
 
-    mPrograms = programList;
+    //mPrograms = programList;
 
     mRemovedPrograms = new HashMap<String, ReminderInfo>(0);
     
@@ -194,26 +194,28 @@ public abstract class Favorite {
    * @throws ClassNotFoundException if the program could not be deserialized
    */
   private void readProgramsToList(final ArrayList<Program> list, final int size, final ObjectInputStream in, int version) throws IOException, ClassNotFoundException {
+    final ArrayList<DeferredProgram> deferredPrograms = new ArrayList<Favorite.DeferredProgram>();
+    
     for (int i = 0; i < size; i++) {
-      Program[] program = null;
-      
-      if(version < 7) {
-        Date date = Date.readData(in);
-        String progID = (String) in.readObject();
-        program = Plugin.getPluginManager().getPrograms(date, progID);
-      }
-      else {
-        program = Plugin.getPluginManager().getPrograms(in.readUTF());
-      }
-      
-      if (program != null) {
-        for(Program p : program) {
-          if(p != null && !list.contains(p)) {
-            list.add(p);
+      deferredPrograms.add(new DeferredProgram(version, in));      
+    }
+    
+    Thread loadDeferredPrograms = new Thread("LOAD DEFERRED FAVORITE PROGRAMS") {
+      @Override
+      public void run() {
+        for(DeferredProgram d : deferredPrograms) {
+          Program[] program = d.getPrograms();
+          if (d != null) {
+            for(Program p : program) {
+              if(p != null && !list.contains(p)) {
+                list.add(p);
+              }
+            }
           }
         }
       }
-    }
+    };
+    loadDeferredPrograms.start();
   }
 
   public abstract String getTypeID();
@@ -1306,6 +1308,34 @@ public abstract class Favorite {
       for(Exclusion ex : mExclusionList) {
         ex.getFilter();
       }
+    }
+  }
+  
+  private static final class DeferredProgram {
+    private Date mDate;
+    private String mId;
+    
+    private DeferredProgram(final int version, final ObjectInputStream in) throws IOException, ClassNotFoundException {
+      if(version < 7) {
+        mDate = Date.readData(in);
+        mId = (String) in.readObject();
+      }
+      else {
+        mId = in.readUTF();
+      }
+    }
+    
+    private Program[] getPrograms() {
+      Program[] result = null;
+      
+      if(mDate != null) {
+        result = Plugin.getPluginManager().getPrograms(mDate, mId);
+      }
+      else {
+        result = Plugin.getPluginManager().getPrograms(mId);
+      }
+      
+      return result;
     }
   }
 }

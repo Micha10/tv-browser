@@ -28,6 +28,12 @@ import util.i18n.Localizer;
 public class FilterSelectionPanel extends JPanel {
   private static final Localizer LOCALIZER = Localizer.getLocalizerFor(FilterSelectionPanel.class);
   private JComboBox<ProgramFilter> mFilterBox;
+  private UserFilter mNewFilter;
+  private ProgramFilter mLastSelectedFilter;
+  
+  public static String getNewFilterName() {
+    return LOCALIZER.ellipsisMsg("createFilter","Create new filter");
+  }
   
   /**
    * Creates an instance of this class.
@@ -49,6 +55,7 @@ public class FilterSelectionPanel extends JPanel {
     setLayout(new FormLayout("default,2dlu,default,2dlu,default","default"));
     
     mFilterBox = new JComboBox<ProgramFilter>();
+    mNewFilter = new UserFilter(getNewFilterName());
     
     if(selectedFilter == null) {
       selectedFilter = FilterManagerImpl.getInstance().getDefaultFilter();
@@ -68,6 +75,8 @@ public class FilterSelectionPanel extends JPanel {
       }
     }
     
+    mFilterBox.addItem(mNewFilter);
+    
     add(new JLabel(label != null ? label : LOCALIZER.msg("filterLabel", "Filter:")), CC.xy(1, 1));
     add(mFilterBox, CC.xy(3, 1));
     
@@ -76,14 +85,40 @@ public class FilterSelectionPanel extends JPanel {
       edit.setEnabled(selectedFilter instanceof UserFilter);
       edit.addActionListener(e -> {
         UserFilter filter = (UserFilter)mFilterBox.getSelectedItem();
-        new EditFilterDlg(UiUtilities.getLastModalChildOf(MainFrame.getInstance()), FilterList.getInstance(), filter, true);
+        boolean filterNew = filter.equals(mNewFilter);
         
-        FilterTreeModel.getInstance().fireFilterTouched(filter);
+        if(filterNew) {
+          filter = new UserFilter("");
+        }
+        
+        EditFilterDlg dlg = new EditFilterDlg(UiUtilities.getLastModalChildOf(MainFrame.getInstance()), FilterList.getInstance(), filter, true);
+        
+        if(dlg.getOkWasPressed()) {
+          if(filterNew) {
+            FilterTreeModel.getInstance().addFilter(filter);
+            FilterList.getInstance().store();
+            mFilterBox.insertItemAt(filter, mFilterBox.getItemCount()-1);
+            mFilterBox.setSelectedItem(filter);
+          }
+          else {
+            FilterTreeModel.getInstance().fireFilterTouched(filter);
+          }
+        } else if(filterNew) {
+          mFilterBox.setSelectedItem(mLastSelectedFilter);
+        }
       });
       
       mFilterBox.addItemListener(e -> {
         if(e.getStateChange() == ItemEvent.SELECTED) {
           edit.setEnabled(mFilterBox.getSelectedItem() instanceof UserFilter);
+          
+          if(mFilterBox.getSelectedItem().equals(mNewFilter)) {
+            mFilterBox.setPopupVisible(false);
+            edit.doClick();
+          }
+        }
+        else {
+          mLastSelectedFilter = (ProgramFilter)e.getItem();
         }
       });
       
@@ -98,5 +133,17 @@ public class FilterSelectionPanel extends JPanel {
    */
   public ProgramFilter getSelectedFilter() {
     return (ProgramFilter)mFilterBox.getSelectedItem();
+  }
+  
+  @Override
+  public void setEnabled(boolean enabled) {
+    for(int i = 0; i < getComponentCount(); i++) {
+      if(enabled && getComponent(i) instanceof JButton) {
+        getComponent(i).setEnabled(mFilterBox.getSelectedItem() instanceof UserFilter);
+      }
+      else {
+        getComponent(i).setEnabled(enabled);
+      }
+    }
   }
 }

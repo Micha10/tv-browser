@@ -75,6 +75,7 @@ import tvbrowser.core.filters.ParserException;
 import tvbrowser.core.filters.UserFilter;
 import util.i18n.Localizer;
 import util.ui.DragAndDropMouseListener;
+import util.ui.FilterSelectionPanel;
 import util.ui.ListDragAndDropHandler;
 import util.ui.ListDropAction;
 import util.ui.UiUtilities;
@@ -317,24 +318,26 @@ public class EditFilterDlg extends JDialog implements ActionListener, DocumentLi
   
 
   void updateBtns() {
-    boolean validRule = true;
+    boolean validRule = !mFilterRuleTF.getText().isBlank();
     
-    try {
-      UserFilter.testTokenTree(mFilterRuleTF.getText(),false);
-      mFilterRuleErrorLb.setForeground(UIManager.getColor("Label.foreground"));
-      mFilterRuleErrorLb.setText(LOCALIZER.msg("ruleExample",
-      "example: component1 or (component2 and not component3)"));
-    } catch (ParserException e) {
-      mFilterRuleErrorLb.setForeground(Color.red);
-      mFilterRuleErrorLb.setText(e.getMessage());
-      validRule = false;
-    }
-
-    if(mFilterRuleTF.hasFocus()) {
-      fillFilterConstruction();
+    if(validRule) {
+      try {
+        UserFilter.testTokenTree(mFilterRuleTF.getText(),false);
+        mFilterRuleErrorLb.setForeground(UIManager.getColor("Label.foreground"));
+        mFilterRuleErrorLb.setText(LOCALIZER.msg("ruleExample",
+        "example: component1 or (component2 and not component3)"));
+      } catch (ParserException e) {
+        mFilterRuleErrorLb.setForeground(Color.red);
+        mFilterRuleErrorLb.setText(e.getMessage());
+        validRule = false;
+      }
+    
+      if(mFilterRuleTF.hasFocus()) {
+        fillFilterConstruction();
+      }
     }
     
-    mOkBtn.setEnabled(StringUtils.isNotBlank(mFilterNameTF.getText()) && mFilterComponent.getList().getModel().getSize() > 0 && validRule);
+    mOkBtn.setEnabled(StringUtils.isNotBlank(mFilterNameTF.getText().strip()) && !mFilterNameTF.getText().strip().equals(FilterSelectionPanel.getNewFilterName()) && mFilterComponent.getList().getModel().getSize() > 0 && validRule);
     mFilterHighlight.setEnabled(mOkBtn.isEnabled());
   }
 
@@ -345,7 +348,7 @@ public class EditFilterDlg extends JDialog implements ActionListener, DocumentLi
       mOkWasPressed = true;
       
       if(mFromFilterList) {
-        String filterName = mFilterNameTF.getText();
+        String filterName = mFilterNameTF.getText().strip();
         if (!filterName.equalsIgnoreCase(mFilterName) && mFilterList.containsFilter(filterName)) {
           JOptionPane
               .showMessageDialog(this, LOCALIZER.msg("alreadyExists", "Filter '{0}' already exists.", filterName));
