@@ -113,7 +113,7 @@ public final class IDontWant2See extends Plugin implements AWTEventListener {
   private static final String DONT_WANT_TO_SEE_IMPORT_SYNC_ADDRESS = "https://www.tvbrowser-app.de/data/scripts/syncDown.php?type=dontWantToSee";
   
   private static final boolean PLUGIN_IS_STABLE = true;
-  private static final Version PLUGIN_VERSION = new Version(0, 19, 0, PLUGIN_IS_STABLE);
+  private static final Version PLUGIN_VERSION = new Version(0, 19, 1, PLUGIN_IS_STABLE);
 
   private static final String RECEIVE_TARGET_EXCLUDE_EXACT = "target_exclude_exact";
 
@@ -468,7 +468,7 @@ public final class IDontWant2See extends Plugin implements AWTEventListener {
         String[] importExclusions = loadExclusions(conn.getInputStream(),false, "UTF-8");
           
         if(importExclusions.length > 0) {
-          updateExclusions(importExclusions);
+          updateExclusions(importExclusions, mSettings.getSearchList(), true);
         }
        // }
       }catch(Exception e) {e.printStackTrace();}
@@ -1003,9 +1003,7 @@ public final class IDontWant2See extends Plugin implements AWTEventListener {
     return "misc";
   }
   
-  void updateExclusions(String[] exclusions) {
-    ArrayList<IDontWant2SeeListEntry> entryList = mSettings.getSearchList();
-    
+  void updateExclusions(String[] exclusions, final ArrayList<IDontWant2SeeListEntry> entryList, boolean update) {
     int count = 0;
     
     for(String exclusion : exclusions) {
@@ -1021,8 +1019,11 @@ public final class IDontWant2See extends Plugin implements AWTEventListener {
     
     if(count > 0) {
       JOptionPane.showMessageDialog(UiUtilities.getLastModalChildOf(getParentFrame()), LOCALIZER.msg("importSuccess.msg","{0} were exclusions imported.",count), LOCALIZER.msg("importSuccess.title", "Import successful"), JOptionPane.INFORMATION_MESSAGE);
-      updateFilter(!mSettings.isSwitchToMyFilter());
-      exportAndroid();
+      
+      if(update) {
+        updateFilter(!mSettings.isSwitchToMyFilter());
+        exportAndroid();
+      }
     }
     else {
       JOptionPane.showMessageDialog(UiUtilities.getLastModalChildOf(getParentFrame()), LOCALIZER.msg("importNothing.msg","The import didn't contain any new exclusions."), LOCALIZER.msg("importNothing.title","Nothing to import"), JOptionPane.INFORMATION_MESSAGE);

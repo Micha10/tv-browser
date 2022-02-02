@@ -53,23 +53,7 @@ public class IDontWant2SeeSettingsTableModel extends AbstractTableModel {
     mLastChangedValue = lastEnteredExclusionString;
     mFilter = "";
     
-    for(IDontWant2SeeListEntry entry : entries) {
-      int index = mData.size();
-      
-      for(int i = mData.size() - 1; i >= 0; i--) {
-        if(mData.get(i).compareTo(entry) > 0) {
-          index = i;
-        }
-        else {
-          break;
-        }
-      }
-      
-      final IDontWant2SeeSettingsTableEntry tableEntry = new IDontWant2SeeSettingsTableEntry(entry);
-      
-      mData.add(index, tableEntry);
-      mDataFull.add(index, tableEntry);
-    }
+    addAll(entries);
   }
   
   public int getColumnCount() {
@@ -83,6 +67,33 @@ public class IDontWant2SeeSettingsTableModel extends AbstractTableModel {
   public boolean isCellEditable(final int row, final int column) {
     return column == 0;
   }
+  
+  void addAll(final ArrayList<IDontWant2SeeListEntry> entries) {
+    for(IDontWant2SeeListEntry entry : entries) {
+      addRow(entry);
+    }
+    
+    fireTableDataChanged();
+  }
+  
+  private void addRow(final IDontWant2SeeListEntry entry) {
+    int index = mData.size();
+    
+    for(int i = mData.size() - 1; i >= 0; i--) {
+      if(mData.get(i).compareTo(entry) > 0) {
+        index = i;
+      }
+      else {
+        break;
+      }
+    }
+    
+    final IDontWant2SeeSettingsTableEntry tableEntry = new IDontWant2SeeSettingsTableEntry(entry);
+    
+    mData.add(index, tableEntry);
+    mDataFull.add(index, tableEntry);
+  }
+  
   
   /**
    * Adds a new row to this table.
@@ -350,5 +361,10 @@ public class IDontWant2SeeSettingsTableModel extends AbstractTableModel {
       
       return 0;
     }
+  }
+  
+  void clear() {
+    mDataFull.clear();
+    fireTableDataChanged();
   }
 }

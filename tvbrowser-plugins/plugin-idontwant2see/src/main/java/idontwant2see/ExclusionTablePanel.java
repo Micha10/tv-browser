@@ -87,6 +87,7 @@ public class ExclusionTablePanel extends JPanel {
   private JTable mTable;
   private IDontWant2SeeSettingsTableModel mTableModel;
   private static final Localizer mLocalizer = IDontWant2See.LOCALIZER;
+  private final JButton mExportBtn;
   
   protected ExclusionTablePanel(final IDontWant2SeeSettings settings) {
     mTableModel = new IDontWant2SeeSettingsTableModel(settings.getSearchList(),settings.getLastEnteredExclusionString());
@@ -160,6 +161,7 @@ public class ExclusionTablePanel extends JPanel {
       public void actionPerformed(final ActionEvent e) {
         mTableModel.addRow();
         mTable.scrollRectToVisible(mTable.getCellRect(mTableModel.getRowCount()-1,0,true));
+        mExportBtn.setEnabled(true);
       }
     });
     
@@ -214,6 +216,7 @@ public class ExclusionTablePanel extends JPanel {
           
           clearFilter.setEnabled(!filter.getText().trim().isEmpty());
           mPreviousText = filter.getText();
+          mExportBtn.setEnabled(mTable.getRowCount() > 0);
         }
       }
     });
@@ -313,9 +316,10 @@ public class ExclusionTablePanel extends JPanel {
     pb.add(delete, CC.xy(5,y++));
     pb.add(UiUtilities.createHelpTextArea(mLocalizer.msg("settings.help",
     "To edit a value double click a cell. You can use wildcard * to search for any text.")), CC.xyw(1,++y,5));
-    
-    final JButton exportBtn = new JButton(mLocalizer.msg("settings.export", "Export exclusions to text file"));
-    exportBtn.addActionListener(new ActionListener() {
+
+    mExportBtn = new JButton(mLocalizer.msg("settings.export", "Export exclusions to text file"));
+    mExportBtn.setEnabled(mTable.getRowCount() > 0);
+    mExportBtn.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
         JFileChooser chooser = new JFileChooser(System.getProperty("user.home"));
@@ -387,9 +391,14 @@ public class ExclusionTablePanel extends JPanel {
               case Launch.OS_MAC: macos.setSelected(true);break;
               case Launch.OS_OTHER: other.setSelected(true);break;
             }
+
+            ArrayList<IDontWant2SeeListEntry> entryList = mTableModel.getChangedList();
             
             JOptionPane.showConfirmDialog(UiUtilities.getLastModalChildOf(IDontWant2See.getInstance().getSuperFrame()), new Object[] {mLocalizer.msg("import.os.msg","On which OS was the import file created?"),win,linux,macos,other,dontKnow}, mLocalizer.msg("import.os.title","Select OS"), JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE);
-            IDontWant2See.getInstance().updateExclusions(IDontWant2See.getInstance().loadExclusions(in, true, win.isSelected() ? "ISO-8859-15" : "UTF-8"));
+            IDontWant2See.getInstance().updateExclusions(IDontWant2See.getInstance().loadExclusions(in, true, win.isSelected() ? "ISO-8859-15" : "UTF-8"), entryList, false);
+            
+            mTableModel.clear();
+            mTableModel.addAll(settings.getSearchList());
           }catch(Exception ioe) {
             ioe.printStackTrace();
           }
@@ -398,7 +407,7 @@ public class ExclusionTablePanel extends JPanel {
     });
     
     final PanelBuilder imExport = new PanelBuilder(new FormLayout("default,10dlu:grow,default","default"));
-    imExport.add(exportBtn, CC.xy(1,1));
+    imExport.add(mExportBtn, CC.xy(1,1));
     imExport.add(importBtn, CC.xy(3,1));
     
     y+=2;
@@ -482,6 +491,8 @@ public class ExclusionTablePanel extends JPanel {
     if(mTable.getSelectedRow() >= 0) {
       mTable.scrollRectToVisible(mTable.getCellRect(mTable.getSelectedRow(), 0, true));
     }
+    
+    mExportBtn.setEnabled(mTable.getRowCount() > 0);
   }
   
   protected void saveSettings(IDontWant2SeeSettings settings) {try {
