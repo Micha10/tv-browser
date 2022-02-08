@@ -165,14 +165,17 @@ public class IDontWant2SeeSettingsTab implements SettingsTab {
       mAdditionalFilter.addItemListener(new ItemListener() {
         @Override
         public void itemStateChanged(ItemEvent e) {
-          for(int i = 0; i < mFilterSelectionPanel.getComponentCount(); i++) {
-            mFilterSelectionPanel.getComponent(i).setEnabled(e.getStateChange() == ItemEvent.SELECTED);
+          try {
+            mFilterSelectionPanel.getClass().getDeclaredMethod("setEnabled",boolean.class).invoke(mFilterSelectionPanel, e.getStateChange() == ItemEvent.SELECTED);
+          } catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e1) {
+            for(int i = 0; i < mFilterSelectionPanel.getComponentCount(); i++) {
+              mFilterSelectionPanel.getComponent(i).setEnabled(e.getStateChange() == ItemEvent.SELECTED);
+            }
           }
         }
       });
     } catch (ClassNotFoundException | NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
+      // ignore
     }
     
     y = 2;
