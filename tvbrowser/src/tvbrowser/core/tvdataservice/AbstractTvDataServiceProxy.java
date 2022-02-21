@@ -110,4 +110,13 @@ public abstract class AbstractTvDataServiceProxy implements TvDataServiceProxy {
     return true;
   }
 
+  @Override
+  public final String getFileName() {
+    return getId()+".service";
+  }
+  
+  @Override
+  public String toString() {
+    return getInfo().getName();
+  }
 }

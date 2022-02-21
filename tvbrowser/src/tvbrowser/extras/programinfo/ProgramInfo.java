@@ -85,7 +85,7 @@ public class ProgramInfo {
   
   private ProgramInfo() {
     mInstance = this;
-    mConfigurationHandler = new ConfigurationHandler(DATAFILE_PREFIX);
+    mConfigurationHandler = new ConfigurationHandler(getName(),DATAFILE_PREFIX);
     loadSettings();
     LookAndFeelAddons.setTrackingLookAndFeelChanges(true);
   }

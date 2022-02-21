@@ -86,7 +86,7 @@ public class SearchPlugin {
    */
   private SearchPlugin() {
     mAlwaysSearchExpert = false;
-    mConfigurationHandler = new ConfigurationHandler(DATAFILE_PREFIX);
+    mConfigurationHandler = new ConfigurationHandler(getName(),DATAFILE_PREFIX);
     load();
   }
   

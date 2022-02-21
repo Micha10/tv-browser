@@ -29,12 +29,10 @@ import java.awt.Frame;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
-import java.util.Properties;
 import java.util.logging.Logger;
 
 import javax.swing.Action;
@@ -68,6 +66,7 @@ import tvbrowser.core.PluginLoader;
 import tvbrowser.core.Settings;
 import tvbrowser.core.filters.GenericFilterMap;
 import tvbrowser.core.filters.UserFilter;
+import tvbrowser.core.settings.PluginSettings;
 import tvbrowser.ui.mainframe.MainFrame;
 import tvdataservice.MutableChannelDayProgram;
 import util.exc.TvBrowserException;
@@ -178,14 +177,11 @@ public class JavaPluginProxy extends AbstractPluginProxy {
 
     // Get all the file names
     File oldDatFile = new File(userDirectory, pluginClassName + ".dat");
-    File oldPropFile = new File(userDirectory, pluginClassName + ".prop");
     File datFile = new File(userDirectory, getId() + ".dat");
-    File propFile = new File(userDirectory, getId() + ".prop");
-
+    
     // Rename the old data and settings file if they still exist
     oldDatFile.renameTo(datFile);
-    oldPropFile.renameTo(propFile);
-
+    
     // load plugin data
     if (datFile.exists()) {
       ObjectInputStream in = null;
@@ -223,30 +219,7 @@ public class JavaPluginProxy extends AbstractPluginProxy {
     }
 
     // load plugin settings
-    BufferedInputStream in = null;
-    try {
-      if (propFile.exists()) {
-        Properties prop = new Properties();
-        in = new BufferedInputStream(new FileInputStream(propFile), 0x4000);
-        prop.load(in);
-        in.close();
-        mPlugin.loadSettings(prop);
-      } else {
-        mPlugin.loadSettings(new Properties());
-      }
-    }
-    catch (Throwable thr) {
-      throw new TvBrowserException(getClass(), "error.4",
-          "Loading settings for plugin {0} failed.\n({1})",
-          getInfo().getName(), propFile.getAbsolutePath(), thr);
-    }
-    finally {
-      if (in != null) {
-        try { in.close(); } catch (IOException exc) {
-          // ignore
-        }
-      }
-    }
+    PluginSettings.loadSettings(mPlugin);
   }
 
 
@@ -290,35 +263,8 @@ public class JavaPluginProxy extends AbstractPluginProxy {
             "Saving data for plugin {0} failed.\n({1})",
             getInfo().getName(), tmpDatFile.getAbsolutePath(), thr);
       }
-  
-      // save the plugin settings in a temp file
-      FileOutputStream fOut = null;
-      File tmpPropFile = new File(userDirectory, getId() + ".prop.temp");
-      try {
-        Properties prop = mPlugin.storeSettings();
-        if (prop != null) {
-          fOut = new FileOutputStream(tmpPropFile);
-          prop.store(fOut, "Settings for plugin " + getInfo().getName());
-          fOut.close();
-        }
-  
-        // Saving succeeded -> Delete the old file and rename the temp file
-        File propFile = new File(userDirectory, getId() + ".prop");
-        propFile.delete();
-        tmpPropFile.renameTo(propFile);
-      }
-      catch (Throwable thr) {
-        throw new TvBrowserException(getClass(), "error.6",
-            "Saving settings for plugin {0} failed.\n({1})",
-            getInfo().getName(), tmpPropFile.getAbsolutePath(), thr);
-      }
-      finally {
-        if (fOut != null) {
-          try { fOut.close(); } catch (IOException exc) {
-            // ignore
-          }
-        }
-      }
+      
+      PluginSettings.storeSettings(mPlugin);
     }
   }
 

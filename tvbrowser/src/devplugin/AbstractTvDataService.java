@@ -31,6 +31,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Properties;
 
+import tvbrowser.core.settings.PluginSettings;
+import tvbrowser.core.tvdataservice.TvDataServiceProxyManager;
 import tvdataservice.SettingsPanel;
 import tvdataservice.TvDataUpdateManager;
 import util.exc.TvBrowserException;
@@ -360,5 +362,15 @@ public abstract class AbstractTvDataService {
    */
   public boolean hasToSaveSettings() {
     return true;
+  }
+  
+  /**
+   *  Says the TV data service proxy manager to store the settings of this data service.
+   *  <p>
+   *  @return <code>True</code> if the settings could be saved successfully.
+   *  @since 4.2.5
+   */
+  protected final boolean saveMe() {
+    return PluginSettings.storeSettings(TvDataServiceProxyManager.getInstance().findDataServiceById(getId()));
   }
 }

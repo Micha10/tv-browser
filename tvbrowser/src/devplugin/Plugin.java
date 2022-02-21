@@ -41,6 +41,7 @@ import javax.swing.ImageIcon;
 import tvbrowser.core.Settings;
 import tvbrowser.core.icontheme.IconLoader;
 import tvbrowser.core.plugin.PluginProxyManager;
+import tvbrowser.core.settings.PluginSettings;
 import tvbrowser.ui.mainframe.toolbar.ToolBar;
 import tvdataservice.MutableChannelDayProgram;
 import util.io.stream.ObjectInputStreamProcessor;
@@ -66,7 +67,7 @@ import util.ui.TVBrowserIcons;
  * @author Martin Oberhauser
  * @author Til Schneider, www.murfman.de
  */
-abstract public class Plugin implements Marker, ContextMenuIf, ProgramReceiveIf {
+abstract public class Plugin implements Marker, ContextMenuIf, ProgramReceiveIf, PluginSettings.Storing {
   public static final String CATEGORY_ALL = "all";
   public static final String CATEGORY_REMOTE_CONTROL_SOFTWARE = "remote_soft";
   public static final String CATEGORY_REMOTE_CONTROL_HARDWARE = "remote_hard";
@@ -1207,5 +1208,10 @@ abstract public class Plugin implements Marker, ContextMenuIf, ProgramReceiveIf 
    */
   public boolean hasToSaveSettings() {
     return true;
+  }
+  
+  @Override
+  public final String getFileName() {
+    return getId()+".prop";
   }
 }

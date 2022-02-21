@@ -2465,6 +2465,8 @@ tvbrowser/src/tvbrowser/core/search/regexsearch/regexsearch_hr.properties -text 
 tvbrowser/src/tvbrowser/core/search/regexsearch/regexsearch_pl.properties -text svneol=unset#text/plain
 tvbrowser/src/tvbrowser/core/settings/DeferredFontProperty.java -text
 tvbrowser/src/tvbrowser/core/settings/JGoodiesThemeProperty.java -text
+tvbrowser/src/tvbrowser/core/settings/PluginSettings.java -text svneol=unset#text/plain
+tvbrowser/src/tvbrowser/core/settings/settings.properties -text svneol=unset#text/plain
 tvbrowser/src/tvbrowser/core/tvdataservice/tvdataservice_cs.properties -text svneol=unset#text/plain
 tvbrowser/src/tvbrowser/core/tvdataservice/tvdataservice_da.properties -text
 tvbrowser/src/tvbrowser/core/tvdataservice/tvdataservice_el.properties -text

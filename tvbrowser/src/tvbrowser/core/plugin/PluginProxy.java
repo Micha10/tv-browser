@@ -27,7 +27,6 @@ package tvbrowser.core.plugin;
 
 import javax.swing.Icon;
 
-import tvdataservice.MutableProgram;
 import devplugin.ActionMenu;
 import devplugin.AfterDataUpdateInfoPanel;
 import devplugin.Channel;
@@ -43,6 +42,7 @@ import devplugin.PluginsProgramFilter;
 import devplugin.Program;
 import devplugin.ProgramInfo;
 import devplugin.ProgramRatingIf;
+import tvdataservice.MutableProgram;
 
 /**
  * Encapsulates a plugin and manages the access to it.

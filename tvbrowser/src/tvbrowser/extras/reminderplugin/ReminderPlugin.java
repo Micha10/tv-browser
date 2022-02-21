@@ -247,7 +247,7 @@ public class ReminderPlugin {
     
     mCenterPanel = UiUtilities.createPersonaBackgroundPanel();
     mClientPluginTargets = new ProgramReceiveTarget[0];
-    mConfigurationHandler = new ConfigurationHandler(getReminderPluginId());
+    mConfigurationHandler = new ConfigurationHandler(getName(),getReminderPluginId());
     loadSettings();
     mReminderList = new ReminderList();
     mReminderList.setReminderTimerListener(new ReminderTimerListener(mSettings, mReminderList));

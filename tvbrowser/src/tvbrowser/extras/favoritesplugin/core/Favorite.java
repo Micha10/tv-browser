@@ -36,6 +36,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import devplugin.Channel;
 import devplugin.Date;
@@ -76,6 +77,7 @@ public abstract class Favorite {
   private boolean mProvideFilter;
   private long mFilterKey;
   private int mDefaultReminderMinutes;
+  private AtomicInteger mLoadDeferredProgramsThreadCount;
 
   /**
    * unsorted list of blacklisted (non-favorite) programs
@@ -83,6 +85,7 @@ public abstract class Favorite {
   private ArrayList<Program> mBlackList;
 
   public Favorite() {
+    mLoadDeferredProgramsThreadCount = new AtomicInteger(0);
     mReminderConfiguration = new ReminderConfiguration(FavoritesPlugin.getInstance().isAutoSelectingReminder() ? new String[] {ReminderConfiguration.REMINDER_DEFAULT} : new String[0]);
     mLimitationConfiguration = new LimitationConfiguration();
     mPrograms = new ArrayList<Program>(0);
@@ -200,12 +203,14 @@ public abstract class Favorite {
       deferredPrograms.add(new DeferredProgram(version, in));      
     }
     
-    Thread loadDeferredPrograms = new Thread("LOAD DEFERRED FAVORITE PROGRAMS") {
+    Thread loadDeferredProgramsThread = new Thread("LOAD DEFERRED FAVORITE PROGRAMS") {
       @Override
       public void run() {
+        mLoadDeferredProgramsThreadCount.incrementAndGet();
+        
         for(DeferredProgram d : deferredPrograms) {
           Program[] program = d.getPrograms();
-          if (d != null) {
+          if (program != null) {
             for(Program p : program) {
               if(p != null && !list.contains(p)) {
                 list.add(p);
@@ -213,9 +218,11 @@ public abstract class Favorite {
             }
           }
         }
+        
+        mLoadDeferredProgramsThreadCount.decrementAndGet();
       }
     };
-    loadDeferredPrograms.start();
+    loadDeferredProgramsThread.start();
   }
 
   public abstract String getTypeID();
@@ -291,7 +298,9 @@ public abstract class Favorite {
 
 
   public Program[] getPrograms() {
-    Program[] programs = mPrograms.toArray(new Program[mPrograms.size()]);
+    waitForDeferredPrograms();
+    
+    Program[] programs = mPrograms.toArray(new Program[0]);
     if (programs.length > 0) {
       Arrays.sort(programs, ProgramUtilities.getProgramComparator());
     }
@@ -300,6 +309,8 @@ public abstract class Favorite {
 
   public Program[] getNewPrograms() {
     mNewProgramsWasRequested = true;
+    
+    waitForDeferredPrograms();
 
     for(int i = mNewPrograms.size()-1; i >= 0; i--) {
       Program test = mNewPrograms.get(i);
@@ -833,6 +844,17 @@ public abstract class Favorite {
   public Program[] getWhiteListPrograms() {
     return getWhiteListPrograms(false);
   }
+  
+  private void waitForDeferredPrograms() {
+    while(mLoadDeferredProgramsThreadCount.get() > 0) {
+      try {
+        Thread.sleep(50);
+      } catch (InterruptedException e) {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+      }
+    }
+  }
 
   /**
    * @param onlyNotExpiredPrograms <code>true</code> if only not expired
@@ -840,6 +862,8 @@ public abstract class Favorite {
    * @return The programs that are not on the blacklist.
    */
   public Program[] getWhiteListPrograms(boolean onlyNotExpiredPrograms) {
+    waitForDeferredPrograms();
+    
     ArrayList<Program> tempProgramArr = new ArrayList<Program>();
 
     synchronized (mPrograms) {
@@ -861,6 +885,8 @@ public abstract class Favorite {
    * @return The programs that are on the blacklist.
    */
   public Program[] getBlackListPrograms() {
+    waitForDeferredPrograms();
+    
     if (mBlackList == null) {
       return new Program[0];
     }

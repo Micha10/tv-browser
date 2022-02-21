@@ -259,7 +259,7 @@ public class FavoritesPlugin {
     mExclusions = new Exclusion[0];
     mPendingFavorites = new ArrayList<PendingFilterLoader>(0);
     mClientPluginTargets = new ProgramReceiveTarget[0];
-    mConfigurationHandler = new ConfigurationHandler(DATAFILE_PREFIX);
+    mConfigurationHandler = new ConfigurationHandler(getName(), DATAFILE_PREFIX);
     load();
 
     TvDataBase.getInstance().addTvDataListener(new TvDataBaseListener() {

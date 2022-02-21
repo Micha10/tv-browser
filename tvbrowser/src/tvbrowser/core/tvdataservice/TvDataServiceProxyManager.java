@@ -26,15 +26,10 @@
 
 package tvbrowser.core.tvdataservice;
 
-import java.io.BufferedInputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Properties;
 
 import javax.swing.JFrame;
 
@@ -42,21 +37,14 @@ import devplugin.AbstractTvDataService;
 import devplugin.Version;
 import tvbrowser.core.Settings;
 import tvbrowser.core.plugin.PluginManagerImpl;
-import util.exc.ErrorHandler;
-import util.io.stream.OutputStreamProcessor;
-import util.io.stream.StreamUtilities;
+import tvbrowser.core.settings.PluginSettings;
 
 
 /**
  * Manages the TvDataServices
  */
 public class TvDataServiceProxyManager {
-
   public static final String PLUGIN_DIRECTORY = "tvdataservice";
-
-  /** The localizer for this class. */
-  private static final util.i18n.Localizer mLocalizer
-      = util.i18n.Localizer.getLocalizerFor(TvDataServiceProxyManager.class);
 
   private static TvDataServiceProxyManager mInstance;
 
@@ -81,51 +69,6 @@ public class TvDataServiceProxyManager {
   public void registerTvDataService(TvDataServiceProxy service) {
      mProxyList.add(service);
   }
-
-  private void loadServiceSettings(TvDataServiceProxy service) {
-    File f=new File(Settings.getUserSettingsDirName(),service.getId()+".service");
-    if (f.exists()) {
-      try {
-        Properties p=new Properties();
-        BufferedInputStream in = new BufferedInputStream(new FileInputStream(f), 0x1000);
-        p.load(in);
-        in.close();
-        service.loadSettings(p);
-      } catch (IOException exc) {
-        String msg = mLocalizer.msg("error.3", "Loading settings for plugin {0} failed!\n({1})",
-            service.getInfo().getName(), f.getAbsolutePath(), exc);
-        ErrorHandler.handle(msg, exc);
-      }
-    }else{
-      service.loadSettings(new Properties());
-    }
-  }
-
-  private void storeServiceSettings(TvDataServiceProxy service) {
-    final Properties prop = service.storeSettings();
-    // don't ever delete settings file if prop is null
-    // since stored data might be needed but not saved again
-    if (prop!=null) {
-      String dir=Settings.getUserSettingsDirName();
-      File f=new File(dir);
-      if (!f.exists()) {
-        f.mkdir();
-      }
-      f=new File(dir,service.getId()+".service");
-      try {
-        StreamUtilities.outputStream(f, new OutputStreamProcessor() {
-          public void process(OutputStream outputStream) throws IOException {
-            prop.store(outputStream, "settings");
-          }
-        });
-      } catch (IOException exc) {
-        String msg = mLocalizer.msg("error.4", "Saving settings for plugin {0} failed!\n({1})",
-            service.getInfo().getName(), f.getAbsolutePath(), exc);
-        ErrorHandler.handle(msg, exc);
-      }
-    }
-  }
-
 
   /**
    * Changes the TvDataService working directory to the specified folder.
@@ -161,7 +104,7 @@ public class TvDataServiceProxyManager {
 
       for (TvDataServiceProxy proxy : proxies) {
         if (list.size() == 0 || list.contains(proxy.getId())) {
-          loadServiceSettings(proxy);
+          PluginSettings.loadSettings(proxy);
         }
       }
     } catch (Throwable t) {
@@ -176,7 +119,7 @@ public class TvDataServiceProxyManager {
 
   public void shutDown() {
     for (TvDataServiceProxy proxy : getDataServices()) {
-      storeServiceSettings(proxy);
+      PluginSettings.storeSettings(proxy);
     }
   }
 
@@ -223,7 +166,6 @@ public class TvDataServiceProxyManager {
       for (TvDataServiceProxy proxy : getDataServices()) {
         proxy.setParent(frame);
       }
-
   }
 
   public void fireTvBrowserStartFinished() {
@@ -248,14 +190,9 @@ public class TvDataServiceProxyManager {
       }
       List<String> list = Arrays.asList(subscribedServices);
       
-      // load cleverepg last, because it uses network connections during setup
-      for (int run = 1; run <=2 ; run++) {
-        for (TvDataServiceProxy proxy : getDataServices()) {
-          if (proxy.getId().contains("cleverepg") == (run == 2)) {
-            if (!list.contains(proxy.getId())) {
-              loadServiceSettings(proxy);
-            }
-          }
+      for (TvDataServiceProxy proxy : getDataServices()) {
+        if (!list.contains(proxy.getId())) {
+          PluginSettings.loadSettings(proxy);
         }
       }
     } catch (Throwable t) {

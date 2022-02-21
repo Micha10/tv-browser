@@ -29,7 +29,6 @@ package tvbrowser.extras.common;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -37,6 +36,7 @@ import java.util.Properties;
 import java.util.logging.Logger;
 
 import tvbrowser.core.Settings;
+import tvbrowser.core.settings.PluginSettings;
 import util.io.stream.ObjectOutputStreamProcessor;
 import util.io.stream.StreamUtilities;
 
@@ -44,15 +44,17 @@ import util.io.stream.StreamUtilities;
 /**
  * ConfigurationHandler is used to load and store configurations.
  */
-public class ConfigurationHandler {
+public class ConfigurationHandler implements PluginSettings.Storing {
   private static final Logger LOGGER = Logger.getLogger(ConfigurationHandler.class.getName());
 
   private String mFilePrefix;
+  private String mName;
+  private Properties mProp;
 
-  public ConfigurationHandler(String filePrefix) {
+  public ConfigurationHandler(String name, String filePrefix) {
+    mName = name;
     mFilePrefix = filePrefix;
   }
-
 
   public void loadData(DataDeserializer deserializer) throws IOException {
     String userDirectoryName = Settings.getUserSettingsDirName();
@@ -120,61 +122,35 @@ public class ConfigurationHandler {
     datFile.renameTo(oldVersion);
     tmpDatFile.renameTo(datFile);
   }
-
+  
   public Properties loadSettings() throws IOException {
-    String userDirectoryName = Settings.getUserSettingsDirName();
-    File propFile = new File(userDirectoryName, "java." + mFilePrefix + ".prop");
-    BufferedInputStream in = null;
-    try {
-      if (propFile.exists()) {
-        Properties prop = new Properties();
-        in = new BufferedInputStream(new FileInputStream(propFile), 0x4000);
-        prop.load(in);
-        in.close();
-        return prop;
-      } else {
-        return new Properties();
-      }
-    }
-    catch (IOException thr) {
-      throw new IOException("Could not read settings from "+propFile.getAbsolutePath(), thr);
-    }
-    finally {
-      if (in != null) {
-        try { in.close(); } catch (IOException exc) {
-          // ignore
-        }
-      }
-    }
+    mProp = null;
+    PluginSettings.loadSettings(this);
+    return mProp;
   }
 
   public synchronized void storeSettings(Properties settings) throws IOException {
-    // save settings in a temp file
-    String userDirectoryName = Settings.getUserSettingsDirName();
-    FileOutputStream fOut = null;
-    File tmpPropFile = new File(userDirectoryName, mFilePrefix + ".prop.temp");
-    try {
-      if (settings != null) {
-        fOut = new FileOutputStream(tmpPropFile);
-        settings.store(fOut, "Settings");
-        fOut.close();
-      }
-
-      // Saving succeeded -> Delete the old file and rename the temp file
-      File propFile = new File(userDirectoryName, "java." + mFilePrefix + ".prop");
-      propFile.delete();
-      tmpPropFile.renameTo(propFile);
-    }
-    catch (Throwable thr) {
-      throw new IOException("Could not store settings to " + tmpPropFile.getAbsolutePath(), thr);
-    }
-    finally {
-      if (fOut != null) {
-        try { fOut.close(); } catch (IOException exc) {
-          // ignore
-        }
-      }
-    }
+    mProp = settings;
+    PluginSettings.storeSettings(this);
   }
 
+  @Override
+  public Properties storeSettings() {
+    return mProp;
+  }
+
+  @Override
+  public void loadSettings(Properties prop) {
+    mProp = prop;
+  }
+
+  @Override
+  public String getFileName() {
+    return "java." + mFilePrefix + ".prop";
+  }
+  
+  @Override
+  public String toString() {
+    return mName;
+  }
 }

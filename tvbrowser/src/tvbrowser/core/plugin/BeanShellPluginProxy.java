@@ -10,8 +10,6 @@ import javax.swing.Action;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 
-import tvdataservice.MutableChannelDayProgram;
-import util.exc.TvBrowserException;
 import bsh.Interpreter;
 import devplugin.ActionMenu;
 import devplugin.AfterDataUpdateInfoPanel;
@@ -34,6 +32,8 @@ import devplugin.ProgramReceiveTarget;
 import devplugin.ToolTipIcon;
 import devplugin.Version;
 import devplugin.beanshell.BeanShellScriptIf;
+import tvdataservice.MutableChannelDayProgram;
+import util.exc.TvBrowserException;
 
 
 /**

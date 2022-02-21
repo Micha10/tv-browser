@@ -39,12 +39,13 @@ import devplugin.PluginInfo;
 import devplugin.ProgressMonitor;
 import devplugin.Version;
 import tvbrowser.core.plugin.ButtonActionIf;
+import tvbrowser.core.settings.PluginSettings;
 import tvdataservice.SettingsPanel;
 import tvdataservice.TvDataUpdateManager;
 import util.exc.TvBrowserException;
 
 
-public interface TvDataServiceProxy extends ContextMenuIf, ButtonActionIf, InfoIf {
+public interface TvDataServiceProxy extends ContextMenuIf, ButtonActionIf, InfoIf, PluginSettings.Storing {
 
 
   /**

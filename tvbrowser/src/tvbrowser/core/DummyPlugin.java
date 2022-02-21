@@ -47,4 +47,9 @@ public final class DummyPlugin extends Plugin {
   static void setCurrentVersion(Version version) {
     mCurrentVersion = version;
   }
+  
+  @Override
+  public String toString() {
+    return "DummyPlugin";
+  }
 }
