@@ -17,9 +17,9 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  * SVN information:
- *     $Date: 2007-01-09 18:37:06 +0100 (Di, 09 Jan 2007) $
- *   $Author: bananeweizen $
- * $Revision: 2997 $
+ *     $Date$
+ *   $Author$
+ * $Revision$
  */
 package tvbrowser.core.settings;
 
