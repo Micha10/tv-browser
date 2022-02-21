@@ -26,27 +26,20 @@
 
 package tvbrowser.extras.common;
 
-import java.io.BufferedInputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.util.Properties;
-import java.util.logging.Logger;
 
 import tvbrowser.core.Settings;
 import tvbrowser.core.settings.PluginSettings;
-import util.io.stream.ObjectOutputStreamProcessor;
-import util.io.stream.StreamUtilities;
+import tvbrowser.core.settings.PluginSettings.Data;
+import util.exc.TvBrowserException;
 
 
 /**
  * ConfigurationHandler is used to load and store configurations.
  */
-public class ConfigurationHandler implements PluginSettings.Storing {
-  private static final Logger LOGGER = Logger.getLogger(ConfigurationHandler.class.getName());
-
+public class ConfigurationHandler implements PluginSettings.Preferences {
   private String mFilePrefix;
   private String mName;
   private Properties mProp;
@@ -56,71 +49,20 @@ public class ConfigurationHandler implements PluginSettings.Storing {
     mFilePrefix = filePrefix;
   }
 
-  public void loadData(DataDeserializer deserializer) throws IOException {
-    String userDirectoryName = Settings.getUserSettingsDirName();
-     File userDirectory = new File(userDirectoryName);
-     File datFile = new File(userDirectory, "java."+mFilePrefix + ".dat");
-
-     if (datFile.exists()) {
-       ObjectInputStream in = null;
-       try {
-         in = new ObjectInputStream(new BufferedInputStream(new FileInputStream(datFile), 0x4000));
-         deserializer.read(in);
-       }
-       catch (IOException e) {
-         File oldFile = new File(userDirectory, "java."+mFilePrefix + ".dat_old");
-         
-         if(oldFile.isFile()) {
-           try {
-             in = new ObjectInputStream(new BufferedInputStream(new FileInputStream(oldFile), 0x4000));
-             deserializer.read(in);
-             LOGGER.severe("Data file '" + datFile.getAbsolutePath() + "' could not be read. Read old version instead '" +oldFile.getAbsolutePath() + "'");
-           }
-           catch(ClassNotFoundException e1) {
-             throw new IOException("Could not read file "+datFile.getAbsolutePath(), e1);
-           }
-         }
-         else {
-           throw e;
-         }
-       }
-       catch (ClassNotFoundException e) {
-         throw new IOException("Could not read file "+datFile.getAbsolutePath(), e);
-       }
-       finally {
-         if (in != null) {
-           try { in.close(); } catch (IOException exc) {
-             // ignore
-           }
-         }
-       }
-     }
-
+  public void loadData(Data data) throws IOException {
+    try {
+      PluginSettings.readData(new File(Settings.getUserSettingsDirName()), data);
+    } catch (TvBrowserException e) {
+      throw new IOException(e.getMessage(),e);
+    }
   }
 
-  public synchronized void storeData(final DataSerializer serializer) throws IOException {
-    String userDirectoryName = Settings.getUserSettingsDirName();
-    File userDirectory = new File(userDirectoryName);
-
-    File tmpDatFile = new File(userDirectory, mFilePrefix + ".dat.temp");
-    File datFile = new File(userDirectory, "java." + mFilePrefix + ".dat");
-    File oldVersion = new File(userDirectory, "java." + mFilePrefix + ".dat_old");
-
-    StreamUtilities.objectOutputStream(tmpDatFile,
-        new ObjectOutputStreamProcessor() {
-          public void process(ObjectOutputStream out) throws IOException {
-            serializer.write(out);
-            out.close();
-          }
-        });
-
-    // Saving succeeded -> Delete the old file and rename the temp file
-    if(oldVersion.isFile()) {
-      oldVersion.delete();
+  public synchronized void storeData(final Data data) throws IOException {
+    try {
+      PluginSettings.writeData(new File(Settings.getUserSettingsDirName()), data, true);
+    } catch (TvBrowserException e) {
+      throw new IOException(e.getMessage(),e);
     }
-    
-    datFile.renameTo(oldVersion);
-    tmpDatFile.renameTo(datFile);
   }
   
   public Properties loadSettings() throws IOException {
@@ -145,12 +87,17 @@ public class ConfigurationHandler implements PluginSettings.Storing {
   }
 
   @Override
-  public String getFileName() {
-    return "java." + mFilePrefix + ".prop";
+  public String getBaseFileName() {
+    return "java." + mFilePrefix;
   }
   
   @Override
   public String toString() {
     return mName;
+  }
+
+  @Override
+  public boolean hasToSaveSettings() {
+    return true;
   }
 }

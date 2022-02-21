@@ -91,9 +91,8 @@ import tvbrowser.core.TvDataUpdater;
 import tvbrowser.core.filters.FilterManagerImpl;
 import tvbrowser.core.icontheme.IconLoader;
 import tvbrowser.core.plugin.PluginManagerImpl;
+import tvbrowser.core.settings.PluginSettings.Data;
 import tvbrowser.extras.common.ConfigurationHandler;
-import tvbrowser.extras.common.DataDeserializer;
-import tvbrowser.extras.common.DataSerializer;
 import tvbrowser.extras.common.InternalPluginProxyIf;
 import tvbrowser.extras.common.ReminderConfiguration;
 import tvbrowser.extras.favoritesplugin.core.ActorsFavorite;
@@ -130,7 +129,7 @@ import util.ui.persona.Persona;
  *
  * @author Til Schneider, www.murfman.de
  */
-public class FavoritesPlugin {
+public class FavoritesPlugin implements Data {
   public static final String ID_ACTION_MANAGE = "manageFavorites";
   public static final String ID_ACTION_SHOW_NEW = "showNewFavorites";
   
@@ -648,12 +647,8 @@ public class FavoritesPlugin {
     }
 
     try {
-      mConfigurationHandler.loadData(new DataDeserializer(){
-        public void read(ObjectInputStream in) throws IOException, ClassNotFoundException {
-          readData(in);
-          store();
-        }
-      });
+      mConfigurationHandler.loadData(this);
+      store();
     }catch(IOException e) {
       ErrorHandler.handle(LOCALIZER.msg("couldNotLoadFavorites","Could not load favorites"), e);
     }
@@ -661,11 +656,7 @@ public class FavoritesPlugin {
 
   public synchronized void store() {
     try {
-      mConfigurationHandler.storeData(new DataSerializer(){
-        public void write(ObjectOutputStream out) throws IOException {
-          writeData(out);
-        }
-      });
+      mConfigurationHandler.storeData(this);
     } catch (IOException e) {
       ErrorHandler.handle(LOCALIZER.msg("couldNotStoreFavorites","Could not store favorites"), e);
     }
@@ -686,7 +677,7 @@ public class FavoritesPlugin {
     return IconLoader.getInstance().getIconFromTheme(category, Icon, size);
   }
 
-  private void readData(ObjectInputStream in) throws IOException,
+  public void readData(ObjectInputStream in) throws IOException,
           ClassNotFoundException {
     int version = in.readInt();
 
@@ -961,7 +952,7 @@ public class FavoritesPlugin {
     mSettings.setProperty(KEY_SHOW_BLACK_LIST_ENTRIES,String.valueOf(value));
   }
 
-  private void writeData(ObjectOutputStream out) throws IOException {
+  public void writeData(ObjectOutputStream out) throws IOException {
     out.writeInt(9); // version
 
     FavoriteTreeModel.getInstance().storeData(out);
@@ -1864,5 +1855,15 @@ public class FavoritesPlugin {
     }
     
     return result;
+  }
+
+  @Override
+  public boolean hasToSaveSettings() {
+    return true;
+  }
+
+  @Override
+  public String getBaseFileName() {
+    return "java."+getFavoritesPluginId();
   }
 }

@@ -33,9 +33,6 @@ import java.io.StringWriter;
 import java.util.Properties;
 import java.util.logging.Logger;
 
-import tvdataservice.SettingsPanel;
-import tvdataservice.TvDataUpdateManager;
-import util.exc.TvBrowserException;
 import devplugin.ActionMenu;
 import devplugin.Channel;
 import devplugin.ChannelGroup;
@@ -44,6 +41,9 @@ import devplugin.PluginInfo;
 import devplugin.Program;
 import devplugin.ProgressMonitor;
 import devplugin.Version;
+import tvdataservice.SettingsPanel;
+import tvdataservice.TvDataUpdateManager;
+import util.exc.TvBrowserException;
 
 public class DefaultTvDataServiceProxy extends AbstractTvDataServiceProxy {
 
@@ -315,5 +315,10 @@ public class DefaultTvDataServiceProxy extends AbstractTvDataServiceProxy {
   @Override
   public void handleTvBrowserVersionUpdate(final Version previousVersion) {
     mTvDataService.handleTvBrowserVersionUpdate(previousVersion);
+  }
+  
+  @Override
+  public boolean hasToSaveSettings() {
+    return mTvDataService.hasToSaveSettings();
   }
 }

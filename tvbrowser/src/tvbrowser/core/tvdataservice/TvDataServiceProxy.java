@@ -45,7 +45,7 @@ import tvdataservice.TvDataUpdateManager;
 import util.exc.TvBrowserException;
 
 
-public interface TvDataServiceProxy extends ContextMenuIf, ButtonActionIf, InfoIf, PluginSettings.Storing {
+public interface TvDataServiceProxy extends ContextMenuIf, ButtonActionIf, InfoIf, PluginSettings.Preferences {
 
 
   /**

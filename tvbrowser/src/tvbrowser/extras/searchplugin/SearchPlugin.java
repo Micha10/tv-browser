@@ -43,9 +43,8 @@ import devplugin.PluginManager;
 import devplugin.Program;
 import devplugin.SettingsTab;
 import devplugin.ThemeIcon;
+import tvbrowser.core.settings.PluginSettings.Data;
 import tvbrowser.extras.common.ConfigurationHandler;
-import tvbrowser.extras.common.DataDeserializer;
-import tvbrowser.extras.common.DataSerializer;
 import tvbrowser.extras.common.InternalPluginProxyIf;
 import tvbrowser.ui.mainframe.MainFrame;
 import util.exc.ErrorHandler;
@@ -58,7 +57,7 @@ import util.ui.UiUtilities;
  *
  * @author Til Schneider, www.murfman.de
  */
-public class SearchPlugin {
+public class SearchPlugin implements Data {
 
   /**
    * The localizer for this class.
@@ -100,12 +99,7 @@ public class SearchPlugin {
 
   private void load() {
     try {
-      mConfigurationHandler.loadData(new DataDeserializer() {
-        public void read(ObjectInputStream in) throws IOException,
-            ClassNotFoundException {
-          readData(in);
-        }
-      });
+      mConfigurationHandler.loadData(this);
     } catch (IOException e) {
       ErrorHandler.handle(mLocalizer.msg("loadError",
           "Could not load search history"), e);
@@ -114,18 +108,14 @@ public class SearchPlugin {
 
   public void store() {
     try {
-      mConfigurationHandler.storeData(new DataSerializer() {
-        public void write(ObjectOutputStream out) throws IOException {
-          writeData(out);
-        }
-      });
+      mConfigurationHandler.storeData(this);
     } catch (IOException e) {
       ErrorHandler.handle(mLocalizer.msg("storeError",
           "Could not store search history"), e);
     }
   }
 
-  private void readData(ObjectInputStream in) throws IOException,
+  public void readData(ObjectInputStream in) throws IOException,
       ClassNotFoundException {
     int version = in.readInt();
     
@@ -192,7 +182,7 @@ public class SearchPlugin {
     }
   }
 
-  private void writeData(ObjectOutputStream out) throws IOException {
+  public void writeData(ObjectOutputStream out) throws IOException {
     out.writeInt(6); // version
 
     if (mSearchHistory == null) {
@@ -335,5 +325,15 @@ public class SearchPlugin {
   public static void setAlwaysSearchExpert(boolean value) {
     SearchPlugin.mAlwaysSearchExpert = value;
     SearchPlugin.getInstance().store();
+  }
+
+  @Override
+  public boolean hasToSaveSettings() {
+    return true;
+  }
+
+  @Override
+  public String getBaseFileName() {
+    return "java."+getSearchPluginId();
   }
 }

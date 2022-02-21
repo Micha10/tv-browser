@@ -26,12 +26,7 @@
 package tvbrowser.core.plugin;
 
 import java.awt.Frame;
-import java.io.BufferedInputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.logging.Logger;
 
@@ -72,8 +67,6 @@ import tvdataservice.MutableChannelDayProgram;
 import util.exc.TvBrowserException;
 import util.i18n.Localizer;
 import util.io.IOUtilities;
-import util.io.stream.ObjectOutputStreamProcessor;
-import util.io.stream.StreamUtilities;
 import util.ui.TVBrowserIcons;
 import util.ui.UiUtilities;
 
@@ -173,52 +166,7 @@ public class JavaPluginProxy extends AbstractPluginProxy {
    * @throws TvBrowserException If loading failed.
    */
   protected void doLoadSettings(File userDirectory) throws TvBrowserException {
-    String pluginClassName = mPlugin.getClass().getName();
-
-    // Get all the file names
-    File oldDatFile = new File(userDirectory, pluginClassName + ".dat");
-    File datFile = new File(userDirectory, getId() + ".dat");
-    
-    // Rename the old data and settings file if they still exist
-    oldDatFile.renameTo(datFile);
-    
-    // load plugin data
-    if (datFile.exists()) {
-      ObjectInputStream in = null;
-      try {
-        in = new ObjectInputStream(new BufferedInputStream(new FileInputStream(datFile), 0x4000));
-        mPlugin.readData(in);
-      }
-      catch (Throwable thr) {
-        File datFileBackup = new File(userDirectory, getId() + ".dat_old");
-        
-        if(datFileBackup.isFile()) {
-          try {
-            in = new ObjectInputStream(new BufferedInputStream(new FileInputStream(datFileBackup), 0x4000));
-            mPlugin.readData(in);
-            LOG.severe("Date file '" + datFile.getAbsolutePath() + "' could not be read. Read old file instead: '" + datFileBackup.getAbsolutePath() + "'.");
-          }catch(Throwable thr1) {
-            throw new TvBrowserException(getClass(), "error.3",
-                "Loading data for plugin {0} failed.\n({1})",
-                getInfo().getName(), datFileBackup.getAbsolutePath(), thr);            
-          }
-        }
-        else {        
-          throw new TvBrowserException(getClass(), "error.3",
-              "Loading data for plugin {0} failed.\n({1})",
-              getInfo().getName(), datFile.getAbsolutePath(), thr);
-        }
-      }
-      finally {
-        if (in != null) {
-          try { in.close(); } catch (IOException exc) {
-            // ignore
-          }
-        }
-      }
-    }
-
-    // load plugin settings
+    PluginSettings.readData(userDirectory, mPlugin);
     PluginSettings.loadSettings(mPlugin);
   }
 
@@ -230,42 +178,8 @@ public class JavaPluginProxy extends AbstractPluginProxy {
    * @throws TvBrowserException If saving failed.
    */
   protected void doSaveSettings(File userDirectory, boolean log) throws TvBrowserException {
-    if(mPlugin.hasToSaveSettings()) {
-      if(log) {
-        LOG.info("Storing plugin settings for " + getId() + "...");
-      }
-  
-      // save the plugin data in a temp file
-      File tmpDatFile = new File(userDirectory, getId() + ".dat.temp");
-      File oldDatFile = new File(userDirectory, getId() + ".dat_old");
-      
-      try {
-        StreamUtilities.objectOutputStream(tmpDatFile,
-            new ObjectOutputStreamProcessor() {
-              public void process(ObjectOutputStream out) throws IOException {
-                mPlugin.writeData(out);
-                out.close();
-              }
-            });
-  
-        // Saving succeeded -> Delete the old file and rename the temp file
-        File datFile = new File(userDirectory, getId() + ".dat");
-        
-        if(oldDatFile.isFile()) {
-          oldDatFile.delete();
-        }
-        
-        datFile.renameTo(oldDatFile);
-        tmpDatFile.renameTo(datFile);
-      }
-      catch(Throwable thr) {
-        throw new TvBrowserException(getClass(), "error.5",
-            "Saving data for plugin {0} failed.\n({1})",
-            getInfo().getName(), tmpDatFile.getAbsolutePath(), thr);
-      }
-      
-      PluginSettings.storeSettings(mPlugin);
-    }
+    PluginSettings.writeData(userDirectory, mPlugin, log);
+    PluginSettings.storeSettings(mPlugin);
   }
 
 
