@@ -108,7 +108,8 @@ public final class PluginSettings {
     return result;
   }
   
-  public static void readData(final File userDirectory, final Data data) throws TvBrowserException {
+  public static void readData(final Data data) throws TvBrowserException {
+    final File userDirectory = new File(Settings.getUserSettingsDirName());
     final String pluginClassName = data.getClass().getName();
 
     // Get all the file names
@@ -132,8 +133,14 @@ public final class PluginSettings {
     }
   }
   
-  public static void writeData(final File userDirectory, final Data data, boolean log) throws TvBrowserException {
+  public static void writeData(final Data data, boolean log) throws TvBrowserException {
     if(data.hasToSaveSettings()) {
+      final File userDirectory = new File(Settings.getUserSettingsDirName());
+      
+      if(!userDirectory.isDirectory()) {
+        userDirectory.mkdirs();
+      }
+      
       if(log) {
         LOG.info("Storing plugin settings for " + data.toString() + "...");
       }

@@ -91,9 +91,8 @@ import tvbrowser.core.TvDataUpdater;
 import tvbrowser.core.filters.FilterManagerImpl;
 import tvbrowser.core.icontheme.IconLoader;
 import tvbrowser.core.plugin.PluginManagerImpl;
-import tvbrowser.core.settings.PluginSettings.Data;
-import tvbrowser.extras.common.ConfigurationHandler;
 import tvbrowser.extras.common.InternalPluginProxyIf;
+import tvbrowser.extras.common.InternalPluginProxyList;
 import tvbrowser.extras.common.ReminderConfiguration;
 import tvbrowser.extras.favoritesplugin.core.ActorsFavorite;
 import tvbrowser.extras.favoritesplugin.core.AdvancedFavorite;
@@ -129,7 +128,7 @@ import util.ui.persona.Persona;
  *
  * @author Til Schneider, www.murfman.de
  */
-public class FavoritesPlugin implements Data {
+public class FavoritesPlugin {
   public static final String ID_ACTION_MANAGE = "manageFavorites";
   public static final String ID_ACTION_SHOW_NEW = "showNewFavorites";
   
@@ -153,8 +152,6 @@ public class FavoritesPlugin implements Data {
   private Properties mSettings = new Properties();
 
   private static final String DATAFILE_PREFIX = "favoritesplugin.FavoritesPlugin";
-
-  private ConfigurationHandler mConfigurationHandler;
 
   private PluginTreeNode mRootNode;
 
@@ -209,12 +206,14 @@ public class FavoritesPlugin implements Data {
   
   private AncestorListener mAncestorListener;
   private AtomicReference<Program[]> mLastFoundPrograms;
+  private boolean mHasToSaveSettings;
   
   /**
    * Creates a new instance of FavoritesPlugin.
    */
   private FavoritesPlugin() {
     mInstance = this;
+    mHasToSaveSettings = false;
     mLastFoundPrograms = new AtomicReference<Program[]>(new Program[0]);
     mDefaultProgramFieldTypeSelection = null;
     mRootNode = new PluginTreeNode(getName());
@@ -258,94 +257,6 @@ public class FavoritesPlugin implements Data {
     mExclusions = new Exclusion[0];
     mPendingFavorites = new ArrayList<PendingFilterLoader>(0);
     mClientPluginTargets = new ProgramReceiveTarget[0];
-    mConfigurationHandler = new ConfigurationHandler(getName(), DATAFILE_PREFIX);
-    load();
-
-    TvDataBase.getInstance().addTvDataListener(new TvDataBaseListener() {
-      public void dayProgramTouched(final ChannelDayProgram removedDayProgram,
-          final ChannelDayProgram addedDayProgram) {
-        if(mThreadPool == null) {
-          mThreadPool = Executors.newFixedThreadPool(Math.max(Runtime.getRuntime().availableProcessors(),3));
-        }
-
-        Runnable update = () -> {
-          Favorite[] favArray = null;
-          
-          if(removedDayProgram != null || addedDayProgram != null) {
-            favArray = FavoriteTreeModel.getInstance().getFavoriteArr();
-          }
-          
-          if(removedDayProgram != null) {
-            Iterator<Program> it1 = removedDayProgram.getPrograms();
-
-            while (it1.hasNext()) {
-              try {
-                Program p1 = it1.next();
-
-                for (Favorite fav1 : favArray) {
-                  fav1.removeProgram(p1);
-                }
-              }catch(Throwable t) {
-                ErrorHandler.handle("Error in removing program from Favorites",t);
-              }
-            }
-          }
-
-          if(addedDayProgram != null) {
-            Iterator<Program> it2 = addedDayProgram.getPrograms();
-            while (it2.hasNext()) {
-              final Program p2 = it2.next();
-
-              for (Favorite fav2 : favArray) {
-                try {
-                  fav2.tryToMatch(p2);
-                } catch (Throwable t) {
-                  ErrorHandler.handle("Error in searching programs for Favorites",t);
-                }
-              }
-            }
-          }
-        };
-
-        mThreadPool.execute(update);
-      }
-
-      public void dayProgramAdded(ChannelDayProgram prog) {}
-      public void dayProgramDeleted(ChannelDayProgram prog) {}
-      public void dayProgramAdded(MutableChannelDayProgram prog) {}
-    });
-
-    TvDataUpdater.getInstance().addTvDataUpdateListener(new TvDataUpdateListener() {
-      public void tvDataUpdateStarted(devplugin.Date until) {
-        if(mThreadPool == null) {
-          mThreadPool = Executors.newFixedThreadPool(Math.max(Runtime.getRuntime().availableProcessors(),3));
-        }
-        
-        mHasRightToSave = false;
-        mSendPluginsTable.clear();
-        
-        for (Favorite favorite : FavoriteTreeModel.getInstance().getFavoriteArr()) {
-          if(mInfoPanel == null) {
-            favorite.clearNewPrograms();
-          }
-          favorite.clearRemovedPrograms();
-        }
-      }
-
-      public void tvDataUpdateFinished() {
-        // only update the favorites if new data was downloaded
-        if (TvDataUpdater.getInstance().tvDataWasChanged()) {
-          if(mMangePanel != null) {
-            mMangePanel.invalidate();
-            mMangePanel.repaint();
-          }
-          if(!mSendPluginsTable.isEmpty()) {
-            sendToPlugins();
-          }
-          //handleTvDataUpdateFinished();
-        }
-      }
-    });
   }
 
   /**
@@ -637,47 +548,18 @@ public class FavoritesPlugin implements Data {
       }
     });
   }
-
-  private void load() {
-    try {
-      Properties prop = mConfigurationHandler.loadSettings();
-      loadSettings(prop);
-    }catch(IOException e) {
-      ErrorHandler.handle(LOCALIZER.msg("couldNotLoadFavoritesSettings","Could not load settings for favorites"), e);
-    }
-
-    try {
-      mConfigurationHandler.loadData(this);
-      store();
-    }catch(IOException e) {
-      ErrorHandler.handle(LOCALIZER.msg("couldNotLoadFavorites","Could not load favorites"), e);
-    }
-  }
-
+  
   public synchronized void store() {
-    try {
-      mConfigurationHandler.storeData(this);
-    } catch (IOException e) {
-      ErrorHandler.handle(LOCALIZER.msg("couldNotStoreFavorites","Could not store favorites"), e);
-    }
-
-    try {
-      if(mMangePanel != null) {
-        mSettings.setProperty(KEY_LAST_SELECTED_PROGRAM_FILTER, mMangePanel.getSelectedProgramFilterName());
-        mSettings.setProperty(KEY_SPLIT_PANE_POSITION, Integer.toString(mMangePanel.getSplitpanePosition()));
-      }
-      
-      mConfigurationHandler.storeSettings(mSettings);
-    } catch (IOException e) {
-      ErrorHandler.handle(LOCALIZER.msg("couldNotStoreFavoritesSettings","Could not store settings for favorites"), e);
-    }
+    mHasToSaveSettings = true;
+    InternalPluginProxyList.getInstance().storeData(FavoritesPluginProxy.getInstance(), true);
+    mHasToSaveSettings = false;
   }
 
   public static ImageIcon getIconFromTheme(String category, String Icon, int size) {
     return IconLoader.getInstance().getIconFromTheme(category, Icon, size);
   }
 
-  public void readData(ObjectInputStream in) throws IOException,
+  void readData(ObjectInputStream in) throws IOException,
           ClassNotFoundException {
     int version = in.readInt();
 
@@ -952,7 +834,7 @@ public class FavoritesPlugin implements Data {
     mSettings.setProperty(KEY_SHOW_BLACK_LIST_ENTRIES,String.valueOf(value));
   }
 
-  public void writeData(ObjectOutputStream out) throws IOException {
+  void writeData(ObjectOutputStream out) throws IOException {
     out.writeInt(9); // version
 
     FavoriteTreeModel.getInstance().storeData(out);
@@ -983,11 +865,106 @@ public class FavoritesPlugin implements Data {
    * Called by the host-application during start-up. Implements this method to
    * load your plugins settings from the file system.
    */
-  private void loadSettings(Properties settings) {
+  void loadSettings(Properties settings) {
     mSettings = settings;
     if (settings == null) {
       throw new IllegalArgumentException("settings is null");
     }
+    
+    TvDataBase.getInstance().addTvDataListener(new TvDataBaseListener() {
+      public void dayProgramTouched(final ChannelDayProgram removedDayProgram,
+          final ChannelDayProgram addedDayProgram) {
+        if(mThreadPool == null) {
+          mThreadPool = Executors.newFixedThreadPool(Math.max(Runtime.getRuntime().availableProcessors(),3));
+        }
+
+        Runnable update = () -> {
+          Favorite[] favArray = null;
+          
+          if(removedDayProgram != null || addedDayProgram != null) {
+            favArray = FavoriteTreeModel.getInstance().getFavoriteArr();
+          }
+          
+          if(removedDayProgram != null) {
+            Iterator<Program> it1 = removedDayProgram.getPrograms();
+
+            while (it1.hasNext()) {
+              try {
+                Program p1 = it1.next();
+
+                for (Favorite fav1 : favArray) {
+                  fav1.removeProgram(p1);
+                }
+              }catch(Throwable t) {
+                ErrorHandler.handle("Error in removing program from Favorites",t);
+              }
+            }
+          }
+
+          if(addedDayProgram != null) {
+            Iterator<Program> it2 = addedDayProgram.getPrograms();
+            while (it2.hasNext()) {
+              final Program p2 = it2.next();
+
+              for (Favorite fav2 : favArray) {
+                try {
+                  fav2.tryToMatch(p2);
+                } catch (Throwable t) {
+                  ErrorHandler.handle("Error in searching programs for Favorites",t);
+                }
+              }
+            }
+          }
+        };
+
+        mThreadPool.execute(update);
+      }
+
+      public void dayProgramAdded(ChannelDayProgram prog) {}
+      public void dayProgramDeleted(ChannelDayProgram prog) {}
+      public void dayProgramAdded(MutableChannelDayProgram prog) {}
+    });
+
+    TvDataUpdater.getInstance().addTvDataUpdateListener(new TvDataUpdateListener() {
+      public void tvDataUpdateStarted(devplugin.Date until) {
+        if(mThreadPool == null) {
+          mThreadPool = Executors.newFixedThreadPool(Math.max(Runtime.getRuntime().availableProcessors(),3));
+        }
+        
+        mHasRightToSave = false;
+        mSendPluginsTable.clear();
+        
+        for (Favorite favorite : FavoriteTreeModel.getInstance().getFavoriteArr()) {
+          if(mInfoPanel == null) {
+            favorite.clearNewPrograms();
+          }
+          favorite.clearRemovedPrograms();
+        }
+      }
+
+      public void tvDataUpdateFinished() {
+        // only update the favorites if new data was downloaded
+        if (TvDataUpdater.getInstance().tvDataWasChanged()) {
+          if(mMangePanel != null) {
+            mMangePanel.invalidate();
+            mMangePanel.repaint();
+          }
+          if(!mSendPluginsTable.isEmpty()) {
+            sendToPlugins();
+          }
+          //handleTvDataUpdateFinished();
+        }
+      }
+    });
+  }
+  
+  Properties storeSettings() {
+    if(mMangePanel != null) {
+      mSettings.setProperty(KEY_LAST_SELECTED_PROGRAM_FILTER, mMangePanel.getSelectedProgramFilterName());
+      mSettings.setProperty(KEY_SPLIT_PANE_POSITION, Integer.toString(mMangePanel.getSplitpanePosition()));
+    }
+    
+    return mSettings;
   }
 
   private int getIntegerSetting(Properties prop, String key, int defaultValue) {
@@ -1856,14 +1833,8 @@ public class FavoritesPlugin implements Data {
     
     return result;
   }
-
-  @Override
-  public boolean hasToSaveSettings() {
-    return true;
-  }
-
-  @Override
-  public String getBaseFileName() {
-    return "java."+getFavoritesPluginId();
+  
+  boolean hasToSaveSettings() {
+    return mHasToSaveSettings;
   }
 }

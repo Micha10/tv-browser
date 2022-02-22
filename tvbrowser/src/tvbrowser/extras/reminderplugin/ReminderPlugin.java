@@ -43,8 +43,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Properties;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.sound.midi.MidiSystem;
 import javax.sound.midi.Sequencer;
@@ -75,7 +73,6 @@ import devplugin.PluginCenterPanel;
 import devplugin.PluginCenterPanelWrapper;
 import devplugin.PluginTreeNode;
 import devplugin.Program;
-import devplugin.ProgramItem;
 import devplugin.ProgramReceiveIf;
 import devplugin.ProgramReceiveTarget;
 import devplugin.SettingsItem;
@@ -84,16 +81,12 @@ import tvbrowser.core.TvDataUpdateListener;
 import tvbrowser.core.TvDataUpdater;
 import tvbrowser.core.icontheme.IconLoader;
 import tvbrowser.core.plugin.PluginManagerImpl;
-import tvbrowser.extras.common.ConfigurationHandler;
 import tvbrowser.extras.common.InternalPluginProxyIf;
+import tvbrowser.extras.common.InternalPluginProxyList;
 import tvbrowser.ui.mainframe.MainFrame;
 import tvbrowser.ui.mainframe.toolbar.ToolBar;
-import util.exc.ErrorHandler;
-import util.io.IOUtilities;
-import util.io.stream.ObjectInputStreamProcessor;
-import util.io.stream.ObjectOutputStreamProcessor;
-import util.io.stream.StreamUtilities;
 import util.i18n.Localizer;
+import util.io.IOUtilities;
 import util.ui.TVBrowserIcons;
 import util.ui.UIThreadRunner;
 import util.ui.UiUtilities;
@@ -112,17 +105,11 @@ public class ReminderPlugin {
 
   private static KeyStroke STROKE_FRAME_REMINDERS_SHOW = null;
   
-  private static final java.util.logging.Logger mLog
-      = Logger.getLogger(ReminderPlugin.class.getName());
-
   private ReminderList mReminderList;
   private Properties mSettings;
 
   private static ReminderPlugin mInstance;
   private static String DATAFILE_PREFIX = "reminderplugin.ReminderPlugin";
-  private static String DATAFILE_NAME = "reminder.dat";
-
-  private ConfigurationHandler mConfigurationHandler;
 
   private static final PluginTreeNode mRootNode = new PluginTreeNode(LOCALIZER.msg("pluginName","Reminders"));
 
@@ -144,6 +131,8 @@ public class ReminderPlugin {
   
   private Thread mInfoCreationThread;
   private AfterDataUpdateInfoPanel mInfoPanel;
+  
+  private boolean mHasToSaveSettings;
 
   static KeyStroke getKeyStrokeFrameReminders() {
     if(STROKE_FRAME_REMINDERS_SHOW == null) {
@@ -177,6 +166,7 @@ public class ReminderPlugin {
   
   private ReminderPlugin() {
     mInstance = this;
+    mHasToSaveSettings = false;
     
     toggleTimer = new AbstractAction() {
       @Override
@@ -247,57 +237,8 @@ public class ReminderPlugin {
     
     mCenterPanel = UiUtilities.createPersonaBackgroundPanel();
     mClientPluginTargets = new ProgramReceiveTarget[0];
-    mConfigurationHandler = new ConfigurationHandler(getName(),getReminderPluginId());
-    loadSettings();
+    
     mReminderList = new ReminderList();
-    mReminderList.setReminderTimerListener(new ReminderTimerListener(mSettings, mReminderList));
-    loadReminderData();
-
-    TvDataUpdater.getInstance().addTvDataUpdateListener(
-        new TvDataUpdateListener() {
-          private boolean mCanCreateInfoPanel;
-          
-          public void tvDataUpdateStarted(Date until) {
-            mCanCreateInfoPanel = false;
-            mHasRightToSave = false;
-            mInfoCreationThread = new Thread() {
-              public void run() {
-                while(!mCanCreateInfoPanel) {
-                  try {
-                    sleep(500);
-                  } catch (InterruptedException e) {
-                    // Ignore
-                  }
-                }
-                
-                if (mSettings.getProperty("showRemovedDialog","true").compareTo("true") == 0) {
-                  Program[] removedPrograms = mReminderList.updatePrograms();
-                  
-                  if (removedPrograms.length > 0) {
-                    mInfoPanel = new RemovedProgramsPanel(removedPrograms);
-                  }
-                  else {
-                    mInfoPanel = null;
-                  }
-                } else {
-                  mReminderList.updatePrograms();
-                  mInfoPanel = null;
-                }
-
-                mHasRightToSave = true;
-                saveReminders();
-
-                ReminderListDialog.updateReminderList();
-              }
-            };
-            mInfoCreationThread.start();
-          }
-
-          public void tvDataUpdateFinished() {
-            mCanCreateInfoPanel = true;
-          }
-        });
-
   }
 
   /**
@@ -369,92 +310,6 @@ public class ReminderPlugin {
     return mHasRightToStartTimer;
   }
 
-  private void loadSettings() {
-
-    try {
-      Properties prop = mConfigurationHandler.loadSettings();
-      loadSettings(prop);
-    } catch (IOException e) {
-      ErrorHandler.handle("Could not load reminder data.", e);
-    }
-
-  }
-
-/*
-  private ObjectInputStream getObjectInputStream(File f) throws IOException {
-    return new ObjectInputStream(new BufferedInputStream(new FileInputStream(f), 0x4000));
-  }
-*/
-  private void loadReminderData() {
-    try {
-
-      File newFile = new File(Settings.getUserSettingsDirName(), DATAFILE_NAME);
-
-      if (newFile.exists()) {
-        StreamUtilities.objectInputStream(newFile, 0x4000, new ObjectInputStreamProcessor() {
-
-          @Override
-          public void process(ObjectInputStream inputStream) throws IOException {
-            try {
-              readData(inputStream);
-            } catch (ClassNotFoundException e) {
-              ErrorHandler.handle("Could not load reminder data", e);
-            }
-          }
-        });
-      } else {
-        tryToReadDataFromPreviousVersions();
-      }
-      mReminderList.removeExpiredItems();
-      mReminderList.setReminderTimerListener(new ReminderTimerListener(mSettings, mReminderList));
-
-    } catch (IOException e) {
-      ErrorHandler.handle("Could not load reminder data", e);
-    }
-  }
-
-
-  private void tryToReadDataFromPreviousVersions() {
-    boolean oldDataRead = false;
-    try {
-      File nodeFile = new File(Settings.getUserSettingsDirName(), "java.reminderplugin.ReminderPlugin.node");
-      if (nodeFile.exists()) {
-        StreamUtilities.objectInputStream(nodeFile, 0x4000, new ObjectInputStreamProcessor() {
-
-          @Override
-          public void process(ObjectInputStream inputStream) throws IOException {
-            try {
-              readReminderFromTVBrowser21and20(inputStream);
-            } catch (ClassNotFoundException e) {
-              mLog.log(Level.WARNING, "Could not read data from previous version", e);
-            }
-          }
-        });
-        oldDataRead = true;
-        nodeFile.delete();
-      }
-      File datFile = new File(Settings.getUserSettingsDirName(), "java.reminderplugin.ReminderPlugin.dat");
-      if (datFile.exists()) {
-        if (!oldDataRead) {
-          StreamUtilities.objectInputStream(datFile, 0x4000, new ObjectInputStreamProcessor() {
-
-            @Override
-            public void process(ObjectInputStream inputStream) throws IOException {
-              try {
-                readReminderFromBeforeTVBrowser20(inputStream);
-              } catch (ClassNotFoundException e) {
-                mLog.log(Level.WARNING, "Could not read data from previous version", e);
-              }
-            }
-          });
-        }
-        datFile.delete();
-      }
-    } catch (IOException e) {
-      mLog.log(Level.WARNING, "Could not read data from previous version", e);
-    }
-  }
-
   /**
    * Gets the settings for the reminder.
    *
@@ -464,45 +319,7 @@ public class ReminderPlugin {
     return mSettings;
   }
 
-  /**
-   * Save the reminder data.
-   */
-  public synchronized void store() {
-    try {
-      String userDirectoryName = Settings.getUserSettingsDirName();
-      File userDirectory = new File(userDirectoryName);
-      File tmpDatFile = new File(userDirectory, DATAFILE_NAME + ".temp");
-      File datFile = new File(userDirectory, DATAFILE_NAME);
-      StreamUtilities.objectOutputStream(tmpDatFile,
-          new ObjectOutputStreamProcessor() {
-            public void process(ObjectOutputStream out) throws IOException {
-              writeData(out);
-              out.flush();
-              out.close();
-            }
-          });
-
-      datFile.delete();
-      tmpDatFile.renameTo(datFile);
-    } catch (IOException e) {
-      ErrorHandler.handle("Could not store reminder data.", e);
-    }
-    try {
-      mConfigurationHandler.storeSettings(mSettings);
-    } catch (IOException e) {
-      ErrorHandler.handle("Could not store reminder settings.", e);
-    }
-  }
-
-  synchronized void saveSettings() {
-    try {
-      mConfigurationHandler.storeSettings(mSettings);
-    } catch (IOException e) {
-      ErrorHandler.handle("Could not store reminder settings.", e);
-    }
-  }
-  
-  private void readData(ObjectInputStream in) throws IOException,
+  void readData(ObjectInputStream in) throws IOException,
       ClassNotFoundException {
 
     int version = in.readInt(); // version
@@ -517,64 +334,8 @@ public class ReminderPlugin {
         mClientPluginTargets[i] = new ProgramReceiveTarget(in);
       }
     }
-  }
-
-  private void readReminderFromTVBrowser21and20(ObjectInputStream in) throws IOException, ClassNotFoundException {
-
-    int cnt = in.readInt();
-    for (int i=0; i<cnt; i++) {
-      int type = in.readInt();
-      if (type == 2) {     // Node.PROGRAM
-        ProgramItem item = new ProgramItem();
-        item.read(in);
-        String m = item.getProperty("minutes");
-        int minutes;
-        try {
-          minutes = Integer.parseInt(m);
-        }catch(NumberFormatException e) {
-          minutes = 10;
-        }
-        Program program = item.getProgram();
-
-        if(program != null) {
-          mReminderList.add(program, new ReminderContent(minutes));
-        }
-
-        in.readInt();  // cnt (should be 0)
-
-      }
-    }
-    in.close();
-  }
-
-  /**
-   * read the object from an input stream.
-   *
-   * @param in the stream to read from
-   * @throws IOException if something went wrong reading the stream
-   * @throws ClassNotFoundException if the object could not be deserialized
-   */
-  private void readReminderFromBeforeTVBrowser20(final ObjectInputStream in) throws IOException, ClassNotFoundException {
-    int version = in.readInt();
-    if (version == 1) {
-      int size = in.readInt();
-      for (int i = 0; i < size; i++) {
-        in.readInt();   // read version
-        int reminderMinutes = in.readInt();
-        Date programDate = Date.readData(in);
-        String programId = (String) in.readObject();
-        Program program = Plugin.getPluginManager().getProgram(programDate, programId);
-
-        // Only add items that were able to load their program
-        if (program != null) {
-          mReminderList.add(program, new ReminderContent(reminderMinutes));
-        }
-      }
-    }
-    else if (version == 2) {
-      mReminderList.setReminderTimerListener(null);
-      mReminderList.read(in);
-    }
+    
+    mReminderList.removeExpiredItems();
   }
 
   /**
@@ -583,7 +344,7 @@ public class ReminderPlugin {
    * @param out The stream to write the data in.
    * @throws IOException Thrown if an IO operation went wrong.
    */
-  public void writeData(ObjectOutputStream out) throws IOException {
+  void writeData(ObjectOutputStream out) throws IOException {
     out.writeInt(3);
     mReminderList.writeData(out);
     out.writeInt(mClientPluginTargets.length);
@@ -593,7 +354,7 @@ public class ReminderPlugin {
     }
   }
 
-  private void loadSettings(Properties settings) {
+  void loadSettings(Properties settings) {
     if (settings == null) {
       settings = new Properties();
     }
@@ -647,6 +408,53 @@ public class ReminderPlugin {
 
       settings.remove("autoCloseReminderAtProgramEnd");
     }
+
+    TvDataUpdater.getInstance().addTvDataUpdateListener(
+        new TvDataUpdateListener() {
+          private boolean mCanCreateInfoPanel;
+          
+          public void tvDataUpdateStarted(Date until) {
+            mCanCreateInfoPanel = false;
+            mHasRightToSave = false;
+            mInfoCreationThread = new Thread() {
+              public void run() {
+                while(!mCanCreateInfoPanel) {
+                  try {
+                    sleep(500);
+                  } catch (InterruptedException e) {
+                    // Ignore
+                  }
+                }
+                
+                if (mSettings.getProperty("showRemovedDialog","true").compareTo("true") == 0) {
+                  Program[] removedPrograms = mReminderList.updatePrograms();
+                  
+                  if (removedPrograms.length > 0) {
+                    mInfoPanel = new RemovedProgramsPanel(removedPrograms);
+                  }
+                  else {
+                    mInfoPanel = null;
+                  }
+                } else {
+                  mReminderList.updatePrograms();
+                  mInfoPanel = null;
+                }
+
+                mHasRightToSave = true;
+                saveReminders();
+
+                ReminderListDialog.updateReminderList();
+              }
+            };
+            mInfoCreationThread.start();
+          }
+
+          public void tvDataUpdateFinished() {
+            mCanCreateInfoPanel = true;
+          }
+        });
+    
+    mReminderList.setReminderTimerListener(new ReminderTimerListener(mSettings, mReminderList));
   }
 
   protected ActionMenu getContextMenuActions(final Window parentFrame, final Program program) {
@@ -1024,8 +832,10 @@ public class ReminderPlugin {
     updateRootNode(save, true);
   }
 
-  private void saveReminders() {
-    store();
+  synchronized void saveReminders() {
+    mHasToSaveSettings = true;
+    InternalPluginProxyList.getInstance().storeData(ReminderPluginProxy.getInstance(), true);
+    mHasToSaveSettings = false;
   }
 
   protected ActionMenu getButtonAction() {try {
@@ -1459,5 +1269,9 @@ public class ReminderPlugin {
 	} catch (Exception e) {
 		e.printStackTrace();
 	}
+  }
+  
+  boolean hasToSaveSettings() {
+    return mHasToSaveSettings;
   }
 }

@@ -27,7 +27,6 @@ package tvbrowser.core.plugin;
 
 import java.awt.Component;
 import java.awt.Frame;
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -702,12 +701,8 @@ public class PluginProxyManager {
       // Tell the plugin that we activate it now
       plugin.onActivation();
 
-      // Get the user directory
-      String userDirectoryName = Settings.getUserSettingsDirName();
-      File userDirectory = new File(userDirectoryName);
-
       // Load the plugin settings
-      plugin.loadSettings(userDirectory);
+      plugin.loadSettings();
 
       // Clear the activated plugins cache
       mActivatedPluginCache = null;
@@ -847,16 +842,7 @@ public class PluginProxyManager {
   }
 
   private void saveSettings(PluginListItem item) throws TvBrowserException {
-    // Get the user directory
-    String userDirectoryName = Settings.getUserSettingsDirName();
-    File userDirectory = new File(userDirectoryName);
-
-    // Create the user directory if it does not exist
-    if (!userDirectory.exists()) {
-      userDirectory.mkdirs();
-    }
-
-    item.getPlugin().saveSettings(userDirectory,!MainFrame.isShuttingDown());
+    item.getPlugin().saveSettings(!MainFrame.isShuttingDown());
   }
 
   /**

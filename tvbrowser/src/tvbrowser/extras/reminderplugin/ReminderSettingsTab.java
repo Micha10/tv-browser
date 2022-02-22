@@ -674,7 +674,7 @@ public class ReminderSettingsTab implements SettingsTab {
     
     Thread saveThread = new Thread("Save reminders") {
       public void run() {
-        ReminderPlugin.getInstance().store();
+        ReminderPlugin.getInstance().saveReminders();
       }
     };
     saveThread.setPriority(Thread.MIN_PRIORITY);

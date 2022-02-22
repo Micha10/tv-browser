@@ -16,6 +16,11 @@
  */
 package tvbrowser.extras.common;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.util.Properties;
+
 import devplugin.Program;
 import devplugin.ProgramReceiveIf;
 import devplugin.ProgramReceiveTarget;
@@ -59,4 +64,39 @@ public abstract class AbstractInternalPluginProxy implements InternalPluginProxy
   public boolean receiveValues(int type, String[] values, ProgramReceiveTarget receiveTarget) {
     return receiveValues(values, receiveTarget);
   }
+  
+  @Override
+  public String toString() {
+    return getName();
+  }
+  
+  @Override
+  public String getBaseFileName() {
+    return "java." + getId();
+  }
+  
+  @Override
+  public boolean hasToSaveSettings() {
+    return true;
+  }
+  
+  @Override
+  public void loadSettings(Properties prop) {
+    
+  }
+  
+  public Properties storeSettings() {
+    return null;
+  };
+  
+  @Override
+  public void writeData(ObjectOutputStream out) throws IOException {
+    
+  }
+  
+  @Override
+  public void readData(ObjectInputStream in) throws IOException, ClassNotFoundException {
+    
+  }
+  
 }

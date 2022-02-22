@@ -28,6 +28,8 @@ import javax.swing.Icon;
 import devplugin.AfterDataUpdateInfoPanel;
 import devplugin.PluginCenterPanelWrapper;
 import devplugin.SettingsTab;
+import tvbrowser.core.settings.PluginSettings.Data;
+import tvbrowser.core.settings.PluginSettings.Preferences;
 
 
 /**
@@ -37,7 +39,7 @@ import devplugin.SettingsTab;
  * @author René Mach
  * @since 2.6
  */
-public interface InternalPluginProxyIf {
+public interface InternalPluginProxyIf extends Preferences, Data {
   /** This is the key for the keyboard accelerator for
    * internal plugin button actions.
    * @since 2.7

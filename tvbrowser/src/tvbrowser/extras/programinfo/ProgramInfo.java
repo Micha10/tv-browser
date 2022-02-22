@@ -29,21 +29,10 @@ package tvbrowser.extras.programinfo;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Window;
-import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Iterator;
-
-import tvbrowser.core.icontheme.IconLoader;
-import tvbrowser.extras.common.ConfigurationHandler;
-import tvbrowser.ui.mainframe.MainFrame;
-import tvbrowser.ui.programtable.ProgramTable;
-import util.exc.ErrorHandler;
-import util.program.ProgramUtilities;
-import util.settings.PluginPictureSettings;
-import util.i18n.Localizer;
-import util.ui.UIThreadRunner;
-import util.ui.UiUtilities;
+import java.util.Properties;
 
 import com.l2fprod.common.swing.plaf.LookAndFeelAddons;
 
@@ -51,6 +40,14 @@ import devplugin.ActionMenu;
 import devplugin.ContextMenuAction;
 import devplugin.Plugin;
 import devplugin.Program;
+import tvbrowser.core.icontheme.IconLoader;
+import tvbrowser.ui.mainframe.MainFrame;
+import tvbrowser.ui.programtable.ProgramTable;
+import util.i18n.Localizer;
+import util.program.ProgramUtilities;
+import util.settings.PluginPictureSettings;
+import util.ui.UIThreadRunner;
+import util.ui.UiUtilities;
 
 /**
  * TV-Browser
@@ -67,9 +64,7 @@ public class ProgramInfo {
   private Dimension mLeftSplit = null;
 
   private ProgramInfoSettings mSettings;
-
-  private ConfigurationHandler mConfigurationHandler;
-
+  
   private static ProgramInfo mInstance;
 
   private Object[] mOrder;
@@ -85,8 +80,6 @@ public class ProgramInfo {
   
   private ProgramInfo() {
     mInstance = this;
-    mConfigurationHandler = new ConfigurationHandler(getName(),DATAFILE_PREFIX);
-    loadSettings();
     LookAndFeelAddons.setTrackingLookAndFeelChanges(true);
   }
 
@@ -151,38 +144,24 @@ public class ProgramInfo {
     return mSettings;
   }
 
-  private void loadSettings() {
-
-    try {
-      mSettings = new ProgramInfoSettings(mConfigurationHandler.loadSettings());
-    } catch (IOException e) {
-      ErrorHandler.handle("Could not load programinfo settings.", e);
-    }
-
+  void loadSettings(Properties prop) {
+    mSettings = new ProgramInfoSettings(prop);
+    
     final int splitWidht = mSettings.getWidth();
     final int splitHeigt = mSettings.getHeight();
 
     if ((splitWidht > 0) && (splitHeigt > 0)) {
       mLeftSplit = new Dimension(splitWidht, splitHeigt);
     }
-
   }
 
-  /**
-   * Save settings.
-   */
-  public void store() {
+  Properties storeSettings() {
     if (mLeftSplit != null) {
       mSettings.setWidth(mLeftSplit.width);
       mSettings.setHeight(mLeftSplit.height);
     }
 
-    try {
-      mSettings.storeSettings(mConfigurationHandler);
-    } catch (IOException e) {
-      ErrorHandler.handle("Could not store settings for programinfo.", e);
-    }
-
+    return mSettings.getProperties();
   }
 
   /**

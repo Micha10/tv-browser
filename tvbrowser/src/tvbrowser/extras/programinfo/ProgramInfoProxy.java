@@ -25,6 +25,8 @@
  */
 package tvbrowser.extras.programinfo;
 
+import java.util.Properties;
+
 import javax.swing.Icon;
 
 import tvbrowser.core.icontheme.IconLoader;
@@ -117,5 +119,15 @@ public class ProgramInfoProxy extends AbstractInternalPluginProxy implements Con
   @Override
   public void handleTvBrowserStartFinished() {
     ProgramInfo.getInstance().handleTvBrowserStartFinished();
+  }
+  
+  @Override
+  public void loadSettings(Properties prop) {
+    ProgramInfo.getInstance().loadSettings(prop);
+  }
+  
+  @Override
+  public Properties storeSettings() {
+    return ProgramInfo.getInstance().storeSettings();
   }
 }

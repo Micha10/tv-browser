@@ -29,13 +29,14 @@ import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.util.Properties;
 
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 
-import tvbrowser.core.plugin.ButtonActionIf;
-import tvbrowser.extras.common.AbstractInternalPluginProxy;
-import tvbrowser.extras.favoritesplugin.dlgs.FavoriteTreeModel;
 import devplugin.ActionMenu;
 import devplugin.AfterDataUpdateInfoPanel;
 import devplugin.ContextMenuIf;
@@ -46,6 +47,9 @@ import devplugin.Program;
 import devplugin.ProgramReceiveTarget;
 import devplugin.SettingsItem;
 import devplugin.SettingsTab;
+import tvbrowser.core.plugin.ButtonActionIf;
+import tvbrowser.extras.common.AbstractInternalPluginProxy;
+import tvbrowser.extras.favoritesplugin.dlgs.FavoriteTreeModel;
 
 /**
  * Encapsulates the FavoritesPlugin and manages the access to it.
@@ -226,5 +230,30 @@ public class FavoritesPluginProxy extends AbstractInternalPluginProxy implements
   @Override
   public boolean canReceiveProgramsWithTarget() {
     return true;
+  }
+  
+  @Override
+  public void readData(ObjectInputStream in) throws IOException, ClassNotFoundException {
+    FavoritesPlugin.getInstance().readData(in);
+  }
+  
+  @Override
+  public void writeData(ObjectOutputStream out) throws IOException {
+    FavoritesPlugin.getInstance().writeData(out);
+  }
+  
+  @Override
+  public void loadSettings(Properties prop) {
+    FavoritesPlugin.getInstance().loadSettings(prop);
+  }
+  
+  @Override
+  public Properties storeSettings() {
+    return FavoritesPlugin.getInstance().storeSettings();
+  }
+  
+  @Override
+  public boolean hasToSaveSettings() {
+    return FavoritesPlugin.getInstance().hasToSaveSettings();
   }
 }

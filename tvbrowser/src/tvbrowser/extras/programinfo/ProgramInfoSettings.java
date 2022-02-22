@@ -18,20 +18,17 @@ package tvbrowser.extras.programinfo;
 
 import java.awt.Color;
 import java.awt.Font;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Properties;
 
 import javax.swing.UIManager;
 
-import tvbrowser.extras.common.ConfigurationHandler;
-import util.program.CompoundedProgramFieldType;
-import util.program.ProgramTextCreator;
-import util.settings.PluginPictureSettings;
-
 import com.l2fprod.common.swing.plaf.LookAndFeelAddons;
 
 import devplugin.ProgramFieldType;
+import util.program.CompoundedProgramFieldType;
+import util.program.ProgramTextCreator;
+import util.settings.PluginPictureSettings;
 
 class ProgramInfoSettings {
 
@@ -241,9 +238,8 @@ class ProgramInfoSettings {
     return getProperty(KEY_SHOW_SEARCH, false);
   }
 
-  protected void storeSettings(final ConfigurationHandler configurationHandler)
-      throws IOException {
-    configurationHandler.storeSettings(mProperties);
+  Properties getProperties() {
+    return mProperties;
   }
 
   protected Font getUsedTitleFont() {

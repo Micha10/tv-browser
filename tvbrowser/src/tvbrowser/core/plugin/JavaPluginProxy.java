@@ -165,8 +165,8 @@ public class JavaPluginProxy extends AbstractPluginProxy {
    * @param userDirectory The directory where the user data is stored.
    * @throws TvBrowserException If loading failed.
    */
-  protected void doLoadSettings(File userDirectory) throws TvBrowserException {
-    PluginSettings.readData(userDirectory, mPlugin);
+  protected void doLoadSettings() throws TvBrowserException {
+    PluginSettings.readData(mPlugin);
     PluginSettings.loadSettings(mPlugin);
   }
 
@@ -174,11 +174,10 @@ public class JavaPluginProxy extends AbstractPluginProxy {
   /**
    * Really saves the settings for this plugin.
    *
-   * @param userDirectory The directory where the user data is stored.
    * @throws TvBrowserException If saving failed.
    */
-  protected void doSaveSettings(File userDirectory, boolean log) throws TvBrowserException {
-    PluginSettings.writeData(userDirectory, mPlugin, log);
+  protected void doSaveSettings(boolean log) throws TvBrowserException {
+    PluginSettings.writeData(mPlugin, log);
     PluginSettings.storeSettings(mPlugin);
   }
 

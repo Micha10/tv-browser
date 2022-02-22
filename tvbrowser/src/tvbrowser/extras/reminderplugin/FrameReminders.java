@@ -152,7 +152,7 @@ public class FrameReminders extends JFrame implements InterfaceClose<PanelRemind
               
               if((getExtendedState() & JFrame.MAXIMIZED_BOTH) != JFrame.MAXIMIZED_BOTH) {
                 ReminderPlugin.getInstance().getSettings().setProperty(ReminderPropertyDefaults.KEY_FRAME_REMINDERS_XPOS, String.valueOf(e.getComponent().getX()));
-                ReminderPlugin.getInstance().saveSettings();
+                ReminderPlugin.getInstance().saveReminders();
               }
             }
           };
@@ -177,7 +177,7 @@ public class FrameReminders extends JFrame implements InterfaceClose<PanelRemind
               
               if((getExtendedState() & JFrame.MAXIMIZED_BOTH) != JFrame.MAXIMIZED_BOTH) {
                 ReminderPlugin.getInstance().getSettings().setProperty(ReminderPropertyDefaults.KEY_FRAME_REMINDERS_WIDTH, String.valueOf(e.getComponent().getWidth()));
-                ReminderPlugin.getInstance().saveSettings();
+                ReminderPlugin.getInstance().saveReminders();
               }
             }
           };

@@ -75,14 +75,10 @@ import util.exc.TvBrowserException;
         }
     }
 
-    protected void doLoadSettings(File userDirectory) throws TvBrowserException {
+    protected void doLoadSettings() throws TvBrowserException {
     }
 
-    protected void doSaveSettings(File userDirectory) throws TvBrowserException {
-      doSaveSettings(userDirectory, true);
-    }
-
-    protected void doSaveSettings(File userDirectory, boolean log) throws TvBrowserException {
+    protected void doSaveSettings(boolean log) throws TvBrowserException {
     }
 
     protected PluginInfo doGetInfo() {

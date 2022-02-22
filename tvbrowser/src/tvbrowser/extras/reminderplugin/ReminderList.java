@@ -73,7 +73,6 @@ public class ReminderList implements ActionListener {
     mList = new ArrayList<ReminderListItem>();
   }
 
-
   /**
    * reads the object from an input stream.
    *

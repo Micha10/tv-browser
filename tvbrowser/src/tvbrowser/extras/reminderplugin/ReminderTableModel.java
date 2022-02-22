@@ -170,7 +170,7 @@ public class ReminderTableModel extends AbstractTableModel {
         FrameReminders.getInstance().updateReminder(mProgramItems[rowIndex]);
       }
       
-      ReminderPlugin.getInstance().store();
+      ReminderPlugin.getInstance().saveReminders();
     }
   }
 

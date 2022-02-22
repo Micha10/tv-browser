@@ -618,6 +618,7 @@ public class TVBrowser {
     splashRef.get().setMessage(LOCALIZER.msg("startScreen.plugins", "Loading plugins..."));
     
     try {
+      InternalPluginProxyList.getInstance();
       PluginProxyManager.getInstance().init();
     } catch(TvBrowserException exc) {
       ErrorHandler.handle(exc);
@@ -1647,8 +1648,7 @@ public class TVBrowser {
     }
     //ChannelList.storeAllSettings();
 
-    SearchPlugin.getInstance().store();
-    ProgramInfo.getInstance().store();
+    InternalPluginProxyList.getInstance().storeData(log);
     mainFrame.storeSettings();
 
     if(log) {

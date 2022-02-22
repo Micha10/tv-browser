@@ -26,7 +26,6 @@
 package tvbrowser.core.plugin;
 
 import java.awt.Frame;
-import java.io.File;
 
 import javax.swing.Action;
 import javax.swing.Icon;
@@ -131,12 +130,11 @@ public abstract class AbstractPluginProxy implements PluginProxy, ContextMenuIf 
   /**
    * Loads the settings for this plugin.
    *
-   * @param userDirectory The directory where the user data is stored.
    * @throws TvBrowserException If loading failed.
    */
-  final void loadSettings(File userDirectory) throws TvBrowserException {
+  final void loadSettings() throws TvBrowserException {
     try {
-      doLoadSettings(userDirectory);
+      doLoadSettings();
     } catch (Throwable t) {
       throw new TvBrowserException(AbstractPluginProxy.class,
 
@@ -151,16 +149,15 @@ public abstract class AbstractPluginProxy implements PluginProxy, ContextMenuIf 
    * @param userDirectory The directory where the user data is stored.
    * @throws TvBrowserException If loading failed.
    */
-  protected abstract void doLoadSettings(File userDirectory) throws TvBrowserException;
+  protected abstract void doLoadSettings() throws TvBrowserException;
 
   /**
    * Saves the settings for this plugin.
    *
-   * @param userDirectory The directory where the user data is stored.
    * @param log If log entries should be written.
    * @throws TvBrowserException If saving failed.
    */
-  final synchronized void saveSettings(File userDirectory, boolean log) throws TvBrowserException {
+  final synchronized void saveSettings(boolean log) throws TvBrowserException {
     // Check whether the plugin is activated
     if (!mIsActivated) {
       throw new TvBrowserException(AbstractPluginProxy.class, "error.saving.notActivated",
@@ -169,7 +166,7 @@ public abstract class AbstractPluginProxy implements PluginProxy, ContextMenuIf 
 
     // Try to save the settings
     try {
-      doSaveSettings(userDirectory, log);
+      doSaveSettings(log);
     } catch (Throwable t) {
       throw new TvBrowserException(AbstractPluginProxy.class, "error.saving.runtimeException",
           "The plugin {0} caused an error when saving the plugin settings.", getInfo().getName(), t);
@@ -179,11 +176,10 @@ public abstract class AbstractPluginProxy implements PluginProxy, ContextMenuIf 
   /**
    * Really saves the settings for this plugin.
    *
-   * @param userDirectory The directory where the user data is stored.
    * @param log If log entries should be written.
    * @throws TvBrowserException If saving failed.
    */
-  protected abstract void doSaveSettings(File userDirectory, boolean log) throws TvBrowserException;
+  protected abstract void doSaveSettings(boolean log) throws TvBrowserException;
 
   /**
    * Gets the meta information about the plugin.

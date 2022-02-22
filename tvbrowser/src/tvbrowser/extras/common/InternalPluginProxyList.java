@@ -27,10 +27,12 @@ import java.util.ArrayList;
 
 import tvbrowser.core.TvDataUpdateListener;
 import tvbrowser.core.TvDataUpdater;
+import tvbrowser.core.settings.PluginSettings;
 import tvbrowser.extras.favoritesplugin.FavoritesPluginProxy;
 import tvbrowser.extras.programinfo.ProgramInfoProxy;
 import tvbrowser.extras.reminderplugin.ReminderPluginProxy;
 import tvbrowser.extras.searchplugin.SearchPluginProxy;
+import util.exc.TvBrowserException;
 
 /**
  * A class that contains all available internal plugin proxys.
@@ -67,6 +69,8 @@ public class InternalPluginProxyList {
         }
       }
     });
+    
+    loadData();
   }
 
   /**
@@ -107,5 +111,37 @@ public class InternalPluginProxyList {
     }
 
     return null;
+  }
+  
+  /**
+   * Store data for internal plugins.
+   */
+  public synchronized void storeData(boolean log) {
+    for(InternalPluginProxyIf plugin : mList) {
+      storeData(plugin, log);
+    }
+  }
+  
+  public synchronized void storeData(InternalPluginProxyIf plugin, boolean log) {
+    try {
+      PluginSettings.writeData(plugin, log);
+    } catch (TvBrowserException e) {
+      e.printStackTrace();
+    }
+    PluginSettings.storeSettings(plugin);
+  }
+  
+  /**
+   * Load data for internal plugins.
+   */
+  private synchronized void loadData() {
+    for(InternalPluginProxyIf plugin : mList) {
+      try {
+        PluginSettings.readData(plugin);
+      } catch (TvBrowserException e) {
+        e.printStackTrace();
+      }
+      PluginSettings.loadSettings(plugin);
+    }
   }
 }

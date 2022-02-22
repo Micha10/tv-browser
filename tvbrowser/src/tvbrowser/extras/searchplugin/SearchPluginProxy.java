@@ -23,6 +23,10 @@
  */
 package tvbrowser.extras.searchplugin;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+
 import javax.swing.Icon;
 
 import devplugin.ActionMenu;
@@ -120,5 +124,15 @@ public class SearchPluginProxy extends AbstractInternalPluginProxy implements Bu
   @Override
   public void handleTvBrowserStartFinished() {
     // nothing to do
+  }
+  
+  @Override
+  public void writeData(ObjectOutputStream out) throws IOException {
+    SearchPlugin.getInstance().writeData(out);
+  }
+  
+  @Override
+  public void readData(ObjectInputStream in) throws IOException, ClassNotFoundException {
+    SearchPlugin.getInstance().readData(in);
   }
 }

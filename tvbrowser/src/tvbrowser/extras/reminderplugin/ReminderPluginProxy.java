@@ -25,6 +25,11 @@
  */
 package tvbrowser.extras.reminderplugin;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.util.Properties;
+
 import javax.swing.Icon;
 
 import tvbrowser.core.icontheme.IconLoader;
@@ -189,5 +194,30 @@ public class ReminderPluginProxy extends AbstractInternalPluginProxy implements 
   @Override
   public boolean canReceiveProgramsWithTarget() {
     return true;
+  }
+  
+  @Override
+  public void writeData(ObjectOutputStream out) throws IOException {
+    ReminderPlugin.getInstance().writeData(out);
+  }
+  
+  @Override
+  public void readData(ObjectInputStream in) throws IOException, ClassNotFoundException {
+    ReminderPlugin.getInstance().readData(in);
+  }
+  
+  @Override
+  public Properties storeSettings() {
+    return ReminderPlugin.getInstance().getSettings();
+  }
+  
+  @Override
+  public void loadSettings(Properties prop) {
+    ReminderPlugin.getInstance().loadSettings(prop);
+  }
+  
+  @Override
+  public boolean hasToSaveSettings() {
+    return ReminderPlugin.getInstance().hasToSaveSettings();
   }
 }
