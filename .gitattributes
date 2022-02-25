@@ -2584,6 +2584,7 @@ tvbrowser/src/tvbrowser/ui/configassistant/configassistant_pl.properties -text s
 tvbrowser/src/tvbrowser/ui/configassistant/configassistant_sk.properties -text
 tvbrowser/src/tvbrowser/ui/filter/dlgs/FilterComponentPanel.java svneol=native#text/plain
 tvbrowser/src/tvbrowser/ui/filter/dlgs/FilterComponentsDlg.java svneol=native#text/plain
+tvbrowser/src/tvbrowser/ui/filter/dlgs/FilterHighlightingSelectionPanel.java -text svneol=unset#text/plain
 tvbrowser/src/tvbrowser/ui/filter/dlgs/FilterItem.java -text svneol=unset#text/plain
 tvbrowser/src/tvbrowser/ui/filter/dlgs/Utilities.java -text
 tvbrowser/src/tvbrowser/ui/filter/dlgs/dlgs_cs.properties -text svneol=unset#text/plain
@@ -2838,6 +2839,7 @@ tvbrowser/src/util/settings/HiddenMessagesProperty.java -text svneol=unset#text/
 tvbrowser/src/util/settings/MinutesProperty.java -text svneol=unset#text/plain
 tvbrowser/src/util/settings/ProgramPanelSettings.java -text
 tvbrowser/src/util/settings/PropertyBasedSettings.java -text
+tvbrowser/src/util/settings/StringMapProperty.java -text svneol=unset#text/plain
 tvbrowser/src/util/tvdataservice/IconLoader.java -text svneol=unset#text/plain
 tvbrowser/src/util/ui/AutoCompletion.java -text svneol=unset#text/plain
 tvbrowser/src/util/ui/CaretPositionCorrector.java -text

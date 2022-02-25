@@ -15,8 +15,11 @@
 package util.ui;
 
 import java.awt.Dimension;
+import java.awt.event.ItemEvent;
 import java.util.ArrayList;
+import java.util.Arrays;
 
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JEditorPane;
@@ -42,6 +45,9 @@ import util.i18n.Localizer;
  * @since 2.5.3
  */
 public final class DefaultMarkingPrioritySelectionPanel extends JPanel {
+  public static final String TYPE_LABEL = "labeled";
+  public static final String TYPE_SELECTABLE = "selectable";
+  
   /**
    * default serial version uid.
    */
@@ -94,9 +100,21 @@ public final class DefaultMarkingPrioritySelectionPanel extends JPanel {
    * @since 3.0
    */
   private DefaultMarkingPrioritySelectionPanel(final int priority, final String label, final boolean showTitle, final boolean showHelpLabel, final boolean withDefaultDialogBorder) {
-    this(new int[] {priority}, new String[] {label}, showTitle, showHelpLabel, withDefaultDialogBorder);
+    this(new State(TYPE_LABEL,true), priority, label, showTitle, showHelpLabel, withDefaultDialogBorder);
   }
-
+  
+  /**
+   * @param state which {@link State} the selection will have.
+   * @param priority which priority is selected in the drop down
+   * @param label the label for the drop down
+   * @param showTitle if true, show the title
+   * @param showHelpLabel if true, show the help text
+   * @param withDefaultDialogBorder if true, use the default border
+   * @since 4.2.5
+   */
+  private DefaultMarkingPrioritySelectionPanel(final State state, final int priority, final String label, final boolean showTitle, final boolean showHelpLabel, final boolean withDefaultDialogBorder) {
+    this(new State[] {state}, new int[] {priority}, new String[] {label}, showTitle, showHelpLabel, withDefaultDialogBorder);
+  }
 
   /**
    * the arrays for label and priority must have the same length. the index of
@@ -110,6 +128,30 @@ public final class DefaultMarkingPrioritySelectionPanel extends JPanel {
    * @since 3.0
    */
   private DefaultMarkingPrioritySelectionPanel(final int[] priority, final String[] label, final boolean showTitle, final boolean showHelpLabel, final boolean withDefaultDialogBorder) {
+    this(getStatesDefault(label.length), priority, label, showTitle, showHelpLabel, withDefaultDialogBorder);
+  }
+  
+  private static State[] getStatesDefault(int length) {
+    State[] states = new State[length];
+    
+    Arrays.fill(states, new State(TYPE_LABEL,true));
+
+    return states;
+  }
+
+  /**
+   * the arrays for label and priority must have the same length. the index of
+   * both arrays must be in the range of an integer. both indexes must be > 0.
+   *
+   * @param states which {@link State} the selection will have.
+   * @param priority which priority is selected in the dropdowns. must not be null.
+   * @param label the labels for the dropdowns. must not be null.
+   * @param showTitle if true, show the title
+   * @param showHelpLabel if true, show the help text
+   * @param withDefaultDialogBorder if true, use the default border
+   * @since 4.2.5
+   */
+  private DefaultMarkingPrioritySelectionPanel(final State[] states, final int[] priority, final String[] label, final boolean showTitle, final boolean showHelpLabel, final boolean withDefaultDialogBorder) {
     CellConstraints cc = new CellConstraints();
     FormLayout layout = new FormLayout("5dlu,default,5dlu,default,0dlu:grow");
     EnhancedPanelBuilder pb = new EnhancedPanelBuilder(layout,this);
@@ -133,9 +175,24 @@ public final class DefaultMarkingPrioritySelectionPanel extends JPanel {
 
     for (int i = 0; i < choosersToDraw; i++) {
       pb.addRow();
-      mLabel[i] = pb.addLabel(label[i], cc.xy(2, pb.getRowCount()));
-
+      
       final JComboBox<Object> box = new JComboBox<>(getMarkingColorNames(true));
+      final State state = states[i];
+      
+      if(state.mType.equals(TYPE_SELECTABLE)) {
+        
+        mLabel[i] = new JCheckBox(label[i], state.mActivated);
+        box.setEnabled(state.mActivated);
+        ((JCheckBox)mLabel[i]).addItemListener(e -> {
+          box.setEnabled(e.getStateChange() == ItemEvent.SELECTED);
+          state.mActivated = box.isEnabled();
+        });
+        
+        pb.add(mLabel[i], cc.xy(2, pb.getRowCount()));
+      }
+      else {
+        mLabel[i] = pb.addLabel(label[i], cc.xy(2, pb.getRowCount()));
+      }
       
       mPrioritySelection.add(box);
       box.setSelectedIndex(Math.min(priority[i],Settings.getHighlightingPriorityMaximum()) + 1);
@@ -186,7 +243,40 @@ public final class DefaultMarkingPrioritySelectionPanel extends JPanel {
   public static DefaultMarkingPrioritySelectionPanel createPanel(final int priority, final String label, final boolean showTitle, final boolean showHelpLabel, final boolean withDefaultDialogBorder) {
     return new DefaultMarkingPrioritySelectionPanel(priority, label, showTitle, showHelpLabel, withDefaultDialogBorder);
   }
+  
+  /**
+   * Creates an instance of this class.
+   *
+   * @param state which {@link State} the selection will have.
+   * @param priority which priority is selected in the drop down
+   * @param label the label for the drop down
+   * @param showTitle if true, show the title
+   * @param showHelpLabel if true, show the help text
+   * @param withDefaultDialogBorder if true, use the default border
+   * @return The created instance of this class.
+   * @since 4.2.5
+   */
+  public static DefaultMarkingPrioritySelectionPanel createPanel(final State state, final int priority, final String label, final boolean showTitle, final boolean showHelpLabel, final boolean withDefaultDialogBorder) {
+    return new DefaultMarkingPrioritySelectionPanel(state, priority, label, showTitle, showHelpLabel, withDefaultDialogBorder);
+  }
 
+  /**
+   * the arrays for label and priority must have the same length. the index of
+   * both arrays must be in the range of an integer. both indexes must be &gt; 0.
+   *
+   * @param states which {@link State} the selections will have.
+   * @param priorities which priority is selected in the dropdowns. must not be null.
+   * @param labels the labels for the dropdowns. must not be null.
+   * @param showTitle if true, show the title
+   * @param showHelpLabel if true, show the help text
+   * @param withDefaultDialogBorder if true, use the default border
+   * @return The created instance of this class.
+   * @since 4.2.5
+   */
+  public static DefaultMarkingPrioritySelectionPanel createPanel(final State[] states, final int[] priorities, final String[] labels, final boolean showTitle, final boolean showHelpLabel, final boolean withDefaultDialogBorder) {
+    return new DefaultMarkingPrioritySelectionPanel(states, priorities, labels, showTitle, showHelpLabel, withDefaultDialogBorder);
+  }
+  
   /**
    * the arrays for label and priority must have the same length. the index of
    * both arrays must be in the range of an integer. both indexes must be &gt; 0.
@@ -294,7 +384,37 @@ public final class DefaultMarkingPrioritySelectionPanel extends JPanel {
     for (int i = 0; i < mLabel.length; i++)
     {
       mLabel[i].setEnabled(enabled);
-      ((JComboBox<Object>)mPrioritySelection.get(i)).setEnabled(enabled);
+      ((JComboBox<Object>)mPrioritySelection.get(i)).setEnabled(enabled && (!(mLabel[i] instanceof JCheckBox) || ((JCheckBox)mLabel[i]).isSelected()));
+    }
+  }
+  
+  /**
+   * @author René Mach
+   * @since 4.2.5
+   */
+  public static final class State {
+    private String mType;
+    private boolean mActivated;
+    
+    /**
+     * State of an selection entry.
+     * 
+     * @param type The type for this State.
+     * @param activated <code>true</code> if the associated selection entry is activated,
+     * <code>false</code> if not.
+     * NOTE: Activation state for {@link DefaultMarkingPrioritySelectionPanel#TYPE_LABEL} will always be <code>true</code>.
+     */
+    public State(final String type, final boolean activated) {
+      mType = type;
+      mActivated = activated;
+    }
+    
+    /**
+     * @return If the associated selection entry is activated.
+     * NOTE: Activation state for {@link DefaultMarkingPrioritySelectionPanel#TYPE_LABEL} will always be <code>true</code>.
+     */
+    public boolean isActivated() {
+      return mType.equals(TYPE_SELECTABLE) ? mActivated : true;
     }
   }
 }

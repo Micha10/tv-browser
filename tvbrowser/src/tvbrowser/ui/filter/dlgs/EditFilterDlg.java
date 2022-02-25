@@ -39,7 +39,6 @@ import javax.swing.BorderFactory;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
-import javax.swing.JCheckBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JList;
@@ -102,9 +101,9 @@ public class EditFilterDlg extends JDialog implements ActionListener, DocumentLi
   private JList<FilterItem> mFilterConstruction;
   private FilterComponentPanel mFilterComponent;
   
-  private DefaultListModel<FilterItem> mFilterConstructionListModel;
+  private FilterHighlightingSelectionPanel mFilterHighlight;
   
-  private JCheckBox mFilterHighlight;
+  private DefaultListModel<FilterItem> mFilterConstructionListModel;
   
   private boolean mFromFilterList;
   private boolean mOkWasPressed;
@@ -170,12 +169,8 @@ public class EditFilterDlg extends JDialog implements ActionListener, DocumentLi
     mFilterRuleErrorLb = filterCreation.addLabel(LOCALIZER.msg("ruleExample",
     "example: component1 or (component2 and not component3)"), CC.xy(2,y+3));
     
-    mFilterHighlight = new JCheckBox(LOCALIZER.msg("highlight", "Highlight all matching programs"));
-    
-    if(mFilter != null) {
-      mFilterHighlight.setSelected(Settings.Markings.HIGHLIGHTING_FILTERS.containsItem(mFilter.getName()));
-    }
-    
+    mFilterHighlight = new FilterHighlightingSelectionPanel(mFilter);
+   
     ButtonBarBuilder bottomBar = Utilities.createFilterButtonBar();
 
     mOkBtn = new JButton(Localizer.getLocalization(Localizer.I18N_OK));
@@ -299,7 +294,7 @@ public class EditFilterDlg extends JDialog implements ActionListener, DocumentLi
     
     filterCreation.add(listPanel.getPanel(), CC.xyw(1,y+7,4));
     filterCreation.add(UiUtilities.createHelpTextArea(LOCALIZER.msg("help","To create or edit a filter you can enter the rules in the text field or drag and drop the rules to the left side.")), CC.xyw(2,y+9,4));
-    filterCreation.add(mFilterHighlight, CC.xyw(2, y+11, 3));
+    filterCreation.add(mFilterHighlight, CC.xyw(1, y+11, 4));
     filterCreation.add(new JSeparator(JSeparator.HORIZONTAL), CC.xyw(1,y+13,4));
     filterCreation.add(bottomBar.getPanel(), CC.xyw(1,y+15,4));
     
@@ -382,12 +377,7 @@ public class EditFilterDlg extends JDialog implements ActionListener, DocumentLi
       }
       
       if(mOkWasPressed) {
-        if(mFilterHighlight.isSelected()) {
-          Settings.Markings.HIGHLIGHTING_FILTERS.addItem(mFilter.getName());
-        }
-        else {
-          Settings.Markings.HIGHLIGHTING_FILTERS.removeItem(mFilter.getName());
-        }
+        mFilterHighlight.save(mFilter);
       }
     } else if (o == mCancelBtn) {
       FilterComponentList.getInstance().store();

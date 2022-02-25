@@ -97,7 +97,7 @@ public class FilterButtons implements ActionListener {
         
         FilterList.getInstance().createFilterMenu(filterMenu,curFilter);
         
-        mEditFilterMI.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_L, KeyEvent.CTRL_DOWN_MASK));
+        mEditFilterMI.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_T, KeyEvent.CTRL_DOWN_MASK));
         mEditFilterComponentsMI.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_K, KeyEvent.CTRL_DOWN_MASK));
     }
 

@@ -170,6 +170,7 @@ import tvbrowser.extras.common.InternalPluginProxyIf;
 import tvbrowser.extras.common.InternalPluginProxyList;
 import tvbrowser.ui.DontShowAgainOptionBox;
 import tvbrowser.ui.aboutbox.AboutBox;
+import tvbrowser.ui.filter.dlgs.FilterComponentsDlg;
 import tvbrowser.ui.filter.dlgs.SelectFilterDlg;
 import tvbrowser.ui.finder.DateSelector;
 import tvbrowser.ui.finder.FinderPanel;
@@ -1152,6 +1153,20 @@ public class MainFrame extends JFrame implements DateListener,DropTargetListener
       @Override
       public void actionPerformed(ActionEvent e) {
         setShowChannellist(!mChannelChooser.isVisible());
+      }
+    });
+    
+    addKeyAction(KeyEvent.VK_T, KeyEvent.CTRL_DOWN_MASK, new AbstractAction() {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        showFilterDialog();
+      }
+    });
+    
+    addKeyAction(KeyEvent.VK_K, KeyEvent.CTRL_DOWN_MASK, new AbstractAction() {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        new FilterComponentsDlg(UiUtilities.getLastModalChildOf(MainFrame.this));
       }
     });
     

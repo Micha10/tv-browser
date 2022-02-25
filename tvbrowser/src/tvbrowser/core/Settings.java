@@ -117,6 +117,7 @@ import util.settings.Property;
 import util.settings.PropertyManager;
 import util.settings.ShortProperty;
 import util.settings.StringArrayProperty;
+import util.settings.StringMapProperty;
 import util.settings.StringProperty;
 import util.settings.VariableIntProperty;
 import util.settings.VersionProperty;
@@ -1933,8 +1934,8 @@ public class Settings {
           new Color(255, 0, 0, 30).getRGB()
       });
     
-    public static final StringArrayProperty HIGHLIGHTING_FILTERS = new StringArrayProperty(
-        mProp, "highlightingFilters", new String[0]);
+    public static final StringMapProperty HIGHLIGHTING_FILTERS = new StringMapProperty(
+        mProp, "highlightingFilters");
     
     private Markings() {}
   }

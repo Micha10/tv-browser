@@ -126,13 +126,8 @@ public class SelectFilterDlg extends JDialog implements ActionListener, WindowCl
         if(mHighlight.isEnabled()) {
           FilterNode node = (FilterNode)mFilterTree.getSelectionPath().getLastPathComponent();
           
-          if(node.containsFilter() && Settings.Markings.HIGHLIGHTING_FILTERS.containsItem(node.getFilter().getName())) {
-            g.setColor(Color.WHITE);
-            mHighlight.setToolTipText(EditFilterDlg.LOCALIZER.msg("highlightDisable", "Disable highlighting of matching programs"));
-          }
-          else {
+          if(node.containsFilter()) {
             g.setColor(Settings.getHighlightingColorForPriority(Settings.Markings.MARK_PRIORITY_FILTERS.getInt()));
-            mHighlight.setToolTipText(EditFilterDlg.LOCALIZER.msg("highlight", "Highlight all matching programs"));
           }
         }
         else {
@@ -322,11 +317,10 @@ public class SelectFilterDlg extends JDialog implements ActionListener, WindowCl
 
   private void editHighlighting(FilterNode node) {
     if(node.containsFilter()) {
-      if(Settings.Markings.HIGHLIGHTING_FILTERS.containsItem(node.getFilter().getName())) {
-        Settings.Markings.HIGHLIGHTING_FILTERS.removeItem(node.getFilter().getName());
-      }
-      else {
-        Settings.Markings.HIGHLIGHTING_FILTERS.addItem(node.getFilter().getName());
+      final FilterHighlightingSelectionPanel highlighting = new FilterHighlightingSelectionPanel(node.getFilter());
+      
+      if(UiUtilities.showConfirmDialogOnMouseScreen(highlighting, LOCALIZER.msg("hightlightingSelection", "Select highlighting for filter: {0}", node.getFilter().getName()), JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, true) == JOptionPane.OK_OPTION) {
+        highlighting.save(node.getFilter());
       }
       
       mFilterTree.updateUI();
@@ -335,7 +329,7 @@ public class SelectFilterDlg extends JDialog implements ActionListener, WindowCl
   
   public void close() {
     MainFrame.updateFilterPanelLabel();
-    MainFrame.getInstance().getProgramTableScrollPane().getProgramTable().forceRepaintAll();
+    MainFrame.getInstance().getProgramTableScrollPane().getProgramTable().repaint();
     mFilterList.store();
     
     setVisible(false);
@@ -417,7 +411,7 @@ public class SelectFilterDlg extends JDialog implements ActionListener, WindowCl
         
         for(ProgramFilter filter : filters) {
           mFilterTree.getModel().fireFilterRemoved(filter);
-          Settings.Markings.HIGHLIGHTING_FILTERS.removeItem(filter.getName());
+          Settings.Markings.HIGHLIGHTING_FILTERS.removeEntry(filter.getName());
         }
       }
       else if(node.getUserObject() instanceof String) {

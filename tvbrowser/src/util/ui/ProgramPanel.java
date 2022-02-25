@@ -44,6 +44,7 @@ import java.io.Reader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -1493,14 +1494,13 @@ private static Font getDynamicFontSize(Font font, int offset) {
   private static int getFilterHighlightingPriority(Program program) {
     int result = Program.PRIORITY_MARK_NONE;
     
-    String[] filterNames = Settings.Markings.HIGHLIGHTING_FILTERS.getStringArray();
+    Set<String> filterNames = Settings.Markings.HIGHLIGHTING_FILTERS.getKeySet();
     
     for(String filterName : filterNames) {
       ProgramFilter filter = FilterManagerImpl.getInstance().getFilterByName(filterName);
       
       if(filter != null && filter.accept(program)) {
-        result = Settings.Markings.MARK_PRIORITY_FILTERS.getInt();
-        break;
+        result = Integer.parseInt(Settings.Markings.HIGHLIGHTING_FILTERS.getEntry(filterName));
       }
     }
     

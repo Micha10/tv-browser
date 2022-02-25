@@ -464,6 +464,8 @@ public class ProgramTable extends JPanel
         panel.forceRepaint();
       }
     }
+    
+    updateLayout();
   }
 
 
