@@ -100,7 +100,7 @@ public final class DefaultMarkingPrioritySelectionPanel extends JPanel {
    * @since 3.0
    */
   private DefaultMarkingPrioritySelectionPanel(final int priority, final String label, final boolean showTitle, final boolean showHelpLabel, final boolean withDefaultDialogBorder) {
-    this(new State(TYPE_LABEL,true), priority, label, showTitle, showHelpLabel, withDefaultDialogBorder);
+    this(new State(TYPE_LABEL,true), priority, label, showTitle, showHelpLabel, withDefaultDialogBorder, false);
   }
   
   /**
@@ -110,10 +110,11 @@ public final class DefaultMarkingPrioritySelectionPanel extends JPanel {
    * @param showTitle if true, show the title
    * @param showHelpLabel if true, show the help text
    * @param withDefaultDialogBorder if true, use the default border
+   * @param growingGap if true, gap between label and selection grows
    * @since 4.2.5
    */
-  private DefaultMarkingPrioritySelectionPanel(final State state, final int priority, final String label, final boolean showTitle, final boolean showHelpLabel, final boolean withDefaultDialogBorder) {
-    this(new State[] {state}, new int[] {priority}, new String[] {label}, showTitle, showHelpLabel, withDefaultDialogBorder);
+  private DefaultMarkingPrioritySelectionPanel(final State state, final int priority, final String label, final boolean showTitle, final boolean showHelpLabel, final boolean withDefaultDialogBorder, final boolean growingGap) {
+    this(new State[] {state}, new int[] {priority}, new String[] {label}, showTitle, showHelpLabel, withDefaultDialogBorder, growingGap);
   }
 
   /**
@@ -128,7 +129,7 @@ public final class DefaultMarkingPrioritySelectionPanel extends JPanel {
    * @since 3.0
    */
   private DefaultMarkingPrioritySelectionPanel(final int[] priority, final String[] label, final boolean showTitle, final boolean showHelpLabel, final boolean withDefaultDialogBorder) {
-    this(getStatesDefault(label.length), priority, label, showTitle, showHelpLabel, withDefaultDialogBorder);
+    this(getStatesDefault(label.length), priority, label, showTitle, showHelpLabel, withDefaultDialogBorder, false);
   }
   
   private static State[] getStatesDefault(int length) {
@@ -149,11 +150,13 @@ public final class DefaultMarkingPrioritySelectionPanel extends JPanel {
    * @param showTitle if true, show the title
    * @param showHelpLabel if true, show the help text
    * @param withDefaultDialogBorder if true, use the default border
+   * @param growingGap if true, gap between label and selection grows
    * @since 4.2.5
    */
-  private DefaultMarkingPrioritySelectionPanel(final State[] states, final int[] priority, final String[] label, final boolean showTitle, final boolean showHelpLabel, final boolean withDefaultDialogBorder) {
+  private DefaultMarkingPrioritySelectionPanel(final State[] states, final int[] priority, final String[] label, final boolean showTitle, final boolean showHelpLabel, final boolean withDefaultDialogBorder, final boolean growingGap) {
     CellConstraints cc = new CellConstraints();
-    FormLayout layout = new FormLayout("5dlu,default,5dlu,default,0dlu:grow");
+    FormLayout layout = new FormLayout(growingGap ? "5dlu,default,5dlu:grow,default,0dlu" : "5dlu,default,5dlu,default,0dlu:grow");
+    
     EnhancedPanelBuilder pb = new EnhancedPanelBuilder(layout,this);
 
     //how many selectors do we have to draw?
@@ -254,10 +257,11 @@ public final class DefaultMarkingPrioritySelectionPanel extends JPanel {
    * @param showHelpLabel if true, show the help text
    * @param withDefaultDialogBorder if true, use the default border
    * @return The created instance of this class.
+   * @param growingGap if true, gap between label and selection grows
    * @since 4.2.5
    */
-  public static DefaultMarkingPrioritySelectionPanel createPanel(final State state, final int priority, final String label, final boolean showTitle, final boolean showHelpLabel, final boolean withDefaultDialogBorder) {
-    return new DefaultMarkingPrioritySelectionPanel(state, priority, label, showTitle, showHelpLabel, withDefaultDialogBorder);
+  public static DefaultMarkingPrioritySelectionPanel createPanel(final State state, final int priority, final String label, final boolean showTitle, final boolean showHelpLabel, final boolean withDefaultDialogBorder, final boolean growingGap) {
+    return new DefaultMarkingPrioritySelectionPanel(state, priority, label, showTitle, showHelpLabel, withDefaultDialogBorder, growingGap);
   }
 
   /**
@@ -271,10 +275,11 @@ public final class DefaultMarkingPrioritySelectionPanel extends JPanel {
    * @param showHelpLabel if true, show the help text
    * @param withDefaultDialogBorder if true, use the default border
    * @return The created instance of this class.
+   * @param growingGap if true, gap between label and selection grows
    * @since 4.2.5
    */
-  public static DefaultMarkingPrioritySelectionPanel createPanel(final State[] states, final int[] priorities, final String[] labels, final boolean showTitle, final boolean showHelpLabel, final boolean withDefaultDialogBorder) {
-    return new DefaultMarkingPrioritySelectionPanel(states, priorities, labels, showTitle, showHelpLabel, withDefaultDialogBorder);
+  public static DefaultMarkingPrioritySelectionPanel createPanel(final State[] states, final int[] priorities, final String[] labels, final boolean showTitle, final boolean showHelpLabel, final boolean withDefaultDialogBorder, final boolean growingGap) {
+    return new DefaultMarkingPrioritySelectionPanel(states, priorities, labels, showTitle, showHelpLabel, withDefaultDialogBorder, growingGap);
   }
   
   /**

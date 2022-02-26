@@ -62,6 +62,7 @@ import com.jgoodies.forms.builder.ButtonBarBuilder;
 import com.jgoodies.forms.builder.PanelBuilder;
 import com.jgoodies.forms.factories.Borders;
 import com.jgoodies.forms.factories.CC;
+import com.jgoodies.forms.factories.DefaultComponentFactory;
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.RowSpec;
@@ -145,7 +146,7 @@ public class EditFilterDlg extends JDialog implements ActionListener, DocumentLi
     mFilterRuleTF.getDocument().addDocumentListener(this);
     mFilterRuleTF.addCaretListener(this);  
     
-    FormLayout layout = new FormLayout("5dlu,fill:min:grow,5dlu,default,5dlu","default,5dlu,default,default,5dlu,default,5dlu,fill:min:grow,5dlu,default,5dlu,default,5dlu,default,5dlu,default");
+    FormLayout layout = new FormLayout("5dlu,fill:min:grow,5dlu,default,5dlu","default,5dlu,default,default,5dlu,default,5dlu,fill:min:grow,5dlu,default,10dlu,default,default,5dlu,default,5dlu,default");
     PanelBuilder filterCreation = new PanelBuilder(layout);
     filterCreation.border(Borders.DIALOG);
     
@@ -294,9 +295,10 @@ public class EditFilterDlg extends JDialog implements ActionListener, DocumentLi
     
     filterCreation.add(listPanel.getPanel(), CC.xyw(1,y+7,4));
     filterCreation.add(UiUtilities.createHelpTextArea(LOCALIZER.msg("help","To create or edit a filter you can enter the rules in the text field or drag and drop the rules to the left side.")), CC.xyw(2,y+9,4));
-    filterCreation.add(mFilterHighlight, CC.xyw(1, y+11, 4));
-    filterCreation.add(new JSeparator(JSeparator.HORIZONTAL), CC.xyw(1,y+13,4));
-    filterCreation.add(bottomBar.getPanel(), CC.xyw(1,y+15,4));
+    filterCreation.add(DefaultComponentFactory.getInstance().createSeparator(LOCALIZER.msg("highlighting", "Highlighting")), CC.xyw(1, y+11, 5));
+    filterCreation.add(mFilterHighlight, CC.xyw(1, y+12, 4));
+    filterCreation.add(new JSeparator(JSeparator.HORIZONTAL), CC.xyw(1,y+14,5));
+    filterCreation.add(bottomBar.getPanel(), CC.xyw(1,y+16,5));
     
     updateBtns();
 

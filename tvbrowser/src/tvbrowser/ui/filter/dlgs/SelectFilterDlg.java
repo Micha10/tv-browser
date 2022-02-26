@@ -27,12 +27,8 @@
 package tvbrowser.ui.filter.dlgs;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Component;
 import java.awt.Dialog;
 import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -40,7 +36,6 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
 import javax.swing.BorderFactory;
-import javax.swing.Icon;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
@@ -79,7 +74,7 @@ public class SelectFilterDlg extends JDialog implements ActionListener, WindowCl
 
   private static SelectFilterDlg INSTANCE;
 
-  private JButton mHelpBtn, mNewFolder, mCopyBtn, mEditBtn, mRemoveBtn, mNewBtn, mOkBtn, mUpBtn, mDownBtn, mSeperator, mDefaultFilterBtn, mSortAlphabetically, mHighlight;
+  private JButton mHelpBtn, mNewFolder, mCopyBtn, mEditBtn, mRemoveBtn, mNewBtn, mOkBtn, mUpBtn, mDownBtn, mSeperator, mDefaultFilterBtn, mSortAlphabetically;
 
   private FilterList mFilterList;
   private FilterTree mFilterTree;
@@ -120,32 +115,6 @@ public class SelectFilterDlg extends JDialog implements ActionListener, WindowCl
     mUpBtn = UiUtilities.createToolBarButton(LOCALIZER.msg("up","Move selected value up"),TVBrowserIcons.up(TVBrowserIcons.SIZE_LARGE));
     mDownBtn = UiUtilities.createToolBarButton(LOCALIZER.msg("down","Move selected value down"),TVBrowserIcons.down(TVBrowserIcons.SIZE_LARGE));    
     mSortAlphabetically = UiUtilities.createToolBarButton(LOCALIZER.msg("sortAlphabetically", "Sort filters alphabetically"), IconLoader.getInstance().getIconFromTheme("actions", "sort-list", TVBrowserIcons.SIZE_LARGE));
-    mHighlight = UiUtilities.createToolBarButton(EditFilterDlg.LOCALIZER.msg("highlight", "Highlight all matching programs"), new Icon() {
-      @Override
-      public void paintIcon(Component c, Graphics g, int x, int y) {
-        if(mHighlight.isEnabled()) {
-          FilterNode node = (FilterNode)mFilterTree.getSelectionPath().getLastPathComponent();
-          
-          if(node.containsFilter()) {
-            g.setColor(Settings.getHighlightingColorForPriority(Settings.Markings.MARK_PRIORITY_FILTERS.getInt()));
-          }
-        }
-        else {
-          g.setColor(Color.LIGHT_GRAY);
-        }
-        ((Graphics2D)g).fill3DRect(x, y, getIconWidth(), getIconHeight(), true);
-      }
-      
-      @Override
-      public int getIconWidth() {
-        return TVBrowserIcons.SIZE_LARGE;
-      }
-      
-      @Override
-      public int getIconHeight() {
-        return TVBrowserIcons.SIZE_LARGE;
-      }
-    });
     
     JToolBar toolbarPn = new JToolBar();
     toolbarPn.setBorder(BorderFactory.createEmptyBorder());
@@ -160,7 +129,6 @@ public class SelectFilterDlg extends JDialog implements ActionListener, WindowCl
     toolbarPn.add(mRemoveBtn);
     addToolbarSeperator(toolbarPn);
     toolbarPn.add(mDefaultFilterBtn);
-    toolbarPn.add(mHighlight);
     addToolbarSeperator(toolbarPn);
     toolbarPn.add(mUpBtn);
     toolbarPn.add(mDownBtn);
@@ -176,7 +144,6 @@ public class SelectFilterDlg extends JDialog implements ActionListener, WindowCl
     mDownBtn.addActionListener(this);
     mNewFolder.addActionListener(this);
     mSortAlphabetically.addActionListener(this);
-    mHighlight.addActionListener(this);
     
     mHelpBtn = Utilities.createHelpButton();
     mOkBtn = new JButton(Localizer.getLocalization(Localizer.I18N_CLOSE));
@@ -235,12 +202,10 @@ public class SelectFilterDlg extends JDialog implements ActionListener, WindowCl
         mDefaultFilterBtn.setEnabled(!((Settings.General.FILTER_DEFAULT.getString().equals(id + "###" + name)) ||
             (Settings.General.FILTER_DEFAULT.getString().trim().length() < 1 && node.getFilter() instanceof ShowAllFilter)));
         
-        mEditBtn.setEnabled(!(node.getFilter() instanceof FavoriteFilter || node.getFilter() instanceof ShowAllFilter || node.getFilter() instanceof PluginFilter || node.getFilter() instanceof PluginsProgramFilter || node.getFilter() instanceof InfoBitFilter || node.getFilter() instanceof SingleChannelFilter));
+        mEditBtn.setEnabled(!(node.getFilter() instanceof ShowAllFilter || node.getFilter() instanceof PluginFilter));
         mCopyBtn.setEnabled(mEditBtn.isEnabled());
-        mHighlight.setEnabled(!(node.getFilter() instanceof ShowAllFilter || node.getFilter() instanceof PluginFilter));
       }
       else {
-        mHighlight.setEnabled(false);
         mEditBtn.setEnabled(row > 0 && node.isDirectoryNode());
         mCopyBtn.setEnabled(false);
         mDefaultFilterBtn.setEnabled(false);
@@ -254,10 +219,7 @@ public class SelectFilterDlg extends JDialog implements ActionListener, WindowCl
       mDownBtn.setEnabled(false);
       mDefaultFilterBtn.setEnabled(false);
       mRemoveBtn.setEnabled(false);
-      mHighlight.setEnabled(false);
     }
-    
-    mHighlight.repaint();
   }
 
   public FilterList getFilterList() {
@@ -304,8 +266,6 @@ public class SelectFilterDlg extends JDialog implements ActionListener, WindowCl
         setDefaultFilter(last);
       } else if (e.getSource() == mNewFolder) {
         createNewFolder(last);
-      } else if (e.getSource() == mHighlight) {
-        editHighlighting(last);
       }
       else if(e.getSource() == mSortAlphabetically) {
         mFilterTree.sortAlphabetically(last);
@@ -386,12 +346,17 @@ public class SelectFilterDlg extends JDialog implements ActionListener, WindowCl
   }
   
   void editSelectedFilter(FilterNode node) {
-    UserFilter filter = (UserFilter)node.getFilter();
-    new EditFilterDlg(this, FilterList.getInstance(), filter, true);
-    
-    mFilterTree.getModel().fireFilterTouched(filter);
-    mFilterTree.updateUI();
-    updateBtns();
+    if(node.getFilter() instanceof FavoriteFilter || node.getFilter() instanceof PluginsProgramFilter || node.getFilter() instanceof InfoBitFilter || node.getFilter() instanceof SingleChannelFilter) {
+      editHighlighting(node);
+    }
+    else {
+      UserFilter filter = (UserFilter)node.getFilter();
+      new EditFilterDlg(this, FilterList.getInstance(), filter, true);
+      
+      mFilterTree.getModel().fireFilterTouched(filter);
+      mFilterTree.updateUI();
+      updateBtns();
+    }
   }
   
   void deleteSelectedItem(FilterNode node) {
