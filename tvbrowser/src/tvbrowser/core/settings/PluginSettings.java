@@ -134,45 +134,43 @@ public final class PluginSettings {
   }
   
   public static void writeData(final Data data, boolean log) throws TvBrowserException {
-    if(data.hasToSaveSettings()) {
-      final File userDirectory = new File(Settings.getUserSettingsDirName());
+    final File userDirectory = new File(Settings.getUserSettingsDirName());
+    
+    if(!userDirectory.isDirectory()) {
+      userDirectory.mkdirs();
+    }
+    
+    if(log) {
+      LOG.info("Storing plugin settings for " + data.toString() + "...");
+    }
+
+    // save the plugin data in a temp file
+    File tmpDatFile = new File(userDirectory, data.getBaseFileName() + ".dat.temp");
+    File oldDatFile = new File(userDirectory, data.getBaseFileName() + ".dat_old");
+    
+    try {
+      StreamUtilities.objectOutputStream(tmpDatFile,
+          new ObjectOutputStreamProcessor() {
+            public void process(ObjectOutputStream out) throws IOException {
+              data.writeData(out);
+              out.close();
+            }
+          });
+
+      // Saving succeeded -> Delete the old file and rename the temp file
+      File datFile = new File(userDirectory, data.getBaseFileName() + ".dat");
       
-      if(!userDirectory.isDirectory()) {
-        userDirectory.mkdirs();
+      if(oldDatFile.isFile()) {
+        oldDatFile.delete();
       }
       
-      if(log) {
-        LOG.info("Storing plugin settings for " + data.toString() + "...");
-      }
-  
-      // save the plugin data in a temp file
-      File tmpDatFile = new File(userDirectory, data.getBaseFileName() + ".dat.temp");
-      File oldDatFile = new File(userDirectory, data.getBaseFileName() + ".dat_old");
-      
-      try {
-        StreamUtilities.objectOutputStream(tmpDatFile,
-            new ObjectOutputStreamProcessor() {
-              public void process(ObjectOutputStream out) throws IOException {
-                data.writeData(out);
-                out.close();
-              }
-            });
-  
-        // Saving succeeded -> Delete the old file and rename the temp file
-        File datFile = new File(userDirectory, data.getBaseFileName() + ".dat");
-        
-        if(oldDatFile.isFile()) {
-          oldDatFile.delete();
-        }
-        
-        datFile.renameTo(oldDatFile);
-        tmpDatFile.renameTo(datFile);
-      }
-      catch(Throwable thr) {
-        throw new TvBrowserException(data.getClass(), "error.data.write",
-            "Saving data for plugin {0} failed.\n({1})",
-            data.toString(), tmpDatFile.getAbsolutePath(), thr);
-      }
+      datFile.renameTo(oldDatFile);
+      tmpDatFile.renameTo(datFile);
+    }
+    catch(Throwable thr) {
+      throw new TvBrowserException(data.getClass(), "error.data.write",
+          "Saving data for plugin {0} failed.\n({1})",
+          data.toString(), tmpDatFile.getAbsolutePath(), thr);
     }
   }
   
@@ -189,52 +187,50 @@ public final class PluginSettings {
   public static boolean storeSettings(Preferences settings) {
     final AtomicBoolean result = new AtomicBoolean(false);
     
-    if(settings.hasToSaveSettings()) {      
-      final Properties prop = settings.storeSettings();
-      // don't ever delete settings file if prop is null
-      // since stored data might be needed but not saved again
-      if (prop!=null) {
-        String dir=Settings.getUserSettingsDirName();
-        final AtomicReference<File> file = new AtomicReference<File>(new File(dir));
-        
-        if (!file.get().exists()) {
-          file.get().mkdir();
-        }
-        file.set(new File(dir,settings.getBaseFileName() + getExtensionFor(settings)));
-        
-        final AtomicReference<File> old = new AtomicReference<File>(new File(file.get().getAbsolutePath()+"_old"));
-        final AtomicReference<File> temp = new AtomicReference<File>(new File(file.get().getAbsolutePath()+"_temp"));
-        
-        try {
-          StreamUtilities.outputStream(temp.get(), new OutputStreamProcessor() {
-            public void process(OutputStream outputStream) throws IOException {
-              prop.store(outputStream, "Settings for plugin " + settings.toString());
+    final Properties prop = settings.storeSettings();
+    // don't ever delete settings file if prop is null
+    // since stored data might be needed but not saved again
+    if (prop!=null) {
+      String dir=Settings.getUserSettingsDirName();
+      final AtomicReference<File> file = new AtomicReference<File>(new File(dir));
+      
+      if (!file.get().exists()) {
+        file.get().mkdir();
+      }
+      file.set(new File(dir,settings.getBaseFileName() + getExtensionFor(settings)));
+      
+      final AtomicReference<File> old = new AtomicReference<File>(new File(file.get().getAbsolutePath()+"_old"));
+      final AtomicReference<File> temp = new AtomicReference<File>(new File(file.get().getAbsolutePath()+"_temp"));
+      
+      try {
+        StreamUtilities.outputStream(temp.get(), new OutputStreamProcessor() {
+          public void process(OutputStream outputStream) throws IOException {
+            prop.store(outputStream, "Settings for plugin " + settings.toString());
+            
+            if(temp.get().isFile()) {
+              result.set(true);
               
-              if(temp.get().isFile()) {
-                result.set(true);
-                
-                if(old.get().isFile()) {
-                  old.get().delete();
-                }
-                
-                if(!old.get().isFile()) {
-                  file.get().renameTo(old.get());
-                }
-                
-                if(!file.get().isFile()) {
-                  temp.get().renameTo(file.get());
-                }
-                else if(file.get().delete()) {
-                  temp.get().renameTo(file.get());
-                }
+              if(old.get().isFile()) {
+                old.get().delete();
+              }
+              
+              if(!old.get().isFile()) {
+                file.get().renameTo(old.get());
+              }
+              
+              if(!file.get().isFile()) {
+                temp.get().renameTo(file.get());
+              }
+              else if(file.get().delete()) {
+                temp.get().renameTo(file.get());
               }
             }
-          });
-        } catch (IOException exc) {
-          String msg = LOCALIZER.msg("error.write", "Saving settings for plugin {0} failed!\n({1})",
-              settings.toString(), file.get().getAbsolutePath(), exc);
-          ErrorHandler.handle(msg, exc);
-        }
+          }
+        });
+      } catch (IOException exc) {
+        String msg = LOCALIZER.msg("error.write", "Saving settings for plugin {0} failed!\n({1})",
+            settings.toString(), file.get().getAbsolutePath(), exc);
+        ErrorHandler.handle(msg, exc);
       }
     }
     

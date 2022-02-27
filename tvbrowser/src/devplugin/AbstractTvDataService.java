@@ -371,6 +371,12 @@ public abstract class AbstractTvDataService {
    *  @since 4.2.5
    */
   protected final boolean saveMe() {
-    return PluginSettings.storeSettings(TvDataServiceProxyManager.getInstance().findDataServiceById(getId()));
+    boolean result = hasToSaveSettings();
+    
+    if(result) {
+      result = PluginSettings.storeSettings(TvDataServiceProxyManager.getInstance().findDataServiceById(getId()));
+    }
+    
+    return result;
   }
 }

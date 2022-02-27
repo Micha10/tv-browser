@@ -177,8 +177,10 @@ public class JavaPluginProxy extends AbstractPluginProxy {
    * @throws TvBrowserException If saving failed.
    */
   protected void doSaveSettings(boolean log) throws TvBrowserException {
-    PluginSettings.writeData(mPlugin, log);
-    PluginSettings.storeSettings(mPlugin);
+    if(mPlugin.hasToSaveSettings()) {
+      PluginSettings.writeData(mPlugin, log);
+      PluginSettings.storeSettings(mPlugin);
+    }
   }
 
 

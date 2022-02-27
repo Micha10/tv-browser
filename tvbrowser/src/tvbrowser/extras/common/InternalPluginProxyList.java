@@ -123,12 +123,14 @@ public class InternalPluginProxyList {
   }
   
   public synchronized void storeData(InternalPluginProxyIf plugin, boolean log) {
-    try {
-      PluginSettings.writeData(plugin, log);
-    } catch (TvBrowserException e) {
-      e.printStackTrace();
+    if(plugin.hasToSaveSettings()) {
+      try {
+          PluginSettings.writeData(plugin, log);
+      } catch (TvBrowserException e) {
+        e.printStackTrace();
+      }
+      PluginSettings.storeSettings(plugin);
     }
-    PluginSettings.storeSettings(plugin);
   }
   
   /**

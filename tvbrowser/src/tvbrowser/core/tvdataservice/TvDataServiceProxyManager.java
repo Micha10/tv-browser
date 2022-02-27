@@ -119,7 +119,9 @@ public class TvDataServiceProxyManager {
 
   public void shutDown() {
     for (TvDataServiceProxy proxy : getDataServices()) {
-      PluginSettings.storeSettings(proxy);
+      if(proxy.hasToSaveSettings()) {
+        PluginSettings.storeSettings(proxy);
+      }
     }
   }
 
