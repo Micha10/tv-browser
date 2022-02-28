@@ -468,6 +468,7 @@ public class MainFrame extends JFrame implements DateListener,DropTargetListener
     mRestartPanel.setVisible(Settings.isRestartNeeded());
     Settings.addRestartInfoListener(e -> {
       mRestartPanel.setVisible(Settings.isRestartNeeded());
+      updateTopPanelVisibility();
     });
     
     mVersionOldPanel = new LabelButtonPanel(LOCALIZER.msg("oldVersion", "This version of TV-Browser is outdated."), null, LOCALIZER.msg("downloadNewVersion", "Go to download of TV-Browser {0}", Settings.General.VERSION_AVAILABLE.getVersion().toString()), () -> {Launch.openURL("https://www.tvbrowser.org/index.php?id=tv-browser");}, true);
