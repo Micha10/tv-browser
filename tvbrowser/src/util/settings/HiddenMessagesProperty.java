@@ -33,9 +33,9 @@ public class HiddenMessagesProperty extends Property {
   private static final PropertyManager DUMMY = new PropertyManager();
   private boolean mDefaultValue;
   
-  public HiddenMessagesProperty(String messageId, boolean defaultValue) {
+  public HiddenMessagesProperty(String messageId, boolean isHiddenDefault) {
     super(DUMMY, messageId);
-    mDefaultValue = defaultValue;
+    mDefaultValue = isHiddenDefault;
   }
   
   public boolean getDefault() {

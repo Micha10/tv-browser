@@ -64,7 +64,6 @@ import javax.swing.tree.TreeSelectionModel;
 
 import com.jgoodies.forms.builder.ButtonBarBuilder;
 import com.jgoodies.forms.factories.Borders;
-import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 
@@ -91,6 +90,7 @@ import util.exc.ErrorHandler;
 import util.i18n.Localizer;
 import util.misc.OperatingSystem;
 import util.ui.ChannelLabel;
+import util.ui.LabelButtonPanel;
 import util.ui.SingleAndDoubleClickTreeUI;
 import util.ui.TVBrowserIcons;
 import util.ui.UiUtilities;
@@ -129,26 +129,15 @@ public class SettingsDialog implements WindowClosingIf {
   private final JSplitPane mSplitPane;
 
   public static JPanel getRestartPanel() {
-    final JLabel restartLb = new JLabel(LOCALIZER.msg("restartNote", "For changes to take effect TV-Browser has to be restarted."));
-    restartLb.setForeground(Color.red);
-    
-    final JButton restartBtn = new JButton(LOCALIZER.msg("restart", "Restart now"));
-    restartBtn.addActionListener(e -> {
-      if(mInstance != null) {
-        mInstance.saveSettings();
+    return new LabelButtonPanel(LOCALIZER.msg("restartNote", "For changes to take effect TV-Browser has to be restarted."), Color.red, LOCALIZER.msg("restart", "Restart now"), () -> {
+        if(mInstance != null) {
+          mInstance.saveSettings();
+        }
+        TVBrowser.addRestart();
+        MainFrame.getInstance().quit();
       }
-      TVBrowser.addRestart();
-      MainFrame.getInstance().quit();
-    });
-    
-    final JPanel restart = new JPanel(new FormLayout("default:grow,3dlu,default","default"));
-    restart.setBorder(Borders.createEmptyBorder("5dlu,5dlu,0dlu,5dlu"));
-    restart.setVisible(Settings.isRestartNeeded());
-    restart.add(restartLb, CC.xy(1, 1));
-    restart.add(restartBtn, CC.xy(3, 1));
-    
-    return restart;
-  }
+     ,Settings.isRestartNeeded());
+   }
   
   /**
    * Creates a new instance of SettingsDialog.

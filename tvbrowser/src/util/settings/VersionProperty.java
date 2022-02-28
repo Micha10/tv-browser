@@ -62,7 +62,7 @@ public class VersionProperty extends Property {
         if(asString.contains(";")) {
           String[] parts = asString.split(";");
           
-          mCachedValue = new devplugin.Version(Integer.parseInt(parts[0]),Integer.parseInt(parts[1]),Integer.parseInt(parts[2]));
+          mCachedValue = new devplugin.Version(Integer.parseInt(parts[0]),Integer.parseInt(parts[1]),Integer.parseInt(parts[2]),parts.length>3 ? parts[3].equals("true"): true);
         }
         else {
           try {
@@ -107,7 +107,7 @@ public class VersionProperty extends Property {
     if (value.equals(mDefaultValue)) {
       setProperty(null);
     } else {
-      setProperty(value.getMajor() + ";" + value.getMinor() + ";" + value.getSubMinor());
+      setProperty(value.getMajor() + ";" + value.getMinor() + ";" + value.getSubMinor() + ";" + value.isStable());
     }
     
     mCachedValue = value;

@@ -66,6 +66,7 @@ public final class SoftwareUpdater {
 	private SoftwareUpdateItem[] mSoftwareUpdateItems;
 	private String mBlockRequestingPluginId;
 	private boolean mIsRequestingBlockArrayClear;
+	private TvbrowserSoftwareUpdateItem mTVBrowserTestItem;
 	
 	public static final String FALLBACK_PLUGINS_GZ_URL = "http://download.tvbrowser.org/plugins/plugins.gz";
 
@@ -217,6 +218,19 @@ public final class SoftwareUpdater {
             continue;
           }
         }
+        else if(item instanceof TvbrowserSoftwareUpdateItem && item.getClassName().endsWith(".stable")) {
+          Settings.General.VERSION_AVAILABLE.setVersion(item.getVersion());
+          it.remove();
+          continue;
+        }
+        else if(item instanceof TvbrowserSoftwareUpdateItem) {
+          if(item.getClassName().endsWith(".test")) {
+            mTVBrowserTestItem = (TvbrowserSoftwareUpdateItem)item;
+          }
+          
+          it.remove();
+          continue;
+        }
         
         if(item.isAccessControl() && !Settings.Plugins.ACCESS_CONTROL.containsItem(className.toLowerCase())) {
           Settings.Plugins.ACCESS_CONTROL.addItem(className.toLowerCase());
@@ -306,6 +320,15 @@ public final class SoftwareUpdater {
 	public SoftwareUpdateItem[] getAvailableSoftwareUpdateItems() {
 		return mSoftwareUpdateItems;
 	}
+	
+	/**
+	 * @return An item for available TV-Browser test version or <code>null</code>
+	 * if there is no test version currently available.
+	 * @since 4.2.5
+	 */
+	public TvbrowserSoftwareUpdateItem getTVBrowserTestItem() {
+    return mTVBrowserTestItem;
+  }
 
 	/**
 	 * @param pluginId The id that is requested to be blocked.

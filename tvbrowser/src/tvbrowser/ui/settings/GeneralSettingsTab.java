@@ -95,6 +95,7 @@ public class GeneralSettingsTab implements devplugin.SettingsTab {
   private JCheckBox mAutoDownloadPrimeTime;
   private JCheckBox mAutoChannelDownload;
   private JCheckBox mAutoJREUpdate;
+  private JCheckBox mInformTestVersions;
 
   private JRadioButton mStartDownload;
   private JRadioButton mRecurrentDownload;
@@ -266,7 +267,14 @@ public class GeneralSettingsTab implements devplugin.SettingsTab {
     
       mSettingsPn.add(mAutoJREUpdate, CC.xyw(2,y,4));
     }
+    
+    mInformTestVersions = new JCheckBox(LOCALIZER.msg("informTestVersion", "Show info when test versions of TV-Browser are available"),!Settings.General.INFORM_TEST_VERSIONS.isHidden());
 
+    layout.insertRow(++y, RowSpec.decode("5dlu"));
+    layout.insertRow(++y, RowSpec.decode("default"));
+    
+    mSettingsPn.add(mInformTestVersions, CC.xyw(2,y,4));
+    
     y++;
 
     String msg = LOCALIZER.msg("onlyMinimizeWhenWindowClosing",
@@ -377,6 +385,7 @@ public class GeneralSettingsTab implements devplugin.SettingsTab {
     Settings.General.ASK_FOR_EXIT_CONFIRMATION.setHidden(!mAskForExitConfirmation.isSelected());
     
     Settings.General.JRE_UPDATE_ENABLED.setBoolean(mAutoJREUpdate.isSelected());
+    Settings.General.INFORM_TEST_VERSIONS.setHidden(!mInformTestVersions.isSelected());
   }
 
   /**
@@ -534,7 +543,7 @@ public class GeneralSettingsTab implements devplugin.SettingsTab {
     
     if(Settings.General.AUTO_CHANNEL_UPDATE_PERIOD.getInt() > VALUE_AUTO_CHANNEL_UPDATE_DISABLED) {
       mAutoChannelDownload.setSelected(true);
-      mAutoChannelDownloadPeriod.setSelectedItem(new DayPeriod(Settings.General.AUTO_DOWNLOAD_PERIOD.getInt()));
+      mAutoChannelDownloadPeriod.setSelectedItem(new DayPeriod(Settings.General.AUTO_CHANNEL_UPDATE_PERIOD.getInt()));
     }
     else {
       mAutoChannelDownloadPeriod.setSelectedItem(VALUE_AUTO_CHANNEL_UPDATE_PERIOD_DEFAULT);

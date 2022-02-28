@@ -2852,6 +2852,7 @@ tvbrowser/src/util/ui/EnhancedPanelBuilder.java -text
 tvbrowser/src/util/ui/FilterSelectionPanel.java -text svneol=unset#text/plain
 tvbrowser/src/util/ui/FilterableProgramListPanel.java -text svneol=unset#text/plain
 tvbrowser/src/util/ui/ImageIconEnhanced.java -text
+tvbrowser/src/util/ui/LabelButtonPanel.java -text svneol=unset#text/plain
 tvbrowser/src/util/ui/LazyImageIcon.java -text
 tvbrowser/src/util/ui/NullProgressMonitor.java -text
 tvbrowser/src/util/ui/ObjectSelectionButton.java -text

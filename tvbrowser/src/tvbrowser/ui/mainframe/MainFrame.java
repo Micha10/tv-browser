@@ -199,6 +199,7 @@ import tvbrowser.ui.settings.SettingsDialog;
 import tvbrowser.ui.update.PluginAutoUpdater;
 import tvbrowser.ui.update.SoftwareUpdateDlg;
 import tvbrowser.ui.update.SoftwareUpdateItem;
+import tvbrowser.ui.update.TvbrowserSoftwareUpdateItem;
 import util.browserlauncher.Launch;
 import util.exc.ErrorHandler;
 import util.exc.TvBrowserException;
@@ -208,6 +209,7 @@ import util.io.NetworkUtilities;
 import util.misc.OperatingSystem;
 import util.programkeyevent.ProgramKeyEventHandler;
 import util.settings.ContextMenuMouseActionSetting;
+import util.ui.LabelButtonPanel;
 import util.ui.TVBrowserIcons;
 import util.ui.UIThreadRunner;
 import util.ui.UiUtilities;
@@ -260,6 +262,7 @@ public class MainFrame extends JFrame implements DateListener,DropTargetListener
 
   private StatusBar mStatusBar;
   
+  private JPanel mTopPanel;
   private JPanel mSouthPanel;
 
   private DateSelector mFinderPanel;
@@ -291,6 +294,8 @@ public class MainFrame extends JFrame implements DateListener,DropTargetListener
 
   /** Panel that Displays current Filter-Name */
   private FilterPanel mFilterPanel;
+  private JPanel mRestartPanel = SettingsDialog.getRestartPanel();
+  private LabelButtonPanel mVersionOldPanel;
 
   private TimeChooserPanel mTimeChooserPanel;
 
@@ -458,18 +463,25 @@ public class MainFrame extends JFrame implements DateListener,DropTargetListener
     addKeyListener(mGlobalFindAsYouTypeKeyListener);
     mTimeChooserPanel = new TimeChooserPanel(this,mGlobalFindAsYouTypeKeyListener);
 
-    final JPanel restart = SettingsDialog.getRestartPanel();
-    restart.setBorder(Borders.createEmptyBorder("2dlu,2dlu,2dlu,2dlu"));
-    restart.setVisible(Settings.isRestartNeeded());
+    mRestartPanel = SettingsDialog.getRestartPanel();
+    mRestartPanel.setBorder(Borders.createEmptyBorder("2dlu,2dlu,2dlu,2dlu"));
+    mRestartPanel.setVisible(Settings.isRestartNeeded());
     Settings.addRestartInfoListener(e -> {
-      restart.setVisible(Settings.isRestartNeeded());
+      mRestartPanel.setVisible(Settings.isRestartNeeded());
     });
     
-    JPanel top = new JPanel(new BorderLayout());
-    top.add(restart, BorderLayout.NORTH);
-    top.add(mFilterPanel, BorderLayout.SOUTH);
+    mVersionOldPanel = new LabelButtonPanel(LOCALIZER.msg("oldVersion", "This version of TV-Browser is outdated."), null, LOCALIZER.msg("downloadNewVersion", "Go to download of TV-Browser {0}", Settings.General.VERSION_AVAILABLE.getVersion().toString()), () -> {Launch.openURL("https://www.tvbrowser.org/index.php?id=tv-browser");}, true);
+    mVersionOldPanel.setBorder(Borders.createEmptyBorder("2dlu,2dlu,2dlu,2dlu"));
+    mVersionOldPanel.setVisible(Settings.General.VERSION_AVAILABLE.getVersion().isNewerThan(TVBrowser.VERSION));
     
-    centerPanel.add(top, BorderLayout.NORTH);
+    mTopPanel = new JPanel(new FormLayout("100dlu:grow","default,default,default"));
+    mTopPanel.add(mVersionOldPanel, CC.xy(1, 1));
+    mTopPanel.add(mRestartPanel, CC.xy(1, 2));
+    mTopPanel.add(mFilterPanel, CC.xy(1, 3));
+    
+    updateTopPanelVisibility();
+    
+    centerPanel.add(mTopPanel, BorderLayout.NORTH);
     
     Channel[] channelArr = ChannelList.getSubscribedChannels();
     int startOfDay = Settings.ProgramTable.START_OF_DAY.getInt();
@@ -1644,6 +1656,11 @@ public class MainFrame extends JFrame implements DateListener,DropTargetListener
     }
     mFilterPanel.setVisible(filterVisible);
     Settings.Window.FILTER_BAR_SHOW.setBoolean(mMenuBar.isShowFilterPanelEnabled());
+    updateTopPanelVisibility();
+  }
+  
+  private void updateTopPanelVisibility() {
+    mTopPanel.setVisible(mFilterPanel.isVisible() || mRestartPanel.isVisible() || mVersionOldPanel.isVisible());
   }
 
   public ProgramFilter getProgramFilter() {
@@ -2646,8 +2663,7 @@ public class MainFrame extends JFrame implements DateListener,DropTargetListener
   private boolean checkForPluginUpdate() {
     boolean result = false;
     
-    if((Settings.Plugins.UPDATE_LAST.getDate() == null || Settings.Plugins.UPDATE_LAST.getDate().addDays(7).compareTo(Date.getCurrentDate()) <= 0)
-        && NetworkUtilities.checkConnection()) {
+    if((Settings.Plugins.UPDATE_LAST.getDate() == null || Settings.Plugins.UPDATE_LAST.getDate().addDays(7).compareTo(Date.getCurrentDate()) <= 0)) {
       PluginAutoUpdater.searchForPluginUpdates(mStatusBar.getLabel());
       result = true;
     }
@@ -2886,40 +2902,53 @@ public class MainFrame extends JFrame implements DateListener,DropTargetListener
   public void updatePlugins(final String baseUrl, final int dialogType, final JLabel infoLabel, final boolean dontShowUpdateDlg, final String search, final boolean select) {
     new Thread("Plugin Update Thread") {
       public void run() {
+        TvbrowserSoftwareUpdateItem testVersion = null;
         try {
           infoLabel.setText(LOCALIZER.msg("searchForPluginUpdates","Search for plugin updates..."));
           java.net.URL url = new java.net.URL(baseUrl + "/" + PluginAutoUpdater.PLUGIN_UPDATES_FILENAME);
           SoftwareUpdater softwareUpdater = new SoftwareUpdater(url,dialogType,false);
-          mSoftwareUpdateItems = softwareUpdater
-              .getAvailableSoftwareUpdateItems();
+          mSoftwareUpdateItems = softwareUpdater.getAvailableSoftwareUpdateItems();
+          testVersion = softwareUpdater.getTVBrowserTestItem();
           infoLabel.setText("");
         } catch (java.io.IOException e) {
           e.printStackTrace();
         }
         
         if(!dontShowUpdateDlg) {
+          boolean goOn = true;
+          
           if (mSoftwareUpdateItems == null && dialogType != SoftwareUpdater.ONLY_UPDATE_TYPE) {
             JOptionPane.showMessageDialog(UiUtilities.getLastModalChildOf(MainFrame.getInstance()), LOCALIZER.msg("error.1",
                 "software check failed."));
-          } else if (mSoftwareUpdateItems != null && mSoftwareUpdateItems.length == 0 && dialogType != SoftwareUpdater.ONLY_UPDATE_TYPE) {
-            JOptionPane.showMessageDialog(UiUtilities.getLastModalChildOf(MainFrame.getInstance()), LOCALIZER.msg("error.2",
-                "No new items available"));
-          } else if(mSoftwareUpdateItems != null && mSoftwareUpdateItems.length > 0) {
-            final Window parent = UiUtilities.getLastModalChildOf(MainFrame
-                .getInstance());
-            try {
-              UIThreadRunner.invokeAndWait(() -> {
-                SoftwareUpdateDlg dlg = new SoftwareUpdateDlg(parent, baseUrl,
-                    dialogType, mSoftwareUpdateItems, false, null, search, select);
-                dlg.setVisible(true);
-              });
-            } catch (InterruptedException e) {
-              e.printStackTrace();
-            } catch (InvocationTargetException e) {
-              e.printStackTrace();
+            goOn = false;
+          } else if(testVersion != null && !Settings.General.INFORM_TEST_VERSIONS.isHidden() && Settings.General.TEST_VERSION_AVAILABLE.getVersion().isOlderThan(testVersion.getVersion())) {
+            showTestVersionAvailable(testVersion);
+          } 
+          
+          if(goOn) {
+            if (mSoftwareUpdateItems != null && mSoftwareUpdateItems.length == 0 && dialogType != SoftwareUpdater.ONLY_UPDATE_TYPE) {
+              JOptionPane.showMessageDialog(UiUtilities.getLastModalChildOf(MainFrame.getInstance()), LOCALIZER.msg("error.2",
+                  "No new items available"));
+            } else if(mSoftwareUpdateItems != null && mSoftwareUpdateItems.length > 0) {
+              final Window parent = UiUtilities.getLastModalChildOf(MainFrame
+                  .getInstance());
+              try {
+                UIThreadRunner.invokeAndWait(() -> {
+                  SoftwareUpdateDlg dlg = new SoftwareUpdateDlg(parent, baseUrl,
+                      dialogType, mSoftwareUpdateItems, false, null, search, select);
+                  dlg.setVisible(true);
+                });
+              } catch (InterruptedException e) {
+                e.printStackTrace();
+              } catch (InvocationTargetException e) {
+                e.printStackTrace();
+              }
+  
             }
-
           }
+        }
+        else if(testVersion != null && !Settings.General.INFORM_TEST_VERSIONS.isHidden() && Settings.General.TEST_VERSION_AVAILABLE.getVersion().isOlderThan(testVersion.getVersion())) {
+          showTestVersionAvailable(testVersion);
         }
 
         BlockedPlugin[] newlyBlocked = Settings.Plugins.BLOCKED_ARRAY.getNewBlockedPlugins();
@@ -2948,13 +2977,32 @@ public class MainFrame extends JFrame implements DateListener,DropTargetListener
             showInfoTextMessage(LOCALIZER.msg("update.blockedPlugins","Plugins blocked!"),message.toString(),450);
           }
         }
-
+        
         Settings.Plugins.UPDATE_LAST.setDate(Date.getCurrentDate());
 
         infoLabel.setText("");
         mSoftwareUpdateItems = null;
+        
+        mVersionOldPanel.setButtonText(LOCALIZER.msg("downloadNewVersion", "Go to download of TV-Browser {0}", Settings.General.VERSION_AVAILABLE.getVersion().toString()));
+        mVersionOldPanel.setVisible(Settings.General.VERSION_AVAILABLE.getVersion().isNewerThan(TVBrowser.VERSION));
+        updateTopPanelVisibility();
       }
     }.start();
+  }
+  
+  private void showTestVersionAvailable(TvbrowserSoftwareUpdateItem testVersion) {
+    JLabel info = new JLabel(LOCALIZER.msg("testVersionFound.msg", "A new test version of TV-Browser ({0}) is available.",testVersion.getVersion().toString()));
+    
+    String[] options = {
+        LOCALIZER.msg("testVersionFound.btn", "To the download in the message board"),
+        Localizer.getLocalization(Localizer.I18N_CANCEL)
+    };
+    
+    if(DontShowAgainOptionBox.showOptionDialog(Settings.General.INFORM_TEST_VERSIONS.getMessageId(), UiUtilities.getBestDialogParent(MainFrame.this), info, LOCALIZER.msg("testVersionFound.title", "New test version available"), JOptionPane.INFORMATION_MESSAGE, JOptionPane.YES_NO_OPTION, options, options[0], null) == JOptionPane.YES_OPTION) {
+      Launch.openURL("https://hilfe.tvbrowser.org/viewforum.php?f=2");
+    }
+    
+    Settings.General.TEST_VERSION_AVAILABLE.setVersion(testVersion.getVersion());
   }
 
   public void showFromTray(int state) {

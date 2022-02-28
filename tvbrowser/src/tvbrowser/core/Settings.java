@@ -1826,6 +1826,24 @@ public class Settings {
     public static final StringProperty FILTER_DEFAULT = new StringProperty(
       mProp, "defaultFilter", "");
     
+    /**
+     * Current available stable version of TV-Browser.
+     * @since 4.2.5
+     */
+    public static final VersionProperty VERSION_AVAILABLE = new VersionProperty(mProp, "versionAvailable", TVBrowser.VERSION);
+
+    /**
+     * Current available test version of TV-Browser.
+     * @since 4.2.5
+     */
+    public static final VersionProperty TEST_VERSION_AVAILABLE = new VersionProperty(mProp, "testVersionAvailable", TVBrowser.VERSION);
+
+    /**
+     * Inform about test versions available.
+     * @since 4.2.5
+     */
+    public static final HiddenMessagesProperty INFORM_TEST_VERSIONS = new HiddenMessagesProperty("informTestVersions", false);
+    
     private General() {}
   }
   
