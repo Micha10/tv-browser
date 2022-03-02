@@ -87,7 +87,7 @@ public final class PluginSettings {
     public String toString();
   }
   
-  private static boolean readDataInternal(final File file, final Data data) throws TvBrowserException {
+  private static boolean readDataInternal(final File file, final Data data, final boolean throwError) throws TvBrowserException {
     boolean result = false;
   
     try (ObjectInputStream in = new ObjectInputStream(new BufferedInputStream(new FileInputStream(file), 0x4000))) {
@@ -95,9 +95,11 @@ public final class PluginSettings {
       result = true;
     }
     catch (Throwable thr) {
-      throw new TvBrowserException(data.getClass(), "error.data.load",
+      if(throwError) {
+        throw new TvBrowserException(data.getClass(), "error.data.load",
           "Loading data for plugin {0} failed.\n({1})",
           data.toString(), file.getAbsolutePath(), thr);
+      }
     }
     
     return result;
@@ -109,16 +111,18 @@ public final class PluginSettings {
     final File datFile = new File(userDirectory, data.getBaseFileName() + ".dat");
     final File datFileBackup = new File(userDirectory, data.getBaseFileName() + ".dat_old");
     
+    boolean dataExists = datFile.isFile() && datFile.length() > 0;
+    boolean dataBackupExists = datFileBackup.isFile() && datFileBackup.length() > 0;
+    
     // load plugin data
-    if (datFile.exists() && datFile.length() > 0) {
-      if(!readDataInternal(datFile, data) && datFileBackup.isFile() && datFileBackup.length() > 0) {
-        if(readDataInternal(datFileBackup, data)) {
-          LOG.severe("Date file '" + datFile.getAbsolutePath() + "' could not be read. Read old file instead: '" + datFileBackup.getAbsolutePath() + "'.");
-        }
+    if (dataExists) {
+      if(!readDataInternal(datFile, data, !dataBackupExists) && dataBackupExists) {
+        LOG.severe("Data file '" + datFile.getAbsolutePath() + "' could not be read. Read old file instead: '" + datFileBackup.getAbsolutePath() + "'.");
+        readDataInternal(datFileBackup, data, true);
       }
     }
-    else if(datFileBackup.isFile() && datFileBackup.length() > 0) {
-      readDataInternal(datFileBackup, data);
+    else if(dataBackupExists) {
+      readDataInternal(datFileBackup, data, true);
     }
   }
   
@@ -221,18 +225,21 @@ public final class PluginSettings {
     final File propFile = new File(Settings.getUserSettingsDirName(),settings.getBaseFileName()+getExtensionFor(settings));
     final File oldPropFile = new File(propFile.getAbsolutePath()+"_old");
     
-    if (propFile.exists() && propFile.length() > 0) {
-      if(loadProperties(propFile, settings) == null && oldPropFile.isFile()) {
-        loadProperties(oldPropFile, settings);
+    final boolean propExists = propFile.exists() && propFile.length() > 0;
+    final boolean propBackupExists = oldPropFile.exists() && oldPropFile.length() > 0;
+    
+    if (propExists) {
+      if(loadProperties(propFile, settings, !propBackupExists) == null && propBackupExists) {
+        loadProperties(oldPropFile, settings, true);
       }
-    } else if(oldPropFile.isFile() && oldPropFile.length() > 0) {
-      loadProperties(oldPropFile, settings);
+    } else if(propBackupExists) {
+      loadProperties(oldPropFile, settings, true);
     } else {
       settings.loadSettings(new Properties());
     }
   }
   
-  private static Properties loadProperties(final File file, final Preferences settings) {
+  private static Properties loadProperties(final File file, final Preferences settings, boolean handleError) {
     Properties p=new Properties();
     
     try {
@@ -243,9 +250,12 @@ public final class PluginSettings {
       settings.loadSettings(p);
     } catch (IOException exc) {
       p = null;
-      String msg = LOCALIZER.msg("error.load", "Loading settings for plugin {0} failed!\n({1})",
-          settings.toString(), file.getAbsolutePath(), exc);
-      ErrorHandler.handle(msg, exc);
+      
+      if(handleError) {
+        String msg = LOCALIZER.msg("error.load", "Loading settings for plugin {0} failed!\n({1})",
+            settings.toString(), file.getAbsolutePath(), exc);
+        ErrorHandler.handle(msg, exc);
+      }
     }
     
     return p;
