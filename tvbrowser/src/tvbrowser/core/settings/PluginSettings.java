@@ -26,13 +26,11 @@ package tvbrowser.core.settings;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.OutputStream;
 import java.util.Properties;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.logging.Logger;
 
 import tvbrowser.core.Settings;
@@ -40,9 +38,6 @@ import tvbrowser.core.tvdataservice.TvDataServiceProxy;
 import util.exc.ErrorHandler;
 import util.exc.TvBrowserException;
 import util.i18n.Localizer;
-import util.io.stream.ObjectOutputStreamProcessor;
-import util.io.stream.OutputStreamProcessor;
-import util.io.stream.StreamUtilities;
 
 /**
  * Central class for handling of properties storage for plugins.
@@ -110,15 +105,9 @@ public final class PluginSettings {
   
   public static void readData(final Data data) throws TvBrowserException {
     final File userDirectory = new File(Settings.getUserSettingsDirName());
-    final String pluginClassName = data.getClass().getName();
-
-    // Get all the file names
-    final File oldDatFile = new File(userDirectory, pluginClassName + ".dat");
+    
     final File datFile = new File(userDirectory, data.getBaseFileName() + ".dat");
     final File datFileBackup = new File(userDirectory, data.getBaseFileName() + ".dat_old");
-    
-    // Rename the old data and settings file if they still exist
-    oldDatFile.renameTo(datFile);
     
     // load plugin data
     if (datFile.exists() && datFile.length() > 0) {
@@ -148,15 +137,9 @@ public final class PluginSettings {
     File tmpDatFile = new File(userDirectory, data.getBaseFileName() + ".dat.temp");
     File oldDatFile = new File(userDirectory, data.getBaseFileName() + ".dat_old");
     
-    try {
-      StreamUtilities.objectOutputStream(tmpDatFile,
-          new ObjectOutputStreamProcessor() {
-            public void process(ObjectOutputStream out) throws IOException {
-              data.writeData(out);
-              out.close();
-            }
-          });
-
+    try(ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(tmpDatFile))) {
+      data.writeData(out);
+      
       // Saving succeeded -> Delete the old file and rename the temp file
       File datFile = new File(userDirectory, data.getBaseFileName() + ".dat");
       
@@ -185,68 +168,56 @@ public final class PluginSettings {
   }
   
   public static boolean storeSettings(Preferences settings) {
-    final AtomicBoolean result = new AtomicBoolean(false);
+    boolean result = false;
     
     final Properties prop = settings.storeSettings();
     // don't ever delete settings file if prop is null
     // since stored data might be needed but not saved again
     if (prop!=null) {
       String dir=Settings.getUserSettingsDirName();
-      final AtomicReference<File> file = new AtomicReference<File>(new File(dir));
+      File propFile = new File(dir);
       
-      if (!file.get().exists()) {
-        file.get().mkdir();
+      if (!propFile.exists()) {
+        propFile.mkdir();
       }
-      file.set(new File(dir,settings.getBaseFileName() + getExtensionFor(settings)));
+      propFile = new File(dir,settings.getBaseFileName() + getExtensionFor(settings));
       
-      final AtomicReference<File> old = new AtomicReference<File>(new File(file.get().getAbsolutePath()+"_old"));
-      final AtomicReference<File> temp = new AtomicReference<File>(new File(file.get().getAbsolutePath()+"_temp"));
+      File oldPropFile = new File(propFile.getAbsolutePath()+"_old");
+      File tmpPropFile = new File(propFile.getAbsolutePath()+"_temp");
       
-      try {
-        StreamUtilities.outputStream(temp.get(), new OutputStreamProcessor() {
-          public void process(OutputStream outputStream) throws IOException {
-            prop.store(outputStream, "Settings for plugin " + settings.toString());
-            
-            if(temp.get().isFile()) {
-              result.set(true);
-              
-              if(old.get().isFile()) {
-                old.get().delete();
-              }
-              
-              if(!old.get().isFile()) {
-                file.get().renameTo(old.get());
-              }
-              
-              if(!file.get().isFile()) {
-                temp.get().renameTo(file.get());
-              }
-              else if(file.get().delete()) {
-                temp.get().renameTo(file.get());
-              }
-            }
+      try(FileOutputStream outputStream = new FileOutputStream(tmpPropFile)) {
+        prop.store(outputStream, "Settings for plugin " + settings.toString());
+        
+        if(tmpPropFile.isFile() && tmpPropFile.length() > 0) {
+          result = true;
+          
+          if(oldPropFile.isFile()) {
+            oldPropFile.delete();
           }
-        });
+          
+          propFile.renameTo(oldPropFile);
+          tmpPropFile.renameTo(propFile);
+        }
       } catch (IOException exc) {
         String msg = LOCALIZER.msg("error.write", "Saving settings for plugin {0} failed!\n({1})",
-            settings.toString(), file.get().getAbsolutePath(), exc);
+            settings.toString(), propFile.getAbsolutePath(), exc);
         ErrorHandler.handle(msg, exc);
       }
     }
     
-    return result.get();
+    return result;
   }
   
   public static void loadSettings(Preferences settings) {
-    final File file = new File(Settings.getUserSettingsDirName(),settings.getBaseFileName()+getExtensionFor(settings));
-    final File old = new File(file.getAbsolutePath()+"_old");
+    final File propFile = new File(Settings.getUserSettingsDirName(),settings.getBaseFileName()+getExtensionFor(settings));
+    final File oldPropFile = new File(propFile.getAbsolutePath()+"_old");
     
-    if (file.exists() && file.length() > 0) {
-      if(loadProperties(file, settings) == null && old.isFile()) {
-        loadProperties(old, settings);
+    if (propFile.exists() && propFile.length() > 0) {
+      if(loadProperties(propFile, settings) == null && oldPropFile.isFile()) {
+        loadProperties(oldPropFile, settings);
       }
-    } else if(old.isFile() && old.length() > 0) {
-      loadProperties(old, settings);
+    } else if(oldPropFile.isFile() && oldPropFile.length() > 0) {
+      loadProperties(oldPropFile, settings);
     } else {
       settings.loadSettings(new Properties());
     }
