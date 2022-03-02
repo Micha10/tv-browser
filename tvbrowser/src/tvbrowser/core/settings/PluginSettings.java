@@ -137,6 +137,10 @@ public final class PluginSettings {
     File tmpDatFile = new File(userDirectory, data.getBaseFileName() + ".dat.temp");
     File oldDatFile = new File(userDirectory, data.getBaseFileName() + ".dat_old");
     
+    if(tmpDatFile.isFile()) {
+      tmpDatFile.delete();
+    }
+    
     try(ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(tmpDatFile))) {
       data.writeData(out);
       
@@ -180,10 +184,15 @@ public final class PluginSettings {
       if (!propFile.exists()) {
         propFile.mkdir();
       }
+      
       propFile = new File(dir,settings.getBaseFileName() + getExtensionFor(settings));
       
       File oldPropFile = new File(propFile.getAbsolutePath()+"_old");
       File tmpPropFile = new File(propFile.getAbsolutePath()+"_temp");
+      
+      if(tmpPropFile.isFile()) {
+        tmpPropFile.delete();
+      }
       
       try(FileOutputStream outputStream = new FileOutputStream(tmpPropFile)) {
         prop.store(outputStream, "Settings for plugin " + settings.toString());
