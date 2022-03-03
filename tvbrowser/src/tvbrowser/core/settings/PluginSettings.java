@@ -145,23 +145,31 @@ public final class PluginSettings {
       tmpDatFile.delete();
     }
     
+    boolean success = false;
+    
     try(ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(tmpDatFile))) {
       data.writeData(out);
-      
-      // Saving succeeded -> Delete the old file and rename the temp file
-      File datFile = new File(userDirectory, data.getBaseFileName() + ".dat");
-      
-      if(oldDatFile.isFile()) {
-        oldDatFile.delete();
-      }
-      
-      datFile.renameTo(oldDatFile);
-      tmpDatFile.renameTo(datFile);
+      success = true;
     }
     catch(Throwable thr) {
       throw new TvBrowserException(data.getClass(), "error.data.write",
           "Saving data for plugin {0} failed.\n({1})",
           data.toString(), tmpDatFile.getAbsolutePath(), thr);
+    }
+    
+    if(success && tmpDatFile.isFile()) {
+	  // Saving succeeded -> Delete the old file and rename the temp file
+      File datFile = new File(userDirectory, data.getBaseFileName() + ".dat");
+    
+      if(oldDatFile.isFile()) {
+        oldDatFile.delete();
+      }
+    
+      if(datFile.isFile()) {
+  	    datFile.renameTo(oldDatFile);
+      }
+    
+      tmpDatFile.renameTo(datFile);
     }
   }
   
@@ -198,24 +206,30 @@ public final class PluginSettings {
         tmpPropFile.delete();
       }
       
+      boolean success = false;
+      
       try(FileOutputStream outputStream = new FileOutputStream(tmpPropFile)) {
         prop.store(outputStream, "Settings for plugin " + settings.toString());
-        
-        if(tmpPropFile.isFile() && tmpPropFile.length() > 0) {
+        success = true;
+      } catch (IOException exc) {
+        String msg = LOCALIZER.msg("error.write", "Saving settings for plugin {0} failed!\n({1})",
+            settings.toString(), propFile.getAbsolutePath(), exc);
+        ErrorHandler.handle(msg, exc);
+      }
+      
+      if(success && tmpPropFile.isFile() && tmpPropFile.length() > 0) {
           result = true;
           
           if(oldPropFile.isFile()) {
             oldPropFile.delete();
           }
           
-          propFile.renameTo(oldPropFile);
+          if(propFile.isFile()) {
+        	  propFile.renameTo(oldPropFile);
+          }
+          
           tmpPropFile.renameTo(propFile);
         }
-      } catch (IOException exc) {
-        String msg = LOCALIZER.msg("error.write", "Saving settings for plugin {0} failed!\n({1})",
-            settings.toString(), propFile.getAbsolutePath(), exc);
-        ErrorHandler.handle(msg, exc);
-      }
     }
     
     return result;
