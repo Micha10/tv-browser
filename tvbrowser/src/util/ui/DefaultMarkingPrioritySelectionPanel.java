@@ -14,6 +14,7 @@
  */
 package util.ui;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ItemEvent;
 import java.util.ArrayList;
@@ -31,6 +32,7 @@ import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.Sizes;
 
+import devplugin.Plugin;
 import devplugin.SettingsItem;
 import tvbrowser.core.Settings;
 import tvbrowser.ui.settings.MarkingsSettingsTab;
@@ -78,8 +80,6 @@ public final class DefaultMarkingPrioritySelectionPanel extends JPanel {
    * the labels for the dropdowns.
    */
   private ArrayList<JComponent> mLabel;
-  private boolean mShowNoMarkingPriority;
-
 
   /**
    * @param priority which priority is selected in the drop down
@@ -156,7 +156,7 @@ public final class DefaultMarkingPrioritySelectionPanel extends JPanel {
    * @since 4.2.5
    */
   private DefaultMarkingPrioritySelectionPanel(final State[] states, final int[] priority, final String[] label, final boolean showTitle, final boolean showHelpLabel, final boolean withDefaultDialogBorder, final boolean growingGap, final boolean showNoMarkingPriority) {
-    mShowNoMarkingPriority = showNoMarkingPriority;
+    try {
     FormLayout layout = new FormLayout(growingGap ? "5dlu,default,5dlu:grow,default,0dlu" : "5dlu,default,5dlu,default,0dlu:grow");
     
     EnhancedPanelBuilder pb = new EnhancedPanelBuilder(layout,this);
@@ -181,7 +181,14 @@ public final class DefaultMarkingPrioritySelectionPanel extends JPanel {
     for (int i = 0; i < choosersToDraw; i++) {
       pb.addRow();
       
-      final JComboBox<Object> box = new JComboBox<>(getMarkingColorNames(showNoMarkingPriority));
+      final JComboBox<Object> box = new JComboBox<>();
+      
+      final String[] names = getMarkingColorNames(showNoMarkingPriority);
+      
+      for(int j = 0; j < names.length; j++) {
+        box.addItem(new PriortiyLabel(j + (showNoMarkingPriority ? -1 : 0), names[j]));
+      }
+      
       final State state = states[i];
       
       if(state.mType.equals(TYPE_SELECTABLE)) {
@@ -200,7 +207,7 @@ public final class DefaultMarkingPrioritySelectionPanel extends JPanel {
       
       mPrioritySelection.add(box);
       box.setSelectedIndex(Math.min(priority[i],Settings.getHighlightingPriorityMaximum()) + (showNoMarkingPriority ? 1 : 0));
-      box.setRenderer(new MarkPriorityComboBoxRenderer(box.getRenderer(), showNoMarkingPriority));
+      box.setRenderer(new MarkPriorityComboBoxRenderer(box.getRenderer()));
       
       pb.add(box, CC.xy(4, pb.getRowCount()));
     }
@@ -216,10 +223,8 @@ public final class DefaultMarkingPrioritySelectionPanel extends JPanel {
       pb.addRow();
       pb.add(mHelpLabel, CC.xyw(2, pb.getRowCount(), 4));      
     }
+    }catch(Throwable t) {t.printStackTrace();}
   }
-
-
-
 
   /**
    * Creates an instance of this class.
@@ -304,9 +309,8 @@ public final class DefaultMarkingPrioritySelectionPanel extends JPanel {
   /**
    * @return The selected marking priority of the first dropdown
    */
-  @SuppressWarnings("unchecked")
   public int getSelectedPriority() {
-    return ((JComboBox<Object>)mPrioritySelection.get(0)).getSelectedIndex() - (mShowNoMarkingPriority ? 1 : 0);
+    return getSelectedPriority(0);
   }
 
   /**
@@ -315,7 +319,7 @@ public final class DefaultMarkingPrioritySelectionPanel extends JPanel {
    */
   @SuppressWarnings("unchecked")
   public int getSelectedPriority(final int index) {
-    return ((JComboBox<Object>)mPrioritySelection.get(index)).getSelectedIndex() - (mShowNoMarkingPriority ? 1 : 0);
+    return ((PriortiyLabel)((JComboBox<Object>)mPrioritySelection.get(index)).getSelectedItem()).getPriority();
   }
 
   /**
@@ -423,6 +427,29 @@ public final class DefaultMarkingPrioritySelectionPanel extends JPanel {
      */
     public boolean isActivated() {
       return mType.equals(TYPE_SELECTABLE) ? mActivated : true;
+    }
+  }
+  
+  public static final class PriortiyLabel {
+    private final int mPriority;
+    private final String mLabel;
+    
+    public PriortiyLabel(final int priority, final String label) {
+      mPriority = priority;
+      mLabel = label;
+    }
+    
+    public int getPriority() {
+      return mPriority;
+    }
+    
+    public Color getColor() {
+      return Plugin.getPluginManager().getTvBrowserSettings().getColorForMarkingPriority(mPriority);
+    }
+    
+    @Override
+    public String toString() {
+      return mLabel;
     }
   }
 }

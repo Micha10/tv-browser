@@ -35,6 +35,7 @@ import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 
 import devplugin.Plugin;
+import util.ui.DefaultMarkingPrioritySelectionPanel.PriortiyLabel;
 
 /**
  * A renderer class for the mark priority selection combo box.
@@ -43,21 +44,14 @@ import devplugin.Plugin;
  * @since 2.6
  */
 public class MarkPriorityComboBoxRenderer extends CustomComboBoxRenderer {
-  private boolean mWithNoMarkingPriority;
-  
   public MarkPriorityComboBoxRenderer() {
     this(null);
   }
   
   public MarkPriorityComboBoxRenderer(ListCellRenderer<Object> backendRenderer) {
-    this(backendRenderer, true);
+    super(backendRenderer);
   }
   
-  public MarkPriorityComboBoxRenderer(ListCellRenderer<Object> backendRenderer, boolean withNoMarkingPriority) {
-    super(backendRenderer);
-    mWithNoMarkingPriority = withNoMarkingPriority;
-  }
-
   public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
     Component c = getBackendRenderer() == null ? getSuperListCellRendererComponent(list,value,index,isSelected,cellHasFocus) : getBackendRenderer().getListCellRendererComponent(list,value,index,isSelected,cellHasFocus);
     
@@ -65,17 +59,24 @@ public class MarkPriorityComboBoxRenderer extends CustomComboBoxRenderer {
       JPanel colorPanel = new JPanel(new FormLayout("default:grow","fill:default:grow"));
       ((JLabel)c).setOpaque(true);
       
-      int colorIndex = index;
+      Color color = null;
       
-      if(index == -1) {
-        colorIndex = list.getSelectedIndex();
+      if(value instanceof PriortiyLabel) {
+        color = ((PriortiyLabel) value).getColor();
       }
-      
-      if(list.getModel().getSize() >= 6) {
-        colorIndex--;
+      else {
+        int colorIndex = index;
+        
+        if(index == -1) {
+          colorIndex = list.getSelectedIndex();
+        }
+        
+        if(list.getModel().getSize() >= 6) {
+          colorIndex--;
+        }
+        
+        color = Plugin.getPluginManager().getTvBrowserSettings().getColorForMarkingPriority(colorIndex);
       }
-      
-      Color color = Plugin.getPluginManager().getTvBrowserSettings().getColorForMarkingPriority(colorIndex + (mWithNoMarkingPriority ? 0 : 1));
       
       if(color != null) {
         c.setBackground(color);
