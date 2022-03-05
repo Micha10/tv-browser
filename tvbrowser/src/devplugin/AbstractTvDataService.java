@@ -365,7 +365,7 @@ public abstract class AbstractTvDataService {
   }
   
   /**
-   *  Says the TV data service proxy manager to store the settings of this data service.
+   *  Tells the TV data service proxy manager to store the settings of this data service.
    *  <p>
    *  @return <code>True</code> if the settings could be saved successfully.
    *  @since 4.2.5

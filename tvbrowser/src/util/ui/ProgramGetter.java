@@ -26,7 +26,7 @@ package util.ui;
 import devplugin.Program;
 
 /**
- * An functional interface to use for getting programs for an index.
+ * A functional interface to use for getting programs for an index.
  * 
  * @author René Mach
  * @since 3.4.5

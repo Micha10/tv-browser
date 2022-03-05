@@ -27,7 +27,7 @@ import javax.swing.JPanel;
 import javax.swing.event.HyperlinkEvent;
 
 import com.jgoodies.forms.factories.Borders;
-import com.jgoodies.forms.layout.CellConstraints;
+import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.Sizes;
 
@@ -77,8 +77,8 @@ public final class DefaultMarkingPrioritySelectionPanel extends JPanel {
   /**
    * the labels for the dropdowns.
    */
-  private JComponent[] mLabel;
-
+  private ArrayList<JComponent> mLabel;
+  private boolean mShowNoMarkingPriority;
 
 
   /**
@@ -100,7 +100,7 @@ public final class DefaultMarkingPrioritySelectionPanel extends JPanel {
    * @since 3.0
    */
   private DefaultMarkingPrioritySelectionPanel(final int priority, final String label, final boolean showTitle, final boolean showHelpLabel, final boolean withDefaultDialogBorder) {
-    this(new State(TYPE_LABEL,true), priority, label, showTitle, showHelpLabel, withDefaultDialogBorder, false);
+    this(new State(TYPE_LABEL,true), priority, label, showTitle, showHelpLabel, withDefaultDialogBorder, false, true);
   }
   
   /**
@@ -111,10 +111,11 @@ public final class DefaultMarkingPrioritySelectionPanel extends JPanel {
    * @param showHelpLabel if true, show the help text
    * @param withDefaultDialogBorder if true, use the default border
    * @param growingGap if true, gap between label and selection grows
+   * @param showNoMarkingPriority if true the selection contains an entry to select no marking
    * @since 4.2.5
    */
-  private DefaultMarkingPrioritySelectionPanel(final State state, final int priority, final String label, final boolean showTitle, final boolean showHelpLabel, final boolean withDefaultDialogBorder, final boolean growingGap) {
-    this(new State[] {state}, new int[] {priority}, new String[] {label}, showTitle, showHelpLabel, withDefaultDialogBorder, growingGap);
+  private DefaultMarkingPrioritySelectionPanel(final State state, final int priority, final String label, final boolean showTitle, final boolean showHelpLabel, final boolean withDefaultDialogBorder, final boolean growingGap, final boolean showNoMarkingPriority) {
+    this(new State[] {state}, new int[] {priority}, new String[] {label}, showTitle, showHelpLabel, withDefaultDialogBorder, growingGap, showNoMarkingPriority);
   }
 
   /**
@@ -129,7 +130,7 @@ public final class DefaultMarkingPrioritySelectionPanel extends JPanel {
    * @since 3.0
    */
   private DefaultMarkingPrioritySelectionPanel(final int[] priority, final String[] label, final boolean showTitle, final boolean showHelpLabel, final boolean withDefaultDialogBorder) {
-    this(getStatesDefault(label.length), priority, label, showTitle, showHelpLabel, withDefaultDialogBorder, false);
+    this(getStatesDefault(label.length), priority, label, showTitle, showHelpLabel, withDefaultDialogBorder, false, true);
   }
   
   private static State[] getStatesDefault(int length) {
@@ -151,10 +152,11 @@ public final class DefaultMarkingPrioritySelectionPanel extends JPanel {
    * @param showHelpLabel if true, show the help text
    * @param withDefaultDialogBorder if true, use the default border
    * @param growingGap if true, gap between label and selection grows
+   * @param showNoMarkingPriority if true the selection contains an entry to select no marking
    * @since 4.2.5
    */
-  private DefaultMarkingPrioritySelectionPanel(final State[] states, final int[] priority, final String[] label, final boolean showTitle, final boolean showHelpLabel, final boolean withDefaultDialogBorder, final boolean growingGap) {
-    CellConstraints cc = new CellConstraints();
+  private DefaultMarkingPrioritySelectionPanel(final State[] states, final int[] priority, final String[] label, final boolean showTitle, final boolean showHelpLabel, final boolean withDefaultDialogBorder, final boolean growingGap, final boolean showNoMarkingPriority) {
+    mShowNoMarkingPriority = showNoMarkingPriority;
     FormLayout layout = new FormLayout(growingGap ? "5dlu,default,5dlu:grow,default,0dlu" : "5dlu,default,5dlu,default,0dlu:grow");
     
     EnhancedPanelBuilder pb = new EnhancedPanelBuilder(layout,this);
@@ -167,41 +169,40 @@ public final class DefaultMarkingPrioritySelectionPanel extends JPanel {
     }
 
     //init the components
-    mLabel = new JComponent[choosersToDraw];
+    mLabel = new ArrayList<JComponent>();
     mPrioritySelection = new ArrayList<>();// JComboBox[choosersToDraw];
 
     //add all the sub components to this panel
     if (showTitle) {
       pb.addRow();
-      mSeparator = pb.addSeparator(getTitle(), cc.xyw(1, pb.getRowCount(), 5));
+      mSeparator = pb.addSeparator(getTitle(), CC.xyw(1, pb.getRowCount(), 5));
     }
 
     for (int i = 0; i < choosersToDraw; i++) {
       pb.addRow();
       
-      final JComboBox<Object> box = new JComboBox<>(getMarkingColorNames(true));
+      final JComboBox<Object> box = new JComboBox<>(getMarkingColorNames(showNoMarkingPriority));
       final State state = states[i];
       
       if(state.mType.equals(TYPE_SELECTABLE)) {
-        
-        mLabel[i] = new JCheckBox(label[i], state.mActivated);
+        mLabel.add(new JCheckBox(label[i], state.mActivated));
         box.setEnabled(state.mActivated);
-        ((JCheckBox)mLabel[i]).addItemListener(e -> {
+        ((JCheckBox)mLabel.get(i)).addItemListener(e -> {
           box.setEnabled(e.getStateChange() == ItemEvent.SELECTED);
           state.mActivated = box.isEnabled();
         });
         
-        pb.add(mLabel[i], cc.xy(2, pb.getRowCount()));
+        pb.add(mLabel.get(i), CC.xy(2, pb.getRowCount()));
       }
       else {
-        mLabel[i] = pb.addLabel(label[i], cc.xy(2, pb.getRowCount()));
+        mLabel.add(pb.addLabel(label[i], CC.xy(2, pb.getRowCount())));
       }
       
       mPrioritySelection.add(box);
-      box.setSelectedIndex(Math.min(priority[i],Settings.getHighlightingPriorityMaximum()) + 1);
-      box.setRenderer(new MarkPriorityComboBoxRenderer(box.getRenderer()));
+      box.setSelectedIndex(Math.min(priority[i],Settings.getHighlightingPriorityMaximum()) + (showNoMarkingPriority ? 1 : 0));
+      box.setRenderer(new MarkPriorityComboBoxRenderer(box.getRenderer(), showNoMarkingPriority));
       
-      pb.add(box, cc.xy(4, pb.getRowCount()));
+      pb.add(box, CC.xy(4, pb.getRowCount()));
     }
 
     if (showHelpLabel) {
@@ -213,7 +214,7 @@ public final class DefaultMarkingPrioritySelectionPanel extends JPanel {
       mHelpLabel.setMaximumSize(new Dimension(Sizes.dialogUnitXAsPixel(200, mHelpLabel), Sizes.dialogUnitXAsPixel(600, mHelpLabel)));
       
       pb.addRow();
-      pb.add(mHelpLabel, cc.xyw(2, pb.getRowCount(), 4));      
+      pb.add(mHelpLabel, CC.xyw(2, pb.getRowCount(), 4));      
     }
   }
 
@@ -258,10 +259,11 @@ public final class DefaultMarkingPrioritySelectionPanel extends JPanel {
    * @param withDefaultDialogBorder if true, use the default border
    * @return The created instance of this class.
    * @param growingGap if true, gap between label and selection grows
+   * @param showNoMarkingPriority if true the selection contains an entry to select no marking
    * @since 4.2.5
    */
-  public static DefaultMarkingPrioritySelectionPanel createPanel(final State state, final int priority, final String label, final boolean showTitle, final boolean showHelpLabel, final boolean withDefaultDialogBorder, final boolean growingGap) {
-    return new DefaultMarkingPrioritySelectionPanel(state, priority, label, showTitle, showHelpLabel, withDefaultDialogBorder, growingGap);
+  public static DefaultMarkingPrioritySelectionPanel createPanel(final State state, final int priority, final String label, final boolean showTitle, final boolean showHelpLabel, final boolean withDefaultDialogBorder, final boolean growingGap, final boolean showNoMarkingPriority) {
+    return new DefaultMarkingPrioritySelectionPanel(state, priority, label, showTitle, showHelpLabel, withDefaultDialogBorder, growingGap, showNoMarkingPriority);
   }
 
   /**
@@ -276,10 +278,11 @@ public final class DefaultMarkingPrioritySelectionPanel extends JPanel {
    * @param withDefaultDialogBorder if true, use the default border
    * @return The created instance of this class.
    * @param growingGap if true, gap between label and selection grows
+   * @param showNoMarkingPriority if true the selection contains an entry to select no marking
    * @since 4.2.5
    */
-  public static DefaultMarkingPrioritySelectionPanel createPanel(final State[] states, final int[] priorities, final String[] labels, final boolean showTitle, final boolean showHelpLabel, final boolean withDefaultDialogBorder, final boolean growingGap) {
-    return new DefaultMarkingPrioritySelectionPanel(states, priorities, labels, showTitle, showHelpLabel, withDefaultDialogBorder, growingGap);
+  public static DefaultMarkingPrioritySelectionPanel createPanel(final State[] states, final int[] priorities, final String[] labels, final boolean showTitle, final boolean showHelpLabel, final boolean withDefaultDialogBorder, final boolean growingGap, final boolean showNoMarkingPriority) {
+    return new DefaultMarkingPrioritySelectionPanel(states, priorities, labels, showTitle, showHelpLabel, withDefaultDialogBorder, growingGap, showNoMarkingPriority);
   }
   
   /**
@@ -303,7 +306,7 @@ public final class DefaultMarkingPrioritySelectionPanel extends JPanel {
    */
   @SuppressWarnings("unchecked")
   public int getSelectedPriority() {
-    return ((JComboBox<Object>)mPrioritySelection.get(0)).getSelectedIndex() - 1;
+    return ((JComboBox<Object>)mPrioritySelection.get(0)).getSelectedIndex() - (mShowNoMarkingPriority ? 1 : 0);
   }
 
   /**
@@ -312,7 +315,7 @@ public final class DefaultMarkingPrioritySelectionPanel extends JPanel {
    */
   @SuppressWarnings("unchecked")
   public int getSelectedPriority(final int index) {
-    return ((JComboBox<Object>)mPrioritySelection.get(index)).getSelectedIndex() - 1;
+    return ((JComboBox<Object>)mPrioritySelection.get(index)).getSelectedIndex() - (mShowNoMarkingPriority ? 1 : 0);
   }
 
   /**
@@ -386,10 +389,10 @@ public final class DefaultMarkingPrioritySelectionPanel extends JPanel {
     {
       mHelpLabel.setEnabled(enabled);
     }
-    for (int i = 0; i < mLabel.length; i++)
+    for (int i = 0; i < mLabel.size(); i++)
     {
-      mLabel[i].setEnabled(enabled);
-      ((JComboBox<Object>)mPrioritySelection.get(i)).setEnabled(enabled && (!(mLabel[i] instanceof JCheckBox) || ((JCheckBox)mLabel[i]).isSelected()));
+      mLabel.get(i).setEnabled(enabled);
+      ((JComboBox<Object>)mPrioritySelection.get(i)).setEnabled(enabled && (!(mLabel.get(i) instanceof JCheckBox) || ((JCheckBox)mLabel.get(i)).isSelected()));
     }
   }
   

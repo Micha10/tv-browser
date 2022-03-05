@@ -337,7 +337,7 @@ public class PluginLoader {
    * @param proxyFile
    * @return pluginProxy
    */
-  private JavaPluginProxy readPluginProxy(File proxyFile) {
+  private synchronized JavaPluginProxy readPluginProxy(File proxyFile) {
     DataInputStream in = null;
 
     try {

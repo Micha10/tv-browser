@@ -43,12 +43,19 @@ import devplugin.Plugin;
  * @since 2.6
  */
 public class MarkPriorityComboBoxRenderer extends CustomComboBoxRenderer {
+  private boolean mWithNoMarkingPriority;
+  
   public MarkPriorityComboBoxRenderer() {
     this(null);
   }
   
   public MarkPriorityComboBoxRenderer(ListCellRenderer<Object> backendRenderer) {
+    this(backendRenderer, true);
+  }
+  
+  public MarkPriorityComboBoxRenderer(ListCellRenderer<Object> backendRenderer, boolean withNoMarkingPriority) {
     super(backendRenderer);
+    mWithNoMarkingPriority = withNoMarkingPriority;
   }
 
   public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
@@ -68,7 +75,7 @@ public class MarkPriorityComboBoxRenderer extends CustomComboBoxRenderer {
         colorIndex--;
       }
       
-      Color color = Plugin.getPluginManager().getTvBrowserSettings().getColorForMarkingPriority(colorIndex);
+      Color color = Plugin.getPluginManager().getTvBrowserSettings().getColorForMarkingPriority(colorIndex + (mWithNoMarkingPriority ? 0 : 1));
       
       if(color != null) {
         c.setBackground(color);

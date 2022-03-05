@@ -41,7 +41,7 @@ public class ImportanceValue {
    * NOTE: This will ignore values that are not reachable with the possible
    *       single importance of a Program. So for instance, if you give
    *       a weight of 4 and a totalImportance of 50 this will be ignored
-   *       as 40 ist the highest possible amount for a weight of 4.
+   *       as 40 is the highest possible amount for a weight of 4.
    * <p>
    * @param weight Is the count of importance values given.
    * @param totalImportance Is the sum of the count importance values
