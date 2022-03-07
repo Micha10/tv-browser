@@ -67,7 +67,7 @@ public class PropertyManager {
 
 
   public void writeToFile(File settingsFile) throws IOException {
-    removeUnknownEntries();
+    
     
     if(TVBrowser.isTransportable()) {
       mProperties.remove("dir.tvdata");
@@ -114,7 +114,7 @@ public class PropertyManager {
       if(mProperties.isEmpty()) {
         throw new IOException("Settings file is empty!");
       }
-    }
+    }removeUnknownEntries();
   }
   
   

@@ -188,7 +188,7 @@ public class Settings {
   private static Font DEFAULT_PROGRAMTIMEFONT = new VariableFontSizeFont(DEFAULT_FONT_NAME,
       Font.BOLD, 0);
 
-  private static PropertyManager mProp = new PropertyManager();
+  private static PropertyManager PROP = new PropertyManager();
 
   private static boolean mShowWaiting;
   private static boolean mShowSettingsCopyWaiting;
@@ -357,7 +357,7 @@ public class Settings {
     }catch(Exception e) {}
 
     try {
-      mProp.writeToFile(settingsFile);
+      PROP.writeToFile(settingsFile);
 
       try {
         if(settingsFile.isFile()) {
@@ -444,6 +444,7 @@ public class Settings {
    * default settings are used.
    */
   public static void loadSettings() {
+    initializeAllSubClasses();
     String oldDirectoryName = System.getProperty("user.home", "")
         + File.separator + ".tvbrowser";
     String newDirectoryName = getUserSettingsDirName();
@@ -454,9 +455,9 @@ public class Settings {
 
     if (settingsFile.exists() || firstSettingsBackupFile.exists() || secondSettingsBackupFile.exists()) {
       try {
-        mProp.readFromFile(settingsFile);
+        PROP.readFromFile(settingsFile);
 
-        if(((mProp.getProperty("subscribedchannels") == null || mProp.getProperty("subscribedchannels").trim().length() < 1) && (mProp.getProperty("channelsWereConfigured") != null && mProp.getProperty("channelsWereConfigured").equals("true")) )
+        if(((PROP.getProperty("subscribedchannels") == null || PROP.getProperty("subscribedchannels").trim().length() < 1) && (PROP.getProperty("channelsWereConfigured") != null && PROP.getProperty("channelsWereConfigured").equals("true")) )
             && (firstSettingsBackupFile.isFile() || secondSettingsBackupFile.isFile())) {
           throw new IOException();
         }
@@ -473,9 +474,9 @@ public class Settings {
 
             if(firstSettingsBackupFile.isFile()) {
               try {
-                mProp.readFromFile(firstSettingsBackupFile);
+                PROP.readFromFile(firstSettingsBackupFile);
 
-                if((mProp.getProperty("subscribedchannels") == null || mProp.getProperty("subscribedchannels").trim().length() < 1) && secondSettingsBackupFile.isFile()) {
+                if((PROP.getProperty("subscribedchannels") == null || PROP.getProperty("subscribedchannels").trim().length() < 1) && secondSettingsBackupFile.isFile()) {
                   loadSecondBackup = true;
                 }
                 else {
@@ -488,7 +489,7 @@ public class Settings {
             }
             if(loadSecondBackup && secondSettingsBackupFile.isFile()) {
               try {
-                mProp.readFromFile(secondSettingsBackupFile);
+                PROP.readFromFile(secondSettingsBackupFile);
                 mLog.info("Using settings from file " + secondSettingsBackupFile.getAbsolutePath());
                 loadSecondBackup = false;
               }catch(Exception e) {
@@ -705,7 +706,7 @@ public class Settings {
             
             mLog.info("settings from previous version copied successfully");
             File newSettingsFile = new File(newDir, SETTINGS_FILE);
-            mProp.readFromFile(newSettingsFile);
+            PROP.readFromFile(newSettingsFile);
             mLog.info("settings from previous version read successfully");
 
             /*
@@ -896,6 +897,35 @@ public class Settings {
     updateColors();
   }
   
+  // make sure all static settings classes are initialied for access
+  private static void initializeAllSubClasses() {
+    Other.initialize();
+    Buttons.initialize();
+    CenterPanels.initialize();
+    IconAndNames.initialize();
+    Channels.initialize();
+    ContextMenu.initialize();
+    DataPostProcessing.initialize();
+    Directories.initialize();
+    Fonts.initialize();
+    General.initialize();
+    Locales.initialize();
+    LookAndFeel.initialize();
+    Markings.initialize();
+    Mouse.initialize();
+    Network.initialize();
+    Pictures.initialize();
+    Plugins.initialize();
+    ProgramPanel.initialize();
+    ProgramTable.initialize();
+    Proxy.initialize();
+    ToolBar.initialize();
+    Tray.initialize();
+    WebBrowser.initialize();
+    Window.initialize();
+    Data.initialize();
+  }
+  
   private static Color[] mHighlightingColors;
   
   public static void updateColors() {
@@ -918,33 +948,33 @@ public class Settings {
   public static void updateContextMenuSettings() {
     ArrayList<ContextMenuMouseActionSetting> leftSingleList = new ArrayList<ContextMenuMouseActionSetting>(2);
     
-    if(mProp.getProperty("leftSingleClickIf") != null) {
+    if(PROP.getProperty("leftSingleClickIf") != null) {
       StringProperty propLeftSingleClickIf = new StringProperty(
-          mProp, "leftSingleClickIf", ProgramInfo.getProgramInfoPluginId());      
+          PROP, "leftSingleClickIf", ProgramInfo.getProgramInfoPluginId());      
       leftSingleList.add(new ContextMenuMouseActionSetting(ContextMenuManager.NO_MOUSE_MODIFIER_EX, propLeftSingleClickIf.getString(), ActionMenu.ID_ACTION_NONE));
       propLeftSingleClickIf.setString(propLeftSingleClickIf.getDefault());
     }
-    if(mProp.getProperty("contextmenudefaultplugin") != null) {
+    if(PROP.getProperty("contextmenudefaultplugin") != null) {
       StringProperty propDoubleClickIf = new StringProperty(
-          mProp, "contextmenudefaultplugin", ProgramInfo.getProgramInfoPluginId());
+          PROP, "contextmenudefaultplugin", ProgramInfo.getProgramInfoPluginId());
       Mouse.LEFT_DOUBLE_CLICK_IF_ARRAY.setContextMenuMouseActionArray(new ContextMenuMouseActionSetting[] {new ContextMenuMouseActionSetting(ContextMenuManager.NO_MOUSE_MODIFIER_EX, propDoubleClickIf.getString(), ActionMenu.ID_ACTION_NONE)});
       propDoubleClickIf.setString(propDoubleClickIf.getDefault());
     }
-    if(mProp.getProperty("middleclickplugin") != null) {
+    if(PROP.getProperty("middleclickplugin") != null) {
       StringProperty propMiddleClickIf = new StringProperty(
-          mProp, "middleclickplugin", ReminderPlugin.getReminderPluginId());
+          PROP, "middleclickplugin", ReminderPlugin.getReminderPluginId());
       Mouse.MIDDLE_SINGLE_CLICK_IF_ARRAY.setContextMenuMouseActionArray(new ContextMenuMouseActionSetting[] {new ContextMenuMouseActionSetting(ContextMenuManager.NO_MOUSE_MODIFIER_EX, propMiddleClickIf.getString(), ActionMenu.ID_ACTION_NONE)});
       propMiddleClickIf.setString(propMiddleClickIf.getDefault());
     }
-    if(mProp.getProperty("middledoubleclickplugin") != null) {
+    if(PROP.getProperty("middledoubleclickplugin") != null) {
       StringProperty propMiddleDoubleClickIf = new StringProperty(
-          mProp, "middledoubleclickplugin", FavoritesPlugin.getFavoritesPluginId());
+          PROP, "middledoubleclickplugin", FavoritesPlugin.getFavoritesPluginId());
       Mouse.MIDDLE_DOUBLE_CLICK_IF_ARRAY.setContextMenuMouseActionArray(new ContextMenuMouseActionSetting[] {new ContextMenuMouseActionSetting(ContextMenuManager.NO_MOUSE_MODIFIER_EX, propMiddleDoubleClickIf.getString(), ActionMenu.ID_ACTION_NONE)});
       propMiddleDoubleClickIf.setString(propMiddleDoubleClickIf.getDefault());
     }
-    if(mProp.getProperty("leftSingleCtrlClickIf") != null) {
+    if(PROP.getProperty("leftSingleCtrlClickIf") != null) {
       StringProperty propLeftSingleCtrlClickIf = new StringProperty(
-          mProp, "leftSingleCtrlClickIf", null);
+          PROP, "leftSingleCtrlClickIf", null);
       leftSingleList.add(new ContextMenuMouseActionSetting(MouseEvent.CTRL_DOWN_MASK, propLeftSingleCtrlClickIf.getString(), ActionMenu.ID_ACTION_NONE));
       propLeftSingleCtrlClickIf.setString(propLeftSingleCtrlClickIf.getDefault());
     }
@@ -1139,7 +1169,7 @@ public class Settings {
         Fonts.PROGRAM_TIME, Fonts.CHANNEL_NAME, Fonts.USE_DEFAULT,
         Fonts.ANTIALIASING_ENABLED, Fonts.PROGRAM_TEX_TLINE_GAP};
     
-    boolean fontChanged = mProp.hasChanged(propArrFont);
+    boolean fontChanged = PROP.hasChanged(propArrFont);
     
     if(fontChanged) {
       for(ChangeListener listener : mListListenerFontChange) {
@@ -1147,7 +1177,7 @@ public class Settings {
       }
     }
     
-    if (fontChanged || mProp.hasChanged(propArr)) {
+    if (fontChanged || PROP.hasChanged(propArr)) {
       util.ui.ProgramPanel.updateFonts();
       tvbrowser.ui.programtable.ChannelPanel.fontChanged();
       ProgramTableScrollPane scrollPane = mainFrame.getProgramTableScrollPane();
@@ -1161,30 +1191,30 @@ public class Settings {
         ProgramPanel.MAX_LINES, ProgramPanel.DESCRIPTION_LIMIT_BY_DURATION,
         ProgramPanel.DESCRIPTION_LIMIT_BY_DURATION_MINUTES, Pictures.BORDER_SHOW};
 
-    if(mProp.hasChanged(propArr)) {
+    if(PROP.hasChanged(propArr)) {
       mainFrame.getProgramTableScrollPane().forceRepaintAll();
     }
 
-    if(mProp.hasChanged(ProgramPanel.HYPHENATION)) {
+    if(PROP.hasChanged(ProgramPanel.HYPHENATION)) {
       TextLineBreakerStringWidth.resetHyphenator();
       mainFrame.getProgramTableScrollPane().forceRepaintAll();
     }
     
-    if (mProp.hasChanged(ProgramTable.COLUMN_WIDTH)) {
+    if (PROP.hasChanged(ProgramTable.COLUMN_WIDTH)) {
       util.ui.ProgramPanel.updateColumnWidth();
       ProgramTableScrollPane scrollPane = mainFrame.getProgramTableScrollPane();
       scrollPane.setColumnWidth(ProgramTable.COLUMN_WIDTH.getInt());
       scrollPane.forceRepaintAll();
     }
 
-    if (mProp.hasChanged(ProgramTable.LAYOUT)) {
+    if (PROP.hasChanged(ProgramTable.LAYOUT)) {
       ProgramTableScrollPane scrollPane = mainFrame.getProgramTableScrollPane();
       scrollPane.getProgramTable().setProgramTableLayout(null);
       scrollPane.getProgramTable().updateBackground();
       scrollPane.forceRepaintAll();
     }
 
-    if (mProp.hasChanged(Plugins.DEACTIVATED)) {
+    if (PROP.hasChanged(Plugins.DEACTIVATED)) {
       mainFrame.updatePluginsMenu();
       mainFrame.updateToolbar();
     }
@@ -1196,44 +1226,44 @@ public class Settings {
         ProgramTable.TIME_OF_DAY_BACKGROUND_EDGE, ProgramTable.TIME_OF_DAY_BACKGROUND_EARLY,
         ProgramTable.TIME_OF_DAY_BACKGROUND_MIDDAY, ProgramTable.TIME_OF_DAY_BACKGROUND_AFTERNOON,
         ProgramTable.TIME_OF_DAY_BACKGROUND_EVENING };
-    if (mProp.hasChanged(propArr)) {
+    if (PROP.hasChanged(propArr)) {
       ProgramTableScrollPane scrollPane = mainFrame.getProgramTableScrollPane();
       scrollPane.getProgramTable().updateBackground();
       mainFrame.getProgramTableScrollPane().forceRepaintAll();
     }
 
-    if(mProp.hasChanged(ProgramTable.TIME_BLOCK_SIZE)) {
+    if(PROP.hasChanged(ProgramTable.TIME_BLOCK_SIZE)) {
       mainFrame.getProgramTableScrollPane().forceRepaintAll();
     }
 
     propArr = new Property[] { ToolBar.BUTTON_STYLE, ToolBar.BUTTONS,
         ToolBar.LOCATION, ToolBar.IS_VISIBLE, ToolBar.BIG_ICONS_USE};
-    if (mProp.hasChanged(propArr)) {
+    if (PROP.hasChanged(propArr)) {
       mainFrame.updateToolbar();
     }
 
-    if (mProp.hasChanged(Buttons.TIME_BUTTONS)) {
+    if (PROP.hasChanged(Buttons.TIME_BUTTONS)) {
       mainFrame.updateTimeButtons();
     }
 
-    if (mProp.hasChanged(Channels.SUBSCRIBED)) {
+    if (PROP.hasChanged(Channels.SUBSCRIBED)) {
       ChannelList.reload();
       DefaultProgramTableModel model = mainFrame.getProgramTableModel();
       model.setChannels(ChannelList.getSubscribedChannels());
       mainFrame.updateChannellist();
     }
     
-    if(mProp.hasChanged(LookAndFeel.PERSONA_RANDOM) && !mProp.hasChanged(LookAndFeel.PERSONA_SELECTED)) {
+    if(PROP.hasChanged(LookAndFeel.PERSONA_RANDOM) && !PROP.hasChanged(LookAndFeel.PERSONA_SELECTED)) {
       Persona.getInstance().applyPersona();
     }
     
-    if(mProp.hasChanged(LookAndFeel.PERSONA_SELECTED)) {
+    if(PROP.hasChanged(LookAndFeel.PERSONA_SELECTED)) {
       Persona.getInstance().applyPersona();
     }
 
     propArr = new Property[] { ProgramTable.START_OF_DAY,
         ProgramTable.END_OF_DAY };
-    if (mProp.hasChanged(propArr)) {
+    if (PROP.hasChanged(propArr)) {
       DefaultProgramTableModel model = mainFrame.getProgramTableModel();
       int startOfDay = ProgramTable.START_OF_DAY.getInt();
       int endOfDay = ProgramTable.END_OF_DAY.getInt();
@@ -1245,7 +1275,7 @@ public class Settings {
         ProgramPanel.INFO_FIELDS, ProgramPanel.INFO_FIELDS_SEPARATORS,
         ProgramPanel.ICON_PLUGINS_ALTERNATIVE,
         ProgramPanel.INFO_FIELDS_ALTERNATIVE, ProgramPanel.INFO_FIELDS_SEPARATORS_ALTERNATIVE};
-    if (mProp.hasChanged(propArr)) {
+    if (PROP.hasChanged(propArr)) {
       // Force a recreation of the table content
       DefaultProgramTableModel model = mainFrame.getProgramTableModel();
       model.setDate(mainFrame.getCurrentSelectedDate(), null, null);
@@ -1255,12 +1285,12 @@ public class Settings {
         IconAndNames.SHOW_ICONS_IN_PROGRAM_TABLE, IconAndNames.SHOW_ICONS_IN_CHANNEL_LIST,
         IconAndNames.SHOW_NAMES_IN_PROGRAM_TABLE, IconAndNames.SHOW_NAMES_IN_CHANNEL_LIST,
         IconAndNames.SHOW_SORT_NUMBER_IN_PROGRAM_TABLE, IconAndNames.SHOW_SORT_NUMBER_IN_PROGRAM_LISTS};
-    if (mProp.hasChanged(propArr)) {
+    if (PROP.hasChanged(propArr)) {
       mainFrame.getProgramTableScrollPane().updateChannelPanel();
       mainFrame.updateChannelChooser();
     }
 
-    if(mProp.hasChanged(Directories.TV_DATA)) {
+    if(PROP.hasChanged(Directories.TV_DATA)) {
       TvDataServiceProxyManager.getInstance().setTvDataDir(new File(Directories.TV_DATA.getString()));
 
       TvDataBase.getInstance().updateTvDataBase();
@@ -1269,16 +1299,16 @@ public class Settings {
       MainFrame.getInstance().handleChangedTvDataDir();
     }
 
-    if (mProp.hasChanged(LookAndFeel.VIEW_DATE_LAYOUT)) {
+    if (PROP.hasChanged(LookAndFeel.VIEW_DATE_LAYOUT)) {
       MainFrame.getInstance().createDateSelector();
       MainFrame.getInstance().setShowDatelist(true, true); // set date list visible (and save), otherwise the setting has no effect on restart
     }
 
-    if(mProp.hasChanged(General.CAN_RECEIVE_PROTOCOL_MESSAGE)) {
+    if(PROP.hasChanged(General.CAN_RECEIVE_PROTOCOL_MESSAGE)) {
       ProtocolHandler.getInstance().handleSettingsChanged();
     }
 
-    mProp.clearChanges();
+    PROP.clearChanges();
 
     try {
       storeSettings(true);
@@ -1326,23 +1356,23 @@ public class Settings {
    /** Color for Programs marked with MIN_PRIORITY 
    * @deprecated since 4.2.2 */
   @Deprecated(since="4.2.2") public static final ColorProperty propProgramPanelMarkedMinPriorityColor = new ColorProperty(
-      mProp, "programpanel.ColorMarked", new Color(140, 255, 0, 60));
+      PROP, "programpanel.ColorMarked", new Color(140, 255, 0, 60));
   /** Color for Programs marked with LOWER_MEDIUM_PRIORITY 
    * @deprecated since 4.2.2 */
   @Deprecated(since="4.2.2") public static final ColorProperty propProgramPanelMarkedLowerMediumPriorityColor = new ColorProperty(
-      mProp, "programpanel.ColorMarkedLowerMedium", new Color(0, 255, 255, 50));
+      PROP, "programpanel.ColorMarkedLowerMedium", new Color(0, 255, 255, 50));
   /** Color for Programs marked with MEDIUM_PRIORITY
    * @deprecated since 4.2.2 */
   @Deprecated(since="4.2.2") public static final ColorProperty propProgramPanelMarkedMediumPriorityColor = new ColorProperty(
-      mProp, "programpanel.ColorMarkedMedium", new Color(255, 255, 0, 60));
+      PROP, "programpanel.ColorMarkedMedium", new Color(255, 255, 0, 60));
   /** Color for Programs marked with HIGHER_MEDIUM_PRIORITY
    * @deprecated since 4.2.2 */
   @Deprecated(since="4.2.2") public static final ColorProperty propProgramPanelMarkedHigherMediumPriorityColor = new ColorProperty(
-      mProp, "programpanel.ColorMarkedHigherMedium", new Color(255, 180, 0, 110));
+      PROP, "programpanel.ColorMarkedHigherMedium", new Color(255, 180, 0, 110));
   /** Color for Programs marked with MAX_PRIORITY
     * @deprecated since 4.2.2 */
   @Deprecated(since="4.2.2") public static final ColorProperty propProgramPanelMarkedMaxPriorityColor = new ColorProperty(
-      mProp, "programpanel.ColorMarkedMax", new Color(255, 0, 0, 30));
+      PROP, "programpanel.ColorMarkedMax", new Color(255, 0, 0, 30));
   /** Color of the foreground of a program panel */
   
   /**
@@ -1480,18 +1510,21 @@ public class Settings {
   }
   
   public static final class Other {
+    private static final void initialize() {
+      //does nothing, just call this method to initialize static members of this class
+    }
   
-    public static final IntProperty SETTINGS_DIALOG_DIVIDER_LOCATION = new IntProperty(mProp,
+    public static final IntProperty SETTINGS_DIALOG_DIVIDER_LOCATION = new IntProperty(PROP,
       "settingsDialogDividerLocation", 200);
   
     /** the class name of the last settings tab that has been closed with OK before */
-    public static final StringProperty SETTINGS_LAST_USED_PATH = new StringProperty(mProp, "lastUsedSettingsTabClassName", "#channels");
+    public static final StringProperty SETTINGS_LAST_USED_PATH = new StringProperty(PROP, "lastUsedSettingsTabClassName", "#channels");
   
     /**
      * list of hidden message boxes
      * @since 2.7
      */
-    public static final StringArrayProperty MESSAGE_BOXES_HIDDEN = new StringArrayProperty(mProp, "hideMessageBox", new String[] {});
+    public static final StringArrayProperty MESSAGE_BOXES_HIDDEN = new StringArrayProperty(PROP, "hideMessageBox", new String[] {});
   
     /**
      * Hidden property for blocked filter components for Favorite usage.
@@ -1500,59 +1533,71 @@ public class Settings {
      * <p>
      * @since 3.4.5 */
     public static final StringArrayProperty FAVORITE_BLOCKED_FILTER_COMPONENTS = new StringArrayProperty(
-      mProp, "favoriteBlockedFilterComponents", new String[] {"tvbrowser.core.filters.filtercomponents.BeanShellFilterComponent","tvbrowser.core.filters.filtercomponents.ProgramMarkingPriorityFilterComponent","tvbrowser.core.filters.filtercomponents.ReminderFilterComponent","tvbrowser.core.filters.filtercomponents.PluginFilterComponent"});
+      PROP, "favoriteBlockedFilterComponents", new String[] {"tvbrowser.core.filters.filtercomponents.BeanShellFilterComponent","tvbrowser.core.filters.filtercomponents.ProgramMarkingPriorityFilterComponent","tvbrowser.core.filters.filtercomponents.ReminderFilterComponent","tvbrowser.core.filters.filtercomponents.PluginFilterComponent"});
   
   
     private Other() {}
   }
   
   public static final class Buttons {
+    private static final void initialize() {
+      //does nothing, just call this method to initialize static members of this class
+    }
+    
     public static final String ID = "#timebuttons";
   
     public static final IntArrayProperty TIME_BUTTONS = new IntArrayProperty(
-      mProp, "timeButtons", new int[] { 6 * 60, 12 * 60, 18 * 60, 20 * 60 + 15 });;
+      PROP, "timeButtons", new int[] { 6 * 60, 12 * 60, 18 * 60, 20 * 60 + 15 });;
     
     private Buttons() {};
   }
   
   public static final class CenterPanels {
+    private static final void initialize() {
+      //does nothing, just call this method to initialize static members of this class
+    }
+    
     public static final String ID = "#centerpanelsetup";
     /**
      * Array with the panel IDs shown in the center panel of TV-Browser main window.
      * @since 3.2
      */
     public static final StringArrayProperty CENTER_PANEL_ARR = new StringArrayProperty(
-      mProp, "centerPanelArr", new String[] {"tvbrowser.ui.programtable.ProgramTableScrollPaneWrapper"});
+      PROP, "centerPanelArr", new String[] {"tvbrowser.ui.programtable.ProgramTableScrollPaneWrapper"});
     
     /**
      * Array with the deselected IDs of the center panels.
      */
     public static final StringArrayProperty DISABLED_CENTER_PANEL_ARR = new StringArrayProperty(
-      mProp, "disabledCenterPanelArr", new String[0]);
+      PROP, "disabledCenterPanelArr", new String[0]);
     /**
      * If the tab bar in the center of the TV-Browser window should always be shown.
      * @since 3.2
      */
     public static final BooleanProperty ALWAYS_SHOW_TAB_BAR_FOR_CENTER_PANEL = new BooleanProperty(
-      mProp, "alwaysShowTabBarForCenterPanel", true);
+      PROP, "alwaysShowTabBarForCenterPanel", true);
     
     /**
      * Property of name and icon showing of tab bar in center panel.
      * @since 3.4.5
      */
     public static final IntProperty TAB_BAR_CENTER_PANEL_NAME_ICON_CONFIG = new IntProperty(
-      mProp, "pbBarCenterPanelNameIconConfig", 2);
+      PROP, "pbBarCenterPanelNameIconConfig", 2);
     
     /**
     * @since 4.2.5
     */
    public static final BooleanProperty PLUGIN_FUNCTIONS_IN_MENU_SHOW = new BooleanProperty(
-       mProp, "showPluginFunctionsInTabpaneMenu", true);
+       PROP, "showPluginFunctionsInTabpaneMenu", true);
     
     public CenterPanels() {}
   }
   
   public static final class IconAndNames {
+    private static final void initialize() {
+      //does nothing, just call this method to initialize static members of this class
+    }
+    
     /** Value for name only settings */
     public static final int VALUE_NAME_ONLY = 0;
   
@@ -1565,100 +1610,108 @@ public class Settings {
     public static final String ID = "#channelIconName";
     
     public static final BooleanProperty SHOW_ICONS_IN_PROGRAM_TABLE = new BooleanProperty(
-      mProp, "showChannelIconsInProgramtable", true);
+      PROP, "showChannelIconsInProgramtable", true);
     public static final BooleanProperty SHOW_NAMES_IN_PROGRAM_TABLE = new BooleanProperty(
-      mProp, "showChannelNamesInProgramtable", true);
+      PROP, "showChannelNamesInProgramtable", true);
     public static final IntProperty SHOW_LOGO_FOR_PROGRAM_PANEL = new IntProperty(
-      mProp, "showChannelLogoForProgramPanel", ProgramPanelSettings.SHOW_CHANNEL_LOGO_PLUGINS_CONTROL);
+      PROP, "showChannelLogoForProgramPanel", ProgramPanelSettings.SHOW_CHANNEL_LOGO_PLUGINS_CONTROL);
     public static final BooleanProperty SHOW_ICONS_IN_CHANNEL_LIST = new BooleanProperty(
-      mProp, "showChannelIconsInChannellist", true);
+      PROP, "showChannelIconsInChannellist", true);
     public static final BooleanProperty SHOW_NAMES_IN_CHANNEL_LIST = new BooleanProperty(
-      mProp, "showChannelNamesInChannellist", true);
+      PROP, "showChannelNamesInChannellist", true);
     
     /**
      * show sort number in program table?
      * @since 3.3.4
      */
     public static final BooleanProperty SHOW_SORT_NUMBER_IN_PROGRAM_TABLE = new BooleanProperty(
-      mProp, "showSortNumberInProgramTable", true);
+      PROP, "showSortNumberInProgramTable", true);
     
     /**
      * show tooltip with large channel icon
      * @since 2.7
      */
     public static final BooleanProperty SHOW_CHANNEL_TOOLTIP_IN_PROGRAM_TABLE = new BooleanProperty(
-      mProp, "showChannelTooltipInProgramtable", true);
+      PROP, "showChannelTooltipInProgramtable", true);
     
     /**
      * show sort number in program lists?
      * @since 3.3.4
      */
     public static final BooleanProperty SHOW_SORT_NUMBER_IN_PROGRAM_LISTS = new BooleanProperty(
-      mProp, "showSortNumberInProgramLists", true);
+      PROP, "showSortNumberInProgramLists", true);
     
     private IconAndNames() {} 
   }
   
   public static final class Channels {
+    private static final void initialize() {
+      //does nothing, just call this method to initialize static members of this class
+    }
+    
     public static final String ID = "#channels";
     
     /**
      * subscribed channels
      */
     public static final ChannelArrayProperty SUBSCRIBED = new ChannelArrayProperty(
-      mProp, "subscribedchannels", new Channel[0]);
+      PROP, "subscribedchannels", new Channel[0]);
 
     /**
      * the last active channel group for filtering the channel list
      */
     public static final StringProperty GROUP_LAST_USED = new StringProperty(
-        mProp, "lastchannelgroup", null);
+        PROP, "lastchannelgroup", null);
 
     /**
      * selected plugin filter in channel settings
      * @since 3.1.1
      */
     public static final StringArrayProperty SUBSCRIBED_SEPARATORS = new StringArrayProperty(
-      mProp, "subscribedChannelsSeparators", new String[0]);    
+      PROP, "subscribedChannelsSeparators", new String[0]);    
 
     /** Saves the selected channel category filter index */
     public static final ByteProperty SELECTED_CATEGORY_INDEX = new ByteProperty(
-      mProp, "selectedChannelCategoryIndex", (byte)1);
+      PROP, "selectedChannelCategoryIndex", (byte)1);
       
     /**
      * selected channel country filter in channel settings
      * @since 3.0
      */
     public static final StringProperty SELECTED_COUNTRY = new StringProperty(
-      mProp, "selectedChannelCountry", "");
+      PROP, "selectedChannelCountry", "");
     
     public static final StringProperty LAST_EXPORT_FILE = new StringProperty(
-      mProp, "lastChannelExportFile", System.getProperty("user.home") + "/TVB-channel-export.txt");
+      PROP, "lastChannelExportFile", System.getProperty("user.home") + "/TVB-channel-export.txt");
     public static final StringProperty SELECTED_PLUGIN = new StringProperty(
-      mProp, "selectedChannelPlugin", "");;
+      PROP, "selectedChannelPlugin", "");;
     
     public static final StringArrayProperty USED_CHANNEL_GROUPS = new StringArrayProperty(
-      mProp, "usedChannelGroups", null);
+      PROP, "usedChannelGroups", null);
     
     /**
      * saves if the channels were configured
      * @since 3.0
      */
     public static final BooleanProperty WERE_CONFIGURED = new BooleanProperty(
-      mProp, "channelsWereConfigured", false);
+      PROP, "channelsWereConfigured", false);
     
     public static final DateProperty UPDATE_LAST = new DateProperty(
-      mProp, "lastChannelUpdate", null);
+      PROP, "lastChannelUpdate", null);
     
     /**
      * @since 3.0
      */
-    public static final StringArrayProperty DATA_SERVICE_IDS_USED_CURRENTLY = new StringArrayProperty(mProp, "currentDataServices", new String[0]);    
+    public static final StringArrayProperty DATA_SERVICE_IDS_USED_CURRENTLY = new StringArrayProperty(PROP, "currentDataServices", new String[0]);    
     
     private Channels() {}
   }
   
   public static final class ContextMenu {
+    private static final void initialize() {
+      //does nothing, just call this method to initialize static members of this class
+    }
+    
     public static final String ID = "#contextmenu";
     
     /**
@@ -1666,12 +1719,12 @@ public class Settings {
      * @since 3.4.5
      */
     public static final StringArrayProperty DISABLED_SUB_ITEMS = new StringArrayProperty(
-      mProp, "propContextMenuDisabledSubItems", null);
+      PROP, "propContextMenuDisabledSubItems", null);
 
     /**
      * Order of the Plugins in the Context-Menu.
      */
-    public static final StringArrayProperty MENU_ORDER = new StringArrayProperty(mProp, "contextMenuOrder",
+    public static final StringArrayProperty MENU_ORDER = new StringArrayProperty(PROP, "contextMenuOrder",
       new String[] { "programinfo.ProgramInfo", "searchplugin.SearchPlugin", "reminderplugin.ReminderPlugin",
           "favoritesplugin.FavoritesPlugin", SeparatorMenuItem.SEPARATOR, "java.webplugin.WebPlugin",
           "java.simplemarkerplugin.SimpleMarkerPlugin", "java.captureplugin.CapturePlugin" });
@@ -1680,163 +1733,179 @@ public class Settings {
      * All disabled Items of the ContextMenu
      */
     public static final StringArrayProperty DISABLED_ITEMS = new StringArrayProperty(
-      mProp, "contextMenuDisabledItems", null);
+      PROP, "contextMenuDisabledItems", null);
     
     public static final StringArrayProperty PLUGINS_KNOWN = new StringArrayProperty(
-      mProp, "knownContextMenuPlugins", new String[0]);
+      PROP, "knownContextMenuPlugins", new String[0]);
     
     private ContextMenu() {}
   }
   
   public static final class DataPostProcessing {
+    private static final void initialize() {
+      //does nothing, just call this method to initialize static members of this class
+    }
+    
     public static final String ID = "#dataPluginPostProcessing";
     
     public static final StringArrayProperty ORDER = new StringArrayProperty(
-      mProp, "dataPluginPostProcessingOrder", new String[0]);
+      PROP, "dataPluginPostProcessingOrder", new String[0]);
     
     private DataPostProcessing() {}
   }
   
   public static final class Directories {
+    private static final void initialize() {
+      //does nothing, just call this method to initialize static members of this class
+    }
+    
     public static final String ID = "#directories";
     
     public static final StringProperty TV_DATA = new StringProperty(
-      mProp, "dir.tvdata", mDefaultSettings.getProperty("tvdatadir",
+      PROP, "dir.tvdata", mDefaultSettings.getProperty("tvdatadir",
           getDefaultTvDataDir()));
     public static final StringProperty PLUGINS = new StringProperty(
-      mProp, "dir.plugins", mDefaultSettings.getProperty("pluginsdir",
+      PROP, "dir.plugins", mDefaultSettings.getProperty("pluginsdir",
           getDefaultPluginsDir()));
     public static final StringProperty LOG = new StringProperty(
-      mProp, "logdirectory", mDefaultSettings.getProperty("logdirectory", null));
+      PROP, "logdirectory", mDefaultSettings.getProperty("logdirectory", null));
     
     private Directories() {}
   }
 
   public static final class Fonts {
+    private static final void initialize() {
+      //does nothing, just call this method to initialize static members of this class
+    }
+    
     public static final String ID = "#fonts";
     
     public static final BooleanProperty ANTIALIASING_ENABLED = new BooleanProperty(
-      mProp, "enableantialiasing", true);
+      PROP, "enableantialiasing", true);
     public static final BooleanProperty USE_DEFAULT = new BooleanProperty(
-      mProp, "usedefaultfonts", true);
+      PROP, "usedefaultfonts", true);
     public static final FontProperty CHANNEL_NAME = new DeferredFontProperty(
-      mProp, "font.channelname", DEFAULT_CHANNELNAMEFONT);
+      PROP, "font.channelname", DEFAULT_CHANNELNAMEFONT);
     public static final FontProperty PROGRAM_TITLE = new DeferredFontProperty(
-      mProp, "font.programtitle", DEFAULT_PROGRAMTITLEFONT);
+      PROP, "font.programtitle", DEFAULT_PROGRAMTITLEFONT);
     public static final FontProperty PROGRAM_INFO = new DeferredFontProperty(
-      mProp, "font.programinfo", DEFAULT_PROGRAMINFOFONT);
+      PROP, "font.programinfo", DEFAULT_PROGRAMINFOFONT);
     public static final FontProperty PROGRAM_TIME = new DeferredFontProperty(
-      mProp, "font.programtime", DEFAULT_PROGRAMTIMEFONT);
+      PROP, "font.programtime", DEFAULT_PROGRAMTIMEFONT);
     public static final IntProperty PROGRAM_TEX_TLINE_GAP = new IntProperty(
-      mProp, "font.lineGap", 0);
+      PROP, "font.lineGap", 0);
     
     private Fonts() {}
   }
   
   public static final class General {
+    private static final void initialize() {
+      //does nothing, just call this method to initialize static members of this class
+    }
+    
     public static final String ID = "#startup";
   
     public static final BooleanProperty MINIMIZE_AFTER_STARTUP = new BooleanProperty(
-      mProp, "minimizeAfterStartup", false);
+      PROP, "minimizeAfterStartup", false);
     public static final BooleanProperty START_SCREEN_SHOW = new BooleanProperty(
-      mProp, "splash.show", true);
+      PROP, "splash.show", true);
     public static final BooleanProperty IS_USING_FULLSCREEN = new BooleanProperty(
-      mProp, "isUsingFullscreen", false);
+      PROP, "isUsingFullscreen", false);
 
     /** 
      * Sets the availability of the restore server.
      * <p>
      * @since 4.1
      */
-    public static final BooleanProperty SERVER_RESTORE_ENABLED = new BooleanProperty(mProp, "serverRestoreEnabled", true);
+    public static final BooleanProperty SERVER_RESTORE_ENABLED = new BooleanProperty(PROP, "serverRestoreEnabled", true);
 
     /**
      * Property to allow handling of tvb:// protocol events. 
      * 
      * @since 4.2.3
      */
-    public static final BooleanProperty CAN_RECEIVE_PROTOCOL_MESSAGE = new BooleanProperty(mProp, "canReceiveProtocolMessages", true);
+    public static final BooleanProperty CAN_RECEIVE_PROTOCOL_MESSAGE = new BooleanProperty(PROP, "canReceiveProtocolMessages", true);
     public static final BooleanProperty ONLY_MINIMIZE_WHEN_WINDOW_CLOSING = new BooleanProperty(
-      mProp, "onlyMinimizeWhenWindowClosing", false);
+      PROP, "onlyMinimizeWhenWindowClosing", false);
     public static final HiddenMessagesProperty ASK_FOR_EXIT_CONFIRMATION = new HiddenMessagesProperty("MainFrame.askForExitConfirm", true);
     
     /** check for channel changes every 14 days by default */
     public static final IntProperty AUTO_CHANNEL_UPDATE_PERIOD = new IntProperty(
-      mProp, "autoChannelUpdatePeriod", 14);
+      PROP, "autoChannelUpdatePeriod", 14);
     
     /**@since 4.2.2*/
     public static final BooleanProperty AUTO_UPDATE_PRIME_TIME = new BooleanProperty(
-      mProp, "autoUpdatePrimeTime", false);
+      PROP, "autoUpdatePrimeTime", false);
     public static final ChoiceProperty AUTO_DOWNLOAD_TYPE = new ChoiceProperty(
-      mProp, "autodownload", "daily", new String[] { "startup", "daily",
+      PROP, "autodownload", "daily", new String[] { "startup", "daily",
           "every3days", "weekly", "never" });
     public static final HiddenMessagesProperty DOWNLOAD_DONE = new HiddenMessagesProperty("downloadDone", true);
     public static final BooleanProperty AUTO_DATA_DOWNLOAD_ENABLED = new BooleanProperty(
-      mProp, "autoDataDownloadEnabled", true);
+      PROP, "autoDataDownloadEnabled", true);
     public static final BooleanProperty ASK_FOR_AUTO_DOWNLOAD = new BooleanProperty(
-      mProp, "askForAutoDownload", false);
+      PROP, "askForAutoDownload", false);
     public static final IntProperty AUTO_DOWNLOAD_PERIOD = new IntProperty(
-      mProp, "autodownloadperiod", 0);
+      PROP, "autodownloadperiod", 0);
     public static final ShortProperty AUTO_DOWNLOAD_WAITING_TIME = new ShortProperty(
-      mProp, "autoDownloadWaitingTime", (short) 5);
+      PROP, "autoDownloadWaitingTime", (short) 5);
     public static final BooleanProperty AUTO_DOWNLOAD_WAITING_ENABLED = new BooleanProperty(
-      mProp, "autoDownloadWaitingEnabled", true);
+      PROP, "autoDownloadWaitingEnabled", true);
     
     /**
      * enable checking date and time via NTP if no TV data can be downloaded
      */
-    public static final BooleanProperty NTP_TIME_CHECK = new BooleanProperty(mProp, "ntpTimeCheckEnabled", true);
+    public static final BooleanProperty NTP_TIME_CHECK = new BooleanProperty(PROP, "ntpTimeCheckEnabled", true);
     
     /**
      * TV-Browser JRE update package path.
      * <p>
      * @since 4.1
      */
-    public static final StringProperty JRE_UPDATE = new StringProperty(mProp, "jreUpdate", "");
-    public static final DateProperty JRE_UPDATE_DATE_LAST = new DateProperty(mProp, "jreUpdateDateLast", null);
-    public static final BooleanProperty JRE_UPDATE_ENABLED = new BooleanProperty(mProp, "jreUpdateEnabled", true);
+    public static final StringProperty JRE_UPDATE = new StringProperty(PROP, "jreUpdate", "");
+    public static final DateProperty JRE_UPDATE_DATE_LAST = new DateProperty(PROP, "jreUpdateDateLast", null);
+    public static final BooleanProperty JRE_UPDATE_ENABLED = new BooleanProperty(PROP, "jreUpdateEnabled", true);
     
     public static final VersionProperty TV_BROWSER_VERSION_USED_LAST = new VersionProperty(
-      mProp, "version", null);
+      PROP, "version", null);
   
     public static final BooleanProperty TV_BROWSER_VERSION_USED_LAST_IS_STABLE = new BooleanProperty(
-      mProp, "versionIsStable", false);
+      PROP, "versionIsStable", false);
     
     /** Saves the date of the very first TV-Browser start */
     public static final DateProperty DATE_FIRST_START = new DateProperty(
-      mProp, "firstStartDate", null);
+      PROP, "firstStartDate", null);
   
   
     
     /**
      * date of last NTP internet time check
      */
-    public static final DateProperty NTP_CHECK_LAST = new DateProperty(mProp, "lastNTPCheck", null);
+    public static final DateProperty NTP_CHECK_LAST = new DateProperty(PROP, "lastNTPCheck", null);
   
     public static final BooleanProperty LOGGING_VERBOSE = new BooleanProperty(
-      mProp, "verboseLogging", false);
+      PROP, "verboseLogging", false);
     
     /**
      * Date when TV-Browser has searched for settings of old versions of TV-Browser last.
      * @since 4.2.2
      */
-    public static final DateProperty DATE_OLD_SETTINGS_CHECKED_LAST = new DateProperty(mProp, "dateOldSettingsCheckedLast", null);
+    public static final DateProperty DATE_OLD_SETTINGS_CHECKED_LAST = new DateProperty(PROP, "dateOldSettingsCheckedLast", null);
     
     /** The user selected default filter */
     public static final StringProperty FILTER_DEFAULT = new StringProperty(
-      mProp, "defaultFilter", "");
+      PROP, "defaultFilter", "");
     
     /**
      * Current available stable version of TV-Browser.
      * @since 4.2.5
      */
-    public static final VersionProperty VERSION_AVAILABLE = new VersionProperty(mProp, "versionAvailable", TVBrowser.VERSION);
+    public static final VersionProperty VERSION_AVAILABLE = new VersionProperty(PROP, "versionAvailable", TVBrowser.VERSION);
 
     /**
      * Current available test version of TV-Browser.
      * @since 4.2.5
      */
-    public static final VersionProperty TEST_VERSION_AVAILABLE = new VersionProperty(mProp, "testVersionAvailable", TVBrowser.VERSION);
+    public static final VersionProperty TEST_VERSION_AVAILABLE = new VersionProperty(PROP, "testVersionAvailable", TVBrowser.VERSION);
 
     /**
      * Inform about test versions available.
@@ -1848,28 +1917,36 @@ public class Settings {
   }
   
   public static final class Locales {
+    private static final void initialize() {
+      //does nothing, just call this method to initialize static members of this class
+    }
+    
     public static final String ID = "#local";
 
     /**
      * Use 12-Hour Format?
      */
     public static final BooleanProperty TWELVE_HOUR_FORMAT = new BooleanProperty(
-      mProp, "uswTwelveHourFormat", false);
+      PROP, "uswTwelveHourFormat", false);
     public static final IntProperty FIRST_DAY_OF_WEEK = new IntProperty(
-      mProp, "firstDayOfWeek", Calendar.getInstance().getFirstDayOfWeek());
-    public static final StringProperty LANGUAGE = new StringProperty(mProp,
+      PROP, "firstDayOfWeek", Calendar.getInstance().getFirstDayOfWeek());
+    public static final StringProperty LANGUAGE = new StringProperty(PROP,
       "language", System.getProperty("user.language"));
-    public static final StringProperty COUNTRY = new StringProperty(mProp,
+    public static final StringProperty COUNTRY = new StringProperty(PROP,
       "country", System.getProperty("user.country", ""));
-    public static final StringProperty VARIANT = new StringProperty(mProp,
+    public static final StringProperty VARIANT = new StringProperty(PROP,
       "variant", System.getProperty("user.variant",""));
-    public static final StringProperty TIMEZONE = new StringProperty(mProp,
+    public static final StringProperty TIMEZONE = new StringProperty(PROP,
       "timeZone", null);
     
     private Locales() {}
   }
   
   public static final class LookAndFeel {
+    private static final void initialize() {
+      //does nothing, just call this method to initialize static members of this class
+    }
+    
     public static final String ID = "#lookandfeel";
     
     /**
@@ -1877,7 +1954,7 @@ public class Settings {
      * @since 2.7
      */
     public static final BooleanProperty PLUGIN_VIEW_IS_LEFT = new BooleanProperty(
-      mProp, "pluginViewIsLeft", true);
+      PROP, "pluginViewIsLeft", true);
     
     /**
      * if calendar view is active
@@ -1885,41 +1962,45 @@ public class Settings {
      * @since 3.0
      */
     public static final IntProperty VIEW_DATE_LAYOUT = new IntProperty(
-      mProp, "propViewDateLayout", 1);
+      PROP, "propViewDateLayout", 1);
       
     /**
      * Stores if the Persona should be selected randomly at start.
      * @since 3.1
      */
     public static final BooleanProperty PERSONA_RANDOM = new BooleanProperty(
-      mProp, "randomPersona", false);
+      PROP, "randomPersona", false);
 
     /**
      * Stores the id of the selected Persona.
      * @since 3.1
      */
     public static final StringProperty PERSONA_SELECTED = new StringProperty(
-      mProp, "persona", "51b73c81-7d61-4626-b230-89627c9f5ce7");
+      PROP, "persona", "51b73c81-7d61-4626-b230-89627c9f5ce7");
     public static final StringProperty JGOODIES_THEME = new JGoodiesThemeProperty(
-      mProp, "jgoodies.theme");
+      PROP, "jgoodies.theme");
     public static final BooleanProperty JGOODIES_SHADOW = new BooleanProperty(
-      mProp, "jgoodies.dropshadow", false);
+      PROP, "jgoodies.dropshadow", false);
     public static final StringProperty SELECTED = new StringProperty(
-      mProp, "lookandfeel1_1", mDefaultSettings.getProperty("lookandfeel",
+      PROP, "lookandfeel1_1", mDefaultSettings.getProperty("lookandfeel",
           UiUtilities.getDefaultLookAndFeelClassName(false)));
     public static final StringProperty INFO_ICON_THEME_ID = new StringProperty(
-      mProp, "infoIconThemeName", "tvb_default.zip");
+      PROP, "infoIconThemeName", "tvb_default.zip");
 
     /**
      * The IconTheme
      */
-    public static final StringProperty ICON_THEME = new StringProperty(mProp,
+    public static final StringProperty ICON_THEME = new StringProperty(PROP,
       "icontheme", mDefaultSettings.getProperty("icontheme", null));
     
     private LookAndFeel() {}
   }
   
   public static final class Markings {
+    private static final void initialize() {
+      //does nothing, just call this method to initialize static members of this class
+    }
+    
     public static final String ID = "#programpanelmarking";
     
     /**
@@ -1927,24 +2008,24 @@ public class Settings {
      * icons
      */
     public static final BooleanProperty USES_EXTRA_SPACE_FOR_MARK_ICONS = new BooleanProperty(
-      mProp, "programpanel.usesExtraSpaceForMarkIcons", true);
+      PROP, "programpanel.usesExtraSpaceForMarkIcons", true);
       
     /** Used to enable border on marked programs */
     public static final BooleanProperty WITH_MARKINGS_SHOWING_BORDER = new BooleanProperty(
-      mProp, "programpanel.markingsShowingBorder", false);
+      PROP, "programpanel.markingsShowingBorder", false);
     
     /** Used default mark priority for markings of plugins. */
     public static final IntProperty MARK_PRIORITY_DEFAULT = new IntProperty(
-      mProp, "programpanel.defaultMarkPriority", 0);
+      PROP, "programpanel.defaultMarkPriority", 0);
     
     /** Used mark priority for markings of filters. */
     public static final IntProperty MARK_PRIORITY_FILTERS = new IntProperty(
-      mProp, "programpanel.filtersMarkPriority", 0);
+      PROP, "programpanel.filtersMarkPriority", 0);
     
     /** Array with in representations of the highlighting colors for Programs 
      * @since 4.2.2 */
     public static final IntArrayProperty HIGHLIGHTING_COLORS = new IntArrayProperty(
-      mProp, "programpanel.HighlightingColors", new int[] {
+      PROP, "programpanel.HighlightingColors", new int[] {
           new Color(140, 255, 0, 60).getRGB(),
           new Color(0, 255, 255, 50).getRGB(),
           new Color(255, 255, 0, 60).getRGB(),
@@ -1953,77 +2034,93 @@ public class Settings {
       });
     
     public static final StringMapProperty HIGHLIGHTING_FILTERS = new StringMapProperty(
-        mProp, "highlightingFilters");
+        PROP, "highlightingFilters");
     
     private Markings() {}
   }
   
   public static final class Mouse {
+    private static final void initialize() {
+      //does nothing, just call this method to initialize static members of this class
+    }
+    
     public static final String ID = "#mouse";
     
     public static final ContextMenuMouseActionArrayProperty LEFT_SINGLE_CLICK_IF_ARRAY = new ContextMenuMouseActionArrayProperty(
-      mProp, "leftSingleClickIfArray", new ContextMenuMouseActionSetting[] {new ContextMenuMouseActionSetting(ContextMenuManager.NO_MOUSE_MODIFIER_EX,ProgramInfo.getProgramInfoPluginId(),ActionMenu.ID_ACTION_NONE)});
+      PROP, "leftSingleClickIfArray", new ContextMenuMouseActionSetting[] {new ContextMenuMouseActionSetting(ContextMenuManager.NO_MOUSE_MODIFIER_EX,ProgramInfo.getProgramInfoPluginId(),ActionMenu.ID_ACTION_NONE)});
     public static final ContextMenuMouseActionArrayProperty LEFT_DOUBLE_CLICK_IF_ARRAY = new ContextMenuMouseActionArrayProperty(
-      mProp, "leftDoubleClickIfArray", new ContextMenuMouseActionSetting[] {new ContextMenuMouseActionSetting(ContextMenuManager.NO_MOUSE_MODIFIER_EX,ProgramInfo.getProgramInfoPluginId(),ActionMenu.ID_ACTION_NONE)});
+      PROP, "leftDoubleClickIfArray", new ContextMenuMouseActionSetting[] {new ContextMenuMouseActionSetting(ContextMenuManager.NO_MOUSE_MODIFIER_EX,ProgramInfo.getProgramInfoPluginId(),ActionMenu.ID_ACTION_NONE)});
     public static final ContextMenuMouseActionArrayProperty MIDDLE_SINGLE_CLICK_IF_ARRAY = new ContextMenuMouseActionArrayProperty(
-      mProp, "middleSingleClickIfArray", new ContextMenuMouseActionSetting[] {new ContextMenuMouseActionSetting(ContextMenuManager.NO_MOUSE_MODIFIER_EX,ReminderPlugin.getReminderPluginId(),ActionMenu.ID_ACTION_NONE)});
+      PROP, "middleSingleClickIfArray", new ContextMenuMouseActionSetting[] {new ContextMenuMouseActionSetting(ContextMenuManager.NO_MOUSE_MODIFIER_EX,ReminderPlugin.getReminderPluginId(),ActionMenu.ID_ACTION_NONE)});
     public static final ContextMenuMouseActionArrayProperty MIDDLE_DOUBLE_CLICK_IF_ARRAY = new ContextMenuMouseActionArrayProperty(
-      mProp, "middleDoubleClickIfArray", new ContextMenuMouseActionSetting[] {new ContextMenuMouseActionSetting(ContextMenuManager.NO_MOUSE_MODIFIER_EX,FavoritesPlugin.getFavoritesPluginId(),1)});
+      PROP, "middleDoubleClickIfArray", new ContextMenuMouseActionSetting[] {new ContextMenuMouseActionSetting(ContextMenuManager.NO_MOUSE_MODIFIER_EX,FavoritesPlugin.getFavoritesPluginId(),1)});
     
     private Mouse() {}
   }
   
   public static final class Network {
+    private static final void initialize() {
+      //does nothing, just call this method to initialize static members of this class
+    }
+    
     public static final String ID = "#network";
     
     /** If the internet connection should be checked before accessing internet */
     public static final BooleanProperty INTERNET_CONNECTION_CHECK = new BooleanProperty(
-      mProp, "internetConnectionCheck", true);
+      PROP, "internetConnectionCheck", true);
     public static final IntProperty DEFAULT_CONNECTION_TIMEOUT = new IntProperty(
-      mProp, "network.defaultConnectionTimeout", 60000);
+      PROP, "network.defaultConnectionTimeout", 60000);
     public static final IntProperty CHECK_TIMEOUT = new IntProperty(
-      mProp, "network.checkTimeout", 10000);
+      PROP, "network.checkTimeout", 10000);
     
     private Network() {}
   }
   
   public static final class Pictures {
+    private static final void initialize() {
+      //does nothing, just call this method to initialize static members of this class
+    }
+    
     public static final String ID = "#pictures";
     
     public static final IntProperty TYPE = new IntProperty(
-      mProp, "pictures.type", ProgramPanelSettings.SHOW_PICTURES_FOR_DURATION);
+      PROP, "pictures.type", ProgramPanelSettings.SHOW_PICTURES_FOR_DURATION);
     public static final MinutesProperty TIME_START = new MinutesProperty(
-      mProp, "pictures.startTime", 18 * 60);
+      PROP, "pictures.startTime", 18 * 60);
     public static final MinutesProperty TIME_END = new MinutesProperty(
-      mProp, "pictures.endTime", 23 * 60);
+      PROP, "pictures.endTime", 23 * 60);
     public static final IntProperty DURATION = new IntProperty(
-      mProp, "pictures.duration", 90);
+      PROP, "pictures.duration", 90);
     public static final BooleanProperty DESCRIPTION_SHOW = new BooleanProperty(
-      mProp, "pictures.showDescription", true);
+      PROP, "pictures.showDescription", true);
     
     /**
      * Stores if the picture borders should be painted.
      * @since 3.1
      */
     public static final BooleanProperty BORDER_SHOW = new BooleanProperty(
-      mProp, "showPictureBorder", true);
+      PROP, "showPictureBorder", true);
     public static final StringArrayProperty PLUGIN_IDS = new StringArrayProperty(
-      mProp, "pictures.pluginIds", new String[0]);
+      PROP, "pictures.pluginIds", new String[0]);
     
     /** The setting that contains the global picture settings value */
     public static final IntProperty PLUGINS_SETTING = new IntProperty(
-      mProp, "pluginsPictureSetting", PluginPictureSettings.PICTURE_AND_DISCRIPTION_TYPE);
+      PROP, "pluginsPictureSetting", PluginPictureSettings.PICTURE_AND_DISCRIPTION_TYPE);
     public static final IntProperty DESCRIPTION_LINES = new IntProperty(
-    mProp, "pictures.lines", 6);
+    PROP, "pictures.lines", 6);
     
     private Pictures() {}
   }
   
   public static final class Plugins {
+    private static final void initialize() {
+      //does nothing, just call this method to initialize static members of this class
+    }
+    
     public static final String ID = "#plugins";
     
     @SuppressWarnings("exports")
-    public static final BlockedPluginArrayProperty BLOCKED_ARRAY = new BlockedPluginArrayProperty(mProp, "blockedPlugins");
+    public static final BlockedPluginArrayProperty BLOCKED_ARRAY = new BlockedPluginArrayProperty(PROP, "blockedPlugins");
     
     /**
      * some plugins are installed by default, but not activated
@@ -2047,18 +2144,18 @@ public class Settings {
      * new plugins are activated automatically.
      */
     public static final StringArrayProperty DEACTIVATED = new StringArrayProperty(
-      mProp, "deactivatedPlugins", DEFAULT_DISABLED_PLUGINS);
+      PROP, "deactivatedPlugins", DEFAULT_DISABLED_PLUGINS);
     
     /** If the plugin updates should be found automatically */
     public static final BooleanProperty AUTO_UPDATE_ENABLED = new BooleanProperty(
-      mProp, "autoUpdatePlugins", true);
+      PROP, "autoUpdatePlugins", true);
     
     /**
      * Ids of plugins which settings should be reset on next startup.
      * <p>
      * @since 4.2.3
      */
-    public static final StringArrayProperty RESET_IDS = new StringArrayProperty(mProp, "propPluginReset", null);
+    public static final StringArrayProperty RESET_IDS = new StringArrayProperty(PROP, "propPluginReset", null);
     
     
     /**
@@ -2069,75 +2166,79 @@ public class Settings {
      * class names and activation is controlled by {@link #propDeactivatedPlugins}.
      */
     public static final StringArrayProperty PLUGIN_ORDER = new StringArrayProperty(
-      mProp, "plugins", null);
+      PROP, "plugins", null);
     
     public static final StringArrayProperty DELETE_FILES_AT_START = new StringArrayProperty(
-      mProp, "deleteFilesAtStart", new String[0]);
+      PROP, "deleteFilesAtStart", new String[0]);
     
     public static final DateProperty UPDATE_LAST = new DateProperty(
-      mProp, "lastPluginsUpdate", null);
+      PROP, "lastPluginsUpdate", null);
 
     /**
      * id of the  active program receive target plugin
      * @since 3.0
      */
     public static final StringProperty RECEIVE_PLUGIN_USED_LAST = new StringProperty(
-      mProp, "lastusedreceiveplugin", null);
+      PROP, "lastusedreceiveplugin", null);
   
     /**
      * id of the last active program receive target
      * @since 3.0
      */
     public static final StringProperty RECEIVE_TARGET_USED_LAST = new StringProperty(
-      mProp, "lastusedreceivetarget", null);
+      PROP, "lastusedreceivetarget", null);
   
     /**
      * Stores if beta warining is enabled for plugin update.
      * @since 3.0
      */
     public static final BooleanProperty BETA_WARNING = new BooleanProperty(
-      mProp, "pluginBetaWarning", true);
+      PROP, "pluginBetaWarning", true);
     
     public static final StringArrayProperty ACCESS_CONTROL = new StringArrayProperty(
-      mProp, "accessControl", new String[0]);
+      PROP, "accessControl", new String[0]);
     
     /** Saves if the plugin info dialog was already shown */
     public static final BooleanProperty INFO_DIALOG_WAS_SHOWN = new BooleanProperty(
-      mProp, "pluginInfoDialogWasShown", false);
+      PROP, "pluginInfoDialogWasShown", false);
       
     private Plugins() {}
   }
   
   public static final class ProgramPanel {
+    private static final void initialize() {
+      //does nothing, just call this method to initialize static members of this class
+    }
+    
     public static final String ID = "#programpanellook";
     
     public static final StringArrayProperty ICON_PLUGINS = new StringArrayProperty(
-      mProp, "programpanel.iconPlugins", new String[] { PICTURE_ID,INFO_ID,
+      PROP, "programpanel.iconPlugins", new String[] { PICTURE_ID,INFO_ID,
           "tvraterplugin.TVRaterPlugin", });
     public static final StringArrayProperty ICON_PLUGINS_ALTERNATIVE = new StringArrayProperty(
-      mProp, "programpanel.iconPluginsAlternative", new String[] { PICTURE_ID,INFO_ID,
+      PROP, "programpanel.iconPluginsAlternative", new String[] { PICTURE_ID,INFO_ID,
           "tvraterplugin.TVRaterPlugin", });
     public static final ProgramFieldTypeArrayProperty INFO_FIELDS = new ProgramFieldTypeArrayProperty(
-      mProp, "programpanel.infoFields", new ProgramFieldType[] {
+      PROP, "programpanel.infoFields", new ProgramFieldType[] {
           ProgramFieldType.GENRE_TYPE, ProgramFieldType.EPISODE_TYPE,
           ProgramFieldType.ORIGIN_TYPE, ProgramFieldType.PRODUCTION_YEAR_TYPE,
           ProgramFieldType.SHORT_DESCRIPTION_TYPE });
     
     /** Contains the separators for the selected program info filed of a program panel */
     public static final StringArrayProperty INFO_FIELDS_SEPARATORS = new StringArrayProperty(
-      mProp, "programpanel.infoFieldsSeparators", new String[] {
+      PROP, "programpanel.infoFieldsSeparators", new String[] {
          " - "," - ",
          " - "," - "
       });
     public static final ProgramFieldTypeArrayProperty INFO_FIELDS_ALTERNATIVE = new ProgramFieldTypeArrayProperty(
-      mProp, "programpanel.infoFieldsAlternative", new ProgramFieldType[] {
+      PROP, "programpanel.infoFieldsAlternative", new ProgramFieldType[] {
           ProgramFieldType.GENRE_TYPE, ProgramFieldType.EPISODE_TYPE,
           ProgramFieldType.ORIGIN_TYPE, ProgramFieldType.PRODUCTION_YEAR_TYPE,
           ProgramFieldType.SHORT_DESCRIPTION_TYPE });
     
     /** Contains the separators for the selected program info filed of a program panel */
     public static final StringArrayProperty INFO_FIELDS_SEPARATORS_ALTERNATIVE = new StringArrayProperty(
-      mProp, "programpanel.infoFieldsSeparatorsAlternative", new String[] {
+      PROP, "programpanel.infoFieldsSeparatorsAlternative", new String[] {
          " - "," - ",
          " - "," - "
       });
@@ -2147,42 +2248,42 @@ public class Settings {
      * @since 3.4.5 
      */
     public static final BooleanProperty ORIGINIAL_TITLES_SHOW = new BooleanProperty(
-      mProp, "programpanel.ShowOriginalTitles", false);
+      PROP, "programpanel.ShowOriginalTitles", false);
     
     /** Used to enable border for on air programs */
     public static final BooleanProperty BORDER_ON_AIR_PROGRAMS_SHOW = new BooleanProperty(
-      mProp, "programpanel.onAirProgramsShowingBorder", false);
+      PROP, "programpanel.onAirProgramsShowingBorder", false);
     
     /**
      * Flag to set highlighting to gradient instead of priority based coloring.
      * @since 4.2.2
      */
     public static final BooleanProperty HIGHLIGHTING_COLOR_GRADIENT = new BooleanProperty(
-      mProp, "programpanel.programPanelGradientColorHighlighting", true);
+      PROP, "programpanel.programPanelGradientColorHighlighting", true);
     
     /** Color for Program on Air - This shows how much was shown until now */
     public static final ColorProperty COLOR_ON_AIR_DARK = new ColorProperty(
-      mProp, "programpanel.ColorOnAirDark", new Color(0, 0, 255, 60));
+      PROP, "programpanel.ColorOnAirDark", new Color(0, 0, 255, 60));
     
     /** Color for Program on Air - This shows how much is not shown until now */
     public static final ColorProperty COLOR_ON_AIR_LIGHT = new ColorProperty(
-      mProp, "programpanel.ColorOnAirLight", new Color(0, 0, 255, 30));
+      PROP, "programpanel.ColorOnAirLight", new Color(0, 0, 255, 30));
     
     /** Color for selected Program */
     public static final ColorProperty COLOR_KEYBOARD_SELECTED = new ColorProperty(
-      mProp, "programpanel.KeyboardSelectedColor", new Color(130, 255, 0, 120));
+      PROP, "programpanel.KeyboardSelectedColor", new Color(130, 255, 0, 120));
     
     /** If plugins are allowed to set the transparency of a program */
     public static final BooleanProperty TRANSPARENCY_ALLOW = new BooleanProperty(
-      mProp, "programpanel.AllowTransparency", true);
+      PROP, "programpanel.AllowTransparency", true);
 
     /**
      * use hyphenation to break strings in a program panel
      */
     public static final BooleanProperty HYPHENATION = new BooleanProperty(
-      mProp, "programpanel.Hyphenation", false);
+      PROP, "programpanel.Hyphenation", false);
     public static final BooleanProperty SMOOTHER_SCROLLING = new BooleanProperty(
-        mProp, "smootherScrolling", true);
+        PROP, "smootherScrolling", true);
     
     
     /**
@@ -2192,7 +2293,7 @@ public class Settings {
      * @since 3.0
      */
     public static final BooleanProperty TITLE_CUT = new BooleanProperty(
-      mProp, "programTableCutTitle", true);
+      PROP, "programTableCutTitle", true);
     
     /**
      * how many lines of the title shall be shown if it is cut
@@ -2200,33 +2301,37 @@ public class Settings {
      * @since 3.0
      */
     public static final IntProperty TITLE_CUT_LINES = new IntProperty(
-      mProp, "programTableCutTitleLines", 2);
+      PROP, "programTableCutTitleLines", 2);
     
     /**
      * number of description lines show in program panel
      */
     public static final IntProperty MAX_LINES  = new IntProperty(
-      mProp, "programpanel.MaxLines", 3);
+      PROP, "programpanel.MaxLines", 3);
     
     /**
      * show less description lines for very short programs
      */
     public static final BooleanProperty DESCRIPTION_LIMIT_BY_DURATION = new BooleanProperty(
-      mProp, "programpanel.ShortActive", true);
+      PROP, "programpanel.ShortActive", true);
     
     /**
      * maximum duration in minutes to show no description
      */
     public static final IntProperty DESCRIPTION_LIMIT_BY_DURATION_MINUTES = new IntProperty(
-      mProp, "programpanel.ShortMinutes", 10);
+      PROP, "programpanel.ShortMinutes", 10);
     
     public static final ColorProperty COLOR_FOREGROUND = new ColorProperty(
-      mProp, "programpanel.ColorForeground", Color.black);
+      PROP, "programpanel.ColorForeground", Color.black);
      
     private ProgramPanel() {}
   }
   
   public static final class ProgramTable {
+    private static final void initialize() {
+      //does nothing, just call this method to initialize static members of this class
+    }
+    
     public static final String ID = "#programtablelook";
     
     /**
@@ -2248,37 +2353,37 @@ public class Settings {
     public static final String VALUE_LAYOUT_REAL_SYNCHRONOUS = "realSynchronous";
     
     public static final ChoiceProperty STYLE_BACKGROUND = new ChoiceProperty(
-      mProp, "tablebackground.style", "uiTimeBlock", new String[] { "singleColor",
+      PROP, "tablebackground.style", "uiTimeBlock", new String[] { "singleColor",
           "oneImage", ProgramTable.VALUE_LAYOUT_TIME_BLOCK, "timeOfDay", "uiColor" , "uiTimeBlock" });
     public static final ChoiceProperty LAYOUT = new ChoiceProperty(
-      mProp, "table.layout", ProgramTable.VALUE_LAYOUT_OPTIMIZED_COMPACT_TIME_BLOCK, new String[] {
+      PROP, "table.layout", ProgramTable.VALUE_LAYOUT_OPTIMIZED_COMPACT_TIME_BLOCK, new String[] {
           ProgramTable.VALUE_LAYOUT_TIME_SYNCHRONOUS, ProgramTable.VALUE_LAYOUT_COMPACT, ProgramTable.VALUE_LAYOUT_REAL_SYNCHRONOUS,
           ProgramTable.VALUE_LAYOUT_REAL_COMPACT, ProgramTable.VALUE_LAYOUT_TIME_BLOCK, ProgramTable.VALUE_LAYOUT_COMPACT_TIME_BLOCK, 
           ProgramTable.VALUE_LAYOUT_OPTIMIZED_COMPACT_TIME_BLOCK});
-    public static final IntProperty COLUMN_WIDTH = new VariableIntProperty(mProp,
+    public static final IntProperty COLUMN_WIDTH = new VariableIntProperty(PROP,
       "columnwidth", 200);
     
     /**
      * start of day in minutes after midnight
      */
     public static final MinutesProperty START_OF_DAY = new MinutesProperty(
-      mProp, "programtable.startofday", 0);
+      PROP, "programtable.startofday", 0);
     
     /**
      * end of day in minutes after midnight
      */
     public static final MinutesProperty END_OF_DAY = new MinutesProperty(
-      mProp, "programtable.endofday", 5 * 60);
+      PROP, "programtable.endofday", 5 * 60);
     public static final BooleanProperty MOUSE_OVER = new BooleanProperty(
-      mProp, "programpanel.MouseOver", true);
+      PROP, "programpanel.MouseOver", true);
     
     /** Color for Mouse-Over */
     public static final ColorProperty COLOR_MOUSE_OVER = new ColorProperty(
-      mProp, "programpanel.MouseOverColor", new Color(200, 200, 0, 60));
+      PROP, "programpanel.MouseOverColor", new Color(200, 200, 0, 60));
     public static final BooleanProperty SCROLL_HORIZONTAL = new BooleanProperty(
-      mProp, "programpanel.scrollHorizontal", false);
+      PROP, "programpanel.scrollHorizontal", false);
     public static final BooleanProperty AUTO_CHANGE_DATE = new BooleanProperty(
-      mProp, "autoScrollToNextDay", true);
+      PROP, "autoScrollToNextDay", true);
     
     /**
      * auto scroll table after panning?
@@ -2286,103 +2391,111 @@ public class Settings {
      * @since 3.0
      */
     public static final BooleanProperty MOUSE_AUTO_SCROLL = new BooleanProperty(
-      mProp, "programTableMouseAutoScroll", true);
+      PROP, "programTableMouseAutoScroll", true);
     public static final BooleanProperty SCROLL_TO_TIME_MARKING = new BooleanProperty(
-      mProp, "scrollToTimeMarkingActivated", true);
+      PROP, "scrollToTimeMarkingActivated", true);
     public static final ColorProperty COLOR_SCROLL_TO_TIME_PROGRAMS_BACKGROUND_LIGHT = new ColorProperty(
-      mProp, "scrollToTimeProgramsLightBackground", new Color(255, 150, 0, 40));
+      PROP, "scrollToTimeProgramsLightBackground", new Color(255, 150, 0, 40));
     public static final ColorProperty COLOR_SCROLL_TO_TIME_PROGRAMS_BACKGROUND_DARK = new ColorProperty(
-      mProp, "scrollToTimeProgramsDarkBackground", new Color(255, 150, 0, 80));
+      PROP, "scrollToTimeProgramsDarkBackground", new Color(255, 150, 0, 80));
     public static final BooleanProperty HIGHLIGHT_CHANNEL_COLUMN_BY_SCROLLING = new BooleanProperty(
-      mProp, "scrollToChannelMarkingActivated", true);
+      PROP, "scrollToChannelMarkingActivated", true);
     
     /**
      * @since 4.2.4
      */
     public static final BooleanProperty HIGHLIGHT_CHANNEL_COLUMN_BY_MOUSE = new BooleanProperty(
-      mProp, "highlightChannelColumnByMouse", true);
+      PROP, "highlightChannelColumnByMouse", true);
     public static final ColorProperty COLOR_HIGHLIGHT_CHANNEL_PROGRAMS_BACKGROUND = new ColorProperty(
-      mProp, "scrollToChannelProgramsBackground", new Color(255, 150, 0, 40));
+      PROP, "scrollToChannelProgramsBackground", new Color(255, 150, 0, 40));
     
     /**
      * Find as you type in the program table enabled?
      * @since 3.1.1
      */    
     public static final BooleanProperty FIND_AS_YOU_TYPE = new BooleanProperty(
-      mProp, "typeAsYouFindEnabled", true);
+      PROP, "typeAsYouFindEnabled", true);
     
     public static final StringProperty TIME_OF_DAY_BACKGROUND_EDGE = new StringProperty(
-      mProp, "tablebackground.timeofday.edge", "imgs/columns_edge.jpg");
+      PROP, "tablebackground.timeofday.edge", "imgs/columns_edge.jpg");
     public static final StringProperty TIME_OF_DAY_BACKGROUND_EARLY = new StringProperty(
-      mProp, "tablebackground.timeofday.early", "imgs/columns_early.jpg");
+      PROP, "tablebackground.timeofday.early", "imgs/columns_early.jpg");
     public static final StringProperty TIME_OF_DAY_BACKGROUND_MIDDAY = new StringProperty(
-      mProp, "tablebackground.timeofday.midday", "imgs/columns_midday.jpg");
+      PROP, "tablebackground.timeofday.midday", "imgs/columns_midday.jpg");
     public static final StringProperty TIME_OF_DAY_BACKGROUND_AFTERNOON = new StringProperty(
-      mProp, "tablebackground.timeofday.afternoon",
+      PROP, "tablebackground.timeofday.afternoon",
       "imgs/columns_afternoon.jpg");
     public static final StringProperty TIME_OF_DAY_BACKGROUND_EVENING = new StringProperty(
-      mProp, "tablebackground.timeofday.evening", "imgs/columns_evening.jpg");
+      PROP, "tablebackground.timeofday.evening", "imgs/columns_evening.jpg");
     
     public static final ColorProperty COLOR_BACKGROUND_SINGLE = new ColorProperty(
-      mProp, "backgroundSingleColor", Color.white);
+      PROP, "backgroundSingleColor", Color.white);
     
     public static final StringProperty ONE_IMAGE_BACKGROUND = new StringProperty(
-      mProp, "tablebackground.oneImage.image", "imgs/columns_evening.jpg");
+      PROP, "tablebackground.oneImage.image", "imgs/columns_evening.jpg");
     
-    public static final IntProperty TIME_BLOCK_SIZE = new IntProperty(mProp,
+    public static final IntProperty TIME_BLOCK_SIZE = new IntProperty(PROP,
       "tablebackground.timeBlock.size", 2);
     public static final StringProperty TIME_BLOCK_BACKGROUND1 = new StringProperty(
-      mProp, "tablebackground.timeBlock.image1", "imgs/time_block_white.png");
+      PROP, "tablebackground.timeBlock.image1", "imgs/time_block_white.png");
     public static final StringProperty TIME_BLOCK_BACKGROUND2 = new StringProperty(
-      mProp, "tablebackground.timeBlock.image2", "imgs/time_block_gray.png");
+      PROP, "tablebackground.timeBlock.image2", "imgs/time_block_gray.png");
     public static final BooleanProperty TIME_BLOCK_SHOW_WEST = new BooleanProperty(
-      mProp, "tablebackground.timeBlock.showWest", true);
+      PROP, "tablebackground.timeBlock.showWest", true);
     public static final StringProperty TIME_BLOCK_WEST_IMAGE1 = new StringProperty(
-      mProp, "tablebackground.timeBlock.west1", "imgs/time_block_white.png");
+      PROP, "tablebackground.timeBlock.west1", "imgs/time_block_white.png");
     public static final StringProperty TIME_BLOCK_WEST_IMAGE2 = new StringProperty(
-      mProp, "tablebackground.timeBlock.west2", "imgs/time_block_gray.png");
+      PROP, "tablebackground.timeBlock.west2", "imgs/time_block_gray.png");
     
     private ProgramTable() {}
   }
   
   public static final class Proxy {
+    private static final void initialize() {
+      //does nothing, just call this method to initialize static members of this class
+    }
+    
     public static final String ID = "#proxy";
     
     public static final BooleanProperty USE = new BooleanProperty(
-      mProp, "proxy.http.useProxy", false);
+      PROP, "proxy.http.useProxy", false);
     public static final StringProperty HOST = new StringProperty(
-      mProp, "proxy.http.host", "");
+      PROP, "proxy.http.host", "");
     public static final StringProperty PORT = new StringProperty(
-      mProp, "proxy.http.port", "");
+      PROP, "proxy.http.port", "");
     public static final BooleanProperty AUTHENTIFY_AT_PROXY = new BooleanProperty(
-      mProp, "proxy.http.authentifyAtProxy", false);
+      PROP, "proxy.http.authentifyAtProxy", false);
     public static final StringProperty USER = new StringProperty(
-      mProp, "proxy.http.user", "");
+      PROP, "proxy.http.user", "");
     public static final EncodedStringProperty PASSWORD = new EncodedStringProperty(
-      mProp, "proxy.http.password", "", PROXY_PASSWORD_SEED);
+      PROP, "proxy.http.password", "", PROXY_PASSWORD_SEED);
     
     private Proxy() {}
   }
   
   public static final class ToolBar {
+    private static final void initialize() {
+      //does nothing, just call this method to initialize static members of this class
+    }
+    
     public static final String ID = "#toolbar";
     
     public static final BooleanProperty IS_VISIBLE = new BooleanProperty(
-      mProp, "isToolbarVisible", true);
+      PROP, "isToolbarVisible", true);
     
     /**
      * Show the SearchField in the Toolbar
      */
     public static final BooleanProperty IS_SEARCH_FIELD_VISIBLE = new BooleanProperty(
-      mProp, "isSearchFieldVisible", true);
+      PROP, "isSearchFieldVisible", true);
     public static final StringProperty LOCATION = new StringProperty(
-      mProp, "toolbarLocation", "north");
+      PROP, "toolbarLocation", "north");
     public static final ChoiceProperty BUTTON_STYLE = new ChoiceProperty(
-      mProp, "buttontype", "icon", new String[] { "text&icon", "text", "icon" });
+      PROP, "buttontype", "icon", new String[] { "text&icon", "text", "icon" });
     public static final BooleanProperty BIG_ICONS_USE = new BooleanProperty(
-      mProp, "toolbarUseBigIcons", true);
+      PROP, "toolbarUseBigIcons", true);
     public static final StringArrayProperty BUTTONS = new StringArrayProperty(
-      mProp, "toolbarButtons_2.0", null // we show all buttons, if this property
+      PROP, "toolbarButtons_2.0", null // we show all buttons, if this property
       // is not set
       );
       
@@ -2390,271 +2503,311 @@ public class Settings {
      * Property to store if additonal space should be inserted above toolbar.
      */
     public static final BooleanProperty ADDITIONAL_TOP_SPACE = new BooleanProperty(
-        mProp, "isToolbarAdditonalTopSpace", false);
+        PROP, "isToolbarAdditonalTopSpace", false);
   
     /**
     * Property to store if additonal space should be inserted below toolbar.
     */
    public static final BooleanProperty ADDITIONAL_BOTTOM_SPACE = new BooleanProperty(
-       mProp, "isToolbarAddtionalBottomSpace", false);
+       PROP, "isToolbarAddtionalBottomSpace", false);
    
    /**
     * @since 4.2.5
     */
    public static final BooleanProperty PLUGIN_FUNCTIONS_IN_MENU_SHOW = new BooleanProperty(
-       mProp, "showPluginFunctionsInToolbarMenu", true);
+       PROP, "showPluginFunctionsInToolbarMenu", true);
     
     private ToolBar() {}
   }
   
   public static final class Tray {
+    private static final void initialize() {
+      Tray.Channels.initialize();
+      Tray.Important.initialize();
+      Tray.Now.initialize();
+      Tray.OnTime.initialize();
+      Tray.Soon.initialize();
+    }
+    
     public static final String ID = "#tray";
     
     public static final BooleanProperty ENABLED = new BooleanProperty(
-      mProp, "trayIsEnabled", true);
+      PROP, "trayIsEnabled", true);
     public static final BooleanProperty MINIMIZE_TO = new BooleanProperty(
-      mProp, "MinimizeToTray", false);
+      PROP, "MinimizeToTray", false);
     public static final BooleanProperty NOW_ON_RESTORE = new BooleanProperty(
-      mProp, "jumpNowOnRestore",true);
+      PROP, "jumpNowOnRestore",true);
     public static final BooleanProperty ANTIALIASING = new BooleanProperty(
-      mProp, "trayIsAntialiasing", true);
+      PROP, "trayIsAntialiasing", true);
     public static final BooleanProperty FILTER_NOT_MARKED = new BooleanProperty(
-      mProp, "trayFilterNotMarked",false);
+      PROP, "trayFilterNotMarked",false);
     public static final BooleanProperty FILTER_NOT = new BooleanProperty(
-      mProp, "trayFilterAll",false);
+      PROP, "trayFilterAll",false);
     
     private Tray() {}
     
     public static final class Important {
+      private static final void initialize() {
+        //does nothing, just call this method to initialize static members of this class
+      }
+      
       public static final String ID = "#trayImportant";
       
       public static final BooleanProperty ENABLED = new BooleanProperty(
-        mProp, "trayImportantProgramsEnabled", true);
+        PROP, "trayImportantProgramsEnabled", true);
       public static final BooleanProperty IN_SUB_MENU = new BooleanProperty(
-        mProp, "trayImportantProgramsInSubMenu", false);
+        PROP, "trayImportantProgramsInSubMenu", false);
       public static final IntProperty SIZE = new IntProperty(
-        mProp, "trayImportantProgramsSize", 5);
+        PROP, "trayImportantProgramsSize", 5);
       public static final BooleanProperty CONTAINS_NAME = new BooleanProperty(
-        mProp, "trayImportantProgramsContainsName", true);
+        PROP, "trayImportantProgramsContainsName", true);
       public static final BooleanProperty CONTAINS_ICON = new BooleanProperty(
-        mProp, "trayImportantProgramsContainsIcon", true);
+        PROP, "trayImportantProgramsContainsIcon", true);
       public static final BooleanProperty CONTAINS_DATE = new BooleanProperty(
-        mProp, "trayImportantProgramsContainsDate", true);
+        PROP, "trayImportantProgramsContainsDate", true);
       public static final BooleanProperty CONTAINS_TIME = new BooleanProperty(
-        mProp, "trayImportantProgramsContainsTime", true);
+        PROP, "trayImportantProgramsContainsTime", true);
       public static final BooleanProperty CONTAINS_TOOL_TIP = new BooleanProperty(
-        mProp, "trayImportantProgramsContainsToolTip", true);
+        PROP, "trayImportantProgramsContainsToolTip", true);
       public static final IntProperty PRIORITY = new IntProperty(
-        mProp, "trayImportantProgramsPriority", 0);
+        PROP, "trayImportantProgramsPriority", 0);
       public static final BooleanProperty SORT_NUMBER_SHOW = new BooleanProperty(
-        mProp, "trayImportantProgramsShowingSortNumber", true);
+        PROP, "trayImportantProgramsShowingSortNumber", true);
       
       private Important() {}
     }
     
     public static final class Now {
+      private static final void initialize() {
+        //does nothing, just call this method to initialize static members of this class
+      }
+      
       public static final String ID = "#trayNow";
       
       public static final BooleanProperty ENABLED = new BooleanProperty(
-        mProp, "trayNowProgramsEnabled", true);
+        PROP, "trayNowProgramsEnabled", true);
       public static final BooleanProperty IN_SUB_MENU = new BooleanProperty(
-        mProp, "trayNowProgramsInSubMenus", false);
+        PROP, "trayNowProgramsInSubMenus", false);
       public static final BooleanProperty CONTAINS_NAME = new BooleanProperty(
-        mProp, "trayNowProgramsContainsName", true);
+        PROP, "trayNowProgramsContainsName", true);
       public static final BooleanProperty CONTAINS_ICON = new BooleanProperty(
-        mProp, "trayNowProgramsContainsIcon", true);
+        PROP, "trayNowProgramsContainsIcon", true);
       public static final BooleanProperty CONTAINS_TIME = new BooleanProperty(
-        mProp, "trayNowProgramsContainsTime", false);
+        PROP, "trayNowProgramsContainsTime", false);
       public static final BooleanProperty CONTAINS_TOOL_TIP = new BooleanProperty(
-        mProp, "trayNowProgramsContainsToolTip", true);
+        PROP, "trayNowProgramsContainsToolTip", true);
       public static final BooleanProperty SORT_NUMBER_SHOW = new BooleanProperty(
-        mProp, "trayNowProgramsShowingSortNumber", true);
+        PROP, "trayNowProgramsShowingSortNumber", true);
       
       private Now() {}
     }
     
     public static final class OnTime {
+      private static final void initialize() {
+        //does nothing, just call this method to initialize static members of this class
+      }
+      
       public static final String ID = "#trayOnTime";
       
       public static final BooleanProperty ENABLED = new BooleanProperty(
-        mProp, "trayOnTimeProgramsEnabled", true);
+        PROP, "trayOnTimeProgramsEnabled", true);
       public static final BooleanProperty IN_SUB_MENU = new BooleanProperty(
-        mProp, "trayOnTimeProgramsInSubMenus", true);
+        PROP, "trayOnTimeProgramsInSubMenus", true);
       public static final BooleanProperty CONTAINS_NAME = new BooleanProperty(
-        mProp, "trayOnTimeProgramsContainsName", true);
+        PROP, "trayOnTimeProgramsContainsName", true);
       public static final BooleanProperty CONTAINS_ICON = new BooleanProperty(
-        mProp, "trayOnTimeProgramsContainsIcon", true);
+        PROP, "trayOnTimeProgramsContainsIcon", true);
       public static final BooleanProperty CONTAINS_TIME = new BooleanProperty(
-        mProp, "trayOnTimeProgramsContainsTime", false);
+        PROP, "trayOnTimeProgramsContainsTime", false);
       public static final BooleanProperty CONTAINS_TOOL_TIP = new BooleanProperty(
-        mProp, "trayOnTimeProgramsContainsToolTip", true);
+        PROP, "trayOnTimeProgramsContainsToolTip", true);
       public static final BooleanProperty SORT_NUMBER_SHOW = new BooleanProperty(
-        mProp, "trayOnTimeProgramsShowingSortNumber", true);
+        PROP, "trayOnTimeProgramsShowingSortNumber", true);
       public static final BooleanProperty PROGRESS_SHOW = new BooleanProperty(
-        mProp, "trayOnTimeProgramsShowProgress", true);
+        PROP, "trayOnTimeProgramsShowProgress", true);
       
       public static final ColorProperty COLOR_PROGRESS_BACKGROUND_LIGHT = new ColorProperty(
-        mProp, "trayOnTimeProgramsLightBackground", new Color(255, 150, 0, 40));
+        PROP, "trayOnTimeProgramsLightBackground", new Color(255, 150, 0, 40));
       public static final ColorProperty COLOR_PROGRESS_BACKGROUND_DARK = new ColorProperty(
-        mProp, "trayOnTimeProgramsDarkBackground", new Color(255, 150, 0, 80));
+        PROP, "trayOnTimeProgramsDarkBackground", new Color(255, 150, 0, 80));
       
       private OnTime() {}
     }
     
     public static final class Channels {
+      private static final void initialize() {
+        //does nothing, just call this method to initialize static members of this class
+      }
+      
       public static final String ID = "#trayChannels";
             
       public static final BooleanProperty SPECIAL_USE = new BooleanProperty(
-        mProp, "trayUseSpecialChannels", false);
+        PROP, "trayUseSpecialChannels", false);
       public static final ChannelArrayProperty SPECIAL = new ChannelArrayProperty(
-        mProp, "traySpecialChannels", new devplugin.Channel[] {});
+        PROP, "traySpecialChannels", new devplugin.Channel[] {});
       public static final IntProperty WIDTH = new IntProperty(
-        mProp, "trayChannelWidth", 78);
+        PROP, "trayChannelWidth", 78);
       
       private Channels() {}
     }
     
     public static final class Soon {
+      private static final void initialize() {
+        //does nothing, just call this method to initialize static members of this class
+      }
+      
       public static final String ID = "#traySoon";
       
       public static final BooleanProperty ENABLED = new BooleanProperty(
-        mProp, "traySoonProgramsEnabled", true);
+        PROP, "traySoonProgramsEnabled", true);
       public static final BooleanProperty CONTAINS_NAME = new BooleanProperty(
-        mProp, "traySoonProgramsContainsName", true);
+        PROP, "traySoonProgramsContainsName", true);
       public static final BooleanProperty CONTAINS_ICON = new BooleanProperty(
-        mProp, "traySoonProgramsContainsIcon", true);
+        PROP, "traySoonProgramsContainsIcon", true);
       public static final BooleanProperty CONTAINS_TIME = new BooleanProperty(
-        mProp, "traySoonProgramsContainsTime", true);
+        PROP, "traySoonProgramsContainsTime", true);
       public static final BooleanProperty CONTAINS_TOOL_TIP = new BooleanProperty(
-        mProp, "traySoonProgramsContainsToolTip", true);
+        PROP, "traySoonProgramsContainsToolTip", true);
       public static final BooleanProperty SORT_NUMBER_SHOW = new BooleanProperty(
-        mProp, "traySoonProgramsShowingSortNumber", true);
+        PROP, "traySoonProgramsShowingSortNumber", true);
       
       private Soon() {}
     }    
   }
   
   public static final class WebBrowser {
+    private static final void initialize() {
+      //does nothing, just call this method to initialize static members of this class
+    }
+    
     public static final String ID = "#webbrowser";
     
     public static final StringProperty USER_DEFINED = new StringProperty(
-      mProp, "webbrowser", null);  
+      PROP, "webbrowser", null);  
     public static final StringProperty USER_DEFINED_PARAMS = new StringProperty(
-      mProp, "webbrowserParams", "{0}");
+      PROP, "webbrowserParams", "{0}");
     
     /**
      * Show the "The Browser was opened"-Dialog
      */
     public static final BooleanProperty OPEN_BROWSER_DIALOG_SHOW = new BooleanProperty(
-      mProp, "showBrowserOpenDialog", true);
+      PROP, "showBrowserOpenDialog", true);
     
     private WebBrowser() {}
   }
   
   public static final class Window {
+    private static final void initialize() {
+      //does nothing, just call this method to initialize static members of this class
+    }
+    
     public static final BooleanProperty MAXIMIZED = new BooleanProperty(
-      mProp, "window.isMaximized", false);
+      PROP, "window.isMaximized", false);
 
     /**
      * Store if TV-Browser window is in native full screen mode of macOS
      * @since 4.2.4
      */
     public static final BooleanProperty MAC_OS_FULL_SCREEN = new BooleanProperty(
-          mProp, "window.isInMacOSFullScreen", false);
+          PROP, "window.isInMacOSFullScreen", false);
   
   
-    public static final IntProperty WIDTH = new IntProperty(mProp,
+    public static final IntProperty WIDTH = new IntProperty(PROP,
         "window.width", 770);
   
-    public static final IntProperty HEIGHT = new IntProperty(mProp,
+    public static final IntProperty HEIGHT = new IntProperty(PROP,
         "window.height", 550);
   
-    public static final IntProperty X = new IntProperty(mProp,
+    public static final IntProperty X = new IntProperty(PROP,
         "window.x", -1);
   
-    public static final IntProperty Y = new IntProperty(mProp,
+    public static final IntProperty Y = new IntProperty(PROP,
         "window.y", -1);
         
    /**
      * Property to store visibility state of menu bar.
      */
     public static final BooleanProperty MENU_BAR_VISIBLE = new BooleanProperty(
-        mProp, "isMenubarVisible", true);
+        PROP, "isMenubarVisible", true);
   
     
     public static final BooleanProperty STATUS_BAR_VISIBLE = new BooleanProperty(
-        mProp, "isStatusbarVisible", true);
+        PROP, "isStatusbarVisible", true);
     
     public static final BooleanProperty PLUGIN_VIEW_SHOW = new BooleanProperty(
-        mProp, "show.pluginview", false);
+        PROP, "show.pluginview", false);
   
     public static final BooleanProperty TIME_BUTTONS_SHOW = new BooleanProperty(
-        mProp, "show.timebuttons", true);
+        PROP, "show.timebuttons", true);
   
     public static final BooleanProperty CHANNEL_SELECTION_SHOW = new BooleanProperty(
-        mProp, "show.channels", true);
+        PROP, "show.channels", true);
   
     public static final BooleanProperty DATE_SELECTION_SHOW = new BooleanProperty(
-        mProp, "show.datelist", true);
+        PROP, "show.datelist", true);
   
     public static final BooleanProperty FILTER_BAR_SHOW = new BooleanProperty(
-        mProp, "show.filterbar", true);
+        PROP, "show.filterbar", true);
         
     public static final BooleanProperty ASSISTANT_SHOW = new BooleanProperty(
-      mProp, "showassistant", true);
+      PROP, "showassistant", true);
   
     /**
      * the last active program filter
      */
     public static final StringProperty FILTER_LAST_USED = new StringProperty(
-      mProp, "lastusedfilter", null);
+      PROP, "lastusedfilter", null);
   
     public static final SplitViewProperty VIEW_ROOT = new SplitViewProperty(
-      mProp, "view.root", false, true, 200);
+      PROP, "view.root", false, true, 200);
 
     public static final SplitViewProperty VIEW_MAIN_FRAME = new SplitViewProperty(
-      mProp, "view.mainframe", false, false, 150);
+      PROP, "view.mainframe", false, false, 150);
 
     public static final SplitViewProperty VIEW_NAVIGATION = new SplitViewProperty(
-      mProp, "view.navigation", true, true, 150);
+      PROP, "view.navigation", true, true, 150);
 
     public static final SplitViewProperty VIEW_DATE_CHANNEL = new SplitViewProperty(
-      mProp, "view.date_channel", true, true, 150);
+      PROP, "view.date_channel", true, true, 150);
     
     public static final IntProperty SCREEN_NUMBER = new IntProperty(
-        mProp, "screenNumber", -1);
+        PROP, "screenNumber", -1);
     
     
     private Window() {}
   }
   
   public static final class Data {
-    public static final IntProperty DOWNLOAD_PERIOD = new IntProperty(mProp,
+    private static final void initialize() {
+      //does nothing, just call this method to initialize static members of this class
+    }
+    
+    public static final IntProperty DOWNLOAD_PERIOD = new IntProperty(PROP,
       "downloadperiod", 1);
 
     public static final BooleanProperty SAVE_DEFAULT_DATA_UPDATE_VALUES_DEFAULT = new BooleanProperty(
-        mProp, "saveDefaultDataUpdateValuesDefault", true);
+        PROP, "saveDefaultDataUpdateValuesDefault", true);
   
     public static final DateProperty DOWNLOAD_DATE_LAST = new DateProperty(
-        mProp, "lastdownload", Date.getCurrentDate().addDays(-100));
+        PROP, "lastdownload", Date.getCurrentDate().addDays(-100));
         
     public static final StringArrayProperty DATA_SERVICES_FOR_UPDATE = new StringArrayProperty(
-      mProp, "tvdataservices.update", null);
+      PROP, "tvdataservices.update", null);
     
     /**@since 4.2.2*/
     public static final IntProperty DOWNLOAD_TIME_LAST = new IntProperty(
-        mProp, "lastdownloadTime", 0);
+        PROP, "lastdownloadTime", 0);
         
     /** An array with the ids of the TV data service which license was accepted. */
     public static final StringArrayProperty ACCEPTED_LICENSES = new StringArrayProperty(
-      mProp, "licnseIds", new String[] {});
+      PROP, "licnseIds", new String[] {});
     
     /**
      * The time between auto updates of data services
      * @since 2.7
      */
     public static final IntProperty DATA_SERVICE_AUTO_UPDATE_TIME = new IntProperty(
-      mProp, "dataServiceAutoUpdateTime", 30);
+      PROP, "dataServiceAutoUpdateTime", 30);
     
     private Data() {}
   }
