@@ -64,20 +64,6 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 
-import tvbrowser.core.Settings;
-import tvbrowser.core.icontheme.IconLoader;
-import tvbrowser.core.plugin.PluginProxyManager;
-import tvbrowser.core.tvdataservice.TvDataServiceProxyManager;
-import util.exc.ErrorHandler;
-import util.io.ZipUtil;
-import util.ui.ExtensionFileFilter;
-import util.ui.LinkButton;
-import util.ui.Localizer;
-import util.ui.SingleAndDoubleClickTreeUI;
-import util.ui.TVBrowserIcons;
-import util.ui.UiUtilities;
-import util.ui.WindowClosingIf;
-
 import com.jgoodies.forms.builder.ButtonBarBuilder2;
 import com.jgoodies.forms.factories.Borders;
 import com.jgoodies.forms.factories.DefaultComponentFactory;
@@ -86,6 +72,22 @@ import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.Sizes;
 
 import devplugin.Channel;
+import devplugin.Plugin;
+import devplugin.Version;
+import tvbrowser.core.Settings;
+import tvbrowser.core.icontheme.IconLoader;
+import tvbrowser.core.plugin.PluginProxyManager;
+import tvbrowser.core.tvdataservice.TvDataServiceProxyManager;
+import util.exc.ErrorHandler;
+import util.io.ZipUtil;
+import util.settings.StringProperty;
+import util.ui.ExtensionFileFilter;
+import util.ui.LinkButton;
+import util.ui.Localizer;
+import util.ui.SingleAndDoubleClickTreeUI;
+import util.ui.TVBrowserIcons;
+import util.ui.UiUtilities;
+import util.ui.WindowClosingIf;
 
 /**
  * The Dialog for the Translation-Tool
@@ -502,7 +504,14 @@ final public class TranslationDialog extends JDialog implements WindowClosingIf 
 
     PathNode plugins = new PathNode("Plugins");
 
-    addJarFiles(plugins, new File(Settings.propPluginsDirectory.getString()));
+    if(Plugin.getPluginManager().getTVBrowserVersion().compareTo(new Version(4,24,51,false)) >= 0) {
+      try {
+        addJarFiles(plugins, new File(((StringProperty)Class.forName("tvbrowser.core.Settings$Directories").getDeclaredField("PLUGINS").get(null)).getString()));
+      } catch (Exception e) {}
+    }
+    else {
+      addJarFiles(plugins, new File(Settings.propPluginsDirectory.getString()));
+    }
     addJarFiles(plugins, new File(PluginProxyManager.PLUGIN_DIRECTORY));
     addJarFiles(plugins, new File(TvDataServiceProxyManager.PLUGIN_DIRECTORY));
 

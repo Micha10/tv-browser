@@ -50,7 +50,7 @@ import devplugin.Version;
  * @author bodum
  */
 public class I18NPlugin extends Plugin {
-  private static final Version mVersion = new Version(3,2);
+  private static final Version mVersion = new Version(3,3);
   
   /** Translator */
   private static final Localizer mLocalizer = Localizer.getLocalizerFor(I18NPlugin.class);
@@ -105,7 +105,7 @@ public class I18NPlugin extends Plugin {
     return new ActionMenu(action);
   }
 
-  private void openTranslationTool() {
+  private void openTranslationTool() {try {
     TranslationDialog dialog;
     
     Window parent = UiUtilities.getLastModalChildOf(getParentFrame());
@@ -114,7 +114,7 @@ public class I18NPlugin extends Plugin {
     layoutWindow("i18nDlg", dialog, new Dimension(800,750));
     
     dialog.setVisible(true);
-    mSettings.setDivider(dialog.getDividerLocation());
+    mSettings.setDivider(dialog.getDividerLocation());}catch(Throwable t) {t.printStackTrace();}
   }
 
   @Override
