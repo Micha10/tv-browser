@@ -35,6 +35,7 @@ import devplugin.Plugin;
 import devplugin.PluginManager;
 import devplugin.Program;
 import devplugin.ProgramFilter;
+import devplugin.ProgramReceiveIf;
 import devplugin.ProgramReceiveTarget;
 import devplugin.ProgramSearcher;
 import tvdataservice.MutableChannelDayProgram;
@@ -170,7 +171,11 @@ public class FilterEntry implements Comparable<FilterEntry> {
   private void sendReceiveTargets(Program[] toSend) {
     if(mReceiveTargets != null) {
       for(ProgramReceiveTarget target : mReceiveTargets) {
-        target.getReceifeIfForIdOfTarget().receivePrograms(toSend, target);
+        ProgramReceiveIf receive = target.getReceifeIfForIdOfTarget();
+        
+        if(receive != null) {
+          receive.receivePrograms(toSend, target);
+        }
       }
     }
   }
