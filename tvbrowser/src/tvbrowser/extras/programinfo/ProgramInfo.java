@@ -37,10 +37,13 @@ import java.util.Properties;
 import com.l2fprod.common.swing.plaf.LookAndFeelAddons;
 
 import devplugin.ActionMenu;
+import devplugin.Channel;
 import devplugin.ContextMenuAction;
+import devplugin.Date;
 import devplugin.Plugin;
 import devplugin.Program;
 import tvbrowser.core.icontheme.IconLoader;
+import tvbrowser.core.plugin.PluginManagerImpl;
 import tvbrowser.ui.mainframe.MainFrame;
 import tvbrowser.ui.programtable.ProgramTable;
 import util.i18n.Localizer;
@@ -73,7 +76,7 @@ public class ProgramInfo {
 
   private Thread mInitThread;
 
-  private ArrayList<Program> mHistory = new ArrayList<Program>();
+  private ArrayList<InfoProgram> mHistory = new ArrayList<InfoProgram>();
   private int mHistoryIndex = 0;
   private Program[] mNextPrograms;
   private Program[] mPreviousPrograms;
@@ -184,9 +187,12 @@ public class ProgramInfo {
     if (program.equals(Plugin.getPluginManager().getExampleProgram()) && showSettings) {
       return;
     }
+    
+    InfoProgram p = new InfoProgram(program);
+    
     // remember program for history
     if (mHistory.isEmpty() || !mHistory.get(mHistory.size() - 1).equals(program)) {
-      mHistory.add(program);
+      mHistory.add(p);
       mHistoryIndex = mHistory.size() - 1;
     }
 
@@ -214,17 +220,18 @@ public class ProgramInfo {
       window.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
       programTable.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
       // open dialog
-      findPreviousAndNextProgram(program);
-      ProgramInfoDialog.getInstance(program, mLeftSplit, showSettings).show();
+      findPreviousAndNextProgram(p);
+      Program test = p.getProgram();
+      ProgramInfoDialog.getInstance(test != null ? test : program, mLeftSplit, showSettings).show();
       window.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
       programTable.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
       mIsShowing = false;
     }
   }
   
-  private void findPreviousAndNextProgram(Program prog) {
-    if(!prog.equals(Plugin.getPluginManager().getExampleProgram())) {
-      Iterator<Program> dayProgram = ProgramUtilities.getJointProgramIteratorFor(prog.getDate(), prog.getChannel());
+  private void findPreviousAndNextProgram(InfoProgram prog) {
+    if(!prog.getProgram().equals(Plugin.getPluginManager().getExampleProgram())) {
+      Iterator<Program> dayProgram = ProgramUtilities.getJointProgramIteratorFor(prog.mDate, prog.mChannel);
       
       ArrayList<Program> previousPrograms = new ArrayList<Program>();
       ArrayList<Program> nextPrograms = new ArrayList<Program>();
@@ -234,7 +241,7 @@ public class ProgramInfo {
       while(dayProgram.hasNext()) {
         Program current = dayProgram.next();
         
-        if(current.equals(prog)) {
+        if(prog.equals(current)) {
           currentFound = true;
         }
         else if(currentFound) {
@@ -246,7 +253,7 @@ public class ProgramInfo {
       }
       
       if(previousPrograms.size() < 5) {
-        dayProgram = ProgramUtilities.getJointProgramIteratorFor(prog.getDate().addDays(-1), prog.getChannel());
+        dayProgram = ProgramUtilities.getJointProgramIteratorFor(prog.mDate.addDays(-1), prog.mChannel);
         
         if(dayProgram != null) {
           int i = 0;
@@ -258,7 +265,7 @@ public class ProgramInfo {
       }
       
       if(nextPrograms.size() < 5) {
-        dayProgram = ProgramUtilities.getJointProgramIteratorFor(prog.getDate().addDays(1), prog.getChannel());
+        dayProgram = ProgramUtilities.getJointProgramIteratorFor(prog.mDate.addDays(1), prog.mChannel);
         
         if(dayProgram != null) {
           while(dayProgram.hasNext()) {
@@ -374,8 +381,10 @@ public class ProgramInfo {
       mHistoryIndex = mHistory.size() - 1;
     }
     if (mHistoryIndex >= 0) {
-      findPreviousAndNextProgram(mHistory.get(mHistoryIndex));
-      ProgramInfoDialog.getInstance(mHistory.get(mHistoryIndex), mLeftSplit, true);
+      final InfoProgram p = mHistory.get(mHistoryIndex);
+      
+      findPreviousAndNextProgram(p);
+      ProgramInfoDialog.getInstance(p.getProgram(), mLeftSplit, true);
     }
   }
 
@@ -391,24 +400,25 @@ public class ProgramInfo {
     if(mNextPrograms != null && mNextPrograms.length > 0) {
       // remember program for history
       if (mHistory.isEmpty() || !mHistory.get(mHistory.size() - 1).equals(mNextPrograms[0])) {
-        mHistory.add(mNextPrograms[0]);
+        mHistory.add(new InfoProgram(mNextPrograms[0]));
         mHistoryIndex = mHistory.size() - 1;
       }
       
       Program next = mNextPrograms[0];
-      findPreviousAndNextProgram(next);
+      findPreviousAndNextProgram(new InfoProgram(next));
       ProgramInfoDialog.getInstance(next, mLeftSplit, true);
     }
   }
   
   void showProgram(Program p) {
+    final InfoProgram prog = new InfoProgram(p);
     // remember program for history
     if (mHistory.isEmpty() || !mHistory.get(mHistory.size() - 1).equals(p)) {
-      mHistory.add(p);
+      mHistory.add(prog);
       mHistoryIndex = mHistory.size() - 1;
     }
     
-    findPreviousAndNextProgram(p);
+    findPreviousAndNextProgram(prog);
     ProgramInfoDialog.getInstance(p, mLeftSplit, true);    
   }
 
@@ -418,15 +428,17 @@ public class ProgramInfo {
   
   void previousProgram() {
     if(mPreviousPrograms != null && mPreviousPrograms.length > 0) {
+      InfoProgram previous = new InfoProgram(mPreviousPrograms[0]);
+      
       // remember program for history
       if (mHistory.isEmpty() || !mHistory.get(mHistory.size() - 1).equals(mPreviousPrograms[0])) {
-        mHistory.add(mPreviousPrograms[0]);
+        mHistory.add(previous);
         mHistoryIndex = mHistory.size() - 1;
       }
       
-      Program previous = mPreviousPrograms[0];
+      
       findPreviousAndNextProgram(previous);
-      ProgramInfoDialog.getInstance(previous, mLeftSplit, true);
+      ProgramInfoDialog.getInstance(previous.getProgram(), mLeftSplit, true);
     }
   }
 
@@ -458,5 +470,39 @@ public class ProgramInfo {
 
   public boolean dialogWasClosedRecently() {
     return ProgramInfoDialog.wasClosedRecently();
+  }
+  
+  private static final class InfoProgram {
+    private String mId;
+    private Date mDate;
+    private Channel mChannel;
+    private String mTitle;
+    
+    public InfoProgram(final Program p) {
+      mId = p.getUniqueID();
+      mDate = p.getDate();
+      mChannel = p.getChannel();
+      mTitle = p.getTitle();
+    }
+    
+    @Override
+    public boolean equals(Object obj) {
+      if(obj instanceof Program) {
+        return ((Program) obj).getUniqueID().contentEquals(mId);
+      }
+      else if(obj instanceof InfoProgram) {
+        return ((InfoProgram) obj).mId.contentEquals(mId);
+      }
+      
+      return super.equals(obj);
+    }
+    
+    public Program getProgram() {
+      return PluginManagerImpl.getInstance().getProgram(mId);
+    }
+    
+    public String getTitle() {
+      return mTitle;
+    }
   }
 }
