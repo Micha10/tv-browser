@@ -33,6 +33,8 @@ import java.util.Iterator;
 import java.util.Properties;
 import java.util.Set;
 
+import tvbrowser.core.plugin.PluginManagerImpl;
+
 
 /**
  * A wrapper class for programs to add properties to the program.
@@ -205,4 +207,20 @@ public class ProgramItem implements Comparable<ProgramItem> {
     return 0;
   }
 
+  /**
+   * Refreshes the program instance contained by this ProgramItem.
+   * 
+   * @return <code>true</code> if the program was refreshed or <code>false</code>
+   * if there is no matching program in the database.
+   * @since 4.2.5
+   */
+  public boolean refreshProgram() {
+    Program p = mProgram != null ? PluginManagerImpl.getInstance().getProgram(mProgram.getUniqueID()) : PluginManagerImpl.getInstance().getProgram(mDate,mProgId);
+    
+    if(p != null) {
+      mProgram = p;
+    }
+    
+    return p != null;
+  }
 }

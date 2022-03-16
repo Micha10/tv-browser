@@ -220,4 +220,8 @@ public class ReminderListItem implements Comparable<ReminderListItem> {
       setComment(comment);
     }
   }
+  
+  public void refreshProgram() {
+    mProgramItem.refreshProgram();
+  }
 }

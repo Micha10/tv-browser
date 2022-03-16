@@ -269,7 +269,7 @@ public class ReminderPlugin {
   public void handleTvBrowserStartFinished() {
     updateRootNode(false);
     mHasRightToStartTimer = true;
-    mReminderList.removeExpiredItems();
+    mReminderList.updateItems();
     mReminderList.startTimer();
     
     addPanel();
@@ -335,7 +335,7 @@ public class ReminderPlugin {
       }
     }
     
-    mReminderList.removeExpiredItems();
+    mReminderList.updateItems();
   }
 
   /**
@@ -1121,7 +1121,7 @@ public class ReminderPlugin {
   }
 
   protected void handleTvDataUpdateFinished() {
-    mReminderList.removeExpiredItems();
+    mReminderList.updateItems();
     
     if(mReminderListPanel != null) {
       mReminderListPanel.updateTableEntries();

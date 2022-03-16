@@ -223,12 +223,16 @@ public class ReminderList implements ActionListener {
     }
   }
   
-  public void removeExpiredItems() {
-    ReminderListItem[] localItems = mList.toArray(new ReminderListItem[0]);
+  public void updateItems() {
+    ReminderListItem[] localItems = mList.toArray(new ReminderListItem[mList.size()]);
     for (ReminderListItem item : localItems) {
       final Program program = item.getProgram();
-      if (program == null || program.isExpired() || !ChannelList.isSubscribedChannel(program.getChannel())) {
+      if (program == null || program.isExpired() || !ChannelList.isSubscribedChannel(program.getChannel()) ||
+          program.getProgramState() == Program.STATE_WAS_DELETED) {
         remove(item);
+      }
+      else if(program != null && program.getProgramState() == Program.STATE_WAS_UPDATED) {
+        item.refreshProgram();
       }
     }
   }
