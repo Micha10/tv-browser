@@ -155,6 +155,19 @@ public class ContextmenuSettingsTab implements devplugin.SettingsTab {
           selected.add(subItem);
         }
       }
+      else if(subItem.getSubItems() != null) {
+        ActionMenu[] subSubItems = subItem.getSubItems();
+        
+        for(ActionMenu subSubItem : subSubItems) {
+          if(subSubItem.getActionId() != ActionMenu.ID_ACTION_NONE) {
+            available.add(subSubItem);
+            
+            if(disabledMenus == null || !disabledMenus.contains(subSubItem.getActionId())) {
+              selected.add(subSubItem);
+            }
+          }    
+        }
+      }
     }
     
     final SelectableItemList<ActionMenu> listItems = new SelectableItemList<>(selected.toArray(new ActionMenu[selected.size()]), available.toArray(new ActionMenu[available.size()]));
@@ -393,6 +406,18 @@ public class ContextmenuSettingsTab implements devplugin.SettingsTab {
               if(item.getActionId() != ActionMenu.ID_ACTION_NONE) {
                 mEditableMenus.add(menuIf);
                 break;
+              }
+              else {
+                final ActionMenu[] subSubItems = item.getSubItems();
+                
+                if(subSubItems != null) {
+                  for(ActionMenu subItem : subSubItems) {
+                    if(subItem.getActionId() != ActionMenu.ID_ACTION_NONE) {
+                      mEditableMenus.add(menuIf);
+                      break;
+                    }
+                  }
+                }
               }
             }
           }

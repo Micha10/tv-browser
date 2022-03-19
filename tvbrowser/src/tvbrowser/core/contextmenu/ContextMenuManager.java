@@ -445,7 +445,7 @@ public ContextMenuIf[] getAvailableContextMenuIfs(boolean includingDisabledItems
                     rootMenu.addSeparator();
                   }
                   else {
-                    JMenuItem menuItem = MenuUtil.createMenuItem(item);
+                    JMenuItem menuItem = MenuUtil.createMenuItem(item, disabledItems);
                     
                     if(menuItem != null) {
                       rootMenu.add(menuItem);
@@ -478,7 +478,7 @@ public ContextMenuIf[] getAvailableContextMenuIfs(boolean includingDisabledItems
             }
             
             if(actionMenu != null) {
-              JMenuItem menuItem = MenuUtil.createMenuItem(actionMenu);
+              JMenuItem menuItem = MenuUtil.createMenuItem(actionMenu, disabledItems);
               
               rootMenu.add(menuItem);
             }

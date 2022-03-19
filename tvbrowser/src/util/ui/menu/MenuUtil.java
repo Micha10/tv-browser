@@ -29,6 +29,7 @@ package util.ui.menu;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.util.HashSet;
 
 import javax.swing.Action;
 import javax.swing.JCheckBoxMenuItem;
@@ -63,10 +64,20 @@ public class MenuUtil {
   }
 
   public static JMenuItem createMenuItem(ActionMenu menu) {
-    return createMenuItem(menu, true);
+    return createMenuItem(menu, null);
+  }
+  
+  /** @since 4.2.5 */
+  public static JMenuItem createMenuItem(ActionMenu menu, final HashSet<Integer> disabledItems) {
+    return createMenuItem(menu, true, disabledItems);
   }
   
   public static JMenuItem createMenuItem(ActionMenu menu, boolean setFont) {
+    return createMenuItem(menu, setFont, null);
+  }
+  
+  /** @since 4.2.5 */
+  public static JMenuItem createMenuItem(ActionMenu menu, boolean setFont, final HashSet<Integer> disabledItems) {
     if (menu == null) {
       return null;
     }
@@ -76,12 +87,14 @@ public class MenuUtil {
       
       ActionMenu[] subItems = menu.getSubItems();
       for (ActionMenu subItem : subItems) {
-        JMenuItem item = createMenuItem(subItem, setFont);
-
-        if (item == null) {
-          ((JMenu) result).addSeparator();
-        } else {
-          result.add(item);
+        if(disabledItems == null || !disabledItems.contains(subItem.getActionId())) {
+          JMenuItem item = createMenuItem(subItem, setFont, disabledItems);
+  
+          if (item == null) {
+            ((JMenu) result).addSeparator();
+          } else {
+            result.add(item);
+          }
         }
       }
     }
