@@ -31,6 +31,7 @@ import java.awt.event.ActionEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.lang.reflect.Method;
+import java.util.HashSet;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -81,11 +82,12 @@ public class TaskMenuAction {
    */
   public TaskMenuAction(final JTaskPaneGroup parent, final Program program,
       final ActionMenu menu, final ProgramInfoDialog info, final String id,
-      final TextComponentFindAction comp) {
+      final TextComponentFindAction comp, HashSet<Integer> disabled) {
     mInfo = info;
     mFind = comp;
     
-    if(menu.getAction() == null || menu.getAction().getValue(Plugin.DISABLED_ON_TASK_MENU) == null || !((Boolean)menu.getAction().getValue(Plugin.DISABLED_ON_TASK_MENU))) {
+    if((menu.getAction() == null || menu.getAction().getValue(Plugin.DISABLED_ON_TASK_MENU) == null || !((Boolean)menu.getAction().getValue(Plugin.DISABLED_ON_TASK_MENU)))
+        && (menu.getActionId() == ActionMenu.ID_ACTION_NONE || disabled == null || !disabled.contains(menu.getActionId()))) {
       if (!menu.hasSubItems()) {
         addAction(parent, menu);
       } else {
@@ -99,7 +101,7 @@ public class TaskMenuAction {
           addAction(parent, childMenu);
         }
         else {
-          addTaskPaneGroup(parent, program, menu, info, id);
+          addTaskPaneGroup(parent, program, menu, info, id, disabled);
         }
       }
     }
@@ -179,7 +181,7 @@ public class TaskMenuAction {
    */
   private void addTaskPaneGroup(final JTaskPaneGroup parent,
       final Program program, final ActionMenu menu, final ProgramInfoDialog info,
-      final String id) {
+      final String id, HashSet<Integer> disabled) {
     final ActionMenu[] subs = menu.getSubItems();
 
     final JTaskPaneGroup group = new JTaskPaneGroup();
@@ -218,13 +220,13 @@ public class TaskMenuAction {
     // delay group creation if it is not expanded
     if (expanded) {
       for (ActionMenu subMenu : subs) {
-        new TaskMenuAction(group, program, subMenu, info, id, mFind);
+        new TaskMenuAction(group, program, subMenu, info, id, mFind, disabled);
       }
     }
     else {
       UIThreadRunner.invokeLater(() -> {
         for (ActionMenu subMenu : subs) {
-          new TaskMenuAction(group, program, subMenu, info, id, mFind);
+          new TaskMenuAction(group, program, subMenu, info, id, mFind, disabled);
         }
       });
     }

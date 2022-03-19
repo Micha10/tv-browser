@@ -46,6 +46,8 @@ import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -106,9 +108,9 @@ import tvbrowser.ui.DontShowAgainOptionBox;
 import tvbrowser.ui.mainframe.MainFrame;
 import util.browserlauncher.Launch;
 import util.exc.TvBrowserException;
+import util.i18n.Localizer;
 import util.program.ProgramTextCreator;
 import util.settings.ProgramPanelSettings;
-import util.i18n.Localizer;
 import util.ui.SearchFormSettings;
 import util.ui.SearchHelper;
 import util.ui.TVBrowserIcons;
@@ -769,6 +771,7 @@ class ProgramInfoDialog {
   }
 
   protected void addPluginActions(boolean rebuild) {
+    final HashMap<ContextMenuIf, HashSet<Integer>> disabledMap = ContextMenuManager.getDisabledSubMenuMap();
     final Rectangle oldVisibleRect = mInfoEP.getVisibleRect();
     mFunctionGroup.removeAll();
     
@@ -779,7 +782,7 @@ class ProgramInfoDialog {
     
     if (ProgramInfo.getInstance().getSettings().getShowSearchButton()) {
       mTextSearch = new TaskMenuAction(mFunctionGroup, mProgram, mSearchMenu,
-          this, "id_sea", mFindAsYouType);
+          this, "id_sea", mFindAsYouType, null);
     }
 
     ContextMenuIf lastEntry = null;
@@ -811,16 +814,18 @@ class ProgramInfoDialog {
 
         ActionMenu configure = new ActionMenu(action);
         new TaskMenuAction(mFunctionGroup, mProgram, configure, this,
-            "id_configure", mFindAsYouType);
+            "id_configure", mFindAsYouType, null);
         lastEntry = contextMenuIf;
       } else if (contextMenuIf.getId().compareTo(
           ProgramInfo.getProgramInfoPluginId()) == 0) {
         // don't show the program info action in the program info dialog
       } else {
         ActionMenu menu = contextMenuIf.getContextMenuActions(mProgram);
-        if (menu != null) {
+        HashSet<Integer> disabled = disabledMap.get(contextMenuIf);
+        
+        if (menu != null && (menu.getActionId() == ActionMenu.ID_ACTION_NONE || disabled == null || !disabled.contains(menu.getActionId()))) {
           new TaskMenuAction(mFunctionGroup, mProgram, menu, this,
-              contextMenuIf.getId(), mFindAsYouType);
+              contextMenuIf.getId(), mFindAsYouType, disabled);
           lastEntry = contextMenuIf;
         }
       }
