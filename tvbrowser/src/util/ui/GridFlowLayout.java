@@ -37,17 +37,30 @@ public class GridFlowLayout implements LayoutManager {
 
     private int mHGap, mVGap;
     private int mVAlign, mHAlign;
+    private int mSpread;
 
-
-    public GridFlowLayout(int hgap, int vgap, int valign, int halign) {
+    /**
+     * @param hgap
+     * @param vgap
+     * @param valign
+     * @param halign
+     * @param spread The spread of the components either {@link #TOP} or {@link #CENTER}
+     * @since 4.2.5
+     */
+    public GridFlowLayout(int hgap, int vgap, int valign, int halign, int spread) {
       mHGap = hgap;
       mVGap = vgap;
       mVAlign = valign;
       mHAlign = halign;
+      mSpread = spread;
     }
-
+    
+    public GridFlowLayout(int hgap, int vgap, int valign, int halign) {
+      this(hgap, vgap, valign, halign, TOP);
+    }
+    
     public GridFlowLayout(int hgap, int vgap) {
-      this(hgap, vgap, CENTER, CENTER);
+      this(hgap, vgap, CENTER, CENTER, TOP);
     }
 
     public GridFlowLayout() {
@@ -91,10 +104,29 @@ public class GridFlowLayout implements LayoutManager {
 
         int rows = totalLength / width +1;
         int compsPerRow = (int) (width / (compDimension.getWidth()+mHGap));
+
+        if(mSpread == CENTER) {
+          int possibleRows = (int) (height / (compDimension.getHeight()+mVGap));
+          
+          if(possibleRows > rows) {
+            float test = cnt / (float)possibleRows;
+            
+            if(test % 1 != 0) {
+              compsPerRow = ((int)test) +1;
+            }
+            else if(test != 0) {
+              compsPerRow = (int)test;
+            }
+            else {
+              compsPerRow = 1;
+            }
+          }
+        }
+        
 				if (compsPerRow == 0) {
           compsPerRow = 1;
 				}
-
+				
         int rowLength = (int) (compsPerRow * compDimension.getWidth()+ (mHGap*compsPerRow-1));
         int rowHeight = (int) (rows * compDimension.getHeight()+ (mVGap*rows-1));
         int hIndent=0;

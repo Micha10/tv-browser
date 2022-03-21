@@ -68,7 +68,7 @@ public class TimeChooserPanel extends JPanel implements ChangeListener, MouseLis
       setLayout(new BorderLayout(0,2));
       setBorder(BorderFactory.createEmptyBorder(5,3,5,3));
       
-      mGridPn = new JPanel(new GridFlowLayout(5,5,GridFlowLayout.TOP, GridFlowLayout.CENTER));
+      mGridPn = new JPanel(new GridFlowLayout(5,5,GridFlowLayout.TOP, GridFlowLayout.CENTER, GridFlowLayout.CENTER));
       updatePersona();
       mGridPn.addKeyListener(keyListener);
       mGridPn.addMouseListener(new MouseAdapter() {
