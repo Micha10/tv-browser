@@ -109,17 +109,7 @@ public class GridFlowLayout implements LayoutManager {
           int possibleRows = (int) (height / (compDimension.getHeight()+mVGap));
           
           if(possibleRows > rows) {
-            float test = cnt / (float)possibleRows;
-            
-            if(test % 1 != 0) {
-              compsPerRow = ((int)test) +1;
-            }
-            else if(test != 0) {
-              compsPerRow = (int)test;
-            }
-            else {
-              compsPerRow = 1;
-            }
+            compsPerRow = (int) Math.ceil(cnt / (float)possibleRows);
           }
         }
         
