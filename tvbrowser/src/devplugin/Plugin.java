@@ -67,7 +67,7 @@ import util.ui.TVBrowserIcons;
  * @author Martin Oberhauser
  * @author Til Schneider, www.murfman.de
  */
-abstract public class Plugin implements Marker, ContextMenuIf, ProgramReceiveIf, PluginSettings.Preferences, PluginSettings.Data {
+abstract public class Plugin implements Marker, ContextMenuIf, ProgramReceiveIf, PluginSettings.Preferences, PluginSettings.Data, Excludable {
   public static final String CATEGORY_ALL = "all";
   public static final String CATEGORY_REMOTE_CONTROL_SOFTWARE = "remote_soft";
   public static final String CATEGORY_REMOTE_CONTROL_HARDWARE = "remote_hard";

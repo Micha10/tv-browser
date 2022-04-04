@@ -11,6 +11,8 @@ import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
 
 import devplugin.Excludable;
+import devplugin.Plugin;
+import devplugin.PluginsProgramFilter;
 import devplugin.ProgramFilter;
 import tvbrowser.core.filters.FilterComponent;
 import tvbrowser.core.filters.FilterList;
@@ -212,8 +214,9 @@ public final class FilterSelectionPanel extends JPanel {
     if(exclusions != null) {
       for(Class<? extends Excludable> exclusion : exclusions) {
         if(exclusion.isInstance(filter) || 
-            filter instanceof UserFilter && 
-            (FilterComponent.class.isAssignableFrom(exclusion) &&
+            (filter instanceof PluginsProgramFilter && Plugin.class.isAssignableFrom(exclusion) &&
+                ((PluginsProgramFilter)filter).containsPluinClass(exclusion)) ||
+            (filter instanceof UserFilter && FilterComponent.class.isAssignableFrom(exclusion) &&
                 ((UserFilter)filter).containsRuleComponent(exclusion))) {
           result = true;
           break;

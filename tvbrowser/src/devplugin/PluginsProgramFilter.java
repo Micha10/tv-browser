@@ -81,4 +81,8 @@ public abstract class PluginsProgramFilter implements ProgramFilter {
   public final String toString() {
     return getName();
   }
+  
+  public boolean containsPluinClass(Class<? extends Excludable> clazz) {
+    return ("java."+clazz.getCanonicalName()).equals(mPluginId);
+  }
 }
