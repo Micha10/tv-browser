@@ -29,7 +29,7 @@ package devplugin;
 /**
  * Defines the filtering behavior.
  */
-public interface ProgramFilter {
+public interface ProgramFilter extends Excludable {
 
   /**
    *

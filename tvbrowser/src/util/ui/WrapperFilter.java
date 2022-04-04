@@ -44,7 +44,7 @@ public final class WrapperFilter {
   public String toString() {
     String result = mFilter.toString();
     
-    if(mFilter instanceof UserFilter) {
+    if(mFilter instanceof UserFilter && !mFilter.getName().equals(FilterSelectionPanel.getNewFilterName())) {
       result = ((UserFilter)mFilter).getViewString();
     }
     

@@ -10,7 +10,9 @@ import javax.swing.JPanel;
 import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
 
+import devplugin.Excludable;
 import devplugin.ProgramFilter;
+import tvbrowser.core.filters.FilterComponent;
 import tvbrowser.core.filters.FilterList;
 import tvbrowser.core.filters.FilterManagerImpl;
 import tvbrowser.core.filters.UserFilter;
@@ -25,14 +27,35 @@ import util.i18n.Localizer;
  * @author René Mach
  * @since 4.2.4
  */
-public class FilterSelectionPanel extends JPanel {
+public final class FilterSelectionPanel extends JPanel {
   private static final Localizer LOCALIZER = Localizer.getLocalizerFor(FilterSelectionPanel.class);
-  private JComboBox<ProgramFilter> mFilterBox;
-  private UserFilter mNewFilter;
-  private ProgramFilter mLastSelectedFilter;
+  private JComboBox<WrapperFilter> mFilterBox;
+  private WrapperFilter mNewFilter;
+  private WrapperFilter mLastSelectedFilter;
   
   public static String getNewFilterName() {
     return LOCALIZER.ellipsisMsg("createFilter","Create new filter");
+  }
+  
+  private static String getLineSpec(final boolean hasLabel, final boolean grow) {
+    StringBuilder b = new StringBuilder();
+    
+    if(hasLabel) {
+      b.append("default,2dlu,");
+    }
+    else {
+      b.append("0dlu,0dlu,");
+    }
+    
+    b.append("default");
+    
+    if(grow) {
+      b.append(":grow");
+    }
+    
+    b.append(",2dlu,default");
+    
+    return b.toString();
   }
   
   /**
@@ -52,10 +75,26 @@ public class FilterSelectionPanel extends JPanel {
    * @param showEditButton <code>true</code> if the edit button should be shown.
    */
   public FilterSelectionPanel(final String label, ProgramFilter selectedFilter, final boolean showEditButton) {
-    setLayout(new FormLayout("default,2dlu,default,2dlu,default","default"));
+    this(label, selectedFilter, showEditButton, false);
+  }
+  
+  /**
+   * Creates an instance of this class.
+   * <p>
+   * @param label The text for the label of the filter.
+   * @param selectedFilter The filter to be selected at first.
+   * @param showEditButton <code>true</code> if the edit button should be shown.
+   * @param grow If the selection JComboBox should grow with the width of the component.
+   * @param exclusions The classes implementing ProgramFilter or FilterComponent that should be excluded
+   * from the list or <code>null</code> if there are no exclusions.
+   * @since 4.2.5
+   */
+  @SafeVarargs
+  public FilterSelectionPanel(final String label, ProgramFilter selectedFilter, final boolean showEditButton, final boolean grow, final Class<? extends Excludable>... exclusions) {
+    setLayout(new FormLayout(getLineSpec(label == null || !label.isBlank(),grow),"default"));
     
-    mFilterBox = new JComboBox<ProgramFilter>();
-    mNewFilter = new UserFilter(getNewFilterName());
+    mFilterBox = new JComboBox<>();
+    mNewFilter = new WrapperFilter(new UserFilter(getNewFilterName()));
     
     if(selectedFilter == null) {
       selectedFilter = FilterManagerImpl.getInstance().getDefaultFilter();
@@ -68,10 +107,14 @@ public class FilterSelectionPanel extends JPanel {
     final ProgramFilter[] filters = FilterManagerImpl.getInstance().getAvailableFilters();
     
     for(ProgramFilter filter : filters) {
-      mFilterBox.addItem(filter);
-      
-      if(filter.getName().equals(selectedFilter.getName())) {
-        mFilterBox.setSelectedItem(filter);
+      if(!isExcluded(filter, exclusions)) {
+        final WrapperFilter wrapper = new WrapperFilter(filter);
+        
+        mFilterBox.addItem(wrapper);
+        
+        if(filter.getName().equals(selectedFilter.getName())) {
+          mFilterBox.setSelectedItem(wrapper);
+        }
       }
     }
     
@@ -83,9 +126,9 @@ public class FilterSelectionPanel extends JPanel {
     if(showEditButton) {
       final JButton edit = new JButton(Localizer.getLocalization(Localizer.I18N_EDIT),TVBrowserIcons.edit(TVBrowserIcons.SIZE_SMALL));
       edit.setEnabled(selectedFilter instanceof UserFilter);
-      edit.addActionListener(e -> {
-        UserFilter filter = (UserFilter)mFilterBox.getSelectedItem();
-        boolean filterNew = filter.equals(mNewFilter);
+      edit.addActionListener(e -> {try {
+        UserFilter filter = (UserFilter)((WrapperFilter)mFilterBox.getSelectedItem()).getFilter();
+        boolean filterNew = mFilterBox.getSelectedItem().equals(mNewFilter);
         
         if(filterNew) {
           filter = new UserFilter("");
@@ -97,20 +140,26 @@ public class FilterSelectionPanel extends JPanel {
           if(filterNew) {
             FilterTreeModel.getInstance().addFilter(filter);
             FilterList.getInstance().store();
-            mFilterBox.insertItemAt(filter, mFilterBox.getItemCount()-1);
-            mFilterBox.setSelectedItem(filter);
+            
+            if(!isExcluded(filter, exclusions)) {
+              final WrapperFilter wrapper = new WrapperFilter(filter);
+              mFilterBox.insertItemAt(wrapper, mFilterBox.getItemCount()-1);
+              mFilterBox.setSelectedItem(wrapper);
+            }
           }
           else {
             FilterTreeModel.getInstance().fireFilterTouched(filter);
           }
         } else if(filterNew) {
           mFilterBox.setSelectedItem(mLastSelectedFilter);
+        }}catch(Throwable t) {
+          t.printStackTrace();
         }
       });
       
       mFilterBox.addItemListener(e -> {
         if(e.getStateChange() == ItemEvent.SELECTED) {
-          edit.setEnabled(mFilterBox.getSelectedItem() instanceof UserFilter);
+          edit.setEnabled(((WrapperFilter)mFilterBox.getSelectedItem()).getFilter() instanceof UserFilter);
           
           if(mFilterBox.getSelectedItem().equals(mNewFilter)) {
             mFilterBox.setPopupVisible(false);
@@ -118,7 +167,7 @@ public class FilterSelectionPanel extends JPanel {
           }
         }
         else {
-          mLastSelectedFilter = (ProgramFilter)e.getItem();
+          mLastSelectedFilter = (WrapperFilter)e.getItem();
         }
       });
       
@@ -132,18 +181,46 @@ public class FilterSelectionPanel extends JPanel {
    * @return The selected filter.
    */
   public ProgramFilter getSelectedFilter() {
-    return (ProgramFilter)mFilterBox.getSelectedItem();
+    return ((WrapperFilter)mFilterBox.getSelectedItem()).getFilter();
+  }
+  
+  /**
+   * Sets the filter to the given filter if it is in the list.
+   * <p> 
+   * @param filter
+   * @since 4.2.5
+   */
+  public void setSelectedFilter(final ProgramFilter filter) {
+    mFilterBox.setSelectedItem(new WrapperFilter(filter));
   }
   
   @Override
   public void setEnabled(boolean enabled) {
     for(int i = 0; i < getComponentCount(); i++) {
       if(enabled && getComponent(i) instanceof JButton) {
-        getComponent(i).setEnabled(mFilterBox.getSelectedItem() instanceof UserFilter);
+        getComponent(i).setEnabled(((WrapperFilter)mFilterBox.getSelectedItem()).getFilter() instanceof UserFilter);
       }
       else {
         getComponent(i).setEnabled(enabled);
       }
     }
+  }
+  
+  private boolean isExcluded(ProgramFilter filter, Class<? extends Excludable>[] exclusions) {
+    boolean result = false;
+    
+    if(exclusions != null) {
+      for(Class<? extends Excludable> exclusion : exclusions) {
+        if(exclusion.isInstance(filter) || 
+            filter instanceof UserFilter && 
+            (FilterComponent.class.isAssignableFrom(exclusion) &&
+                ((UserFilter)filter).containsRuleComponent(exclusion))) {
+          result = true;
+          break;
+        }
+      }
+    }
+    
+    return result;
   }
 }

@@ -37,6 +37,7 @@ import java.util.Iterator;
 import java.util.regex.Pattern;
 
 import devplugin.Channel;
+import devplugin.Excludable;
 import devplugin.ProgramFilter;
 import tvbrowser.core.Settings;
 import tvbrowser.core.filters.filtercomponents.AcceptNoneFilterComponent;
@@ -482,6 +483,13 @@ public class UserFilter implements devplugin.ProgramFilter {
     return mRoot.containsRuleComponent(comp);
   }
   
+  public boolean containsRuleComponent(Class<? extends Excludable> comp) {
+    if (mRoot == null) {
+      return false;
+    }
+    return mRoot.containsRuleComponent(comp);
+  }
+  
   /**
    * @return <code>true</code> if all contained filter components
    * are marked as broken.
@@ -600,6 +608,17 @@ abstract class Node {
     while (it.hasNext()) {
       Node n = it.next();
       if (n.containsRuleComponent(compName)) {
+        return true;
+      }
+    }
+    return false;
+  }
+  
+  public boolean containsRuleComponent(Class<? extends Excludable> component) {
+    Iterator<Node> it = mNodes.iterator();
+    while (it.hasNext()) {
+      Node n = it.next();
+      if (n.containsRuleComponent(component)) {
         return true;
       }
     }
@@ -733,6 +752,16 @@ class ItemNode extends Node {
 
   public boolean containsRuleComponent(String compName) {
     return (mRule.getName().equalsIgnoreCase(compName));
+  }
+  
+  public boolean containsRuleComponent(Class<? extends Excludable> component) {
+    boolean result = false;
+    
+    if(component != null && component.isInstance(mRule)) {
+      result = true;
+    }
+    
+    return result;
   }
   
   @Override

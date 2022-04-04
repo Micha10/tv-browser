@@ -31,10 +31,12 @@ import java.io.ObjectOutputStream;
 
 import javax.swing.JPanel;
 
+import devplugin.Excludable;
+
 /**
  * An interface for the program filter system of TV-Browser.
  */
-public interface FilterComponent {
+public interface FilterComponent extends Excludable {
   
   /**
    * Gets the version number of a FilterComponent.

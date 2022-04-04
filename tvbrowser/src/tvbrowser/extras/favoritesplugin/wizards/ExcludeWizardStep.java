@@ -33,8 +33,6 @@ import java.util.Calendar;
 import java.util.Collections;
 
 import javax.swing.ButtonGroup;
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
@@ -52,24 +50,20 @@ import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.RowSpec;
 
 import devplugin.Channel;
-import devplugin.Plugin;
 import devplugin.Program;
 import devplugin.ProgramFieldType;
 import devplugin.ProgramFilter;
 import devplugin.ProgramInfoHelper;
 import tvbrowser.core.ChannelList;
-import tvbrowser.core.filters.FilterManagerImpl;
+import tvbrowser.core.filters.filtercomponents.FavoritesFilterComponent;
 import tvbrowser.extras.common.DayListCellRenderer;
 import tvbrowser.extras.common.LimitationConfiguration;
 import tvbrowser.extras.favoritesplugin.core.Exclusion;
 import tvbrowser.extras.favoritesplugin.core.Exclusion.ProgramFieldExclusion;
 import tvbrowser.extras.favoritesplugin.core.Favorite;
 import tvbrowser.extras.favoritesplugin.core.FavoriteFilter;
-import tvbrowser.ui.filter.dlgs.SelectFilterDlg;
-import tvbrowser.ui.mainframe.MainFrame;
+import util.ui.FilterSelectionPanel;
 import util.ui.TimePeriodChooser;
-import util.ui.UiUtilities;
-import util.ui.WrapperFilter;
 
 public class ExcludeWizardStep extends AbstractWizardStep {
 
@@ -107,7 +101,6 @@ public class ExcludeWizardStep extends AbstractWizardStep {
   private JTextField mEpisodeTitleTf;
   private JTextField mProgramFieldTextTf;
 
-  private JComboBox<WrapperFilter> mFilterChooser;
   private JComboBox<Channel> mChannelCB;
   private JComboBox<Object> mDayChooser;
   private JComboBox<String> mCategoryChooser;
@@ -131,7 +124,7 @@ public class ExcludeWizardStep extends AbstractWizardStep {
   private int mMode;
 
   private JPanel mContentPanel;
-  private JButton mEditFilter;
+  private FilterSelectionPanel mFilterSelection;
 
   /**
    * Creates a new Wizard Step instance to create a new exclusion
@@ -221,7 +214,6 @@ public class ExcludeWizardStep extends AbstractWizardStep {
     mEpisodeTitleTf = new JTextField();
     mProgramFieldTextTf = new JTextField();
     mFilterCb = new JCheckBox(mFilterQuestion);
-    mEditFilter = new JButton(SelectFilterDlg.LOCALIZER.msg("title", "Edit Filters"));
     
     final CaretListener textFieldButtonUpdateListener = new CaretListener() {
       @Override
@@ -235,17 +227,7 @@ public class ExcludeWizardStep extends AbstractWizardStep {
     mTopicTf.addCaretListener(textFieldButtonUpdateListener);
     mProgramFieldTextTf.addCaretListener(textFieldButtonUpdateListener);
     
-    ProgramFilter[] avilableFilter = FilterManagerImpl.getInstance().getAvailableFilters();
-    
-    ArrayList<WrapperFilter> useableFilter = new ArrayList<WrapperFilter>();
-    
-    for(ProgramFilter filter : avilableFilter) {
-      if(!(filter instanceof FavoriteFilter)) {
-        useableFilter.add(new WrapperFilter(filter));
-      }
-    }
-    
-    mFilterChooser = new JComboBox<>(useableFilter.toArray(new WrapperFilter[useableFilter.size()]));
+    mFilterSelection = new FilterSelectionPanel("", null, true, true, FavoriteFilter.class, FavoritesFilterComponent.class);
     
     mDayChooser = new JComboBox<>(new Object[] {
         LimitationConfiguration.DAYLIMIT_WEEKDAY,
@@ -361,26 +343,7 @@ public class ExcludeWizardStep extends AbstractWizardStep {
       layout.insertRow(filterIndex+1, RowSpec.decode("5dlu"));
 
       panelBuilder.add(mFilterCb, CC.xyw(2, filterIndex, 2));
-      panelBuilder.add(mFilterChooser, CC.xy(4, filterIndex));
-      
-      mEditFilter.addActionListener(e -> {
-        SelectFilterDlg filterDlg = SelectFilterDlg.create(UiUtilities.getLastModalChildOf(MainFrame.getInstance()));
-        filterDlg.setVisible(true);
-        
-        Object selected = mFilterChooser.getSelectedItem();
-        
-        ((DefaultComboBoxModel<WrapperFilter>)mFilterChooser.getModel()).removeAllElements();
-        
-        for(ProgramFilter filter : Plugin.getPluginManager().getFilterManager().getAvailableFilters()) {
-          if(!(filter instanceof FavoriteFilter)) {
-            ((DefaultComboBoxModel<WrapperFilter>)mFilterChooser.getModel()).addElement(new WrapperFilter(filter));
-          }
-        }
-        
-        mFilterChooser.setSelectedItem(selected);
-      });
-      
-      panelBuilder.add(mEditFilter, CC.xy(6, filterIndex));
+      panelBuilder.add(mFilterSelection, CC.xyw(4, filterIndex, 3));
     }
 
     if (mMode == MODE_CREATE_DERIVED_FROM_PROGRAM && mProgram != null) {
@@ -438,7 +401,7 @@ public class ExcludeWizardStep extends AbstractWizardStep {
       }
       if (filter != null) {
         mFilterCb.setSelected(true);
-        mFilterChooser.setSelectedItem(new WrapperFilter(filter));
+        mFilterSelection.setSelectedFilter(filter);
       }
       if (channel != null) {
         mChannelCb.setSelected(true);
@@ -541,8 +504,7 @@ public class ExcludeWizardStep extends AbstractWizardStep {
     mChannelCB.setEnabled(mChannelCb.isSelected());
     mTopicTf.setEnabled(mTopicCb.isSelected());
     mEpisodeTitleTf.setEnabled(mEpisodeTitleCb.isSelected());
-    mFilterChooser.setEnabled(mFilterCb.isSelected());
-    mEditFilter.setEnabled(mFilterCb.isSelected());
+    mFilterSelection.setEnabled(mFilterCb.isSelected());
     mTimePeriodChooser.setEnabled(mTimeCb.isSelected());
     mDayChooser.setEnabled(mDayCb.isSelected());
     mCategoryChooser.setEnabled(mCategoryCb.isSelected());
@@ -601,7 +563,7 @@ public class ExcludeWizardStep extends AbstractWizardStep {
     }
 
     if(mFilterCb.isSelected()) {
-      filterName = ((WrapperFilter)mFilterChooser.getSelectedItem()).getName();
+      filterName = mFilterSelection.getSelectedFilter().getName();
     }
 
     if (mChannelCb.isSelected()) {
