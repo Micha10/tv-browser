@@ -503,6 +503,8 @@ public class SoftwareUpdateDlg extends JDialog implements ActionListener, ListSe
       }
     });
 
+    JTextField name;
+    
     if(dialogType != SoftwareUpdater.ONLY_UPDATE_TYPE && dialogType != SoftwareUpdater.ONLY_DATA_SERVICE_TYPE) {
       layout.appendRow(RowSpec.decode("5dlu"));
       layout.appendRow(RowSpec.decode("default"));
@@ -543,7 +545,7 @@ public class SoftwareUpdateDlg extends JDialog implements ActionListener, ListSe
 
       mSoftwareUpdateItemList.setFilterComboBox(filterBox);
 
-      JTextField name = new JTextField();
+      name = new JTextField();
       mSoftwareUpdateItemList.setNameFilter(new NameFilterItem(name));
       
       northPn.add(filterBox, CC.xy(3,y++));
@@ -554,6 +556,9 @@ public class SoftwareUpdateDlg extends JDialog implements ActionListener, ListSe
       if(search != null && !search.isBlank()) {
         name.setText(search);
       }
+    }
+    else {
+      name = null;
     }
 
     contentPane.add(northPn, BorderLayout.NORTH);
@@ -579,6 +584,10 @@ public class SoftwareUpdateDlg extends JDialog implements ActionListener, ListSe
     });
 
     UiUtilities.registerForClosing(this);
+    
+    if(name != null) {
+      name.requestFocusInWindow();
+    }
   }
   
   /**
