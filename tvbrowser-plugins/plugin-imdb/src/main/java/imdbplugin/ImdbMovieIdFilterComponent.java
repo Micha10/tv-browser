@@ -1,13 +1,14 @@
 package imdbplugin;
 
 import java.awt.Color;
+import java.awt.Rectangle;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.concurrent.atomic.AtomicReference;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -72,7 +73,7 @@ public class ImdbMovieIdFilterComponent extends PluginsFilterComponent {
       
       String comment = mCommentList.get(i);
       
-      if(comment != null && !comment.isBlank()) {
+      if(comment != null && !comment.trim().isEmpty()) {
         b.append(" ").append(comment);
       }
     }
@@ -88,7 +89,8 @@ public class ImdbMovieIdFilterComponent extends PluginsFilterComponent {
       @Override
       public void paste() {
         super.paste();
-        search.setEnabled(!getText().isBlank());
+        mContent.select(-1, -1);
+        search.setEnabled(!getText().trim().isEmpty());
         search.doClick();
       }
       
@@ -96,21 +98,36 @@ public class ImdbMovieIdFilterComponent extends PluginsFilterComponent {
       public void cut() {
         super.cut();
         search.setEnabled(false);
+        mContent.select(-1, -1);
       }
     };
     final Color backgroundDefault = searchField.getBackground();
     final Color foregroundDefault = searchField.getForeground();
     search.setEnabled(false);
     search.addActionListener(e -> {
+      int startIndex = mContent.getSelectionEnd();
       mContent.select(-1, -1);
-      int pos = mContent.getText().indexOf(searchField.getText().trim());
+
+      int pos = mContent.getText().toLowerCase().indexOf(searchField.getText().trim().toLowerCase(), startIndex);
+      
+      if(startIndex > 0 && pos == -1) {
+        pos = mContent.getText().toLowerCase().indexOf(searchField.getText().toLowerCase().trim());
+      }
       
       if(pos != -1) {
         mContent.getCaret().setSelectionVisible(true);
-        java.awt.geom.Rectangle2D view;
+        Rectangle bounds;
+        
         try {
-          view = mContent.modelToView2D(pos);
-          mContent.scrollRectToVisible(view.getBounds());
+          try {
+            Method m = mContent.getClass().getDeclaredMethod("modelToView2D", int.class);
+            java.awt.geom.Rectangle2D view = (java.awt.geom.Rectangle2D)m.invoke(mContent, pos);
+            bounds = view.getBounds();
+          }catch(Exception ee) {
+            bounds = mContent.modelToView(pos).getBounds();
+          }
+          
+          mContent.scrollRectToVisible(bounds);
           mContent.moveCaretPosition(pos+ searchField.getText().trim().length());
           mContent.select(pos, pos + searchField.getText().trim().length());
         } catch (BadLocationException e1) {
@@ -141,6 +158,7 @@ public class ImdbMovieIdFilterComponent extends PluginsFilterComponent {
       searchField.setBackground(backgroundDefault);
       searchField.setForeground(foregroundDefault);
       search.setEnabled(searchField.getText().trim().length() > 0 && mContent.getText().length() > 0);
+      mContent.select(-1, -1);
     });
     
     JPanel main = new JPanel(new FormLayout("default,2dlu,default:grow,2dlu,default","fill:40dlu:grow,2dlu,default"));
