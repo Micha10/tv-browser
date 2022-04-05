@@ -70,6 +70,7 @@ public class SearchableTextAreaPanel extends JPanel {
       @Override
       public void paste() {
         super.paste();
+        mContent.select(-1, -1);
         search.setEnabled(!getText().trim().isEmpty());
         search.doClick();
       }
@@ -78,6 +79,7 @@ public class SearchableTextAreaPanel extends JPanel {
       public void cut() {
         super.cut();
         search.setEnabled(false);
+        mContent.select(-1, -1);
       }
     };
     final Color backgroundDefault = searchField.getBackground();
@@ -131,6 +133,7 @@ public class SearchableTextAreaPanel extends JPanel {
       searchField.setBackground(backgroundDefault);
       searchField.setForeground(foregroundDefault);
       search.setEnabled(searchField.getText().trim().length() > 0 && mContent.getText().length() > 0);
+      mContent.select(-1, -1);
     });
     
     setLayout(new FormLayout("default,2dlu,default:grow,2dlu,default","fill:40dlu:grow,2dlu,default"));

@@ -30,8 +30,6 @@ import java.util.ArrayList;
 
 import javax.swing.JButton;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
 
 import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
@@ -39,8 +37,8 @@ import com.jgoodies.forms.layout.FormLayout;
 import devplugin.Program;
 import devplugin.ProgramSearcher;
 import util.exc.TvBrowserException;
-import util.ui.LineNumberHeader;
 import util.ui.SearchFormSettings;
+import util.ui.SearchableTextAreaPanel;
 import util.ui.UiUtilities;
 
 /**
@@ -60,7 +58,7 @@ public class MassFilterComponent extends AbstractFilterComponent {
 
   private ProgramSearcher[] mSearcher;
 
-  private JTextArea mTextInput;
+  private SearchableTextAreaPanel mTextInput;
 
   private JPanel mSettingsPanel;
 
@@ -139,13 +137,10 @@ public class MassFilterComponent extends AbstractFilterComponent {
     mNewSearchFormSettings = mSearchFormSettings;
 
     mSettingsPanel = new JPanel(new FormLayout("default:grow,default","fill:50dlu:grow,2dlu,default"));
-
-    mTextInput = new JTextArea(mText);
-    JScrollPane scrollPane = new JScrollPane(mTextInput);
-    LineNumberHeader header = new LineNumberHeader(mTextInput);
-    scrollPane.setRowHeaderView(header);
-
-    mSettingsPanel.add(scrollPane, CC.xyw(1, 1, 2));
+     
+    mTextInput = new SearchableTextAreaPanel(mText, false);
+    
+    mSettingsPanel.add(mTextInput, CC.xyw(1, 1, 2));
     
     JButton config = new JButton(mLocalizer.msg("configure", "Search options"));
 
