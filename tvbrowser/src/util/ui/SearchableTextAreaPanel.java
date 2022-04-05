@@ -1,3 +1,27 @@
+/*
+ * TV-Browser
+ * Copyright (C) 2003-2021 TV-Browser-Team (dev@tvbrowser.org)
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 3
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ *
+ * SVN information:
+ *     $Date$
+ *     $Id$
+ *   $Author$
+ * $Revision$
+ */
 package util.ui;
 
 import java.awt.Color;
@@ -18,6 +42,13 @@ import com.jgoodies.forms.layout.FormLayout;
 
 import util.i18n.Localizer;
 
+/**
+ * A JPanel with a JTextArea in a JScrollPane and a JTextField for
+ * searching for values inside the JTextArea.
+ * 
+ * @author René Mach
+ * @since 4.2.5
+ */
 public class SearchableTextAreaPanel extends JPanel {
   private static final Color NOT_FOUND = new Color(255,100,100);
   private static final Localizer LOCALIZER = Localizer.getLocalizerFor(SearchableTextAreaPanel.class);
@@ -53,8 +84,15 @@ public class SearchableTextAreaPanel extends JPanel {
     final Color foregroundDefault = searchField.getForeground();
     search.setEnabled(false);
     search.addActionListener(ee -> {
+      int startIndex = mContent.getSelectionEnd();
+      
       mContent.select(-1, -1);
-      int pos = caseSensitiveSearch ? mContent.getText().indexOf(searchField.getText().trim()) : mContent.getText().toLowerCase().indexOf(searchField.getText().toLowerCase().trim());
+      
+      int pos = caseSensitiveSearch ? mContent.getText().indexOf(searchField.getText().trim(), startIndex) : mContent.getText().toLowerCase().indexOf(searchField.getText().toLowerCase().trim(), startIndex);
+      
+      if(startIndex > 0 && pos == -1) {
+        pos = caseSensitiveSearch ? mContent.getText().indexOf(searchField.getText().trim()) : mContent.getText().toLowerCase().indexOf(searchField.getText().toLowerCase().trim());
+      }
       
       if(pos != -1) {
         mContent.getCaret().setSelectionVisible(true);

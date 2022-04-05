@@ -1,3 +1,27 @@
+/*
+ * TV-Browser
+ * Copyright (C) 2003-2021 TV-Browser-Team (dev@tvbrowser.org)
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 3
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ *
+ * SVN information:
+ *     $Date$
+ *     $Id$
+ *   $Author$
+ * $Revision$
+ */
 package util.ui;
 
 import java.awt.Window;
@@ -12,6 +36,13 @@ import com.jgoodies.forms.factories.CC;
 
 import util.i18n.Localizer;
 
+/**
+ * A dialog that provides buttons and function for OK and Cancel action to
+ * which a JComponent can be added.
+ * 
+ * @author René Mach
+ * @since 4.2.5
+ */
 public class OkayCancelDialog extends JDialog implements WindowClosingIf {
   private JButton mOk;
   private boolean mOkWasPressed;
