@@ -77,8 +77,8 @@ public class ExclusionPanel extends JPanel{
       final Favorite favorite) {
     mWasEditedOrDeleted = mWasAdded = false;
     
-    setLayout(new FormLayout("5dlu, fill:pref:grow, 3dlu, pref",
-        "pref, 3dlu, pref, 3dlu, pref, 3dlu, fill:pref:grow"));
+    setLayout(new FormLayout("5dlu, 100dlu:grow, 3dlu, pref",
+        "default, 3dlu, default, 3dlu, default, fill:0dlu:grow, 2dlu"));
 
     CellConstraints cc = new CellConstraints();
 
@@ -107,7 +107,7 @@ public class ExclusionPanel extends JPanel{
       }
     });
 
-    add(new JScrollPane(mExclusionsList), cc.xywh(2, 1, 1, 5));
+    add(new JScrollPane(mExclusionsList), cc.xywh(2, 1, 1, 6));
 
     Icon newIcon = TVBrowserIcons.newIcon(TVBrowserIcons.SIZE_SMALL);
     Icon editIcon = TVBrowserIcons.edit(TVBrowserIcons.SIZE_SMALL);

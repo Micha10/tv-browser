@@ -32,16 +32,15 @@ import java.io.ObjectOutputStream;
 import java.util.Calendar;
 import java.util.Iterator;
 
-import tvbrowser.core.filters.FilterManagerImpl;
-import tvbrowser.extras.common.ChannelItem;
-import tvbrowser.extras.common.DayListCellRenderer;
-import tvbrowser.extras.common.LimitationConfiguration;
-import util.ui.WrapperFilter;
 import devplugin.Channel;
 import devplugin.Program;
 import devplugin.ProgramFieldType;
 import devplugin.ProgramFilter;
 import devplugin.ProgramInfoHelper;
+import tvbrowser.core.filters.FilterManagerImpl;
+import tvbrowser.extras.common.ChannelItem;
+import tvbrowser.extras.common.LimitationConfiguration;
+import util.ui.WrapperFilter;
 
 public class Exclusion implements Comparable<Exclusion> {
   private static final util.i18n.Localizer LOCALIZER = util.i18n.Localizer.getLocalizerFor(Exclusion.class);
@@ -572,7 +571,7 @@ public class Exclusion implements Comparable<Exclusion> {
     String upTime = hUp + ":" + (mUp < 10 ? "0" : "") + mUp;
 
     if (dayOfWeek != Exclusion.DAYLIMIT_DAILY) {
-      String dayStr = DayListCellRenderer.getDayString(dayOfWeek);
+      String dayStr = LimitationConfiguration.getDayString(dayOfWeek);
       if (lowBnd >= 0 && upBnd >= 0) {
         return LOCALIZER.msg("datetimestring.between", "on {0} between {1} and {2}", dayStr, lowTime, upTime);
       } else if (lowBnd >= 0) {

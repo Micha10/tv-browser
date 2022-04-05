@@ -36,6 +36,8 @@ import com.jgoodies.forms.layout.RowSpec;
  *
  */
 public class EnhancedPanelBuilder extends PanelBuilder {
+  private RowSpec mDefaultRowGapSpec;
+  
   public EnhancedPanelBuilder(final FormLayout layout, final JPanel parentPanel) {
     super(layout,parentPanel);
   }
@@ -50,7 +52,19 @@ public class EnhancedPanelBuilder extends PanelBuilder {
    * @param encodedColumnSpecs The encoded column spec.
    */
   public EnhancedPanelBuilder(final String encodedColumnSpecs) {
+    this(encodedColumnSpecs,"5dlu");
+  }
+  
+  /**
+   * Create a new panel builder with the given columns.
+   * You can add rows afterwards by using {@link #addParagraph(String)}, {@link #addRow()} and {@link #addGrowingRow()}.
+   * @param encodedColumnSpecs The encoded column spec.
+   * @param defaultRowGapSpec The encoded row spec for the default gap size.
+   * @since 4.2.5
+   */
+  public EnhancedPanelBuilder(final String encodedColumnSpecs, final String defaultRowGapSpec) {
     super(new FormLayout(encodedColumnSpecs,""));
+    mDefaultRowGapSpec = RowSpec.decode(defaultRowGapSpec);
   }
 
   /**
@@ -60,9 +74,22 @@ public class EnhancedPanelBuilder extends PanelBuilder {
    * @param parentPanel the finally built panel will be a child of this parent panel
    */
   public EnhancedPanelBuilder(final String encodedColumnSpecs, final JPanel parentPanel) {
-    super(new FormLayout(encodedColumnSpecs,""), parentPanel);
+    this(encodedColumnSpecs, "5dlu", parentPanel);
   }
 
+  /**
+   * Create a new panel builder with the given columns, which sits on the given panel.
+   * You can add rows afterwards by using {@link #addParagraph(String)}, {@link #addRow()} and {@link #addGrowingRow()}.
+   * @param encodedColumnSpecs The encoded column spec.
+   * @param defaultRowGapSpec The encoded row spec for the default gap size.
+   * @param parentPanel the finally built panel will be a child of this parent panel
+   * @since 4.2.5
+   */
+  public EnhancedPanelBuilder(final String encodedColumnSpecs, final String defaultRowGapSpec, final JPanel parentPanel) {
+    super(new FormLayout(encodedColumnSpecs,""), parentPanel);
+    mDefaultRowGapSpec = RowSpec.decode(defaultRowGapSpec);
+  }
+  
   /**
    * create a new section in the layout, which is separated from the previous line by a PARAGRAPH_GAP
    * @param label label string
@@ -161,7 +188,7 @@ public class EnhancedPanelBuilder extends PanelBuilder {
    */
   public PanelBuilder addRow(final String rowHeightCode, boolean withGap) {
     if(withGap) {
-      appendRow(RowSpec.decode("5dlu"));
+      appendRow(mDefaultRowGapSpec);
     }
     
     appendRow(rowHeightCode);

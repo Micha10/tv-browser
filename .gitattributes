@@ -2476,7 +2476,6 @@ tvbrowser/src/tvbrowser/core/tvdataservice/tvdataservice_hr.properties -text svn
 tvbrowser/src/tvbrowser/core/tvdataservice/tvdataservice_pl.properties -text svneol=unset#text/plain
 tvbrowser/src/tvbrowser/core/tvdataservice/tvdataservice_sk.properties -text
 tvbrowser/src/tvbrowser/extras/common/AbstractInternalPluginProxy.java -text
-tvbrowser/src/tvbrowser/extras/common/DayListCellRenderer.java -text
 tvbrowser/src/tvbrowser/extras/common/common.properties -text
 tvbrowser/src/tvbrowser/extras/common/common_cs.properties -text svneol=unset#text/plain
 tvbrowser/src/tvbrowser/extras/common/common_da.properties -text

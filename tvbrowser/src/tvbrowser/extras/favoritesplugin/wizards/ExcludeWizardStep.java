@@ -56,8 +56,8 @@ import devplugin.ProgramFilter;
 import devplugin.ProgramInfoHelper;
 import tvbrowser.core.ChannelList;
 import tvbrowser.core.filters.filtercomponents.FavoritesFilterComponent;
-import tvbrowser.extras.common.DayListCellRenderer;
 import tvbrowser.extras.common.LimitationConfiguration;
+import tvbrowser.extras.common.LimitationConfiguration.DayLimitValue;
 import tvbrowser.extras.favoritesplugin.core.Exclusion;
 import tvbrowser.extras.favoritesplugin.core.Exclusion.ProgramFieldExclusion;
 import tvbrowser.extras.favoritesplugin.core.Favorite;
@@ -102,7 +102,7 @@ public class ExcludeWizardStep extends AbstractWizardStep {
   private JTextField mProgramFieldTextTf;
 
   private JComboBox<Channel> mChannelCB;
-  private JComboBox<Object> mDayChooser;
+  private JComboBox<LimitationConfiguration.DayLimitValue> mDayChooser;
   private JComboBox<String> mCategoryChooser;
   private JComboBox<ProgramFieldType> mProgramFieldChooser;
 
@@ -229,17 +229,7 @@ public class ExcludeWizardStep extends AbstractWizardStep {
     
     mFilterSelection = new FilterSelectionPanel("", null, true, true, FavoriteFilter.class, FavoritesFilterComponent.class);
     
-    mDayChooser = new JComboBox<>(new Object[] {
-        LimitationConfiguration.DAYLIMIT_WEEKDAY,
-        LimitationConfiguration.DAYLIMIT_WEEKEND,
-        LimitationConfiguration.DAYLIMIT_MONDAY,
-        LimitationConfiguration.DAYLIMIT_TUESDAY,
-        LimitationConfiguration.DAYLIMIT_WEDNESDAY,
-        LimitationConfiguration.DAYLIMIT_THURSDAY,
-        LimitationConfiguration.DAYLIMIT_FRIDAY,
-        LimitationConfiguration.DAYLIMIT_SATURDAY,
-        LimitationConfiguration.DAYLIMIT_SUNDAY });
-    mDayChooser.setRenderer(new DayListCellRenderer());
+    mDayChooser = new JComboBox<>(LimitationConfiguration.DAYLIMIT_VALUE_ARRAY);
     
     mCategoryChooser = new JComboBox<>(ProgramInfoHelper.getInfoIconMessages());
     
@@ -372,8 +362,8 @@ public class ExcludeWizardStep extends AbstractWizardStep {
       }
       mTimePeriodChooser.setFromTime(timeFrom);
       mTimePeriodChooser.setToTime(timeTo);
-      mDayChooser.setSelectedItem(mProgram.getDate().getCalendar().get(
-          Calendar.DAY_OF_WEEK));
+      mDayChooser.setSelectedItem(new LimitationConfiguration.DayLimitValue(mProgram.getDate().getCalendar().get(
+          Calendar.DAY_OF_WEEK)));
     } else if (mMode == MODE_EDIT_EXCLUSION) {
       String title = mExclusion.getTitle();
       String topic = mExclusion.getTopic();
@@ -411,11 +401,11 @@ public class ExcludeWizardStep extends AbstractWizardStep {
         mTimeCb.setSelected(true);
         mTimePeriodChooser.setFromTime(timeFrom);
         mTimePeriodChooser.setToTime(timeTo);
-        mDayChooser.setSelectedItem(mExclusion.getDayOfWeek());
+        mDayChooser.setSelectedItem(new LimitationConfiguration.DayLimitValue(mExclusion.getDayOfWeek()));
       }
       if (dayOfWeek != Exclusion.DAYLIMIT_DAILY) {
         mDayCb.setSelected(true);
-        mDayChooser.setSelectedItem(dayOfWeek);
+        mDayChooser.setSelectedItem(new LimitationConfiguration.DayLimitValue(dayOfWeek));
       }
       if(bitIndex != -1) {
         mCategoryCb.setSelected(true);
@@ -576,7 +566,7 @@ public class ExcludeWizardStep extends AbstractWizardStep {
     }
 
     if (mDayCb.isSelected()) {
-      weekOfDay = ((Integer) mDayChooser.getSelectedItem()).intValue();
+      weekOfDay = ((DayLimitValue) mDayChooser.getSelectedItem()).getDay();
     }
 
     if(mCategoryCb.isSelected()) {

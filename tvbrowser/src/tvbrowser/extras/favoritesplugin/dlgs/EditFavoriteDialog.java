@@ -34,6 +34,7 @@ import java.awt.Window;
 import java.awt.event.ItemEvent;
 import java.util.ArrayList;
 
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
@@ -48,7 +49,6 @@ import com.jgoodies.forms.builder.ButtonBarBuilder;
 import com.jgoodies.forms.builder.PanelBuilder;
 import com.jgoodies.forms.factories.Borders;
 import com.jgoodies.forms.factories.CC;
-import com.jgoodies.forms.factories.DefaultComponentFactory;
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 
@@ -56,9 +56,10 @@ import devplugin.Channel;
 import devplugin.ProgramFilter;
 import devplugin.ProgramReceiveIf;
 import devplugin.ProgramReceiveTarget;
+import tvbrowser.core.Settings;
 import tvbrowser.core.filters.FilterList;
-import tvbrowser.extras.common.DayListCellRenderer;
 import tvbrowser.extras.common.LimitationConfiguration;
+import tvbrowser.extras.common.LimitationConfiguration.DayLimitValue;
 import tvbrowser.extras.common.ReminderConfiguration;
 import tvbrowser.extras.favoritesplugin.FavoriteConfigurator;
 import tvbrowser.extras.favoritesplugin.FavoritesPlugin;
@@ -71,11 +72,10 @@ import tvbrowser.extras.reminderplugin.ReminderPluginProxy;
 import tvbrowser.ui.mainframe.MainFrame;
 import util.exc.ErrorHandler;
 import util.exc.TvBrowserException;
-import util.ui.ChannelChooserDlg;
 import util.i18n.Localizer;
+import util.ui.ChannelChooserDlg;
+import util.ui.EnhancedPanelBuilder;
 import util.ui.PluginChooserDlg;
-import util.ui.ScrollableJPanel;
-import util.ui.TabLayout;
 import util.ui.TimePeriodChooser;
 import util.ui.UiUtilities;
 import util.ui.WindowClosingIf;
@@ -85,7 +85,7 @@ import util.ui.WindowClosingIf;
  */
 public class EditFavoriteDialog extends JDialog implements WindowClosingIf {
 
-  private static final util.i18n.Localizer mLocalizer = util.i18n.Localizer.getLocalizerFor(EditFavoriteDialog.class);
+  private static final util.i18n.Localizer LOCALIZER = util.i18n.Localizer.getLocalizerFor(EditFavoriteDialog.class);
 
   private Favorite mFavorite;
 
@@ -106,7 +106,7 @@ public class EditFavoriteDialog extends JDialog implements WindowClosingIf {
 
   private Channel[] mChannelArr;
 
-  private JComboBox<Object> mLimitDaysCB;
+  private JComboBox<LimitationConfiguration.DayLimitValue> mLimitDaysCB;
 
   private TimePeriodChooser mTimePeriodChooser;
 
@@ -144,33 +144,49 @@ public class EditFavoriteDialog extends JDialog implements WindowClosingIf {
     mFavorite = fav;
     mFavoriteConfigurator = mFavorite.createConfigurator();
 
-    setTitle(mLocalizer.msg("title", "Edit Favorite"));
+    setTitle(LOCALIZER.msg("title", "Edit Favorite"));
 
-    ScrollableJPanel rootPn = new ScrollableJPanel();
+    JPanel rootPn = new JPanel();
     rootPn.setLayout(new BorderLayout());
     rootPn.setBorder(Borders.DLU4);
+    rootPn.setOpaque(true);
+    
+    EnhancedPanelBuilder pb = new EnhancedPanelBuilder("default:grow","1dlu");
+    pb.border(new EmptyBorder(10, 10, 10, 10));
+    
+  /*  JPanel pb = new JPanel(new TabLayout(1));
+    pb.setBorder(new EmptyBorder(10, 10, 10, 10));*/
 
-    JPanel content = new JPanel(new TabLayout(1));
-    content.setBorder(new EmptyBorder(10, 10, 10, 10));
+    pb.addRow(false);
+    pb.addSeparator(LOCALIZER.msg("section.head", "Favorite"), CC.xy(1, pb.getRowCount()));
 
-    content.add(DefaultComponentFactory.getInstance().createSeparator(mLocalizer.msg("section.head", "Favorite")));
+    pb.addRow();
+    pb.add(createTitleChangePanel(), CC.xy(1, pb.getRowCount()));
+    pb.addRow();
+    pb.add(mFavoriteConfigurator.createConfigurationPanel(), CC.xy(1, pb.getRowCount()));
 
-    content.add(createTitleChangePanel());
-    content.add(mFavoriteConfigurator.createConfigurationPanel());
+    pb.addRow();
+    pb.addSeparator(LOCALIZER.msg("section.details", "Details"), CC.xy(1, pb.getRowCount()));
+    pb.addRow();
+    pb.add(createLimitPanel(), CC.xy(1, pb.getRowCount()));
 
-    content.add(DefaultComponentFactory.getInstance().createSeparator(mLocalizer.msg("section.details", "Details")));
-    content.add(createLimitPanel());
+    pb.addRow();
+    pb.addSeparator(LOCALIZER.msg("section.exclusions", "Exclusion Criteria"), CC.xy(1, pb.getRowCount()));
+    pb.addRow("fill:60dlu:grow");
+    pb.add(mExclusionPanel = new ExclusionPanel(mFavorite.getExclusions(),this,mFavorite), CC.xy(1, pb.getRowCount()));
 
-    content.add(DefaultComponentFactory.getInstance().createSeparator(
-        mLocalizer.msg("section.exclusions", "Exclusion Criteria")));
-    content.add(mExclusionPanel = new ExclusionPanel(mFavorite.getExclusions(),this,mFavorite)/*createExclusionPanel()*/);
+    pb.addRow();
+    pb.addSeparator(LOCALIZER.msg("section.reminder", "Reminder"), CC.xy(1, pb.getRowCount()));
+    pb.addRow();
+    pb.add(createReminderPanel(), CC.xy(1, pb.getRowCount()));
 
-    content.add(DefaultComponentFactory.getInstance().createSeparator(mLocalizer.msg("section.reminder", "Reminder")));
-    content.add(createReminderPanel());
-
-    content.add(DefaultComponentFactory.getInstance().createSeparator(mLocalizer.msg("section.extras", "Extras")));
-    content.add(createExtrasPanel());
-
+    pb.addRow();
+    pb.addSeparator(LOCALIZER.msg("section.extras", "Extras"), CC.xy(1, pb.getRowCount()));
+    pb.addRow();
+    pb.add(createExtrasPanel(), CC.xy(1, pb.getRowCount()));
+    pb.addRow();
+    
+    
     JButton cancelBtn = new JButton(Localizer.getLocalization(Localizer.I18N_CANCEL));
     JButton okBtn = new JButton(Localizer.getLocalization(Localizer.I18N_OK));
 
@@ -186,19 +202,24 @@ public class EditFavoriteDialog extends JDialog implements WindowClosingIf {
     buttons.addGlue();
     buttons.addButton(new JButton[] { okBtn, cancelBtn });
 
-    rootPn.add(BorderLayout.NORTH, content);
+    //pb.add(buttons.getPanel(), CC.xy(1, pb.getRowCount()));
+    
+    JScrollPane scrollPane = new JScrollPane(pb.getPanel());
+    scrollPane.setBorder(null);
+    scrollPane.setViewportBorder(BorderFactory.createEmptyBorder());
+    
+    rootPn.add(BorderLayout.CENTER, scrollPane);
     rootPn.add(BorderLayout.SOUTH, buttons.getPanel());
 
     getRootPane().setDefaultButton(okBtn);
-
-    JScrollPane scrollPane = new JScrollPane(rootPn);
-    scrollPane.setBorder(null);
-
-    setContentPane(scrollPane);
-    pack();
-
+    pb.getPanel().setOpaque(true);
+    
+    setContentPane(rootPn);
+    
+    Settings.layoutWindow(fav.getClass().getCanonicalName(), this);
+    
     Dimension d = Toolkit.getDefaultToolkit().getScreenSize();
-
+    
     if (d.height < getHeight()) {
       setSize(getWidth(), d.height);
     }
@@ -208,17 +229,17 @@ public class EditFavoriteDialog extends JDialog implements WindowClosingIf {
     CellConstraints cc = new CellConstraints();
 
     if(mFavorite.getName().length() < 1) {
-      mName = new JLabel(mLocalizer.msg("defaultName","Is going to be created automatically"));
+      mName = new JLabel(LOCALIZER.msg("defaultName","Is going to be created automatically"));
       mName.setEnabled(false);
     } else {
       mName = new JLabel(mFavorite.getName());
     }
 
     JPanel panel = new JPanel(new FormLayout("pref,3dlu,30dlu:grow,3dlu,pref","pref"));
-    panel.add(new JLabel(mLocalizer.msg("name","Name:")), cc.xy(1,1));
+    panel.add(new JLabel(LOCALIZER.msg("name","Name:")), cc.xy(1,1));
     panel.add(mName, cc.xy(3,1));
 
-    JButton changeTitle = new JButton(mLocalizer.msg("changeName","Change name"));
+    JButton changeTitle = new JButton(LOCALIZER.msg("changeName","Change name"));
     changeTitle.setFocusable(false);
 
     changeTitle.addActionListener(e -> {
@@ -232,20 +253,20 @@ public class EditFavoriteDialog extends JDialog implements WindowClosingIf {
 
   private void setFavoriteName() {
     String newName = (String) JOptionPane.showInputDialog(this,
-        mLocalizer.msg("name","Name:"), mLocalizer.msg("renameFav","Rename Favorite"), JOptionPane.PLAIN_MESSAGE, null, null,
+        LOCALIZER.msg("name","Name:"), LOCALIZER.msg("renameFav","Rename Favorite"), JOptionPane.PLAIN_MESSAGE, null, null,
         mName.getText());
     if (isValidName(newName)) {
       mName.setText(newName);
       mName.setEnabled(true);
     }
-    else if(mName.getText().compareTo(mLocalizer.msg("defaultName","Is going to be created automatically")) == 0) {
+    else if(mName.getText().compareTo(LOCALIZER.msg("defaultName","Is going to be created automatically")) == 0) {
       mName.setEnabled(false);
     }
   }
 
   private static boolean isValidName(String name) {
     return name != null && name.length() > 0 &&
-        (name.compareTo(mLocalizer.msg("defaultName","Is going to be created automatically")) != 0);
+        (name.compareTo(LOCALIZER.msg("defaultName","Is going to be created automatically")) != 0);
   }
 
   private String getChannelString(Channel[] channelArr) {
@@ -270,9 +291,9 @@ public class EditFavoriteDialog extends JDialog implements WindowClosingIf {
 
       return result;
     } else if(!mLimitChannelCb.isSelected()){
-      return mLocalizer.msg("allChannels", "All channels");
+      return LOCALIZER.msg("allChannels", "All channels");
     } else {
-      return mLocalizer.msg("noChannels", "No channels");
+      return LOCALIZER.msg("noChannels", "No channels");
     }
   }
 
@@ -301,28 +322,16 @@ public class EditFavoriteDialog extends JDialog implements WindowClosingIf {
 
     mTimePeriodChooser = new TimePeriodChooser(from, to, TimePeriodChooser.ALIGN_RIGHT);
 
-    mChangeChannelsBtn = new JButton(mLocalizer.msg("change", "Change"));
+    mChangeChannelsBtn = new JButton(LOCALIZER.msg("change", "Change"));
     mChannelArr = mFavorite.getLimitationConfiguration().getChannels();
 
-    mLimitChannelCb = new JCheckBox(mLocalizer.msg("channels", "Channels:") + " ");
-    mLimitTimeCb = new JCheckBox(mLocalizer.msg("time", "Time:") + " ");
+    mLimitChannelCb = new JCheckBox(LOCALIZER.msg("channels", "Channels:") + " ");
+    mLimitTimeCb = new JCheckBox(LOCALIZER.msg("time", "Time:") + " ");
 
     mChannelLabel = new JLabel(getChannelString(mChannelArr));
 
-    mLimitDaysCB = new JComboBox<Object>(new Object[] {
-        LimitationConfiguration.DAYLIMIT_DAILY,
-        LimitationConfiguration.DAYLIMIT_WEEKDAY,
-        LimitationConfiguration.DAYLIMIT_WEEKEND,
-        LimitationConfiguration.DAYLIMIT_MONDAY,
-        LimitationConfiguration.DAYLIMIT_TUESDAY,
-        LimitationConfiguration.DAYLIMIT_WEDNESDAY,
-        LimitationConfiguration.DAYLIMIT_THURSDAY,
-        LimitationConfiguration.DAYLIMIT_FRIDAY,
-        LimitationConfiguration.DAYLIMIT_SATURDAY,
-        LimitationConfiguration.DAYLIMIT_SUNDAY, });
-    mLimitDaysCB.setRenderer(new DayListCellRenderer());
-    mLimitDaysCB.setSelectedItem(mFavorite.getLimitationConfiguration()
-        .getDayLimit());
+    mLimitDaysCB = new JComboBox<>(LimitationConfiguration.DAYLIMIT_VALUE_ARRAY);
+    mLimitDaysCB.setSelectedItem(mFavorite.getLimitationConfiguration().getDayLimitValue());
 
     boolean isLimitedByChannel = mFavorite.getLimitationConfiguration().isLimitedByChannel();
     boolean isLimitedByTime = mFavorite.getLimitationConfiguration().isLimitedByTime();
@@ -379,7 +388,7 @@ public class EditFavoriteDialog extends JDialog implements WindowClosingIf {
 
   private JPanel createReminderPanel() {
     JPanel panel = new JPanel(new FormLayout("default,5dlu:grow,default","default"));
-    panel.add(mUseReminderCb = new JCheckBox(mLocalizer.msg("reminderWindow", "Reminder window")), CC.xy(1, 1));
+    panel.add(mUseReminderCb = new JCheckBox(LOCALIZER.msg("reminderWindow", "Reminder window")), CC.xy(1, 1));
     panel.add(mReminderMinutesSelection = ReminderConstants.getPreReminderMinutesSelection(mFavorite.getReminderMinutesDefault()), CC.xy(3, 1));
 
     mReminderMinutesSelection.setEnabled(false);
@@ -426,12 +435,12 @@ public class EditFavoriteDialog extends JDialog implements WindowClosingIf {
         buf.append(" (");
         buf.append(pluginArr.length - 2);
         buf.append(' ');
-        buf.append(mLocalizer.msg("more", "more"));
+        buf.append(LOCALIZER.msg("more", "more"));
         buf.append("...)");
       }
       return buf.toString();
     } else {
-      return mLocalizer.msg("dontpass", "don't pass programs");
+      return LOCALIZER.msg("dontpass", "don't pass programs");
     }
   }
 
@@ -442,7 +451,7 @@ public class EditFavoriteDialog extends JDialog implements WindowClosingIf {
 
     mPassProgramPlugins = mFavorite.getForwardPlugins();
     mPassProgramsLb = new JLabel(getForwardPluginsLabelString(mPassProgramPlugins));
-    mChangePassProgramsBtn = new JButton(mLocalizer.msg("change", "Change"));
+    mChangePassProgramsBtn = new JButton(LOCALIZER.msg("change", "Change"));
     mChangePassProgramsBtn.addActionListener(e -> {
       PluginChooserDlg dlg = new PluginChooserDlg(PluginChooserDlg.TYPE_RECEIVE_ADD_BOTH,(Window)EditFavoriteDialog.this, mPassProgramPlugins, null, ReminderPluginProxy.getInstance(), FavoritesPlugin.getInstance().getClientPluginTargetIds());
       UiUtilities.centerAndShow(dlg);
@@ -457,9 +466,9 @@ public class EditFavoriteDialog extends JDialog implements WindowClosingIf {
       }
     });
 
-    panel.add(mReminderAfterDownloadCb = new JCheckBox(mLocalizer.msg("autoAlert", "Alert me, whenever a matching program is discovered")), cc.xyw(1, 1, 2));
-    panel.add(mProvideFilter = new JCheckBox(mLocalizer.msg("provideFilter", "Provide filter for this Favorite program")), cc.xyw(1, 3, 2));
-    panel.add(mPassProgramsCheckBox = new JCheckBox(mLocalizer.msg("passProgramsTo", "Pass programs to") +" "), cc.xy(1, 5));
+    panel.add(mReminderAfterDownloadCb = new JCheckBox(LOCALIZER.msg("autoAlert", "Alert me, whenever a matching program is discovered")), cc.xyw(1, 1, 2));
+    panel.add(mProvideFilter = new JCheckBox(LOCALIZER.msg("provideFilter", "Provide filter for this Favorite program")), cc.xyw(1, 3, 2));
+    panel.add(mPassProgramsCheckBox = new JCheckBox(LOCALIZER.msg("passProgramsTo", "Pass programs to") +" "), cc.xy(1, 5));
     panel.add(mPassProgramsLb, cc.xy(2, 5));
     panel.add(mChangePassProgramsBtn, cc.xy(3, 5));
     
@@ -478,7 +487,7 @@ public class EditFavoriteDialog extends JDialog implements WindowClosingIf {
     
     mPassProgramPlugins = targets.toArray(new ProgramReceiveTarget[targets.size()]);
     
-    mPassProgramsCheckBox.setSelected(mPassProgramPlugins != null && mPassProgramPlugins.length > 0 && !mPassProgramsLb.getText().equals(mLocalizer.msg("dontpass", "don't pass programs")));
+    mPassProgramsCheckBox.setSelected(mPassProgramPlugins != null && mPassProgramPlugins.length > 0 && !mPassProgramsLb.getText().equals(LOCALIZER.msg("dontpass", "don't pass programs")));
     mPassProgramsCheckBox.setEnabled(FavoritesPlugin.getInstance().getClientPluginTargetIds().length == 0);
     mPassProgramsCheckBox.addActionListener(e -> {
       updatePassProgramsPanel();
@@ -515,7 +524,7 @@ public class EditFavoriteDialog extends JDialog implements WindowClosingIf {
 
     if (mLimitTimeCb.isSelected()) {
       mFavorite.getLimitationConfiguration().setTime(mTimePeriodChooser.getFromTime(), mTimePeriodChooser.getToTime());
-      mFavorite.getLimitationConfiguration().setDayLimit(((Integer) mLimitDaysCB.getSelectedItem()).intValue());
+      mFavorite.getLimitationConfiguration().setDayLimit(((DayLimitValue)mLimitDaysCB.getSelectedItem()).getDay());
     } else {
       mFavorite.getLimitationConfiguration().setIsLimitedByTime(false);
       mFavorite.getLimitationConfiguration().setDayLimit(LimitationConfiguration.DAYLIMIT_DAILY);
@@ -550,7 +559,7 @@ public class EditFavoriteDialog extends JDialog implements WindowClosingIf {
     try {
       mFavorite.updatePrograms(false);
     } catch (TvBrowserException exc) {
-      ErrorHandler.handle(mLocalizer.msg("error.updateFavoriteFailed", "Could not update favorite"), exc);
+      ErrorHandler.handle(LOCALIZER.msg("error.updateFavoriteFailed", "Could not update favorite"), exc);
       return; // do not save a favorite with a parse error
     }
 
@@ -567,7 +576,7 @@ public class EditFavoriteDialog extends JDialog implements WindowClosingIf {
       ReminderPlugin.getInstance().updatePrograms(mFavorite.getPrograms(), mFavorite.getReminderMinutesDefault(), reminderMinutesOld);
     }
 
-    if(mName.getText().length() > 0 && mName.getText().compareTo(mLocalizer.msg("defaultName","Is going to be created automatically")) != 0) {
+    if(mName.getText().length() > 0 && mName.getText().compareTo(LOCALIZER.msg("defaultName","Is going to be created automatically")) != 0) {
       mFavorite.setName(mName.getText());
     }
 

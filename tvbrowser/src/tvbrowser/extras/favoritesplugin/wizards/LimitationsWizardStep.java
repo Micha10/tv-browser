@@ -43,8 +43,8 @@ import com.jgoodies.forms.layout.FormLayout;
 
 import devplugin.Channel;
 import devplugin.Program;
-import tvbrowser.extras.common.DayListCellRenderer;
 import tvbrowser.extras.common.LimitationConfiguration;
+import tvbrowser.extras.common.LimitationConfiguration.DayLimitValue;
 import tvbrowser.extras.favoritesplugin.core.Favorite;
 import util.ui.ChannelChooserDlg;
 import util.ui.TimePeriodChooser;
@@ -93,19 +93,8 @@ public class LimitationsWizardStep extends AbstractWizardStep {
       mChannelArr = new Channel[]{};
     }
 
-    mDayOfWeekCombo = new JComboBox<>(new Object[] {
-        LimitationConfiguration.DAYLIMIT_DAILY,
-        LimitationConfiguration.DAYLIMIT_WEEKDAY,
-        LimitationConfiguration.DAYLIMIT_WEEKEND,
-        LimitationConfiguration.DAYLIMIT_MONDAY,
-        LimitationConfiguration.DAYLIMIT_TUESDAY,
-        LimitationConfiguration.DAYLIMIT_WEDNESDAY,
-        LimitationConfiguration.DAYLIMIT_THURSDAY,
-        LimitationConfiguration.DAYLIMIT_FRIDAY,
-        LimitationConfiguration.DAYLIMIT_SATURDAY,
-        LimitationConfiguration.DAYLIMIT_SUNDAY });
-    mDayOfWeekCombo.setRenderer(new DayListCellRenderer());
-
+    mDayOfWeekCombo = new JComboBox<>(LimitationConfiguration.DAYLIMIT_VALUE_ARRAY);
+    
     int lowBnd, upBnd;
     if (mProgram != null) {
       lowBnd = (mProgram.getHours() - 1) * 60;
@@ -195,7 +184,7 @@ public class LimitationsWizardStep extends AbstractWizardStep {
       fav.getLimitationConfiguration().setTime(mTimePeriodChooser.getFromTime(), mTimePeriodChooser.getToTime());
     }
     if (mDayOfWeekCb.isSelected()) {
-      int dayOfWeek = ((Integer)mDayOfWeekCombo.getSelectedItem()).intValue();
+      int dayOfWeek = ((DayLimitValue)mDayOfWeekCombo.getSelectedItem()).getDay();
       fav.getLimitationConfiguration().setDayLimit(dayOfWeek);
       if (!mTimeCb.isSelected()) {
         fav.getLimitationConfiguration().setTime(0, 24*60-1);
