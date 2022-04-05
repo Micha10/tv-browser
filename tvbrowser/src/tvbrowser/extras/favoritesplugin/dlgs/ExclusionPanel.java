@@ -77,7 +77,7 @@ public class ExclusionPanel extends JPanel{
       final Favorite favorite) {
     mWasEditedOrDeleted = mWasAdded = false;
     
-    setLayout(new FormLayout("5dlu, 100dlu:grow, 3dlu, pref",
+    setLayout(new FormLayout("1dlu, 100dlu:grow, 3dlu, pref",
         "default, 3dlu, default, 3dlu, default, fill:0dlu:grow, 2dlu"));
 
     CellConstraints cc = new CellConstraints();
