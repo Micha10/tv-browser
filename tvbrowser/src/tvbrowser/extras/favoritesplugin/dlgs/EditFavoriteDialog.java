@@ -138,7 +138,7 @@ public class EditFavoriteDialog extends JDialog implements WindowClosingIf {
     init(fav);
   }
 
-  private void init(Favorite fav) {
+  private void init(Favorite fav) {try {
     UiUtilities.registerForClosing(this);
     mOkWasPressed = false;
     mFavorite = fav;
@@ -219,7 +219,7 @@ public class EditFavoriteDialog extends JDialog implements WindowClosingIf {
     
     if (d.height < getHeight()) {
       setSize(getWidth(), d.height);
-    }
+    }}catch(Throwable t) {t.printStackTrace();}
   }
 
   private JPanel createTitleChangePanel() {

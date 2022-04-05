@@ -31,7 +31,9 @@ import util.i18n.Localizer;
  */
 public final class FilterSelectionPanel extends JPanel {
   private static final Localizer LOCALIZER = Localizer.getLocalizerFor(FilterSelectionPanel.class);
+  private JLabel mLabel;
   private JComboBox<WrapperFilter> mFilterBox;
+  private JButton mEdit;
   private WrapperFilter mNewFilter;
   private WrapperFilter mLastSelectedFilter;
   
@@ -122,13 +124,13 @@ public final class FilterSelectionPanel extends JPanel {
     
     mFilterBox.addItem(mNewFilter);
     
-    add(new JLabel(label != null ? label : LOCALIZER.msg("filterLabel", "Filter:")), CC.xy(1, 1));
+    add(mLabel = new JLabel(label != null ? label : LOCALIZER.msg("filterLabel", "Filter:")), CC.xy(1, 1));
     add(mFilterBox, CC.xy(3, 1));
     
     if(showEditButton) {
-      final JButton edit = new JButton(Localizer.getLocalization(Localizer.I18N_EDIT),TVBrowserIcons.edit(TVBrowserIcons.SIZE_SMALL));
-      edit.setEnabled(selectedFilter instanceof UserFilter);
-      edit.addActionListener(e -> {try {
+      mEdit = new JButton(Localizer.getLocalization(Localizer.I18N_EDIT),TVBrowserIcons.edit(TVBrowserIcons.SIZE_SMALL));
+      mEdit.setEnabled(selectedFilter instanceof UserFilter);
+      mEdit.addActionListener(e -> {try {
         UserFilter filter = (UserFilter)((WrapperFilter)mFilterBox.getSelectedItem()).getFilter();
         boolean filterNew = mFilterBox.getSelectedItem().equals(mNewFilter);
         
@@ -161,11 +163,11 @@ public final class FilterSelectionPanel extends JPanel {
       
       mFilterBox.addItemListener(e -> {
         if(e.getStateChange() == ItemEvent.SELECTED) {
-          edit.setEnabled(((WrapperFilter)mFilterBox.getSelectedItem()).getFilter() instanceof UserFilter);
+          mEdit.setEnabled(((WrapperFilter)mFilterBox.getSelectedItem()).getFilter() instanceof UserFilter);
           
           if(mFilterBox.getSelectedItem().equals(mNewFilter)) {
             mFilterBox.setPopupVisible(false);
-            edit.doClick();
+            mEdit.doClick();
           }
         }
         else {
@@ -173,7 +175,7 @@ public final class FilterSelectionPanel extends JPanel {
         }
       });
       
-      add(edit, CC.xy(5, 1));
+      add(mEdit, CC.xy(5, 1));
     }
   }
   
@@ -184,6 +186,14 @@ public final class FilterSelectionPanel extends JPanel {
    */
   public ProgramFilter getSelectedFilter() {
     return ((WrapperFilter)mFilterBox.getSelectedItem()).getFilter();
+  }
+  
+  public JComboBox<WrapperFilter> getFilterBox() {
+    return mFilterBox;
+  }
+  
+  public JButton getEditButton() {
+    return mEdit;
   }
   
   /**
@@ -198,13 +208,11 @@ public final class FilterSelectionPanel extends JPanel {
   
   @Override
   public void setEnabled(boolean enabled) {
-    for(int i = 0; i < getComponentCount(); i++) {
-      if(enabled && getComponent(i) instanceof JButton) {
-        getComponent(i).setEnabled(((WrapperFilter)mFilterBox.getSelectedItem()).getFilter() instanceof UserFilter);
-      }
-      else {
-        getComponent(i).setEnabled(enabled);
-      }
+    mLabel.setEnabled(enabled);
+    mFilterBox.setEnabled(enabled);
+    
+    if(mEdit != null) {
+      mEdit.setEnabled(enabled && (((WrapperFilter)mFilterBox.getSelectedItem()).getFilter() instanceof UserFilter));
     }
   }
   

@@ -26,6 +26,8 @@
 
 package tvbrowser.extras.favoritesplugin.wizards;
 
+import java.awt.Dimension;
+import java.awt.Window;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.util.ArrayList;
@@ -33,6 +35,7 @@ import java.util.Calendar;
 import java.util.Collections;
 
 import javax.swing.ButtonGroup;
+import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
@@ -55,6 +58,7 @@ import devplugin.ProgramFieldType;
 import devplugin.ProgramFilter;
 import devplugin.ProgramInfoHelper;
 import tvbrowser.core.ChannelList;
+import tvbrowser.core.Settings;
 import tvbrowser.core.filters.filtercomponents.FavoritesFilterComponent;
 import tvbrowser.extras.common.LimitationConfiguration;
 import tvbrowser.extras.common.LimitationConfiguration.DayLimitValue;
@@ -62,11 +66,14 @@ import tvbrowser.extras.favoritesplugin.core.Exclusion;
 import tvbrowser.extras.favoritesplugin.core.Exclusion.ProgramFieldExclusion;
 import tvbrowser.extras.favoritesplugin.core.Favorite;
 import tvbrowser.extras.favoritesplugin.core.FavoriteFilter;
+import tvbrowser.ui.mainframe.MainFrame;
 import util.ui.FilterSelectionPanel;
+import util.ui.OkayCancelDialog;
+import util.ui.SearchableTextAreaPanel;
 import util.ui.TimePeriodChooser;
+import util.ui.UiUtilities;
 
 public class ExcludeWizardStep extends AbstractWizardStep {
-
   private static final util.i18n.Localizer LOCALIZER = util.i18n.Localizer.getLocalizerFor(ExcludeWizardStep.class);
 
   private static final int MODE_CREATE_DERIVED_FROM_PROGRAM = 0;
@@ -96,10 +103,10 @@ public class ExcludeWizardStep extends AbstractWizardStep {
   private JRadioButton mDurationTooShort;
   private JSpinner mDurationValue;
   
-  private JTextField mTitleTf;
-  private JTextField mTopicTf;
-  private JTextField mEpisodeTitleTf;
-  private JTextField mProgramFieldTextTf;
+  private MutliSelectionTextField mTitleTf;
+  private MutliSelectionTextField mTopicTf;
+  private MutliSelectionTextField mEpisodeTitleTf;
+  private MutliSelectionTextField mProgramFieldTextTf;
 
   private JComboBox<Channel> mChannelCB;
   private JComboBox<LimitationConfiguration.DayLimitValue> mDayChooser;
@@ -208,24 +215,19 @@ public class ExcludeWizardStep extends AbstractWizardStep {
     final PanelBuilder panelBuilder = new PanelBuilder(layout);
 
     try {
+      final CaretListener textFieldButtonUpdateListener = new CaretListener() {
+        @Override
+        public void caretUpdate(CaretEvent e) {
+          updateButtons(handler);
+        }
+      };
+      
     mTitleCb = new JCheckBox(mTitleQuestion);
-    mTitleTf = new JTextField();
-    mTopicTf = new JTextField();
-    mEpisodeTitleTf = new JTextField();
-    mProgramFieldTextTf = new JTextField();
+    mTitleTf = new MutliSelectionTextField(textFieldButtonUpdateListener);
+    mTopicTf = new MutliSelectionTextField(textFieldButtonUpdateListener);
+    mEpisodeTitleTf = new MutliSelectionTextField(textFieldButtonUpdateListener);
+    mProgramFieldTextTf = new MutliSelectionTextField(textFieldButtonUpdateListener);
     mFilterCb = new JCheckBox(mFilterQuestion);
-    
-    final CaretListener textFieldButtonUpdateListener = new CaretListener() {
-      @Override
-      public void caretUpdate(CaretEvent e) {
-        updateButtons(handler);
-      }
-    };
-    
-    mTitleTf.addCaretListener(textFieldButtonUpdateListener);
-    mEpisodeTitleTf.addCaretListener(textFieldButtonUpdateListener);
-    mTopicTf.addCaretListener(textFieldButtonUpdateListener);
-    mProgramFieldTextTf.addCaretListener(textFieldButtonUpdateListener);
     
     mFilterSelection = new FilterSelectionPanel("", null, true, true, FavoriteFilter.class, FavoritesFilterComponent.class);
     
@@ -239,16 +241,19 @@ public class ExcludeWizardStep extends AbstractWizardStep {
     panelBuilder.add(new JLabel(mMainQuestion), CC.xyw(1, 1, 6));
 
     panelBuilder.add(mTitleCb, CC.xyw(2, rowInx, 2));
-    panelBuilder.add(mTitleTf, CC.xyw(4, rowInx, 3));
+    panelBuilder.add(mTitleTf.mTextField, CC.xy(4, rowInx));
+    panelBuilder.add(mTitleTf.mButton, CC.xy(6, rowInx));
     rowInx += 2;
 
     panelBuilder.add(mTopicCb = new JCheckBox(mTopicQuestion), CC.xyw(2, rowInx, 2));
-    panelBuilder.add(mTopicTf, CC.xyw(4, rowInx, 3));
+    panelBuilder.add(mTopicTf.mTextField, CC.xy(4, rowInx));
+    panelBuilder.add(mTopicTf.mButton, CC.xy(6, rowInx));
     
     rowInx += 2;
     
     panelBuilder.add(mEpisodeTitleCb = new JCheckBox(mEpisodeTitleQuestion), CC.xyw(2,rowInx, 2));
-    panelBuilder.add(mEpisodeTitleTf, CC.xyw(4, rowInx, 3));
+    panelBuilder.add(mEpisodeTitleTf.mTextField, CC.xy(4, rowInx));
+    panelBuilder.add(mEpisodeTitleTf.mButton, CC.xy(6, rowInx));
     
     rowInx += 2;
     
@@ -273,7 +278,8 @@ public class ExcludeWizardStep extends AbstractWizardStep {
     rowInx += 2;
     panelBuilder.add(mProgramFieldCb = new JCheckBox(mProgramFieldQuestion), CC.xy(2, rowInx));
     panelBuilder.add(mProgramFieldChooser = new JComboBox<>(), CC.xy(3, rowInx));
-    panelBuilder.add(mProgramFieldTextTf, CC.xyw(4, rowInx, 3));
+    panelBuilder.add(mProgramFieldTextTf.mTextField, CC.xy(4, rowInx));
+    panelBuilder.add(mProgramFieldTextTf.mButton, CC.xy(6, rowInx));
     
     final ArrayList<ProgramFieldType> listProgramFields = new ArrayList<ProgramFieldType>();
     
@@ -333,7 +339,8 @@ public class ExcludeWizardStep extends AbstractWizardStep {
       layout.insertRow(filterIndex+1, RowSpec.decode("5dlu"));
 
       panelBuilder.add(mFilterCb, CC.xyw(2, filterIndex, 2));
-      panelBuilder.add(mFilterSelection, CC.xyw(4, filterIndex, 3));
+      panelBuilder.add(mFilterSelection.getFilterBox(), CC.xy(4, filterIndex));
+      panelBuilder.add(mFilterSelection.getEditButton(), CC.xy(6, filterIndex));
     }
 
     if (mMode == MODE_CREATE_DERIVED_FROM_PROGRAM && mProgram != null) {
@@ -636,5 +643,50 @@ public class ExcludeWizardStep extends AbstractWizardStep {
   @Override
   public String getDoneBtnText() {
     return mDoneBtnText;
+  }
+  
+  private static final class MutliSelectionTextField {
+    private JTextField mTextField;
+    private JButton mButton;
+    
+    private MutliSelectionTextField(final CaretListener listener) {
+      this("",listener);
+    }
+    
+    private MutliSelectionTextField(final String text, final CaretListener listener) {
+      mTextField = new JTextField(text);
+      mTextField.addCaretListener(listener);
+      mButton = new JButton(LOCALIZER.ellipsisMsg("multiple.select", "Multiple"));
+      mButton.addActionListener(e -> {
+        final SearchableTextAreaPanel area = new SearchableTextAreaPanel(mTextField.getText().replace(";;", System.lineSeparator()), false);
+        
+        Window parent = UiUtilities.getLastModalChildOf(MainFrame.getInstance());
+        final OkayCancelDialog dlg = new OkayCancelDialog(parent, LOCALIZER.msg("multiple.title", "Enter data"), area, LOCALIZER.msg("multiple.help", "Use one line for each entry."), !mTextField.getText().isBlank());
+        area.getTextArea().addCaretListener(ce -> {
+          dlg.setOkayEnabled(!area.getText().isBlank());
+        });
+        
+        Settings.layoutWindow("excludeWizardMultipleInput2", dlg, new Dimension(500, 400), parent);
+        dlg.setVisible(true);
+        
+        if(dlg.getOkWasPressed()) {
+          mTextField.setText(area.getText().replaceAll(System.lineSeparator(), ";;"));
+          mTextField.setCaretPosition(0);
+        }
+      });
+    }
+    
+    private void setEnabled(final boolean enabled) {
+      mTextField.setEnabled(enabled);
+      mButton.setEnabled(enabled);
+    }
+    
+    private void setText(final String text) {
+      mTextField.setText(text);
+    }
+    
+    private String getText() {
+      return mTextField.getText();
+    }
   }
 }
