@@ -1,28 +1,38 @@
 package imdbplugin;
 
 import java.awt.Color;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
+import java.util.concurrent.atomic.AtomicReference;
 
-import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import javax.swing.JTextField;
+import javax.swing.text.BadLocationException;
 
 import com.jgoodies.forms.factories.CC;
+import com.jgoodies.forms.layout.FormLayout;
 
 import devplugin.PluginsFilterComponent;
 import devplugin.Program;
-import util.ui.EnhancedPanelBuilder;
 import util.ui.LineNumberHeader;
 import util.ui.Localizer;
+import util.ui.TVBrowserIcons;
+import util.ui.UiUtilities;
 
 public class ImdbMovieIdFilterComponent extends PluginsFilterComponent {
   private static final Localizer LOCALIZER = Localizer.getLocalizerFor(ImdbMovieIdFilterComponent.class);
+  private static final Color NOT_FOUND = new Color(255,100,100);
 
   private ArrayList<String> mAcceptedList = new ArrayList<String>();
+  private ArrayList<String> mCommentList = new ArrayList<String>();
   
   @Override
   public boolean accept(Program p) {
@@ -39,11 +49,6 @@ public class ImdbMovieIdFilterComponent extends PluginsFilterComponent {
   
   @Override
   public JPanel getSettingsPanel() {
-    EnhancedPanelBuilder pb = new EnhancedPanelBuilder("default:grow");
-    pb.addRow(false);
-    pb.addLabel("<html>"+LOCALIZER.msg("help", "List with IMDB movie IDs to match<br>(one ID per line):")+"</html>", CC.xy(1, pb.getRowCount()));
-    pb.addRow("fill:default:grow",true);
-    
     if(mContent == null) {
       mContent = new JTextArea();
     }
@@ -58,36 +63,128 @@ public class ImdbMovieIdFilterComponent extends PluginsFilterComponent {
     
     StringBuilder b = new StringBuilder();
     
-    for(String value : mAcceptedList) {
+    for(int i = 0; i < mAcceptedList.size(); i++) {
       if(b.length() > 0) {
         b.append("\n");
       }
       
-      b.append(value);
+      b.append(mAcceptedList.get(i));
+      
+      String comment = mCommentList.get(i);
+      
+      if(comment != null && !comment.isBlank()) {
+        b.append(" ").append(comment);
+      }
     }
     
     mContent.setText(b.toString());
     
-    pb.getPanel().setBackground(Color.red);
-    pb.add(scroll, CC.xy(1, pb.getRowCount()));
+    if(b.length() > 0) {
+      mContent.setCaretPosition(0);
+    }
+    final JButton search = new JButton(TVBrowserIcons.search(TVBrowserIcons.SIZE_LARGE));
+    JLabel searchLabel = new JLabel(LOCALIZER.msg("search", "Search in list:"));
+    JTextField searchField = new JTextField() {
+      @Override
+      public void paste() {
+        super.paste();
+        search.setEnabled(!getText().isBlank());
+        search.doClick();
+      }
+      
+      @Override
+      public void cut() {
+        super.cut();
+        search.setEnabled(false);
+      }
+    };
+    final Color backgroundDefault = searchField.getBackground();
+    final Color foregroundDefault = searchField.getForeground();
+    search.setEnabled(false);
+    search.addActionListener(e -> {
+      mContent.select(-1, -1);
+      int pos = mContent.getText().indexOf(searchField.getText().trim());
+      
+      if(pos != -1) {
+        mContent.getCaret().setSelectionVisible(true);
+        java.awt.geom.Rectangle2D view;
+        try {
+          view = mContent.modelToView2D(pos);
+          mContent.scrollRectToVisible(view.getBounds());
+          mContent.moveCaretPosition(pos+ searchField.getText().trim().length());
+          mContent.select(pos, pos + searchField.getText().trim().length());
+        } catch (BadLocationException e1) {
+          e1.printStackTrace();
+        }
+      }
+      else {
+        if(UiUtilities.isGTKLookAndFeel()) {
+          searchField.setForeground(NOT_FOUND);
+        }
+        else {
+          searchField.setBackground(NOT_FOUND);
+        }
+      }
+    });
     
-    return pb.getPanel();
+    searchField.addKeyListener(new KeyAdapter() {
+      @Override
+      public void keyPressed(KeyEvent e) {
+        if(e.getKeyCode() == KeyEvent.VK_ENTER) {
+          search.doClick();
+          e.consume();
+        }
+      }
+    });
+    
+    searchField.addCaretListener(e -> {
+      searchField.setBackground(backgroundDefault);
+      searchField.setForeground(foregroundDefault);
+      search.setEnabled(searchField.getText().trim().length() > 0 && mContent.getText().length() > 0);
+    });
+    
+    JPanel main = new JPanel(new FormLayout("default,2dlu,default:grow,2dlu,default","fill:40dlu:grow,2dlu,default"));
+    
+    main.add(searchLabel, CC.xy(1, 3));
+    main.add(searchField, CC.xy(3, 3));
+    main.add(search, CC.xy(5, 3));
+    main.add(scroll, CC.xyw(1, 1, 5));
+    
+    return main;
   }
 
   @Override
   public void saveSettings() {
     mAcceptedList.clear();
+    mCommentList.clear();
     
     final String[] parts = mContent.getText().replace("\r\n", "\n").split("\n");
     
     for(String p : parts) {
-      mAcceptedList.add(p);
+      int pos = p.indexOf(" ");
+      
+      String value = null;
+      String comment = null;
+      
+      if(pos == -1) {
+        value = p;
+        comment = "";
+      }
+      else {
+        value = p.substring(0, pos).trim();
+        comment = p.substring(pos+1).trim();
+      }
+      
+      if(!mAcceptedList.contains(value)) {
+        mAcceptedList.add(value);
+        mCommentList.add(comment);
+      }
     }
   }
   
   @Override
   public int getVersion() {
-    return 0;
+    return 1;
   }
 
   @Override
@@ -96,6 +193,13 @@ public class ImdbMovieIdFilterComponent extends PluginsFilterComponent {
     
     for(int i = 0; i < n; i++) {
       mAcceptedList.add(in.readUTF());
+      
+      if(version >= 1) {
+        mCommentList.add(in.readUTF());
+      }
+      else {
+        mCommentList.add("");
+      }
     }
   }
 
@@ -103,14 +207,19 @@ public class ImdbMovieIdFilterComponent extends PluginsFilterComponent {
   public void write(ObjectOutputStream out) throws IOException {
     out.writeInt(mAcceptedList.size());
     
-    for(String value : mAcceptedList) {
-      out.writeUTF(value);
+    for(int i = 0; i < mAcceptedList.size(); i++) {
+      out.writeUTF(mAcceptedList.get(i));
+      out.writeUTF(mCommentList.get(i));
     }
   }
 
   @Override
   public String getUserPresentableClassName() {
-    return LOCALIZER.msg("name", "IMDB movie ID filter component");
+    return LOCALIZER.msg("name", "IMDb movie ID");
   }
 
+  @Override
+  public String getTypeDescription() {
+    return LOCALIZER.msg("help", "List with IMDB movie IDs to match (one ID per line, comments can be added after the ID starting with a blank):");
+  }
 }

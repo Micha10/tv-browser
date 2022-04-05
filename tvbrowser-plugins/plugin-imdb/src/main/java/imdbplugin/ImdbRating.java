@@ -1,5 +1,8 @@
 package imdbplugin;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+
 /*
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -77,5 +80,9 @@ public final class ImdbRating {
   
   public Boolean isEpisode() {
 	    return mIsEpisode;  
+  }
+  
+  public static final String getLinkForID(final String id) throws UnsupportedEncodingException {
+    return "https://www.imdb.com/title/" + URLEncoder.encode(id, "ISO-8859-1") + "/";
   }
 }

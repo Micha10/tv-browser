@@ -20,6 +20,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -67,12 +68,17 @@ public final class ImdbPlugin extends Plugin {
   /**
    * Translator
    */
-  private static final Localizer mLocalizer = Localizer.getLocalizerFor(ImdbPlugin.class);
+  private static final Localizer LOCALIZER = Localizer.getLocalizerFor(ImdbPlugin.class);
   //private static final java.util.logging.Logger mLog = java.util.logging.Logger.getLogger(ImdbPlugin.class.getName());
-
+  private static final ProgramInfo[] INFO_EMPTY = new ProgramInfo[0]; 
+  private static final String ID_MOVIE_ID = "imdbMovieId";
+  private static final String ID_LINK = "imdbLink";
+  private static final String NAME_MOVIE_ID = LOCALIZER.msg("movieID", "IMDb movie ID");
+  private static final String NAME_LINK = LOCALIZER.msg("link", "IMDb link");
+  
   private static final boolean IS_STABLE = false;
 
-  private static final Version mVersion = new Version(1, 16, IS_STABLE);
+  private static final Version mVersion = new Version(1, 17, IS_STABLE);
 
   // Empty Rating for Cache
   private static final ImdbRating DUMMY_RATING = new ImdbRating(0, 0, "", false);
@@ -120,8 +126,8 @@ public final class ImdbPlugin extends Plugin {
   @Override
   public PluginInfo getInfo() {
     if (mPluginInfo == null) {
-      final String name = mLocalizer.msg("pluginName", "Imdb Ratings");
-      final String desc = mLocalizer.msg("description",
+      final String name = LOCALIZER.msg("pluginName", "Imdb Ratings");
+      final String desc = LOCALIZER.msg("description",
           "Display IMDb ratings of programs");
       final String author = "TV-Browser Team";
 
@@ -143,7 +149,7 @@ public final class ImdbPlugin extends Plugin {
       return null;
     }
     
-    return new ToolTipIcon[] {new ToolTipIcon(mDefaultIconAddress, mLocalizer.msg("rating", "Rating: {0}",rating.getRatingText()))};
+    return new ToolTipIcon[] {new ToolTipIcon(mDefaultIconAddress, LOCALIZER.msg("rating", "Rating: {0}",rating.getRatingText()))};
   }
 
   @Override
@@ -200,17 +206,15 @@ public final class ImdbPlugin extends Plugin {
     }
   }
   
-  private static final String ID_MOVIE_ID = "imdbMovieId";
-  private static final String NAME_MOVIE_ID = "IMDB movie ID";
-  
   @Override
   public ProgramInfo[] getAddtionalProgramInfoForProgram(Program p, String uniqueId) {
-    ProgramInfo[] result = null;
+    ProgramInfo[] result = INFO_EMPTY;
     
     if(p != null) {
       if(p.equals(getPluginManager().getExampleProgram())) {
-        result = new ProgramInfo[1];
+        result = new ProgramInfo[2];
         result[0] = new ProgramInfo(ImdbPlugin.this, ID_MOVIE_ID, NAME_MOVIE_ID, "");
+        result[1] = new ProgramInfo(ImdbPlugin.this, ID_LINK, NAME_LINK, "");
       }
       else if(uniqueId != null && uniqueId.equals(ID_MOVIE_ID)) {
         ImdbRating rating = getRatingFor(p);
@@ -218,6 +222,24 @@ public final class ImdbPlugin extends Plugin {
         if(rating != null) {
           result = new ProgramInfo[1];
           result[0] = new ProgramInfo(ImdbPlugin.this, ID_MOVIE_ID, NAME_MOVIE_ID, rating.getMovieId());
+        }
+      }
+      else if(uniqueId != null && uniqueId.equals(ID_LINK)) {
+        ImdbRating rating = getRatingFor(p);
+        
+        if(rating != null) {
+          String link = null;
+        
+          try {
+            link = ImdbRating.getLinkForID(rating.getMovieId());
+          } catch (UnsupportedEncodingException e) {
+            // Ignore
+          }
+          
+          if(link != null) {
+            result = new ProgramInfo[1];
+            result[0] = new ProgramInfo(ImdbPlugin.this, ID_LINK, NAME_LINK, link);
+          }
         }
       }
     }
@@ -254,7 +276,7 @@ public final class ImdbPlugin extends Plugin {
           showRatingDialog(program);
         }
       };
-      action.putValue(Action.NAME, mLocalizer.msg("contextMenuDetails",
+      action.putValue(Action.NAME, LOCALIZER.msg("contextMenuDetails",
           "Details for the IMDb rating [{0}]", rating.getRatingText()));
       action.putValue(Action.SMALL_ICON, new ImdbIcon(rating));
       return new ActionMenu(action);
@@ -277,7 +299,7 @@ public final class ImdbPlugin extends Plugin {
   
   @Override
   public String getProgramTableIconText() {
-    return mLocalizer.msg("iconText", "Imdb Rating");
+    return LOCALIZER.msg("iconText", "Imdb Rating");
   }
 
   @Override
@@ -286,15 +308,15 @@ public final class ImdbPlugin extends Plugin {
     if (mImdbDatabase.isInitialised() && !mSettings.isDatabaseCurrentVersion()) {
       SwingUtilities.invokeLater(new Runnable(){
         public void run() {
-        	String[] buttons = new String[] {mLocalizer.msg("buttonImport", "Import now"), mLocalizer.msg("buttonLater", "Later")};
+        	String[] buttons = new String[] {LOCALIZER.msg("buttonImport", "Import now"), LOCALIZER.msg("buttonLater", "Later")};
 					if (JOptionPane
 							.showOptionDialog(
 									getParentFrame(),
-									mLocalizer
+									LOCALIZER
 											.msg(
 													"version.message",
 													"Your local IMDb database must be imported again because the\ndatabase format has changed with this plugin version."),
-									mLocalizer.msg("version.title", "Database upgrade"),
+									LOCALIZER.msg("version.title", "Database upgrade"),
 									JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE,
 									null, buttons, buttons[0]) == JOptionPane.YES_OPTION) {
 						showUpdateDialog();
@@ -305,14 +327,14 @@ public final class ImdbPlugin extends Plugin {
     if (mSettings.askCreateDatabase() && !mImdbDatabase.isInitialised() && getPluginManager().getSubscribedChannels().length > 0) {
       SwingUtilities.invokeLater(new Runnable(){
         public void run() {
-          final JCheckBox askAgain = new JCheckBox(mLocalizer.msg(
+          final JCheckBox askAgain = new JCheckBox(LOCALIZER.msg(
               "dontShowAgain", "Don't show this message again"));
           Object[] shownObjects = new Object[2];
-          shownObjects[0] = mLocalizer.msg("downloadData", "No IMDb-Database available, should I download the ImDB-Data now (approx. {0} MB)? It will take around {1} MB on disk.", 180, 180);
+          shownObjects[0] = LOCALIZER.msg("downloadData", "No IMDb-Database available, should I download the ImDB-Data now (approx. {0} MB)? It will take around {1} MB on disk.", 180, 180);
           shownObjects[1] = askAgain;
 
           final int ret = JOptionPane.showConfirmDialog(getParentFrame(),
-              shownObjects, mLocalizer.msg("downloadDataTitle",
+              shownObjects, LOCALIZER.msg("downloadDataTitle",
                   "No data available"), JOptionPane.YES_NO_OPTION);
 
           if (askAgain.isSelected()) {
@@ -356,11 +378,11 @@ public final class ImdbPlugin extends Plugin {
   public void showUpdateDialog() {
     final JComboBox box = new JComboBox(new String[] { "IMDB-Server", "TV-Browser Verzeichnis" });
     Object[] shownObjects = new Object[2];
-    shownObjects[0] = mLocalizer.msg("serverMsg", "Choose server:");
+    shownObjects[0] = LOCALIZER.msg("serverMsg", "Choose server:");
     shownObjects[1] = box;
 
     final int ret = JOptionPane.showConfirmDialog(getParentFrame(),
-        shownObjects, mLocalizer.msg("serverTitle", "Choose Server"),
+        shownObjects, LOCALIZER.msg("serverTitle", "Choose Server"),
         JOptionPane.OK_CANCEL_OPTION);
 
     if (ret == JOptionPane.OK_OPTION) {
@@ -489,7 +511,7 @@ public final class ImdbPlugin extends Plugin {
     return new ProgramRatingIf[] {new ProgramRatingIf() {
 
       public String getName() {
-        return mLocalizer.msg("pluginName", "Imdb Ratings");
+        return LOCALIZER.msg("pluginName", "Imdb Ratings");
       }
 
       public Icon getIcon() {
@@ -565,7 +587,7 @@ public final class ImdbPlugin extends Plugin {
 
   @Override
   public ActionMenu getButtonAction() {
-  	AbstractAction action = new AbstractAction(mLocalizer.msg("download", "Download new IMDb data")) {
+  	AbstractAction action = new AbstractAction(LOCALIZER.msg("download", "Download new IMDb data")) {
 
 			public void actionPerformed(ActionEvent e) {
 				showUpdateDialog();

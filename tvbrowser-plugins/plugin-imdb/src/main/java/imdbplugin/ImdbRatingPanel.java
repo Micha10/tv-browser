@@ -79,8 +79,8 @@ public class ImdbRatingPanel extends JPanel {
 
     try {
         layout.appendRow(RowSpec.decode("pref"));
-        String link = "https://www.imdb.com/title/" + URLEncoder.encode(rating.getMovieId(), "ISO-8859-1") + "/";
-        LinkButton imdbLink = new LinkButton(mLocalizer.msg("imdbEntry","IMDb entry"), link);
+        
+        LinkButton imdbLink = new LinkButton(mLocalizer.msg("imdbEntry","IMDb entry"), ImdbRating.getLinkForID(rating.getMovieId()));
         add(imdbLink, cc.xy(1,layout.getRowCount()));
         layout.appendRow(RowSpec.decode("10dlu"));
       } catch (UnsupportedEncodingException e) {
