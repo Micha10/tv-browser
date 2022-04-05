@@ -61,7 +61,7 @@ import util.ui.WrapperFilter;
 
 public class AdvancedFavorite extends Favorite implements PendingFilterLoader {
 
-  private static final util.i18n.Localizer mLocalizer
+  private static final util.i18n.Localizer LOCALIZER
         = util.i18n.Localizer.getLocalizerFor(AdvancedFavorite.class);
 
   public static final String TYPE_ID = "advanced";
@@ -352,7 +352,7 @@ public class AdvancedFavorite extends Favorite implements PendingFilterLoader {
       PanelBuilder panelBuilder = new PanelBuilder(new FormLayout("pref:grow, 3dlu, pref:grow, 3dlu, default", "pref, 5dlu, pref"));
 
       panelBuilder.add(mSearchForm, cc.xyw(1, 1, 5));
-      panelBuilder.add(mFilterCheckbox = new JCheckBox(mLocalizer.msg("useFilter","Use filter:")), cc.xy(1, 3));
+      panelBuilder.add(mFilterCheckbox = new JCheckBox(LOCALIZER.msg("useFilter","Use filter:")), cc.xy(1, 3));
       panelBuilder.add(mFilterCombo = new JComboBox<>(), cc.xy(3, 3));
       
       ProgramFilter[] availableFilter = Plugin.getPluginManager().getFilterManager().getAvailableFilters();
@@ -440,8 +440,8 @@ public class AdvancedFavorite extends Favorite implements PendingFilterLoader {
     public boolean check() {
       if (mSearchForm.getSearchFormSettings().getSearchText().equals("")) {
         JOptionPane.showMessageDialog(mSearchForm,
-            mLocalizer.msg("missingSearchText.message", "Please specify a search text for the favorite!"),
-            mLocalizer.msg("missingSearchText.title", "Invalid search options"),
+            LOCALIZER.msg("missingSearchText.message", "Please specify a search text for the favorite!"),
+            LOCALIZER.msg("missingSearchText.title", "Invalid search options"),
             JOptionPane.WARNING_MESSAGE);
         return false;
       }
@@ -522,5 +522,10 @@ public class AdvancedFavorite extends Favorite implements PendingFilterLoader {
     }
     
     return result;
+  }
+
+  @Override
+  public String getTypeName() {
+    return LOCALIZER.msg("typeName", "Expert Favorite");
   }
 }

@@ -44,7 +44,7 @@ import devplugin.ProgramFieldType;
 
 public class ActorsFavorite extends Favorite {
 
-  private static final util.i18n.Localizer mLocalizer = util.i18n.Localizer
+  private static final util.i18n.Localizer LOCALIZER = util.i18n.Localizer
       .getLocalizerFor(ActorsFavorite.class);
 
   public static final String TYPE_ID = "actors";
@@ -121,7 +121,7 @@ public class ActorsFavorite extends Favorite {
 
     public JPanel createConfigurationPanel() {
       JPanel panel = new JPanel(new GridLayout(-1, 1));
-      panel.add(new JLabel(mLocalizer.msg("actors-favorite.term",
+      panel.add(new JLabel(LOCALIZER.msg("actors-favorite.term",
           "Any program containing all of theses actors will be marked as a favorite:")));
       panel.add(mSearchTextTf);
       return panel;
@@ -135,8 +135,8 @@ public class ActorsFavorite extends Favorite {
     public boolean check() {
       if (mSearchTextTf.getText().trim().equals("")) {
         JOptionPane.showMessageDialog(mSearchTextTf,
-            mLocalizer.msg("missingActor.message", "Please specify an actor for the favorite!"),
-            mLocalizer.msg("missingActor.title", "Invalid options"),
+            LOCALIZER.msg("missingActor.message", "Please specify an actor for the favorite!"),
+            LOCALIZER.msg("missingActor.title", "Invalid options"),
             JOptionPane.WARNING_MESSAGE);
         return false;
       }
@@ -147,5 +147,10 @@ public class ActorsFavorite extends Favorite {
   @Override
   public boolean isValidSearch() {
     return true;
+  }
+
+  @Override
+  public String getTypeName() {
+    return LOCALIZER.msg("typeName", "Actors Favorite");
   }
 }

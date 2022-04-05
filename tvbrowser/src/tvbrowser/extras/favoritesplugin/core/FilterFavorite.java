@@ -325,4 +325,10 @@ public class FilterFavorite extends Favorite implements PendingFilterLoader {
     
     return result;
   }
+  
+
+  @Override
+  public String getTypeName() {
+    return LOCALIZER.msg("typeName", "Filter Favorite");
+  }
 }

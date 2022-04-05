@@ -39,11 +39,37 @@ public class EnhancedPanelBuilder extends PanelBuilder {
   private RowSpec mDefaultRowGapSpec;
   
   public EnhancedPanelBuilder(final FormLayout layout, final JPanel parentPanel) {
-    super(layout,parentPanel);
+    this(layout,"5dlu",parentPanel);
   }
 
+  /**
+   * Create a new panel builder with the given columns.
+   * You can add rows afterwards by using {@link #addParagraph(String)}, {@link #addRow()} and {@link #addGrowingRow()}.
+   * @param layout The layout to use for this builder.
+   * @param defaultRowGapSpec The encoded row spec for the default gap size.
+   * @param parentPanel the finally built panel will be a child of this parent panel
+   * @since 4.2.5
+   */
+  public EnhancedPanelBuilder(final FormLayout layout, final String defaultRowGapSpec, JPanel parentPanel) {
+    super(layout,parentPanel);
+    mDefaultRowGapSpec = RowSpec.decode(defaultRowGapSpec);
+  }
+
+  
   public EnhancedPanelBuilder(final FormLayout layout) {
+    this(layout,"5dlu");
+  }
+
+  /**
+   * Create a new panel builder with the given columns.
+   * You can add rows afterwards by using {@link #addParagraph(String)}, {@link #addRow()} and {@link #addGrowingRow()}.
+   * @param layout The layout to use for this builder.
+   * @param defaultRowGapSpec The encoded row spec for the default gap size.
+   * @since 4.2.5
+   */
+  public EnhancedPanelBuilder(final FormLayout layout, final String defaultRowGapSpec) {
     super(layout);
+    mDefaultRowGapSpec = RowSpec.decode(defaultRowGapSpec);
   }
 
   /**

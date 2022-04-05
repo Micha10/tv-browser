@@ -40,7 +40,7 @@ import util.ui.SearchFormSettings;
 
 public class TopicFavorite extends Favorite {
 
-  private static final util.i18n.Localizer mLocalizer
+  private static final util.i18n.Localizer LOCALIZER
      = util.i18n.Localizer.getLocalizerFor(TopicFavorite.class);
 
   public static final String TYPE_ID = "topic";
@@ -93,7 +93,7 @@ public class TopicFavorite extends Favorite {
 
     public JPanel createConfigurationPanel() {
       JPanel panel = new JPanel(new GridLayout(-1, 1));
-      panel.add(new JLabel(mLocalizer.msg("topic-favorite.term","Any program containing this term will be marked as a favorite:")));
+      panel.add(new JLabel(LOCALIZER.msg("topic-favorite.term","Any program containing this term will be marked as a favorite:")));
       panel.add(mSearchTextTf);
       return panel;
     }
@@ -106,8 +106,8 @@ public class TopicFavorite extends Favorite {
     public boolean check() {
       if (mSearchTextTf.getText().trim().equals("")) {
         JOptionPane.showMessageDialog(mSearchTextTf,
-            mLocalizer.msg("missingTopic.message", "Please specify a topic for the favorite!"),
-            mLocalizer.msg("missingTopic.title", "Invalid options"),
+            LOCALIZER.msg("missingTopic.message", "Please specify a topic for the favorite!"),
+            LOCALIZER.msg("missingTopic.title", "Invalid options"),
             JOptionPane.WARNING_MESSAGE);
         return false;
       }
@@ -118,5 +118,11 @@ public class TopicFavorite extends Favorite {
   @Override
   public boolean isValidSearch() {
     return true;
+  }
+  
+
+  @Override
+  public String getTypeName() {
+    return LOCALIZER.msg("typeName", "Topic Favorite");
   }
 }

@@ -226,6 +226,8 @@ public abstract class Favorite {
   }
 
   public abstract String getTypeID();
+  
+  public abstract String getTypeName();
 
   public String getName() {
     return mName;
