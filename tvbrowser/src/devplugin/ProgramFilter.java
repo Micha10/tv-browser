@@ -26,6 +26,8 @@
 
 package devplugin;
 
+import tvbrowser.core.filters.Excludable;
+
 /**
  * Defines the filtering behavior.
  */

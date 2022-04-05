@@ -37,7 +37,6 @@ import java.util.Iterator;
 import java.util.regex.Pattern;
 
 import devplugin.Channel;
-import devplugin.Excludable;
 import devplugin.ProgramFilter;
 import tvbrowser.core.Settings;
 import tvbrowser.core.filters.filtercomponents.AcceptNoneFilterComponent;

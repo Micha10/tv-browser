@@ -31,8 +31,6 @@ import java.io.ObjectOutputStream;
 
 import javax.swing.JPanel;
 
-import devplugin.Excludable;
-
 /**
  * An interface for the program filter system of TV-Browser.
  */

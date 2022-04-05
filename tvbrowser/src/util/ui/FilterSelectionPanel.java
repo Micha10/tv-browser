@@ -10,10 +10,10 @@ import javax.swing.JPanel;
 import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
 
-import devplugin.Excludable;
 import devplugin.Plugin;
 import devplugin.PluginsProgramFilter;
 import devplugin.ProgramFilter;
+import tvbrowser.core.filters.Excludable;
 import tvbrowser.core.filters.FilterComponent;
 import tvbrowser.core.filters.FilterList;
 import tvbrowser.core.filters.FilterManagerImpl;

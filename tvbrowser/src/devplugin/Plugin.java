@@ -39,6 +39,7 @@ import javax.swing.Icon;
 import javax.swing.ImageIcon;
 
 import tvbrowser.core.Settings;
+import tvbrowser.core.filters.Excludable;
 import tvbrowser.core.icontheme.IconLoader;
 import tvbrowser.core.plugin.PluginProxyManager;
 import tvbrowser.core.settings.PluginSettings;

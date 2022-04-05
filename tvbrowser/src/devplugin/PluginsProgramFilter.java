@@ -18,6 +18,7 @@
  */
 package devplugin;
 
+import tvbrowser.core.filters.Excludable;
 import tvbrowser.core.plugin.PluginProxy;
 import tvbrowser.core.plugin.PluginProxyManager;
 
