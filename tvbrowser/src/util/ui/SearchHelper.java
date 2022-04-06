@@ -333,9 +333,8 @@ public class SearchHelper {
           });
         }
       };
-
-      pb.addRow();
-      pb.add(mProgressBar, CC.xy(1, pb.getRow()));
+      
+      pb.addRowFull(mProgressBar);
     }
     
     mFilterSelection = new JComboBox<>(FilterManagerImpl.getInstance().getAvailableFilters());
@@ -371,17 +370,15 @@ public class SearchHelper {
     filter.add(new JLabel("Filter:"), CC.xy(1, 1));
     filter.add(mFilterSelection, CC.xy(3, 1));
     
-    pb.addRow(false);
-    pb.add(filter, CC.xy(1, pb.getRow()));
+    pb.addRowFull(false, filter);
     
     mProgramList = new ProgramList(mListModel, pictureSettings);
 
     mProgramList.addMouseAndKeyListeners(null);
 
     mProgramListScrollPane = new JScrollPane(mProgramList);
-
-    pb.addGrowingRow();
-    pb.add(mProgramListScrollPane, CC.xy(1, pb.getRow()));
+    
+    pb.addGrowingRowFull(mProgramListScrollPane);
         
     if (curPos >= 0) {
       mProgramList.setSelectedValue(programArr[curPos], true);
@@ -452,8 +449,7 @@ public class SearchHelper {
     builder.addGlue();
     builder.addFixed(closeBt);
     
-    pb.addRow();
-    pb.add(builder.getPanel(), CC.xy(1, pb.getRow()));
+    pb.addRowFull(builder.getPanel());
 
     dlg.getRootPane().setDefaultButton(closeBt);
 

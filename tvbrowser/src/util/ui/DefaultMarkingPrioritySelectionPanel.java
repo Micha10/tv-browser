@@ -28,7 +28,6 @@ import javax.swing.JPanel;
 import javax.swing.event.HyperlinkEvent;
 
 import com.jgoodies.forms.factories.Borders;
-import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.Sizes;
 
@@ -174,13 +173,10 @@ public final class DefaultMarkingPrioritySelectionPanel extends JPanel {
 
     //add all the sub components to this panel
     if (showTitle) {
-      pb.addRow();
-      mSeparator = pb.addSeparator(getTitle(), CC.xyw(1, pb.getRowCount(), 5));
+      mSeparator = pb.addSeparatorRowFull(getTitle());
     }
 
     for (int i = 0; i < choosersToDraw; i++) {
-      pb.addRow();
-      
       final JComboBox<Object> box = new JComboBox<>();
       
       final String[] names = getMarkingColorNames(showNoMarkingPriority);
@@ -199,17 +195,17 @@ public final class DefaultMarkingPrioritySelectionPanel extends JPanel {
           state.mActivated = box.isEnabled();
         });
         
-        pb.add(mLabel.get(i), CC.xy(2, pb.getRowCount()));
+        pb.addRow(mLabel.get(i), 2);
       }
       else {
-        mLabel.add(pb.addLabel(label[i], CC.xy(2, pb.getRowCount())));
+        mLabel.add(pb.addLabelRow(label[i], 2));
       }
       
       mPrioritySelection.add(box);
       box.setSelectedIndex(Math.min(priority[i],Settings.getHighlightingPriorityMaximum()) + (showNoMarkingPriority ? 1 : 0));
       box.setRenderer(new MarkPriorityComboBoxRenderer(box.getRenderer()));
       
-      pb.add(box, CC.xy(4, pb.getRowCount()));
+      pb.add(box, 4);
     }
 
     if (showHelpLabel) {
@@ -220,8 +216,7 @@ public final class DefaultMarkingPrioritySelectionPanel extends JPanel {
       });
       mHelpLabel.setMaximumSize(new Dimension(Sizes.dialogUnitXAsPixel(200, mHelpLabel), Sizes.dialogUnitXAsPixel(600, mHelpLabel)));
       
-      pb.addRow();
-      pb.add(mHelpLabel, CC.xyw(2, pb.getRowCount(), 4));      
+      pb.addRowFull(mHelpLabel, 2);      
     }
     }catch(Throwable t) {t.printStackTrace();}
   }

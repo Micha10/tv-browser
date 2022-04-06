@@ -32,7 +32,6 @@ import javax.swing.JDialog;
 import javax.swing.JSeparator;
 
 import com.jgoodies.forms.factories.Borders;
-import com.jgoodies.forms.factories.CC;
 
 import util.i18n.Localizer;
 
@@ -69,18 +68,14 @@ public class OkayCancelDialog extends JDialog implements WindowClosingIf {
     pb.border(Borders.DIALOG);
     
     if(help != null && !help.isBlank()) {
-      pb.addRow(false);
-      pb.addLabel("<html>"+help+"</html>", CC.xyw(1, pb.getRowCount(), 4));
+      pb.addLabelRowFull(false,"<html>"+help+"</html>");
     }
     
-    pb.addRow("fill:10dlu:grow");
-    pb.add(message, CC.xyw(1, pb.getRowCount(), 4));
+    pb.addRowFull("fill:10dlu:grow", message);
+    pb.addRowFull(new JSeparator(JSeparator.HORIZONTAL));
     
-    pb.addRow("default");
-    pb.add(new JSeparator(JSeparator.HORIZONTAL), CC.xyw(1, pb.getRowCount(), 4));
-    pb.addRow();
-    pb.add(cancel, CC.xy(2, pb.getRowCount()));
-    pb.add(mOk, CC.xy(4, pb.getRowCount()));
+    pb.addRow(cancel, 2);
+    pb.add(mOk, 4);
     
     setContentPane(pb.getPanel());
     getRootPane().setDefaultButton(mOk);

@@ -312,7 +312,7 @@ public class ProgramInfoSettingsTab implements SettingsTab {
     actorPanel.addRowFull(mPersonSearchCB);
     
     final JLabel searchLabel = actorPanel.addLabelRow("3dlu,default",ProgramInfo.LOCALIZER.msg("defaultActorSearchMethod", "Default search method:"));
-    actorPanel.addRow("1dlu,fill:default:grow",scrollPane);
+    actorPanel.addRowFull("1dlu,fill:default:grow",scrollPane);
 
     mPersonSearchCB.addActionListener(e -> {
       scrollPane.setEnabled(mPersonSearchCB.isSelected());

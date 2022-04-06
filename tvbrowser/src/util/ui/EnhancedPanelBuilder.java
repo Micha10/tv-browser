@@ -383,7 +383,7 @@ public class EnhancedPanelBuilder extends PanelBuilder {
    * @return The component given with parameter component.
    * @since 4.2.5
    */
-  public Component addRow(final boolean withGap, final Component component) {
+  public Component addRowFull(final boolean withGap, final Component component) {
     addRow(withGap);
     return add(component, CC.xyw(1, getRowCount(), getColumnCount()));
   }
@@ -440,7 +440,7 @@ public class EnhancedPanelBuilder extends PanelBuilder {
    * @return The component given with parameter component.
    * @since 4.2.5
    */
-  public Component addRow(final String rowHeightCode, final Component component) {
+  public Component addRowFull(final String rowHeightCode, final Component component) {
     addRow(rowHeightCode, true);
     return add(component, CC.xyw(1, getRowCount(), getColumnCount()));
   }
@@ -498,7 +498,7 @@ public class EnhancedPanelBuilder extends PanelBuilder {
    * @return The component given with parameter component.
    * @since 4.2.5
    */
-  public Component addRow(final String rowHeightCode, final boolean withGap, final Component component) {
+  public Component addRowFull(final String rowHeightCode, final boolean withGap, final Component component) {
     addRow(rowHeightCode, withGap);
     return add(component, CC.xyw(1, getRowCount(), getColumnCount()));
   }
@@ -613,7 +613,7 @@ public class EnhancedPanelBuilder extends PanelBuilder {
    * @return The component given with parameter component.
    * @since 4.2.5
    */
-  public Component addGrowingRow(final boolean withGap, final Component component) {
+  public Component addGrowingRowFull(final boolean withGap, final Component component) {
     addGrowingRow(withGap);
     return add(component, CC.xyw(1, getRowCount(), getColumnCount()));
   }
@@ -780,7 +780,7 @@ public class EnhancedPanelBuilder extends PanelBuilder {
    * @return A separator with the parameter text..
    * @since 4.2.5
    */
-  public JComponent addSeparatorRow(final String rowHeightCode, final String textWithMnemonic) {
+  public JComponent addSeparatorRowFull(final String rowHeightCode, final String textWithMnemonic) {
     addRow(rowHeightCode, true);
     return addSeparator(textWithMnemonic, CC.xyw(1, getRowCount(), getColumnCount()));
   }
@@ -838,7 +838,7 @@ public class EnhancedPanelBuilder extends PanelBuilder {
    * @return A separator with the parameter text..
    * @since 4.2.5
    */
-  public JComponent addSeparatorRow(final String rowHeightCode, final boolean withGap, final String textWithMnemonic) {
+  public JComponent addSeparatorRowFull(final String rowHeightCode, final boolean withGap, final String textWithMnemonic) {
     addRow(rowHeightCode, withGap);
     return addSeparator(textWithMnemonic, CC.xyw(1, getRowCount(), getColumnCount()));
   }
@@ -951,7 +951,7 @@ public class EnhancedPanelBuilder extends PanelBuilder {
    * @return A label with the given parameter text.
    * @since 4.2.5
    */
-  public JLabel addLabelRow(final boolean withGap, final String textWithMnemonic) {
+  public JLabel addLabelRowFull(final boolean withGap, final String textWithMnemonic) {
     addRow(withGap);
     return addLabel(textWithMnemonic, CC.xyw(1, getRowCount(), getColumnCount()));
   }
@@ -1065,7 +1065,7 @@ public class EnhancedPanelBuilder extends PanelBuilder {
    * @return A label with the given parameter text.
    * @since 4.2.5
    */
-  public JLabel addLabelRow(final String rowHeightCode, final boolean withGap, final String textWithMnemonic) {
+  public JLabel addLabelRowFull(final String rowHeightCode, final boolean withGap, final String textWithMnemonic) {
     addRow(rowHeightCode, withGap);
     return addLabel(textWithMnemonic, CC.xyw(1, getRowCount(), getColumnCount()));
   }
