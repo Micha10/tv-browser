@@ -57,7 +57,6 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.PlainDocument;
 
 import com.jgoodies.forms.builder.ButtonBarBuilder;
-import com.jgoodies.forms.builder.PanelBuilder;
 import com.jgoodies.forms.factories.Borders;
 import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
@@ -88,6 +87,7 @@ import tvbrowser.core.filters.filtercomponents.TimeFilterComponent;
 import tvbrowser.core.plugin.PluginManagerImpl;
 import tvbrowser.extras.favoritesplugin.core.FilterComponentNewFavoritePrograms;
 import util.i18n.Localizer;
+import util.ui.EnhancedPanelBuilder;
 import util.ui.UiUtilities;
 import util.ui.WindowClosingIf;
 
@@ -169,21 +169,6 @@ public class EditFilterComponentDlg extends JDialog implements ActionListener, D
     JScrollPane scrollPane = new JScrollPane(mCenterPanel);
     scrollPane.setBorder(BorderFactory.createEmptyBorder());
     scrollPane.setViewportBorder(BorderFactory.createEmptyBorder());
-    
-    PanelBuilder pb = new PanelBuilder(new FormLayout("5dlu,default,5dlu,default:grow,5dlu,",
-        "default,5dlu,default,2dlu,default,2dlu,default,10dlu,default,5dlu,fill:min:grow,5dlu,default,5dlu,default"),mContentPane);
-    pb.border(Borders.DIALOG);
-    
-    pb.addSeparator(LOCALIZER.msg("component", "Component"), CC.xyw(1,1,5));
-    pb.addLabel(LOCALIZER.msg("name","Name:"), CC.xy(2,3));
-    pb.add(mNameTF, CC.xy(4,3));
-    pb.addLabel(LOCALIZER.msg("description", "Description:"), CC.xy(2,5));
-    pb.add(mDescTF, CC.xy(4,5));
-    pb.addLabel(LOCALIZER.msg("type", "Type:"), CC.xy(2,7));
-    pb.add(mRuleCb, CC.xy(4,7));
-    pb.addSeparator(LOCALIZER.msg("componentSettings", "Component settings:"), CC.xyw(1,9,5));
-    pb.add(scrollPane, CC.xyw(2,11,3));
-    pb.add(new JSeparator(JSeparator.HORIZONTAL), CC.xyw(1,13,5));
 
     // The TreeSet sorts the Entries
     TreeSet<FilterComponent> set = new TreeSet<FilterComponent>(new FilterComponent.TypeComparator());
@@ -281,7 +266,20 @@ public class EditFilterComponentDlg extends JDialog implements ActionListener, D
       mRuleCb.setSelectedIndex(1);
     }
 
-    pb.add(bottomBar.getPanel(), CC.xyw(1,15,5));
+    EnhancedPanelBuilder pb = new EnhancedPanelBuilder(new FormLayout("5dlu,default,5dlu,default:grow,5dlu"),mContentPane);
+    pb.border(Borders.DIALOG);
+    
+    pb.addSeparatorRowFull(false, LOCALIZER.msg("component", "Component"));
+    pb.addLabelRow(LOCALIZER.msg("name","Name:"), 2);
+    pb.add(mNameTF, 4);
+    pb.addLabelRow("2dlu,default", LOCALIZER.msg("description", "Description:"), 2);
+    pb.add(mDescTF, 4);
+    pb.addLabelRow("2dlu,default", LOCALIZER.msg("type", "Type:"), 2);
+    pb.add(mRuleCb, 4);
+    pb.addParagraph(LOCALIZER.msg("componentSettings", "Component settings:"));
+    pb.addGrowingRow(scrollPane, 2, 3);
+    pb.addRowFull(new JSeparator(JSeparator.HORIZONTAL));
+    pb.addRowFull(bottomBar.getPanel());
     
     updateOkBtn();
     

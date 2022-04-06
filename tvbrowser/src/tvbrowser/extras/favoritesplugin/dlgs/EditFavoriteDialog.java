@@ -46,7 +46,6 @@ import javax.swing.JScrollPane;
 import javax.swing.border.EmptyBorder;
 
 import com.jgoodies.forms.builder.ButtonBarBuilder;
-import com.jgoodies.forms.builder.PanelBuilder;
 import com.jgoodies.forms.factories.Borders;
 import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.CellConstraints;
@@ -350,21 +349,19 @@ public class EditFavoriteDialog extends JDialog implements WindowClosingIf {
       }
     });
 
-    CellConstraints cc = new CellConstraints();
-
     JPanel limitPn = new JPanel(new BorderLayout());
     JPanel pn = new JPanel(new FormLayout("pref, 3dlu, pref", "pref"));
-    pn.add(mTimePeriodChooser, cc.xy(1,1));
-    pn.add(mLimitDaysCB, cc.xy(3,1));
+    pn.add(mTimePeriodChooser, CC.xy(1,1));
+    pn.add(mLimitDaysCB, CC.xy(3,1));
     limitPn.add(pn, BorderLayout.EAST);
 
-    PanelBuilder panelBuilder = new PanelBuilder(new FormLayout("pref, pref:grow, pref", "pref, 5dlu, pref"));
+    EnhancedPanelBuilder panelBuilder = new EnhancedPanelBuilder(new FormLayout("pref, pref:grow, pref"));
 
-    panelBuilder.add(mLimitChannelCb, cc.xy(1, 1));
-    panelBuilder.add(mChannelLabel, cc.xy(2, 1));
-    panelBuilder.add(mChangeChannelsBtn, cc.xy(3, 1));
-    panelBuilder.add(mLimitTimeCb, cc.xy(1, 3));
-    panelBuilder.add(limitPn, cc.xyw(2, 3, 2));
+    panelBuilder.addRow(false, mLimitChannelCb, 1);
+    panelBuilder.add(mChannelLabel, 2);
+    panelBuilder.add(mChangeChannelsBtn, 3);
+    panelBuilder.addRow(mLimitTimeCb, 1);
+    panelBuilder.addFull(limitPn, 2);
 
     return panelBuilder.getPanel();
   }

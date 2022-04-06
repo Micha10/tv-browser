@@ -104,7 +104,7 @@ public class MultiChannelConfigDlg extends JDialog implements ActionListener, Wi
     
     // background color
     
-    mUseUserBackground = new JCheckBox(ChannelConfigDlg.mLocalizer.msg("backgroundColorUse", "User defined background color"), false);
+    mUseUserBackground = new JCheckBox(ChannelConfigDlg.LOCALIZER.msg("backgroundColorUse", "User defined background color"), false);
     mSelectBackgroundColor = new ColorButton(Color.white);
     mSelectBackgroundColor.setEnabled(mUseUserBackground.isSelected());
     

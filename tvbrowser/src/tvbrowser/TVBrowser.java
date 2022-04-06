@@ -779,10 +779,14 @@ public class TVBrowser {
         if (currentVersion != null
             && currentVersion.compareTo(new Version(2, 22)) < 0) {
           TvBrowserPictureSettingsUpdateDialog.createAndShow(mainFrame);
-        } else if (currentVersion != null
+        } 
+        
+        if (currentVersion != null
             && currentVersion.compareTo(new Version(2, 51, true)) < 0) {
           Settings.Data.ACCEPTED_LICENSES.setStringArray(new String[0]);
-        } else if(currentVersion != null && currentVersion.compareTo(new Version(4, 21, 96, false)) < 0) {
+        } 
+        
+        if(currentVersion != null && currentVersion.compareTo(new Version(4, 21, 96, false)) < 0) {
           final String refresh = GeneralSettingsTab.LOCALIZER.msg("titleRefresh", "Refresh");
           
           JCheckBox gradient = new JCheckBox(ProgramPanelSettingsTab.LOCALIZER.msg("color.programGradientHighlighting",

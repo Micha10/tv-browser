@@ -12,9 +12,7 @@ import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.event.HyperlinkEvent;
 
-import com.jgoodies.forms.builder.PanelBuilder;
 import com.jgoodies.forms.factories.Borders;
-import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
 
 import devplugin.SettingsItem;
@@ -22,6 +20,7 @@ import devplugin.SettingsTab;
 import tvbrowser.core.Settings;
 import util.i18n.Localizer;
 import util.ui.DefaultMarkingPrioritySelectionPanel;
+import util.ui.EnhancedPanelBuilder;
 import util.ui.MarkPriorityComboBoxRenderer;
 import util.ui.UiUtilities;
 
@@ -56,9 +55,7 @@ public class TrayImportantSettingsTab implements SettingsTab {
   public JPanel createSettingsPanel() {
     mInstance = this;
     
-    PanelBuilder builder = new PanelBuilder(new FormLayout("5dlu,12dlu,pref,5dlu,pref,5dlu,pref:grow,5dlu",
-        "pref,5dlu,pref,pref,pref,pref,pref,10dlu,pref,5dlu,pref," +
-        "pref,pref,5dlu,pref,10dlu,pref,5dlu,pref,pref,pref,fill:pref:grow,pref"));
+    EnhancedPanelBuilder builder = new EnhancedPanelBuilder(new FormLayout("5dlu,12dlu,pref,5dlu,pref,5dlu,pref:grow,5dlu"));
     builder.border(Borders.DIALOG);
     
     mIsEnabled = new JCheckBox(LOCALIZER.msg("importantEnabled","Show important programs"),Settings.Tray.Important.ENABLED.getBoolean());
@@ -98,7 +95,7 @@ public class TrayImportantSettingsTab implements SettingsTab {
       }
     });
     
-    JPanel priority = new JPanel(new FormLayout("pref,5dlu,pref","1dlu,pref"));
+    EnhancedPanelBuilder priority = new EnhancedPanelBuilder(new FormLayout("default,5dlu,default","1dlu,default"));
     
     String[] colors = DefaultMarkingPrioritySelectionPanel.getMarkingColorNames(false);
     
@@ -108,30 +105,30 @@ public class TrayImportantSettingsTab implements SettingsTab {
     mPriority.setSelectedIndex(Settings.Tray.Important.PRIORITY.getInt());
     mPriority.setRenderer(new MarkPriorityComboBoxRenderer(mPriority.getRenderer()));
 
-    priority.add(mPriorityText, CC.xy(1,2));
-    priority.add(mPriority, CC.xy(3,2));
+    priority.add(mPriorityText, 1);
+    priority.add(mPriority, 3);
+  
+    JPanel c = (JPanel) builder.addSeparatorRowFull(false, LOCALIZER.msg("important","Important programs"));
+    builder.addRow(mIsEnabled, 2, 6);
+    builder.addRow(false, mShowInTray, 3, 5);
+    builder.addRow(false, mShowInSubMenu, 3, 5);
+    mSizeLabel = builder.addLabelRow(false, LOCALIZER.msg("importantSize","Number of shown programs:"), 3);
+    builder.add(mSize, 5);
+    mSizeInfo = builder.labelAdd(LOCALIZER.msg("sizeInfo","(maximum: {0})",maxSizeValue), 7);
+    builder.addRow(false, priority.getPanel(), 3, 5);
     
-    JPanel c = (JPanel) builder.addSeparator(LOCALIZER.msg("important","Important programs"), CC.xyw(1,1,8));
-    builder.add(mIsEnabled, CC.xyw(2,3,6));
-    builder.add(mShowInTray, CC.xyw(3,4,5));
-    builder.add(mShowInSubMenu, CC.xyw(3,5,5));
-    mSizeLabel = builder.addLabel(LOCALIZER.msg("importantSize","Number of shown programs:"), CC.xy(3,6));
-    builder.add(mSize, CC.xy(5,6));
-    mSizeInfo = builder.addLabel(LOCALIZER.msg("sizeInfo","(maximum: {0})",maxSizeValue), CC.xy(7,6));
-    builder.add(priority, CC.xyw(3,7,5));
+    JPanel c1 = (JPanel) builder.addParagraph(LOCALIZER.msg("iconNameSeparator","Channel icons/channel name"));
+    builder.addRow(mShowIconAndName, 2, 6);
+    builder.addRow(false, mShowIcon, 2, 6);
+    builder.addRow(false, mShowName, 2, 6);
     
-    JPanel c1 = (JPanel) builder.addSeparator(LOCALIZER.msg("iconNameSeparator","Channel icons/channel name"), CC.xyw(1,9,8));
-    builder.add(mShowIconAndName, CC.xyw(2,11,6));
-    builder.add(mShowIcon, CC.xyw(2,12,6));
-    builder.add(mShowName, CC.xyw(2,13,6));
+    builder.addRow(mShowSortNumber, 2, 6);
     
-    builder.add(mShowSortNumber, CC.xyw(2,15,6));
-    
-    JPanel c2 = (JPanel) builder.addSeparator(LOCALIZER.msg("settings","Settings"), CC.xyw(1,17,8));
-    builder.add(mShowDate, CC.xyw(2,19,6));
-    builder.add(mShowTime, CC.xyw(2,20,6));
-    builder.add(mShowToolTip, CC.xyw(2,21,6));
-    builder.add(mHelpLabel, CC.xyw(1,23,8));
+    JPanel c2 = (JPanel) builder.addParagraph(LOCALIZER.msg("settings","Settings"));
+    builder.addRow(mShowDate, 2, 6);
+    builder.addRow(false, mShowTime, 2, 6);
+    builder.addRow(false, mShowToolTip, 2, 6);
+    builder.addRowFull("fill:pref:grow", mHelpLabel);
     
     mSeparator1 = (JLabel)c.getComponent(0);
     mIconSeparator = (JLabel)c1.getComponent(0);

@@ -34,22 +34,20 @@ import javax.swing.JPanel;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingUtilities;
 
-import tvbrowser.core.plugin.programformating.GlobalPluginProgramFormating;
-import tvbrowser.core.plugin.programformating.GlobalPluginProgramFormatingManager;
-import tvbrowser.ui.mainframe.MainFrame;
-import util.program.AbstractPluginProgramFormating;
-import util.ui.LocalPluginProgramFormatingSettingsDialog;
-import util.i18n.Localizer;
-import util.ui.TVBrowserIcons;
-import util.ui.UiUtilities;
-import util.ui.customizableitems.SortableItemList;
-
-import com.jgoodies.forms.builder.PanelBuilder;
 import com.jgoodies.forms.factories.Borders;
-import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 
 import devplugin.SettingsTab;
+import tvbrowser.core.plugin.programformating.GlobalPluginProgramFormating;
+import tvbrowser.core.plugin.programformating.GlobalPluginProgramFormatingManager;
+import tvbrowser.ui.mainframe.MainFrame;
+import util.i18n.Localizer;
+import util.program.AbstractPluginProgramFormating;
+import util.ui.EnhancedPanelBuilder;
+import util.ui.LocalPluginProgramFormatingSettingsDialog;
+import util.ui.TVBrowserIcons;
+import util.ui.UiUtilities;
+import util.ui.customizableitems.SortableItemList;
 
 /**
  * The settings for the global program configurations.
@@ -65,10 +63,9 @@ public class GlobalPluginProgramFormatingSettings implements SettingsTab, Action
 
   public JPanel createSettingsPanel() {
     try {
-      CellConstraints cc = new CellConstraints();
-      PanelBuilder pb = new PanelBuilder(new FormLayout("5dlu,default:grow,5dlu","pref,5dlu,fill:default:grow,5dlu,pref,10dlu,pref"));
+      EnhancedPanelBuilder pb = new EnhancedPanelBuilder(new FormLayout("5dlu,default:grow,5dlu"));
       pb.border(Borders.DIALOG);
-
+      
       mConfigurations = new SortableItemList<>("",GlobalPluginProgramFormatingManager.getInstance().getAvailableGlobalPluginProgramFormatings());
       mConfigurations.getList().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
@@ -80,15 +77,13 @@ public class GlobalPluginProgramFormatingSettings implements SettingsTab, Action
           }
         }
       });
+      
+      pb.addSeparatorRowFull(false, LOCALIZER.msg("title","Plugin program formating"));
+      pb.addGrowingRow(mConfigurations, 2);
 
-      pb.addSeparator(LOCALIZER.msg("title","Plugin program formating"), cc.xyw(1,1,3));
-      pb.add(mConfigurations, cc.xy(2,3));
-
-      FormLayout layout = new FormLayout("default,5dlu,default,5dlu,default","pref");
-      layout.setColumnGroups(new int[][] {{1,3,5}});
-
-      JPanel buttonPanel = new JPanel(layout);
-
+      EnhancedPanelBuilder buttonPanel = new EnhancedPanelBuilder(new FormLayout("default,5dlu,default,5dlu,default","default"));
+      buttonPanel.getLayout().setColumnGroups(new int[][] {{1,3,5}});
+      
       mAdd = new JButton(Localizer.getLocalization(Localizer.I18N_ADD));
       mAdd.setIcon(TVBrowserIcons.newIcon(TVBrowserIcons.SIZE_SMALL));
       mAdd.addActionListener(this);
@@ -103,12 +98,12 @@ public class GlobalPluginProgramFormatingSettings implements SettingsTab, Action
       mDelete.setEnabled(false);
       mDelete.addActionListener(this);
 
-      buttonPanel.add(mAdd, cc.xy(1,1));
-      buttonPanel.add(mEdit, cc.xy(3,1));
-      buttonPanel.add(mDelete, cc.xy(5,1));
-
-      pb.add(buttonPanel, cc.xy(2,5));
-      pb.addLabel(LOCALIZER.msg("help","<html>This list of formating can be used by several plugins. So a formating don't have to be entered in every plugin that should use the formating. The selection of the formating can be done in the settings of the plugin.</html>"), cc.xy(2,7));
+      buttonPanel.add(mAdd, 1);
+      buttonPanel.add(mEdit, 3);
+      buttonPanel.add(mDelete, 5);
+      
+      pb.addRow(buttonPanel.getPanel(), 2);
+      pb.addLabelRow("10dlu,pref", LOCALIZER.msg("help","<html>This list of formating can be used by several plugins. So a formating don't have to be entered in every plugin that should use the formating. The selection of the formating can be done in the settings of the plugin.</html>"), 2);
 
       mConfigurations.getList().addListSelectionListener(e -> {
         if(!e.getValueIsAdjusting()) {

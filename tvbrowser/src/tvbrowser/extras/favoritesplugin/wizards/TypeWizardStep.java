@@ -34,7 +34,6 @@ import java.awt.event.FocusEvent;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JComboBox;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
@@ -42,9 +41,7 @@ import javax.swing.JTextField;
 
 import org.apache.commons.lang3.StringUtils;
 
-import com.jgoodies.forms.builder.PanelBuilder;
 import com.jgoodies.forms.factories.Borders;
-import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 
 import devplugin.Program;
@@ -59,12 +56,13 @@ import tvbrowser.extras.favoritesplugin.dlgs.FavoriteNode;
 import tvbrowser.extras.favoritesplugin.dlgs.FavoriteTreeModel;
 import tvbrowser.ui.mainframe.MainFrame;
 import util.program.ProgramUtilities;
+import util.ui.EnhancedPanelBuilder;
 import util.ui.LinkButton;
 import util.ui.UiUtilities;
 
 public class TypeWizardStep extends AbstractWizardStep {
 
-  private static final util.i18n.Localizer mLocalizer = util.i18n.Localizer
+  private static final util.i18n.Localizer LOCALIZER = util.i18n.Localizer
       .getLocalizerFor(TypeWizardStep.class);
 
   private JTextField mProgramNameTf;
@@ -112,41 +110,38 @@ public class TypeWizardStep extends AbstractWizardStep {
     mProgram = program;
 
     if (mProgram == null) {
-      mMainQuestion = mLocalizer.msg("mainQuestion.create",
+      mMainQuestion = LOCALIZER.msg("mainQuestion.create",
           "Choose the condition that your favorite program needs to match:");
     } else {
-      mMainQuestion = mLocalizer.msg("mainQuestion.edit",
+      mMainQuestion = LOCALIZER.msg("mainQuestion.edit",
           "Why is this program a favorite of yours?");
     }
   }
 
   public String getTitle() {
-    return mLocalizer.msg("title", "Create new Favorite");
+    return LOCALIZER.msg("title", "Create new Favorite");
   }
 
   public JPanel createContent(final WizardHandler handler) {
 
-    LinkButton expertBtn = new LinkButton(mLocalizer.msg("advancedView", "Switch to expert view"), null);
-    LinkButton filterBtn = new LinkButton(mLocalizer.msg("filterFavorite", "Create filter favorite"), null);
+    LinkButton expertBtn = new LinkButton(LOCALIZER.msg("advancedView", "Switch to expert view"), null);
+    LinkButton filterBtn = new LinkButton(LOCALIZER.msg("filterFavorite", "Create filter favorite"), null);
 
-    CellConstraints cc = new CellConstraints();
-    PanelBuilder panelBuilder = new PanelBuilder(new FormLayout("5dlu, pref, default:grow",
-        "pref, 5dlu, pref, 5dlu, pref, 5dlu, pref, 5dlu, pref, 5dlu, default"));
+    EnhancedPanelBuilder panelBuilder = new EnhancedPanelBuilder(new FormLayout("5dlu, pref, default:grow"));
 
-    panelBuilder.add(new JLabel(mMainQuestion), cc.xyw(1, 1, 3));
-    panelBuilder
-        .add(mTitleRb = new JRadioButton(mLocalizer.msg("option.title", "I like this program:")), cc.xy(2, 3));
-    panelBuilder.add(mProgramNameTf = new JTextField(), cc.xy(3, 3));
-    panelBuilder.add(mTopicRb = new JRadioButton(mLocalizer.msg("option.topic", "I like this subject:")), cc.xy(2, 5));
-    panelBuilder.add(mTopicTf = new JTextField(), cc.xy(3, 5));
+    panelBuilder.addLabelRowFull(false, mMainQuestion);
+    panelBuilder.addRow(mTitleRb = new JRadioButton(LOCALIZER.msg("option.title", "I like this program:")), 2);
+    panelBuilder.add(mProgramNameTf = new JTextField(), 3);
+    panelBuilder.addRow(mTopicRb = new JRadioButton(LOCALIZER.msg("option.topic", "I like this subject:")), 2);
+    panelBuilder.add(mTopicTf = new JTextField(), 3);
 
-    panelBuilder.add(mActorsRb = new JRadioButton(mLocalizer.msg("option.actors","I like these actors:")), cc.xy(2,7));
+    panelBuilder.addRow(mActorsRb = new JRadioButton(LOCALIZER.msg("option.actors","I like these actors:")), 2);
     mActorsCb = new JComboBox<>();
     mActorsCb.setEditable(true);
-    panelBuilder.add(mActorsCb, cc.xy(3,7));
+    panelBuilder.add(mActorsCb, 3);
     panelBuilder.border(Borders.DLU4);
-    panelBuilder.add(expertBtn, cc.xyw(1, 9, 3));
-    panelBuilder.add(filterBtn, cc.xyw(1, 11, 3));
+    panelBuilder.addRowFull(expertBtn);
+    panelBuilder.addRowFull(filterBtn);
     
     ButtonGroup group = new ButtonGroup();
     group.add(mTitleRb);
@@ -308,8 +303,8 @@ public class TypeWizardStep extends AbstractWizardStep {
         return true;
       }
       JOptionPane.showMessageDialog(mContent,
-          mLocalizer.msg("warningTitleMessage", "Enter Title!"),
-          mLocalizer.msg("warningTitleTitle", "Enter Title"),
+          LOCALIZER.msg("warningTitleMessage", "Enter Title!"),
+          LOCALIZER.msg("warningTitleTitle", "Enter Title"),
           JOptionPane.WARNING_MESSAGE);
       mProgramNameTf.requestFocusInWindow();
     } else if (mTopicRb.isSelected()) {
@@ -318,8 +313,8 @@ public class TypeWizardStep extends AbstractWizardStep {
         return true;
       }
       JOptionPane.showMessageDialog(mContent,
-          mLocalizer.msg("warningTopicMessage", "Enter Topic!"),
-          mLocalizer.msg("warningTopicTitle", "Enter Topic"),
+          LOCALIZER.msg("warningTopicMessage", "Enter Topic!"),
+          LOCALIZER.msg("warningTopicTitle", "Enter Topic"),
           JOptionPane.WARNING_MESSAGE);
       mTopicTf.requestFocusInWindow();
     } else if (mActorsRb.isSelected()) {
@@ -328,8 +323,8 @@ public class TypeWizardStep extends AbstractWizardStep {
         return true;
       }
       JOptionPane.showMessageDialog(mContent,
-          mLocalizer.msg("warningActorsMessage", "Enter Actors!"),
-          mLocalizer.msg("warningActorsTitle", "Enter Actors"),
+          LOCALIZER.msg("warningActorsMessage", "Enter Actors!"),
+          LOCALIZER.msg("warningActorsTitle", "Enter Actors"),
           JOptionPane.WARNING_MESSAGE);
       mActorsCb.requestFocusInWindow();
     }

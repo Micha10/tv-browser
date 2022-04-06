@@ -28,6 +28,7 @@ import javax.swing.JPanel;
 import javax.swing.event.HyperlinkEvent;
 
 import com.jgoodies.forms.factories.Borders;
+import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.Sizes;
 
@@ -156,10 +157,15 @@ public final class DefaultMarkingPrioritySelectionPanel extends JPanel {
    */
   private DefaultMarkingPrioritySelectionPanel(final State[] states, final int[] priority, final String[] label, final boolean showTitle, final boolean showHelpLabel, final boolean withDefaultDialogBorder, final boolean growingGap, final boolean showNoMarkingPriority) {
     try {
-    FormLayout layout = new FormLayout(growingGap ? "5dlu,default,5dlu:grow,default,0dlu" : "5dlu,default,5dlu,default,0dlu:grow");
+    EnhancedPanelBuilder pb = new EnhancedPanelBuilder(new FormLayout("5dlu,default,default,0dlu:grow"),this);
     
-    EnhancedPanelBuilder pb = new EnhancedPanelBuilder(layout,this);
-
+    if(growingGap) {
+      pb.getLayout().insertColumn(3, ColumnSpec.decode("5dlu:grow"));
+    }
+    else {
+      pb.getLayout().insertColumn(3, ColumnSpec.decode("5dlu"));
+    }
+    
     //how many selectors do we have to draw?
     int choosersToDraw = Math.min(priority.length, label.length);
 

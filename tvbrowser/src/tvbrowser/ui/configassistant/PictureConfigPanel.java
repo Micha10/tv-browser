@@ -22,16 +22,15 @@ import javax.swing.ButtonGroup;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 
+import com.jgoodies.forms.layout.FormLayout;
+
 import tvbrowser.core.tvdataservice.TvDataServiceProxy;
 import tvbrowser.core.tvdataservice.TvDataServiceProxyManager;
 import tvdataservice.PictureSettingsIf;
 import tvdataservice.SettingsPanel;
 import util.i18n.Localizer;
+import util.ui.EnhancedPanelBuilder;
 import util.ui.UiUtilities;
-
-import com.jgoodies.forms.builder.PanelBuilder;
-import com.jgoodies.forms.layout.CellConstraints;
-import com.jgoodies.forms.layout.FormLayout;
 
 /**
  * A panel with the settings for the picture
@@ -54,10 +53,8 @@ public class PictureConfigPanel extends JPanel {
    * @param update If this panel is for an update of TV-Browser.
    */
   public PictureConfigPanel(boolean update) {
-    CellConstraints cc = new CellConstraints();
-    PanelBuilder pb = new PanelBuilder(new FormLayout(
-        "fill:pref:grow, 10dlu, fill:300dlu:grow, fill:pref:grow",
-        "fill:0dlu:grow, pref, 15dlu, pref, pref, pref, pref, 15dlu, pref, fill:0dlu:grow"), this);
+    EnhancedPanelBuilder pb = new EnhancedPanelBuilder(new FormLayout(
+        "fill:pref:grow, 10dlu, fill:300dlu:grow, fill:pref:grow","15dlu"), this);
     
     mDownloadAll = new JRadioButton(mLocalizer.msg("allPictures","Download pictures for all programs"));
     mDownloadNoPictures = new JRadioButton(mLocalizer.msg("noPictures","Don't download pictures"));
@@ -65,15 +62,15 @@ public class PictureConfigPanel extends JPanel {
         "Download only pictures for the evening programs (4 PM to midnight)"));
     mDownloadMorning = new JRadioButton(mLocalizer.msg("morningPictures",
         "Download only pictures for the day programs (midnight to 4 PM)"));
-
-    pb.add(UiUtilities.createHtmlHelpTextArea((update ? mLocalizer.msg("preambelUpdate", "Preambel") : "") + mLocalizer.msg("preambel", "Preambel")), cc.xyw(2,2,2));
     
-    pb.add(mDownloadAll, cc.xy(3,4));
-    pb.add(mDownloadNoPictures, cc.xy(3,5));
-    pb.add(mDownloadEvening, cc.xy(3,6));
-    pb.add(mDownloadMorning, cc.xy(3,7));
+    pb.addRow("fill:0dlu:grow, default", UiUtilities.createHtmlHelpTextArea((update ? mLocalizer.msg("preambelUpdate", "Preambel") : "") + mLocalizer.msg("preambel", "Preambel")), 2, 2);
+    pb.addRow(mDownloadAll, 3);
+    pb.addRow(false, mDownloadNoPictures, 3);
+    pb.addRow(false, mDownloadEvening, 3);
+    pb.addRow(false, mDownloadMorning, 3);
     
-    pb.add(UiUtilities.createHtmlHelpTextArea(mLocalizer.msg(update ? "closingUpdate" : "closing", "Closing")), cc.xyw(2,9,2));
+    pb.addRow(UiUtilities.createHtmlHelpTextArea(mLocalizer.msg(update ? "closingUpdate" : "closing", "Closing")), 2, 2);
+    pb.addRow("fill:0dlu:grow",false);
     
     ButtonGroup bg = new ButtonGroup();
     

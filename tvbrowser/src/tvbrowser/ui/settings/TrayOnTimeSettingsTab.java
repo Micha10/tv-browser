@@ -9,9 +9,7 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.event.HyperlinkEvent;
 
-import com.jgoodies.forms.builder.PanelBuilder;
 import com.jgoodies.forms.factories.Borders;
-import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
 
 import devplugin.SettingsItem;
@@ -20,6 +18,7 @@ import tvbrowser.core.Settings;
 import tvbrowser.ui.settings.util.ColorButton;
 import tvbrowser.ui.settings.util.ColorLabel;
 import util.i18n.Localizer;
+import util.ui.EnhancedPanelBuilder;
 import util.ui.UiUtilities;
 
 /**
@@ -49,9 +48,8 @@ public class TrayOnTimeSettingsTab implements SettingsTab {
   public JPanel createSettingsPanel() {
     mInstance = this;
     
-    PanelBuilder builder = new PanelBuilder(new FormLayout("5dlu,12dlu,pref:grow,5dlu",
-        "pref,5dlu,pref,pref,pref,5dlu,pref,10dlu,pref,5dlu,pref,pref,pref,5dlu,pref," +
-        "10dlu,pref,5dlu,pref,pref,pref,3dlu,pref,5dlu,pref,fill:pref:grow,pref"));
+    EnhancedPanelBuilder builder = new EnhancedPanelBuilder(new FormLayout("5dlu,12dlu,pref:grow,5dlu"));
+    
     builder.border(Borders.DIALOG);
     
     mIsEnabled = new JCheckBox(LOCALIZER.msg("onTimeEnabled","Show programs at..."),Settings.Tray.OnTime.ENABLED.getBoolean());
@@ -102,41 +100,36 @@ public class TrayOnTimeSettingsTab implements SettingsTab {
     mLight = new ColorButton(mLightColorLb);
     mDark = new ColorButton(mDarkColorLb);
     
-    PanelBuilder colors = new PanelBuilder(new FormLayout(
-        "default,5dlu,default,5dlu,default", "pref,2dlu,pref"));
+    EnhancedPanelBuilder colors = new EnhancedPanelBuilder(new FormLayout("default,5dlu,default,5dlu,default"),"2dlu");
     
-    mDarkLabel = colors.addLabel(
-        LOCALIZER.msg("progressLight",
-            "Background color of the programs at..."), CC.xy(1, 1));
-    colors.add(mLightColorLb, CC.xy(3, 1));
-    colors.add(mLight,CC.xy(5, 1));
+    mDarkLabel = colors.addLabelRow(false,LOCALIZER.msg("progressLight","Background color of the programs at..."), 1);
+    colors.add(mLightColorLb, 3);
+    colors.add(mLight, 5);
 
-    mLightLabel = colors.addLabel(
-        LOCALIZER.msg("progressDark",
-            "Progress color of the programs at..."), CC.xy(1, 3));
-    colors.add(mDarkColorLb, CC.xy(3, 3));
-    colors.add(mDark,CC.xy(5, 3));
-        
-    JPanel c = (JPanel) builder.addSeparator(LOCALIZER.msg("onTime","Programs at..."), CC.xyw(1,1,4));
-    builder.add(mIsEnabled, CC.xyw(2,3,2));
-    builder.add(mShowInTray, CC.xy(3,4));
-    builder.add(mShowInSubMenu, CC.xy(3,5));
-    builder.add(mTimeHelp, CC.xyw(2,7,2));
-
-    JPanel c1 = (JPanel) builder.addSeparator(LOCALIZER.msg("iconNameSeparator","Channel icons/channel name"), CC.xyw(1,9,4));
-    builder.add(mShowIconAndName, CC.xyw(2,11,2));
-    builder.add(mShowIcon, CC.xyw(2,12,2));
-    builder.add(mShowName, CC.xyw(2,13,2));
+    mLightLabel = colors.addLabelRow(LOCALIZER.msg("progressDark","Progress color of the programs at..."), 1);
+    colors.add(mDarkColorLb, 3);
+    colors.add(mDark, 5);
     
-    builder.add(mShowSortNumber, CC.xyw(2,15,2));
+    JPanel c = (JPanel) builder.addSeparatorRowFull(false, LOCALIZER.msg("onTime","Programs at..."));
+    builder.addRow(mIsEnabled, 2, 2);
+    builder.addRow(false, mShowInTray, 3);
+    builder.addRow(false, mShowInSubMenu, 3);
+    builder.addRow(mTimeHelp, 2, 2);
     
-    JPanel c2 = (JPanel) builder.addSeparator(LOCALIZER.msg("settings","Settings"), CC.xyw(1,17,4));
-    builder.add(mShowTime, CC.xyw(2,19,2));
-    builder.add(mShowToolTip, CC.xyw(2,20,2));
-    builder.add(mShowProgress, CC.xyw(2,21,2));
-    builder.add(colors.getPanel(), CC.xy(3,23));
-    builder.add(mInfo, CC.xyw(2,25,2));
-    builder.add(mHelpLabel, CC.xyw(1,27,4));
+    JPanel c1 = (JPanel) builder.addParagraph(LOCALIZER.msg("iconNameSeparator","Channel icons/channel name"));
+    builder.addRow(mShowIconAndName, 2, 2);
+    builder.addRow(false, mShowIcon, 2, 2);
+    builder.addRow(false, mShowName, 2, 2);
+    
+    builder.addRow(mShowSortNumber, 2, 2);
+    
+    JPanel c2 = (JPanel) builder.addParagraph(LOCALIZER.msg("settings","Settings"));
+    builder.addRow(mShowTime, 2, 2);
+    builder.addRow(false, mShowToolTip, 2, 2);
+    builder.addRow(false, mShowProgress, 2, 2);
+    builder.addRow("3dlu,default", colors.getPanel(), 3);
+    builder.addRow(mInfo, 2, 2);
+    builder.addRowFull("fill:pref:grow,default", mHelpLabel);
     
     mSeparator1 = (JLabel)c.getComponent(0);
     mIconSeparator = (JLabel)c1.getComponent(0);

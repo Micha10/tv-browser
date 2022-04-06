@@ -30,23 +30,21 @@ import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 
 import javax.swing.JCheckBox;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import tvbrowser.extras.common.ReminderConfiguration;
-import tvbrowser.extras.favoritesplugin.FavoritesPlugin;
-import tvbrowser.extras.favoritesplugin.core.Favorite;
-
-import com.jgoodies.forms.builder.PanelBuilder;
 import com.jgoodies.forms.factories.Borders;
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 
 import devplugin.Program;
+import tvbrowser.extras.common.ReminderConfiguration;
+import tvbrowser.extras.favoritesplugin.FavoritesPlugin;
+import tvbrowser.extras.favoritesplugin.core.Favorite;
+import util.ui.EnhancedPanelBuilder;
 
 public class NotificationWizardStep extends AbstractWizardStep {
 
-  private static final util.i18n.Localizer mLocalizer
+  private static final util.i18n.Localizer LOCALIZER
     = util.i18n.Localizer.getLocalizerFor(NotificationWizardStep.class);
 
   private JCheckBox mReminderCb;
@@ -61,18 +59,17 @@ public class NotificationWizardStep extends AbstractWizardStep {
   }
 
   public String getTitle() {
-    return mLocalizer.msg("title","Notification");
+    return LOCALIZER.msg("title","Notification");
   }
 
   public JPanel createContent(WizardHandler handler) {
     CellConstraints cc = new CellConstraints();
-    PanelBuilder panelBuilder = new PanelBuilder(new FormLayout("pref",
-                    "pref, 5dlu, pref, 5dlu, pref, 5dlu, pref"));
+    EnhancedPanelBuilder panelBuilder = new EnhancedPanelBuilder(new FormLayout("default"));
 
     panelBuilder.border(Borders.DLU4);
-    panelBuilder.add(new JLabel(mLocalizer.msg("mainQuestion","Wollen Sie automatisch auf diese Sendung hingewiesen werden?")), cc.xy(1,1));
-    panelBuilder.add(mReminderCb = new JCheckBox(mLocalizer.msg("option.remind","Automatisch an diese Sendung erinnern.")), cc.xy(1,3));
-    panelBuilder.add(mCheckOnUpdateCb = new JCheckBox(mLocalizer.msg("option.checkAfterUpdate","Sofort alarmieren, wenn die Sendung nach einer Aktualisierung gefunden wird.")), cc.xy(1,5));
+    panelBuilder.addLabelRow(false, LOCALIZER.msg("mainQuestion","Wollen Sie automatisch auf diese Sendung hingewiesen werden?"), 1);
+    panelBuilder.addRow(mReminderCb = new JCheckBox(LOCALIZER.msg("option.remind","Automatisch an diese Sendung erinnern.")), 1);
+    panelBuilder.addRow(mCheckOnUpdateCb = new JCheckBox(LOCALIZER.msg("option.checkAfterUpdate","Sofort alarmieren, wenn die Sendung nach einer Aktualisierung gefunden wird.")), 1);
 
     mReminderCb.setSelected(FavoritesPlugin.getInstance().isAutoSelectingReminder());
     JPanel result = panelBuilder.getPanel();

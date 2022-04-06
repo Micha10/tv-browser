@@ -51,7 +51,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 
-import com.jgoodies.forms.builder.PanelBuilder;
 import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.Sizes;
@@ -62,6 +61,7 @@ import tvbrowser.core.DummyChannel;
 import tvbrowser.core.Settings;
 import tvbrowser.core.tvdataservice.TvDataServiceProxy;
 import util.i18n.Localizer;
+import util.ui.EnhancedPanelBuilder;
 import util.ui.UiUtilities;
 import util.ui.WindowClosingIf;
 
@@ -145,8 +145,8 @@ public class UpdateDlg extends JDialog implements ActionListener, WindowClosingI
     }
 
     // then time selection
-    final PanelBuilder panel1 = new PanelBuilder(new FormLayout("10dlu,default,5dlu:grow,5dlu","default,5dlu,default,default,5dlu,default"));
-    panel1.addSeparator(LOCALIZER.msg("period", "Update program for"), CC.xyw(1,1,4));
+    final EnhancedPanelBuilder panel1 = new EnhancedPanelBuilder(new FormLayout("10dlu,default,5dlu:grow,5dlu"));
+    panel1.addSeparatorRowFull(false, LOCALIZER.msg("period", "Update program for"));
     
     mManuelDownloadPeriodSelection = new JComboBox<>(PeriodItem.getPeriodItems());
     mSaveAsDefaultPeriod = new JCheckBox(LOCALIZER.msg("saveDefault", "Save as default"), Settings.Data.SAVE_DEFAULT_DATA_UPDATE_VALUES_DEFAULT.getBoolean());
@@ -154,9 +154,9 @@ public class UpdateDlg extends JDialog implements ActionListener, WindowClosingI
     mHideForSession = new JCheckBox(LOCALIZER.msg("hideForSession", "Don't ask again in this session."));
     mHideForSession.addActionListener(this);
     
-    panel1.add(mManuelDownloadPeriodSelection, CC.xyw(2,3,2));
-    panel1.add(mSaveAsDefaultPeriod, CC.xyw(2,4,2));
-    panel1.add(mHideForSession, CC.xyw(2,6,2));
+    panel1.addRow(mManuelDownloadPeriodSelection, 2, 2);
+    panel1.addRow(false, mSaveAsDefaultPeriod, 2, 2);
+    panel1.addRow(mHideForSession, 2, 2);
     
     northPanel.add(panel1.getPanel());
 
@@ -191,18 +191,15 @@ public class UpdateDlg extends JDialog implements ActionListener, WindowClosingI
       
       dataServicePanel.add(Box.createRigidArea(new Dimension(0,Sizes.dialogUnitXAsPixel(5, dataServicePanel))));
       dataServicePanel.add(mSaveAsDefaultDataservices);
-      
-      final PanelBuilder ds = new PanelBuilder(new FormLayout("10dlu,default:grow,5dlu,default","10dlu,default,5dlu,default"));
-      ds.add(dataServicePanel, CC.xyw(2,4,3));
-      
-      ds.addSeparator(LOCALIZER.msg("dataSources", "Data sources"), CC.xyw(1,2,2));
-      
       dataServicePanel.setVisible(expand);
       
       PanelButton open = new PanelButton(dataServicePanel,this);
       
-      ds.add(open, CC.xy(4,2));
-            
+      final EnhancedPanelBuilder ds = new EnhancedPanelBuilder(new FormLayout("10dlu,default:grow,5dlu,default"));
+      ds.addParagraph(LOCALIZER.msg("dataSources", "Data sources"), 1, 2);
+      ds.add(open, 4);
+      ds.addRowFull(dataServicePanel, 2);
+      
       northPanel.add(ds.getPanel());
     }
 
@@ -210,10 +207,6 @@ public class UpdateDlg extends JDialog implements ActionListener, WindowClosingI
     
     PeriodItem pi = new PeriodItem(period);
     mManuelDownloadPeriodSelection.setSelectedItem(pi);
-
-    final PanelBuilder pb = new PanelBuilder(new FormLayout("10dlu,default:grow,5dlu,default","10dlu,default,5dlu,default"));
-    
-    pb.addSeparator(LOCALIZER.msg("autoUpdateTitle", "Automatic update"), CC.xyw(1,2,2));
 
     final JPanel boxPanel = new JPanel(new FormLayout("10dlu,0dlu,default:grow","default,2dlu,default,default,4dlu,default,3dlu,default"));
     
@@ -242,8 +235,6 @@ public class UpdateDlg extends JDialog implements ActionListener, WindowClosingI
     label.setEnabled(mAutoUpdate.isSelected());
     mAutoDownloadPeriodSelection.setEnabled(mAutoUpdate.isSelected());
 
-    pb.add(boxPanel, CC.xyw(2,4,2));
-
     final ButtonGroup bg = new ButtonGroup();
 
     bg.add(mStartUpdate);
@@ -251,8 +242,11 @@ public class UpdateDlg extends JDialog implements ActionListener, WindowClosingI
     
     final PanelButton open = new PanelButton(boxPanel,this);
     
-    pb.add(open, CC.xy(4,2));
-
+    final EnhancedPanelBuilder pb = new EnhancedPanelBuilder(new FormLayout("10dlu,default:grow,5dlu,default"));
+    pb.addParagraph(LOCALIZER.msg("autoUpdateTitle", "Automatic update"), 1, 2);
+    pb.add(open, 4);
+    pb.addRow(boxPanel, 2, 2);
+    
     mAutoUpdate.addItemListener(e -> {
       mRecurrentUpdate.setEnabled(e.getStateChange() == ItemEvent.SELECTED);
       mStartUpdate.setEnabled(e.getStateChange() == ItemEvent.SELECTED);

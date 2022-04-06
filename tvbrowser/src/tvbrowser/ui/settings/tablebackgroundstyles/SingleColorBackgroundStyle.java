@@ -28,13 +28,12 @@ package tvbrowser.ui.settings.tablebackgroundstyles;
 
 import javax.swing.JPanel;
 
+import com.jgoodies.forms.layout.FormLayout;
+
 import tvbrowser.core.Settings;
 import tvbrowser.ui.settings.util.ColorButton;
 import tvbrowser.ui.settings.util.ColorLabel;
-
-import com.jgoodies.forms.builder.PanelBuilder;
-import com.jgoodies.forms.layout.CellConstraints;
-import com.jgoodies.forms.layout.FormLayout;
+import util.ui.EnhancedPanelBuilder;
 
 
 /**
@@ -58,17 +57,16 @@ public class SingleColorBackgroundStyle implements TableBackgroundStyle {
   }
 
   public JPanel createSettingsContent() {
-    CellConstraints cc = new CellConstraints();
-    PanelBuilder pb = new PanelBuilder(new FormLayout("default,5dlu,default,5dlu,default","default"));
+    EnhancedPanelBuilder pb = new EnhancedPanelBuilder(new FormLayout("default,5dlu,default,5dlu,default","default"));
     
     mColorLabel = new ColorLabel(Settings.ProgramTable.COLOR_BACKGROUND_SINGLE.getColor());
     mColorLabel.setStandardColor(Settings.ProgramTable.COLOR_BACKGROUND_SINGLE.getDefaultColor());
     
     ColorButton colorButton = new ColorButton(mColorLabel);
     
-    pb.addLabel(LOCALIZER.msg("text","Background color"), cc.xy(1,1));
-    pb.add(mColorLabel, cc.xy(3,1));
-    pb.add(colorButton, cc.xy(5,1));
+    pb.labelAdd(LOCALIZER.msg("text","Background color"), 1);
+    pb.add(mColorLabel, 3);
+    pb.add(colorButton, 5);
     
     return pb.getPanel();
   }

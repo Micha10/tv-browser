@@ -29,20 +29,18 @@ package tvbrowser.extras.favoritesplugin.wizards;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import tvbrowser.extras.favoritesplugin.core.Favorite;
-
-import com.jgoodies.forms.builder.PanelBuilder;
 import com.jgoodies.forms.factories.Borders;
-import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
+
+import tvbrowser.extras.favoritesplugin.core.Favorite;
+import util.ui.EnhancedPanelBuilder;
 
 public class RenameWizardStep extends AbstractWizardStep {
 
-  private static final util.i18n.Localizer mLocalizer = util.i18n.Localizer
+  private static final util.i18n.Localizer LOCALIZER = util.i18n.Localizer
       .getLocalizerFor(RenameWizardStep.class);
 
   private JTextField mNameTf;
@@ -58,13 +56,11 @@ public class RenameWizardStep extends AbstractWizardStep {
 
     mNameTf = new JTextField(((Favorite)handler.getCurrentValue()).getName());
 
-
-    PanelBuilder panelBuilder = new PanelBuilder(new FormLayout("5dlu, pref, 3dlu, default:grow",
-        "pref"));
+    EnhancedPanelBuilder panelBuilder = new EnhancedPanelBuilder(new FormLayout("5dlu, default, 3dlu, default:grow", "default"));
     panelBuilder.border(Borders.DLU4);
-    CellConstraints cc = new CellConstraints();
-    panelBuilder.add(new JLabel(mLocalizer.msg("saveAs", "Save as:")), cc.xy(2,1));
-    panelBuilder.add(mNameTf, cc.xy(4,1));
+    
+    panelBuilder.labelAdd(LOCALIZER.msg("saveAs", "Save as:"), 2);
+    panelBuilder.add(mNameTf, 4);
 
     JPanel panel = panelBuilder.getPanel();
     panel.addFocusListener(new FocusAdapter() {
@@ -80,7 +76,7 @@ public class RenameWizardStep extends AbstractWizardStep {
   }
 
   public String getTitle() {
-    return mLocalizer.msg("title","name");
+    return LOCALIZER.msg("title","name");
   }
 
   public Object createDataObject(Object obj) {

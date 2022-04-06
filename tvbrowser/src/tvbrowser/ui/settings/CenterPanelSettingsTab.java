@@ -33,9 +33,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 
-import com.jgoodies.forms.builder.PanelBuilder;
 import com.jgoodies.forms.factories.Borders;
-import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
 
 import devplugin.PluginCenterPanel;
@@ -49,6 +47,7 @@ import tvbrowser.extras.common.InternalPluginProxyList;
 import tvbrowser.ui.DontShowAgainOptionBox;
 import tvbrowser.ui.mainframe.MainFrame;
 import util.i18n.Localizer;
+import util.ui.EnhancedPanelBuilder;
 import util.ui.OrderChooser;
 import util.ui.UiUtilities;
 
@@ -128,20 +127,18 @@ public class CenterPanelSettingsTab implements SettingsTab {
     bg.add(mIconOnly);
     bg.add(mNameAndIcon);
     
-    PanelBuilder pb = new PanelBuilder(new FormLayout("5dlu,default:grow,5dlu",
-        "default,5dlu,fill:default:grow,5dlu,default,1dlu,default,10dlu,default,5dlu,default,1dlu,default,1dlu,default"));
-    
+    EnhancedPanelBuilder pb = new EnhancedPanelBuilder(new FormLayout("5dlu,default:grow,5dlu"));
     pb.border(Borders.DIALOG);
+
+    pb.addSeparatorRowFull(false, LOCALIZER.msg("info", "Shown tabs in the main window"));
+    pb.addGrowingRow(mPanelChooser, 2);
+    pb.addRow(mTabBarAlwaysVisible, 2);
+    pb.addRow("1dlu,default", mShowPluginActionsInMenu, 2);
     
-    pb.addSeparator(LOCALIZER.msg("info", "Shown tabs in the main window"), CC.xyw(1, 1, 3));
-    pb.add(mPanelChooser, CC.xy(2,3));
-    pb.add(mTabBarAlwaysVisible, CC.xy(2, 5));
-    pb.add(mShowPluginActionsInMenu, CC.xy(2, 7));
-    
-    pb.addSeparator(LOCALIZER.msg("nameAndIconSep", "Name and icon display"), CC.xyw(1, 9, 3));
-    pb.add(mNameOnly, CC.xy(2, 11));
-    pb.add(mIconOnly, CC.xy(2, 13));
-    pb.add(mNameAndIcon, CC.xy(2, 15));
+    pb.addParagraph(LOCALIZER.msg("nameAndIconSep", "Name and icon display"));
+    pb.addRow(mNameOnly, 2);
+    pb.addRow("1dlu,default", mIconOnly, 2);
+    pb.addRow("1dlu,default", mNameAndIcon, 2);
     
     return pb.getPanel();
   }

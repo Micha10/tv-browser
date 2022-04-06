@@ -9,15 +9,14 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.event.HyperlinkEvent;
 
-import com.jgoodies.forms.builder.PanelBuilder;
 import com.jgoodies.forms.factories.Borders;
-import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
 
 import devplugin.SettingsItem;
 import devplugin.SettingsTab;
 import tvbrowser.core.Settings;
 import util.i18n.Localizer;
+import util.ui.EnhancedPanelBuilder;
 import util.ui.UiUtilities;
 
 /**
@@ -43,9 +42,7 @@ public class TraySoonSettingsTab implements SettingsTab {
   public JPanel createSettingsPanel() {
     mInstance = this;
     
-    PanelBuilder builder = new PanelBuilder(new FormLayout("5dlu,pref:grow,5dlu",
-        "pref,5dlu,pref,10dlu,pref,5dlu,pref,pref,pref,5dlu,pref," +
-        "10dlu,pref,5dlu,pref,pref,fill:default:grow,pref"));
+    EnhancedPanelBuilder builder = new EnhancedPanelBuilder(new FormLayout("5dlu,pref:grow,5dlu"));
     builder.border(Borders.DIALOG);
     
     mIsEnabled = new JCheckBox(LOCALIZER.msg("soonEnabled","Show Soon running programs"),Settings.Tray.Soon.ENABLED.getBoolean());
@@ -70,23 +67,23 @@ public class TraySoonSettingsTab implements SettingsTab {
         SettingsDialog.getInstance().showSettingsTab(SettingsItem.TRAY);
       }
     });
-        
-    JPanel c = (JPanel) builder.addSeparator(LOCALIZER.msg("soon","Soon running programs"), CC.xyw(1,1,3));
-    builder.add(mIsEnabled, CC.xy(2,3));
     
-    JPanel c1 = (JPanel) builder.addSeparator(LOCALIZER.msg("iconNameSeparator","Channel icons/channel name"), CC.xyw(1,5,3));
+    JPanel c = (JPanel) builder.addSeparatorRowFull(LOCALIZER.msg("soon","Soon running programs"));
+    builder.addRow(mIsEnabled, 2);
     
-    builder.add(mShowIconAndName, CC.xy(2,7));
-    builder.add(mShowIcon, CC.xy(2,8));
-    builder.add(mShowName, CC.xy(2,9));
+    JPanel c1 = (JPanel) builder.addParagraph(LOCALIZER.msg("iconNameSeparator","Channel icons/channel name"));
     
-    builder.add(mShowSortNumber, CC.xy(2,11));
+    builder.addRow(mShowIconAndName, 2);
+    builder.addRow(false, mShowIcon, 2);
+    builder.addRow(false, mShowName, 2);
     
-    JPanel c2 = (JPanel) builder.addSeparator(LOCALIZER.msg("settings","Settings"), CC.xyw(1,13,3));
+    builder.addRow(mShowSortNumber, 2);
     
-    builder.add(mShowTime, CC.xy(2,15));
-    builder.add(mShowToolTip, CC.xy(2,16));
-    builder.add(mHelpLabel, CC.xyw(1,18,3));
+    JPanel c2 = (JPanel) builder.addParagraph(LOCALIZER.msg("settings","Settings"));
+    
+    builder.addRow(mShowTime, 2);
+    builder.addRow(false, mShowToolTip, 2);
+    builder.addRowFull("fill:default:grow,default", mHelpLabel);
     
     mSeparator1 = (JLabel)c.getComponent(0);
     mIconSeparator = (JLabel)c1.getComponent(0);

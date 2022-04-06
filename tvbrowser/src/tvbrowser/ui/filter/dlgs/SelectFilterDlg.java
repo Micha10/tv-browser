@@ -44,9 +44,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JToolBar;
 import javax.swing.tree.TreePath;
 
-import com.jgoodies.forms.builder.PanelBuilder;
 import com.jgoodies.forms.factories.Borders;
-import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
 
 import devplugin.PluginsProgramFilter;
@@ -64,6 +62,7 @@ import tvbrowser.core.icontheme.IconLoader;
 import tvbrowser.extras.favoritesplugin.core.FavoriteFilter;
 import tvbrowser.ui.mainframe.MainFrame;
 import util.i18n.Localizer;
+import util.ui.EnhancedPanelBuilder;
 import util.ui.TVBrowserIcons;
 import util.ui.UiUtilities;
 import util.ui.WindowClosingIf;
@@ -95,9 +94,7 @@ public class SelectFilterDlg extends JDialog implements ActionListener, WindowCl
     super(parent, LOCALIZER.msg("title", "Edit Filters"), Dialog.ModalityType.DOCUMENT_MODAL);
     INSTANCE = this;
     
-    FormLayout layout = new FormLayout("default,default:grow,default","default,4dlu,fill:default:grow,5dlu,default");
-    
-    PanelBuilder pb = new PanelBuilder(layout);
+    final EnhancedPanelBuilder pb = new EnhancedPanelBuilder(new FormLayout("default,default:grow,default"));
     pb.border(Borders.DIALOG);
     
     UiUtilities.registerForClosing(this);
@@ -149,13 +146,14 @@ public class SelectFilterDlg extends JDialog implements ActionListener, WindowCl
     mOkBtn = new JButton(Localizer.getLocalization(Localizer.I18N_CLOSE));
     mOkBtn.addActionListener(this);
     getRootPane().setDefaultButton(mOkBtn);
-    layout.setColumnGroups(new int[][] {{1,3}});
+    pb.getLayout().setColumnGroups(new int[][] {{1,3}});
 
     JScrollPane scrollPane = new JScrollPane(mFilterTree);
-    pb.add(scrollPane, CC.xyw(1,3,3));
-    pb.add(mHelpBtn, CC.xy(1,5));
-    pb.add(mOkBtn, CC.xy(3,5));
-    pb.add(toolbarPn, CC.xyw(1,1,3)); 
+    
+    pb.addRowFull(false, toolbarPn);
+    pb.addRowFull("4dlu,fill:default:grow", scrollPane);
+    pb.addRow(mHelpBtn, 1);
+    pb.add(mOkBtn, 3);
     
     updateBtns();
     

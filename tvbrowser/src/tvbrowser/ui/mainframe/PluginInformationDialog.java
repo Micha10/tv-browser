@@ -39,13 +39,12 @@ import javax.swing.UIManager;
 import javax.swing.event.HyperlinkEvent;
 
 import com.jgoodies.forms.builder.ButtonBarBuilder;
-import com.jgoodies.forms.builder.PanelBuilder;
 import com.jgoodies.forms.factories.Borders;
-import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 
 import util.browserlauncher.Launch;
 import util.i18n.Localizer;
+import util.ui.EnhancedPanelBuilder;
 import util.ui.UiUtilities;
 import util.ui.WindowClosingIf;
 
@@ -74,14 +73,10 @@ public class PluginInformationDialog extends JDialog implements WindowClosingIf 
     setTitle(mLocalizer.msg("title","TV-Browser is able to do much more"));
 
     UiUtilities.registerForClosing(this);
-
-    CellConstraints cc = new CellConstraints();
-    PanelBuilder pb = new PanelBuilder(
-        new FormLayout("default:grow,default,default:grow",
-            "default,fill:default:grow,default"),
-        (JPanel)getContentPane());
-
-    JLabel l = pb.addLabel(mLocalizer.msg("header","Important information about TV-Browser functionality!"), cc.xy(2,1));
+    
+    EnhancedPanelBuilder pb = new EnhancedPanelBuilder(new FormLayout("default:grow,default,default:grow"), (JPanel)getContentPane());
+    
+    JLabel l = pb.addLabelRow(false, mLocalizer.msg("header","Important information about TV-Browser functionality!"), 2);
     l.setForeground(new Color(200,0,0));
     l.setFont(l.getFont().deriveFont(Font.BOLD,20));
     l.setBorder(Borders.createEmptyBorder("10dlu,0dlu,5dlu,0dlu"));
@@ -98,7 +93,7 @@ public class PluginInformationDialog extends JDialog implements WindowClosingIf 
     pane.setBackground(UIManager.getColor("List.background"));
     pane.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createMatteBorder(0,0,1,0,Color.darkGray),Borders.createEmptyBorder("0dlu,10dlu,0dlu,10dlu")));
 
-    pb.add(pane, cc.xyw(1,2,3));
+    pb.addRowFull("fill:default:grow", false, pane);
 
     JButton[] buttons = {new JButton(mLocalizer.msg("showList","Show the list with the Plugins now")),
         new JButton(mLocalizer.msg("closeDialog","Close this dialog"))};
@@ -124,7 +119,7 @@ public class PluginInformationDialog extends JDialog implements WindowClosingIf 
     bb.addGlue();
     bb.setBorder(Borders.createEmptyBorder("6dlu,6dlu,6dlu,6dlu"));
 
-    pb.add(bb.getPanel(), cc.xyw(1,3,3));
+    pb.addRowFull(false, bb.getPanel());
     pb.getPanel().setBackground(UIManager.getColor("EditorPane.background"));
     pb.getPanel().setOpaque(true);
   }

@@ -35,9 +35,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
 
-import com.jgoodies.forms.builder.PanelBuilder;
 import com.jgoodies.forms.factories.Borders;
-import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
 
 import devplugin.SettingsTab;
@@ -50,6 +48,7 @@ import tvbrowser.ui.filter.dlgs.EditFilterDlg;
 import tvbrowser.ui.mainframe.MainFrame;
 import tvdataservice.MarkedProgramsMap;
 import util.i18n.Localizer;
+import util.ui.EnhancedPanelBuilder;
 import util.ui.TVBrowserIcons;
 import util.ui.UiUtilities;
 import util.ui.customizableitems.SelectableItem;
@@ -116,16 +115,15 @@ public class GenericPluginFilterSettingsTab implements SettingsTab {
       }
     });
     
-    FormLayout layout = new FormLayout("10dlu,100dlu:grow,default,5dlu","default,5dlu,default,5dlu,fill:default:grow,3dlu,default");
-    
-    PanelBuilder pb = new PanelBuilder(layout);
+    EnhancedPanelBuilder pb = new EnhancedPanelBuilder(new FormLayout("10dlu,100dlu:grow,default,5dlu"));
     pb.border(Borders.DIALOG);
-    pb.addSeparator(getTitle(), CC.xyw(1,1,4));
-    pb.add(UiUtilities.createHtmlHelpTextArea(LOCALIZER.msg("help", 
+    //
+    pb.addSeparatorRowFull(false, getTitle());
+    pb.addRow(UiUtilities.createHtmlHelpTextArea(LOCALIZER.msg("help", 
         "Activate and setup filter for each plugin to pre filter the highlightings and the context menu of the plugin. (Only for programs that are accepted by an activated filter can be hightlighted by the plugin and context menu can be shown.)")),
-        CC.xyw(2,3,2));
-    pb.add(scrollPane, CC.xyw(2,5,2));
-    pb.add(edit, CC.xy(3,7));
+        2, 2);
+    pb.addGrowingRow(scrollPane, 2, 2);
+    pb.addRow("3dlu,default", edit, 3);
     
     return pb.getPanel();
   }

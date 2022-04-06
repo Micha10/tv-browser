@@ -58,11 +58,9 @@ import javax.swing.JRadioButton;
 import javax.swing.JRootPane;
 import javax.swing.JScrollPane;
 
-import com.jgoodies.forms.builder.PanelBuilder;
 import com.jgoodies.forms.factories.Borders;
 import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.factories.DefaultComponentFactory;
-import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 
 import tvbrowser.core.PluginLoader;
@@ -72,6 +70,7 @@ import tvbrowser.ui.mainframe.MainFrame;
 import util.i18n.Localizer;
 import util.io.IOUtilities;
 import util.ui.CustomComboBoxRenderer;
+import util.ui.EnhancedPanelBuilder;
 import util.ui.UiUtilities;
 import util.ui.WindowClosingIf;
 import util.ui.customizableitems.SelectableItem;
@@ -417,16 +416,12 @@ public class LocaleSettingsTab implements devplugin.CancelableSettingsTab {
       }
     });
     
-    FormLayout layout = new FormLayout("default:grow,default,5dlu,default","default,default,3dlu,fill:default:grow,5dlu,default");
-    
-    PanelBuilder pb = new PanelBuilder(layout);
+    EnhancedPanelBuilder pb = new EnhancedPanelBuilder(new FormLayout("default:grow,default,5dlu,default"));
     pb.border(Borders.DIALOG);
     
     final JDialog dialog = new JDialog(UiUtilities.getLastModalChildOf(MainFrame.getInstance()));
     dialog.setTitle(LOCALIZER.msg("downloadLanguages", "Install additional languages"));
     dialog.setContentPane(pb.getPanel());
-    
-    CellConstraints cc = new CellConstraints();
     
     final SelectableItemList<LocaleLink> list = new SelectableItemList<>(new LocaleLink[0], availableLocales.toArray(new LocaleLink[availableLocales.size()]));
     list.addCenterRendererComponent(LocaleLink.class, new SelectableItemRendererCenterComponentIf<LocaleLink>() {
@@ -458,9 +453,9 @@ public class LocaleSettingsTab implements devplugin.CancelableSettingsTab {
       public void calculateSize(JList<? extends SelectableItem<LocaleLink>> list, int index, JPanel contentPane) {}
     });
     
-    pb.addLabel(LOCALIZER.msg("additionalLanguagesFound", "The following languages were found:"), cc.xyw(1,1,4));
-    pb.addLabel(LOCALIZER.msg("additionalLanguagesInfo", "(Bold language are installed but have possibly been updated.)"), cc.xyw(1,2,4));
-    pb.add(list, cc.xyw(1,4,4));
+    pb.addLabelRowFull(false, LOCALIZER.msg("additionalLanguagesFound", "The following languages were found:"));
+    pb.addLabelRowFull(false, LOCALIZER.msg("additionalLanguagesInfo", "(Bold language are installed but have possibly been updated.)"));
+    pb.addRowFull("3dlu,fill:default:grow", list);
     
     final JButton download = new JButton(LOCALIZER.msg("downloadSelectedLanguages", "Download selected languages"));
     download.setEnabled(false);
@@ -478,8 +473,8 @@ public class LocaleSettingsTab implements devplugin.CancelableSettingsTab {
       dialog.dispose();
     });
     
-    pb.add(download, cc.xy(2,6));
-    pb.add(close, cc.xy(4,6));
+    pb.addRow(download, 2);
+    pb.add(close, 4);
     
     WindowClosingIf windowClosing = new WindowClosingIf() {
       @Override

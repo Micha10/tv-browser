@@ -54,7 +54,6 @@ import javax.swing.WindowConstants;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import com.jgoodies.forms.builder.PanelBuilder;
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.RowSpec;
@@ -65,10 +64,11 @@ import tvbrowser.core.Settings;
 import tvbrowser.extras.favoritesplugin.core.Favorite;
 import tvbrowser.extras.favoritesplugin.dlgs.FavoriteTreeModel;
 import tvbrowser.ui.mainframe.MainFrame;
+import util.i18n.Localizer;
 import util.io.IOUtilities;
 import util.settings.PluginPictureSettings;
 import util.settings.ProgramPanelSettings;
-import util.i18n.Localizer;
+import util.ui.EnhancedPanelBuilder;
 import util.ui.ProgramPanel;
 import util.ui.UiUtilities;
 import util.ui.WindowClosingIf;
@@ -175,12 +175,13 @@ public class ReminderFrame implements WindowClosingIf, ChangeListener {
     jcontentPane.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
     mDialog.setContentPane(jcontentPane);
 
-    mLayout = new FormLayout("pref:grow,3dlu,pref","pref,3dlu");
-    final PanelBuilder programsPanel = new PanelBuilder(mLayout);
+    mLayout = new FormLayout("default:grow,3dlu,default","default");
+    final EnhancedPanelBuilder programsPanel = new EnhancedPanelBuilder(mLayout);
     CellConstraints cc = new CellConstraints();
 
     final Date today = Date.getCurrentDate();
-    programsPanel.add(mHeader = new JLabel(""), cc.xyw(1, 1, 3));
+    mHeader = programsPanel.labelAddFull("");
+    programsPanel.addRow("3dlu",false);
     programsPanel.setRow(3);
     int remainingMinutesMax = 0;
     int runningMinutes = 0;

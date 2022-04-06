@@ -39,9 +39,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 
-import com.jgoodies.forms.builder.PanelBuilder;
 import com.jgoodies.forms.factories.Borders;
-import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
 
 import devplugin.ProgramReceiveIf;
@@ -54,6 +52,7 @@ import tvbrowser.extras.favoritesplugin.dlgs.ManageFavoritesPanel;
 import tvbrowser.extras.reminderplugin.ReminderPluginProxy;
 import tvbrowser.ui.mainframe.MainFrame;
 import util.ui.DefaultMarkingPrioritySelectionPanel;
+import util.ui.EnhancedPanelBuilder;
 import util.ui.FilterableProgramListPanel;
 import util.ui.PluginChooserDlg;
 import util.ui.UiUtilities;
@@ -66,7 +65,7 @@ import util.ui.UiUtilities;
 public class FavoritesSettingTab implements SettingsTab {
 
   /** The localizer for this class. */
-  private static final util.i18n.Localizer mLocalizer
+  private static final util.i18n.Localizer LOCALIZER
     = util.i18n.Localizer.getLocalizerFor(FavoritesSettingTab.class);
 
   private ProgramReceiveTarget[] mClientPluginTargets, mCurrentClientPluginTargets;
@@ -83,22 +82,18 @@ public class FavoritesSettingTab implements SettingsTab {
    * Creates the settings panel for this tab.
    */
   public JPanel createSettingsPanel() {
-    PanelBuilder builder = new PanelBuilder(new FormLayout(
-        "5dlu,min(150dlu;pref):grow,5dlu,pref,5dlu",
-        "pref,5dlu,pref,10dlu,pref,5dlu,pref,default,10dlu,pref,5dlu," +
-        "pref,10dlu,pref,5dlu,pref,10dlu,pref,5dlu,pref,10dlu," +
-        "pref,5dlu,default,default,default,10dlu,default,5dlu,default,10dlu,default,5dlu,default"));
+    EnhancedPanelBuilder builder = new EnhancedPanelBuilder(new FormLayout("5dlu,min(150dlu;pref):grow,5dlu,pref,5dlu"));
     builder.border(Borders.DIALOG);
 
     mPluginLabel = new JLabel();
-    JButton choose = new JButton(mLocalizer.msg("selectPlugins","Choose Plugins"));
-    mExpertMode = new JCheckBox(mLocalizer.msg("expertMode","Always show advanced favorite edit dialog"),FavoritesPlugin.getInstance().isUsingExpertMode());
-    mShowTypeSelection = new JCheckBox(mLocalizer.msg("showTypeSelection","Show selection for creation of filter favorite"),FavoritesPlugin.getInstance().showTypeSelection());
+    JButton choose = new JButton(LOCALIZER.msg("selectPlugins","Choose Plugins"));
+    mExpertMode = new JCheckBox(LOCALIZER.msg("expertMode","Always show advanced favorite edit dialog"),FavoritesPlugin.getInstance().isUsingExpertMode());
+    mShowTypeSelection = new JCheckBox(LOCALIZER.msg("showTypeSelection","Show selection for creation of filter favorite"),FavoritesPlugin.getInstance().showTypeSelection());
     mShowTypeSelection.setEnabled(mExpertMode.isSelected());
-    mShowRepetitions = new JCheckBox(mLocalizer.msg("showRepetitions","Show repetitions in context menu of a favorite program"),FavoritesPlugin.getInstance().isShowingRepetitions());
-    mAutoSelectRemider = new JCheckBox(mLocalizer.msg("autoSelectReminder","Automatically remind of new favorite programs"),FavoritesPlugin.getInstance().isAutoSelectingReminder());
-    mShowDateSeparators = new JCheckBox(mLocalizer.msg("showDateSeparator","Show date separator in found programs list"),FavoritesPlugin.getInstance().showDateSeparators());
-    mProvideTab = new JCheckBox(mLocalizer.msg("provideTab","Provide tab in TV-Browser main window"),FavoritesPlugin.getInstance().provideTab());
+    mShowRepetitions = new JCheckBox(LOCALIZER.msg("showRepetitions","Show repetitions in context menu of a favorite program"),FavoritesPlugin.getInstance().isShowingRepetitions());
+    mAutoSelectRemider = new JCheckBox(LOCALIZER.msg("autoSelectReminder","Automatically remind of new favorite programs"),FavoritesPlugin.getInstance().isAutoSelectingReminder());
+    mShowDateSeparators = new JCheckBox(LOCALIZER.msg("showDateSeparator","Show date separator in found programs list"),FavoritesPlugin.getInstance().showDateSeparators());
+    mProvideTab = new JCheckBox(LOCALIZER.msg("provideTab","Provide tab in TV-Browser main window"),FavoritesPlugin.getInstance().provideTab());
 
     ProgramReceiveTarget[] targetsArr
     = FavoritesPlugin.getInstance().getClientPluginTargetIds();
@@ -136,54 +131,12 @@ public class FavoritesSettingTab implements SettingsTab {
       handlePluginSelection();
     });
     
-    int y = 1;
-
-    builder.addSeparator(mLocalizer.msg("passTo", "Pass favorite programs to"), CC.xyw(1,y,5));
+    EnhancedPanelBuilder timeButtonSettings = new EnhancedPanelBuilder(new FormLayout("10dlu,default:grow"));
     
-    y += 2;
+    final JLabel timeButtonBehaviour = new JLabel(LOCALIZER.msg("timeButtonBehaviour", "Time buttons behaviour:"));
     
-    builder.add(mPluginLabel, CC.xy(2,y));
-    builder.add(choose, CC.xy(4,y));
-    
-    y += 2;
-    builder.addSeparator(mLocalizer.msg("expertSettings","Expert mode"), CC.xyw(1,y,5));
-    y += 2;
-    
-    builder.add(mExpertMode, CC.xyw(2,y++,3));
-    
-    builder.add(mShowTypeSelection, CC.xyw(2,y,3));
-    
-    y += 2;
-    builder.addSeparator(mLocalizer.msg("repetitionSettings","Repetitions"), CC.xyw(1,10,4));
-    y += 2;
-    
-    builder.add(mShowRepetitions, CC.xyw(2,y,3));
-    
-    y += 2;
-    builder.addSeparator(mLocalizer.msg("reminderSettings","Automatic reminder"), CC.xyw(1,y,4));
-    y += 2;
-    
-    builder.add(mAutoSelectRemider, CC.xyw(2,y,3));
-
-    y += 2;
-    builder.addSeparator(mLocalizer.msg("exclusions","Global exclusion criterions"), CC.xyw(1,y,4));
-    y += 2;
-    
-    builder.add(mExclusionPanel = new ExclusionPanel(FavoritesPlugin.getInstance().getGlobalExclusions(), UiUtilities.getLastModalChildOf(MainFrame.getInstance()), null), CC.xyw(2,y,3));
-
-    y += 2;
-    builder.addSeparator(mLocalizer.msg("miscSettings","Miscellaneous"), CC.xyw(1,y,4));
-    y += 2;
-    
-    builder.add(mShowDateSeparators, CC.xyw(2,y++,3));
-    builder.add(mProvideTab, CC.xyw(2,y,3));
-    
-    JPanel timeButtonSettings = new JPanel(new FormLayout("10dlu,default:grow","5dlu,default,5dlu,default,1dlu,default"));
-    
-    final JLabel timeButtonBehaviour = new JLabel(mLocalizer.msg("timeButtonBehaviour", "Time buttons behaviour:"));
-    
-    mScrollTimeNext = new JRadioButton(mLocalizer.msg("timeButtonScrollNext", "Scroll to next occurence of time from shown programs onward"), FavoritesPlugin.getInstance().timeButtonsScrollToNextTimeInTab());
-    mScrollTimeDay = new JRadioButton(mLocalizer.msg("timeButtonScrollDay", "Scroll to occurence of time on shown day in list"), !mScrollTimeNext.isSelected());
+    mScrollTimeNext = new JRadioButton(LOCALIZER.msg("timeButtonScrollNext", "Scroll to next occurence of time from shown programs onward"), FavoritesPlugin.getInstance().timeButtonsScrollToNextTimeInTab());
+    mScrollTimeDay = new JRadioButton(LOCALIZER.msg("timeButtonScrollDay", "Scroll to occurence of time on shown day in list"), !mScrollTimeNext.isSelected());
     
     ButtonGroup bg = new ButtonGroup();
     
@@ -198,24 +151,20 @@ public class FavoritesSettingTab implements SettingsTab {
       timeButtonBehaviour.setEnabled(e.getStateChange() == ItemEvent.SELECTED);
       mScrollTimeDay.setEnabled(timeButtonBehaviour.isEnabled());
       mScrollTimeNext.setEnabled(timeButtonBehaviour.isEnabled());
-  });
+    });
     
-    timeButtonSettings.add(timeButtonBehaviour, CC.xy(2, 2));
-    timeButtonSettings.add(mScrollTimeNext, CC.xy(2, 4));
-    timeButtonSettings.add(mScrollTimeDay, CC.xy(2, 6));
-    
-    y++;
-    
-    builder.add(timeButtonSettings, CC.xyw(2, y, 3));
+    timeButtonSettings.addRow(timeButtonBehaviour, 2);
+    timeButtonSettings.addRow(mScrollTimeNext, 2);
+    timeButtonSettings.addRow(mScrollTimeDay, 2);
     
     int filterStartType = FavoritesPlugin.getInstance().getFilterStartType();
     
-    JPanel filterSettingsPanel = new JPanel(new FormLayout("10dlu,default:grow","default,2dlu,default,1dlu,default,1dlu,default,1dlu,default,3dlu,default"));
+    EnhancedPanelBuilder filterSettingsPanel = new EnhancedPanelBuilder(new FormLayout("10dlu,default:grow"));
     
-    mFilterStartAll = new JRadioButton(mLocalizer.msg("filterStartAll", "Show all filter"), filterStartType == FilterableProgramListPanel.FILTER_START_ALL_TYPE);
-    mFilterStartDefault = new JRadioButton(mLocalizer.msg("filterStartDefault", "Default filter"), filterStartType == FilterableProgramListPanel.FILTER_START_DEFAULT_TYPE);
-    mFilterStartCurrent = new JRadioButton(mLocalizer.msg("filterStartCurrent", "Current TV-Browser filter"), filterStartType == FilterableProgramListPanel.FILTER_START_CURRENT_TYPE);
-    mFilterStartLast = new JRadioButton(mLocalizer.msg("filterStartLast", "Last used filter"), filterStartType == ManageFavoritesPanel.FILTER_START_LAST_TYPE);
+    mFilterStartAll = new JRadioButton(LOCALIZER.msg("filterStartAll", "Show all filter"), filterStartType == FilterableProgramListPanel.FILTER_START_ALL_TYPE);
+    mFilterStartDefault = new JRadioButton(LOCALIZER.msg("filterStartDefault", "Default filter"), filterStartType == FilterableProgramListPanel.FILTER_START_DEFAULT_TYPE);
+    mFilterStartCurrent = new JRadioButton(LOCALIZER.msg("filterStartCurrent", "Current TV-Browser filter"), filterStartType == FilterableProgramListPanel.FILTER_START_CURRENT_TYPE);
+    mFilterStartLast = new JRadioButton(LOCALIZER.msg("filterStartLast", "Last used filter"), filterStartType == ManageFavoritesPanel.FILTER_START_LAST_TYPE);
     
     ButtonGroup filterStartGroup = new ButtonGroup();
     
@@ -224,28 +173,43 @@ public class FavoritesSettingTab implements SettingsTab {
     filterStartGroup.add(mFilterStartCurrent);
     filterStartGroup.add(mFilterStartLast);
     
-    mFilterReactOnChange = new JCheckBox(mLocalizer.msg("filterReactOnChange", "React on changes of selected filter of TV-Browser"), FavoritesPlugin.getInstance().reactOnFilterChange());
+    mFilterReactOnChange = new JCheckBox(LOCALIZER.msg("filterReactOnChange", "React on changes of selected filter of TV-Browser"), FavoritesPlugin.getInstance().reactOnFilterChange());
     
-    JLabel filterStartLabel = new JLabel(mLocalizer.msg("filterStart", "Start with:"));
+    filterSettingsPanel.addLabelRowFull(false, LOCALIZER.msg("filterStart", "Start with:"));
+    filterSettingsPanel.addRow("2dlu,default", mFilterStartAll, 2);
+    filterSettingsPanel.addRow("1dlu,default", mFilterStartDefault, 2);
+    filterSettingsPanel.addRow("1dlu,default", mFilterStartCurrent, 2);
+    filterSettingsPanel.addRow("1dlu,default", mFilterStartLast, 2);
+    filterSettingsPanel.addRowFull("3dlu,default", mFilterReactOnChange);
     
-    filterSettingsPanel.add(filterStartLabel, CC.xyw(1, 1, 2));
-    filterSettingsPanel.add(mFilterStartAll, CC.xy(2, 3));
-    filterSettingsPanel.add(mFilterStartDefault, CC.xy(2, 5));
-    filterSettingsPanel.add(mFilterStartCurrent, CC.xy(2, 7));
-    filterSettingsPanel.add(mFilterStartLast, CC.xy(2, 9));
-    filterSettingsPanel.add(mFilterReactOnChange, CC.xyw(1, 11, 2));
+    builder.addSeparatorRowFull(false,LOCALIZER.msg("passTo", "Pass favorite programs to"));
     
-    y += 2;
-    builder.addSeparator(mLocalizer.msg("filter", "Program Filter"), CC.xyw(1,y,4));
-    y += 2;
+    builder.addRow(mPluginLabel, 2);
+    builder.add(choose, 4);
     
-    builder.add(filterSettingsPanel, CC.xyw(2,y,3));
+    builder.addParagraph(LOCALIZER.msg("expertSettings","Expert mode"));
+    builder.addRowFull(mExpertMode, 2);
+    builder.addRowFull(false, mShowTypeSelection, 2);
     
-    y += 2;
-    builder.addSeparator(DefaultMarkingPrioritySelectionPanel.getTitle(), CC.xyw(1,y,4));
-    y += 2;
+    builder.addParagraph(LOCALIZER.msg("repetitionSettings","Repetitions"));
+    builder.addRowFull(mShowRepetitions, 2);
     
-    builder.add(mMarkingsPanel = DefaultMarkingPrioritySelectionPanel.createPanel(FavoritesPlugin.getInstance().getMarkPriority(),false,false), CC.xyw(2,y,3));
+    builder.addParagraph(LOCALIZER.msg("reminderSettings","Automatic reminder"));
+    builder.addRowFull(mAutoSelectRemider, 2);
+    
+    builder.addParagraph(LOCALIZER.msg("exclusions","Global exclusion criterions"));
+    builder.addRowFull(mExclusionPanel = new ExclusionPanel(FavoritesPlugin.getInstance().getGlobalExclusions(), UiUtilities.getLastModalChildOf(MainFrame.getInstance()), null), 2);
+    
+    builder.addParagraph(LOCALIZER.msg("miscSettings","Miscellaneous"));
+    builder.addRowFull(mShowDateSeparators, 2);
+    builder.addRowFull(false, mProvideTab, 2);
+    builder.addRowFull(false, timeButtonSettings.getPanel(), 2);
+    
+    builder.addParagraph(LOCALIZER.msg("filter", "Program Filter"));
+    builder.addRowFull(filterSettingsPanel.getPanel(), 2);
+    
+    builder.addParagraph(DefaultMarkingPrioritySelectionPanel.getTitle());
+    builder.addRowFull(mMarkingsPanel = DefaultMarkingPrioritySelectionPanel.createPanel(FavoritesPlugin.getInstance().getMarkPriority(),false,false), 2);
     
     return builder.getPanel();
   }
@@ -267,7 +231,7 @@ public class FavoritesSettingTab implements SettingsTab {
         mPluginLabel.setEnabled(true);
       }
       else {
-        mPluginLabel.setText(mLocalizer.msg("noPlugins","No Plugins choosen"));
+        mPluginLabel.setText(LOCALIZER.msg("noPlugins","No Plugins choosen"));
         mPluginLabel.setEnabled(false);
       }
 
@@ -276,7 +240,7 @@ public class FavoritesSettingTab implements SettingsTab {
       }
 
       if(mClientPlugins.length > 4) {
-        mPluginLabel.setText(mPluginLabel.getText() + " (" + (mClientPlugins.length - 3) + " " + mLocalizer.ellipsisMsg("otherPlugins","others") + ")");
+        mPluginLabel.setText(mPluginLabel.getText() + " (" + (mClientPlugins.length - 3) + " " + LOCALIZER.ellipsisMsg("otherPlugins","others") + ")");
       }
     }
   }
@@ -336,7 +300,7 @@ public class FavoritesSettingTab implements SettingsTab {
    * Returns the title of the tab-sheet.
    */
   public String getTitle() {
-    return mLocalizer.msg("name", "Favorite programs");
+    return LOCALIZER.msg("name", "Favorite programs");
   }
 
 }

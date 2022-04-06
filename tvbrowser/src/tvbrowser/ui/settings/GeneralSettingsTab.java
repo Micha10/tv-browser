@@ -43,11 +43,9 @@ import javax.swing.JRadioButton;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
 
-import com.jgoodies.forms.builder.PanelBuilder;
 import com.jgoodies.forms.factories.Borders;
 import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.factories.DefaultComponentFactory;
-import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.RowSpec;
 
@@ -61,6 +59,7 @@ import tvbrowser.ui.mainframe.PeriodItem;
 import util.browserlauncher.Launch;
 import util.i18n.Localizer;
 import util.io.windows.registry.RegistryKey;
+import util.ui.EnhancedPanelBuilder;
 import util.ui.UiUtilities;
 import util.ui.WideComboBox;
 
@@ -403,15 +402,9 @@ public class GeneralSettingsTab implements devplugin.SettingsTab {
   }
 
   private JPanel createRefreshPanel() {
-    PanelBuilder refreshSettings = new PanelBuilder(new FormLayout("5dlu, 9dlu, default, 3dlu, default, fill:3dlu:grow, 3dlu",
-    "default, 5dlu, default, 3dlu, default, default, 3dlu, default, default, 5dlu, default, 3dlu, default,10dlu,default,3dlu,default"));
-
-    CellConstraints cc = new CellConstraints();
-
-    int y = 1;
+    EnhancedPanelBuilder refreshSettings = new EnhancedPanelBuilder(new FormLayout("5dlu, 9dlu, default, 3dlu, default, fill:3dlu:grow, 3dlu"));
     
-    refreshSettings.addSeparator(LOCALIZER.msg("titleRefresh", "Refresh"), cc.xyw(
-        1, y, 6));
+    refreshSettings.addSeparatorRow(false, LOCALIZER.msg("titleRefresh", "Refresh"), 1, 6);
 
     mAutoDownload = new JCheckBox(LOCALIZER.msg("autoUpdate","Automatically update TV listings"));
 
@@ -423,14 +416,11 @@ public class GeneralSettingsTab implements devplugin.SettingsTab {
     bg.add(mStartDownload);
     bg.add(mRecurrentDownload);
 
-    y += 2;
-    
-    refreshSettings.add(mAutoDownload, cc.xyw(2, y, 5));
 
-    y += 2;
+    refreshSettings.addRow(mAutoDownload, 2, 5);
     
-    refreshSettings.add(mStartDownload, cc.xyw(3, y++, 4));
-    refreshSettings.add(mRecurrentDownload, cc.xyw(3, y, 4));
+    refreshSettings.addRow("3dlu, default", mStartDownload, 3, 4);
+    refreshSettings.addRow(false, mRecurrentDownload, 3, 4);
 
     mAutoDownloadCombo = new JComboBox<>(AUTO_DOWNLOAD_MSG_ARR);
     String dlType = Settings.General.AUTO_DOWNLOAD_TYPE.getString();
@@ -442,7 +432,7 @@ public class GeneralSettingsTab implements devplugin.SettingsTab {
       mAutoDownloadCombo.setSelectedIndex(2);
     }
 
-    JPanel panel = new JPanel(new FormLayout("10dlu, pref, 3dlu, pref", "pref, 3dlu, pref, 3dlu, pref, 5dlu, pref"));
+    EnhancedPanelBuilder panel = new EnhancedPanelBuilder(new FormLayout("10dlu, default, 3dlu, default"),"3dlu");
 
     mStartDownload.setSelected(!dlType.equals("never") && !Settings.General.AUTO_DATA_DOWNLOAD_ENABLED.getBoolean());
     mRecurrentDownload.setSelected(Settings.General.AUTO_DATA_DOWNLOAD_ENABLED.getBoolean());
@@ -454,8 +444,9 @@ public class GeneralSettingsTab implements devplugin.SettingsTab {
     mRecurrentDownload.setEnabled(mAutoDownload.isSelected());
 
     mHowOften = new JLabel(LOCALIZER.msg("autoDownload.howOften", "How often?"));
-    panel.add(mHowOften, cc.xy(2, 1));
-    panel.add(mAutoDownloadCombo, cc.xy(4, 1));
+    
+    panel.addRow(false, mHowOften, 2);
+    panel.add(mAutoDownloadCombo, 4);
 
     mAskBeforeDownloadRadio = new JRadioButton(LOCALIZER.msg("autoDownload.ask", "Ask before downloading"));
     mAutoDownloadPeriodCB = new JComboBox<>(PeriodItem.getPeriodItems());
@@ -463,12 +454,12 @@ public class GeneralSettingsTab implements devplugin.SettingsTab {
     int autoDLPeriod = Settings.General.AUTO_DOWNLOAD_PERIOD.getInt();
     PeriodItem pi = new PeriodItem(autoDLPeriod);
     mAutoDownloadPeriodCB.setSelectedItem(pi);
-
-    panel.add(mAskBeforeDownloadRadio, cc.xyw(2, 3, 3));
+    
+    panel.addRowFull(mAskBeforeDownloadRadio, 2);
 
     mAskTimeRadio = new JRadioButton(LOCALIZER.msg("autoDownload.duration", "Automatically refresh for"));
-    panel.add(mAskTimeRadio, cc.xy(2, 5));
-    panel.add(mAutoDownloadPeriodCB, cc.xy(4, 5));
+    panel.addRow(mAskTimeRadio, 2);
+    panel.add(mAutoDownloadPeriodCB, 4);
 
     ButtonGroup group = new ButtonGroup();
     group.add(mAskBeforeDownloadRadio);
@@ -498,36 +489,30 @@ public class GeneralSettingsTab implements devplugin.SettingsTab {
       mAutoDownloadWaitingTimeSp.setEnabled(e.getStateChange() == ItemEvent.SELECTED);
     });
 
-    JPanel waitingPanel = new JPanel(new FormLayout("pref,2dlu,pref,2dlu,pref","pref"));
+    EnhancedPanelBuilder waitingPanel = new EnhancedPanelBuilder(new FormLayout("default,2dlu,default,2dlu,default","default"));
 
-    waitingPanel.add(mAutoDownloadWaitingTime, cc.xy(1, 1));
-    waitingPanel.add(mAutoDownloadWaitingTimeSp, cc.xy(3, 1));
-    waitingPanel.add(mSecondsLabel, cc.xy(5,1));
+    waitingPanel.add(mAutoDownloadWaitingTime, 1);
+    waitingPanel.add(mAutoDownloadWaitingTimeSp, 3);
+    waitingPanel.add(mSecondsLabel, 5);
 
-    panel.add(waitingPanel, cc.xyw(1,7,4));
+    panel.addRowFull("5dlu, default", waitingPanel.getPanel());
 
-    y += 2;
-    
-    refreshSettings.add(panel, cc.xyw(3, y++, 4));
+    refreshSettings.addRow("3dlu, default", panel.getPanel(), 3, 4);
     
     mAutoDownloadPrimeTime = new JCheckBox(LOCALIZER.msg("autoUpdatePrimeTime","Daily auto update prime time data in the evening"));
     mAutoDownloadPrimeTime.setSelected(Settings.General.AUTO_UPDATE_PRIME_TIME.getBoolean());
     
-    refreshSettings.add(mAutoDownloadPrimeTime, cc.xyw(2, y, 5));
+    refreshSettings.addRow(false, mAutoDownloadPrimeTime, 2, 5);
 
     mDateCheck = new JCheckBox(LOCALIZER.msg("checkDate", "Check date via NTP if data download fails"));
     mDateCheck.setSelected(Settings.General.NTP_TIME_CHECK.getBoolean());
-
-    y += 2;
     
-    refreshSettings.add(mDateCheck, cc.xyw(2, y, 5));
+    refreshSettings.addRow(mDateCheck, 2, 5);
 
     mShowFinishDialog = new JCheckBox(LOCALIZER.msg("showFinishDialog", "Show dialog when update is done"));
     mShowFinishDialog.setSelected(!Settings.General.DOWNLOAD_DONE.isHidden());
 
-    y += 2;
-    
-    refreshSettings.add(mShowFinishDialog, cc.xyw(2, y, 5));
+    refreshSettings.addRow("3dlu, default", mShowFinishDialog, 2, 5);
 
     setAutoDownloadEnabled(mAutoDownload.isSelected());
     
@@ -554,13 +539,8 @@ public class GeneralSettingsTab implements devplugin.SettingsTab {
       mAutoChannelDownloadPeriod.setEnabled(e.getStateChange() == ItemEvent.SELECTED);
     });
     
-    y += 2;
-    
-    refreshSettings.add(mAutoChannelDownload, cc.xyw(2, y, 5));
-    
-    y += 2;
-    
-    refreshSettings.add(mAutoChannelDownloadPeriod, cc.xyw(3, y, 1));
+    refreshSettings.addRow("10dlu,default", mAutoChannelDownload, 2, 5);
+    refreshSettings.addRow("3dlu,default", mAutoChannelDownloadPeriod, 3);
     
     return refreshSettings.getPanel();
   }

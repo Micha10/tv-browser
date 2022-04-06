@@ -43,11 +43,9 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
-import com.jgoodies.forms.builder.PanelBuilder;
 import com.jgoodies.forms.factories.Borders;
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
-import com.jgoodies.forms.layout.RowSpec;
 
 import devplugin.Plugin;
 import util.i18n.Localizer;
@@ -102,22 +100,20 @@ public class LocalPluginProgramFormatingSettingsDialog extends JDialog implement
     setTitle(LOCALIZER.msg("settingsFor","Settings for ") + config.getName());
     UiUtilities.registerForClosing(this);
 
-    CellConstraints cc = new CellConstraints();
-    FormLayout baseLayout = new FormLayout("pref,5dlu,pref:grow","pref,5dlu,pref,fill:default:grow,5dlu,pref");
-    PanelBuilder pb = new PanelBuilder(baseLayout,(JPanel)getContentPane());
+    EnhancedPanelBuilder pb = new EnhancedPanelBuilder(new FormLayout("default,5dlu,default:grow"),(JPanel)getContentPane());
     pb.border(Borders.DIALOG);
 
     mName = new JLabel(config.getName());
     mSetName = new JButton(LOCALIZER.msg("changeName","Change name"));
     mSetName.addActionListener(this);
 
-    JPanel panel = new JPanel(new FormLayout("pref:grow,5dlu,pref","pref"));
-    panel.add(mName, cc.xy(1,1));
-    panel.add(mSetName, cc.xy(3,1));
+    EnhancedPanelBuilder panel = new EnhancedPanelBuilder(new FormLayout("default:grow,5dlu,default","default"));
+    panel.add(mName, 1);
+    panel.add(mSetName, 3);
 
     mTitle = new JTextField(config.getTitleValue());
     mContentArea = new JTextArea(config.getContentValue());
-
+    
     Vector<String> encodings = new Vector<String>();
     Map<String, Charset> availcs = Charset.availableCharsets();
     Set<String> keys = availcs.keySet();
@@ -144,44 +140,31 @@ public class LocalPluginProgramFormatingSettingsDialog extends JDialog implement
     mCancel = new JButton(Localizer.getLocalization(Localizer.I18N_CANCEL));
     mCancel.addActionListener(this);
 
-    FormLayout layout = new FormLayout("pref,3dlu,pref,3dlu,pref,0dlu:grow,pref,3dlu,pref","pref");
-    layout.setColumnGroups(new int[][] {{1,3,5,7,9}});
-
-    JPanel buttonPanel = new JPanel(layout);
-
-    buttonPanel.add(mPreview, cc.xy(1,1));
-    buttonPanel.add(mSetBack, cc.xy(3,1));
-    buttonPanel.add(mHelp, cc.xy(5,1));
-    buttonPanel.add(mOk, cc.xy(7,1));
-    buttonPanel.add(mCancel, cc.xy(9,1));
-
-    int y = 1;
-
-    pb.addLabel(LOCALIZER.msg("name","Name") + ":", cc.xy(1,y));
-    pb.add(panel, cc.xy(3,y++));
+    EnhancedPanelBuilder buttonPanel = new EnhancedPanelBuilder(new FormLayout("default,3dlu,default,3dlu,default,0dlu:grow,default,3dlu,default","default"));
+    buttonPanel.getLayout().setColumnGroups(new int[][] {{1,3,5,7,9}});
+    buttonPanel.add(mPreview, 1);
+    buttonPanel.add(mSetBack, 3);
+    buttonPanel.add(mHelp, 5);
+    buttonPanel.add(mOk, 7);
+    buttonPanel.add(mCancel, 9);
+    
+    pb.addLabelRow(false, LOCALIZER.msg("name","Name") + ":", 1);
+    pb.add(panel.getPanel(), 3);
 
     if(showTitleSetting) {
-      baseLayout.insertRow(y++, RowSpec.decode("2dlu"));
-      baseLayout.insertRow(y, RowSpec.decode("pref"));
-
-      pb.addLabel(LOCALIZER.msg("title","Titel") + ":", cc.xy(1,y));
-      pb.add(mTitle, cc.xy(3,y++));
+      pb.addLabelRow("2dlu,default",LOCALIZER.msg("title","Titel") + ":", 1);
+      pb.add(mTitle, 3);
     }
-
-    pb.addLabel(LOCALIZER.msg("content","Content") + ":", cc.xyw(1,++y,3));
-    pb.add(new JScrollPane(mContentArea), cc.xyw(1,++y,3));
-
-    y++;
+    
+    pb.addLabelRowFull(LOCALIZER.msg("content","Content") + ":");
+    pb.addRowFull("fill:default:grow", false, new JScrollPane(mContentArea));
 
     if(showEncodingSetting) {
-      baseLayout.insertRow(y++, RowSpec.decode("5dlu"));
-      baseLayout.insertRow(y, RowSpec.decode("pref"));
-
-      pb.addLabel(LOCALIZER.msg("encoding","Encoding") + ":", cc.xy(1,y));
-      pb.add(mEncoding, cc.xy(3,y++));
+      pb.addLabelRow(LOCALIZER.msg("encoding","Encoding") + ":", 1);
+      pb.add(mEncoding, 3);
     }
-
-    pb.add(buttonPanel, cc.xyw(1,++y,3));
+    
+    pb.addRowFull(buttonPanel.getPanel());
 
     UiUtilities.setSize(this, 500, 400);
     setLocationRelativeTo(w);

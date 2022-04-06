@@ -51,7 +51,6 @@ import javax.swing.event.DocumentListener;
 
 import com.jgoodies.forms.builder.ButtonBarBuilder;
 import com.jgoodies.forms.builder.DefaultFormBuilder;
-import com.jgoodies.forms.builder.PanelBuilder;
 import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
 
@@ -158,12 +157,10 @@ public class SearchForm extends JPanel {
     super();
 
     final FormLayout layoutTop = new FormLayout("default, 3dlu, fill:10dlu:grow", "");
-    final FormLayout layoutSearchIn = new FormLayout("3dlu, default:grow","default, 3dlu, default, default, default");
-    final FormLayout layoutOptions = new FormLayout("3dlu, default, fill:default:grow","default, 3dlu, default, default, default, default, default, default, 3dlu, default");
-
+    
     final JPanel topPanel = new JPanel(layoutTop);
-    final PanelBuilder searchInPanel = new PanelBuilder(layoutSearchIn);
-    final PanelBuilder optionsPanel = new PanelBuilder(layoutOptions);
+    final EnhancedPanelBuilder searchInPanel = new EnhancedPanelBuilder(new FormLayout("3dlu, default:grow"), "3dlu");
+    final EnhancedPanelBuilder optionsPanel = new EnhancedPanelBuilder(new FormLayout("3dlu, default, fill:default:grow"), "3dlu");
 
     final DefaultFormBuilder topBuilder = new DefaultFormBuilder(layoutTop, topPanel);
     
@@ -198,8 +195,8 @@ public class SearchForm extends JPanel {
     // Search in
     bg = new ButtonGroup();
     String msg;
-
-    searchInPanel.addSeparator(LOCALIZER.msg("searchIn", "Search in"), CC.xyw(1,1,2));
+    
+    searchInPanel.addSeparatorRowFull(false, LOCALIZER.msg("searchIn", "Search in"));
 
     final ActionListener updateEnabledListener = e -> {
       updateEnabled();
@@ -209,13 +206,13 @@ public class SearchForm extends JPanel {
     mSearchTitleRB.setSelected(true);
     mSearchTitleRB.addActionListener(updateEnabledListener);
     bg.add(mSearchTitleRB);
-    searchInPanel.add(mSearchTitleRB, CC.xy(2,3));
+    searchInPanel.addRow(mSearchTitleRB, 2);
 
     msg = LOCALIZER.msg("allFields", "All fields");
     mSearchAllRB = new JRadioButton(msg);
     mSearchAllRB.addActionListener(updateEnabledListener);
     bg.add(mSearchAllRB);
-    searchInPanel.add(mSearchAllRB, CC.xy(2,4));
+    searchInPanel.addRow(false, mSearchAllRB, 2);
 
     mSearchUserDefinedRB = new JRadioButton(LOCALIZER.msg("certainFields", "Certain Fields"));
     mSearchUserDefinedRB.addActionListener(updateEnabledListener);
@@ -229,42 +226,41 @@ public class SearchForm extends JPanel {
     JPanel panel = new JPanel(new FormLayout("pref,1dlu:grow,pref","pref"));
     panel.add(mSearchUserDefinedRB, CC.xy(1,1));
     panel.add(mChangeSearchFieldsBt, CC.xy(3,1));
-    searchInPanel.add(panel, CC.xy(2,5));
+    searchInPanel.addRow(false, panel, 2);
 
-    optionsPanel.addSeparator(Localizer.getLocalization(Localizer.I18N_OPTIONS), CC.xyw(1,1,3));
+    optionsPanel.addSeparatorRowFull(false, Localizer.getLocalization(Localizer.I18N_OPTIONS));
 
     mCaseSensitiveChB = new JCheckBox(LOCALIZER.msg("caseSensitive", "Case sensitive"));
-    optionsPanel.add(mCaseSensitiveChB, CC.xy(2,3));
-
+    optionsPanel.addRow(mCaseSensitiveChB, 2);
+    
     bg = new ButtonGroup();
     mSearcherTypeExactlyRB = new JRadioButton(LOCALIZER.msg("matchExactly", "Match exactly"));
     bg.add(mSearcherTypeExactlyRB);
-    optionsPanel.add(mSearcherTypeExactlyRB, CC.xy(2,4));
+    optionsPanel.addRow(false, mSearcherTypeExactlyRB, 2);
     
     mSearcherTypeWholeTermRB = new JRadioButton(LOCALIZER.msg("wholeTerm", "Whole term"));
     bg.add(mSearcherTypeWholeTermRB);
-    optionsPanel.add(mSearcherTypeWholeTermRB, CC.xy(2,5));
+    optionsPanel.addRow(false, mSearcherTypeWholeTermRB, 2);
     
     mSearcherTypeKeywordRB = new JRadioButton(LOCALIZER.msg("matchSubstring", "Term is a keyword"));
     mSearcherTypeKeywordRB.setSelected(true);
     bg.add(mSearcherTypeKeywordRB);
-    optionsPanel.add(mSearcherTypeKeywordRB, CC.xy(2,6));
+    optionsPanel.addRow(false, mSearcherTypeKeywordRB, 2);
     
     mSearcherTypeBooleanRB = new JRadioButton(LOCALIZER.msg("matchBoolean", "Term is a boolean (with AND, OR, a.s.o.)"));
     bg.add(mSearcherTypeBooleanRB);
-    optionsPanel.add(mSearcherTypeBooleanRB, CC.xy(2,7));
+    optionsPanel.addRow(false, mSearcherTypeBooleanRB, 2);
 
     mSearcherTypeRegexRB = new JRadioButton(LOCALIZER.msg("matchRegex", "Term is a regular expression"));
     bg.add(mSearcherTypeRegexRB);
-    optionsPanel.add(mSearcherTypeRegexRB, CC.xy(2,8));
-
+    optionsPanel.addRow(false, mSearcherTypeRegexRB, 2);
+    
     final LinkButton b = new LinkButton(
             "("+LOCALIZER.msg("regExHelp","Help for regular expressions")+")",
             LOCALIZER.msg("regExUrl","http://wiki.tvbrowser.org/index.php/Regul%C3%A4re_Ausdr%C3%BCcke"));
     b.setHorizontalAlignment(SwingConstants.CENTER);
-    optionsPanel.add(b, CC.xy(2,10));
-
-
+    optionsPanel.addRow(b, 2);
+    
     // Set the default settings
     setSearchFormSettings(new SearchFormSettings(""));
 

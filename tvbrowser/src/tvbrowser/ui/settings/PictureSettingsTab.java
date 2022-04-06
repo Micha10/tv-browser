@@ -39,11 +39,9 @@ import javax.swing.SpinnerDateModel;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.event.HyperlinkEvent;
 
-import com.jgoodies.forms.builder.PanelBuilder;
 import com.jgoodies.forms.factories.Borders;
 import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
-import com.jgoodies.forms.layout.RowSpec;
 
 import devplugin.CancelableSettingsTab;
 import devplugin.Marker;
@@ -62,6 +60,7 @@ import util.i18n.Localizer;
 import util.settings.PluginPictureSettings;
 import util.settings.ProgramPanelSettings;
 import util.ui.CaretPositionCorrector;
+import util.ui.EnhancedPanelBuilder;
 import util.ui.MarkerChooserDlg;
 import util.ui.PluginsPictureSettingsPanel;
 import util.ui.UiUtilities;
@@ -150,35 +149,26 @@ public class PictureSettingsTab extends AbstractSettingsTab implements Cancelabl
         }
       });
       
-      
-      FormLayout layout = new FormLayout(
-              "5dlu, 12dlu, 15dlu, default, 5dlu, default, 5dlu, default:grow, default, 5dlu",
-              "default,5dlu,default,default,default,2dlu,default,default,2dlu,default," +
-              "2dlu,default,default,5dlu,default,default,default,10dlu,default,5dlu,"+
-              "default,10dlu,default,5dlu,fill:0dlu:grow,default");
-
-      PanelBuilder pb = new PanelBuilder(layout/*, new ScrollableJPanel()*/);
+      EnhancedPanelBuilder pb = new EnhancedPanelBuilder(new FormLayout("5dlu,12dlu,15dlu,default,5dlu,default,5dlu,default:grow,default,5dlu"));
 
       pb.border(Borders.DIALOG);
+      
+      pb.addSeparatorRowFull(false, LOCALIZER.msg("basics", "Picture settings for the program table"));
 
-      int y = 1;
+      pb.addRowFull(mShowPicturesNever, 2);
+      pb.addRowFull(false, mShowPicturesEver, 2);
+      pb.addRowFull(false, mShowPicturesForSelection, 2);
 
-      pb.addSeparator(LOCALIZER.msg("basics", "Picture settings for the program table"), CC.xyw(1, y, 10));
-
-      pb.add(mShowPicturesNever, CC.xyw(2, y+=2, 9));
-      pb.add(mShowPicturesEver, CC.xyw(2, y+=1, 9));
-      pb.add(mShowPicturesForSelection, CC.xyw(2, y+=1, 9));
-
-      pb.add(mShowPicturesInTimeRange, CC.xyw(3, y+=2, 8));
-      mStartLabel = pb.addLabel(LOCALIZER.msg("startTime", "From:"), CC.xy(4, y+=1));
-      pb.add(mPictureStartTime, CC.xy(6, y));
-      mEndLabel = pb.addLabel(LOCALIZER.msg("endTime", "To:"), CC.xy(4, y+=2));
-      pb.add(mPictureEndTime, CC.xy(6, y));
-
-      pb.add(mShowPicturesForDuration, CC.xyw(3, y+=2, 8));
-      pb.add(mDuration, CC.xy(6, y+=1));
-      final JLabel minutesLabel = pb.addLabel(LOCALIZER.msg("minutes", "Minutes"), CC.xy(8, y));
-      y++;
+      pb.addRowFull("2dlu,default", mShowPicturesInTimeRange, 3);
+      mStartLabel = pb.addLabelRow(LOCALIZER.msg("startTime", "From:"), 4);
+      pb.add(mPictureStartTime, 6);
+      mEndLabel = pb.addLabelRow("2dlu,default", LOCALIZER.msg("endTime", "To:"), 4);
+      pb.add(mPictureEndTime, 6);
+      
+      pb.addRowFull("2dlu,default", mShowPicturesForDuration, 3);
+      pb.addRow(false, mDuration, 6);
+      final JLabel minutesLabel = pb.labelAdd(LOCALIZER.msg("minutes", "Minutes"), 8);
+      
       if (Settings.Pictures.PLUGIN_IDS.getStringArray() != null) {
         JPanel mSubPanel = new JPanel(new FormLayout("15dlu,150dlu:grow,5dlu,pref", "pref,2dlu,pref"));
 
@@ -235,11 +225,8 @@ public class PictureSettingsTab extends AbstractSettingsTab implements Cancelabl
         mSubPanel.add(mPluginLabel, CC.xy(2, 3));
         mSubPanel.add(choose, CC.xy(4, 3));
 
-        layout.insertRow(y, RowSpec.decode("2dlu"));
-        layout.insertRow(y+=1, RowSpec.decode("pref"));
-        pb.add(mSubPanel, CC.xyw(3, y, 7));
-        layout.insertRow(y+=1, RowSpec.decode("2dlu"));
-        y++;
+        pb.addRow("2dlu,default", mSubPanel, 3, 7);
+        pb.addRow("2dlu",false);
       }
       else {
         mPluginLabel.setEnabled(false);
@@ -260,28 +247,16 @@ public class PictureSettingsTab extends AbstractSettingsTab implements Cancelabl
       mShowPicturesForFilter.addItemListener(e -> {
         editFilter.setEnabled(e.getStateChange() == ItemEvent.SELECTED);
       });
-            
-      layout.insertRow(y, RowSpec.decode("default"));
       
-      pb.add(mShowPicturesForFilter, CC.xyw(2, y, 9));
-      
-      y++;
-      
-      layout.insertRow(y, RowSpec.decode("2dlu"));
-      
-      y++;
-      
-      layout.insertRow(y, RowSpec.decode("default"));
-      
-      pb.add(editFilter, CC.xyw(3, y++, 4));
-      
-      pb.add(mShowDescription, CC.xyw(2, y+=1, 9));
+      pb.addRowFull(false, mShowPicturesForFilter);
+      pb.addRow("2dlu,default", editFilter, 3, 4);
+      pb.addRowFull(mShowDescription, 2);
 
       mDescriptionLines = new JSpinner(new SpinnerNumberModel(Settings.Pictures.DESCRIPTION_LINES.getInt(), 1, 20, 1));
-      pb.add(mDescriptionLines, CC.xyw(3, y+=1, 4));
+      pb.addRow(false, mDescriptionLines, 3, 4);
       mDescriptionLabel = new JLabel(LOCALIZER.msg("lines", "lines"));
-  	  pb.add(mDescriptionLabel, CC.xy(8, y));
-      pb.add(mShowPictureBorderProgramTable, CC.xyw(3,y+=1,8));
+  	  pb.add(mDescriptionLabel, 8);
+      pb.addRowFull(false, mShowPictureBorderProgramTable, 3);
   	  mDescriptionLabel.setEnabled(mShowDescription.isSelected());
   	  mDescriptionLines.setEnabled(mShowDescription.isSelected());
   	  mShowPictureBorderProgramTable.setEnabled(!mShowDescription.isSelected());
@@ -289,10 +264,10 @@ public class PictureSettingsTab extends AbstractSettingsTab implements Cancelabl
   		  mDescriptionLines.setEnabled(mShowDescription.isSelected());
   		  mDescriptionLabel.setEnabled(mShowDescription.isSelected());
   		});
-    
-      pb.addSeparator(LOCALIZER.msg("pluginPictureTitle", "Default picture settings for the program lists of the Plugins"), CC.xyw(1, y+=2, 9));
-      pb.add(mPluginsPictureSettings = new PluginsPictureSettingsPanel(new PluginPictureSettings(Settings.Pictures.PLUGINS_SETTING.getInt()), true), CC.xyw(2, y+=2, 8));
-      pb.add(helpLabel, CC.xyw(1, y+=2, 10));
+
+      pb.addParagraph(LOCALIZER.msg("pluginPictureTitle", "Default picture settings for the program lists of the Plugins"), 1, 9);
+      pb.addRow(mPluginsPictureSettings = new PluginsPictureSettingsPanel(new PluginPictureSettings(Settings.Pictures.PLUGINS_SETTING.getInt()), true), 2, 8);
+      pb.addRowFull("10dlu,default", helpLabel);
       
       if(PLUGIN_PICTURE_SELECTION_ORIGINAL == -1) {
         PLUGIN_PICTURE_SELECTION_ORIGINAL = mPluginsPictureSettings.getSettings().getType();
@@ -301,8 +276,6 @@ public class PictureSettingsTab extends AbstractSettingsTab implements Cancelabl
       mPluginsPictureSettings.addChangeListener(e -> {
         Settings.setRestartInfo(PictureSettingsTab.class.getCanonicalName(), PLUGIN_PICTURE_SELECTION_ORIGINAL != mPluginsPictureSettings.getSettings().getType());
       });
-      
-      y+=3;
       
       mShowPicturesInTimeRange.addItemListener(e -> {
         mPictureStartTime.setEnabled(mShowPicturesInTimeRange.isSelected());

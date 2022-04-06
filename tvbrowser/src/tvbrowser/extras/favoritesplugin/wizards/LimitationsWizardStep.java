@@ -33,12 +33,9 @@ import java.awt.event.FocusEvent;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import com.jgoodies.forms.builder.PanelBuilder;
 import com.jgoodies.forms.factories.Borders;
-import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 
 import devplugin.Channel;
@@ -47,12 +44,13 @@ import tvbrowser.extras.common.LimitationConfiguration;
 import tvbrowser.extras.common.LimitationConfiguration.DayLimitValue;
 import tvbrowser.extras.favoritesplugin.core.Favorite;
 import util.ui.ChannelChooserDlg;
+import util.ui.EnhancedPanelBuilder;
 import util.ui.TimePeriodChooser;
 import util.ui.UiUtilities;
 
 public class LimitationsWizardStep extends AbstractWizardStep {
 
-  private static final util.i18n.Localizer mLocalizer = util.i18n.Localizer
+  private static final util.i18n.Localizer LOCALIZER = util.i18n.Localizer
       .getLocalizerFor(LimitationsWizardStep.class);
 
   private JCheckBox mChannelCb;
@@ -81,7 +79,7 @@ public class LimitationsWizardStep extends AbstractWizardStep {
   }
 
   public String getTitle() {
-    return mLocalizer.msg("title", "Limitations");
+    return LOCALIZER.msg("title", "Limitations");
   }
 
   public JPanel createContent(WizardHandler handler) {
@@ -111,20 +109,16 @@ public class LimitationsWizardStep extends AbstractWizardStep {
     }
     mTimePeriodChooser = new TimePeriodChooser(lowBnd, upBnd, TimePeriodChooser.ALIGN_RIGHT);
 
-    CellConstraints cc = new CellConstraints();
-    PanelBuilder panelBuilder = new PanelBuilder(new FormLayout("pref, default:grow, pref", "pref, 5dlu, pref, 5dlu, pref, 5dlu, pref, 5dlu, pref"));
-
+    EnhancedPanelBuilder panelBuilder = new EnhancedPanelBuilder(new FormLayout("pref, default:grow, pref"));
     panelBuilder.border(Borders.DLU4);
-    panelBuilder.add(new JLabel(mLocalizer.msg("mainQuestion", "Are there any limitations?")), cc.xy(1, 1));
-    panelBuilder.add(mChannelCb = new JCheckBox(mLocalizer.msg("limitByChannel",
-        "Certain channels only:")), cc.xy(1, 3));
-    panelBuilder.add(mDayOfWeekCb = new JCheckBox(mLocalizer.msg("limitByDayOfWeek","Certain day of week only:")), cc.xy(1,5));
-    panelBuilder.add(mTimeCb = new JCheckBox(mLocalizer.msg("limitByTime",
-        "Certain start times only:")), cc.xy(1, 7));
 
-    panelBuilder.add(mChooseChannelsBtn = new JButton(mLocalizer.msg("selectChannels","Select channels")), cc.xy(3,3));
-    panelBuilder.add(mDayOfWeekCombo, cc.xy(3,5));
-    panelBuilder.add(mTimePeriodChooser, cc.xy(3,7));
+    panelBuilder.addLabelRow(false, LOCALIZER.msg("mainQuestion", "Are there any limitations?"), 1);
+    panelBuilder.addRow(mChannelCb = new JCheckBox(LOCALIZER.msg("limitByChannel", "Certain channels only:")), 1);
+    panelBuilder.add(mChooseChannelsBtn = new JButton(LOCALIZER.msg("selectChannels","Select channels")), 3);
+    panelBuilder.addRow(mDayOfWeekCb = new JCheckBox(LOCALIZER.msg("limitByDayOfWeek","Certain day of week only:")), 1);
+    panelBuilder.add(mDayOfWeekCombo, 3);
+    panelBuilder.addRow(mTimeCb = new JCheckBox(LOCALIZER.msg("limitByTime", "Certain start times only:")), 1);
+    panelBuilder.add(mTimePeriodChooser, 3);
 
     updateControls();
 

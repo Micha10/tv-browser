@@ -19,9 +19,7 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 
 import com.jgoodies.forms.builder.ButtonBarBuilder;
-import com.jgoodies.forms.builder.PanelBuilder;
 import com.jgoodies.forms.factories.Borders;
-import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.Sizes;
 
@@ -106,11 +104,10 @@ public class SendToPluginDialog extends JDialog implements WindowClosingIf {
   private void createDialog(Window parent) {
     setTitle(LOCALIZER.msg("title", "Send to other Plugin"));
     
-    PanelBuilder pb = new PanelBuilder(new FormLayout("5dlu,0dlu:grow,5dlu",
-        "default,5dlu,default,5dlu,default,5dlu,default,default,fill:10dlu:grow,default"));
+    final EnhancedPanelBuilder pb = new EnhancedPanelBuilder(new FormLayout("5dlu,0dlu:grow,5dlu"));
     pb.border(Borders.DIALOG);
-    
-    pb.addSeparator(LOCALIZER.msg("sendTo", "Send {0} programs to", mPrograms.length), CC.xyw(1,1,3));
+
+    pb.addSeparatorRowFull(false, LOCALIZER.msg("sendTo", "Send {0} programs to", mPrograms.length));
     
     mSendType = ProgramReceiveTarget.TYPE_EVENT_UNDIFINED;
     mTypeAdd = new JRadioButton(LOCALIZER.msg("add", "Add"),true);
@@ -129,10 +126,11 @@ public class SendToPluginDialog extends JDialog implements WindowClosingIf {
     bg.add(mTypeAdd);
     bg.add(mTypeRemove);
     
-    PanelBuilder sending = new PanelBuilder(new FormLayout("5dlu,0dlu:grow,5dlu","5dlu,default,5dlu,default,default"));
-    sending.addSeparator(LOCALIZER.msg("type", "Type of sending"),CC.xyw(1, 2, 3));
-    sending.add(mTypeAdd, CC.xy(2, 4));
-    sending.add(mTypeRemove, CC.xy(2, 5));
+    EnhancedPanelBuilder sending = new EnhancedPanelBuilder(new FormLayout("5dlu,0dlu:grow,5dlu"));
+    
+    sending.addSeparatorRowFull(LOCALIZER.msg("type", "Type of sending"));
+    sending.addRow(mTypeAdd, 2);
+    sending.addRow(false, mTypeRemove, 2);
     
     final JPanel sendingPanel = sending.getPanel();
     
@@ -142,9 +140,9 @@ public class SendToPluginDialog extends JDialog implements WindowClosingIf {
     Arrays.sort(installedPluginArr, new ObjectComparator());
     
     mPluginList = new JComboBox<>(installedPluginArr);
-    pb.add(mPluginList, CC.xy(2, 3));
-
-    pb.addSeparator(LOCALIZER.msg("target","Target:"), CC.xyw(1,5,3));
+    pb.addRow(mPluginList, 2);
+    
+    pb.addSeparatorRowFull(LOCALIZER.msg("target","Target:"));
     
     mTargetList = new JComboBox<>(installedPluginArr[0].getProgramReceiveTargets());
     mTargetList.addItemListener(e -> {
@@ -156,8 +154,9 @@ public class SendToPluginDialog extends JDialog implements WindowClosingIf {
         mSendType = eventType;
       }
     });
-    pb.add(mTargetList, CC.xy(2, 7));
-    pb.add(sendingPanel, CC.xyw(1, 8, 3));
+    
+    pb.addRow(mTargetList, 2);
+    pb.addRowFull(false, sendingPanel);
     
     sendingPanel.setVisible(installedPluginArr[0].canReceiveProgramsWithTarget()&& mTargetList.getItemCount() > 1);
     
@@ -236,7 +235,7 @@ public class SendToPluginDialog extends JDialog implements WindowClosingIf {
     buttonBuilder.addGlue();
     buttonBuilder.addButton(new JButton[] {sendButton, cancelButton});
     
-    pb.add(buttonBuilder.getPanel(), CC.xyw(1,10,3));
+    pb.addRowFull("fill:10dlu:grow,default", buttonBuilder.getPanel());
     
     setLayout(new BorderLayout());
     add(pb.getPanel(), BorderLayout.CENTER);

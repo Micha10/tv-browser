@@ -34,9 +34,7 @@ import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
-import com.jgoodies.forms.builder.PanelBuilder;
 import com.jgoodies.forms.factories.Borders;
-import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
 
 import devplugin.Plugin;
@@ -53,6 +51,7 @@ import tvbrowser.ui.filter.dlgs.SelectFilterDlg;
 import tvbrowser.ui.mainframe.MainFrame;
 import util.exc.TvBrowserException;
 import util.i18n.Localizer;
+import util.ui.EnhancedPanelBuilder;
 import util.ui.SearchFormSettings;
 import util.ui.UiUtilities;
 
@@ -192,7 +191,7 @@ public class FilterFavorite extends Favorite implements PendingFilterLoader {
     
     @Override
     public JPanel createConfigurationPanel() {
-      PanelBuilder pb = new PanelBuilder(new FormLayout("default:grow,3dlu,default","default,3dlu,default"));
+      EnhancedPanelBuilder pb = new EnhancedPanelBuilder(new FormLayout("default:grow,3dlu,default"),"3dlu");
       pb.border(Borders.createEmptyBorder("2dlu,0dlu,2dlu,0dlu"));
       
       ArrayList<ProgramFilter> selectableFilter = new ArrayList<ProgramFilter>();
@@ -231,9 +230,9 @@ public class FilterFavorite extends Favorite implements PendingFilterLoader {
         mFilterSelection.setSelectedItem(selected);
       });
       
-      pb.addLabel(LOCALIZER.msg("message", "Programs that are accepted by this filter will be marked as Favorite:"), CC.xyw(1, 1, 3));
-      pb.add(mFilterSelection, CC.xy(1,3));
-      pb.add(editFilter, CC.xy(3, 3));
+      pb.addLabelRowFull(false, LOCALIZER.msg("message", "Programs that are accepted by this filter will be marked as Favorite:"));
+      pb.addRow(mFilterSelection, 1);
+      pb.add(editFilter, 3);
       
       return pb.getPanel();
     }

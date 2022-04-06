@@ -14,8 +14,6 @@ import javax.swing.ListSelectionModel;
 import javax.swing.SwingUtilities;
 import javax.swing.event.HyperlinkEvent;
 
-import com.jgoodies.forms.builder.PanelBuilder;
-import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 
 import devplugin.Plugin;
@@ -23,9 +21,9 @@ import devplugin.SettingsItem;
 import tvbrowser.ui.mainframe.MainFrame;
 import tvbrowser.ui.settings.GlobalPluginProgramFormatingSettings;
 import tvbrowser.ui.settings.SettingsDialog;
+import util.i18n.Localizer;
 import util.program.AbstractPluginProgramFormating;
 import util.program.LocalPluginProgramFormating;
-import util.i18n.Localizer;
 
 /**
  * A class that provides a panel for configuration of the
@@ -55,8 +53,7 @@ public class PluginProgramConfigurationPanel extends JPanel implements ActionLis
    * @param showEncodingSetting Show the encoding setting part of this dialog.
    */
   public PluginProgramConfigurationPanel(AbstractPluginProgramFormating[] selectedValues, LocalPluginProgramFormating[] availableLocalFormatings, LocalPluginProgramFormating defaultLocalFormating, boolean showTitleSetting, boolean showEncodingSetting) {
-    CellConstraints cc = new CellConstraints();
-    PanelBuilder pb = new PanelBuilder(new FormLayout("5dlu,default:grow,5dlu","pref,fill:default:grow,5dlu,pref,10dlu,pref"), this);
+    final EnhancedPanelBuilder pb = new EnhancedPanelBuilder(new FormLayout("5dlu,default:grow,5dlu"), this);
     
     mDefaultLocalFormating = (defaultLocalFormating == null) ? new LocalPluginProgramFormating("Plugin - Default","{title}","{channel_name} - {title}\n{leadingZero(start_day,\"2\")}.{leadingZero(start_month,\"2\")}.{start_year} {leadingZero(start_hour,\"2\")}:{leadingZero(start_minute,\"2\")}-{leadingZero(end_hour,\"2\")}:{leadingZero(end_minute,\"2\")}\n\n{splitAt(short_info,\"78\")}\n\n","UTF-8") : defaultLocalFormating;
     mShowTitleSetting = showTitleSetting;
@@ -85,10 +82,8 @@ public class PluginProgramConfigurationPanel extends JPanel implements ActionLis
     
     AbstractPluginProgramFormating[] allArr = formatingsList.toArray(new AbstractPluginProgramFormating[formatingsList.size()]);
     
-    FormLayout layout = new FormLayout("default,5dlu,default,5dlu,default","pref");
-    layout.setColumnGroups(new int[][] {{1,3,5}});
-    
-    JPanel buttonPanel = new JPanel(layout);
+    EnhancedPanelBuilder buttonPanel = new EnhancedPanelBuilder(new FormLayout("default,5dlu,default,5dlu,default","default"));
+    buttonPanel.getLayout().setColumnGroups(new int[][] {{1,3,5}});
     
     mAdd = new JButton(Localizer.getLocalization(Localizer.I18N_ADD));
     mAdd.setIcon(TVBrowserIcons.newIcon(TVBrowserIcons.SIZE_SMALL));
@@ -104,9 +99,9 @@ public class PluginProgramConfigurationPanel extends JPanel implements ActionLis
     mDelete.setEnabled(false);
     mDelete.addActionListener(this);
     
-    buttonPanel.add(mAdd, cc.xy(1,1));
-    buttonPanel.add(mEdit, cc.xy(3,1));
-    buttonPanel.add(mDelete, cc.xy(5,1));
+    buttonPanel.add(mAdd, 1);
+    buttonPanel.add(mEdit, 3);
+    buttonPanel.add(mDelete, 5);
     
     mOrder = new OrderChooser<>(selectedValues == null ? allArr : selectedValues, allArr);
     mOrder.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -134,10 +129,10 @@ public class PluginProgramConfigurationPanel extends JPanel implements ActionLis
       }
     });
     
-    pb.addLabel(LOCALIZER.msg("title","Formatings that should be shown for selection in the context menu:"),cc.xy(2,1));
-    pb.add(mOrder, cc.xy(2,2));
-    pb.add(buttonPanel, cc.xy(2,4));
-    pb.add(mHelpLabel, cc.xy(2,6));
+    pb.addLabelRow(false, LOCALIZER.msg("title","Formatings that should be shown for selection in the context menu:"), 2);
+    pb.addRow("fill:default:grow",false, mOrder, 2);
+    pb.addRow(buttonPanel.getPanel(), 2);
+    pb.addRow("10dlu,pref", mHelpLabel, 2);
   }
   
   /**

@@ -55,7 +55,6 @@ import javax.swing.SwingUtilities;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 
-import com.jgoodies.forms.builder.PanelBuilder;
 import com.jgoodies.forms.factories.Borders;
 import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
@@ -77,6 +76,7 @@ import tvbrowser.core.plugin.PluginProxyManager;
 import tvbrowser.core.plugin.PluginStateAdapter;
 import tvbrowser.ui.settings.util.LineButton;
 import util.i18n.Localizer;
+import util.ui.EnhancedPanelBuilder;
 import util.ui.FixedSizeIcon;
 import util.ui.LineComponent;
 import util.ui.TVBrowserIcons;
@@ -120,14 +120,13 @@ public class ContextmenuSettingsTab implements devplugin.SettingsTab {
     
     createList();
 
-    PanelBuilder contentPanel = new PanelBuilder(new FormLayout("5dlu, pref, 3dlu, pref, fill:pref:grow, 3dlu",
-        "pref, 5dlu, pref, 3dlu, fill:pref:grow, 2dlu, default"));
+    EnhancedPanelBuilder contentPanel = new EnhancedPanelBuilder(new FormLayout("5dlu, default, 3dlu, default, fill:default:grow, 3dlu"));
     contentPanel.border(Borders.DIALOG);
-    
-    contentPanel.addSeparator(LOCALIZER.msg("title", "Title"), CC.xyw(1, 1, 6));
-    contentPanel.add(UiUtilities.createHelpTextArea(LOCALIZER.msg("ItemOrder", "Item Order:")), CC.xyw(2, 3, 4));
-    contentPanel.add(mList, CC.xyw(2, 5, 4));
-    contentPanel.add(genericFilterLink, CC.xyw(2, 7, 4));
+     
+    contentPanel.addSeparatorRowFull(false, LOCALIZER.msg("title", "Title"));
+    contentPanel.addRowFull(UiUtilities.createHelpTextArea(LOCALIZER.msg("ItemOrder", "Item Order:")), 2);
+    contentPanel.addRowFull("3dlu, fill:pref:grow", mList, 2);
+    contentPanel.addRowFull("2dlu, default", genericFilterLink, 2);
     
     fillListbox();
 

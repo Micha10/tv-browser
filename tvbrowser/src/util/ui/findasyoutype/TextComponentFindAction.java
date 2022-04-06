@@ -24,11 +24,10 @@ import javax.swing.text.Caret;
 import javax.swing.text.JTextComponent;
 import javax.swing.text.Position;
 
-import com.jgoodies.forms.builder.PanelBuilder;
-import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 
 import tvbrowser.core.icontheme.IconLoader;
+import util.ui.EnhancedPanelBuilder;
 import util.ui.TVBrowserIcons;
 
 /**
@@ -69,11 +68,8 @@ public class TextComponentFindAction extends FindAction implements
 
   // Added method for building up the search bar
   private void ini() {
-    PanelBuilder b = new PanelBuilder(new FormLayout(
-        "2dlu,pref,5dlu,pref,5dlu,100dlu,5dlu,pref,5dlu,pref,15dlu,pref",
-        "pref,3dlu"));
-    CellConstraints cc = new CellConstraints();
-
+    EnhancedPanelBuilder b = new EnhancedPanelBuilder(new FormLayout("2dlu,default,5dlu,default,5dlu,100dlu,5dlu,default,5dlu,default,15dlu,default","default,3dlu"));
+    
     mSearchBar = b.getPanel();
     mSearchBar.addComponentListener(this);
     mSearchBar.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, mSearchBar.getBackground().darker()));
@@ -127,12 +123,12 @@ public class TextComponentFindAction extends FindAction implements
       }
     });
 
-    b.add(mSearchCloseBtn, cc.xy(2, 1));
-    b.addLabel(mLocalizer.msg("find", "Find:"), cc.xy(4, 1));
-    b.add(searchField, cc.xy(6, 1));
-    b.add(mFindNext, cc.xy(8, 1));
-    b.add(mFindPrev, cc.xy(10, 1));
-    b.add(getMessageLabel(), cc.xy(12, 1));
+    b.add(mSearchCloseBtn, 2);
+    b.labelAdd(mLocalizer.msg("find", "Find:"), 4);
+    b.add(searchField, 6);
+    b.add(mFindNext, 8);
+    b.add(mFindPrev, 10);
+    b.add(getMessageLabel(), 12);
 
     /*
      * Close action for the SearchPanel.

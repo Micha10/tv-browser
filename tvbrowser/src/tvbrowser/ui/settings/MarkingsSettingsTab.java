@@ -35,9 +35,7 @@ import javax.swing.JEditorPane;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import com.jgoodies.forms.builder.PanelBuilder;
 import com.jgoodies.forms.factories.Borders;
-import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
 
 import devplugin.SettingsTab;
@@ -68,13 +66,13 @@ public class MarkingsSettingsTab implements SettingsTab {
   private DefaultMarkingPrioritySelectionPanel mDefaultColors;
   
   public JPanel createSettingsPanel() {
-    PanelBuilder pb = new PanelBuilder(new FormLayout("5dlu,default:grow,default","default,5dlu,default,10dlu,default,5dlu,default,10dlu,default,5dlu,pref,fill:10dlu:grow,default,default"));
+    EnhancedPanelBuilder pb = new EnhancedPanelBuilder(new FormLayout("5dlu,default:grow,default"));
     pb.border(Borders.DIALOG);
     
-    JPanel defaultMarkings = new JPanel(new FormLayout("default:grow","default,2dlu,default"));
+    EnhancedPanelBuilder defaultMarkings = new EnhancedPanelBuilder(new FormLayout("default:grow"),"2dlu");
     
-    defaultMarkings.add(mProgramPanelUsesExtraSpaceForMarkIcons = new JCheckBox(LOCALIZER.msg("panel.extraSpace","Use additional space for the mark icons"), Settings.Markings.USES_EXTRA_SPACE_FOR_MARK_ICONS.getBoolean()), CC.xy(1,1));
-    defaultMarkings.add(mProgramItemWithMarkingsIsShowingBorder = new JCheckBox(LOCALIZER.msg("color.showBorder","Show border for highlighted programs"), Settings.Markings.WITH_MARKINGS_SHOWING_BORDER.getBoolean()), CC.xy(1,3));
+    defaultMarkings.addRow(false, mProgramPanelUsesExtraSpaceForMarkIcons = new JCheckBox(LOCALIZER.msg("panel.extraSpace","Use additional space for the mark icons"), Settings.Markings.USES_EXTRA_SPACE_FOR_MARK_ICONS.getBoolean()), 1);
+    defaultMarkings.addRow(mProgramItemWithMarkingsIsShowingBorder = new JCheckBox(LOCALIZER.msg("color.showBorder","Show border for highlighted programs"), Settings.Markings.WITH_MARKINGS_SHOWING_BORDER.getBoolean()), 1);
     
     mDefaultColors = DefaultMarkingPrioritySelectionPanel.createPanel(new int[] {Settings.Markings.MARK_PRIORITY_DEFAULT.getInt(),Settings.Markings.MARK_PRIORITY_FILTERS.getInt()}, new String[] {LOCALIZER.msg("color.highlightedByPlugins","Highlighted by plugins:"),LOCALIZER.msg("color.highlightedByFilters","Highlighted by filters:")}, false, false, false);
     
@@ -126,14 +124,14 @@ public class MarkingsSettingsTab implements SettingsTab {
     HighlightPanel lastPanel = (HighlightPanel)mHighlightings.getComponent(mHighlightings.getComponentCount()-1);
     lastPanel.setDeleteEnabled(!lastPanel.isDefaultColor());
     
-    pb.addSeparator(LOCALIZER.msg("color.programMarked","Highlighting by plugins"), CC.xyw(1,1,3));
-    pb.add(defaultMarkings, CC.xyw(2,3,2));
-    pb.addSeparator(LOCALIZER.msg("color.default","Default colors"), CC.xyw(1,5,3));
-    pb.add(mDefaultColors, CC.xyw(2,7,2));
-    pb.addSeparator(LOCALIZER.msg("color.programMarkedAdditional","Additional colors (replacing default color)"), CC.xyw(1,9,3));
-    pb.add(mHighlightings, CC.xyw(1,11,3));
-    pb.add(addColor, CC.xy(3, 13));
-    pb.add(mHelpLabel, CC.xyw(2,14,2));
+    pb.addSeparatorRowFull(false, LOCALIZER.msg("color.programMarked","Highlighting by plugins"));
+    pb.addRowFull(defaultMarkings.getPanel(), 2);
+    pb.addParagraph(LOCALIZER.msg("color.default","Default colors"));
+    pb.addRowFull(mDefaultColors, 2);
+    pb.addParagraph(LOCALIZER.msg("color.programMarkedAdditional","Additional colors (replacing default color)"));
+    pb.addRowFull(mHighlightings);
+    pb.addRow("fill:10dlu:grow,default", addColor, 3);
+    pb.addRowFull(mHelpLabel, 2);
     
     return pb.getPanel();
   }

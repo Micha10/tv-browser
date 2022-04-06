@@ -36,13 +36,10 @@ import javax.swing.JPanel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import com.jgoodies.forms.builder.PanelBuilder;
-import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 
 import devplugin.ProgramReceiveIf;
 import devplugin.ProgramReceiveTarget;
-
 import util.i18n.Localizer;
 
 /**
@@ -79,7 +76,7 @@ public class ProgramReceiveTargetSelectionPanel extends JPanel {
    */
   public ProgramReceiveTargetSelectionPanel(final Window parent, ProgramReceiveTarget[] receiveTargetArr,
       final String description, final ProgramReceiveIf caller, boolean withTitle, String title) {
-    PanelBuilder pb = new PanelBuilder(new FormLayout("5dlu,150dlu:grow,5dlu,default,5dlu",withTitle? "pref,5dlu,pref" : "pref"),this);
+    final EnhancedPanelBuilder pb = new EnhancedPanelBuilder(new FormLayout("5dlu,150dlu:grow,5dlu,default,5dlu"),this);
     
     mReceiveTargets = receiveTargetArr;
     
@@ -112,20 +109,15 @@ public class ProgramReceiveTargetSelectionPanel extends JPanel {
       ;}catch(Exception ee) {ee.printStackTrace();}
     });
     
-    CellConstraints cc = new CellConstraints();
-    
     if(withTitle) {
-      pb.addSeparator(title == null ? LOCALIZER.msg("defaultTitle","Send programs to:") : title, cc.xyw(1,1,5));
-      pb.add(mReceiveTargetLabel, cc.xy(2,3));
-      pb.add(selectionButton, cc.xy(4,3));
+      pb.addSeparatorRowFull(false, (title == null ? LOCALIZER.msg("defaultTitle","Send programs to:") : title));
+      pb.addLineGap();
     }
-    else {
-      pb.add(mReceiveTargetLabel, cc.xy(2,1));
-      pb.add(selectionButton, cc.xy(4,1));
-    }
+    
+    pb.addRow(false, mReceiveTargetLabel, 2);
+    pb.add(selectionButton, 4);
     
     handlePluginSelection();
-    
   }
   
   private void handlePluginSelection() {

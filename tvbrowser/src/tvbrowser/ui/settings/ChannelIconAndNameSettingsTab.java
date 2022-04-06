@@ -32,14 +32,13 @@ import javax.swing.JCheckBox;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 
-import com.jgoodies.forms.builder.PanelBuilder;
 import com.jgoodies.forms.factories.Borders;
-import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
 
 import devplugin.CancelableSettingsTab;
 import tvbrowser.core.Settings;
 import util.settings.ProgramPanelSettings;
+import util.ui.EnhancedPanelBuilder;
 
 /**
  * Settings for the icon and name values in
@@ -75,22 +74,16 @@ public class ChannelIconAndNameSettingsTab implements CancelableSettingsTab {
    * Creates the settings panel for this tab.
    */
   public JPanel createSettingsPanel() {
-    PanelBuilder pb = new PanelBuilder(new FormLayout("5dlu, default:grow, default, 5dlu",
-    "default,5dlu,default,default,default,5dlu,default,default,10dlu,default," +
-    "5dlu,default,default,10dlu,default,5dlu,default,default,default,5dlu,default,fill:0dlu:grow,default"));
+    EnhancedPanelBuilder pb = new EnhancedPanelBuilder(new FormLayout("5dlu, default:grow, default, 5dlu"));
     pb.border(Borders.DIALOG);
-
-    int y = 1;
     
-    pb.addSeparator(LOCALIZER.msg("programTable","Program table"), CC.xyw(1,y++,4));
-    pb.add(mShowIconAndNameInProgramTable = new JRadioButton(LOCALIZER.msg("showIconAndName","Show channel icon and channel name"), Settings.IconAndNames.SHOW_ICONS_IN_PROGRAM_TABLE.getBoolean() && Settings.IconAndNames.SHOW_NAMES_IN_PROGRAM_TABLE.getBoolean()), CC.xyw(2,++y,2));
-    pb.add(mShowOnlyIconInProgramTable = new JRadioButton(LOCALIZER.msg("showOnlyIcon","Show channel icon"), Settings.IconAndNames.SHOW_ICONS_IN_PROGRAM_TABLE.getBoolean() && !Settings.IconAndNames.SHOW_NAMES_IN_PROGRAM_TABLE.getBoolean()), CC.xyw(2,++y,2));
-    pb.add(mShowOnlyNameInProgramTable = new JRadioButton(LOCALIZER.msg("showOnlyName","Show channel name"), Settings.IconAndNames.SHOW_NAMES_IN_PROGRAM_TABLE.getBoolean() && !Settings.IconAndNames.SHOW_ICONS_IN_PROGRAM_TABLE.getBoolean()), CC.xyw(2,++y,2));
+    pb.addSeparatorRowFull(false, LOCALIZER.msg("programTable","Program table"));
+    pb.addRow(mShowIconAndNameInProgramTable = new JRadioButton(LOCALIZER.msg("showIconAndName","Show channel icon and channel name"), Settings.IconAndNames.SHOW_ICONS_IN_PROGRAM_TABLE.getBoolean() && Settings.IconAndNames.SHOW_NAMES_IN_PROGRAM_TABLE.getBoolean()), 2, 2);
+    pb.addRow(false, mShowOnlyIconInProgramTable = new JRadioButton(LOCALIZER.msg("showOnlyIcon","Show channel icon"), Settings.IconAndNames.SHOW_ICONS_IN_PROGRAM_TABLE.getBoolean() && !Settings.IconAndNames.SHOW_NAMES_IN_PROGRAM_TABLE.getBoolean()), 2, 2);
+    pb.addRow(false, mShowOnlyNameInProgramTable = new JRadioButton(LOCALIZER.msg("showOnlyName","Show channel name"), Settings.IconAndNames.SHOW_NAMES_IN_PROGRAM_TABLE.getBoolean() && !Settings.IconAndNames.SHOW_ICONS_IN_PROGRAM_TABLE.getBoolean()), 2, 2);
     
-    y += 2;
-    
-    pb.add(mShowSortNumberInProgramTable = new JCheckBox(LOCALIZER.msg("showChannelNumber", "Show sort number"), Settings.IconAndNames.SHOW_SORT_NUMBER_IN_PROGRAM_TABLE.getBoolean()), CC.xy(2, y++));
-    pb.add(mShowTooltipInProgramTable = new JCheckBox(LOCALIZER.msg("showToolTip","Show large channel icons in tooltip"), Settings.IconAndNames.SHOW_CHANNEL_TOOLTIP_IN_PROGRAM_TABLE.getBoolean()), CC.xy(2,y));
+    pb.addRow(mShowSortNumberInProgramTable = new JCheckBox(LOCALIZER.msg("showChannelNumber", "Show sort number"), Settings.IconAndNames.SHOW_SORT_NUMBER_IN_PROGRAM_TABLE.getBoolean()), 2);
+    pb.addRow(false, mShowTooltipInProgramTable = new JCheckBox(LOCALIZER.msg("showToolTip","Show large channel icons in tooltip"), Settings.IconAndNames.SHOW_CHANNEL_TOOLTIP_IN_PROGRAM_TABLE.getBoolean()), 2);
     
     mShowTooltipInProgramTable.setEnabled(!mShowOnlyNameInProgramTable.isSelected());
     
@@ -103,11 +96,9 @@ public class ChannelIconAndNameSettingsTab implements CancelableSettingsTab {
     programTable.add(mShowOnlyIconInProgramTable);
     programTable.add(mShowOnlyNameInProgramTable);
     
-    y += 2;
-    
-    pb.addSeparator(LOCALIZER.msg("programPanels", "Program panels"),CC.xyw(1,y++,4));
-    pb.add(mShowIconInProgramPanelPlugins = new JRadioButton(LOCALIZER.msg("showLogoPlugins", "Plugins decide showing of channel logos"), Settings.IconAndNames.SHOW_LOGO_FOR_PROGRAM_PANEL.getInt() == ProgramPanelSettings.SHOW_CHANNEL_LOGO_PLUGINS_CONTROL), CC.xyw(2,++y,2));
-    pb.add(mShowIconInProgramPanelNever = new JRadioButton(LOCALIZER.msg("showLogoNever", "Channel logos are never shown"), Settings.IconAndNames.SHOW_LOGO_FOR_PROGRAM_PANEL.getInt() == ProgramPanelSettings.SHOW_CHANNEL_LOGO_NEVER), CC.xyw(2,++y,2));
+    pb.addParagraph(LOCALIZER.msg("programPanels", "Program panels"));
+    pb.addRow(mShowIconInProgramPanelPlugins = new JRadioButton(LOCALIZER.msg("showLogoPlugins", "Plugins decide showing of channel logos"), Settings.IconAndNames.SHOW_LOGO_FOR_PROGRAM_PANEL.getInt() == ProgramPanelSettings.SHOW_CHANNEL_LOGO_PLUGINS_CONTROL), 2, 2);
+    pb.addRow(false, mShowIconInProgramPanelNever = new JRadioButton(LOCALIZER.msg("showLogoNever", "Channel logos are never shown"), Settings.IconAndNames.SHOW_LOGO_FOR_PROGRAM_PANEL.getInt() == ProgramPanelSettings.SHOW_CHANNEL_LOGO_NEVER), 2, 2);
     
     if(INDEX_ICONS_PROGRAM_PANEL == -1) {
       INDEX_ICONS_PROGRAM_PANEL = Settings.IconAndNames.SHOW_LOGO_FOR_PROGRAM_PANEL.getInt();
@@ -117,16 +108,12 @@ public class ChannelIconAndNameSettingsTab implements CancelableSettingsTab {
     programPanels.add(mShowIconInProgramPanelPlugins);
     programPanels.add(mShowIconInProgramPanelNever);
     
-    y += 2;
+    pb.addParagraph(LOCALIZER.msg("channelLists","Channel lists"), 1, 4);
+    pb.addRow(mShowIconAndNameInChannelLists = new JRadioButton(LOCALIZER.msg("showIconAndName","Show channel icon and channel name"), Settings.IconAndNames.SHOW_ICONS_IN_CHANNEL_LIST.getBoolean() && Settings.IconAndNames.SHOW_NAMES_IN_CHANNEL_LIST.getBoolean()), 2, 2);
+    pb.addRow(false, mShowOnlyIconInChannelLists = new JRadioButton(LOCALIZER.msg("showOnlyIcon","Show channel icon"), Settings.IconAndNames.SHOW_ICONS_IN_CHANNEL_LIST.getBoolean() && !Settings.IconAndNames.SHOW_NAMES_IN_CHANNEL_LIST.getBoolean()), 2, 2);
+    pb.addRow(false, mShowOnlyNameInChannelLists = new JRadioButton(LOCALIZER.msg("showOnlyName","Show channel name"), Settings.IconAndNames.SHOW_NAMES_IN_CHANNEL_LIST.getBoolean() && !Settings.IconAndNames.SHOW_ICONS_IN_CHANNEL_LIST.getBoolean()), 2, 2);
     
-    pb.addSeparator(LOCALIZER.msg("channelLists","Channel lists"), CC.xyw(1,y++,4));
-    pb.add(mShowIconAndNameInChannelLists = new JRadioButton(LOCALIZER.msg("showIconAndName","Show channel icon and channel name"), Settings.IconAndNames.SHOW_ICONS_IN_CHANNEL_LIST.getBoolean() && Settings.IconAndNames.SHOW_NAMES_IN_CHANNEL_LIST.getBoolean()), CC.xyw(2,++y,2));
-    pb.add(mShowOnlyIconInChannelLists = new JRadioButton(LOCALIZER.msg("showOnlyIcon","Show channel icon"), Settings.IconAndNames.SHOW_ICONS_IN_CHANNEL_LIST.getBoolean() && !Settings.IconAndNames.SHOW_NAMES_IN_CHANNEL_LIST.getBoolean()), CC.xyw(2,++y,2));
-    pb.add(mShowOnlyNameInChannelLists = new JRadioButton(LOCALIZER.msg("showOnlyName","Show channel name"), Settings.IconAndNames.SHOW_NAMES_IN_CHANNEL_LIST.getBoolean() && !Settings.IconAndNames.SHOW_ICONS_IN_CHANNEL_LIST.getBoolean()), CC.xyw(2,++y,2));
-    
-    y += 2;
-    
-    pb.add(mShowSortNumberInChannelLists = new JCheckBox(LOCALIZER.msg("showChannelNumber", "Show sort number"), Settings.IconAndNames.SHOW_SORT_NUMBER_IN_PROGRAM_LISTS.getBoolean()), CC.xyw(2, y++, 2));
+    pb.addRow(mShowSortNumberInChannelLists = new JCheckBox(LOCALIZER.msg("showChannelNumber", "Show sort number"), Settings.IconAndNames.SHOW_SORT_NUMBER_IN_PROGRAM_LISTS.getBoolean()), 2, 2);
     
     final ButtonGroup channelLists = new ButtonGroup();
     channelLists.add(mShowIconAndNameInChannelLists);
@@ -142,8 +129,6 @@ public class ChannelIconAndNameSettingsTab implements CancelableSettingsTab {
     
     mShowIconInProgramPanelNever.addItemListener(pluginProgramPanelLogoListener);
     mShowIconInProgramPanelPlugins.addItemListener(pluginProgramPanelLogoListener);
-    
-    y++;
     
     return pb.getPanel();
   }

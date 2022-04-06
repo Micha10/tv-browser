@@ -54,7 +54,6 @@ import javax.swing.SpinnerNumberModel;
 
 import org.apache.commons.lang3.StringUtils;
 
-import com.jgoodies.forms.builder.PanelBuilder;
 import com.jgoodies.forms.factories.Borders;
 import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
@@ -68,6 +67,7 @@ import tvbrowser.ui.filter.dlgs.EditFilterDlg;
 import tvbrowser.ui.mainframe.MainFrame;
 import util.misc.PropertyDefaults;
 import util.ui.DefaultMarkingPrioritySelectionPanel;
+import util.ui.EnhancedPanelBuilder;
 import util.ui.ExecuteSettingsDialog;
 import util.ui.ExtensionFileFilter;
 import util.ui.FileCheckBox;
@@ -139,14 +139,9 @@ public class ReminderSettingsTab implements SettingsTab {
     PropertyDefaults propDefaults = ReminderPropertyDefaults.getPropertyDefaults();
     propDefaults.setProperties(mSettings);
     
-    FormLayout layout = new FormLayout("5dlu,pref,5dlu,pref,pref:grow,3dlu,pref,3dlu,pref,5dlu",
-        "default,5dlu,default,5dlu,default,1dlu,default,1dlu,default,1dlu,default,10dlu," +
-        "default,5dlu,default,10dlu," +
-        "default,5dlu,default,10dlu,pref,5dlu,pref,10dlu,pref,5dlu," +
-        "pref,10dlu,pref,5dlu,pref,3dlu,pref,3dlu,default,3dlu," +
-        "default,default,10dlu,default,5dlu,default");
+    FormLayout layout = new FormLayout("5dlu,pref,5dlu,pref,pref:grow,3dlu,pref,3dlu,pref,5dlu");
     layout.setColumnGroups(new int[][] {{7,9}});
-    PanelBuilder pb = new PanelBuilder(layout, new ScrollableJPanel());
+    EnhancedPanelBuilder pb = new EnhancedPanelBuilder(layout, new ScrollableJPanel());
     pb.border(Borders.DIALOG);
 
     final String[] extArr = { ".wav", ".aif", ".rmf", ".au", ".mid" };
@@ -307,16 +302,16 @@ public class ReminderSettingsTab implements SettingsTab {
 
     mShowTimeCounter = new JCheckBox(LOCALIZER.msg("showTimeCounter","Show time counter"),mSettings.getProperty("showTimeCounter","false").compareTo("true") == 0);
     mShowTimeCounter.setEnabled(!mCloseNever.isSelected() && (mReminderWindowChB.isSelected() || mFrameRemindersChB.isSelected()));
+    
+    EnhancedPanelBuilder autoClosePanel = new EnhancedPanelBuilder(new FormLayout("12dlu,default,2dlu,default:grow"),"2dlu");
+    autoClosePanel.addRowFull(false, mCloseOnEnd);
+    autoClosePanel.addRowFull(mCloseNever);
+    autoClosePanel.addRowFull(mCloseOnTime);
+    autoClosePanel.addRow(mAutoCloseReminderTimeSp, 2);
 
-    PanelBuilder autoClosePanel = new PanelBuilder(new FormLayout("12dlu,default,2dlu,default:grow","pref,2dlu,pref,2dlu,pref,2dlu,pref,10dlu,pref"));
-    autoClosePanel.add(mCloseOnEnd, CC.xyw(1,1,4));
-    autoClosePanel.add(mCloseNever, CC.xyw(1,3,4));
-    autoClosePanel.add(mCloseOnTime, CC.xyw(1,5,4));
-    autoClosePanel.add(mAutoCloseReminderTimeSp, CC.xy(2,7));
+    final JLabel secondsLabel = autoClosePanel.labelAdd(LOCALIZER.msg("seconds", "seconds (0 = off)"), 4);
 
-    final JLabel secondsLabel = autoClosePanel.addLabel(LOCALIZER.msg("seconds", "seconds (0 = off)"), CC.xy(4,7));
-
-    autoClosePanel.add(mShowTimeCounter, CC.xyw(1,9,4));
+    autoClosePanel.addRowFull("10dlu,default", mShowTimeCounter);
 
     secondsLabel.setEnabled(mCloseOnTime.isSelected() && mReminderWindowChB.isSelected());
 
@@ -347,48 +342,16 @@ public class ReminderSettingsTab implements SettingsTab {
     mProvideTab = new JCheckBox(LOCALIZER.msg("provideTab", "Provide tab in TV-Browser main window"));
     mProvideTab.setSelected(mSettings.getProperty("provideTab","true").equals("true"));
 
-    int y = 1;
+    EnhancedPanelBuilder filter = new EnhancedPanelBuilder(new FormLayout("default,5dlu,default,0dlu:grow"),"2dlu");
     
-    pb.addSeparator(LOCALIZER.msg("remindBy", "Remind me by"), CC.xyw(1,y,10));
-
-    pb.add(frameRemindersCfg, CC.xyw(2,y += 2,4));
-    pb.add(reminderWindowCfg, CC.xyw(2,y += 2,4));
-    pb.add(mSoundFileChB, CC.xyw(2,y += 2,4));
-    pb.add(mSoundFileChB.getButton(), CC.xy(7,y));
-    pb.add(soundTestBt, CC.xy(9,y));
-    pb.add(mBeep, CC.xy(2,y += 2));
-    pb.add(mExecChB, CC.xyw(2,y += 2,4));
-    pb.add(mExecFileDialogBtn, CC.xyw(7,y,3));
-
-    JPanel filter = new JPanel(new FormLayout("default,5dlu,default,0dlu:grow","default,2dlu,default"));
-    filter.add(mPrefilter, CC.xy(1, 1));
-    filter.add(editFilter, CC.xy(3, 1));
-    filter.add(helpPrefilter, CC.xyw(1, 3, 4));
+    filter.addRow(false, mPrefilter, 1);
+    filter.add(editFilter, 3);
+    filter.addRowFull(helpPrefilter);
     
-    pb.addSeparator(LOCALIZER.msg("prefilterLabel", "Prefiltering of Reminders"), CC.xyw(1,y += 2,10));
-    pb.add(filter, CC.xyw(2, y+=2,9));
-    
-    pb.addSeparator(LOCALIZER.msg("sendToPlugin", "Send reminded program to"), CC.xyw(1,y += 2,10));
-
-    pb.add(mPluginTargetSelectionPanel, CC.xyw(1,y += 2,10));
-
-    final JLabel c = (JLabel) pb.addSeparator(LOCALIZER.msg("autoCloseReminder", "Automatically close reminder"), CC.xyw(1,y += 2,10)).getComponent(0);
-    c.setEnabled(mReminderWindowChB.isSelected() || mFrameRemindersChB.isSelected());
-
-    pb.add(autoClosePanel.getPanel(), CC.xyw(2,y += 2,5));
-
     JPanel reminderEntry = new JPanel(new FlowLayout(FlowLayout.LEADING,0,0));
     reminderEntry.add(mDefaultReminderEntryList);
-
-    pb.addSeparator(LOCALIZER.msg("defaltReminderEntry","Default reminder time"), CC.xyw(1,y += 2,10));
-    pb.add(reminderEntry, CC.xyw(2,y += 2,4));
-
-    pb.addSeparator(LOCALIZER.msg("miscSettings","Misc settings"), CC.xyw(1,y += 2,10));
-    pb.add(mShowTimeSelectionDlg, CC.xyw(2,y += 2,7));
-    pb.add(mShowRemovedDlg, CC.xyw(2,y += 2,7));
-    pb.add(mShowDateSeparators, CC.xyw(2,y += 2,7));
-    pb.add(mProvideTab, CC.xyw(2,y += 2,7));
     
+
     mScrollTimeToNext = new JRadioButton(LOCALIZER.msg("timeButtonScrollNext", "Scroll to next occurence of time from shown programs onward"), Boolean.parseBoolean(propDefaults.getValueFromProperties(ReminderPropertyDefaults.KEY_SCROLL_TIME_TYPE_NEXT)));
     mScrollTimeOnDay = new JRadioButton(LOCALIZER.msg("timeButtonScrollDay", "Scroll to occurence of time on shown day in list"), !mScrollTimeToNext.isSelected());
     final JLabel scrollTimeLabel = new JLabel(LOCALIZER.msg("timeButtonBehaviour", "Time buttons behaviour:"));
@@ -397,27 +360,56 @@ public class ReminderSettingsTab implements SettingsTab {
     mScrollTimeOnDay.setEnabled(mProvideTab.isSelected());
     scrollTimeLabel.setEnabled(mProvideTab.isSelected());
     
-    ButtonGroup time = new ButtonGroup();
+    final ButtonGroup time = new ButtonGroup();
     
     time.add(mScrollTimeToNext);
     time.add(mScrollTimeOnDay);
 
-    JPanel timeButtonBehaviour = new JPanel(new FormLayout("10dlu,default:grow","5dlu,default,5dlu,default,1dlu,default"));
-
-    timeButtonBehaviour.add(scrollTimeLabel, CC.xy(2, 2));
-    timeButtonBehaviour.add(mScrollTimeToNext, CC.xy(2,4));
-    timeButtonBehaviour.add(mScrollTimeOnDay, CC.xy(2,6));
+    final EnhancedPanelBuilder timeButtonBehaviour = new EnhancedPanelBuilder(new FormLayout("10dlu,default:grow"));
     
-    pb.add(timeButtonBehaviour, CC.xyw(2, ++y, 7));
+    timeButtonBehaviour.addRow(scrollTimeLabel, 2);
+    timeButtonBehaviour.addRow(mScrollTimeToNext, 2);
+    timeButtonBehaviour.addRow(mScrollTimeOnDay, 2);
     
     mProvideTab.addItemListener(e -> {
       scrollTimeLabel.setEnabled(e.getStateChange() == ItemEvent.SELECTED);
       mScrollTimeToNext.setEnabled(scrollTimeLabel.isEnabled());
       mScrollTimeOnDay.setEnabled(scrollTimeLabel.isEnabled());
     });
+    
+    pb.addSeparatorRowFull(false, LOCALIZER.msg("remindBy", "Remind me by"));
 
-    pb.addSeparator(DefaultMarkingPrioritySelectionPanel.getTitle(), CC.xyw(1,y+=2,10));
-    pb.add(mMarkingsPanel = DefaultMarkingPrioritySelectionPanel.createPanel(ReminderPlugin.getInstance().getMarkPriority(),false,false),CC.xyw(2,y+=2,9));
+    pb.addRow(frameRemindersCfg, 2, 4);
+    pb.addRow(reminderWindowCfg, 2, 4);
+    pb.addRow("1dlu,default", mSoundFileChB, 2, 4);
+    pb.add(mSoundFileChB.getButton(), 7);
+    pb.add(soundTestBt, 9);
+    pb.addRow("1dlu,default", mBeep, 2);
+    pb.addRow("1dlu,default", mExecChB, 2, 4);
+    pb.add(mExecFileDialogBtn, 7, 3);
+    
+    pb.addParagraph(LOCALIZER.msg("prefilterLabel", "Prefiltering of Reminders"));
+    pb.addRowFull(filter.getPanel(), 2);
+    
+    pb.addParagraph(LOCALIZER.msg("sendToPlugin", "Send reminded program to"));
+    pb.addRowFull(mPluginTargetSelectionPanel);
+
+    final JLabel c = (JLabel) pb.addParagraph(LOCALIZER.msg("autoCloseReminder", "Automatically close reminder")).getComponent(0);
+    c.setEnabled(mReminderWindowChB.isSelected() || mFrameRemindersChB.isSelected());
+    pb.addRow(autoClosePanel.getPanel(), 2, 5);
+
+    pb.addParagraph(LOCALIZER.msg("defaltReminderEntry","Default reminder time"));
+    pb.addRow(reminderEntry, 2, 4);
+
+    pb.addParagraph(LOCALIZER.msg("miscSettings","Misc settings"));
+    pb.addRow(mShowTimeSelectionDlg, 2, 7);
+    pb.addRow("3dlu,default", mShowRemovedDlg, 2, 7);
+    pb.addRow("3dlu,default", mShowDateSeparators, 2, 7);
+    pb.addRow("3dlu,default", mProvideTab, 2, 7);
+    pb.addRow(false, timeButtonBehaviour.getPanel(), 2, 7);
+
+    pb.addParagraph(DefaultMarkingPrioritySelectionPanel.getTitle());
+    pb.addRowFull(mMarkingsPanel = DefaultMarkingPrioritySelectionPanel.createPanel(ReminderPlugin.getInstance().getMarkPriority(),false,false), 2);
     
     mFrameRemindersChB.addItemListener(e -> {
       if(e.getStateChange() == ItemEvent.SELECTED && mReminderWindowChB.isSelected()) {
@@ -561,38 +553,7 @@ public class ReminderSettingsTab implements SettingsTab {
     
     return pb.getPanel();
   }
-/*
-  private void handlePluginSelection() {
-    ArrayList<ProgramReceiveIf> plugins = new ArrayList<ProgramReceiveIf>();
-
-    if(mClientPluginTargets != null) {
-      for (ProgramReceiveTarget target : mClientPluginTargets) {
-        if(!plugins.contains(target.getReceifeIfForIdOfTarget())) {
-          plugins.add(target.getReceifeIfForIdOfTarget());
-        }
-      }
-
-      ProgramReceiveIf[] mClientPlugins = plugins.toArray(new ProgramReceiveIf[plugins.size()]);
-
-      if(mClientPlugins.length > 0) {
-        mPluginLabel.setText(mClientPlugins[0].toString());
-        mPluginLabel.setEnabled(true);
-      }
-      else {
-        mPluginLabel.setText(mLocalizer.msg("noPlugins","No Plugins choosen"));
-        mPluginLabel.setEnabled(false);
-      }
-
-      for (int i = 1; i < (mClientPlugins.length > 4 ? 3 : mClientPlugins.length); i++) {
-        mPluginLabel.setText(mPluginLabel.getText() + ", " + mClientPlugins[i]);
-      }
-
-      if(mClientPlugins.length > 4) {
-        mPluginLabel.setText(mPluginLabel.getText() + " (" + (mClientPlugins.length - 3) + " " + mLocalizer.ellipsisMsg("otherPlugins","others") + ")");
-      }
-    }
-  }
-*/
+  
   /**
    * Shows the Settings-Dialog for the Executable
    */

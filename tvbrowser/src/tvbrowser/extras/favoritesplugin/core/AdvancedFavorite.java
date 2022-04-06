@@ -38,8 +38,7 @@ import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
-import com.jgoodies.forms.builder.PanelBuilder;
-import com.jgoodies.forms.layout.CellConstraints;
+import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
 
 import devplugin.Channel;
@@ -54,6 +53,7 @@ import tvbrowser.ui.filter.dlgs.SelectFilterDlg;
 import tvbrowser.ui.mainframe.MainFrame;
 import util.exc.ErrorHandler;
 import util.exc.TvBrowserException;
+import util.ui.EnhancedPanelBuilder;
 import util.ui.SearchForm;
 import util.ui.SearchFormSettings;
 import util.ui.UiUtilities;
@@ -348,12 +348,11 @@ public class AdvancedFavorite extends Favorite implements PendingFilterLoader {
       mSearchForm = new SearchForm(true, false, false, SearchForm.LAYOUT_HORIZONTAL, true);
       mSearchForm.setSearchFormSettings(mSearchFormSettings);
 
-      CellConstraints cc = new CellConstraints();
-      PanelBuilder panelBuilder = new PanelBuilder(new FormLayout("pref:grow, 3dlu, pref:grow, 3dlu, default", "pref, 5dlu, pref"));
-
-      panelBuilder.add(mSearchForm, cc.xyw(1, 1, 5));
-      panelBuilder.add(mFilterCheckbox = new JCheckBox(LOCALIZER.msg("useFilter","Use filter:")), cc.xy(1, 3));
-      panelBuilder.add(mFilterCombo = new JComboBox<>(), cc.xy(3, 3));
+      EnhancedPanelBuilder panelBuilder = new EnhancedPanelBuilder(new FormLayout("pref:grow, 3dlu, pref:grow, 3dlu, default"));
+      
+      panelBuilder.addRowFull(false, mSearchForm);
+      panelBuilder.addRow(mFilterCheckbox = new JCheckBox(LOCALIZER.msg("useFilter","Use filter:")), 1);
+      panelBuilder.add(mFilterCombo = new JComboBox<>(), 3);
       
       ProgramFilter[] availableFilter = Plugin.getPluginManager().getFilterManager().getAvailableFilters();
       
@@ -393,7 +392,7 @@ public class AdvancedFavorite extends Favorite implements PendingFilterLoader {
         }
       });
       
-      panelBuilder.add(mEditFilter, cc.xy(5, 3));
+      panelBuilder.add(mEditFilter, CC.xy(5, 3));
       
       if (mFilter != null) {
         mFilterCheckbox.setSelected(true);

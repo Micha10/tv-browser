@@ -323,6 +323,18 @@ public class EnhancedPanelBuilder extends PanelBuilder {
   }
   
   /**
+   * Adds a single row with LINE_GAP height.
+   * 
+   * @return This builder.
+   * @since 4.2.5
+   */
+  public EnhancedPanelBuilder addLineGap() {
+    appendRow(mDefaultRowGapSpec);
+    incrementRowNumber(false);
+    return this;
+  }
+  
+  /**
    * Adds a new standard row with gap to the layout and then adds the component to the new row from first to last column.
    * 
    * @param component The component to add.

@@ -44,7 +44,6 @@ import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingUtilities;
 
-import com.jgoodies.forms.builder.PanelBuilder;
 import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
 
@@ -54,6 +53,7 @@ import tvbrowser.core.filters.FilterList;
 import tvbrowser.core.filters.UserFilter;
 import tvbrowser.core.filters.filtercomponents.AcceptNoneFilterComponent;
 import tvbrowser.core.filters.filtercomponents.SingleChannelFilterComponent;
+import util.ui.EnhancedPanelBuilder;
 import util.ui.TVBrowserIcons;
 
 /**
@@ -78,9 +78,8 @@ public class FilterComponentPanel extends JPanel implements ActionListener {
     mParent = parent;
     mFilterRuleTF = filterRuleTF;
     mFilter = filter;
-    FormLayout filterCompLayout = new FormLayout("default:grow,5dlu,default","default,5dlu,default,5dlu,default,5dlu,default,fill:min:grow");
-    PanelBuilder filterComponents = new PanelBuilder(filterCompLayout,this);
-
+    EnhancedPanelBuilder filterComponents = new EnhancedPanelBuilder(new FormLayout("default:grow,5dlu,default"),this);
+    
     mFilterComponentListModel = new DefaultListModel<>();
     
     if(mParent instanceof EditFilterDlg) {
@@ -139,11 +138,11 @@ public class FilterComponentPanel extends JPanel implements ActionListener {
     mCopyButton.addActionListener(this);
     mRemoveBtn.addActionListener(this);
     
-    filterComponents.add(mNewBtn, CC.xy(3,1));
-    filterComponents.add(mEditBtn, CC.xy(3,3));
-    filterComponents.add(mCopyButton, CC.xy(3,5));
-    filterComponents.add(mRemoveBtn, CC.xy(3,7));
-    
+    filterComponents.addRow(false, mNewBtn, 3);
+    filterComponents.addRow(mEditBtn, 3);
+    filterComponents.addRow(mCopyButton,3);
+    filterComponents.addRow(mRemoveBtn, 3);
+    filterComponents.addGrowingRow(false);
     filterComponents.add(new JScrollPane(mFilterComponentList), CC.xywh(1,1,1,8));
     
     if(!(mParent instanceof EditFilterDlg)) {

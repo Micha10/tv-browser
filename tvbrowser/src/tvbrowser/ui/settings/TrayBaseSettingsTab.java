@@ -32,19 +32,17 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 
+import com.jgoodies.forms.factories.Borders;
+import com.jgoodies.forms.layout.FormLayout;
+
+import devplugin.SettingsTab;
 import tvbrowser.TVBrowser;
 import tvbrowser.core.Settings;
 import tvbrowser.core.icontheme.IconLoader;
 import util.i18n.Localizer;
 import util.misc.JavaVersion;
 import util.misc.OperatingSystem;
-
-import com.jgoodies.forms.builder.PanelBuilder;
-import com.jgoodies.forms.factories.Borders;
-import com.jgoodies.forms.layout.CellConstraints;
-import com.jgoodies.forms.layout.FormLayout;
-
-import devplugin.SettingsTab;
+import util.ui.EnhancedPanelBuilder;
 
 /**
  * The base settings for the tray.
@@ -64,11 +62,8 @@ public class TrayBaseSettingsTab implements SettingsTab {
 
   public JPanel createSettingsPanel() {
 
-    final PanelBuilder builder = new PanelBuilder(new FormLayout(
-        "5dlu, 50dlu:grow, 5dlu",
-        "default, 5dlu, default, default, default, default, default, default, 10dlu, default, 5dlu, default, default, default"));
+    final EnhancedPanelBuilder builder = new EnhancedPanelBuilder(new FormLayout("5dlu, 50dlu:grow, 5dlu"));
     builder.border(Borders.DIALOG);
-    CellConstraints cc = new CellConstraints();
 
     String msg = LOCALIZER.msg("trayIsEnabled", "Tray activated");
     mOldState = Settings.Tray.ENABLED.getBoolean();
@@ -116,17 +111,17 @@ public class TrayBaseSettingsTab implements SettingsTab {
     filter.add(mFilterAll);
     filter.add(mNoMarkedFiltering);
     filter.add(mNoFiltering);
-
-    //create panel
-    builder.addSeparator(LOCALIZER.msg("basics", "Basic settings"), cc.xyw(1,1,3));
-    builder.add(mTrayIsEnabled, cc.xy(2,3));
-    builder.add(mTrayIsAnialiasing, cc.xy(2,4));
-    builder.add(mMinimizeToTrayChb, cc.xy(2,5));
     
-    builder.addSeparator(LOCALIZER.msg("filter", "Filter settings"), cc.xyw(1,10,3));
-    builder.add(mFilterAll, cc.xy(2,12));
-    builder.add(mNoMarkedFiltering, cc.xy(2,13));
-    builder.add(mNoFiltering, cc.xy(2,14));
+    //create panel
+    builder.addSeparatorRowFull(false, LOCALIZER.msg("basics", "Basic settings"));
+    builder.addRow(mTrayIsEnabled, 2);
+    builder.addRow(false, mTrayIsAnialiasing, 2);
+    builder.addRow(false, mMinimizeToTrayChb, 2);
+    
+    builder.addParagraph(LOCALIZER.msg("filter", "Filter settings"));
+    builder.addRow(mFilterAll, 2);
+    builder.addRow(false, mNoMarkedFiltering, 2);
+    builder.addRow(false, mNoFiltering, 2);
 
     mTrayIsEnabled.addActionListener(e -> {
       mIsEnabled = mTrayIsEnabled.isSelected();

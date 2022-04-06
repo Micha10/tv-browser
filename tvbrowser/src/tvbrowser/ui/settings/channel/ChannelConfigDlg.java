@@ -52,21 +52,19 @@ import javax.swing.SpinnerDateModel;
 import javax.swing.SwingConstants;
 
 import com.jgoodies.forms.builder.ButtonBarBuilder;
-import com.jgoodies.forms.builder.PanelBuilder;
 import com.jgoodies.forms.factories.Borders;
-import com.jgoodies.forms.factories.CC;
-import com.jgoodies.forms.factories.DefaultComponentFactory;
 import com.jgoodies.forms.layout.FormLayout;
 
 import devplugin.Channel;
 import tvbrowser.core.ChannelList;
 import tvbrowser.core.Settings;
+import util.i18n.Localizer;
 import util.io.IOUtilities;
 import util.ui.CaretPositionCorrector;
 import util.ui.ColorButton;
+import util.ui.EnhancedPanelBuilder;
 import util.ui.ImageIconEnhanced;
 import util.ui.ImageUtilities;
-import util.i18n.Localizer;
 import util.ui.UiUtilities;
 import util.ui.WindowClosingIf;
 
@@ -78,7 +76,7 @@ import util.ui.WindowClosingIf;
  */
 public class ChannelConfigDlg extends JDialog implements ActionListener, WindowClosingIf {
   /** Localizer */
-  static final util.i18n.Localizer mLocalizer = util.i18n.Localizer.getLocalizerFor(ChannelConfigDlg.class);
+  static final util.i18n.Localizer LOCALIZER = util.i18n.Localizer.getLocalizerFor(ChannelConfigDlg.class);
   /** Current Channel */
   private Channel mChannel;
   /** Close/OK Buttons */
@@ -122,7 +120,7 @@ public class ChannelConfigDlg extends JDialog implements ActionListener, WindowC
    * @since 3.0
    */
   public ChannelConfigDlg(Window parent, Channel channel) {
-    super(parent, mLocalizer.msg("configChannel", "Configure Channel"));
+    super(parent, LOCALIZER.msg("configChannel", "Configure Channel"));
     setModalityType(ModalityType.DOCUMENT_MODAL);
     mChannel = channel;
     createDialog();
@@ -132,57 +130,42 @@ public class ChannelConfigDlg extends JDialog implements ActionListener, WindowC
    * Create the GUI
    */
   private void createDialog() {
-    JPanel panel = (JPanel) getContentPane();
+    EnhancedPanelBuilder panel = new EnhancedPanelBuilder(new FormLayout("default, 3dlu, fill:default:grow"),"3dlu", (JPanel) getContentPane());
 
     UiUtilities.registerForClosing(this);
     
-    panel.setLayout(new FormLayout("default, 3dlu, fill:default:grow",
-    "default, 3dlu, default, 3dlu, default, 3dlu, default, 3dlu, default, 3dlu, default, 3dlu, default, 3dlu, default, 3dlu, default, 3dlu, default, 5dlu, default, 3dlu, default, 3dlu:grow, default, 5dlu, default"));
-    
-    panel.setBorder(Borders.DLU4);
-    
-    int y = 1;
+    panel.border(Borders.DLU4);
     
     // sort number
-    panel.add(new JLabel(mLocalizer.msg("channelNumber", "Sort number:")), CC.xy(1, y));
-    mSortNumber = new JTextField(mChannel.getSortNumber());
-    panel.add(mSortNumber, CC.xy(3, y));
+    panel.addLabelRow(false, LOCALIZER.msg("channelNumber", "Sort number:"), 1);
+    panel.add(mSortNumber = new JTextField(mChannel.getSortNumber()), 3);
     
-    y += 2;
-
     // name
-    panel.add(new JLabel(mLocalizer.msg("channelName", "Channel Name:")), CC.xy(1, y));
-    mChannelName = new JTextField(mChannel.getName());
-    panel.add(mChannelName, CC.xy(3, y));
-
-    y += 2;
+    panel.addLabelRow(LOCALIZER.msg("channelName", "Channel Name:"), 1);
+    panel.add(mChannelName = new JTextField(mChannel.getName()), 3);
     
     // provider
-    panel.add(new JLabel(mLocalizer.msg("provider", "Provided by:")), CC.xy(1, y));
-    panel.add(new JLabel(ChannelUtil.getProviderName(mChannel)), CC.xy(3, y));
-
-    y += 2;
+    panel.addLabelRow(LOCALIZER.msg("provider", "Provided by:"), 1);
+    panel.labelAdd(ChannelUtil.getProviderName(mChannel), 3);
     
     // logo
-    panel.add(new JLabel(mLocalizer.msg("channelLogo", "Channel Logo:")), CC.xy(1, y));
+    panel.addLabelRow(LOCALIZER.msg("channelLogo", "Channel Logo:"), 1);
     if (mChannel.getUserIconFileName() != null) {
       mIconFile = new File(IOUtilities.translateRelativePath(mChannel.getUserIconFileName()));
     }
     
     mIconLabel = new JLabel(createUserIcon());
-    mChangeIcon = new JButton(mLocalizer.msg("useIcon", "Select channel icon"));
+    mChangeIcon = new JButton(LOCALIZER.msg("useIcon", "Select channel icon"));
     mChangeIcon.addActionListener(e -> {
       changeIcon();
     });
 
-    panel.add(mIconLabel, CC.xy(3, y++));
-    panel.add(mChangeIcon, CC.xy(3, ++y));
+    panel.add(mIconLabel, 3);
+    panel.addRow(mChangeIcon, 3);
     
-    y += 2;
-
     // background color
     
-    mUseUserBackground = new JCheckBox(mLocalizer.msg("backgroundColorUse", "User defined background color"), mChannel.isUsingUserBackgroundColor());
+    mUseUserBackground = new JCheckBox(LOCALIZER.msg("backgroundColorUse", "User defined background color"), mChannel.isUsingUserBackgroundColor());
     mSelectBackgroundColor = new ColorButton(mChannel.isUsingUserBackgroundColor() ? mChannel.getUserBackgroundColor() : Color.white);
     mSelectBackgroundColor.setEnabled(mUseUserBackground.isSelected());
     
@@ -190,35 +173,29 @@ public class ChannelConfigDlg extends JDialog implements ActionListener, WindowC
       mSelectBackgroundColor.setEnabled(e.getStateChange() == ItemEvent.SELECTED);
     });
     
-    panel.add(mUseUserBackground, CC.xy(3, y++));
-    panel.add(mSelectBackgroundColor, CC.xy(3, ++y));
-    
-    y += 2;
+    panel.addRow(mUseUserBackground, 3);
+    panel.addRow(mSelectBackgroundColor, 3);
     
     // URL
-    panel.add(new JLabel(mLocalizer.msg("webAddress", "Web Address:")), CC.xy(1, y));
+    panel.addLabelRow(LOCALIZER.msg("webAddress", "Web Address:"), 1);
     mWebPage =new JTextField(mChannel.getWebpage());
-    panel.add(mWebPage, CC.xy(3, y));
-
-    y += 2;
+    panel.add(mWebPage, 3);
     
     // time correction
-    panel.add(new JLabel(mLocalizer.msg("time", "Time zone correction:")), CC.xy(1, y));
+    panel.addLabelRow(LOCALIZER.msg("time", "Time zone correction:"), 1);
     mCorrectionCB = new JComboBox<>(new String[] { "-1:00", "-0:45", "-0:30", "-0:15", "0:00", "+0:15", "+0:30", "+0:45", "+1:00" });
     mCorrectionCB.setSelectedIndex(mChannel.getTimeZoneCorrectionMinutes() / 15 + 4);
-    panel.add(mCorrectionCB, CC.xy(3, y++));
+    panel.add(mCorrectionCB, 3);
 
-    JTextArea txt = UiUtilities.createHelpTextArea(mLocalizer.msg("DLSTNote", ""));
+    JTextArea txt = UiUtilities.createHelpTextArea(LOCALIZER.msg("DLSTNote", ""));
     // Hack because of growing JTextArea in FormLayout
     txt.setMinimumSize(new Dimension(150, 20));
-    panel.add(txt, CC.xy(3, ++y));
-    
-    y += 2;
+    panel.addRow(txt, 3);
 
     // time limitation
-    panel.add(DefaultComponentFactory.getInstance().createLabel(mLocalizer.msg("timeLimits","Time limits:")), CC.xy(1,y));
+    panel.addLabelRow(LOCALIZER.msg("timeLimits","Time limits:"), 1);
     
-    String timePattern = mLocalizer.msg("timePattern", "hh:mm a");
+    String timePattern = LOCALIZER.msg("timePattern", "hh:mm a");
         
     mStartTimeLimit = new JSpinner(new SpinnerDateModel());
     mStartTimeLimit.setEditor(new JSpinner.DateEditor(mStartTimeLimit, timePattern));
@@ -234,22 +211,19 @@ public class ChannelConfigDlg extends JDialog implements ActionListener, WindowC
     CaretPositionCorrector.createCorrector(((JSpinner.DateEditor)mStartTimeLimit.getEditor()).getTextField(), new char[] {':'}, -1);
     CaretPositionCorrector.createCorrector(((JSpinner.DateEditor)mEndTimeLimit.getEditor()).getTextField(), new char[] {':'}, -1);
     
-    PanelBuilder timeLimitPanel = new PanelBuilder(new FormLayout("default:grow,10dlu,default:grow","default,2dlu,default"));
+    EnhancedPanelBuilder timeLimitPanel = new EnhancedPanelBuilder(new FormLayout("default:grow,10dlu,default:grow"),"2dlu");
+    timeLimitPanel.addLabelRow(false, LOCALIZER.msg("startTime","Start time:"), 1);
+    timeLimitPanel.labelAdd(LOCALIZER.msg("endTime","End time:"), 3);
+    timeLimitPanel.addRow(mStartTimeLimit, 1);
+    timeLimitPanel.add(mEndTimeLimit, 3);
     
-    timeLimitPanel.addLabel(mLocalizer.msg("startTime","Start time:"), CC.xy(1,1));
-    timeLimitPanel.addLabel(mLocalizer.msg("endTime","End time:"), CC.xy(3,1));
-    timeLimitPanel.add(mStartTimeLimit, CC.xy(1,3));
-    timeLimitPanel.add(mEndTimeLimit, CC.xy(3,3));
+    panel.add(timeLimitPanel.getPanel(), 3);
     
-    panel.add(timeLimitPanel.getPanel(), CC.xy(3,y));
-    
-    y += 2;
-    
-    JTextArea txt2 = UiUtilities.createHelpTextArea(mLocalizer.msg("DLSTNote", ""));
+    JTextArea txt2 = UiUtilities.createHelpTextArea(LOCALIZER.msg("DLSTNote", ""));
     // Hack because of growing JTextArea in FormLayout
     txt2.setMinimumSize(new Dimension(150, 20));
-    panel.add(txt2, CC.xy(3, y));
-    
+    panel.addRow(txt2, 3);
+
     // buttons
     ButtonBarBuilder builder = new ButtonBarBuilder();
     JButton defaultButton = new JButton(Localizer.getLocalization(Localizer.I18N_DEFAULT));
@@ -272,10 +246,9 @@ public class ChannelConfigDlg extends JDialog implements ActionListener, WindowC
 
     builder.addButton(new JButton[] { mOKBt, mCloseBt });
     
-    y += 2;
-
-    panel.add(new JSeparator(), CC.xyw(1, y++, 3));
-    panel.add(builder.getPanel(), CC.xyw(1, ++y, 3));
+    panel.addRow("fill:0dlu:grow", false);
+    panel.addRowFull("5dlu,default", new JSeparator());
+    panel.addRowFull(builder.getPanel());
     
     pack();
     Settings.layoutWindow("channelConfig", this, new Dimension(420,420));

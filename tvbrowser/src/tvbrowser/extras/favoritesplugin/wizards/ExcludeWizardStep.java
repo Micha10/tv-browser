@@ -47,10 +47,8 @@ import javax.swing.SpinnerNumberModel;
 import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
 
-import com.jgoodies.forms.builder.PanelBuilder;
 import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
-import com.jgoodies.forms.layout.RowSpec;
 
 import devplugin.Channel;
 import devplugin.Program;
@@ -67,6 +65,7 @@ import tvbrowser.extras.favoritesplugin.core.Exclusion.ProgramFieldExclusion;
 import tvbrowser.extras.favoritesplugin.core.Favorite;
 import tvbrowser.extras.favoritesplugin.core.FavoriteFilter;
 import tvbrowser.ui.mainframe.MainFrame;
+import util.ui.EnhancedPanelBuilder;
 import util.ui.FilterSelectionPanel;
 import util.ui.OkayCancelDialog;
 import util.ui.SearchableTextAreaPanel;
@@ -210,17 +209,14 @@ public class ExcludeWizardStep extends AbstractWizardStep {
 
   @Override
   public JPanel createContent(final WizardHandler handler) {
-    final FormLayout layout = new FormLayout("5dlu, default, default, default:grow, 3dlu, default",
-        "default, 5dlu, default, 5dlu, default, 5dlu, default, 5dlu, default, 5dlu, default, 5dlu, default, 5dlu, default, 5dlu, default, 5dlu, default, default, default");
-    final PanelBuilder panelBuilder = new PanelBuilder(layout);
-
-    try {
-      final CaretListener textFieldButtonUpdateListener = new CaretListener() {
-        @Override
-        public void caretUpdate(CaretEvent e) {
-          updateButtons(handler);
-        }
-      };
+    final EnhancedPanelBuilder panelBuilder = new EnhancedPanelBuilder(new FormLayout("5dlu, default, default, default:grow, 3dlu, default"));
+    
+    final CaretListener textFieldButtonUpdateListener = new CaretListener() {
+      @Override
+      public void caretUpdate(CaretEvent e) {
+        updateButtons(handler);
+      }
+    };
       
     mTitleCb = new JCheckBox(mTitleQuestion);
     mTitleTf = new MutliSelectionTextField(textFieldButtonUpdateListener);
@@ -236,50 +232,43 @@ public class ExcludeWizardStep extends AbstractWizardStep {
     mCategoryChooser = new JComboBox<>(ProgramInfoHelper.getInfoIconMessages());
     
     mChannelCB = new JComboBox<>(ChannelList.getSubscribedChannels());
-
-    int rowInx = 3;
-    panelBuilder.add(new JLabel(mMainQuestion), CC.xyw(1, 1, 6));
-
-    panelBuilder.add(mTitleCb, CC.xyw(2, rowInx, 2));
-    panelBuilder.add(mTitleTf.mTextField, CC.xy(4, rowInx));
-    panelBuilder.add(mTitleTf.mButton, CC.xy(6, rowInx));
-    rowInx += 2;
-
-    panelBuilder.add(mTopicCb = new JCheckBox(mTopicQuestion), CC.xyw(2, rowInx, 2));
-    panelBuilder.add(mTopicTf.mTextField, CC.xy(4, rowInx));
-    panelBuilder.add(mTopicTf.mButton, CC.xy(6, rowInx));
     
-    rowInx += 2;
-    
-    panelBuilder.add(mEpisodeTitleCb = new JCheckBox(mEpisodeTitleQuestion), CC.xyw(2,rowInx, 2));
-    panelBuilder.add(mEpisodeTitleTf.mTextField, CC.xy(4, rowInx));
-    panelBuilder.add(mEpisodeTitleTf.mButton, CC.xy(6, rowInx));
-    
-    rowInx += 2;
-    
-    int filterIndex = rowInx;
-        
-    panelBuilder.add(mCategoryCb = new JCheckBox(mCateogryQuestion), CC.xyw(2, rowInx, 2));
-    panelBuilder.add(mCategoryChooser, CC.xyw(4, rowInx, 3));
-    
-    rowInx += 2;
+    panelBuilder.addLabelRowFull(false, mMainQuestion);
 
-    panelBuilder.add(mChannelCb = new JCheckBox(mChannelQuestion), CC.xyw(2, rowInx, 2));
-    panelBuilder.add(mChannelCB, CC.xyw(4, rowInx, 3));
-    rowInx += 2;
-
-    panelBuilder.add(mDayCb = new JCheckBox(mDayQuestion), CC.xyw(2, rowInx, 2));
-    panelBuilder.add(mDayChooser, CC.xyw(4, rowInx, 3));
-
-    rowInx += 2;
-    panelBuilder.add(mTimeCb = new JCheckBox(mTimeQuestion), CC.xyw(2, rowInx, 2));
-    panelBuilder.add(mTimePeriodChooser = new TimePeriodChooser(TimePeriodChooser.ALIGN_LEFT), CC.xyw(4, rowInx, 3));
+    panelBuilder.addRow(mTitleCb, 2, 2);
+    panelBuilder.add(mTitleTf.mTextField, 4);
+    panelBuilder.add(mTitleTf.mButton, 6);
     
-    rowInx += 2;
-    panelBuilder.add(mProgramFieldCb = new JCheckBox(mProgramFieldQuestion), CC.xy(2, rowInx));
-    panelBuilder.add(mProgramFieldChooser = new JComboBox<>(), CC.xy(3, rowInx));
-    panelBuilder.add(mProgramFieldTextTf.mTextField, CC.xy(4, rowInx));
-    panelBuilder.add(mProgramFieldTextTf.mButton, CC.xy(6, rowInx));
+    panelBuilder.addRow(mTopicCb = new JCheckBox(mTopicQuestion), 2, 2);
+    panelBuilder.add(mTopicTf.mTextField, 4);
+    panelBuilder.add(mTopicTf.mButton, 6);
+    
+    panelBuilder.addRow(mEpisodeTitleCb = new JCheckBox(mEpisodeTitleQuestion), 2, 2);
+    panelBuilder.add(mEpisodeTitleTf.mTextField, 4);
+    panelBuilder.add(mEpisodeTitleTf.mButton, 6);
+    
+    panelBuilder.addRow(mCategoryCb = new JCheckBox(mCateogryQuestion), 2, 2);
+    panelBuilder.add(mCategoryChooser, 4, 3);
+    
+    if(mMode == MODE_EDIT_EXCLUSION || mMode == MODE_CREATE_EXCLUSION) {
+      panelBuilder.addRow(mFilterCb, 2, 2);
+      panelBuilder.add(mFilterSelection.getFilterBox(), 4);
+      panelBuilder.add(mFilterSelection.getEditButton(), 6);
+    }
+    
+    panelBuilder.addRow(mChannelCb = new JCheckBox(mChannelQuestion), 2, 2);
+    panelBuilder.add(mChannelCB, 4, 3);
+    
+    panelBuilder.addRow(mDayCb = new JCheckBox(mDayQuestion), 2, 2);
+    panelBuilder.add(mDayChooser, 4, 3);
+    
+    panelBuilder.addRow(mTimeCb = new JCheckBox(mTimeQuestion), 2, 2);
+    panelBuilder.add(mTimePeriodChooser = new TimePeriodChooser(TimePeriodChooser.ALIGN_LEFT), 4, 3);
+    
+    panelBuilder.addRow(mProgramFieldCb = new JCheckBox(mProgramFieldQuestion), 2);
+    panelBuilder.add(mProgramFieldChooser = new JComboBox<>(), 3);
+    panelBuilder.add(mProgramFieldTextTf.mTextField, 4);
+    panelBuilder.add(mProgramFieldTextTf.mButton, 6);
     
     final ArrayList<ProgramFieldType> listProgramFields = new ArrayList<ProgramFieldType>();
     
@@ -302,10 +291,9 @@ public class ExcludeWizardStep extends AbstractWizardStep {
       mProgramFieldChooser.addItem(fieldType);
     }
     
-    rowInx += 2;
-    panelBuilder.add(mProgramDurationCb = new JCheckBox(mDurationQuestion), CC.xy(2, rowInx));
-    panelBuilder.add(mDurationTooShort = new JRadioButton(LOCALIZER.msg("programDuration.tooShort", "duration to short with:")), CC.xy(3, rowInx));
-    panelBuilder.add(mDurationTooLong = new JRadioButton(LOCALIZER.msg("programDuration.tooLong", "duration to long with:")), CC.xy(3, ++rowInx));
+    panelBuilder.addRow(mProgramDurationCb = new JCheckBox(mDurationQuestion), 2);
+    panelBuilder.add(mDurationTooShort = new JRadioButton(LOCALIZER.msg("programDuration.tooShort", "duration to short with:")), 3);
+    panelBuilder.addRow(false, mDurationTooLong = new JRadioButton(LOCALIZER.msg("programDuration.tooLong", "duration to long with:")), 3);
 
     final JLabel minutes = new JLabel(LOCALIZER.msg("programDuration.minutes", "minutes"));
     JPanel duration = new JPanel(new FormLayout("default,2dlu,default:grow","fill:1dlu:grow,default,fill:1dlu:grow"));
@@ -332,16 +320,7 @@ public class ExcludeWizardStep extends AbstractWizardStep {
     mDurationValue.setEnabled(false);
     minutes.setEnabled(false);
     
-    panelBuilder.add(duration, CC.xywh(4, rowInx-1, 2, 2));
-    
-    if(mMode == MODE_EDIT_EXCLUSION || mMode == MODE_CREATE_EXCLUSION) {
-      layout.insertRow(filterIndex, RowSpec.decode("pref"));
-      layout.insertRow(filterIndex+1, RowSpec.decode("5dlu"));
-
-      panelBuilder.add(mFilterCb, CC.xyw(2, filterIndex, 2));
-      panelBuilder.add(mFilterSelection.getFilterBox(), CC.xy(4, filterIndex));
-      panelBuilder.add(mFilterSelection.getEditButton(), CC.xy(6, filterIndex));
-    }
+    panelBuilder.add(duration, CC.xywh(4, panelBuilder.getRowCount()-1, 2, 2));
 
     if (mMode == MODE_CREATE_DERIVED_FROM_PROGRAM && mProgram != null) {
       mTitleCb.setSelected(false);
@@ -448,9 +427,7 @@ public class ExcludeWizardStep extends AbstractWizardStep {
     mDayCb.addItemListener(buttonUpdate);
     mProgramFieldCb.addItemListener(buttonUpdate);
     mProgramDurationCb.addItemListener(buttonUpdate);
-  }catch(Throwable t) {
-    t.printStackTrace();
-  }
+    
     mContentPanel = panelBuilder.getPanel();
     
     return mContentPanel;

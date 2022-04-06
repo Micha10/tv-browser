@@ -28,16 +28,12 @@ import javax.swing.JEditorPane;
 import javax.swing.JPanel;
 import javax.swing.event.HyperlinkEvent;
 
-import tvbrowser.ui.settings.SettingsDialog;
-
-import com.jgoodies.forms.builder.PanelBuilder;
 import com.jgoodies.forms.factories.Borders;
-import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 
 import devplugin.Program;
 import devplugin.SettingsItem;
-
+import tvbrowser.ui.settings.SettingsDialog;
 import util.i18n.Localizer;
 
 /**
@@ -52,8 +48,8 @@ public class DefaultProgramImportanceSelectionPanel extends JPanel {
   private JEditorPane mHelpLabel;
   
   private DefaultProgramImportanceSelectionPanel(byte importance, boolean showTitle, boolean withDefaultDialogBorder) {
-    CellConstraints cc = new CellConstraints();
-    PanelBuilder pb = new PanelBuilder(showTitle ? new FormLayout("5dlu,pref,5dlu,pref,0dlu:grow","pref,5dlu,pref,fill:0dlu:grow,10dlu,pref") : new FormLayout("5dlu,pref,5dlu,pref,0dlu:grow","pref,fill:0dlu:grow,10dlu,pref"),this);
+    
+    EnhancedPanelBuilder pb = new EnhancedPanelBuilder(new FormLayout("5dlu,default,5dlu,default,0dlu:grow"),this);
     
     if(withDefaultDialogBorder) {
       pb.border(Borders.DIALOG);
@@ -68,16 +64,15 @@ public class DefaultProgramImportanceSelectionPanel extends JPanel {
       }
     });
     
-    int y = 1;
-    
     if(showTitle) {
-      pb.addSeparator(getTitle(),cc.xyw(1,y++,5));
-      y++;
+      pb.addSeparatorRowFull(false, getTitle());
+      pb.addLineGap();
     }
     
-    pb.addLabel(LOCALIZER.msg("color","Program importance:"), cc.xy(2,y));
-    pb.add(mProgramImportanceSelection, cc.xy(4,y++));y++;
-    pb.add(mHelpLabel, cc.xyw(2,++y,4));
+    pb.addLabelRow(false, LOCALIZER.msg("color","Program importance:"), 2);
+    pb.add(mProgramImportanceSelection, 4);
+    pb.addRow("fill:0dlu:grow",false);
+    pb.addRowFull("10dlu,default",mHelpLabel, 2);
   }
   
   /**

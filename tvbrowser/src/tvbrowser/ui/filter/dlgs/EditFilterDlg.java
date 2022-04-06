@@ -59,13 +59,11 @@ import javax.swing.text.PlainDocument;
 import org.apache.commons.lang3.StringUtils;
 
 import com.jgoodies.forms.builder.ButtonBarBuilder;
-import com.jgoodies.forms.builder.PanelBuilder;
 import com.jgoodies.forms.factories.Borders;
 import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.factories.DefaultComponentFactory;
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.FormLayout;
-import com.jgoodies.forms.layout.RowSpec;
 
 import tvbrowser.core.Settings;
 import tvbrowser.core.filters.FilterComponent;
@@ -75,6 +73,7 @@ import tvbrowser.core.filters.ParserException;
 import tvbrowser.core.filters.UserFilter;
 import util.i18n.Localizer;
 import util.ui.DragAndDropMouseListener;
+import util.ui.EnhancedPanelBuilder;
 import util.ui.FilterSelectionPanel;
 import util.ui.ListDragAndDropHandler;
 import util.ui.ListDropAction;
@@ -144,31 +143,7 @@ public class EditFilterDlg extends JDialog implements ActionListener, DocumentLi
     
     mFilterRuleTF = new JTextField();
     mFilterRuleTF.getDocument().addDocumentListener(this);
-    mFilterRuleTF.addCaretListener(this);  
-    
-    FormLayout layout = new FormLayout("5dlu,fill:min:grow,5dlu,default,5dlu","default,5dlu,default,default,5dlu,default,5dlu,fill:min:grow,5dlu,default,10dlu,default,default,5dlu,default,5dlu,default");
-    PanelBuilder filterCreation = new PanelBuilder(layout);
-    filterCreation.border(Borders.DIALOG);
-    
-    int y = 1;
-    
-    if(fromFilterList) {
-      layout.insertRow(1, RowSpec.decode("10dlu"));
-      layout.insertRow(1, RowSpec.decode("default"));
-      layout.insertRow(1, RowSpec.decode("5dlu"));
-      layout.insertRow(1, RowSpec.decode("default"));
-      
-      filterCreation.addSeparator(LOCALIZER.msg("filterName", "Filter name:"), CC.xyw(1,y,5));
-      filterCreation.add(mFilterNameTF, CC.xyw(2,y+2,3));
-      
-      y = 5;
-    }
-    
-    filterCreation.addSeparator(LOCALIZER.msg("ruleString", "Filter rule:"), CC.xyw(1,y,5));
-    filterCreation.add(mFilterRuleTF, CC.xy(2,y+2));
-    mColLb = filterCreation.addLabel("0", CC.xy(4,y+2));
-    mFilterRuleErrorLb = filterCreation.addLabel(LOCALIZER.msg("ruleExample",
-    "example: component1 or (component2 and not component3)"), CC.xy(2,y+3));
+    mFilterRuleTF.addCaretListener(this);
     
     mFilterHighlight = new FilterHighlightingSelectionPanel(mFilter);
    
@@ -273,13 +248,6 @@ public class EditFilterDlg extends JDialog implements ActionListener, DocumentLi
       }
     });
     
-    if (mFilter != null) {
-      mFilterName = filter.getName();
-      mFilterNameTF.setText(mFilter.toString());
-      mFilterRuleTF.setText(mFilter.getRule());
-      fillFilterConstruction();
-    }
-    
     //Register DnD on the List.
     ListDragAndDropHandler dnDHandler = new ListDragAndDropHandler(mFilterComponent.getList(), mFilterConstruction, this);
     new DragAndDropMouseListener<FilterItem>(mFilterComponent.getList(),mFilterConstruction,this,dnDHandler,false);
@@ -287,22 +255,45 @@ public class EditFilterDlg extends JDialog implements ActionListener, DocumentLi
     
     mFilterComponent.registerMouseListener();
     
-    PanelBuilder listPanel = new PanelBuilder(new FormLayout("5dlu,min:grow,5dlu,10dlu,5dlu,min:grow,5dlu","default,5dlu,fill:min:grow"));
-    listPanel.addSeparator(LOCALIZER.msg("componentsTitle","Available filter components:"), CC.xyw(5,1,3));
-    listPanel.add(mFilterComponent, CC.xy(6,3));
-    listPanel.addSeparator(LOCALIZER.msg("filterConstruction", "Filter construction"), CC.xyw(1,1,3));
-    listPanel.add(new JScrollPane(mFilterConstruction), CC.xy(2,3));
+    final EnhancedPanelBuilder listPanel = new EnhancedPanelBuilder(new FormLayout("5dlu,min:grow,5dlu,10dlu,5dlu,min:grow,5dlu"));
     
-    filterCreation.add(listPanel.getPanel(), CC.xyw(1,y+7,4));
-    filterCreation.add(UiUtilities.createHelpTextArea(LOCALIZER.msg("help","To create or edit a filter you can enter the rules in the text field or drag and drop the rules to the left side.")), CC.xyw(2,y+9,4));
-    filterCreation.add(DefaultComponentFactory.getInstance().createSeparator(LOCALIZER.msg("highlighting", "Highlighting")), CC.xyw(1, y+11, 5));
-    filterCreation.add(mFilterHighlight, CC.xyw(1, y+12, 4));
-    filterCreation.add(new JSeparator(JSeparator.HORIZONTAL), CC.xyw(1,y+14,5));
-    filterCreation.add(bottomBar.getPanel(), CC.xyw(1,y+16,5));
+    listPanel.addSeparatorRow(false, LOCALIZER.msg("componentsTitle","Available filter components:"), 5, 3);
+    listPanel.add(DefaultComponentFactory.getInstance().createSeparator(LOCALIZER.msg("filterConstruction", "Filter construction")), 1, 3);
+    listPanel.addRow("fill:50dlu:grow",mFilterComponent, 6);
+    listPanel.add(new JScrollPane(mFilterConstruction), 2);
+    
+    final EnhancedPanelBuilder filterCreation = new EnhancedPanelBuilder(new FormLayout("5dlu,fill:min:grow,5dlu,default,5dlu"));
+    filterCreation.border(Borders.DIALOG);
+    
+    if(fromFilterList) {
+      filterCreation.addSeparatorRowFull(LOCALIZER.msg("filterName", "Filter name:"));
+      filterCreation.addRow(mFilterNameTF, 2, 3);
+      filterCreation.addRow("10dlu", false);
+    }
+    
+    filterCreation.addSeparatorRowFull(false, LOCALIZER.msg("ruleString", "Filter rule:"));
+    filterCreation.addRow(mFilterRuleTF, 2);
+    mColLb = filterCreation.labelAdd("0", 4);
+    mFilterRuleErrorLb = filterCreation.addLabelRow(false, LOCALIZER.msg("ruleExample",
+    "example: component1 or (component2 and not component3)"), 2);
+    
+    filterCreation.addRow("fill:min:grow", listPanel.getPanel(), 1, 4);
+    filterCreation.addRowFull(UiUtilities.createHelpTextArea(LOCALIZER.msg("help","To create or edit a filter you can enter the rules in the text field or drag and drop the rules to the left side.")), 2);
+    filterCreation.addParagraph(LOCALIZER.msg("highlighting", "Highlighting"));
+    filterCreation.addRow(mFilterHighlight, 1, 4);
+    filterCreation.addRowFull(new JSeparator(JSeparator.HORIZONTAL));
+    filterCreation.addRowFull(bottomBar.getPanel());
+    
+    if (mFilter != null) {
+      mFilterName = filter.getName();
+      mFilterNameTF.setText(mFilter.toString());
+      mFilterRuleTF.setText(mFilter.getRule());
+      fillFilterConstruction();
+    }
     
     updateBtns();
 
-    setMinimumSize(new Dimension(600,560));
+    setMinimumSize(new Dimension(600,570));
     
     setLayout(new BorderLayout());
     

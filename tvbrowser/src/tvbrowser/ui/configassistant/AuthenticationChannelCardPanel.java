@@ -34,10 +34,8 @@ import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
-import com.jgoodies.forms.builder.PanelBuilder;
 import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
-import com.jgoodies.forms.layout.RowSpec;
 
 import tvbrowser.core.ChannelList;
 import tvbrowser.core.tvdataservice.ChannelGroupManager;
@@ -45,6 +43,7 @@ import tvbrowser.core.tvdataservice.TvDataServiceProxy;
 import tvbrowser.core.tvdataservice.TvDataServiceProxyManager;
 import tvbrowser.ui.mainframe.MainFrame;
 import tvdataservice.SettingsPanel;
+import util.ui.EnhancedPanelBuilder;
 import util.ui.ScrollableJPanel;
 import util.ui.UiUtilities;
 import util.ui.progress.Progress;
@@ -65,8 +64,7 @@ class AuthenticationChannelCardPanel extends AbstractCardPanel {
   public void createPanel() {
     mSettingsPanelList = new ArrayList<SettingsPanel>(0);
     
-    FormLayout layout = new FormLayout("5dlu,default:grow,5dlu");
-    PanelBuilder pb = new PanelBuilder(layout,new ScrollableJPanel());
+    final EnhancedPanelBuilder pb = new EnhancedPanelBuilder(new FormLayout("5dlu,default:grow,5dlu"),new ScrollableJPanel());
     
     TvDataServiceProxy[] tvDataServices = TvDataServiceProxyManager.getInstance().getDataServices();
     
@@ -76,10 +74,7 @@ class AuthenticationChannelCardPanel extends AbstractCardPanel {
       if(panel != null) {
         mSettingsPanelList.add(panel);
         
-        layout.appendRow(RowSpec.decode("10dlu"));
-        layout.appendRow(RowSpec.decode("default"));
-        
-        JComponent x = pb.addSeparator(dataService.getInfo().getName(),CC.xyw(1,layout.getRowCount(),3));
+        JComponent x = pb.addParagraph(dataService.getInfo().getName());
         
         try {          
           Method getFont = x.getComponent(0).getClass().getMethod("getFont",new Class[0]);
@@ -90,10 +85,7 @@ class AuthenticationChannelCardPanel extends AbstractCardPanel {
           setFont.invoke(x.getComponent(0), new Object[] {f});
         }catch(Exception e) {}
         
-        layout.appendRow(RowSpec.decode("5dlu"));
-        layout.appendRow(RowSpec.decode("fill:default:grow"));
-        
-        pb.add(panel,CC.xy(2,layout.getRowCount()));
+        pb.addGrowingRow(panel, 2);
       }
     }
     

@@ -43,15 +43,14 @@ import javax.swing.ToolTipManager;
 import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
 
-import com.jgoodies.forms.builder.PanelBuilder;
 import com.jgoodies.forms.factories.Borders;
-import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 
 import devplugin.Date;
 import devplugin.ProgramFilter;
 import tvbrowser.core.icontheme.IconLoader;
 import util.i18n.Localizer;
+import util.ui.EnhancedPanelBuilder;
 
 /**
  * A Panel for FindAsYouType in program table.
@@ -103,7 +102,7 @@ public class FaytPanel extends JPanel {
     setBorder(Borders.DLU2);
     setOpaque(false);
     
-    PanelBuilder pb = new PanelBuilder(new FormLayout("default,5dlu,100dlu","default"),this);
+    EnhancedPanelBuilder pb = new EnhancedPanelBuilder(new FormLayout("default,5dlu,100dlu","default"),this);
     
     
     /*
@@ -168,8 +167,8 @@ public class FaytPanel extends JPanel {
       }
     });
     
-    pb.add(mSearchCloseBtn,new CellConstraints().xy(1,1));
-    pb.add(mTextField,new CellConstraints().xy(3,1));
+    pb.add(mSearchCloseBtn, 1);
+    pb.add(mTextField, 3);
   }
   
   /**

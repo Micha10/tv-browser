@@ -35,12 +35,11 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
-import com.jgoodies.forms.builder.PanelBuilder;
 import com.jgoodies.forms.factories.Borders;
-import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
 
 import devplugin.SettingsTab;
+import util.ui.EnhancedPanelBuilder;
 import util.ui.SearchFormSettings;
 import util.ui.TVBrowserIcons;
 
@@ -52,7 +51,7 @@ import util.ui.TVBrowserIcons;
 class SearchSettingsTab implements SettingsTab {
 
   /** The localizer of this class. */
-  private static final util.i18n.Localizer mLocalizer
+  private static final util.i18n.Localizer LOCALIZER
     = util.i18n.Localizer.getLocalizerFor(SearchSettingsTab.class);
 
   private JCheckBox mAlwaysExpertMode;
@@ -63,10 +62,10 @@ class SearchSettingsTab implements SettingsTab {
    * @return Settings-Panel
    */
   public JPanel createSettingsPanel() {
-    PanelBuilder pb = new PanelBuilder(new FormLayout("5dlu,5dlu,default,default,0dlu:grow","default,5dlu,default,10dlu,default,5dlu,fill:20dlu:grow,2dlu,default"));
+    EnhancedPanelBuilder pb = new EnhancedPanelBuilder(new FormLayout("5dlu,5dlu,default,default,0dlu:grow"));
     pb.border(Borders.DIALOG);
     
-    mAlwaysExpertMode = new JCheckBox(mLocalizer.msg("alwaysExpert", "Use expert mode for repetition search also"), SearchPlugin.getAlwaysSearchExpert());
+    mAlwaysExpertMode = new JCheckBox(LOCALIZER.msg("alwaysExpert", "Use expert mode for repetition search also"), SearchPlugin.getAlwaysSearchExpert());
     
     SearchFormSettings[] history = SearchPlugin.getSearchHistory();
     
@@ -91,11 +90,11 @@ class SearchSettingsTab implements SettingsTab {
       }
     });
     
-    pb.addSeparator(mLocalizer.msg("title", "Search"), CC.xyw(1,1,5));
-    pb.add(mAlwaysExpertMode, CC.xyw(2,3,4));
-    pb.addSeparator(mLocalizer.msg("history", "Search history entries"), CC.xyw(1,5,5));
-    pb.add(new JScrollPane(mSearchHistory), CC.xyw(3,7,3));
-    pb.add(delete, CC.xy(3, 9));
+    pb.addSeparatorRowFull(false, LOCALIZER.msg("title", "Search"));
+    pb.addRowFull(mAlwaysExpertMode, 2);
+    pb.addParagraph(LOCALIZER.msg("history", "Search history entries"));
+    pb.addRowFull("fill:20dlu:grow", new JScrollPane(mSearchHistory), 3);
+    pb.addRow("2dlu,default", delete, 3);
     
     mSearchHistory.addListSelectionListener(e -> delete.setEnabled(mSearchHistory.getSelectedIndices().length != 0));
 
@@ -130,7 +129,7 @@ class SearchSettingsTab implements SettingsTab {
    * @return the Title for this SettingsTab
    */
   public String getTitle() {
-    return mLocalizer.msg("title", "Search");
+    return LOCALIZER.msg("title", "Search");
   }
 
 }
