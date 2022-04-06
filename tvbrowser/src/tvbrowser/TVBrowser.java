@@ -141,10 +141,10 @@ import tvbrowser.ui.configassistant.TvBrowserPictureSettingsUpdateDialog;
 import tvbrowser.ui.mainframe.MainFrame;
 import tvbrowser.ui.mainframe.SoftwareUpdater;
 import tvbrowser.ui.mainframe.UpdateDlg;
+import tvbrowser.ui.settings.GeneralSettingsTab;
 import tvbrowser.ui.settings.LookAndFeelSettingsTab;
 import tvbrowser.ui.settings.MarkingsSettingsTab;
 import tvbrowser.ui.settings.ProgramPanelSettingsTab;
-import tvbrowser.ui.settings.GeneralSettingsTab;
 import tvbrowser.ui.splashscreen.DummySplash;
 import tvbrowser.ui.splashscreen.Splash;
 import tvbrowser.ui.splashscreen.SplashScreen;
@@ -790,25 +790,13 @@ public class TVBrowser {
           JCheckBox update = new JCheckBox(LOCALIZER.msg("update.primeTimeActivate","Activate prime time update"), Settings.General.AUTO_UPDATE_PRIME_TIME.getBoolean());
           
           EnhancedPanelBuilder pb = new EnhancedPanelBuilder("5dlu,10dlu,default,default:grow");
-          pb.addRow("default",false);
-          pb.addSeparator(refresh, CC.xyw(1, pb.getRowCount(), 4));
-          pb.addRow("5dlu",false);
-          pb.addRow("default",false);
-          pb.add(UiUtilities.createHtmlHelpTextArea(LOCALIZER.msg("update.primeTimeUpdate","Independent of the configuration of the automatically data update, TV-Browser since 4.2.2 provides the option to activate an automatically data update of the prime time (after 6 pm). If activated TV-Browser will download the data for today and tomorrow each day right before the prime time. You can configure this options under <b><i>{0}, {1}</i></b>&nbsp;&nbsp;or directly here.",GeneralSettingsTab.LOCALIZER.msg("general","General settings"), refresh)), CC.xyw(2, pb.getRowCount(), 3));
-          pb.addRow();
-          pb.add(update, CC.xyw(2, pb.getRowCount(), 3));
-          pb.addRow("10dlu",false);
-          pb.addRow(false);
-          pb.addSeparator(MarkingsSettingsTab.LOCALIZER.msg("title","Highlighting"), CC.xyw(1, pb.getRowCount(), 4));              
           
-          pb.addRow("5dlu",false);
-          pb.addRow("default",false);
-          pb.add(UiUtilities.createHtmlHelpTextArea(LOCALIZER.msg("update.gradientColors","Since TV-Browser 4.2.2 programs can be highlighted by more than one color at the same time. This is done by showing a color. The previous highlighting with only the color of the highest priority is still available and can be configured right here or anytime under <b><i>{0}->{1}, {2}</i></b>.",LookAndFeelSettingsTab.LOCALIZER.msg("graphical","Graphical settings"),ProgramPanelSettingsTab.LOCALIZER.msg("title","Program display"),ProgramPanelSettingsTab.LOCALIZER.msg("Colors", "Colors"))), CC.xyw(2, pb.getRowCount(), 3));
-          pb.addRow("5dlu",false);
-          pb.addRow("default",false);
-          pb.add(gradient, CC.xyw(2, pb.getRowCount(), 3));
-          pb.addRow("5dlu",false);
-          pb.addRow("default",false);
+          pb.addParagraph(refresh);
+          pb.addRowFull(UiUtilities.createHtmlHelpTextArea(LOCALIZER.msg("update.primeTimeUpdate","Independent of the configuration of the automatically data update, TV-Browser since 4.2.2 provides the option to activate an automatically data update of the prime time (after 6 pm). If activated TV-Browser will download the data for today and tomorrow each day right before the prime time. You can configure this options under <b><i>{0}, {1}</i></b>&nbsp;&nbsp;or directly here.",GeneralSettingsTab.LOCALIZER.msg("general","General settings"), refresh)), 2);
+          pb.addRowFull(update, 2);
+          pb.addParagraph(MarkingsSettingsTab.LOCALIZER.msg("title","Highlighting"));              
+          pb.addRowFull(UiUtilities.createHtmlHelpTextArea(LOCALIZER.msg("update.gradientColors","Since TV-Browser 4.2.2 programs can be highlighted by more than one color at the same time. This is done by showing a color. The previous highlighting with only the color of the highest priority is still available and can be configured right here or anytime under <b><i>{0}->{1}, {2}</i></b>.",LookAndFeelSettingsTab.LOCALIZER.msg("graphical","Graphical settings"),ProgramPanelSettingsTab.LOCALIZER.msg("title","Program display"),ProgramPanelSettingsTab.LOCALIZER.msg("Colors", "Colors"))), 2);
+          pb.addRowFull(gradient, 2);
           
           int fMarkPriorityOld = FavoritesPluginProxy.getInstance().getMarkPriorityMaxForProgram(null);
           int rMarkPriorityOld = ReminderPluginProxy.getInstance().getMarkPriorityMaxForProgram(null);
@@ -826,7 +814,7 @@ public class TVBrowser {
           } catch (NoSuchMethodException | SecurityException | IllegalAccessException | 
               IllegalArgumentException | InvocationTargetException e1) {} 
           final ProgramPanel p = new ProgramPanel(PluginManagerImpl.getInstance().getExampleProgram());
-          pb.add(p, CC.xy(3, pb.getRowCount()));
+          pb.addRow(p, 3);
           
           p.getProgram().mark(FavoritesPluginProxy.getInstance());
           p.getProgram().mark(ReminderPluginProxy.getInstance());

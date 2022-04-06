@@ -53,7 +53,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 
 import com.jgoodies.forms.factories.Borders;
-import com.jgoodies.forms.layout.CellConstraints;
+import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
 
 import devplugin.AfterDataUpdateInfoPanel;
@@ -392,8 +392,6 @@ public class TvDataUpdater {
           infoPanel.closed();
           centerPanel.updateUI();
         };
-
-        CellConstraints cc = new CellConstraints();
                 
         InternalPluginProxyIf[] internalPlugins = InternalPluginProxyList.getInstance().getAvailableProxys();
         
@@ -405,8 +403,7 @@ public class TvDataUpdater {
           if(test != null) {
             test.setAfterDataUpdateInfoPanelListener(infoPanelListener);
             pb.addParagraph(internalPlugin.getName());
-            pb.addGrowingRow();
-            pb.add(test, cc.xy(2, pb.getRowCount()));
+            pb.addGrowingRow(test, 2);
             showDialog = true;
           }
         }
@@ -419,8 +416,7 @@ public class TvDataUpdater {
           if(test != null) {
             test.setAfterDataUpdateInfoPanelListener(infoPanelListener);
             pb.addParagraph(pluginProxy.getInfo().getName());
-            pb.addGrowingRow();
-            pb.add(test, cc.xy(2, pb.getRowCount()));
+            pb.addGrowingRow(test, 2);
             showDialog = true;
           }
         }
@@ -443,8 +439,8 @@ public class TvDataUpdater {
           });
           
           JPanel buttons = new JPanel(new FormLayout("min:grow,default,min:grow","5dlu,default,5dlu,default"));
-          buttons.add(new JSeparator(JSeparator.HORIZONTAL), cc.xyw(1, 2, 3));
-          buttons.add(close, cc.xy(2, 4));
+          buttons.add(new JSeparator(JSeparator.HORIZONTAL), CC.xyw(1, 2, 3));
+          buttons.add(close, CC.xy(2, 4));
           
           center.add(buttons, BorderLayout.SOUTH);
                     

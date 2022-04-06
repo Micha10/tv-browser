@@ -17,16 +17,13 @@
 package tvbrowser.ui.settings;
 
 import javax.swing.Icon;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import tvbrowser.core.icontheme.IconLoader;
-import util.ui.EnhancedPanelBuilder;
-
-import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormSpecs;
 
 import devplugin.SettingsTab;
+import tvbrowser.core.icontheme.IconLoader;
+import util.ui.EnhancedPanelBuilder;
 
 /**
  * @author Bananeweizen
@@ -45,8 +42,7 @@ public abstract class AbstractSettingsTab implements SettingsTab {
 	protected JPanel createEmptyPanel(final String title, final String description) {
     EnhancedPanelBuilder panel = new EnhancedPanelBuilder(FormSpecs.RELATED_GAP_COLSPEC.encode() + ",pref:grow");
     panel.addParagraph(title);
-    panel.addRow();
-    panel.add(new JLabel(description), new CellConstraints().xy(2, panel.getRow()));
+    panel.addLabelRow(description, 2);
     return panel.getPanel();
 	}
 

@@ -519,11 +519,11 @@ class ProgramInfoDialog {
             .showOptionDialog(
                 "programInfoDialog.newActorSearch",
                 mDialog,
-                ProgramInfo.mLocalizer
+                ProgramInfo.LOCALIZER
                     .msg(
                         "newActorSearchText",
                         "This function was changed for TV-Browser 2.7. The search type is now\nchangeable in the settings of the Program details, additional now available\nis a context menu for the actor search."),
-                ProgramInfo.mLocalizer
+                ProgramInfo.LOCALIZER
                     .msg("newActorSearch", "New actor search"));
 
         try {

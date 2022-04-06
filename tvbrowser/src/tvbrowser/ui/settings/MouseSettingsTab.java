@@ -42,6 +42,13 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.ListCellRenderer;
 
+import com.jgoodies.forms.factories.Borders;
+import com.jgoodies.forms.layout.FormLayout;
+
+import devplugin.ActionMenu;
+import devplugin.ContextMenuIf;
+import devplugin.Plugin;
+import devplugin.Program;
 import tvbrowser.core.Settings;
 import tvbrowser.core.contextmenu.ConfigMenuItem;
 import tvbrowser.core.contextmenu.ContextMenuManager;
@@ -52,21 +59,12 @@ import tvbrowser.core.contextmenu.SeparatorMenuItem;
 import tvbrowser.core.icontheme.IconLoader;
 import tvbrowser.core.plugin.PluginProxy;
 import tvbrowser.ui.mainframe.MainFrame;
+import util.i18n.Localizer;
 import util.settings.ContextMenuMouseActionSetting;
 import util.ui.CustomComboBoxRenderer;
 import util.ui.EnhancedPanelBuilder;
-import util.i18n.Localizer;
 import util.ui.TVBrowserIcons;
 import util.ui.html.HTMLTextHelper;
-
-import com.jgoodies.forms.factories.Borders;
-import com.jgoodies.forms.factories.CC;
-import com.jgoodies.forms.layout.FormLayout;
-
-import devplugin.ActionMenu;
-import devplugin.ContextMenuIf;
-import devplugin.Plugin;
-import devplugin.Program;
 
 public class MouseSettingsTab implements devplugin.SettingsTab {
 
@@ -124,20 +122,13 @@ public class MouseSettingsTab implements devplugin.SettingsTab {
 		
 		mMouseActions.clear();
 		
-		contentPanel.addRow();
-		contentPanel.addSeparator(LOCALIZER.msg("title", "Title"), CC.xyw(1, contentPanel.getRow(), 6));
-
-		contentPanel.addRow();
-		contentPanel.add(
-				new JLabel(LOCALIZER.msg("MouseButtons", "Mouse Buttons:")),
-				CC.xyw(2, contentPanel.getRow(), 4));
-
+		contentPanel.addSeparatorRowFull(LOCALIZER.msg("title", "Title"));
+		contentPanel.addLabelRow(LOCALIZER.msg("MouseButtons", "Mouse Buttons:"), 2, 4);
 
 		mMainPanel = new JPanel();
 		mMainPanel.setLayout(new BoxLayout(mMainPanel, BoxLayout.Y_AXIS));
 		
-		contentPanel.addRow();
-		contentPanel.add(mMainPanel, CC.xyw(2, contentPanel.getRow(), 4));
+		contentPanel.addRow(mMainPanel, 2, 4);
 		
     ContextMenuMouseActionSetting[] leftSingleClick = Settings.Mouse.LEFT_SINGLE_CLICK_IF_ARRAY.getContextMenuMouseActionArray();
     ContextMenuMouseActionSetting[] leftDoubleClick = Settings.Mouse.LEFT_DOUBLE_CLICK_IF_ARRAY.getContextMenuMouseActionArray();
@@ -162,8 +153,7 @@ public class MouseSettingsTab implements devplugin.SettingsTab {
       mMainPanel.updateUI();
     });
     
-    contentPanel.addRow();
-    contentPanel.add(add, CC.xy(2,contentPanel.getRow()));
+    contentPanel.addRow(add, 2);
 		
 		return contentPanel.getPanel();
 	}
@@ -257,13 +247,10 @@ public class MouseSettingsTab implements devplugin.SettingsTab {
 	  private ContextMenuPanel(ContextMenuMouseActionSetting setting, int mouseButton, int clickCount) {
 	    EnhancedPanelBuilder pb = new EnhancedPanelBuilder("default,3dlu,default,3dlu,default,3dlu,default,3dlu,default",this);
 
-	    pb.addRow();
-	    pb.addLabel(LOCALIZER.msg("mouseButton", "Mouse button"), CC.xy(1, pb.getRow()));
-	    pb.addLabel(LOCALIZER.msg("clickCount", "Click count"),CC.xy(3, pb.getRow()));
-	    pb.addLabel(LOCALIZER.msg("modifier", "Keyboard"), CC.xy(5, pb.getRow()));
-	    pb.addLabel(LOCALIZER.msg("action", "Action"), CC.xy(7, pb.getRow()));
-	    
-	    pb.addRow();
+	    pb.addLabelRow(LOCALIZER.msg("mouseButton", "Mouse button"), 1);
+	    pb.labelAdd(LOCALIZER.msg("clickCount", "Click count"), 3);
+	    pb.labelAdd(LOCALIZER.msg("modifier", "Keyboard"), 5);
+	    pb.labelAdd(LOCALIZER.msg("action", "Action"), 7);
 	    
 	    mMouseButton = new JComboBox<>(MOUSE_BUTTON_TEXT);
 	    mMouseButton.setSelectedIndex(mouseButton-1);
@@ -298,11 +285,11 @@ public class MouseSettingsTab implements devplugin.SettingsTab {
         mMainPanel.updateUI();
       });
 	    
-	    pb.add(mMouseButton, CC.xy(1, pb.getRow()));
-	    pb.add(mClickCount, CC.xy(3, pb.getRow()));
-	    pb.add(mModifiersEx, CC.xy(5, pb.getRow()));
-	    pb.add(mMouseClickSetting.createComboxBox(), CC.xy(7, pb.getRow()));
-	    pb.add(delete, CC.xy(9, pb.getRow()));
+	    pb.addRow(mMouseButton, 1);
+	    pb.add(mClickCount, 3);
+	    pb.add(mModifiersEx, 5);
+	    pb.add(mMouseClickSetting.createComboxBox(), 7);
+	    pb.add(delete, 9);
 	  }
 	  
 	  private int indexOfModifier(int[] modifierExArr, int modifierEx) {

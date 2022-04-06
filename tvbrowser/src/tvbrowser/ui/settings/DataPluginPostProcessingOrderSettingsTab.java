@@ -6,18 +6,16 @@ import java.util.Comparator;
 import javax.swing.Icon;
 import javax.swing.JPanel;
 
+import com.jgoodies.forms.factories.Borders;
+
+import devplugin.SettingsTab;
 import tvbrowser.core.Settings;
 import tvbrowser.core.plugin.PluginProxy;
 import tvbrowser.core.plugin.PluginProxyManager;
-import util.ui.EnhancedPanelBuilder;
 import util.i18n.Localizer;
+import util.ui.EnhancedPanelBuilder;
 import util.ui.UiUtilities;
 import util.ui.customizableitems.SortableItemList;
-
-import com.jgoodies.forms.factories.Borders;
-import com.jgoodies.forms.factories.CC;
-
-import devplugin.SettingsTab;
 
 public class DataPluginPostProcessingOrderSettingsTab implements SettingsTab {
   private static final Localizer LOCALIZER = Localizer.getLocalizerFor(DataPluginPostProcessingOrderSettingsTab.class);
@@ -74,14 +72,9 @@ public class DataPluginPostProcessingOrderSettingsTab implements SettingsTab {
     
     final EnhancedPanelBuilder pb = new EnhancedPanelBuilder("0dlu,5dlu,default:grow,0dlu");
     pb.border(Borders.DIALOG);
-    pb.addRow("default",false);
-    pb.addSeparator(getTitle(), CC.xyw(2,pb.getRowCount(),2));
-    pb.addRow("5dlu",false);
-    pb.addRow("default",false);
-    pb.add(UiUtilities.createHelpTextArea(LOCALIZER.msg("help", "The order set here is used to defines the priority every plugin has to post process and change the updated data. The plugin at the top of this is called last to post process to give it the chance to be the last to change data.")), CC.xy(3, pb.getRowCount()));
-    pb.addRow("3dlu",false);
-    pb.addRow("fill:100dlu:grow",false);
-    pb.add(mSortablePluginList, CC.xy(3, pb.getRowCount()));
+    pb.addParagraph(getTitle(), 2);
+    pb.addRow(UiUtilities.createHelpTextArea(LOCALIZER.msg("help", "The order set here is used to defines the priority every plugin has to post process and change the updated data. The plugin at the top of this is called last to post process to give it the chance to be the last to change data.")), 3);
+    pb.addRow("3dlu,fill:100dlu:grow",mSortablePluginList, 3);
     
     return pb.getPanel();
   }

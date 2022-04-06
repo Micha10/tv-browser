@@ -154,35 +154,21 @@ public class EditFavoriteDialog extends JDialog implements WindowClosingIf {
     EnhancedPanelBuilder pb = new EnhancedPanelBuilder("3dlu,default:grow,2dlu","1dlu");
     pb.border(new EmptyBorder(10, 10, 10, 10));
     
-    pb.addRow(false);
-    pb.addSeparator(LOCALIZER.msg("section.head", "Favorite"), CC.xyw(1, pb.getRowCount(), 3));
-
-    pb.addRow();
-    pb.add(createTitleChangePanel(), CC.xy(2, pb.getRowCount()));
-    pb.addRow();
-    pb.add(mFavoriteConfigurator.createConfigurationPanel(), CC.xy(2, pb.getRowCount()));
-
-    pb.addRow();
-    pb.addSeparator(LOCALIZER.msg("section.details", "Details"), CC.xyw(1, pb.getRowCount(), 3));
-    pb.addRow();
-    pb.add(createLimitPanel(), CC.xy(2, pb.getRowCount()));
-
-    pb.addRow();
-    pb.addSeparator(LOCALIZER.msg("section.exclusions", "Exclusion Criteria"), CC.xyw(1, pb.getRowCount(), 3));
-    pb.addRow("fill:60dlu:grow");
-    pb.add(mExclusionPanel = new ExclusionPanel(mFavorite.getExclusions(),this,mFavorite), CC.xy(2, pb.getRowCount()));
-
-    pb.addRow();
-    pb.addSeparator(LOCALIZER.msg("section.reminder", "Reminder"), CC.xyw(1, pb.getRowCount(), 3));
-    pb.addRow();
-    pb.add(createReminderPanel(), CC.xy(2, pb.getRowCount()));
-
-    pb.addRow();
-    pb.addSeparator(LOCALIZER.msg("section.extras", "Extras"), CC.xyw(1, pb.getRowCount(), 3));
-    pb.addRow();
-    pb.add(createExtrasPanel(), CC.xy(2, pb.getRowCount()));
-    pb.addRow();
+    pb.addSeparatorRowFull(false, LOCALIZER.msg("section.head", "Favorite"));
+    pb.addRow(createTitleChangePanel(), 2);
+    pb.addRow(mFavoriteConfigurator.createConfigurationPanel(), 2);
     
+    pb.addSeparatorRowFull(LOCALIZER.msg("section.details", "Details"));
+    pb.addRow(createLimitPanel(), 2);
+    
+    pb.addSeparatorRowFull(LOCALIZER.msg("section.exclusions", "Exclusion Criteria"));
+    pb.addRow("fill:60dlu:grow", mExclusionPanel = new ExclusionPanel(mFavorite.getExclusions(),this,mFavorite), 2);
+
+    pb.addSeparatorRowFull(LOCALIZER.msg("section.reminder", "Reminder"));
+    pb.addRow(createReminderPanel(), 2);
+    
+    pb.addSeparatorRowFull(LOCALIZER.msg("section.extras", "Extras"));
+    pb.addRow(createExtrasPanel(), 2);
     
     JButton cancelBtn = new JButton(Localizer.getLocalization(Localizer.I18N_CANCEL));
     JButton okBtn = new JButton(Localizer.getLocalization(Localizer.I18N_OK));

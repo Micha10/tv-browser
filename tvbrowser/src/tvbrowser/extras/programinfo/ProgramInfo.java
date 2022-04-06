@@ -59,7 +59,7 @@ import util.ui.UiUtilities;
  */
 public class ProgramInfo {
 
-  static Localizer mLocalizer = util.i18n.Localizer
+  static Localizer LOCALIZER = util.i18n.Localizer
       .getLocalizerFor(ProgramInfo.class);
 
   private static final String DATAFILE_PREFIX = "programinfo.ProgramInfo";
@@ -111,7 +111,7 @@ public class ProgramInfo {
 
   protected ActionMenu getContextMenuActions(final Program program) {
     ContextMenuAction action = new ContextMenuAction();
-    action.setText(mLocalizer.msg("contextMenuText", "Program information"));
+    action.setText(LOCALIZER.msg("contextMenuText", "Program information"));
     action.setSmallIcon(IconLoader.getInstance().getIconFromTheme("actions",
         "edit-find", 16));
     action.setActionListener(event -> {
@@ -339,7 +339,7 @@ public class ProgramInfo {
   }
 
   static String getName() {
-    return mLocalizer.msg("pluginName","Program details");
+    return LOCALIZER.msg("pluginName","Program details");
   }
 
   protected PluginPictureSettings getPictureSettings() {
@@ -465,7 +465,7 @@ public class ProgramInfo {
   }
 
   public static void resetLocalizer() {
-    mLocalizer = Localizer.getLocalizerFor(ProgramInfo.class);
+    LOCALIZER = Localizer.getLocalizerFor(ProgramInfo.class);
   }
 
   public boolean dialogWasClosedRecently() {

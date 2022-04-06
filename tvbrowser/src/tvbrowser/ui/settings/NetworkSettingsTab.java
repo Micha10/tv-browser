@@ -11,15 +11,13 @@ import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
 
+import com.jgoodies.forms.factories.Borders;
+
+import devplugin.SettingsTab;
 import tvbrowser.core.Settings;
 import tvbrowser.core.icontheme.IconLoader;
 import util.io.NetworkUtilities;
 import util.ui.EnhancedPanelBuilder;
-
-import com.jgoodies.forms.factories.Borders;
-import com.jgoodies.forms.layout.CellConstraints;
-
-import devplugin.SettingsTab;
 
 /**
  * Settings for network stuff.
@@ -38,25 +36,17 @@ public class NetworkSettingsTab implements SettingsTab {
   public JPanel createSettingsPanel() {
     EnhancedPanelBuilder pb = new EnhancedPanelBuilder("5dlu, pref, 3dlu, 0dlu:grow");
     pb.border(Borders.DIALOG);
-    
-    CellConstraints cc = new CellConstraints();
-    
+        
     pb.addParagraph(LOCALIZER.msg("connectionTestTitle","Internet connection test"));
+    pb.addRowFull(mConnectionTest = new JCheckBox(LOCALIZER.msg("connectionTestText","Internet connection test activated"), Settings.Network.INTERNET_CONNECTION_CHECK.getBoolean()), 2);
+    pb.addRow(mNetworkCheckTimeout = new JSpinner(new SpinnerNumberModel(Settings.Network.CHECK_TIMEOUT.getInt()/1000,10,90,5)), 2);
+    final JLabel label = pb.labelAdd(LOCALIZER.msg("waitTime","Seconds maximum waiting time for connection test"), 4);
     
-    pb.addRow();
-    pb.add(mConnectionTest = new JCheckBox(LOCALIZER.msg("connectionTestText","Internet connection test activated"), Settings.Network.INTERNET_CONNECTION_CHECK.getBoolean()), cc.xyw(2, pb.getRowCount(), 3));
-
-    pb.addRow();
-    pb.add(mNetworkCheckTimeout = new JSpinner(new SpinnerNumberModel(Settings.Network.CHECK_TIMEOUT.getInt()/1000,10,90,5)), cc.xy(2, pb.getRowCount()));
-    final JLabel label = pb.addLabel(LOCALIZER.msg("waitTime","Seconds maximum waiting time for connection test"), cc.xy(4, pb.getRowCount()));
+    pb.addLabelRowFull(LOCALIZER.msg("sites", "Websites used for checking"), 2);
     
-    pb.addRow();
-    pb.add(new JLabel(LOCALIZER.msg("sites", "Websites used for checking")), cc.xyw(2, pb.getRowCount(), 3));
-    
-    pb.addRow();
     final JList<String> urlList = new JList<>(NetworkUtilities.getConnectionCheckUrls());
     urlList.setEnabled(false);
-    pb.add(new JScrollPane(urlList), cc.xyw(2, pb.getRowCount(), 3));
+    pb.addRowFull(new JScrollPane(urlList), 2);
     
     mConnectionTest.addItemListener(e -> {
       boolean enabled = e.getStateChange() == ItemEvent.SELECTED;
@@ -68,10 +58,8 @@ public class NetworkSettingsTab implements SettingsTab {
     label.setEnabled(mConnectionTest.isSelected());
     
     pb.addParagraph(LOCALIZER.msg("cancelTime","Timeout for not responding connections"));
-    
-    pb.addRow();
-    pb.add(mConnectionTimeout = new JSpinner(new SpinnerNumberModel(Settings.Network.DEFAULT_CONNECTION_TIMEOUT.getInt()/1000,5,60,5)), cc.xy(2, pb.getRowCount()));
-    pb.addLabel(LOCALIZER.msg("seconds","Seconds"), cc.xy(4, pb.getRowCount()));
+    pb.addRow(mConnectionTimeout = new JSpinner(new SpinnerNumberModel(Settings.Network.DEFAULT_CONNECTION_TIMEOUT.getInt()/1000,5,60,5)), 2);
+    pb.labelAdd(LOCALIZER.msg("seconds","Seconds"), 4);
     
     return pb.getPanel();
   }

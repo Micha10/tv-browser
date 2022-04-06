@@ -30,9 +30,12 @@ import java.awt.BorderLayout;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import com.jgoodies.forms.factories.Borders;
+import com.jgoodies.forms.layout.FormSpecs;
+
+import devplugin.CancelableSettingsTab;
 import tvbrowser.core.Settings;
 import tvbrowser.core.plugin.AbstractPluginProxy;
 import tvbrowser.core.plugin.PluginProxy;
@@ -41,12 +44,6 @@ import tvbrowser.core.plugin.SettingsTabProxy;
 import tvbrowser.ui.mainframe.MainFrame;
 import util.exc.TvBrowserException;
 import util.ui.EnhancedPanelBuilder;
-
-import com.jgoodies.forms.factories.Borders;
-import com.jgoodies.forms.layout.CellConstraints;
-import com.jgoodies.forms.layout.FormSpecs;
-
-import devplugin.CancelableSettingsTab;
 
 public class ConfigPluginSettingsTab extends AbstractSettingsTab implements CancelableSettingsTab {
 
@@ -122,12 +119,8 @@ public class ConfigPluginSettingsTab extends AbstractSettingsTab implements Canc
     } else {
       // The plugin is not activated -> Tell it the user
       EnhancedPanelBuilder panelActivate = new EnhancedPanelBuilder(FormSpecs.RELATED_GAP_COLSPEC.encode() + "," + FormSpecs.PREF_COLSPEC.encode() + "," + FormSpecs.RELATED_GAP_COLSPEC.encode() + "," + FormSpecs.PREF_COLSPEC.encode() + ",default:grow");
-      CellConstraints cc = new CellConstraints();
-
       panelActivate.addParagraph(LOCALIZER.msg("activation", "Activation"));
-
-      panelActivate.addRow();
-      panelActivate.add(new JLabel(LOCALIZER.msg("notactivated", "This Plugin is currently not activated.")), cc.xy(2, panelActivate.getRow()));
+      panelActivate.addLabelRow(LOCALIZER.msg("notactivated", "This Plugin is currently not activated."), 2);
 
       final JButton btnActivate = new JButton(LOCALIZER.msg("activate", "Activate"));
       btnActivate.addActionListener(e -> {
@@ -148,7 +141,7 @@ public class ConfigPluginSettingsTab extends AbstractSettingsTab implements Canc
         }
       });
 
-      panelActivate.add(btnActivate, cc.xy(4, panelActivate.getRow()));
+      panelActivate.add(btnActivate, 4);
       mPluginPanel.add(panelActivate.getPanel(), BorderLayout.NORTH);
     }
 

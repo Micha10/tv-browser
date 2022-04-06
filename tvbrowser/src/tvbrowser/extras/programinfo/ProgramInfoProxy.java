@@ -77,7 +77,7 @@ public class ProgramInfoProxy extends AbstractInternalPluginProxy implements Con
   }
 
   public String getButtonActionDescription() {
-    return ProgramInfo.mLocalizer.msg("description","Shows details about a program.");
+    return ProgramInfo.LOCALIZER.msg("description","Shows details about a program.");
   }
 
   public Icon getIcon() {

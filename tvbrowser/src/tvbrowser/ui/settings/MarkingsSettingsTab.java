@@ -182,13 +182,13 @@ public class MarkingsSettingsTab implements SettingsTab {
     
     private void createGui() {
       EnhancedPanelBuilder pb = new EnhancedPanelBuilder(new FormLayout("5dlu,10dlu,1dlu,default,5dlu,default,5dlu,default,5dlu:grow,default"),this);
-      pb.addRow(true);
-      pb.addLabel(mPriority+".", CC.xy(2, pb.getRow())).setHorizontalAlignment(JLabel.RIGHT);
-      pb.addLabel(LOCALIZER.msg("color.colorPriority", "Color/priority"), CC.xy(4, pb.getRow()));
-      pb.add(mColorLabel, CC.xy(6, pb.getRow()));
+      
+      pb.addLabelRow(mPriority+".", 2).setHorizontalAlignment(JLabel.RIGHT);
+      pb.labelAdd(LOCALIZER.msg("color.colorPriority", "Color/priority"), 4);
+      pb.add(mColorLabel, 6);
       mColorLabel.setStandardColor(mDefaultColor);
-      pb.add(new ColorButton(mColorLabel), CC.xy(8, pb.getRow()));
-      pb.add(mDelete, CC.xy(10, pb.getRow()));
+      pb.add(new ColorButton(mColorLabel), 8);
+      pb.add(mDelete, 10);
     }
     
     private void setDeleteEnabled(final boolean enabled) {

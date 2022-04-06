@@ -130,11 +130,9 @@ public class ProgramPanelSettingsTab implements SettingsTab {
     EnhancedPanelBuilder panel = new EnhancedPanelBuilder("5dlu, fill:50dlu:grow, 3dlu, fill:50dlu:grow, 3dlu");
     panel.border(Borders.DIALOG);
     
-    panel.addParagraph("");
+    panel.addSeparatorRow(LOCALIZER.msg("pluginIcons", "Plugin icons"), 1, 2);
     // icons
-    panel.add(DefaultComponentFactory.getInstance()
-        .createSeparator(LOCALIZER.msg("pluginIcons", "Plugin icons")), CC.xyw(1, panel.getRowCount(), 2));
-
+    
     IconPlugin[] allPluginArr = getAvailableIconPlugins();
     IconPlugin[] pluginOrderArr = getSelectedIconPlugins(allPluginArr, Settings.ProgramPanel.ICON_PLUGINS );
     mIconPluginOCh = createIconPluginChooser(allPluginArr, pluginOrderArr);
@@ -143,8 +141,7 @@ public class ProgramPanelSettingsTab implements SettingsTab {
     mIconPluginOChAlt = createIconPluginChooser(allPluginArr, pluginOrderArr);
     
     // info text
-    panel.add(DefaultComponentFactory.getInstance().createSeparator(LOCALIZER.msg("infoText", "Info text")), CC
-        .xyw(4, panel.getRowCount(), 2));
+    panel.add(DefaultComponentFactory.getInstance().createSeparator(LOCALIZER.msg("infoText", "Info text")), 4, 2);
     
     ProgramFieldType[] allTypeArr = getAvailableTypes();
     ProgramFieldType[] typeOrderArr = Settings.ProgramPanel.INFO_FIELDS.getProgramFieldTypeArray();
@@ -199,7 +196,7 @@ public class ProgramPanelSettingsTab implements SettingsTab {
     
     mShowOriginalTitles = new JCheckBox(LOCALIZER.msg("showOriginalTitles", "Show original title, if available, instead of title"), Settings.ProgramPanel.ORIGINIAL_TITLES_SHOW.getBoolean());
     
-    JPanel filterPanel = new JPanel(new FormLayout("default","default"));
+    EnhancedPanelBuilder filterPanel = new EnhancedPanelBuilder(new FormLayout("default","default"));
     JButton editFilter = new JButton("Filter editieren...");
     editFilter.addActionListener(e -> {
       final UserFilter filter = GenericFilterMap.getInstance().getGenericInternalFilter(GenericFilterMap.GENERIC_PROGRAM_PANEL_FILTER_NAME);
@@ -210,44 +207,38 @@ public class ProgramPanelSettingsTab implements SettingsTab {
       }
     });
     
-    filterPanel.add(editFilter, CC.xy(1, 1));
+    filterPanel.addFull(editFilter);
     
     panel.addRow("top:default");
-    panel.addRow("default");
-    panel.add(UiUtilities.createHelpTextArea(LOCALIZER.msg("pluginIcons.description", "")), CC.xywh(2, panel.getRowCount()-2, 1, 3));
-    panel.add(UiUtilities.createHelpTextArea(LOCALIZER.msg("infoText.description", "")), CC.xy(4, panel.getRowCount()-2));
-    panel.add(mShowOriginalTitles, CC.xy(4, panel.getRowCount()));
+    panel.addRow();
+    panel.add(UiUtilities.createHelpTextArea(LOCALIZER.msg("pluginIcons.description", "")), CC.xywh(2, panel.getRowCount()-2, 1, 2));
+    panel.add(UiUtilities.createHelpTextArea(LOCALIZER.msg("infoText.description", "")), CC.xyw(4, panel.getRowCount()-2, 1));
+    panel.add(mShowOriginalTitles, 4);
     
-    panel.addRow("default");
-    panel.addSeparator("Standard", CC.xyw(2, panel.getRowCount(), 3));
+    panel.addSeparatorRow("Standard", 2, 3);
     
-    panel.addGrowingRow();
-    panel.add(mIconPluginOCh, CC.xy(2, panel.getRowCount()));
-    panel.add(mInfoTextOCh, CC.xy(4, panel.getRowCount()));
+    panel.addGrowingRow(mIconPluginOCh, 2);
+    panel.add(mInfoTextOCh, 4);
     
-    panel.addRow("default");
-    panel.addSeparator("Alternative Darstellung nach Filter", CC.xyw(2, panel.getRowCount(), 3));
+    panel.addSeparatorRow("Alternative Darstellung nach Filter", 2, 3);
     
-    panel.addRow("default");
-    panel.add(filterPanel, CC.xyw(2, panel.getRowCount(), 3));
+    panel.addRow(filterPanel.getPanel(), 2, 3);
     
-    panel.addGrowingRow();
-    panel.add(mIconPluginOChAlt, CC.xy(2, panel.getRowCount()));
-    panel.add(mInfoTextOChAlt, CC.xy(4, panel.getRowCount()));
+    panel.addGrowingRow(mIconPluginOChAlt, 2);
+    panel.add(mInfoTextOChAlt, 4);
     
     panel.addParagraph(LOCALIZER.msg("layout", "Layout"));
     
-    JPanel layoutPanel = new JPanel(new FormLayout("default,3dlu,default,3dlu,default","default,3dlu,default,3dlu,default"));
+    EnhancedPanelBuilder layoutPanel = new EnhancedPanelBuilder(new FormLayout("default,3dlu,default,3dlu,default"));
     
     // Cut long titles
-    mCutLongTitlesCB = new JCheckBox(LOCALIZER.msg("cutTitle",
-        "Cut long titles"), Settings.ProgramPanel.TITLE_CUT.getBoolean());
-    layoutPanel.add(mCutLongTitlesCB, CC.xy(1, 1));
-    mCutLongTitlesSelection = new JSpinner(new SpinnerNumberModel(
-        Settings.ProgramPanel.TITLE_CUT_LINES.getInt(), 1, 3, 1));
-    layoutPanel.add(mCutLongTitlesSelection, CC.xy(3, 1));
+    mCutLongTitlesCB = new JCheckBox(LOCALIZER.msg("cutTitle", "Cut long titles"), Settings.ProgramPanel.TITLE_CUT.getBoolean());
+    mCutLongTitlesSelection = new JSpinner(new SpinnerNumberModel(Settings.ProgramPanel.TITLE_CUT_LINES.getInt(), 1, 3, 1));
     mCutLongTitlesLabel = new JLabel(LOCALIZER.msg("lines", "Lines"));
-    layoutPanel.add(mCutLongTitlesLabel, CC.xy(5, 1));
+
+    layoutPanel.addRow(false, mCutLongTitlesCB, 1);
+    layoutPanel.add(mCutLongTitlesSelection, 3);
+    layoutPanel.add(mCutLongTitlesLabel, 5);
     
     mCutLongTitlesCB.addActionListener(e -> {
       mCutLongTitlesSelection.setEnabled(mCutLongTitlesCB.isSelected());
@@ -256,24 +247,19 @@ public class ProgramPanelSettingsTab implements SettingsTab {
     mCutLongTitlesCB.getActionListeners()[0].actionPerformed(null);
     
     // Short descriptions N lines
-    mDescriptionLines = new JSpinner(new SpinnerNumberModel(
-        Settings.ProgramPanel.MAX_LINES.getInt(), 1, 5, 1));
-    layoutPanel.add(new JLabel(LOCALIZER.msg("shortDescription",
-        "Short description")), CC.xy(1, 3));
-    layoutPanel.add(mDescriptionLines, CC.xy(3, 3));
-    layoutPanel.add(new JLabel(LOCALIZER.msg("lines", "Lines")), CC.xy(5, 3));
+    mDescriptionLines = new JSpinner(new SpinnerNumberModel(Settings.ProgramPanel.MAX_LINES.getInt(), 1, 5, 1));
+    layoutPanel.addLabelRow("3dlu,default", LOCALIZER.msg("shortDescription","Short description"), 1);
+    layoutPanel.add(mDescriptionLines, 3);
+    layoutPanel.add(new JLabel(LOCALIZER.msg("lines", "Lines")), 5);
     
     // Short programs no description
-    mShortProgramsCB = new JCheckBox(LOCALIZER.msg("shortPrograms",
-        "If duration less than"),
-        Settings.ProgramPanel.DESCRIPTION_LIMIT_BY_DURATION.getBoolean());
-    layoutPanel.add(mShortProgramsCB, CC.xy(1, 5));
-    mShortProgramsMinutes = new JSpinner(new SpinnerNumberModel(
-        Settings.ProgramPanel.DESCRIPTION_LIMIT_BY_DURATION_MINUTES.getInt(), 1, 30, 1));
-    layoutPanel.add(mShortProgramsMinutes, CC.xy(3, 5));
-    mShortProgramsLabel = new JLabel(LOCALIZER.msg("shortPrograms2",
-        "minutes, then hide description"));
-    layoutPanel.add(mShortProgramsLabel, CC.xy(5, 5));
+    mShortProgramsCB = new JCheckBox(LOCALIZER.msg("shortPrograms", "If duration less than"), Settings.ProgramPanel.DESCRIPTION_LIMIT_BY_DURATION.getBoolean());
+    mShortProgramsMinutes = new JSpinner(new SpinnerNumberModel(Settings.ProgramPanel.DESCRIPTION_LIMIT_BY_DURATION_MINUTES.getInt(), 1, 30, 1));
+    mShortProgramsLabel = new JLabel(LOCALIZER.msg("shortPrograms2", "minutes, then hide description"));
+    
+    layoutPanel.addRow("3dlu,default", mShortProgramsCB, 1);
+    layoutPanel.add(mShortProgramsMinutes, 3);
+    layoutPanel.add(mShortProgramsLabel, 5);
 
     mShortProgramsCB.addActionListener(e -> {
       mShortProgramsMinutes.setEnabled(mShortProgramsCB.isSelected());
@@ -281,25 +267,17 @@ public class ProgramPanelSettingsTab implements SettingsTab {
     });
     mShortProgramsCB.getActionListeners()[0].actionPerformed(null);
     
-    panel.addRow();
-    panel.add(layoutPanel, CC.xyw(2, panel.getRowCount(),4));
+    panel.addRowFull(layoutPanel.getPanel(), 2);
       
-    panel.addParagraph(LOCALIZER.msg("Colors", "Colors"));
+    panel.addParagraph(LOCALIZER.msg("Colors", "Colors"));    
+    panel.addRow(mGradientHighlighting = new JCheckBox(LOCALIZER.msg("color.programGradientHighlighting",
+        "Highlight programs with gradient colors"),Settings.ProgramPanel.HIGHLIGHTING_COLOR_GRADIENT.getBoolean()), 2, 3);
+    panel.addRow(mAllowProgramImportance = new JCheckBox(LOCALIZER.msg("color.allowTransparency","Allow plugins to set the transparency of a program"),
+        Settings.ProgramPanel.TRANSPARENCY_ALLOW.getBoolean()), 2, 3);    
+    panel.addRow(mBorderForOnAirPrograms = new JCheckBox(LOCALIZER.msg("color.programOnAirWithBorder",
+        "Border for programs on air"), Settings.ProgramPanel.BORDER_ON_AIR_PROGRAMS_SHOW.getBoolean()), 2, 3);
     
-    panel.addRow();
-    panel.add(mGradientHighlighting = new JCheckBox(LOCALIZER.msg("color.programGradientHighlighting",
-        "Highlight programs with gradient colors"),Settings.ProgramPanel.HIGHLIGHTING_COLOR_GRADIENT.getBoolean()), CC.xyw(2, panel.getRowCount(), 3));
-
-    panel.addRow();
-    panel.add(mAllowProgramImportance = new JCheckBox(LOCALIZER.msg("color.allowTransparency","Allow plugins to set the transparency of a program"),
-        Settings.ProgramPanel.TRANSPARENCY_ALLOW.getBoolean()), CC.xyw(2, panel.getRowCount() ,3));
-    
-    panel.addRow();
-    panel.add(mBorderForOnAirPrograms = new JCheckBox(LOCALIZER.msg("color.programOnAirWithBorder",
-        "Border for programs on air"), Settings.ProgramPanel.BORDER_ON_AIR_PROGRAMS_SHOW.getBoolean()), CC.xyw(2, panel.getRowCount(),
-        3));
-    
-    JPanel colors = new JPanel();
+    EnhancedPanelBuilder colors = new EnhancedPanelBuilder(new FormLayout("default, 5dlu, default, 5dlu, default, 5dlu, default"));
     Color programItemProgressColor = Settings.ProgramPanel.COLOR_ON_AIR_DARK.getColor();
     Color programItemOnAirColor = Settings.ProgramPanel.COLOR_ON_AIR_LIGHT.getColor();
     Color programItemKeyboardSelectedColor = Settings.ProgramPanel.COLOR_KEYBOARD_SELECTED.getColor();
@@ -307,32 +285,24 @@ public class ProgramPanelSettingsTab implements SettingsTab {
     Color programItemDefaultProgressColor = Settings.ProgramPanel.COLOR_ON_AIR_DARK.getDefaultColor();
     Color programItemDefaultOnAirColor = Settings.ProgramPanel.COLOR_ON_AIR_LIGHT.getDefaultColor();
     Color programItemDefaultKeyboardSelectedColor = Settings.ProgramPanel.COLOR_KEYBOARD_SELECTED.getDefaultColor();
-
-    FormLayout formLayout = new FormLayout("default, 5dlu, default, 5dlu, default, 5dlu, default",
-        "5dlu, default, 3dlu, default, 3dlu, default");
-    colors.setLayout(formLayout);
-
-    colors.add(new JLabel(LOCALIZER.msg("color.programOnAir", "Background color for programs on air")), CC.xy(1, 2));
-    colors.add(mProgramItemOnAirColorLb = new ColorLabel(programItemOnAirColor), CC.xy(3, 2));
+    
+    colors.addLabelRow(LOCALIZER.msg("color.programOnAir", "Background color for programs on air"), 1);
+    colors.add(mProgramItemOnAirColorLb = new ColorLabel(programItemOnAirColor), 3);
     mProgramItemOnAirColorLb.setStandardColor(programItemDefaultOnAirColor);
-    colors.add(new ColorButton(mProgramItemOnAirColorLb), CC.xy(5, 2));
+    colors.add(new ColorButton(mProgramItemOnAirColorLb), 5);
 
-    colors.add(new JLabel(LOCALIZER.msg("color.programProgress", "Progress bar for programs on air")), CC.xy(
-        1, 4));
-    colors.add(mProgramItemProgressColorLb = new ColorLabel(programItemProgressColor), CC.xy(3, 4));
+    colors.addLabelRow("3dlu, default", LOCALIZER.msg("color.programProgress", "Progress bar for programs on air"), 1);
+    colors.add(mProgramItemProgressColorLb = new ColorLabel(programItemProgressColor), 3);
     mProgramItemProgressColorLb.setStandardColor(programItemDefaultProgressColor);
-    colors.add(new ColorButton(mProgramItemProgressColorLb), CC.xy(5, 4));
+    colors.add(new ColorButton(mProgramItemProgressColorLb), 5);
 
-    colors.add(new JLabel(LOCALIZER.msg("color.keyboardSelected", "Color for programs selected by keyboard")), CC.xy(1, 6));
-    colors.add(mProgramItemKeyboardSelectedLb = new ColorLabel(programItemKeyboardSelectedColor), CC.xy(3, 6));
+    colors.addLabelRow("3dlu, default", LOCALIZER.msg("color.keyboardSelected", "Color for programs selected by keyboard"), 1);
+    colors.add(mProgramItemKeyboardSelectedLb = new ColorLabel(programItemKeyboardSelectedColor), 3);
     mProgramItemKeyboardSelectedLb.setStandardColor(programItemDefaultKeyboardSelectedColor);
-    colors.add(new ColorButton(mProgramItemKeyboardSelectedLb), CC.xy(5, 6));
+    colors.add(new ColorButton(mProgramItemKeyboardSelectedLb), 5);
 
-    panel.addRow();
-    panel.add(colors, CC.xyw(2, panel.getRowCount(), panel.getColumnCount() - 1));
-    
-    panel.addRow();
-    
+    panel.addRow(colors.getPanel(), 2, panel.getColumnCount() - 1);
+        
     JEditorPane programTableLink = UiUtilities.createHtmlHelpTextArea(LOCALIZER.msg("programTableLink","<html>Font color configurable in <a href=\"\">program table settings</a></html>"), new HyperlinkListener() {
       @Override
       public void hyperlinkUpdate(HyperlinkEvent e) {
@@ -342,14 +312,13 @@ public class ProgramPanelSettingsTab implements SettingsTab {
       }
     });
     
-    panel.add(programTableLink, CC.xyw(2, panel.getRowCount(), 4));
+    panel.addRowFull(programTableLink, 2);
     
-    panel.addParagraph(LOCALIZER.msg("text", "Text"));
-    panel.addRow();
-    panel.add(mHyphenator = new JCheckBox(LOCALIZER.msg("hyphenation", "Use hyphenation"), Settings.ProgramPanel.HYPHENATION.getBoolean()), CC.xyw(2, panel.getRowCount(), panel.getColumnCount() - 1));
+    panel.addParagraph(LOCALIZER.msg("text", "Text"));    
+    panel.addRow(mHyphenator = new JCheckBox(LOCALIZER.msg("hyphenation", "Use hyphenation"), Settings.ProgramPanel.HYPHENATION.getBoolean()), 2, panel.getColumnCount() - 1);
+    
     panel.addParagraph(LOCALIZER.msg("scrolling", "Scrolling"));
-    panel.addRow();
-    panel.add(mSmootherScrolling = new JCheckBox(LOCALIZER.msg("scrolling.smoother", "Smoother scrolling in lists with programs"), Settings.ProgramPanel.SMOOTHER_SCROLLING.getBoolean()), CC.xyw(2, panel.getRowCount(), panel.getColumnCount() - 1));
+    panel.addRow(mSmootherScrolling = new JCheckBox(LOCALIZER.msg("scrolling.smoother", "Smoother scrolling in lists with programs"), Settings.ProgramPanel.SMOOTHER_SCROLLING.getBoolean()), 2, panel.getColumnCount() - 1);
     
     return panel.getPanel();
   }
