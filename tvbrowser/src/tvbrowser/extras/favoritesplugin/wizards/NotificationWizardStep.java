@@ -33,7 +33,6 @@ import javax.swing.JCheckBox;
 import javax.swing.JPanel;
 
 import com.jgoodies.forms.factories.Borders;
-import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 
 import devplugin.Program;
@@ -63,7 +62,6 @@ public class NotificationWizardStep extends AbstractWizardStep {
   }
 
   public JPanel createContent(WizardHandler handler) {
-    CellConstraints cc = new CellConstraints();
     EnhancedPanelBuilder panelBuilder = new EnhancedPanelBuilder(new FormLayout("default"));
 
     panelBuilder.border(Borders.DLU4);
