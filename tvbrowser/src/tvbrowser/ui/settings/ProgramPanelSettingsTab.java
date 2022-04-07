@@ -211,7 +211,7 @@ public class ProgramPanelSettingsTab implements SettingsTab {
     
     panel.addRow("top:default");
     panel.addRow();
-    panel.add(UiUtilities.createHelpTextArea(LOCALIZER.msg("pluginIcons.description", "")), CC.xywh(2, panel.getRowCount()-2, 1, 2));
+    panel.add(UiUtilities.createHelpTextArea(LOCALIZER.msg("pluginIcons.description", "")), CC.xywh(2, panel.getRowCount()-2, 1, 3));
     panel.add(UiUtilities.createHelpTextArea(LOCALIZER.msg("infoText.description", "")), CC.xyw(4, panel.getRowCount()-2, 1));
     panel.add(mShowOriginalTitles, 4);
     
