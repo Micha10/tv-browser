@@ -211,8 +211,8 @@ public class ProgramPanelSettingsTab implements SettingsTab {
     
     panel.addRow("top:default");
     panel.addRow();
-    panel.add(UiUtilities.createHelpTextArea(LOCALIZER.msg("pluginIcons.description", "")), CC.xywh(2, panel.getRowCount()-2, 1, 3));
-    panel.add(UiUtilities.createHelpTextArea(LOCALIZER.msg("infoText.description", "")), CC.xyw(4, panel.getRowCount()-2, 1));
+    panel.add(UiUtilities.createHelpTextArea(LOCALIZER.msg("pluginIcons.description", "Select what icons will be shown in the program table below the start time.")), CC.xywh(2, panel.getRowCount()-2, 1, 3));
+    panel.add(UiUtilities.createHelpTextArea(LOCALIZER.msg("infoText.description", "Select the information and its order to show at the programs.")), CC.xyw(4, panel.getRowCount()-2, 1));
     panel.add(mShowOriginalTitles, 4);
     
     panel.addSeparatorRow("Standard", 2, 3);
@@ -220,7 +220,7 @@ public class ProgramPanelSettingsTab implements SettingsTab {
     panel.addGrowingRow(mIconPluginOCh, 2);
     panel.add(mInfoTextOCh, 4);
     
-    panel.addSeparatorRow("Alternative Darstellung nach Filter", 2, 3);
+    panel.addSeparatorRow(LOCALIZER.msg("filterDisplay", "Alternative display with filter"), 2, 3);
     
     panel.addRow(filterPanel.getPanel(), 2, 3);
     
