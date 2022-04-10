@@ -35,6 +35,7 @@ import javax.swing.JOptionPane;
 
 import util.ui.Localizer;
 import util.ui.UiUtilities;
+import captureplugin.drivers.Command;
 import captureplugin.drivers.DeviceIf;
 import captureplugin.drivers.DriverIf;
 import captureplugin.drivers.utils.ProgramTime;
@@ -52,7 +53,7 @@ public final class SimpleDevice implements DeviceIf {
     /**
      * Translator
      */
-    private static final Localizer mLocalizer = Localizer
+    private static final Localizer LOCALIZER = Localizer
             .getLocalizerFor(SimpleDevice.class);
 
     /**
@@ -79,11 +80,14 @@ public final class SimpleDevice implements DeviceIf {
      * List of Recordings
      */
     private Program[] mListOfRecordings;
+    
+    private int mActionIdLast;
 
-    public SimpleDevice(SimpleConnectionIf connection, DriverIf driver, String name) {
+    public SimpleDevice(SimpleConnectionIf connection, DriverIf driver, String name, int actionIdLast) {
         mDriver = driver;
         mName = name;
         mConnection = connection;
+        mActionIdLast = actionIdLast;
     }
 
     public SimpleDevice(SimpleDevice device) {
@@ -125,9 +129,9 @@ public final class SimpleDevice implements DeviceIf {
         }
     }
 
-    public String[] getAdditionalCommands() {
-        return new String[]{mLocalizer.msg("switchChannel",
-                "Switch to Channel"),};
+    public Command[] getAdditionalCommands() {
+        return new Command[]{new Command(mActionIdLast, LOCALIZER.msg("switchChannel",
+                "Switch to Channel")),};
     }
 
     public boolean executeAdditionalCommand(Window parent, int num,
@@ -157,21 +161,26 @@ public final class SimpleDevice implements DeviceIf {
         return Arrays.asList(mListOfRecordings).contains(program);
     }
 
-    public boolean add(Window parent, Program program) {
+    @Override
+    public boolean add(Window parent, Program program, boolean onlyGuiAtErrors) {
         if (testConfig(parent, program.getChannel())) {
             ProgramTime time = new ProgramTime(program);
             ProgramTimeDialog dialog = new ProgramTimeDialog(parent, time, false);
-            UiUtilities.centerAndShow(dialog);
+            
+            if(!onlyGuiAtErrors) {
+              UiUtilities.centerAndShow(dialog);
+            }
 
             if (dialog.getPrgTime() != null) {
-                return mConnection.addToRecording(mConfig, dialog.getPrgTime());
+                return mConnection.addToRecording(mConfig, dialog.getPrgTime(),onlyGuiAtErrors);
             }
         }
         return false;
     }
 
-    public boolean remove(Window parent, Program program) {
-        mConnection.removeRecording(mConfig, program);
+    @Override
+    public boolean remove(Window parent, Program program, boolean onlyGuiAtErrors) {
+        mConnection.removeRecording(mConfig, program, onlyGuiAtErrors);
         return true;
     }
 
@@ -185,7 +194,7 @@ public final class SimpleDevice implements DeviceIf {
      */
     private boolean testConfig(Window parent, Channel ch) {
         if (mConfig.getExternalChannel(ch) == null) {
-            int ret = JOptionPane.showConfirmDialog(parent, mLocalizer.msg("channelAssign", "Please assign Channel first"), mLocalizer.msg("channelAssignTitle", "Assign Channel"), JOptionPane.YES_NO_OPTION);
+            int ret = JOptionPane.showConfirmDialog(parent, LOCALIZER.msg("channelAssign", "Please assign Channel first"), LOCALIZER.msg("channelAssignTitle", "Assign Channel"), JOptionPane.YES_NO_OPTION);
 
             if (ret == JOptionPane.YES_OPTION) {
                 SimpleConfigDialog dialog = new SimpleConfigDialog(parent, this,
@@ -246,7 +255,7 @@ public final class SimpleDevice implements DeviceIf {
      * @since 2.11
      */
     public void removeProgramWithoutExecution(Program p) {
-        mConnection.removeRecording(mConfig, p);
+        mConnection.removeRecording(mConfig, p, true);
     }
 
     /**
@@ -282,5 +291,10 @@ public final class SimpleDevice implements DeviceIf {
     public void handleTvBrowserVersionUpdate(Version previousVersion) {
       // TODO Auto-generated method stub
       
+    }
+
+    @Override
+    public int getActionIdLast() {
+      return mActionIdLast;
     }
 }

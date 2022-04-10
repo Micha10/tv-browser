@@ -38,13 +38,13 @@ public class DreamboxDriver implements DriverIf {
      * Translator
      */
     private static final Localizer mLocalizer = Localizer.getLocalizerFor(DreamboxDriver.class);
-
+    
     /**
      * @param name Name for the Device
      * @return a new Dreambox-Device
      */
-    public DeviceIf createDevice(String name) {
-        return new DreamboxDevice(this, name);
+    public DeviceIf createDevice(String name, int actionIdLast) {
+        return new DreamboxDevice(this, name, actionIdLast);
     }
 
     /**

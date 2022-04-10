@@ -87,9 +87,10 @@ public interface DeviceIf extends Cloneable {
      * Adds a Program to the List
      * @param parent Parent-Frame
      * @param program Program to add
+     * @param noGui If the device should not show any GUI during adding
      * @return true if successful
      */
-    public boolean add(Window parent, Program program);
+    public boolean add(Window parent, Program program, boolean onlyGuiAtErrors);
 
     /**
      * Removes a Program from the List
@@ -97,7 +98,7 @@ public interface DeviceIf extends Cloneable {
      * @param program Program to remove
      * @return true if successful
      */
-    public boolean remove(Window parent, Program program);
+    public boolean remove(Window parent, Program program, boolean onlyGuiAtErrors);
 
     /**
      * Get the List of Programs selected by this Device
@@ -109,7 +110,7 @@ public interface DeviceIf extends Cloneable {
      * Get the List of additional Commands
      * @return List of additional Commands
      */
-    public String[] getAdditionalCommands();
+    public Command[] getAdditionalCommands();
     
     /**
      * Execute a additional Command. The Number must correspond to the
@@ -192,4 +193,11 @@ public interface DeviceIf extends Cloneable {
      * @since 4.2.3
      */
     public void handleTvBrowserVersionUpdate(final Version previousVersion);
+    
+    /**
+     * Gets the action base if of this DeviceIf.
+     * @return The base id of this DeviceIf.
+     * @since 3.2.1 (CapturePlugin)
+     */
+    public int getActionIdLast();
 }

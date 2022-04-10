@@ -40,6 +40,7 @@ import devplugin.Program;
  * This Class contains all needed Data
  */
 public final class CapturePluginData implements Cloneable {
+    public static final int ACTION_ID_UNKNOWN = -1;
     /** Translator */
     private static final Localizer LOCALIZER = Localizer.getLocalizerFor(CapturePluginData.class);
 
@@ -51,6 +52,10 @@ public final class CapturePluginData implements Cloneable {
     
     private int mWidthProgramTableColum1 = 200;
     private int mWidthProgramTableColum2 = 400;
+    
+    private int mActionIdLast = 10000;
+    
+    private boolean mShowDirectlyInContextMenu = false;
     
     /**
      * All Devices
@@ -93,7 +98,7 @@ public final class CapturePluginData implements Cloneable {
      * @throws IOException problems while writing
      */
     public void writeData(ObjectOutputStream out) throws IOException {
-        out.writeInt(7);
+        out.writeInt(9);
         
         out.writeInt(mMarkPriority);
         out.writeInt(mPriorityMarkingMulti);
@@ -109,10 +114,13 @@ public final class CapturePluginData implements Cloneable {
             out.writeObject(dev.getDriver().getClass().getName());
             out.writeObject(dev.getName());
             out.writeObject(writer.writeDevice(dev));
+            out.writeInt(dev.getActionIdLast());
         }
         
         out.writeInt(mWidthProgramTableColum1);
         out.writeInt(mWidthProgramTableColum2);
+        
+        out.writeBoolean(mShowDirectlyInContextMenu);
     }
 
     /**
@@ -151,16 +159,25 @@ public final class CapturePluginData implements Cloneable {
         mDevices = new Vector<DeviceIf>();
         
         DeviceFileHandling reader = new DeviceFileHandling();
-
+        
         for (int i = 0; i < num; i++) {
             String classname = (String) in.readObject();
             String devname = (String)in.readObject();
             String filename = (String)in.readObject();
+            
+            int actionId = mActionIdLast;
+            
+            if(version > 7) {
+              actionId = in.readInt();
+            }
+            
             try {
-                DeviceIf dev = reader.readDevice(classname, filename, devname);
+                DeviceIf dev = reader.readDevice(classname, filename, devname, actionId);
                 
                 if (dev != null) {
                     mDevices.add(dev);
+                    getAndIncrementActionIdLast();
+                    mActionIdLast = ((Math.max(mActionIdLast, actionId) / 10000) * 10000) + 2;
                 }
             } catch (Throwable e) {
                 ErrorHandler.handle(LOCALIZER.msg("ProblemDevice", "Problems while loading Device {0}.", devname),e);
@@ -171,6 +188,10 @@ public final class CapturePluginData implements Cloneable {
         if(version > 5) {
           mWidthProgramTableColum1 = in.readInt();
           mWidthProgramTableColum2 = in.readInt();
+        }
+        
+        if(version > 8) {
+          mShowDirectlyInContextMenu = in.readBoolean();
         }
     }
 
@@ -283,5 +304,19 @@ public final class CapturePluginData implements Cloneable {
 
     public void setShowRemovedProgramsDialog(boolean showRemovedProgramsDialog) {
       mShowRemovedProgramsDialog = showRemovedProgramsDialog;
+    }
+    
+    public int getAndIncrementActionIdLast() {
+      int actionIdLast = (mActionIdLast/10000) * 10000;
+      mActionIdLast += 10002;
+      return actionIdLast;
+    }
+    
+    public boolean showDirectlyInContextMenu() {
+      return mShowDirectlyInContextMenu;
+    }
+    
+    public void setShowDirectlyInContextMenu(final boolean showDirectlyInContextMenu) {
+      mShowDirectlyInContextMenu = showDirectlyInContextMenu;
     }
 }

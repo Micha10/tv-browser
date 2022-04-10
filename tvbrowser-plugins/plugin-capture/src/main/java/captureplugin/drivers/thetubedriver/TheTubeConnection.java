@@ -266,7 +266,8 @@ public class TheTubeConnection implements SimpleConnectionIf {
     return programs.toArray(new Program[programs.size()]);
   }
 
-  public boolean addToRecording(SimpleConfig conf, ProgramTime prg) {
+  @Override
+  public boolean addToRecording(SimpleConfig conf, ProgramTime prg, boolean onlyGuiAtErrors) {
       SimpleDateFormat dateformater = new SimpleDateFormat("yyyy-MM-dd");
       SimpleDateFormat timeformater = new SimpleDateFormat("HH:mm");
 
@@ -296,7 +297,8 @@ public class TheTubeConnection implements SimpleConnectionIf {
       return res != null;
   }
 
-  public void removeRecording(SimpleConfig conf, Program prg) {
+  @Override
+  public void removeRecording(SimpleConfig conf, Program prg, boolean onlyGuiAtErrors) {
     SimpleDateFormat dateformater = new SimpleDateFormat("yyyy-MM-dd");
 
     String call = DELETERECORDING.replaceAll("\\{1\\}", dateformater.format(prg.getDate().getCalendar().getTime()));

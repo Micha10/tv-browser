@@ -38,8 +38,8 @@ public class ElgatoDriver implements DriverIf {
   /** Translator */
   private static final Localizer mLocalizer = Localizer.getLocalizerFor(ElgatoDriver.class);
   
-  public DeviceIf createDevice(String name) {
-    return new SimpleDevice(new ElgatoConnection(), this, name);
+  public DeviceIf createDevice(String name, int actionIdLast) {
+    return new SimpleDevice(new ElgatoConnection(), this, name, actionIdLast);
   }
 
   public String getDriverDesc() {

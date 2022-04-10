@@ -29,7 +29,7 @@ public interface SimpleConnectionIf {
      * @param prg add this Program
      * @return <code>true</code> if successfully
      */
-    boolean addToRecording(SimpleConfig conf, ProgramTime prg);
+    boolean addToRecording(SimpleConfig conf, ProgramTime prg, boolean onlyGuiAtErrors);
 
     /**
      * Remove a recording
@@ -37,7 +37,7 @@ public interface SimpleConnectionIf {
      * @param conf Configuration
      * @param prg Program to remove
      */
-    void removeRecording(SimpleConfig conf, Program prg);
+    void removeRecording(SimpleConfig conf, Program prg, boolean onlyGuiAtErrors);
 
     /**
      * Switch to channel

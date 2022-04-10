@@ -51,6 +51,7 @@ import util.io.stream.StreamUtilities;
 import util.paramhandler.ParamParser;
 import util.ui.Localizer;
 import util.ui.UiUtilities;
+import captureplugin.CapturePluginData;
 import captureplugin.drivers.utils.ProgramTime;
 import captureplugin.utils.CaptureUtilities;
 
@@ -63,7 +64,7 @@ class CaptureExecute {
   private static final Localizer mLocalizer = Localizer.getLocalizerFor(CaptureExecute.class);
 
   /** Data for Export */
-  private DeviceConfig mData = new DeviceConfig();
+  private DeviceConfig mData = new DeviceConfig(CapturePluginData.ACTION_ID_UNKNOWN);
 
   /** parent window */
   private Window mParent;
@@ -119,7 +120,7 @@ class CaptureExecute {
    *          Program to add
    * @return Success?
    */
-  public boolean addProgram(ProgramTime programTime) {
+  public boolean addProgram(ProgramTime programTime, boolean noGui) {
     if (StringUtils.isBlank(mData.getParameterFormatAdd())) {
       JOptionPane.showMessageDialog(mParent, mLocalizer.msg("NoParamsAdd",
           "Please specify parameters for adding of the program!"), mLocalizer.msg("CapturePlugin", "Capture Plugin"),
@@ -127,7 +128,7 @@ class CaptureExecute {
       createDialog().show(DefaultKonfigurator.TAB_PARAMETER);
       return false;
     }
-    return execute(programTime, mData.getParameterFormatAdd());
+    return execute(programTime, mData.getParameterFormatAdd(),noGui);
   }
 
   /**
@@ -137,7 +138,7 @@ class CaptureExecute {
    *          Program to remove
    * @return Success?
    */
-  public boolean removeProgram(ProgramTime programTime) {
+  public boolean removeProgram(ProgramTime programTime, boolean onlyGuiAtErrors) {
     if (StringUtils.isBlank(mData.getParameterFormatAdd()) || (StringUtils.isBlank(mData.getParameterFormatRem()))) {
       JOptionPane.showMessageDialog(mParent, mLocalizer.msg("NoParams", "Please specify Parameters for the Program!"),
           mLocalizer.msg("CapturePlugin", "Capture Plugin"), JOptionPane.OK_OPTION);
@@ -145,7 +146,7 @@ class CaptureExecute {
       return false;
     }
 
-    return execute(programTime, mData.getParameterFormatRem());
+    return execute(programTime, mData.getParameterFormatRem(), onlyGuiAtErrors);
   }
 
   /**
@@ -157,7 +158,7 @@ class CaptureExecute {
    *          Parameter
    * @return true if successful
    */
-  public boolean execute(ProgramTime programTime, String param) {
+  public boolean execute(ProgramTime programTime, String param, boolean onlyGuiAtErrors) {
     try {
       String output;
 
@@ -199,7 +200,7 @@ class CaptureExecute {
         return false;
       }
 
-      if (!mData.getDialogOnlyOnError() || (mData.getDialogOnlyOnError() && mError && mExitValue != 249)) {
+      if ((!mData.getDialogOnlyOnError() && !onlyGuiAtErrors) || (mError && mExitValue != 249)) {
         ResultDialog dialog = new ResultDialog(mParent, params, output, false);
         UiUtilities.centerAndShow(dialog);
       }

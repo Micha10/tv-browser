@@ -36,6 +36,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.RandomAccessFile;
+import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -45,6 +46,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
+import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -60,6 +62,7 @@ import javax.swing.table.DefaultTableModel;
 
 import org.apache.commons.lang3.StringUtils;
 
+import captureplugin.drivers.Command;
 import captureplugin.drivers.DeviceIf;
 import devplugin.ActionMenu;
 import devplugin.Plugin;
@@ -67,6 +70,7 @@ import devplugin.PluginInfo;
 import devplugin.PluginTreeNode;
 import devplugin.Program;
 import devplugin.ProgramFieldType;
+import devplugin.ProgramReceiveIf;
 import devplugin.ProgramReceiveTarget;
 import devplugin.SettingsTab;
 import devplugin.ThemeIcon;
@@ -83,12 +87,12 @@ import util.ui.UiUtilities;
  *         adopted by fishhead
  */
 public class CapturePlugin extends devplugin.Plugin {
-  private static final Version mVersion = new Version(3,20,0,true);
+  private static final Version mVersion = new Version(3,23,0,false);
   
     /**
      * Translator
      */
-    private static final Localizer mLocalizer = Localizer.getLocalizerFor(CapturePlugin.class);
+    private static final Localizer LOCALIZER = Localizer.getLocalizerFor(CapturePlugin.class);
 
     /**
      * mData that stores the Settings
@@ -118,6 +122,7 @@ public class CapturePlugin extends devplugin.Plugin {
     private PluginTreeNode mRootNode = new PluginTreeNode(this, false);
     private static final String RECORD = "##record";
     private static final String REMOVE = "##remove";
+    private static final String QUICK = "##quick";
 
     private PluginInfo mPluginInfo;
 
@@ -215,8 +220,8 @@ public class CapturePlugin extends devplugin.Plugin {
      */
     public PluginInfo getInfo() {
       if(mPluginInfo == null) {
-        String name = mLocalizer.msg("CapturePlugin", "Capture Plugin");
-        String desc = mLocalizer.msg("Desc", "Starts a external Program with configurable Parameters");
+        String name = LOCALIZER.msg("CapturePlugin", "Capture Plugin");
+        String desc = LOCALIZER.msg("Desc", "Starts a external Program with configurable Parameters");
         String author = "Bodo Tasche, Andreas Hessel";
 
         mPluginInfo = new PluginInfo(CapturePlugin.class, name, desc, author);
@@ -231,59 +236,91 @@ public class CapturePlugin extends devplugin.Plugin {
         return new CapturePluginSettingsTab((JFrame) getParentFrame(), this);
     }
 
+    private AbstractAction createRemoveAction(final DeviceIf dev, final Window parent, final Program test, final boolean withDevName, final boolean quick) {
+      AbstractAction caction = new AbstractAction() {
+        public void actionPerformed(ActionEvent evt) {
+            dev.remove(parent, test, quick);
+            updateMarkedPrograms();
+        }
+      };
+
+      if(quick) {
+        caction.putValue(Action.NAME, (withDevName ? dev.getName() + " - " : "") + LOCALIZER.msg("quick", "Quick schduling ") + ": " + Localizer.getLocalization(Localizer.I18N_DELETE));
+      }
+      else {
+        caction.putValue(Action.NAME, (withDevName ? dev.getName() + " - " : "") + Localizer.getLocalization(Localizer.I18N_DELETE));
+      }
+      
+      if(withDevName) {
+        caction.putValue(Action.SMALL_ICON, getMarkIcon());
+      }
+      
+      return caction;
+    }
+    
+    private AbstractAction createAddAction(final DeviceIf dev, final Window parent, final Program program, final boolean withDevName, final boolean quick) {
+      AbstractAction caction = new AbstractAction() {
+        public void actionPerformed(ActionEvent evt) {
+            if(dev.add(parent, program, quick)) {
+              dev.sendProgramsToReceiveTargets(new Program[] {program});
+            }
+            updateMarkedPrograms();
+        }
+      };
+      
+      if(quick) {
+        caction.putValue(Action.NAME, (withDevName ? dev.getName() + " - " : "") + LOCALIZER.msg("quick", "Quick scheduling") + (withDevName ? "" : ": " + LOCALIZER.msg("record", "record")));
+      }
+      else {
+        caction.putValue(Action.NAME, (withDevName ? dev.getName() + " - " : "") + LOCALIZER.msg("record", "Record"));
+      }
+      
+      if(withDevName) {
+        caction.putValue(Action.SMALL_ICON, getMarkIcon());
+      }
+      
+      return caction;
+    }
+    
     public ActionMenu getContextMenuActions(final Program program) {
-
         final DeviceIf[] devices = mConfig.getDeviceArray();
-
+        final boolean exampleProgram = getPluginManager().getExampleProgram().equals(program);
+        
         // fishhead ---------------------------------
         Frame parentFrame = getParentFrame();
         final Window parent = (parentFrame == null ? null : UiUtilities.getLastModalChildOf(parentFrame));
         // fishhead ---------------------------------
 
-        String menuText = mLocalizer.msg("record", "record Program");
+        String menuText = LOCALIZER.msg("record", "record Program");
         ImageIcon menuIcon = createImageIcon("mimetypes", "video-x-generic", 16);
 
         ArrayList<ActionMenu> actionList = new ArrayList<ActionMenu>();
 
         for (final DeviceIf dev : devices) {
-            ArrayList<AbstractAction> commandList = new ArrayList<AbstractAction>();
+            ArrayList<ActionMenu> commandList = new ArrayList<ActionMenu>();
             
             if(getCapturePluginData().showAdditionalCommandsOnTop()) {
-              addAdditionalCommandsToMenu(dev, program, commandList);
+              addAdditionalCommandsToMenu(dev, program, commandList, exampleProgram || (mConfig.showDirectlyInContextMenu() && devices.length == 1));
             }
             
             if (dev.isAbleToAddAndRemovePrograms()) {
                 final Program test = dev.getProgramForProgramInList(program);
 
                 if (test != null) {
-                    AbstractAction caction = new AbstractAction() {
-                        public void actionPerformed(ActionEvent evt) {
-                            dev.remove(parent, test);
-                            updateMarkedPrograms();
-                        }
-                    };
-                    caction.putValue(Action.NAME, Localizer.getLocalization(Localizer.I18N_DELETE));
-                    commandList.add(caction);
+                    commandList.add(CapturePlugin.createActionMenu((dev.getActionIdLast()/10000) * 10000, createRemoveAction(dev, parent, test, exampleProgram || (mConfig.showDirectlyInContextMenu() && devices.length == 1), false)));
+                    commandList.add(CapturePlugin.createActionMenu((dev.getActionIdLast()/10000) * 10000 + 1, createRemoveAction(dev, parent, test, exampleProgram || (mConfig.showDirectlyInContextMenu() && devices.length == 1), true)));
                 } else {
-                    AbstractAction caction = new AbstractAction() {
-                        public void actionPerformed(ActionEvent evt) {
-                            if(dev.add(parent, program)) {
-                              dev.sendProgramsToReceiveTargets(new Program[] {program});
-                            }
-                            updateMarkedPrograms();
-                        }
-                    };
-                    caction.putValue(Action.NAME, mLocalizer.msg("record", "record"));
-                    commandList.add(caction);
+                    commandList.add(CapturePlugin.createActionMenu((dev.getActionIdLast()/10000) * 10000, createAddAction(dev, parent, program, exampleProgram || (mConfig.showDirectlyInContextMenu() && devices.length == 1), false)));
+                    commandList.add(CapturePlugin.createActionMenu((dev.getActionIdLast()/10000) * 10000 + 1, createAddAction(dev, parent, program, exampleProgram || (mConfig.showDirectlyInContextMenu() && devices.length == 1), true)));
                 }
             }
             
             if(!getCapturePluginData().showAdditionalCommandsOnTop()) {
-              addAdditionalCommandsToMenu(dev, program, commandList);
+              addAdditionalCommandsToMenu(dev, program, commandList, exampleProgram || (mConfig.showDirectlyInContextMenu() && devices.length == 1));
             }
             
             if (!commandList.isEmpty()) {
-              actionList.add(new ActionMenu(dev.getName(), commandList.toArray(new Action[commandList.size()])));
+              actionList.add(new ActionMenu(dev.getName(), commandList.toArray(new ActionMenu[commandList.size()])));
             }
         }
 
@@ -299,7 +336,9 @@ public class CapturePlugin extends devplugin.Plugin {
                 action.putValue(Action.SMALL_ICON, menuIcon);
                 return new ActionMenu(action);
             } else {
-                return new ActionMenu(menu.getTitle(), menuIcon, menu.getSubItems());
+              final ActionMenu result = new ActionMenu(menu.getTitle(), menuIcon, menu.getSubItems());
+              result.getAction().putValue("showOnlySubMenus", mConfig.showDirectlyInContextMenu());
+              return result;
             }
 
         }
@@ -310,13 +349,16 @@ public class CapturePlugin extends devplugin.Plugin {
         if (actions.length == 0) {
             return null;
         }
-
-        return new ActionMenu(menuText, menuIcon, actions);
+        
+        final ActionMenu result = new ActionMenu(menuText, menuIcon, actions);
+        result.getAction().putValue("showOnlySubMenus", mConfig.showDirectlyInContextMenu());
+        
+        return result;
     }
     
-    private void addAdditionalCommandsToMenu(final DeviceIf dev, final Program program, ArrayList<AbstractAction> commandList) {
-      String[] commands = dev.getAdditionalCommands();
-
+    private void addAdditionalCommandsToMenu(final DeviceIf dev, final Program program, ArrayList<ActionMenu> commandList, final boolean withDevName) {
+      Command[] commands = dev.getAdditionalCommands();
+      
       if (commands != null) {
         for (int y = 0; y < commands.length; y++) {
 
@@ -331,8 +373,14 @@ public class CapturePlugin extends devplugin.Plugin {
                     // fishhead ---------------------------------
                 }
             };
-            caction.putValue(Action.NAME, commands[y]);
-            commandList.add(caction);
+            caction.putValue(Action.NAME, (withDevName ? dev.getName() + " - " : "") + commands[y].getActionName());
+            
+            if(withDevName) {
+              caction.putValue(Action.SMALL_ICON, getMarkIcon());
+            }
+            
+            commandList.add(CapturePlugin.createActionMenu(commands[y].getActionId(), caction));
+            
         }
       }
     }
@@ -413,7 +461,7 @@ public class CapturePlugin extends devplugin.Plugin {
                 showDialog();
             }
         };
-        action.putValue(Action.NAME, mLocalizer.msg("CapturePlugin", "Capture Plugin"));
+        action.putValue(Action.NAME, LOCALIZER.msg("CapturePlugin", "Capture Plugin"));
         action.putValue(Action.SMALL_ICON, createImageIcon("mimetypes", "video-x-generic", 16));
         action.putValue(BIG_ICON, createImageIcon("mimetypes", "video-x-generic", 22));
 
@@ -480,7 +528,7 @@ public class CapturePlugin extends devplugin.Plugin {
             }
 
             if(device.isAbleToAddAndRemovePrograms()) {
-              node.getMutableTreeNode().setProgramReceiveTarget(new ProgramReceiveTarget(this, device.getName() + " - " + mLocalizer.msg("record", "record"), device.getId() + RECORD));
+              node.getMutableTreeNode().setProgramReceiveTarget(new ProgramReceiveTarget(this, device.getName() + " - " + LOCALIZER.msg("record", "record"), device.getId() + RECORD));
             }
 
             Program[] programs = device.getProgramList();
@@ -491,7 +539,7 @@ public class CapturePlugin extends devplugin.Plugin {
               }
             }
 
-            node.addAction(new AbstractAction(mLocalizer.msg("configure", "Configure '{0}'", device.getName())) {
+            node.addAction(new AbstractAction(LOCALIZER.msg("configure", "Configure '{0}'", device.getName())) {
               @Override
               public void actionPerformed(ActionEvent e) {
                 device.configDevice(UiUtilities.getBestDialogParent(getParentFrame()));
@@ -523,6 +571,10 @@ public class CapturePlugin extends devplugin.Plugin {
 
     @Override
     public boolean receivePrograms(Program[] programArr, ProgramReceiveTarget receiveTarget) {
+      return receivePrograms(0, programArr, receiveTarget);
+    }
+      
+    public boolean receivePrograms(int type, Program[] programArr, ProgramReceiveTarget receiveTarget) {
         if (receiveTarget == null || receiveTarget.getTargetId() == null ||
             receiveTarget.getTargetId().indexOf('#') == -1) {
           return false;
@@ -530,23 +582,23 @@ public class CapturePlugin extends devplugin.Plugin {
 
         String id = receiveTarget.getTargetId();
         String deviceid = StringUtils.substringBefore(id,"#");
-    String command = id.substring(id.indexOf('#'));
+        String command = id.substring(id.indexOf('#'));
 
         for (DeviceIf device : mConfig.getDevices()) {
             if (device.getId().equals(deviceid)) {
-                if (command.equals(REMOVE)) {
+                if (command.equals(REMOVE) && type != 1) {
                     for (Program program:programArr) {
                       if(device.isInList(program)) {
-                        device.remove(getParentFrame(), program);
+                        device.remove(getParentFrame(), program, false);
                       }
                     }
                     updateMarkedPrograms();
                     return true;
-                } else if (command.equals(RECORD)) {
+                } else if (command.equals(RECORD) && type != 2) {
                     ArrayList<Program> successfullPrograms = new ArrayList<Program>(programArr.length);
 
                     for (Program program:programArr) {
-                        if(device.add(getParentFrame(), program)) {
+                        if(device.add(getParentFrame(), program, false)) {
                           successfullPrograms.add(program);
                         }
                     }
@@ -554,14 +606,40 @@ public class CapturePlugin extends devplugin.Plugin {
                     updateMarkedPrograms();
                     return true;
                 }
+                else if(command.equals(QUICK)) {
+                  boolean removed = type == 2;
+                  
+                  if(type != 1) {
+                    for (Program program:programArr) {
+                      if(device.isInList(program)) {
+                        removed = true;
+                        device.remove(getParentFrame(), program, true);
+                      }
+                    }
+                  }
+                  
+                  if(!removed) {
+                    ArrayList<Program> successfullPrograms = new ArrayList<Program>(programArr.length);
+
+                    for (Program program:programArr) {
+                        if(device.add(getParentFrame(), program, true)) {
+                          successfullPrograms.add(program);
+                        }
+                    }
+                    device.sendProgramsToReceiveTargets(successfullPrograms.toArray(new Program[successfullPrograms.size()]));
+                  }
+                  
+                  updateMarkedPrograms();
+                  return true;
+                }
 
                 if (command.startsWith("#_")) {
                     command = command.substring(2);
 
-                    String[] cmdstr = device.getAdditionalCommands();
+                    Command[] cmdstr = device.getAdditionalCommands();
 
                     for (int i = 0;i < cmdstr.length;i++) {
-                        if (cmdstr[i].equals(command)) {
+                        if (cmdstr[i].getActionName().equals(command)) {
                             for (Program program:programArr) {
                                 device.executeAdditionalCommand(getParentFrame(), i, program);
                             }
@@ -582,12 +660,13 @@ public class CapturePlugin extends devplugin.Plugin {
 
         for (DeviceIf device : mConfig.getDevices()) {
             if (device.isAbleToAddAndRemovePrograms()) {
-                targets.add(new ProgramReceiveTarget(this, device.getName() + " - " + mLocalizer.msg("record", "record"), device.getId() + RECORD));
-                targets.add(new ProgramReceiveTarget(this, device.getName() + " - " + mLocalizer.msg("remove", "remove"), device.getId() + REMOVE));
+                targets.add(createTarget(1, device.getName() + " - " + LOCALIZER.msg("record", "Record"), device.getId() + RECORD));
+                targets.add(createTarget(2, device.getName() + " - " + LOCALIZER.msg("remove", "Remove"), device.getId() + REMOVE));
+                targets.add(createTarget(3, device.getName() + " - " + LOCALIZER.msg("quick", "Quick scheduling"), device.getId() + QUICK));
             }
 
-            for (String command : device.getAdditionalCommands()) {
-                targets.add(new ProgramReceiveTarget(this, device.getName() + " - " + command, device.getId() + "#_" + command));
+            for (Command command : device.getAdditionalCommands()) {
+                targets.add(new ProgramReceiveTarget(this, device.getName() + " - " + command.getActionName(), device.getId() + "#_" + command.getActionName()));
             }
         }
 
@@ -622,7 +701,7 @@ public class CapturePlugin extends devplugin.Plugin {
         };
 
         model.setColumnCount(5);
-        model.setColumnIdentifiers(new String[] {mLocalizer.msg("device","Device"),Localizer.getLocalization(Localizer.I18N_CHANNEL),mLocalizer.msg("date","Date"),ProgramFieldType.START_TIME_TYPE.getLocalizedName(),ProgramFieldType.TITLE_TYPE.getLocalizedName()});
+        model.setColumnIdentifiers(new String[] {LOCALIZER.msg("device","Device"),Localizer.getLocalization(Localizer.I18N_CHANNEL),LOCALIZER.msg("date","Date"),ProgramFieldType.START_TIME_TYPE.getLocalizedName(),ProgramFieldType.TITLE_TYPE.getLocalizedName()});
 
         UIThreadRunner.invokeLater(new Runnable() {
 
@@ -658,7 +737,7 @@ public class CapturePlugin extends devplugin.Plugin {
               if(deleted != null && deleted.length > 0) {
                 for(Program p : deleted) {
                   if(device.getDeleteRemovedProgramsAutomatically() && !p.isExpired() && !p.isOnAir()) {
-                    device.remove(UiUtilities.getLastModalChildOf(getParentFrame()), p);
+                    device.remove(UiUtilities.getLastModalChildOf(getParentFrame()), p, true);
                   } else {
                     device.removeProgramWithoutExecution(p);
                   }
@@ -699,7 +778,7 @@ public class CapturePlugin extends devplugin.Plugin {
                 scrollPane.getViewport().setPreferredSize(new Dimension(sum,scrollPane.getViewport().getPreferredSize().height));
               }
 
-              JButton export = new JButton(mLocalizer.msg("exportList","Export list"));
+              JButton export = new JButton(LOCALIZER.msg("exportList","Export list"));
               export.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                   JFileChooser chooser = new JFileChooser();
@@ -751,13 +830,13 @@ public class CapturePlugin extends devplugin.Plugin {
                 }
               });
 
-              Object[] message = {mLocalizer.msg("deletedText","The data was changed and the following programs were deleted:"),scrollPane,export};
+              Object[] message = {LOCALIZER.msg("deletedText","The data was changed and the following programs were deleted:"),scrollPane,export};
 
               JOptionPane pane = new JOptionPane();
               pane.setMessage(message);
               pane.setMessageType(JOptionPane.PLAIN_MESSAGE);
 
-              final JDialog d = pane.createDialog(UiUtilities.getLastModalChildOf(getParentFrame()), mLocalizer.msg("CapturePlugin","CapturePlugin") + " - " + mLocalizer.msg("deletedTitle","Deleted programs"));
+              final JDialog d = pane.createDialog(UiUtilities.getLastModalChildOf(getParentFrame()), LOCALIZER.msg("CapturePlugin","CapturePlugin") + " - " + LOCALIZER.msg("deletedTitle","Deleted programs"));
               d.setResizable(true);
               d.setModal(false);
 
@@ -795,5 +874,44 @@ public class CapturePlugin extends devplugin.Plugin {
     
     public static boolean isPipeTimeoutSupported() {
       return IS_PIPE_TIMEOUT_SUPPORTED;
+    }
+    
+    public static ActionMenu createActionMenu(int actionId, Action action) {
+      ActionMenu result = null;
+      
+      try {
+        Constructor<ActionMenu> c = ActionMenu.class.getConstructor(int.class, Action.class);
+        result = c.newInstance(actionId, action);
+      } catch (Exception e1) {
+        e1.printStackTrace();
+        result = new ActionMenu(action);
+      }
+      
+      return result;
+    }
+    
+    private static boolean supportsEventTypes() {
+      return Plugin.getPluginManager().getTVBrowserVersion().compareTo(new Version(4, 21, 52, false)) >= 0;
+    }
+    
+    private ProgramReceiveTarget createTarget(int eventType, String name, String targetId) {
+      ProgramReceiveTarget result = null;
+    
+      if(supportsEventTypes()) {
+        try {
+          Constructor<ProgramReceiveTarget> c = ProgramReceiveTarget.class.getConstructor(int.class, ProgramReceiveIf.class, String.class, String.class);
+          c.setAccessible(true);
+          
+          
+          result = c.newInstance(eventType,CapturePlugin.this,name,targetId);
+        }catch(Exception e) {
+          result = new ProgramReceiveTarget(CapturePlugin.this, name, targetId);
+        }
+      }
+      else {
+        result = new ProgramReceiveTarget(CapturePlugin.this, name, targetId);
+      }
+      
+      return result;
     }
 }

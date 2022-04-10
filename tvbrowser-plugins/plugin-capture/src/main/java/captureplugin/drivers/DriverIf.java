@@ -47,6 +47,6 @@ public interface DriverIf {
      * @param name Name of the Device
      * @return new Device
      */
-    public DeviceIf createDevice(String name);
+    public DeviceIf createDevice(String name, int actionId);
 
 }

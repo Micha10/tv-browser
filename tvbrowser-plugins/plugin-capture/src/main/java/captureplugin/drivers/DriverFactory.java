@@ -98,13 +98,13 @@ public class DriverFactory {
    * @param devname Name of Device
    * @return created Device
    */
-  public DeviceIf createDevice(String classname, String devname) {
+  public DeviceIf createDevice(String classname, String devname, int actionIdLast) {
 
     DriverIf[] drivers = getDrivers();
 
     for (DriverIf driver : drivers) {
       if (driver.getClass().getName().equals(classname)) {
-        return driver.createDevice(devname);
+        return driver.createDevice(devname, actionIdLast);
       }
     }
 

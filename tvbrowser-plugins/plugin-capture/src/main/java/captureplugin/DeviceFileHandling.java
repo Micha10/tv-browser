@@ -103,8 +103,8 @@ public class DeviceFileHandling {
      * @throws java.io.IOException  Problems while reading the device
      * @throws ClassNotFoundException Class creation problems
      */
-    public DeviceIf readDevice(String classname, String filename, String devname) throws IOException, ClassNotFoundException {
-        final DeviceIf dev = DriverFactory.getInstance().createDevice(classname, devname);
+    public DeviceIf readDevice(String classname, String filename, String devname, int actionIdLast) throws IOException, ClassNotFoundException {
+        final DeviceIf dev = DriverFactory.getInstance().createDevice(classname, devname, actionIdLast);
         
         if (dev == null) {
             return null;

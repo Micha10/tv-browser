@@ -188,7 +188,7 @@ public class ProgramListPanel extends JPanel implements ProgramMouseAndContextMe
                JOptionPane.YES_NO_OPTION);
 
        if (ret == JOptionPane.YES_OPTION) {
-           dev.remove(UiUtilities.getLastModalChildOf(mParent), prg);
+           dev.remove(UiUtilities.getLastModalChildOf(mParent), prg, false);
 
            mProgramTableModel.removeRow(row);
 

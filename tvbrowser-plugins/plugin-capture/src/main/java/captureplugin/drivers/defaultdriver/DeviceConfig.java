@@ -33,6 +33,7 @@ import java.util.Iterator;
 import java.util.TimeZone;
 import java.util.TreeMap;
 
+import captureplugin.CapturePluginData;
 import captureplugin.drivers.utils.IDGenerator;
 import captureplugin.utils.ChannelComparator;
 import devplugin.Channel;
@@ -127,11 +128,14 @@ public final class DeviceConfig implements Cloneable {
      * If the set time offset should be used for additional commands.
      */
     private boolean mUseTimeOffsetForAllCommands = false;
+    
+    private int mActionIdLast;
 
     /**
      * Create an empty Config
      */
-    public DeviceConfig() {
+    public DeviceConfig(int actionIdLast) {
+      mActionIdLast = actionIdLast;
     }
 
     /**
@@ -165,6 +169,7 @@ public final class DeviceConfig implements Cloneable {
         setDeleteRemovedPrograms(data.getDeleteRemovedPrograms());
         setProgramReceiveTargets(data.getProgramReceiveTargets());
         setUseTimeOffsetForAllCommands(data.getUseTimeOffsetForAllCommands());
+        mActionIdLast = data.mActionIdLast;
     }
 
     /**
@@ -615,6 +620,14 @@ public final class DeviceConfig implements Cloneable {
         for (int i = 0; i < size; i++) {
             ParamEntry entry = new ParamEntry();
             entry.readData(stream);
+            
+            if(entry.getActionId() == CapturePluginData.ACTION_ID_UNKNOWN || importDevice) {
+              entry.setActionId(++mActionIdLast);
+            }
+            else {
+              mActionIdLast = Math.max(mActionIdLast, entry.getActionId());
+            }
+            
             mParamEntries.add(entry);
         }
 
@@ -800,5 +813,17 @@ public final class DeviceConfig implements Cloneable {
      */
     public boolean getUseTimeOffsetForAllCommands() {
       return mUseTimeOffsetForAllCommands;
+    }
+
+    public int getActionIdLast() {
+      return mActionIdLast;
+    }
+    
+    public void setActionIdLast(int actionIdLast) {
+      mActionIdLast = actionIdLast;
+    }
+    
+    public int getIncrementAndGetActionIdLast() {
+      return ++mActionIdLast;
     }
 }

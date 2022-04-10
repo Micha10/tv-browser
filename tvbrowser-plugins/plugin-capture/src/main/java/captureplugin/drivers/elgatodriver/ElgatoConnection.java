@@ -266,7 +266,8 @@ public class ElgatoConnection implements SimpleConnectionIf {
      * @param prg Program to record
      * @return true if successful
      */
-    public boolean addToRecording(SimpleConfig conf, ProgramTime prg) {
+    @Override
+    public boolean addToRecording(SimpleConfig conf, ProgramTime prg, boolean onlyGuiAtErrors) {
         String date = new SimpleDateFormat("yyyy-MM-dd").format(prg.getStart());
         String time = new SimpleDateFormat("HH:mm").format(prg.getStart());
         String text = "";
@@ -299,7 +300,8 @@ public class ElgatoConnection implements SimpleConnectionIf {
      * @param conf
      * @param prg Remove recording of this Program
      */
-    public void removeRecording(SimpleConfig conf, Program prg) {
+    @Override
+    public void removeRecording(SimpleConfig conf, Program prg, boolean onlyGuiAtErrors) {
         String id = mProgramMapping.get(prg);
         try {
             mAppleScript.executeScript(replaceParams(REMOVE_RECORDING, id));

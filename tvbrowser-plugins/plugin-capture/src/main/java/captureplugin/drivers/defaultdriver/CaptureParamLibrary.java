@@ -41,9 +41,15 @@ import devplugin.Program;
  * @author bodum
  */
 public class CaptureParamLibrary extends ParamLibrary {
-
+  private static final String KEY_FUNCTION_VARIABLE = "variable";
+  private static final String KEY_KEY_CHANNEL_NAME_EXTERNAL = "channel_name_external";
+  private static final String KEY_KEY_CHANNEL_NAME_EXTERNAL_QUIET = "channel_name_external_quiet";
+  private static final String KEY_KEY_DEVICE_USERNAME = "device_username";
+  private static final String KEY_KEY_DEVICE_PASSWORD = "device_password";
+  
   /** Translator */
-  private static final Localizer mLocalizer = Localizer.getLocalizerFor(CaptureParamLibrary.class);
+  private static final Localizer LOCALIZER = Localizer.getLocalizerFor(CaptureParamLibrary.class);
+  
   /** Program-Time Values */
   private ProgramTime mPrgTime;
   /** Configuration */
@@ -98,7 +104,7 @@ public class CaptureParamLibrary extends ParamLibrary {
   }
 
   public String getDescriptionForFunctions(String function) {
-    String translation = mLocalizer.msg("function_" + function, "", false);
+    String translation = LOCALIZER.msg("function_" + function, "", false);
     if (translation.startsWith("[CaptureParamLibrary.function")) {
       return super.getDescriptionForFunctions(function);
     }
@@ -107,17 +113,17 @@ public class CaptureParamLibrary extends ParamLibrary {
   }
 
   public String[] getPossibleFunctions() {
-    String[] additionalKeys = {"variable"};
+    String[] additionalKeys = {KEY_FUNCTION_VARIABLE};
 
     return concat(super.getPossibleFunctions(), additionalKeys);
   }
 
   public String getStringForFunction(Program prg, String function, String[] params) {
 
-    if (function.equals("variable")) {
+    if (function.equals(KEY_FUNCTION_VARIABLE)) {
       if (params.length != 1) {
         setErrors(true);
-        setErrorString(mLocalizer.msg("variable_Wrong_Usage", "Wrong usage of command variable. Only one Param is allowed"));
+        setErrorString(LOCALIZER.msg("variable_Wrong_Usage", "Wrong usage of command variable. Only one Param is allowed"));
         return null;
       }
 
@@ -133,7 +139,7 @@ public class CaptureParamLibrary extends ParamLibrary {
         return varArray[i-1].getValue();
       } catch (Exception e) {
         setErrors(true);
-        setErrorString(mLocalizer.msg("variable_Not_A_Number", "The variable-Command needs a Number."));
+        setErrorString(LOCALIZER.msg("variable_Not_A_Number", "The variable-Command needs a Number."));
         return null;
       }
 
@@ -143,7 +149,7 @@ public class CaptureParamLibrary extends ParamLibrary {
   }
 
   public String getDescriptionForKey(String key) {
-    String translation = mLocalizer.msg("parameter_" + key, "", false);
+    String translation = LOCALIZER.msg("parameter_" + key, "", false);
     if (translation.startsWith("[CaptureParamLibrary.parameter")) {
       return super.getDescriptionForKey(key);
     }
@@ -153,7 +159,7 @@ public class CaptureParamLibrary extends ParamLibrary {
 
 
   public String[] getPossibleKeys() {
-    String[] additionalKeys = {"channel_name_external","channel_name_external_quiet" , "device_username", "device_password"};
+    String[] additionalKeys = {KEY_KEY_CHANNEL_NAME_EXTERNAL, KEY_KEY_CHANNEL_NAME_EXTERNAL_QUIET, KEY_KEY_DEVICE_USERNAME, KEY_KEY_DEVICE_PASSWORD};
 
     return concat(super.getPossibleKeys(), additionalKeys);
   }
@@ -193,13 +199,13 @@ public class CaptureParamLibrary extends ParamLibrary {
       return String.valueOf(mPrgTime.getLength());
     } else if (key.equalsIgnoreCase("length_sec")) {
       return String.valueOf(mPrgTime.getLength() * 60);
-    } else if (key.equalsIgnoreCase("channel_name_external")) {
+    } else if (key.equalsIgnoreCase(KEY_KEY_CHANNEL_NAME_EXTERNAL)) {
       return getExternalChannelName(prg, true);
-    } else if (key.equalsIgnoreCase("channel_name_external_quiet")) {
+    } else if (key.equalsIgnoreCase(KEY_KEY_CHANNEL_NAME_EXTERNAL_QUIET)) {
       return getExternalChannelName(prg, false);
-    } else if (key.equalsIgnoreCase("device_username")) {
+    } else if (key.equalsIgnoreCase(KEY_KEY_DEVICE_USERNAME)) {
       return getUserName();
-    } else if (key.equalsIgnoreCase("device_password")) {
+    } else if (key.equalsIgnoreCase(KEY_KEY_DEVICE_PASSWORD)) {
       return getPassword();
     }
     return super.getStringForKey(prg, key);
@@ -212,7 +218,7 @@ public class CaptureParamLibrary extends ParamLibrary {
   private String getUserName() {
     if (StringUtils.isEmpty(mConfig.getUsername())) {
       setErrors(true);
-      setErrorString(mLocalizer.msg("NoUser", "Please specify Username!"));
+      setErrorString(LOCALIZER.msg("NoUser", "Please specify Username!"));
       return null;
     }
 
@@ -226,7 +232,7 @@ public class CaptureParamLibrary extends ParamLibrary {
   private String getPassword() {
     if (StringUtils.isEmpty(mConfig.getPassword())) {
       setErrors(true);
-      setErrorString(mLocalizer.msg("NoPwd", "Please specify Password!"));
+      setErrorString(LOCALIZER.msg("NoPwd", "Please specify Password!"));
       return null;
     }
 
@@ -246,7 +252,7 @@ public class CaptureParamLibrary extends ParamLibrary {
 
       if (showError) {
         setErrors(true);
-        setErrorString(mLocalizer.msg("NoExternal", "No external Name exists for channel {0}.", prg.getChannel().getName()));
+        setErrorString(LOCALIZER.msg("NoExternal", "No external Name exists for channel {0}.", prg.getChannel().getName()));
         return null;
       } else {
         return "";

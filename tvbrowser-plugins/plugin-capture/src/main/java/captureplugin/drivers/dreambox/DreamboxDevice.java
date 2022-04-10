@@ -35,6 +35,7 @@ import java.util.Map;
 
 import javax.swing.JOptionPane;
 
+import captureplugin.drivers.Command;
 import captureplugin.drivers.DeviceIf;
 import captureplugin.drivers.DriverIf;
 import captureplugin.drivers.dreambox.connector.DreamboxChannel;
@@ -87,15 +88,18 @@ public final class DreamboxDevice implements DeviceIf {
      */
     private ArrayList<Program> mProgramList = new ArrayList<Program>();
     private DreamboxConnector mConnector;
+    private int mActionIdLast;
+    
     /**
      * Creates this Device
      *
      * @param dreamboxDriver Driver for the Dreambox
      * @param name           Name for this Device
      */
-    public DreamboxDevice(DreamboxDriver dreamboxDriver, String name) {
+    public DreamboxDevice(DreamboxDriver dreamboxDriver, String name, int actionIdLast) {
         mDriver = dreamboxDriver;
         mName = name;
+        mActionIdLast = actionIdLast;
         mConfig = new DreamboxConfig();
         mConnector = new DreamboxConnector(mConfig,mName);
     }
@@ -185,7 +189,8 @@ public final class DreamboxDevice implements DeviceIf {
     /**
      * @see captureplugin.drivers.DeviceIf#add(java.awt.Window,devplugin.Program)
      */
-    public boolean add(Window parent, Program program) {
+    @Override
+    public boolean add(Window parent, Program program, boolean noGui) {
         if(!mConnector.isAccessible()) {
           JOptionPane.showMessageDialog(parent,
               LOCALIZER.msg("boxNotAccessible.msg","The box '{0}' with the address '{1}' is not accessible.\nAction '{2}' not possible.",mName,mConfig.getDreamboxAddress(),LOCALIZER.msg("boxNotAccessible.addTimer","Add Timer")),
@@ -246,7 +251,9 @@ public final class DreamboxDevice implements DeviceIf {
             dialog = new ProgramTimeDialog(parent, time, false, LOCALIZER.msg("afterEventTitle", "After recording"),
                     pgmOptPanel);
 
-            UiUtilities.centerAndShow(dialog);
+            if(!noGui) {
+              UiUtilities.centerAndShow(dialog);
+            }
 
             ProgramTime prgTime = dialog.getPrgTime();
             if (prgTime != null) {
@@ -291,7 +298,8 @@ public final class DreamboxDevice implements DeviceIf {
     /**
      * @see captureplugin.drivers.DeviceIf#remove(java.awt.Window,devplugin.Program)
      */
-    public boolean remove(Window parent, Program program) {
+    @Override
+    public boolean remove(Window parent, Program program, boolean noGui) {
       if(!mConnector.isAccessible()) {
         JOptionPane.showMessageDialog(parent,
             LOCALIZER.msg("boxNotAccessible.msg","The box '{0}' with the address '{1}' is not accessible.\nAction '{2}' not possible.",mName,mConfig.getDreamboxAddress(),LOCALIZER.msg("boxNotAccessible.removeTimer","Remove Timer")),
@@ -341,13 +349,13 @@ public final class DreamboxDevice implements DeviceIf {
     /**
      * @see captureplugin.drivers.DeviceIf#getAdditionalCommands()
      */
-    public String[] getAdditionalCommands() {
-        return new String[] { 
-                LOCALIZER.msg("switch", "Switch channel"),
-                LOCALIZER.msg("sendMessage", "Send as Message"),
-                LOCALIZER.msg("streamChannel", "Open channel with mediaplayer"),
+    public Command[] getAdditionalCommands() {
+        return new Command[] { 
+                new Command(mActionIdLast, LOCALIZER.msg("switch", "Switch channel")),
+                new Command(mActionIdLast+1, LOCALIZER.msg("sendMessage", "Send as Message")),
+                new Command(mActionIdLast+2, LOCALIZER.msg("streamChannel", "Open channel with mediaplayer")),
                 // fishhead ------------------------
-                LOCALIZER.msg("timerlist", "Show Timerlist") };
+                new Command(mActionIdLast+3, LOCALIZER.msg("timerlist", "Show Timerlist")) };
                 // fishhead ------------------------
     }
 
@@ -481,5 +489,10 @@ public final class DreamboxDevice implements DeviceIf {
     public void handleTvBrowserVersionUpdate(Version previousVersion) {
       // TODO Auto-generated method stub
       
+    }
+
+    @Override
+    public int getActionIdLast() {
+      return mActionIdLast;
     }
 }

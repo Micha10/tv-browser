@@ -364,6 +364,7 @@ tvbrowser-plugins/plugin-capture/src/main/java/captureplugin/CapturePluginDialog
 tvbrowser-plugins/plugin-capture/src/main/java/captureplugin/CapturePluginPanel.java -text
 tvbrowser-plugins/plugin-capture/src/main/java/captureplugin/CapturePluginSettingsTab.java -text
 tvbrowser-plugins/plugin-capture/src/main/java/captureplugin/DeviceFileHandling.java -text
+tvbrowser-plugins/plugin-capture/src/main/java/captureplugin/drivers/Command.java -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-capture/src/main/java/captureplugin/drivers/DeviceCreatorDialog.java -text
 tvbrowser-plugins/plugin-capture/src/main/java/captureplugin/drivers/DeviceIf.java -text
 tvbrowser-plugins/plugin-capture/src/main/java/captureplugin/drivers/DriverFactory.java -text

@@ -218,7 +218,7 @@ public class DevicePanel extends JPanel {
      */
     private void addDevice() {
         Window parent = UiUtilities.getLastModalChildOf(mOwner);
-        DeviceCreatorDialog dialog = new DeviceCreatorDialog(parent);
+        DeviceCreatorDialog dialog = new DeviceCreatorDialog(parent, mData.getAndIncrementActionIdLast());
         UiUtilities.centerAndShow(dialog);
         
         DeviceIf device = dialog.createDevice();

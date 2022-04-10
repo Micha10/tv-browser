@@ -15,6 +15,7 @@ import javax.swing.JOptionPane;
 
 import util.ui.Localizer;
 import util.ui.UiUtilities;
+import captureplugin.drivers.Command;
 import captureplugin.drivers.DeviceIf;
 import captureplugin.drivers.DriverIf;
 import captureplugin.drivers.topfield.connector.TopfieldConnectionException;
@@ -62,11 +63,12 @@ public final class TopfieldDevice implements DeviceIf {
   private static final String REPEAT_LABEL = "recordRepeat";
   private static final String DEFAULT_REPEAT_LABEL = "Repeat:";
 
-  private static final Localizer localizer = Localizer.getLocalizerFor(TopfieldDevice.class);
+  private static final Localizer LOCALIZER = Localizer.getLocalizerFor(TopfieldDevice.class);
 
   private final TopfieldDriver driver;
   private String name;
   private TopfieldConfiguration configuration;
+  private int mActionIdLast;
 
   /**
    * Create a new device.
@@ -74,9 +76,10 @@ public final class TopfieldDevice implements DeviceIf {
    * @param driver Driver for the device
    * @param name Name of the device
    */
-  public TopfieldDevice(TopfieldDriver driver, String name) {
+  public TopfieldDevice(TopfieldDriver driver, String name, int actionIdLast) {
     this.driver = driver;
     this.name = name;
+    mActionIdLast = actionIdLast;
     configuration = new TopfieldConfiguration();
   }
 
@@ -107,17 +110,17 @@ public final class TopfieldDevice implements DeviceIf {
    * @see captureplugin.drivers.DeviceIf#add(java.awt.Window, devplugin.Program)
    */
   @Override
-  public boolean add(Window parent, Program program) {
+  public boolean add(Window parent, Program program, boolean onlyGuiAtErrors) {
     if (program.isExpired()) {
-      JOptionPane.showMessageDialog(parent, localizer.msg(EXPIRED_TEXT, DEFAULT_EXPIRED_TEXT),
-          localizer.msg(EXPIRED_TITLE, DEFAULT_EXPIRED_TITLE), JOptionPane.INFORMATION_MESSAGE);
+      JOptionPane.showMessageDialog(parent, LOCALIZER.msg(EXPIRED_TEXT, DEFAULT_EXPIRED_TEXT),
+          LOCALIZER.msg(EXPIRED_TITLE, DEFAULT_EXPIRED_TITLE), JOptionPane.INFORMATION_MESSAGE);
       return false;
     }
 
     TopfieldServiceInfo service = (TopfieldServiceInfo) configuration.getExternalChannel(program.getChannel());
     if (service == null) {
-      if (JOptionPane.showConfirmDialog(parent, localizer.msg(NOT_CONFIGURED_TEXT, DEFAULT_NOT_CONFIGURED_TEXT),
-          localizer.msg(NOT_CONFIGURED_TITLE, DEFAULT_NOT_CONFIGURED_TITLE), JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+      if (JOptionPane.showConfirmDialog(parent, LOCALIZER.msg(NOT_CONFIGURED_TEXT, DEFAULT_NOT_CONFIGURED_TEXT),
+          LOCALIZER.msg(NOT_CONFIGURED_TITLE, DEFAULT_NOT_CONFIGURED_TITLE), JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
         configDevice(parent);
       }
     } else {
@@ -132,7 +135,7 @@ public final class TopfieldDevice implements DeviceIf {
       time.setEnd(end.getTime());
 
       TopfieldProgramTimeComponent additionalComponent = new TopfieldProgramTimeComponent(configuration);
-      ProgramTimeDialog recordDialog = new ProgramTimeDialog(parent, time, true, localizer.msg(REPEAT_LABEL,
+      ProgramTimeDialog recordDialog = new ProgramTimeDialog(parent, time, true, LOCALIZER.msg(REPEAT_LABEL,
           DEFAULT_REPEAT_LABEL), additionalComponent);
       UiUtilities.centerAndShow(recordDialog);
       ProgramTime programToRecord = recordDialog.getPrgTime();
@@ -143,15 +146,15 @@ public final class TopfieldDevice implements DeviceIf {
           recordingAdded = connector.addRecording(parent, service, programToRecord,
               additionalComponent.getSelectedTimerMode(), additionalComponent.isProtectTimerChecked());
         } catch (TopfieldConnectionException e) {
-          String message = String.format(localizer.msg(DEVICE_UNREACHABLE_TEXT, DEFAULT_DEVICE_UNREACHABLE_TEXT), name);
+          String message = String.format(LOCALIZER.msg(DEVICE_UNREACHABLE_TEXT, DEFAULT_DEVICE_UNREACHABLE_TEXT), name);
           JOptionPane.showMessageDialog(parent, message,
-              localizer.msg(DEVICE_UNREACHABLE_TITLE, DEFAULT_DEVICE_UNREACHABLE_TITLE), JOptionPane.ERROR_MESSAGE);
+              LOCALIZER.msg(DEVICE_UNREACHABLE_TITLE, DEFAULT_DEVICE_UNREACHABLE_TITLE), JOptionPane.ERROR_MESSAGE);
         } catch (TopfieldServiceException e) {
-          JOptionPane.showMessageDialog(parent, localizer.msg(SERVICE_CHANGED_TEXT, DEFAULT_SERVICE_CHANGED_TEXT),
-              localizer.msg(SERVICE_CHANGED_TITLE, DEFAULT_SERVICE_CHANGED_TITLE), JOptionPane.ERROR_MESSAGE);
+          JOptionPane.showMessageDialog(parent, LOCALIZER.msg(SERVICE_CHANGED_TEXT, DEFAULT_SERVICE_CHANGED_TEXT),
+              LOCALIZER.msg(SERVICE_CHANGED_TITLE, DEFAULT_SERVICE_CHANGED_TITLE), JOptionPane.ERROR_MESSAGE);
         } catch (TopfieldTunerException e) {
-          JOptionPane.showMessageDialog(parent, localizer.msg(NO_TUNER_TEXT, DEFAULT_NO_TUNER_TEXT),
-              localizer.msg(NO_TUNER_TITLE, DEFAULT_NO_TUNER_TITLE), JOptionPane.ERROR_MESSAGE);
+          JOptionPane.showMessageDialog(parent, LOCALIZER.msg(NO_TUNER_TEXT, DEFAULT_NO_TUNER_TEXT),
+              LOCALIZER.msg(NO_TUNER_TITLE, DEFAULT_NO_TUNER_TITLE), JOptionPane.ERROR_MESSAGE);
         }
         return recordingAdded;
       }
@@ -173,9 +176,9 @@ public final class TopfieldDevice implements DeviceIf {
       try {
         connector.getTimerList();
       } catch (TopfieldConnectionException e) {
-        String message = String.format(localizer.msg(DEVICE_UNREACHABLE_TEXT, DEFAULT_DEVICE_UNREACHABLE_TEXT), name);
+        String message = String.format(LOCALIZER.msg(DEVICE_UNREACHABLE_TEXT, DEFAULT_DEVICE_UNREACHABLE_TEXT), name);
         JOptionPane.showMessageDialog(null, message,
-            localizer.msg(DEVICE_UNREACHABLE_TITLE, DEFAULT_DEVICE_UNREACHABLE_TITLE), JOptionPane.ERROR_MESSAGE);
+            LOCALIZER.msg(DEVICE_UNREACHABLE_TITLE, DEFAULT_DEVICE_UNREACHABLE_TITLE), JOptionPane.ERROR_MESSAGE);
       }
     }
 
@@ -218,15 +221,15 @@ public final class TopfieldDevice implements DeviceIf {
     switch (num) {
     case 0:
       if (program.isExpired()) {
-        JOptionPane.showMessageDialog(parent, localizer.msg(EXPIRED_P_TEXT, DEFAULT_EXPIRED_P_TEXT),
-            localizer.msg(EXPIRED_P_TITLE, DEFAULT_EXPIRED_P_TITLE), JOptionPane.INFORMATION_MESSAGE);
+        JOptionPane.showMessageDialog(parent, LOCALIZER.msg(EXPIRED_P_TEXT, DEFAULT_EXPIRED_P_TEXT),
+            LOCALIZER.msg(EXPIRED_P_TITLE, DEFAULT_EXPIRED_P_TITLE), JOptionPane.INFORMATION_MESSAGE);
         return false;
       }
 
       TopfieldServiceInfo service = (TopfieldServiceInfo) configuration.getExternalChannel(program.getChannel());
       if (service == null) {
-        if (JOptionPane.showConfirmDialog(parent, localizer.msg(NOT_CONFIGURED_TEXT, DEFAULT_NOT_CONFIGURED_TEXT),
-            localizer.msg(NOT_CONFIGURED_TITLE, DEFAULT_NOT_CONFIGURED_TITLE), JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+        if (JOptionPane.showConfirmDialog(parent, LOCALIZER.msg(NOT_CONFIGURED_TEXT, DEFAULT_NOT_CONFIGURED_TEXT),
+            LOCALIZER.msg(NOT_CONFIGURED_TITLE, DEFAULT_NOT_CONFIGURED_TITLE), JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
           configDevice(parent);
         }
       } else {
@@ -245,15 +248,15 @@ public final class TopfieldDevice implements DeviceIf {
         try {
           timerAdded = connector.addPTimer(parent, service, time);
         } catch (TopfieldConnectionException e) {
-          String message = String.format(localizer.msg(DEVICE_UNREACHABLE_TEXT, DEFAULT_DEVICE_UNREACHABLE_TEXT), name);
+          String message = String.format(LOCALIZER.msg(DEVICE_UNREACHABLE_TEXT, DEFAULT_DEVICE_UNREACHABLE_TEXT), name);
           JOptionPane.showMessageDialog(parent, message,
-              localizer.msg(DEVICE_UNREACHABLE_TITLE, DEFAULT_DEVICE_UNREACHABLE_TITLE), JOptionPane.ERROR_MESSAGE);
+              LOCALIZER.msg(DEVICE_UNREACHABLE_TITLE, DEFAULT_DEVICE_UNREACHABLE_TITLE), JOptionPane.ERROR_MESSAGE);
         } catch (TopfieldServiceException e) {
-          JOptionPane.showMessageDialog(parent, localizer.msg(SERVICE_CHANGED_TEXT, DEFAULT_SERVICE_CHANGED_TEXT),
-              localizer.msg(SERVICE_CHANGED_TITLE, DEFAULT_SERVICE_CHANGED_TITLE), JOptionPane.ERROR_MESSAGE);
+          JOptionPane.showMessageDialog(parent, LOCALIZER.msg(SERVICE_CHANGED_TEXT, DEFAULT_SERVICE_CHANGED_TEXT),
+              LOCALIZER.msg(SERVICE_CHANGED_TITLE, DEFAULT_SERVICE_CHANGED_TITLE), JOptionPane.ERROR_MESSAGE);
         } catch (TopfieldTunerException e) {
-          JOptionPane.showMessageDialog(parent, localizer.msg(NO_TUNER_TEXT, DEFAULT_NO_TUNER_TEXT),
-              localizer.msg(NO_TUNER_TITLE, DEFAULT_NO_TUNER_TITLE), JOptionPane.ERROR_MESSAGE);
+          JOptionPane.showMessageDialog(parent, LOCALIZER.msg(NO_TUNER_TEXT, DEFAULT_NO_TUNER_TEXT),
+              LOCALIZER.msg(NO_TUNER_TITLE, DEFAULT_NO_TUNER_TITLE), JOptionPane.ERROR_MESSAGE);
         }
         return timerAdded;
       }
@@ -268,8 +271,8 @@ public final class TopfieldDevice implements DeviceIf {
    * @see captureplugin.drivers.DeviceIf#getAdditionalCommands()
    */
   @Override
-  public String[] getAdditionalCommands() {
-    return new String[] { localizer.msg(SWITCH_PROGRAM, DEFAULT_SWITCH_PROGRAM) };
+  public Command[] getAdditionalCommands() {
+    return new Command[] { new Command(mActionIdLast+1, LOCALIZER.msg(SWITCH_PROGRAM, DEFAULT_SWITCH_PROGRAM)) };
   }
 
   /*
@@ -326,9 +329,9 @@ public final class TopfieldDevice implements DeviceIf {
       try {
         connector.getTimerList();
       } catch (TopfieldConnectionException e) {
-        String message = String.format(localizer.msg(DEVICE_UNREACHABLE_TEXT, DEFAULT_DEVICE_UNREACHABLE_TEXT), name);
+        String message = String.format(LOCALIZER.msg(DEVICE_UNREACHABLE_TEXT, DEFAULT_DEVICE_UNREACHABLE_TEXT), name);
         JOptionPane.showMessageDialog(null, message,
-            localizer.msg(DEVICE_UNREACHABLE_TITLE, DEFAULT_DEVICE_UNREACHABLE_TITLE), JOptionPane.ERROR_MESSAGE);
+            LOCALIZER.msg(DEVICE_UNREACHABLE_TITLE, DEFAULT_DEVICE_UNREACHABLE_TITLE), JOptionPane.ERROR_MESSAGE);
       }
     }
 
@@ -355,9 +358,9 @@ public final class TopfieldDevice implements DeviceIf {
       try {
         connector.getTimerList();
       } catch (TopfieldConnectionException e) {
-        String message = String.format(localizer.msg(DEVICE_UNREACHABLE_TEXT, DEFAULT_DEVICE_UNREACHABLE_TEXT), name);
+        String message = String.format(LOCALIZER.msg(DEVICE_UNREACHABLE_TEXT, DEFAULT_DEVICE_UNREACHABLE_TEXT), name);
         JOptionPane.showMessageDialog(null, message,
-            localizer.msg(DEVICE_UNREACHABLE_TITLE, DEFAULT_DEVICE_UNREACHABLE_TITLE), JOptionPane.ERROR_MESSAGE);
+            LOCALIZER.msg(DEVICE_UNREACHABLE_TITLE, DEFAULT_DEVICE_UNREACHABLE_TITLE), JOptionPane.ERROR_MESSAGE);
       }
     }
     List<TopfieldTimerEntry> timerEntries = configuration.getTimerEntries();
@@ -391,9 +394,9 @@ public final class TopfieldDevice implements DeviceIf {
       try {
         connector.getTimerList();
       } catch (TopfieldConnectionException e) {
-        String message = String.format(localizer.msg(DEVICE_UNREACHABLE_TEXT, DEFAULT_DEVICE_UNREACHABLE_TEXT), name);
+        String message = String.format(LOCALIZER.msg(DEVICE_UNREACHABLE_TEXT, DEFAULT_DEVICE_UNREACHABLE_TEXT), name);
         JOptionPane.showMessageDialog(null, message,
-            localizer.msg(DEVICE_UNREACHABLE_TITLE, DEFAULT_DEVICE_UNREACHABLE_TITLE), JOptionPane.ERROR_MESSAGE);
+            LOCALIZER.msg(DEVICE_UNREACHABLE_TITLE, DEFAULT_DEVICE_UNREACHABLE_TITLE), JOptionPane.ERROR_MESSAGE);
       }
     }
 
@@ -423,15 +426,15 @@ public final class TopfieldDevice implements DeviceIf {
    * devplugin.Program)
    */
   @Override
-  public boolean remove(Window parent, Program program) {
+  public boolean remove(Window parent, Program program, boolean onlyGuiAtErrors) {
     TopfieldConnector connector = new TopfieldConnector(configuration);
     if (!configuration.isRecordingsLocal()) {
       try {
         connector.getTimerList();
       } catch (TopfieldConnectionException e) {
-        String message = String.format(localizer.msg(DEVICE_UNREACHABLE_TEXT, DEFAULT_DEVICE_UNREACHABLE_TEXT), name);
+        String message = String.format(LOCALIZER.msg(DEVICE_UNREACHABLE_TEXT, DEFAULT_DEVICE_UNREACHABLE_TEXT), name);
         JOptionPane.showMessageDialog(parent, message,
-            localizer.msg(DEVICE_UNREACHABLE_TITLE, DEFAULT_DEVICE_UNREACHABLE_TITLE), JOptionPane.ERROR_MESSAGE);
+            LOCALIZER.msg(DEVICE_UNREACHABLE_TITLE, DEFAULT_DEVICE_UNREACHABLE_TITLE), JOptionPane.ERROR_MESSAGE);
       }
     }
 
@@ -441,10 +444,10 @@ public final class TopfieldDevice implements DeviceIf {
           try {
             return connector.deleteRecording(parent, entry);
           } catch (TopfieldConnectionException e) {
-            String message = String.format(localizer.msg(DEVICE_UNREACHABLE_TEXT, DEFAULT_DEVICE_UNREACHABLE_TEXT),
+            String message = String.format(LOCALIZER.msg(DEVICE_UNREACHABLE_TEXT, DEFAULT_DEVICE_UNREACHABLE_TEXT),
                 name);
             JOptionPane.showMessageDialog(parent, message,
-                localizer.msg(DEVICE_UNREACHABLE_TITLE, DEFAULT_DEVICE_UNREACHABLE_TITLE), JOptionPane.ERROR_MESSAGE);
+                LOCALIZER.msg(DEVICE_UNREACHABLE_TITLE, DEFAULT_DEVICE_UNREACHABLE_TITLE), JOptionPane.ERROR_MESSAGE);
           }
         } else {
           configuration.removeTimerEntry(entry);
@@ -464,7 +467,7 @@ public final class TopfieldDevice implements DeviceIf {
    */
   @Override
   public void removeProgramWithoutExecution(Program p) {
-    remove(null, p);
+    remove(null, p, true);
   }
 
   /*
@@ -506,5 +509,10 @@ public final class TopfieldDevice implements DeviceIf {
   public void handleTvBrowserVersionUpdate(Version previousVersion) {
     // TODO Auto-generated method stub
     
+  }
+
+  @Override
+  public int getActionIdLast() {
+    return mActionIdLast;
   }
 }

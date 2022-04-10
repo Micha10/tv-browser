@@ -35,6 +35,7 @@ import java.util.Iterator;
 
 import javax.swing.JOptionPane;
 
+import captureplugin.drivers.Command;
 import captureplugin.drivers.DeviceIf;
 import captureplugin.drivers.DriverIf;
 import captureplugin.drivers.utils.ProgramTime;
@@ -58,15 +59,15 @@ public final class DefaultDevice implements DeviceIf {
     private DeviceConfig mConfig;
     /** Translator */
     private static final Localizer mLocalizer = Localizer.getLocalizerFor(DefaultDevice.class);
-
+    
     /**
      * Create the Device
      * @param driver Driver
      * @param name Name of Device
      */
-    public DefaultDevice(DriverIf driver, String name) {
+    public DefaultDevice(DriverIf driver, String name, int actionIdLast) {
         mDriver = driver;
-        mConfig = new DeviceConfig();
+        mConfig = new DeviceConfig(actionIdLast);
         mConfig.setName(name);
     }
     
@@ -129,7 +130,8 @@ public final class DefaultDevice implements DeviceIf {
         return mConfig.getMarkedPrograms().contains(program);
     }
 
-    public boolean add(Window parent, Program program) {
+    @Override
+    public boolean add(Window parent, Program program, boolean onlyGuiAtErrors) {
         
         if (isInList(program)) {
             return false;
@@ -163,7 +165,7 @@ public final class DefaultDevice implements DeviceIf {
         
         ProgramTimeDialog cdialog = new ProgramTimeDialog(parent, prgTime, true);
         
-        if(mConfig.getShowTitleAndTimeDialog()) {
+        if(mConfig.getShowTitleAndTimeDialog() && !onlyGuiAtErrors) {
           UiUtilities.centerAndShow(cdialog);
         }
         
@@ -183,7 +185,7 @@ public final class DefaultDevice implements DeviceIf {
         
         CaptureExecute exec = CaptureExecute.getInstance(parent, mConfig);
         
-        if (exec.addProgram(prgTime)) {
+        if (exec.addProgram(prgTime, onlyGuiAtErrors)) {
             mConfig.getMarkedPrograms().add(prgTime);
             return true;
         }
@@ -191,12 +193,13 @@ public final class DefaultDevice implements DeviceIf {
         return false;
     }
 
-    public boolean remove(Window parent, Program program) {
+    @Override
+    public boolean remove(Window parent, Program program, boolean onlyGuiAtErrors) {
         CaptureExecute exec = CaptureExecute.getInstance(parent, mConfig);
         
         ProgramTime prgTime = mConfig.getMarkedPrograms().getProgramTimeForProgram(program);
         
-        if (exec.removeProgram(prgTime)) {
+        if (exec.removeProgram(prgTime, onlyGuiAtErrors)) {
             mConfig.getMarkedPrograms().remove(prgTime);
             return true;
         } else {
@@ -248,15 +251,16 @@ public final class DefaultDevice implements DeviceIf {
     }
 
 
-    public String[] getAdditionalCommands() {
+    public Command[] getAdditionalCommands() {
         Collection<ParamEntry> commands = mConfig.getEnabledParamList();
-        String[] values = new String[commands.size()];
+        Command[] values = new Command[commands.size()];
         
         Iterator<ParamEntry> it = commands.iterator();
 
         int i = 0;
         while (it.hasNext()) {
-            values[i] = it.next().toString();
+          ParamEntry entry = it.next();
+            values[i] = new Command(entry.getActionId(), entry.toString());
             i++;
         }
         
@@ -279,7 +283,7 @@ public final class DefaultDevice implements DeviceIf {
               time.addMinutesToEnd(mConfig.getPostTime());
             }
             
-            return exec.execute(time, list.get(num).getParam());
+            return exec.execute(time, list.get(num).getParam(), false);
         }
         
         return false;
@@ -434,5 +438,10 @@ public final class DefaultDevice implements DeviceIf {
       }while(index1 != -1);
       
       return param;
+    }
+ 
+    @Override
+    public int getActionIdLast() {
+      return mConfig.getActionIdLast();
     }
 }

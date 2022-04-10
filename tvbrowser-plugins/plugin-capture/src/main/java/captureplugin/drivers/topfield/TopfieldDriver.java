@@ -26,8 +26,8 @@ public class TopfieldDriver implements DriverIf {
    * @see captureplugin.drivers.DriverIf#createDevice(java.lang.String)
    */
   @Override
-  public DeviceIf createDevice(String name) {
-    return new TopfieldDevice(this, name);
+  public DeviceIf createDevice(String name, int actionIdLast) {
+    return new TopfieldDevice(this, name, actionIdLast);
   }
 
   /*

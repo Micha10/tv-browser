@@ -29,6 +29,8 @@ import java.io.ObjectOutputStream;
 
 import org.apache.commons.lang3.StringUtils;
 
+import captureplugin.CapturePluginData;
+
 
 /**
  * A parameter for the additional parameter list
@@ -41,6 +43,8 @@ public class ParamEntry {
     private String mParam;
     /** Is the parameter enabled ? */
     private boolean mEnabled;
+    /** The action id for this param entry */
+    private int mActionId;
 
     /**
      * Create an empty parameter
@@ -49,6 +53,7 @@ public class ParamEntry {
         mName = "";
         mParam = "";
         mEnabled = true;
+        mActionId = CapturePluginData.ACTION_ID_UNKNOWN;
     }
 
     /**
@@ -57,10 +62,11 @@ public class ParamEntry {
      * @param param Parameter
      * @param enabled True if Parameter is enabled
      */
-    public ParamEntry(String name, String param, boolean enabled) {
+    public ParamEntry(String name, String param, boolean enabled, int actionId) {
         mName = name;
         mParam = param;
         mEnabled = enabled;
+        mActionId = actionId;
     }
 
     /**
@@ -69,10 +75,11 @@ public class ParamEntry {
      * @throws IOException during save operation
      */
     public void writeData(ObjectOutputStream out) throws IOException {
-        out.writeInt(2);
+        out.writeInt(3);
         out.writeObject(mName);
         out.writeObject(mParam);
         out.writeBoolean(mEnabled);
+        out.writeInt(mActionId);
     }
 
     /**
@@ -87,6 +94,13 @@ public class ParamEntry {
         mParam = (String)in.readObject();
 
         mEnabled = version < 2 || in.readBoolean();
+        
+        if(version > 2) {
+          mActionId = in.readInt();
+        }
+        else {
+          mActionId = CapturePluginData.ACTION_ID_UNKNOWN;
+        }
     }
 
     /**
@@ -144,5 +158,13 @@ public class ParamEntry {
      */
     public void setEnabled(boolean enabled) {
       mEnabled = enabled;
+    }
+    
+    public int getActionId() {
+      return mActionId;
+    }
+    
+    public void setActionId(int actionId) {
+      mActionId = actionId;
     }
 }

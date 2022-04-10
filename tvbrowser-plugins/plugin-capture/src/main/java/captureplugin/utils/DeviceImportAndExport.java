@@ -34,13 +34,13 @@ import java.io.ObjectOutputStream;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
-import util.io.stream.ObjectOutputStreamProcessor;
-import util.io.stream.StreamUtilities;
-import util.ui.Localizer;
 import captureplugin.CapturePluginData;
 import captureplugin.drivers.DeviceIf;
 import captureplugin.drivers.DriverFactory;
 import captureplugin.tabs.DevicePanel;
+import util.io.stream.ObjectOutputStreamProcessor;
+import util.io.stream.StreamUtilities;
+import util.ui.Localizer;
 
 /**
  * This Class handles the import and export of Device-Files
@@ -106,7 +106,7 @@ public class DeviceImportAndExport {
       String classname = (String) in.readObject();
       String devname = (String)in.readObject();
       
-      DeviceIf dev = DriverFactory.getInstance().createDevice(classname, devname);
+      DeviceIf dev = DriverFactory.getInstance().createDevice(classname, devname, data.getAndIncrementActionIdLast());
       
       if (dev == null) {
           mError = mLocalizer.msg("ProblemsCreating","Problems while creating the Device");

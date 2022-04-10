@@ -57,6 +57,8 @@ import util.ui.WindowClosingIf;
 
 import com.jgoodies.forms.builder.ButtonBarBuilder;
 
+import captureplugin.CapturePluginData;
+
 /**
  * A Dialog for creating new Devices
  */
@@ -75,6 +77,8 @@ public class DeviceCreatorDialog extends JDialog implements WindowClosingIf {
 
   /** Which button was pressed ? */
   private int mRetmode = JOptionPane.CANCEL_OPTION;
+  
+  private int mActionId = CapturePluginData.ACTION_ID_UNKNOWN;
 
   /**
    * Creates the Dialog
@@ -82,9 +86,10 @@ public class DeviceCreatorDialog extends JDialog implements WindowClosingIf {
    * @param parent
    *          Parent-Frame
    */
-  public DeviceCreatorDialog(Window parent) {
+  public DeviceCreatorDialog(Window parent, int actionId) {
     super(parent);
     setModal(true);
+    mActionId = actionId;
     createGUI();
     setTitle(mLocalizer.msg("Title", "Create Device"));
   }
@@ -237,7 +242,7 @@ public class DeviceCreatorDialog extends JDialog implements WindowClosingIf {
       return null;
     }
 
-    return ((DriverIf) mDriverCombo.getSelectedItem()).createDevice(mName.getText().trim());
+    return ((DriverIf) mDriverCombo.getSelectedItem()).createDevice(mName.getText().trim(), mActionId);
   }
 
   /**

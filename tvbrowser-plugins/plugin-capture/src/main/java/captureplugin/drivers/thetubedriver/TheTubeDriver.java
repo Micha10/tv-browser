@@ -20,7 +20,7 @@ public class TheTubeDriver implements DriverIf {
         return mLocalizer.msg("desc", "Description");
     }
 
-    public DeviceIf createDevice(String name) {
-        return new SimpleDevice(new TheTubeConnection(), this, name);
+    public DeviceIf createDevice(String name, int actionIdLast) {
+        return new SimpleDevice(new TheTubeConnection(), this, name, actionIdLast);
      }
 }

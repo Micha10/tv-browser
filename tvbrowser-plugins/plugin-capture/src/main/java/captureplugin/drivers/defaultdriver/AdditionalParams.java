@@ -375,6 +375,7 @@ public class AdditionalParams extends JDialog implements WindowClosingIf{
      */
     protected void addPressed() {
         ParamEntry n = new ParamEntry();
+        n.setActionId(mConfig.getIncrementAndGetActionIdLast());
         mListModel.addElement(n);
         mList.setSelectedValue(n, true);
     }

@@ -52,8 +52,8 @@ public class DefaultDriver implements DriverIf {
         return getDriverName();
     }
 
-    public DeviceIf createDevice(String name) {
-        return new DefaultDevice(this, name);
+    public DeviceIf createDevice(String name, int actionIdLast) {
+        return new DefaultDevice(this, name, actionIdLast);
     }
 
 }

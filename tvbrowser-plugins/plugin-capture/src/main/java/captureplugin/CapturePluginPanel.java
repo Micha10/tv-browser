@@ -68,6 +68,7 @@ public class CapturePluginPanel extends JPanel {
     
     private JCheckBox mShowAdditionalCommandsOnTop;
     private JCheckBox mShowRemovedProgramsDialog;
+    private JCheckBox mShowDirectlyInContextMenu;
     
     /**
      * Creates the Panel
@@ -100,12 +101,14 @@ public class CapturePluginPanel extends JPanel {
 
         mShowAdditionalCommandsOnTop = new JCheckBox(LOCALIZER.msg("showOnTop", "Show additional commands (if any) on top of context menu."), data.showAdditionalCommandsOnTop());
         mShowRemovedProgramsDialog = new JCheckBox(LOCALIZER.msg("showRemovedPrograms", "Show dialog with removed programs after data update."), data.showRemovedProgramsDialog());
+        mShowDirectlyInContextMenu = new JCheckBox(LOCALIZER.msg("showDirectlyInContextMenu", "Show devices directly in context menu of TV-Browser."), data.showDirectlyInContextMenu());
         
-        PanelBuilder pb = new PanelBuilder(new FormLayout("default","default,default"));
+        PanelBuilder pb = new PanelBuilder(new FormLayout("default","default,default,default"));
         pb.border(Borders.DIALOG);
         
         pb.add(mShowAdditionalCommandsOnTop, CC.xy(1, 1));
         pb.add(mShowRemovedProgramsDialog, CC.xy(1, 2));
+        pb.add(mShowDirectlyInContextMenu, CC.xy(1, 3));
         
         mTabPane.addTab(LOCALIZER.msg("Global", "Global Settings"), pb.getPanel());
         
@@ -137,5 +140,6 @@ public class CapturePluginPanel extends JPanel {
       CapturePlugin.getInstance().getCapturePluginData().setMarkPriority(mMarkingPriorityPanel.getSelectedPriorities());
       CapturePlugin.getInstance().getCapturePluginData().setShowAdditionalCommandsOnTop(mShowAdditionalCommandsOnTop.isSelected());
       CapturePlugin.getInstance().getCapturePluginData().setShowRemovedProgramsDialog(mShowRemovedProgramsDialog.isSelected());
+      CapturePlugin.getInstance().getCapturePluginData().setShowDirectlyInContextMenu(mShowDirectlyInContextMenu.isSelected());
     }
 }
