@@ -2995,12 +2995,12 @@ public class MainFrame extends JFrame implements DateListener,DropTargetListener
     JLabel info = new JLabel(LOCALIZER.msg("testVersionFound.msg", "A new test version of TV-Browser ({0}) is available.",testVersion.getVersion().toString()));
     
     String[] options = {
-        LOCALIZER.msg("testVersionFound.btn", "To the download in the message board"),
+        LOCALIZER.msg("testVersionFound.btn", "Open TV-Browser website for download"),
         Localizer.getLocalization(Localizer.I18N_CANCEL)
     };
     
     if(DontShowAgainOptionBox.showOptionDialog(Settings.General.INFORM_TEST_VERSIONS.getMessageId(), UiUtilities.getBestDialogParent(MainFrame.this), info, LOCALIZER.msg("testVersionFound.title", "New test version available"), JOptionPane.INFORMATION_MESSAGE, JOptionPane.YES_NO_OPTION, options, options[0], null) == JOptionPane.YES_OPTION) {
-      Launch.openURL("https://hilfe.tvbrowser.org/viewforum.php?f=2");
+      Launch.openURL("https://www.tvbrowser.org/index.php?id=tv-browser-beta");
     }
     
     Settings.General.TEST_VERSION_AVAILABLE.setVersion(testVersion.getVersion());
