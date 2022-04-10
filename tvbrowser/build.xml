@@ -103,7 +103,12 @@
 |  Task definitions
 |
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
+  <taskdef resource="net/sf/antcontrib/antlib.xml">
+	<classpath>
+	  <pathelement location="${deployment.dir}/lib/ant-contrib.jar"/>
+	</classpath>
+  </taskdef>
+	
   <!-- Creates an .app file for Mac OS X (http://informagen.com/JarBundler/)  -->
   <taskdef name="jarbundler"
            classpath="deployment/macosx/jarbundler-2.0.0.jar"
@@ -554,7 +559,26 @@
    	<chmod perm="u+x" file="${tvbrowser-linux.runtime.dir}/tvbrowser.sh"/>
   </target>
 
-  <target name="release-packages" depends="public-win, public-linux, public-ubuntu, public-fedora, public-default, public-transportable, public-doc, public-src"/>
+  <target name="release-packages" depends="public-win, public-linux, public-ubuntu, public-fedora, public-default, public-transportable, public-src">
+  	<for param="file">
+  	    <path>
+  	        <fileset dir="${public.dir}/." />
+  	    </path>
+  	    <sequential>
+  	        <local name="md5" />
+  	    	<local name="sha1" />
+  	        <local name="relativeFile" />
+
+  	        <checksum file="@{file}" algorithm="md5" format="MD5SUM" property="md5"/>
+  	    	<checksum file="@{file}" algorithm="sha1" format="MD5SUM" property="sha1"/>
+  	        <property name="relativeFile" location="@{file}" basedir="${public.dir}" relative="true" />
+  	        <echo file="${public.dir}/checksums.md5" append="true">${md5} ${relativeFile}
+</echo>
+  	    	<echo file="${public.dir}/checksums.sha1" append="true">${sha1} ${relativeFile}
+</echo>
+  	    </sequential>
+  	</for>
+  </target>
 
   <!-- Creates the release binaries (.zip) for the platform independent TV-Browser version -->
   <target name="public-default" depends="runtime-default" description="creates platform-independent binaries">
@@ -832,7 +856,8 @@
   	  <arg value="/DPLATFORM=win32"/>
       <arg value="${installer.dir}\tvbrowser.nsi"/>
     </exec>
-  	<delete dir="${env.TEMP}/nsis"></delete>  
+  	<move file="${public.dir}/jre/${programname.file}-jre_${jre.version}_win32.exe" todir="${public.dir}"/>
+  	<delete dir="${env.TEMP}/nsis"></delete>
   </target>
   <!-- Creates the release binaries (.exe installer) for windows platforms -->
   <target name="public-win" depends="java32-check, create-installer-win64, create-installer-win32" description="Creates binaries for the Microsoft Windows Platforms (requires Windows)">
@@ -894,6 +919,17 @@
 
 	      <!-- Delete Files -->
 	      <delete file="tvbrowser.sparseimage" />
+	      
+          <local name="md5" />
+  	      <local name="sha1" />
+
+  	      <checksum file="${public.dir}/tvbrowser_${tvbrowser.version}_macjava.dmg" algorithm="md5" format="MD5SUM" property="md5"/>
+  	      <checksum file="${public.dir}/tvbrowser_${tvbrowser.version}_macjava.dmg" algorithm="sha1" format="MD5SUM" property="sha1"/>
+  	      <echo file="${public.dir}/checksums.md5" append="true">${md5} tvbrowser_${tvbrowser.version}_macjava.dmg
+</echo>
+  	      <echo file="${public.dir}/checksums.sha1" append="true">${sha1} tvbrowser_${tvbrowser.version}_macjava.dmg
+</echo>
+
 	    </target>
 
   <!--
