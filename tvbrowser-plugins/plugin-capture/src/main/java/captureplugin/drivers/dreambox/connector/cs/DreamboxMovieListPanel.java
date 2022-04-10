@@ -177,7 +177,7 @@ public class DreamboxMovieListPanel extends JPanelRefreshAbstract implements
   private static final Localizer mLocalizer = Localizer
       .getLocalizerFor(DreamboxMovieListPanel.class);
   // MovieLocation
-  private static final String mRootLocation = "/hdd/movie/";
+  private static final String mRootLocation = E2LocationHelper.LOCATION_DEFAULT;
   // Member
   private DreamboxConnector mConnector = null;
   private final E2MovieHelper mMovieHelper;

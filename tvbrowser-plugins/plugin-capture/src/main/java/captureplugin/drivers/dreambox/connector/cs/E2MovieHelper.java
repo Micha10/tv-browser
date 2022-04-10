@@ -199,7 +199,7 @@ public class E2MovieHelper {
           String directory = getCurrentDirectory();
           
           try {
-            url = "/web/movielist?dirname=" + URLEncoder.encode(directory, "UTF-8");
+            url = "/web/movielist?dirname=" + URLEncoder.encode(directory, "UTF-8") + "&tag=";
             data = mConnector.getDataForLocalUrl(url, "Error reading movies from box " + mConnector.getConfig().getDreamboxAddress(), false);
                         
             if(DreamboxConnector.testXmlData(data,"<e2movielist>")) {
