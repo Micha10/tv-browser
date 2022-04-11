@@ -644,7 +644,7 @@ public class Settings {
 
         String temp = prop.getProperty("dir.tvdata", null);
         
-        boolean versionTest = !TVBrowser.isTransportable() && Launch.isOsWindowsNtBranch() && testVersion != null && testVersion.compareTo(new Version(3,0,true)) < 0
+        boolean versionTest = !TVBrowser.isTransportable() && Launch.isOsWindowsNtBranch() && testVersion != null && testVersion.isOlderThan(new Version(3,0,true))
                                && (temp == null || temp.replace("/","\\").equals(System.getProperty("user.home")+"\\TV-Browser\\tvdata"));
         
         if((TVBrowser.isTransportable() || versionTest || !oldDir.getParentFile().equals(newDir.getParentFile()))

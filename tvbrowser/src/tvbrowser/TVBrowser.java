@@ -777,17 +777,15 @@ public class TVBrowser {
         }
         
         // check if user should select picture settings
-        if (currentVersion != null
-            && currentVersion.compareTo(new Version(2, 22)) < 0) {
+        if (currentVersion != null && currentVersion.isOlderThan(new Version(2, 22))) {
           TvBrowserPictureSettingsUpdateDialog.createAndShow(mainFrame);
         } 
         
-        if (currentVersion != null
-            && currentVersion.compareTo(new Version(2, 51, true)) < 0) {
+        if (currentVersion != null && currentVersion.isOlderThan(new Version(2, 51, true))) {
           Settings.Data.ACCEPTED_LICENSES.setStringArray(new String[0]);
         } 
         
-        if(currentVersion != null && currentVersion.compareTo(new Version(4, 21, 96, false)) < 0) {
+        if(currentVersion != null && currentVersion.isOlderThan(new Version(4, 21, 96, false))) {
           final String refresh = GeneralSettingsTab.LOCALIZER.msg("titleRefresh", "Refresh");
           
           JCheckBox gradient = new JCheckBox(ProgramPanelSettingsTab.LOCALIZER.msg("color.programGradientHighlighting",
@@ -849,8 +847,7 @@ public class TVBrowser {
           Settings.General.AUTO_UPDATE_PRIME_TIME.setBoolean(update.isSelected());
         }
 
-        if (currentVersion != null
-            && currentVersion.compareTo(new Version(2, 60, true)) < 0) {
+        if (currentVersion != null && currentVersion.isOlderThan(new Version(2, 60, true))) {
           int startOfDay = Settings.ProgramTable.START_OF_DAY.getInt();
           int endOfDay = Settings.ProgramTable.END_OF_DAY.getInt();
 
@@ -870,23 +867,19 @@ public class TVBrowser {
           }
         }
         
-        if(currentVersion != null 
-            && currentVersion.compareTo(new Version(3,43,52,false)) < 0) {
+        if(currentVersion != null && currentVersion.isOlderThan(new Version(3,43,52,false)) ) {
           FilterComponentList.getInstance().store();
         }
         
-        if(currentVersion != null
-            && currentVersion.compareTo(new Version(3,30,51,false)) < 0) {
+        if(currentVersion != null && currentVersion.isOlderThan(new Version(3,30,51,false))) {
           Settings.updateContextMenuSettings();
         }
 
-        if(currentVersion != null
-            && currentVersion.compareTo(new Version(3,33,51,false)) < 0) {
+        if(currentVersion != null && currentVersion.isOlderThan(new Version(3,33,51,false))) {
           Settings.Channels.SUBSCRIBED.setChannelArray(ChannelList.getSubscribedChannels());
         }
         
-        if(currentVersion != null
-            && currentVersion.compareTo(new Version(3,39,7,false)) < 0) {
+        if(currentVersion != null && currentVersion.isOlderThan(new Version(3,39,7,false))) {
           ProgramFieldType[] typeArr = Settings.ProgramPanel.INFO_FIELDS.getProgramFieldTypeArray();
           String[] separators = Settings.ProgramPanel.INFO_FIELDS_SEPARATORS.getStringArray();
           
@@ -904,8 +897,7 @@ public class TVBrowser {
           Settings.ProgramPanel.INFO_FIELDS_SEPARATORS.setStringArray(separatorList.toArray(new String[separatorList.size()]));
         }
         
-        if(currentVersion != null
-            && currentVersion.compareTo(new Version(4,21,51,false)) < 0) {
+        if(currentVersion != null && currentVersion.isOlderThan(new Version(4,21,51,false))) {
           @SuppressWarnings("deprecation")
           int[] colors = {
               Settings.propProgramPanelMarkedMinPriorityColor.getColor().getRGB(),

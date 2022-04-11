@@ -34,6 +34,8 @@ import devplugin.Version;
  * @author René Mach
  */
 public final class BlockedPlugin {
+  private static final Version NULL_VERSION = new Version(0, 0, 0, true);
+  
   private Version mBlockStart;
   private Version mBlockEnd;
   private String mPluginId;
@@ -91,9 +93,9 @@ public final class BlockedPlugin {
   public boolean isBlockedVersion(PluginAccess plugin) {
     return plugin != null
         && plugin.getId().equals(mPluginId)
-        && (((mBlockEnd == null || plugin.getInfo().getVersion().compareTo(mBlockEnd) <= 0) && (mBlockStart == null || plugin
-            .getInfo().getVersion().compareTo(mBlockStart) >= 0)) || plugin.getInfo().getVersion().compareTo(
-            new Version(0, 0, 0, true)) <= 0);
+        && (((mBlockEnd == null || plugin.getInfo().getVersion().isOlderThanOrEqualTo(mBlockEnd)) && (mBlockStart == null || 
+            plugin.getInfo().getVersion().isNewerThanOrEqualTo(mBlockStart))) || 
+            plugin.getInfo().getVersion().isOlderThanOrEqualTo(NULL_VERSION));
   }
 
   /**
@@ -105,8 +107,8 @@ public final class BlockedPlugin {
     return pluginId != null
         && version != null
         && pluginId.equals(mPluginId)
-        && (((mBlockEnd == null || version.compareTo(mBlockEnd) <= 0) && (mBlockStart == null || version
-            .compareTo(mBlockStart) >= 0)) || version.compareTo(new Version(0, 0, 0, true)) <= 0);
+        && (((mBlockEnd == null || version.isOlderThanOrEqualTo(mBlockEnd)) && (mBlockStart == null || 
+            version.isNewerThanOrEqualTo(mBlockStart))) || version.isOlderThanOrEqualTo(NULL_VERSION));
   }
 
   String getPropertyString() {

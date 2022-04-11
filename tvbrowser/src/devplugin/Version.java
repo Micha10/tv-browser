@@ -218,6 +218,17 @@ public final class Version implements Comparable<Version> {
   }
   
   /**
+   * Checks if this version is older than or equal to the given version.
+   * <p>
+   * @param version The version to check against.
+   * @return <code>true</code> if this version is older than or equal to the given version.
+   * @since 4.2.5
+   */
+  public boolean isOlderThanOrEqualTo(final Version version) {
+    return version != null && this.compareTo(version) <= 0;
+  }
+  
+  /**
    * Checks if this version is newer than the given version.
    * <p>
    * @param version The version to check against.
@@ -228,6 +239,17 @@ public final class Version implements Comparable<Version> {
     return version != null && this.compareTo(version) > 0;
   }
 
+  /**
+   * Checks if this version is newer than or equal to the given version.
+   * <p>
+   * @param version The version to check against.
+   * @return <code>true</code> if this version is newer than or equal to the given version.
+   * @since 4.2.5
+   */
+  public boolean isNewerThanOrEqualTo(final Version version) {
+    return version != null && this.compareTo(version) >= 0;
+  }
+  
   public boolean equals(Object obj) {
     if (obj instanceof Version) {
       Version ver = (Version) obj;
