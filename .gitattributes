@@ -1797,6 +1797,7 @@ tvbrowser-plugins/plugin-virtualdataservice/src/main/resources/virtualdataservic
 tvbrowser-plugins/plugin-virtualdataservice/src/main/resources/virtualdataservice/virtualdataservice.properties -text
 tvbrowser-plugins/plugin-virtualdataservice/src/main/resources/virtualdataservice/virtualdataservice_de.properties -text
 tvbrowser-plugins/plugin-web/pom.xml -text
+tvbrowser-plugins/plugin-web/src/main/java/org/apache/log4j/Logger.java -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-web/src/main/java/webplugin/FavIconFetcher.java -text
 tvbrowser-plugins/plugin-web/src/main/java/webplugin/WebAddress.java -text
 tvbrowser-plugins/plugin-web/src/main/java/webplugin/WebAddressEditDialog.java -text
