@@ -183,4 +183,17 @@ public class HTMLTextHelper {
 	  
 	  return text;
   }
+  
+  /**
+   * @param path The path to check.
+   * @return The path with a closing slash.
+   * @since 4.2.5 
+   */
+  public static String getPathWithClosingSlash(String path) {
+    if(!path.endsWith("/")) {
+      path += "/";
+    }
+    
+    return path;
+  }
 }

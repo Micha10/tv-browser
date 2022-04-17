@@ -125,6 +125,8 @@ import javax.swing.event.ChangeListener;
 import javax.swing.plaf.TabbedPaneUI;
 import javax.swing.plaf.basic.BasicTabbedPaneUI;
 
+import org.htmlparser.util.Translate;
+
 import com.jgoodies.forms.factories.Borders;
 import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
@@ -213,6 +215,7 @@ import util.ui.LabelButtonPanel;
 import util.ui.TVBrowserIcons;
 import util.ui.UIThreadRunner;
 import util.ui.UiUtilities;
+import util.ui.html.HTMLTextHelper;
 import util.ui.persona.Persona;
 import util.ui.persona.PersonaListener;
 import util.ui.progress.Progress;
@@ -2906,7 +2909,8 @@ public class MainFrame extends JFrame implements DateListener,DropTargetListener
         TvbrowserSoftwareUpdateItem testVersion = null;
         try {
           infoLabel.setText(LOCALIZER.msg("searchForPluginUpdates","Search for plugin updates..."));
-          java.net.URL url = new java.net.URL(baseUrl + "/" + PluginAutoUpdater.PLUGIN_UPDATES_FILENAME);
+          java.net.URL url = new java.net.URL(HTMLTextHelper.getPathWithClosingSlash(baseUrl) + PluginAutoUpdater.PLUGIN_UPDATES_FILENAME);
+          
           SoftwareUpdater softwareUpdater = new SoftwareUpdater(url,dialogType,false);
           mSoftwareUpdateItems = softwareUpdater.getAvailableSoftwareUpdateItems();
           testVersion = softwareUpdater.getTVBrowserTestItem();
@@ -2919,8 +2923,7 @@ public class MainFrame extends JFrame implements DateListener,DropTargetListener
           boolean goOn = true;
           
           if (mSoftwareUpdateItems == null && dialogType != SoftwareUpdater.ONLY_UPDATE_TYPE) {
-            JOptionPane.showMessageDialog(UiUtilities.getLastModalChildOf(MainFrame.getInstance()), LOCALIZER.msg("error.1",
-                "software check failed."));
+            JOptionPane.showMessageDialog(UiUtilities.getLastModalChildOf(MainFrame.getInstance()), LOCALIZER.msg("error.1","software check failed."));
             goOn = false;
           } else if(testVersion != null && !Settings.General.INFORM_TEST_VERSIONS.isHidden() && Settings.General.TEST_VERSION_AVAILABLE.getVersion().isOlderThan(testVersion.getVersion())) {
             showTestVersionAvailable(testVersion);
@@ -2992,7 +2995,7 @@ public class MainFrame extends JFrame implements DateListener,DropTargetListener
   }
   
   private void showTestVersionAvailable(TvbrowserSoftwareUpdateItem testVersion) {
-    JLabel info = new JLabel(LOCALIZER.msg("testVersionFound.msg", "A new test version of TV-Browser ({0}) is available.",testVersion.getVersion().toString()));
+    JLabel info = new JLabel("<html>"+LOCALIZER.msg("testVersionFound.msg", "A new test version of TV-Browser ({0}) is available:",testVersion.getVersion().toString())+"<br><br><i>"+Translate.decode(testVersion.getDescription())+"</i><html>");
     
     String[] options = {
         LOCALIZER.msg("testVersionFound.btn", "Open TV-Browser website for download"),
