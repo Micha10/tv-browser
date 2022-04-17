@@ -572,9 +572,9 @@
   	        <checksum file="@{file}" algorithm="md5" format="MD5SUM" property="md5"/>
   	    	<checksum file="@{file}" algorithm="sha1" format="MD5SUM" property="sha1"/>
   	        <property name="relativeFile" location="@{file}" basedir="${public.dir}" relative="true" />
-  	        <echo file="${public.dir}/checksums.md5" append="true">${md5} ${relativeFile}
+  	        <echo file="${public.dir}/checksums.md5" append="true">${md5}  ${relativeFile}
 </echo>
-  	    	<echo file="${public.dir}/checksums.sha1" append="true">${sha1} ${relativeFile}
+  	    	<echo file="${public.dir}/checksums.sha1" append="true">${sha1}  ${relativeFile}
 </echo>
   	    </sequential>
   	</for>
@@ -925,9 +925,9 @@
 
   	      <checksum file="${public.dir}/tvbrowser_${tvbrowser.version}_macjava.dmg" algorithm="md5" format="MD5SUM" property="md5"/>
   	      <checksum file="${public.dir}/tvbrowser_${tvbrowser.version}_macjava.dmg" algorithm="sha1" format="MD5SUM" property="sha1"/>
-  	      <echo file="${public.dir}/checksums.md5" append="true">${md5} tvbrowser_${tvbrowser.version}_macjava.dmg
+  	      <echo file="${public.dir}/checksums.md5" append="true">${md5}  tvbrowser_${tvbrowser.version}_macjava.dmg
 </echo>
-  	      <echo file="${public.dir}/checksums.sha1" append="true">${sha1} tvbrowser_${tvbrowser.version}_macjava.dmg
+  	      <echo file="${public.dir}/checksums.sha1" append="true">${sha1}  tvbrowser_${tvbrowser.version}_macjava.dmg
 </echo>
 
 	    </target>
