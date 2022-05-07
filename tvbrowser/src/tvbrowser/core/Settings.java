@@ -541,7 +541,7 @@ public class Settings {
       
       for(int j = 0; j < directories.size(); j++) {
         mLog.info("Search for settings import in: '" + directories.get(j) + "'");
-        oldDir = findNewestOldVersionDir(directories.get(j), oldDirectoryName, j != 0);
+        oldDir = findNewestOldVersionDir(directories.get(j), oldDirectoryName, j != 0, TVBrowser.isTransportable());
         
         if(oldDir != null) {
           break;
@@ -575,11 +575,15 @@ public class Settings {
             oldDir = loadExternalSettings();
             
             if(oldDir != null) {
-              oldDir = findNewestOldVersionDir(oldDir.getAbsolutePath(), oldDirectoryName, true);
+              oldDir = findNewestOldVersionDir(oldDir.getAbsolutePath(), oldDirectoryName, true, false);
             }
           }
-          else if(OperatingSystem.isMacOs()) {
-            pluginsDir = new File(System.getProperty("user.home"),"Library/Application Support/TV-Browser/plugins");
+          else {
+            oldDir = findNewestOldVersionDir(oldDir.getParentFile().getAbsolutePath(), oldDirectoryName, true, false);
+            
+            if(OperatingSystem.isMacOs()) {
+              pluginsDir = new File(System.getProperty("user.home"),"Library/Application Support/TV-Browser/plugins");
+            }
           }
         }
         else if(oldDir == null || !oldDir.isDirectory() || !oldDir.exists()) {
@@ -596,7 +600,7 @@ public class Settings {
             oldDir = loadExternalSettings();
             
             if(oldDir != null) {
-              oldDir = findNewestOldVersionDir(oldDir.getAbsolutePath(), oldDirectoryName, true);
+              oldDir = findNewestOldVersionDir(oldDir.getAbsolutePath(), oldDirectoryName, true, false);
             }
           }
           else {
@@ -630,7 +634,7 @@ public class Settings {
         String versionString = prop.getProperty("version",null);
         Version testVersion = null;
 
-        if(versionString != null) {
+        if(versionString != null && !versionString.contains(";")) {
           try {
             int asInt = Integer.parseInt(versionString);
             int major = asInt / 100;
@@ -641,7 +645,12 @@ public class Settings {
             // Ignore
           }
         }
-
+        else if(versionString != null && versionString.contains(";")) {
+          String[] parts = versionString.split(";");
+          
+          testVersion = new devplugin.Version(Integer.parseInt(parts[0]),Integer.parseInt(parts[1]),Integer.parseInt(parts[2]),parts.length>3 ? parts[3].equals("true"): true);
+        }
+        
         String temp = prop.getProperty("dir.tvdata", null);
         
         boolean versionTest = !TVBrowser.isTransportable() && Launch.isOsWindowsNtBranch() && testVersion != null && testVersion.isOlderThan(new Version(3,0,true))
@@ -865,6 +874,15 @@ public class Settings {
                 + oldDir.getAbsolutePath() + "' to '"
                 + newDir.getAbsolutePath() + "'", e);
           }
+          
+          if(testVersion != null && testVersion.isOlderThanOrEqualTo(new Version(4,24))) {
+            final File oldReminderDat = new File(newDir,"reminder.dat");
+            final File newReminderDat = new File(newDir,"java.reminderplugin.ReminderPlugin.dat");
+            
+            if(oldReminderDat.isFile() && !newReminderDat.isFile()) {
+              oldReminderDat.renameTo(newReminderDat);
+            }
+          }
         } else {
           mLog.info("Could not create directory '" + newDir.getAbsolutePath()
               + "' - using default user settings");
@@ -993,7 +1011,7 @@ public class Settings {
   }
   
   
-  private static File findNewestOldVersionDir(String directory, String oldDirectoryName, boolean includeCurrent) {
+  private static File findNewestOldVersionDir(String directory, String oldDirectoryName, boolean includeCurrent, boolean quiet) {
     File oldDir = null;
     File testFile = null;
     String[] allVersions = TVBrowser.getAllVersionStrings();
@@ -1002,7 +1020,7 @@ public class Settings {
     
     for (int i = (includeCurrent ? 0 : 1); i < allVersions.length; i++) {
       testFile = new File(directory + File.separator + allVersions[i], SETTINGS_FILE);
-
+      
       if(testFile.isFile()) {
         oldDir = testFile;
         directories.add(oldDir);
@@ -1047,7 +1065,7 @@ public class Settings {
         }
       }
       
-      if(directories.size() > 1) {
+      if(directories.size() > 1 && !quiet) {
         Localizer localizer = Localizer.getLocalizerFor(Settings.class);
         final ButtonGroup bg = new ButtonGroup();
         final JRadioButton[] versions = new JRadioButton[directories.size()];

@@ -48,6 +48,8 @@ import java.io.Writer;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.rmi.ConnectException;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -66,10 +68,10 @@ import javax.swing.ImageIcon;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.StringUtils;
 
+import devplugin.Plugin;
 import tvbrowser.core.Settings;
 import util.ui.ImageIconEnhanced;
 import util.ui.TimeFormatter;
-import devplugin.Plugin;
 
 /**
  * A utilities class for I/O stuff. It constists of serveral static
@@ -594,29 +596,34 @@ public class IOUtilities {
    * @since 2.2.2/2.5.1
    */
   public static void copy(File src, File target, boolean onlyNew) throws IOException {
-    BufferedInputStream in = null;
-    BufferedOutputStream out = null;
-    try {
-      FileOutputStream outFile = new FileOutputStream(target);
-      in = new BufferedInputStream(new FileInputStream(src), 0x4000);
-      out = new BufferedOutputStream(outFile, 0x4000);
-
-      if(!onlyNew || target.length() < 1 || (src.lastModified() > target.lastModified())) {
-        outFile.getChannel().truncate(0);
-        pipeStreams(in, out);
-      }
-
-      in.close();
-      out.close();
+    if(!onlyNew || target.length() < 1 || (src.lastModified() > target.lastModified())) {
+      Files.copy(src.toPath(), target.toPath(), StandardCopyOption.REPLACE_EXISTING);
     }
-    finally {
-      if (in != null) {
-        try { in.close(); } catch (IOException exc) {}
+    /*else {
+      BufferedInputStream in = null;
+      BufferedOutputStream out = null;
+      try {
+        FileOutputStream outFile = new FileOutputStream(target);
+        in = new BufferedInputStream(new FileInputStream(src), 0x4000);
+        out = new BufferedOutputStream(outFile, 0x4000);
+  
+        if(!onlyNew || target.length() < 1 || (src.lastModified() > target.lastModified())) {
+          outFile.getChannel().truncate(0);
+          pipeStreams(in, out);
+        }
+  
+        in.close();
+        out.close();
       }
-      if (out != null) {
-        try { out.close(); } catch (IOException exc) {}
+      finally {
+        if (in != null) {
+          try { in.close(); } catch (IOException exc) {}
+        }
+        if (out != null) {
+          try { out.close(); } catch (IOException exc) {}
+        }
       }
-    }
+    }*/
   }
 
 
