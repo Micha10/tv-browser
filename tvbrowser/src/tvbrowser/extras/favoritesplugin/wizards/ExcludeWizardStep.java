@@ -33,6 +33,7 @@ import java.awt.event.ItemListener;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.HashSet;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
@@ -623,6 +624,7 @@ public class ExcludeWizardStep extends AbstractWizardStep {
   }
   
   private static final class MutliSelectionTextField {
+    private static final String SEPARATOR = ";;";
     private JTextField mTextField;
     private JButton mButton;
     
@@ -635,7 +637,7 @@ public class ExcludeWizardStep extends AbstractWizardStep {
       mTextField.addCaretListener(listener);
       mButton = new JButton(LOCALIZER.ellipsisMsg("multiple.select", "Multiple"));
       mButton.addActionListener(e -> {
-        final SearchableTextAreaPanel area = new SearchableTextAreaPanel(mTextField.getText().replace(";;", "\n"), false);
+        final SearchableTextAreaPanel area = new SearchableTextAreaPanel(mTextField.getText().replace(SEPARATOR, "\n"), false);
         
         Window parent = UiUtilities.getLastModalChildOf(MainFrame.getInstance());
         final OkayCancelDialog dlg = new OkayCancelDialog(parent, LOCALIZER.msg("multiple.title", "Enter data"), area, LOCALIZER.msg("multiple.help", "Use one line for each entry."), !mTextField.getText().isBlank());
@@ -647,7 +649,7 @@ public class ExcludeWizardStep extends AbstractWizardStep {
         dlg.setVisible(true);
         
         if(dlg.getOkWasPressed()) {
-          mTextField.setText(area.getText().replaceAll("\n+", ";;"));
+          mTextField.setText(area.getText().strip().replaceAll("\n+", SEPARATOR));
           mTextField.setCaretPosition(0);
         }
       });
@@ -663,7 +665,23 @@ public class ExcludeWizardStep extends AbstractWizardStep {
     }
     
     private String getText() {
-      return mTextField.getText();
+      final String[] parts = mTextField.getText().split(SEPARATOR);
+      final HashSet<String> added = new HashSet<String>();
+      final StringBuilder result = new StringBuilder();
+      
+      for(String part : parts) {
+        if(!added.contains(part)) {
+          added.add(part);
+          
+          if(result.length() > 0) {
+            result.append(SEPARATOR);
+          }
+          
+          result.append(part);
+        }
+      }
+      
+      return result.toString();
     }
   }
 }
