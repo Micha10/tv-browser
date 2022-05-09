@@ -35,19 +35,13 @@ public class StringMapProperty extends Property {
   private static final String SEPARATOR_VALUES = "#§#";
   
   private HashMap<String, String> mMap;
+  private boolean mIsCacheFilled;
   
   public StringMapProperty(PropertyManager manager, String key) {
     super(manager, key);
-    mMap = new HashMap<String, String>();
     
-    if(getProperty() != null && !getProperty().isBlank()) {
-      final String[] entries = getProperty().split(SEPARATOR_ENTRIES);
-      
-      for(String entry : entries) {
-        final String[] parts = entry.split(SEPARATOR_VALUES);
-        mMap.put(parts[0], parts[1]);
-      }
-    }
+    mMap = new HashMap<String, String>();
+    mIsCacheFilled = false;
   }
   
   public void putEntry(final String key, final int value) {
@@ -55,20 +49,36 @@ public class StringMapProperty extends Property {
   }
   
   public String getEntry(final String key) {
+    if(!mIsCacheFilled) {
+      fillCache();
+    }
+    
     return mMap.get(key);
   }
   
   public void putEntry(final String key, final String value) {
+    if(!mIsCacheFilled) {
+      fillCache();
+    }
+    
     mMap.put(key, value);
     
     updateProperty();
   }
   
   public boolean containsKey(final String key) {
+    if(!mIsCacheFilled) {
+      fillCache();
+    }
+    
     return mMap.containsKey(key);
   }
   
   public String removeEntry(final String key) {
+    if(!mIsCacheFilled) {
+      fillCache();
+    }
+    
     String result = mMap.remove(key);
     
     if(result != null) {
@@ -79,10 +89,18 @@ public class StringMapProperty extends Property {
   }
   
   public Set<String> getKeySet() {
+    if(!mIsCacheFilled) {
+      fillCache();
+    }
+    
     return mMap.keySet();
   }
   
   private void updateProperty() {
+    if(!mIsCacheFilled) {
+      fillCache();
+    }
+    
     Set<String> keys = mMap.keySet();
     StringBuilder property = new StringBuilder();
     
@@ -96,8 +114,22 @@ public class StringMapProperty extends Property {
     setProperty(property.toString());
   }
 
+  private void fillCache() {
+    if(getProperty() != null && !getProperty().isBlank()) {
+      final String[] entries = getProperty().split(SEPARATOR_ENTRIES);
+      
+      for(String entry : entries) {
+        final String[] parts = entry.split(SEPARATOR_VALUES);
+        mMap.put(parts[0], parts[1]);
+      }
+    }
+    
+    mIsCacheFilled = true;
+  }
+  
   @Override
   protected void clearCache() {
-    //no cache used
+    mMap.clear();
+    mIsCacheFilled = false;
   }
 }
