@@ -115,8 +115,10 @@ public class StringMapProperty extends Property {
   }
 
   private void fillCache() {
-    if(getProperty() != null && !getProperty().isBlank()) {
-      final String[] entries = getProperty().split(SEPARATOR_ENTRIES);
+    final String prop = getProperty();
+    
+    if(prop != null && !prop.isBlank()) {
+      final String[] entries = prop.split(SEPARATOR_ENTRIES);
       
       for(String entry : entries) {
         final String[] parts = entry.split(SEPARATOR_VALUES);
@@ -124,7 +126,7 @@ public class StringMapProperty extends Property {
       }
     }
     
-    mIsCacheFilled = true;
+    mIsCacheFilled = prop != null;
   }
   
   @Override
