@@ -649,7 +649,7 @@ public class ExcludeWizardStep extends AbstractWizardStep {
         dlg.setVisible(true);
         
         if(dlg.getOkWasPressed()) {
-          mTextField.setText(area.getText().strip().replaceAll("\n+", SEPARATOR));
+          mTextField.setText(area.getText().strip().replaceAll("\\n+", SEPARATOR));
           mTextField.setCaretPosition(0);
         }
       });
