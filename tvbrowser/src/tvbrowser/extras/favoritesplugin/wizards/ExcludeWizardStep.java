@@ -635,7 +635,7 @@ public class ExcludeWizardStep extends AbstractWizardStep {
       mTextField.addCaretListener(listener);
       mButton = new JButton(LOCALIZER.ellipsisMsg("multiple.select", "Multiple"));
       mButton.addActionListener(e -> {
-        final SearchableTextAreaPanel area = new SearchableTextAreaPanel(mTextField.getText().replace(";;", System.lineSeparator()), false);
+        final SearchableTextAreaPanel area = new SearchableTextAreaPanel(mTextField.getText().replace(";;", "\n"), false);
         
         Window parent = UiUtilities.getLastModalChildOf(MainFrame.getInstance());
         final OkayCancelDialog dlg = new OkayCancelDialog(parent, LOCALIZER.msg("multiple.title", "Enter data"), area, LOCALIZER.msg("multiple.help", "Use one line for each entry."), !mTextField.getText().isBlank());
@@ -647,7 +647,7 @@ public class ExcludeWizardStep extends AbstractWizardStep {
         dlg.setVisible(true);
         
         if(dlg.getOkWasPressed()) {
-          mTextField.setText(area.getText().replaceAll(System.lineSeparator(), ";;"));
+          mTextField.setText(area.getText().replaceAll("\n+", ";;"));
           mTextField.setCaretPosition(0);
         }
       });
