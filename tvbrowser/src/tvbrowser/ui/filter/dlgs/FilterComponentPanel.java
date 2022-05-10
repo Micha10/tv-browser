@@ -61,6 +61,7 @@ import util.ui.TVBrowserIcons;
  * filter components for creating, editing and deleting those.
  * 
  * @author René Mach
+ * @since 4.2.5
  */
 public class FilterComponentPanel extends JPanel implements ActionListener {
   private JList<FilterItem> mFilterComponentList;
@@ -161,7 +162,10 @@ public class FilterComponentPanel extends JPanel implements ActionListener {
         if (SwingUtilities.isLeftMouseButton(e) && e.getClickCount() == 2) {
           int index = mFilterComponentList.locationToIndex(e.getPoint());
           mFilterComponentList.setSelectedIndex(index);
-          editSelectedFilterComponent();
+          
+          if(mEditBtn.isEnabled()) {
+            editSelectedFilterComponent();
+          }
         }
       }
     });
