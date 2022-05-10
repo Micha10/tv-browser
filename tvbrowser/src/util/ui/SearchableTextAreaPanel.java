@@ -41,6 +41,7 @@ import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
 
 import util.i18n.Localizer;
+import util.misc.TextUtilities;
 
 /**
  * A JPanel with a JTextArea in a JScrollPane and a JTextField for
@@ -59,6 +60,22 @@ public class SearchableTextAreaPanel extends JPanel {
   }
   
   public SearchableTextAreaPanel(final String text, final boolean caseSensitiveSearch) {
+    this(text, null, caseSensitiveSearch);
+  }
+  
+  /**
+   * Creates a new instance of this SearchableTextAreaPanel.
+   * 
+   * @param text The text for this SearchableTextAreaPanel.
+   * @param lineSeparator The separator used in text to separate lines from each other.
+   * @param caseSensitiveSearch <code>true</code> if the search for entries should be case sensitive, <code>false</code> if not.
+   * @since 4.2.7
+   */
+  public SearchableTextAreaPanel(String text, final String lineSeparator, final boolean caseSensitiveSearch) {
+    if(lineSeparator != null) {
+      text = text.replace(lineSeparator, "\\n");
+    }
+    
     mContent = new JTextArea(text);
     
     JScrollPane scroll = new JScrollPane(mContent);
@@ -150,5 +167,38 @@ public class SearchableTextAreaPanel extends JPanel {
   
   public String getText() {
     return mContent.getText();
+  }
+  
+  /**
+   * Sets the text of this area to text
+   *  
+   * @param text The text to set.
+   */
+  public void setText(final String text) {
+    mContent.setText(text);
+  }
+  
+  /**
+   * Sets the text of this area to text and replaces all
+   * occurrences of separator with new line character.
+   * 
+   * @param lineSeparator The separator used in text to separate the lines from each other.
+   * @param text The text to set.
+   * @since 4.2.7
+   */
+  public void setText(final String lineSeparator, final String text) {
+    setText(text.replaceAll(lineSeparator, "\n"));
+  }
+  
+  /**
+   * Gets the text of this area and replaces all
+   * occurrences of new line character with separator
+   * and eliminates multiple identical entries. 
+   * 
+   * @param lineSeparator The separator used to separate the lines from each other.
+   * @since 4.2.7
+   */
+  public String getText(final String lineSeparator) {
+    return TextUtilities.removeDoubletLines(getText(), "\\n+", lineSeparator);
   }
 }

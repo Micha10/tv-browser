@@ -2807,6 +2807,7 @@ tvbrowser/src/util/misc/ChangeTrackingProperties.java -text svneol=unset#text/pl
 tvbrowser/src/util/misc/HashCodeUtilities.java -text
 tvbrowser/src/util/misc/PropertyDefaults.java -text svneol=unset#text/plain
 tvbrowser/src/util/misc/SoftReferenceCache.java -text
+tvbrowser/src/util/misc/TextUtilities.java -text svneol=unset#text/plain
 tvbrowser/src/util/paramhandler/paramhandler_cs.properties -text svneol=unset#text/plain
 tvbrowser/src/util/paramhandler/paramhandler_da.properties -text
 tvbrowser/src/util/paramhandler/paramhandler_el.properties -text

@@ -166,7 +166,7 @@ public class MassFilterComponent extends AbstractFilterComponent {
   }
 
   public void saveSettings() {
-    mText = mTextInput.getText();
+    mText = mTextInput.getText("\n");
     mSearchFormSettings = mNewSearchFormSettings;
     mSearcher = null;
   }
