@@ -73,7 +73,7 @@ public class SearchableTextAreaPanel extends JPanel {
    */
   public SearchableTextAreaPanel(String text, final String lineSeparator, final boolean caseSensitiveSearch) {
     if(lineSeparator != null) {
-      text = text.replace(lineSeparator, "\\n");
+      text = text.replace(lineSeparator, "\n");
     }
     
     mContent = new JTextArea(text);
