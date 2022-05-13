@@ -45,6 +45,8 @@ import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -122,6 +124,8 @@ import util.ui.ScrollableJPanel;
 import util.ui.TVBrowserIcons;
 import util.ui.UiUtilities;
 import util.ui.persona.Persona;
+import util.ui.progress.Progress;
+import util.ui.progress.ProgressWindow;
 
 /**
  * Plugin for managing the favorite programs.
@@ -194,7 +198,7 @@ public class FavoritesPlugin {
   private Thread mUpdateThread;
   private AfterDataUpdateInfoPanel mInfoPanel;
   private ManageFavoritesPanel panel;
-
+  
   private ExecutorService mThreadPool;
   private JPanel mCenterPanel;
   
@@ -427,22 +431,66 @@ public class FavoritesPlugin {
     FilterManagerImpl.getInstance().registerFilterChangeListener(new FilterChangeListenerV2() {
       @Override
       public void filterTouched(ProgramFilter filter) {
+        final ExecutorService threadPool = Executors.newFixedThreadPool(Math.max(Runtime.getRuntime().availableProcessors(), 3));
+        
         Favorite[] favorites = FavoriteTreeModel.getInstance().getFavoriteArr();
-        boolean reload = false;
+        
+        final AtomicBoolean reload = new AtomicBoolean(false);
+        final AtomicInteger count = new AtomicInteger(0);
+        
+        final ProgressWindow progWin = new ProgressWindow(UiUtilities.getLastModalChildOf(MainFrame.getInstance()), LOCALIZER.msg("updatingFilter", "Updating Favorites with filter: {0}", filter.getName()));
+        progWin.setMaximum(favorites.length);
         
         for(Favorite fav : favorites) {
           if(fav instanceof FilterFavorite) {
-            reload = ((FilterFavorite)fav).updateFilter(filter) || reload;
+            threadPool.execute(() -> {
+              reload.compareAndSet(false, ((FilterFavorite)fav).updateFilter(filter));
+              progWin.setValue(count.incrementAndGet());
+            });
           }
           else if(fav instanceof AdvancedFavorite) {
-            reload = ((AdvancedFavorite)fav).updateFilter(filter) || reload;
+            threadPool.execute(() -> {
+              reload.compareAndSet(false, ((AdvancedFavorite)fav).updateFilter(filter));
+              progWin.setValue(count.incrementAndGet());
+            });
           }
           else {
-            reload = fav.updateFilterExclusion(filter,true) || reload;
+            threadPool.execute(() -> {
+              reload.compareAndSet(false, fav.updateFilterExclusion(filter,true));
+              progWin.setValue(count.incrementAndGet());
+            });
           }
         }
+        threadPool.shutdown();
         
-        if(reload) {
+        final AtomicBoolean done = new AtomicBoolean(false);
+        
+        progWin.run(new Progress() {
+          @Override
+          public void run() {
+            while(!done.get()) {
+              try {
+                Thread.sleep(100);
+              } catch (InterruptedException e) {
+                // ignore
+              }
+            }
+          }
+        }, 2);
+        
+        try {
+          if (threadPool.awaitTermination(Math.max(favorites.length, 10),TimeUnit.SECONDS)) {
+            LOG.info("Favorites: Update threads were finished");
+          } else {
+            LOG.severe("Favorites: Timeout on waiting for update threads to finish was reached");
+          }
+        } catch (InterruptedException e) {
+          LOG.log(Level.INFO,"Waiting for favorite update finishing was interrupted",e);
+        }
+        
+        done.set(true);
+        
+        if(reload.get()) {
           if(mMangePanel != null) {
             mMangePanel.reload(true);
           }

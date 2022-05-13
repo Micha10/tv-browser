@@ -344,17 +344,25 @@ public class SelectFilterDlg extends JDialog implements ActionListener, WindowCl
   }
   
   void editSelectedFilter(FilterNode node) {
-    if(node.getFilter() instanceof FavoriteFilter || node.getFilter() instanceof PluginsProgramFilter || node.getFilter() instanceof InfoBitFilter || node.getFilter() instanceof SingleChannelFilter) {
-      editHighlighting(node);
-    }
-    else {
-      UserFilter filter = (UserFilter)node.getFilter();
-      new EditFilterDlg(this, FilterList.getInstance(), filter, true);
-      
-      mFilterTree.getModel().fireFilterTouched(filter);
-      mFilterTree.updateUI();
-      updateBtns();
-    }
+    new Thread("EDIT SELECTED FILTER THREAD") {
+      public void run() {
+        if(node.getFilter() instanceof FavoriteFilter || node.getFilter() instanceof PluginsProgramFilter || node.getFilter() instanceof InfoBitFilter || node.getFilter() instanceof SingleChannelFilter) {
+          editHighlighting(node);
+        }
+        else {
+          UserFilter filter = (UserFilter)node.getFilter();
+          EditFilterDlg dlg = new EditFilterDlg(SelectFilterDlg.this, FilterList.getInstance(), filter, true);
+          
+          if(dlg.getOkWasPressed()) {
+            dlg.dispose();
+            mFilterTree.getModel().fireFilterTouched(filter);
+            mFilterTree.updateUI();
+          }
+        }
+        
+        updateBtns();
+      }
+    }.start();
   }
   
   void deleteSelectedItem(FilterNode node) {

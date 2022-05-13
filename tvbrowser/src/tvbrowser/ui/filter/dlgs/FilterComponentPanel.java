@@ -323,57 +323,64 @@ public class FilterComponentPanel extends JPanel implements ActionListener {
   }
 
   private void editSelectedFilterComponent() {
-    int inx = mFilterComponentList.getSelectedIndex();
-
-    if(inx == -1) {
-      return;
-    }
-
-    FilterComponent rule = ((FilterItem)mFilterComponentListModel.getElementAt(inx)).getComponent();
-    final String oldName = rule.getName();
-    FilterComponentList.getInstance().remove(oldName);
-    mFilterComponentListModel.removeElementAt(inx);
-    EditFilterComponentDlg dlg = null;
+    new Thread("EDIT FILTER COMPONENT THREAD") {
+      @Override
+      public void run() {
+        int inx = mFilterComponentList.getSelectedIndex();
     
-    dlg = new EditFilterComponentDlg(mParent,rule);
+        if(inx == -1) {
+          return;
+        }
     
-    FilterComponent newRule = dlg.getFilterComponent();
-    if (newRule == null) {
-      newRule = rule;
-    }
-    
-    FilterComponentList.getInstance().add(newRule);
-    FilterTreeModel.getInstance().updateFilterComponent(oldName, newRule);
-    
-    if(mParent instanceof EditFilterDlg) {
-      if(!oldName.equalsIgnoreCase(newRule.getName())) {
+        FilterComponent rule = ((FilterItem)mFilterComponentListModel.getElementAt(inx)).getComponent();
+        final String oldName = rule.getName();
         FilterComponentList.getInstance().remove(oldName);
+        mFilterComponentListModel.removeElementAt(inx);
+        EditFilterComponentDlg dlg = null;
         
-        final String[] parts = mFilterRuleTF.getText().split("\\s+");
-        final StringBuilder newRuleText = new StringBuilder();
+        dlg = new EditFilterComponentDlg(mParent,rule);
         
-        for(int i = 0; i < parts.length; i++) {
-          if(parts[i].equals(oldName)) {
-            parts[i] = newRule.getName();
-          }
-          
-          if(newRuleText.length() > 0) {
-            newRuleText.append(" ");
-          }
-          
-          newRuleText.append(parts[i]);
+        FilterComponent newRule = dlg.getFilterComponent();
+        if (newRule == null) {
+          newRule = rule;
         }
         
-        mFilterRuleTF.setText(newRuleText.toString());
+        FilterComponentList.getInstance().add(newRule);
+        FilterTreeModel.getInstance().updateFilterComponent(oldName, newRule);
+        
+        if(!oldName.equalsIgnoreCase(newRule.getName())) {
+          FilterComponentList.getInstance().remove(oldName);
+        }
+        
+        if(mParent instanceof EditFilterDlg) {
+          if(!oldName.equalsIgnoreCase(newRule.getName())) {
+            final String[] parts = mFilterRuleTF.getText().split("\\s+");
+            final StringBuilder newRuleText = new StringBuilder();
+            
+            for(int i = 0; i < parts.length; i++) {
+              if(parts[i].equals(oldName)) {
+                parts[i] = newRule.getName();
+              }
+              
+              if(newRuleText.length() > 0) {
+                newRuleText.append(" ");
+              }
+              
+              newRuleText.append(parts[i]);
+            }
+            
+            mFilterRuleTF.setText(newRuleText.toString());
+          }
+          
+          ((EditFilterDlg) mParent).repaintFilterConstruction();
+        }
+          
+        mFilterComponentListModel.insertElementAt(new FilterItem(newRule,0),inx);
+        mFilterComponentList.setSelectedIndex(inx);
+        mFilterComponentList.ensureIndexIsVisible(inx);
+        
+        updateBtns();
       }
-      
-      ((EditFilterDlg) mParent).repaintFilterConstruction();
-    }
-      
-    mFilterComponentListModel.insertElementAt(new FilterItem(newRule,0),inx);
-    mFilterComponentList.setSelectedIndex(inx);
-    mFilterComponentList.ensureIndexIsVisible(inx);
-    
-    updateBtns();
+    }.start();
   }
 }

@@ -30,6 +30,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Cursor;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.swing.BorderFactory;
 import javax.swing.JDialog;
@@ -73,19 +74,51 @@ public class ProgressWindow implements devplugin.ProgressMonitor {
   public ProgressWindow(Component parent) {
     this(parent, "");
   }
-
+  
   public void run(final Progress progress) {
+    run(progress, 0);
+  }
+  
+  public void run(final Progress progress, final int delaySeconds) {
+    final AtomicBoolean done = new AtomicBoolean(false); 
     Thread thread = new Thread("Progress window") {
+      @Override
       public void run() {
         progress.run();
-        while (!mDialog.isVisible()) {
+        done.set(true);
+        while (!mDialog.isVisible() && done.get()) {
         }
         mDialog.setVisible(false);
         mDialog.dispose();
       }
     };
     thread.start();
-    UiUtilities.centerAndShow(mDialog);
+    
+    if(delaySeconds > 0) {
+      new Thread("Wait for progress window") {
+        @Override
+        public void run() {
+          int delayMilliSeconds = delaySeconds * 1000;
+          do {
+            try {
+              sleep(100);
+            } catch (InterruptedException e) {
+              // ignore
+            }
+          }while((delayMilliSeconds-=100) > 0);
+          
+          if(!done.get()) {
+            UiUtilities.centerAndShow(mDialog);
+          }
+          else {
+            done.set(false);
+          }
+        }
+      }.start();
+    }
+    else {
+      UiUtilities.centerAndShow(mDialog);
+    }
   }
 
   public void setMaximum(final int maximum) {
