@@ -339,7 +339,7 @@ public class Exclusion implements Comparable<Exclusion> {
       while(types.hasNext()) {
         ProgramFieldType type = types.next();
         
-        if(type.getFormat() == ProgramFieldType.FORMAT_TEXT) {
+        if(type.getFormat() == ProgramFieldType.FORMAT_TEXT && prog.hasFieldValue(type)) {
           value.append(prog.getTextField(type)).append(' ');
         }
       }
@@ -688,7 +688,7 @@ public class Exclusion implements Comparable<Exclusion> {
     }
     
     private StringExclusion(final String text) {
-      mText = text;
+      mText = text.replaceAll("\\s+", " ").replaceAll(" +", " ").replaceAll("[\uFF0D\uFE63\u2010\u2011\u2012\u2013\u2014\u2015]", "-");
     }
     
     @Override
@@ -711,7 +711,8 @@ public class Exclusion implements Comparable<Exclusion> {
       return b.toString();
     }
     
-    public boolean isExcludedFrom(final String value, final boolean exactMatch, final boolean ignoreCase) {
+    public boolean isExcludedFrom(String value, final boolean exactMatch, final boolean ignoreCase) {
+      value = value.replaceAll("\\s+", " ").replaceAll(" +", " ").replaceAll("[\uFF0D\uFE63\u2010\u2011\u2012\u2013\u2014\u2015]", "-");
       String[] parts = mText.split(";;");
       
       for(String part : parts) {
