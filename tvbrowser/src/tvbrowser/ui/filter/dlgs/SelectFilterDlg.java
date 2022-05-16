@@ -34,6 +34,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -78,6 +79,8 @@ public class SelectFilterDlg extends JDialog implements ActionListener, WindowCl
   private FilterList mFilterList;
   private FilterTree mFilterTree;
   
+  private ArrayList<ProgramFilter> mTouchedFilterList;
+  
   public static SelectFilterDlg create(Window parent) {
     if(INSTANCE == null) {
       new SelectFilterDlg(UiUtilities.getLastModalChildOf(MainFrame.getInstance()));
@@ -93,6 +96,7 @@ public class SelectFilterDlg extends JDialog implements ActionListener, WindowCl
   private SelectFilterDlg(Window parent) {
     super(parent, LOCALIZER.msg("title", "Edit Filters"), Dialog.ModalityType.DOCUMENT_MODAL);
     INSTANCE = this;
+    mTouchedFilterList = new ArrayList<ProgramFilter>();
     
     final EnhancedPanelBuilder pb = new EnhancedPanelBuilder(new FormLayout("default,default:grow,default"));
     pb.border(Borders.DIALOG);
@@ -290,6 +294,16 @@ public class SelectFilterDlg extends JDialog implements ActionListener, WindowCl
     MainFrame.getInstance().getProgramTableScrollPane().getProgramTable().repaint();
     mFilterList.store();
     
+    new Thread("FIRE FILTER TOUCHED THREAD") {
+      @Override
+      public void run() {
+        if(!mTouchedFilterList.isEmpty()) {
+          mFilterTree.getModel().fireFilterTouched(mTouchedFilterList.toArray(new ProgramFilter[mTouchedFilterList.size()]));
+          mTouchedFilterList.clear();
+        }
+      }
+    }.start();
+    
     setVisible(false);
     INSTANCE = null;
     dispose();
@@ -355,7 +369,7 @@ public class SelectFilterDlg extends JDialog implements ActionListener, WindowCl
           EditFilterDlg dlg = new EditFilterDlg(SelectFilterDlg.this, FilterList.getInstance(), filter, true);
           
           if(dlg.getOkWasPressed()) {
-            mFilterTree.getModel().fireFilterTouched(filter);
+            mTouchedFilterList.add(filter);
             mFilterTree.updateUI();
           }
           

@@ -430,6 +430,10 @@ public class FavoritesPlugin {
     
     FilterManagerImpl.getInstance().registerFilterChangeListener(new FilterChangeListenerV2() {
       private void handleFilterChanges(ProgramFilter[] filters, final boolean delete) {
+        if(filters == null || filters.length == 0) {
+          return;
+        }
+        
         final ExecutorService threadPool = Executors.newFixedThreadPool(Math.max(Runtime.getRuntime().availableProcessors(), 3));
         
         Favorite[] favorites = FavoriteTreeModel.getInstance().getFavoriteArr();

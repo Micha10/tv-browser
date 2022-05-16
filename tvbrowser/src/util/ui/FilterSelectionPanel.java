@@ -154,6 +154,8 @@ public final class FilterSelectionPanel extends JPanel {
           else {
             FilterTreeModel.getInstance().fireFilterTouched(filter);
           }
+          
+          dlg.dispose();
         } else if(filterNew) {
           mFilterBox.setSelectedItem(mLastSelectedFilter);
         }}catch(Throwable t) {

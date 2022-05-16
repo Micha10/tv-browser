@@ -376,7 +376,7 @@ public class FilterTreeModel extends DefaultTreeModel {
     fireFilterTouched(new ProgramFilter[] {filter});
   }
   
-  private void fireFilterTouched(final ProgramFilter[] filters) {
+  void fireFilterTouched(final ProgramFilter[] filters) {
     for(FilterChangeListenerV2 listener : CHANGE_LISTENER_LISTV2) {
       listener.filterTouched(filters);
     }

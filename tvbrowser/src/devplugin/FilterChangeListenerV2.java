@@ -46,12 +46,13 @@ public interface FilterChangeListenerV2 {
   
   /**
    * Called when user edited the filter.
-   * NOTE: When you override {@link #filterTouched(ProgramFilter[])}
+   * NOTE: If you override {@link #filterTouched(ProgramFilter[])}
    * this method will never be called.
    * <p>
    * @param filter The filter that was touched.
+   * @deprecated since 4.2.7
    */
-  public void filterTouched(ProgramFilter filter);
+  @Deprecated(since="4.2.7") public void filterTouched(ProgramFilter filter);
   
   /**
    * Called when user edited filters.
