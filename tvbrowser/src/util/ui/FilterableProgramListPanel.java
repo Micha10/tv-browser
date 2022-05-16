@@ -350,6 +350,20 @@ public class FilterableProgramListPanel extends JPanel implements FilterChangeLi
       mProgramFilterBox.updateUI();
     }
   }
+
+  @Override
+  public void filterTouched(ProgramFilter[] filters) {
+    if(mType == TYPE_NAME_AND_PROGRAM_FILTER || mType == TYPE_PROGRAM_ONLY_FILTER) {
+      for(ProgramFilter filter : filters) {
+        if(mProgramFilterBox.getSelectedItem().equals(filter)) {
+          filterPrograms(filter);
+          break;
+        }
+      }
+      
+      mProgramFilterBox.updateUI();
+    }
+  }
   
   @Override
   public void filterDefaultChanged(ProgramFilter filter) {

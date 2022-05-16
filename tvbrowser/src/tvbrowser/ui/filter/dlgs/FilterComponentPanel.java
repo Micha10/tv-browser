@@ -314,6 +314,8 @@ public class FilterComponentPanel extends JPanel implements ActionListener {
     dlg.dispose();
     
     if (newRule != null) {
+      mFilterComponentTouched = true;
+      
       FilterComponentList.getInstance().add(newRule);
     
       mFilterComponentListModel.addElement(new FilterItem(newRule,0));
@@ -340,29 +342,31 @@ public class FilterComponentPanel extends JPanel implements ActionListener {
         FilterComponentList.getInstance().remove(oldName);
         mFilterComponentListModel.removeElementAt(inx);
         EditFilterComponentDlg dlg = null;
+        FilterComponent newRule = rule;
         
         dlg = new EditFilterComponentDlg(mParent,rule);
+        boolean result = dlg.getOkWasPressed();
         
-        if(dlg.getOkWasPressed()) {
+        if(result) {
           mFilterComponentTouched = true;
+        
+          newRule = dlg.getFilterComponent();
+          
+          if (newRule == null) {
+            newRule = rule;
+          }
+          
+          dlg.dispose();
+          
+          FilterComponentList.getInstance().add(newRule);
+          FilterTreeModel.getInstance().updateFilterComponent(oldName, newRule);
+          
+          if(!oldName.equalsIgnoreCase(newRule.getName())) {
+            FilterComponentList.getInstance().remove(oldName);
+          }
         }
         
-        FilterComponent newRule = dlg.getFilterComponent();
-        
-        if (newRule == null) {
-          newRule = rule;
-        }
-        
-        dlg.dispose();
-        
-        FilterComponentList.getInstance().add(newRule);
-        FilterTreeModel.getInstance().updateFilterComponent(oldName, newRule);
-        
-        if(!oldName.equalsIgnoreCase(newRule.getName())) {
-          FilterComponentList.getInstance().remove(oldName);
-        }
-        
-        if(mParent instanceof EditFilterDlg) {
+        if(mParent instanceof EditFilterDlg && result) {
           if(!oldName.equalsIgnoreCase(newRule.getName())) {
             final String[] parts = mFilterRuleTF.getText().split("\\s+");
             final StringBuilder newRuleText = new StringBuilder();

@@ -373,8 +373,12 @@ public class FilterTreeModel extends DefaultTreeModel {
   }
   
   public void fireFilterTouched(final ProgramFilter filter) {
+    fireFilterTouched(new ProgramFilter[] {filter});
+  }
+  
+  private void fireFilterTouched(final ProgramFilter[] filters) {
     for(FilterChangeListenerV2 listener : CHANGE_LISTENER_LISTV2) {
-      listener.filterTouched(filter);
+      listener.filterTouched(filters);
     }
   }
   
@@ -386,10 +390,11 @@ public class FilterTreeModel extends DefaultTreeModel {
   
   public void updateFilterComponent(final String oldName, final FilterComponent filterComponent) {
     final UserFilter[] userFilters = FilterList.getInstance().getUserFilterArr();
+    final ArrayList<UserFilter> touched = new ArrayList<UserFilter>();
     
     for(UserFilter filter : userFilters) {
       if(filter.containsRuleComponent(filterComponent.getName()) || filter.containsRuleComponent(oldName)) {
-        fireFilterTouched(filter);
+        touched.add(filter);
         
         if(!oldName.equals(filterComponent.getName())) {
           final String[] parts = filter.getRule().split("\\s+");
@@ -416,6 +421,10 @@ public class FilterTreeModel extends DefaultTreeModel {
         
         filter.store();
       }
+    }
+    
+    if(!touched.isEmpty()) {
+      fireFilterTouched(touched.toArray(new ProgramFilter[touched.size()]));
     }
   }
   

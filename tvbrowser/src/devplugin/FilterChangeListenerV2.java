@@ -46,10 +46,24 @@ public interface FilterChangeListenerV2 {
   
   /**
    * Called when user edited the filter.
+   * NOTE: When you override {@link #filterTouched(ProgramFilter[])}
+   * this method will never be called.
    * <p>
    * @param filter The filter that was touched.
    */
   public void filterTouched(ProgramFilter filter);
+  
+  /**
+   * Called when user edited filters.
+   * <p>
+   * @param filters An array with the filters that were touched.
+   * @since 4.2.7
+   */
+  default public void filterTouched(ProgramFilter[] filters) {
+    for(ProgramFilter filter : filters) {
+      filterTouched(filter);
+    }
+  }
   
   /**
    * Called when the default filter was changed.

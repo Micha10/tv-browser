@@ -429,8 +429,7 @@ public class FavoritesPlugin {
     }
     
     FilterManagerImpl.getInstance().registerFilterChangeListener(new FilterChangeListenerV2() {
-      @Override
-      public void filterTouched(ProgramFilter filter) {
+      private void handleFilterChanges(ProgramFilter[] filters, final boolean delete) {
         final ExecutorService threadPool = Executors.newFixedThreadPool(Math.max(Runtime.getRuntime().availableProcessors(), 3));
         
         Favorite[] favorites = FavoriteTreeModel.getInstance().getFavoriteArr();
@@ -438,25 +437,70 @@ public class FavoritesPlugin {
         final AtomicBoolean reload = new AtomicBoolean(false);
         final AtomicInteger count = new AtomicInteger(0);
         
-        final ProgressWindow progWin = new ProgressWindow(UiUtilities.getLastModalChildOf(MainFrame.getInstance()), LOCALIZER.msg("updatingFilter", "Updating Favorites with filter: {0}", filter.getName()));
+        final ProgressWindow progWin = new ProgressWindow(UiUtilities.getLastModalChildOf(MainFrame.getInstance()), LOCALIZER.msg("updatingFilter", "Updating Favorites with filter: {0}", filters[0].getName()));
         progWin.setMaximum(favorites.length);
         
         for(Favorite fav : favorites) {
           if(fav instanceof FilterFavorite) {
             threadPool.execute(() -> {
-              reload.compareAndSet(false, ((FilterFavorite)fav).updateFilter(filter));
+              boolean update = false;
+              
+              for(ProgramFilter filter : filters) {
+                update = (delete ? ((FilterFavorite)fav).deleteFilter(filter, false) : ((FilterFavorite)fav).updateFilter(filter, false)) || update;
+              }
+              
+              if(update) {
+                try {
+                  fav.updatePrograms();
+                } catch (TvBrowserException e) {
+                  // TODO Auto-generated catch block
+                  e.printStackTrace();
+                }
+              }
+              
+              reload.compareAndSet(false, update);
               progWin.setValue(count.incrementAndGet());
             });
           }
           else if(fav instanceof AdvancedFavorite) {
             threadPool.execute(() -> {
-              reload.compareAndSet(false, ((AdvancedFavorite)fav).updateFilter(filter));
+              boolean update = false;
+              
+              for(ProgramFilter filter : filters) {
+                update = (delete ? ((AdvancedFavorite)fav).deleteFilter(filter, false) : ((AdvancedFavorite)fav).updateFilter(filter, false)) || update;
+              }
+              
+              if(update) {
+                try {
+                  fav.updatePrograms();
+                } catch (TvBrowserException e) {
+                  // TODO Auto-generated catch block
+                  e.printStackTrace();
+                }
+              }
+              
+              reload.compareAndSet(false, update);
               progWin.setValue(count.incrementAndGet());
             });
           }
           else {
             threadPool.execute(() -> {
-              reload.compareAndSet(false, fav.updateFilterExclusion(filter,true));
+              boolean update = false;
+              
+              for(ProgramFilter filter : filters) {
+                update = (delete ? fav.deleteFilterExclusion(filter, false) : fav.updateFilterExclusion(filter, false)) || update;
+              }
+              
+              if(update) {
+                try {
+                  fav.updatePrograms();
+                } catch (TvBrowserException e) {
+                  // TODO Auto-generated catch block
+                  e.printStackTrace();
+                }
+              }
+              
+              reload.compareAndSet(false, update);
               progWin.setValue(count.incrementAndGet());
             });
           }
@@ -504,32 +548,18 @@ public class FavoritesPlugin {
       }
       
       @Override
+      public void filterTouched(ProgramFilter[] filters) {
+        handleFilterChanges(filters, false);
+      }
+      
+      @Override
+      public void filterTouched(ProgramFilter filter) {
+        filterTouched(new ProgramFilter[] {filter});
+      }
+      
+      @Override
       public void filterRemoved(ProgramFilter filter) {
-        Favorite[] favorites = FavoriteTreeModel.getInstance().getFavoriteArr();
-        boolean reload = false;
-        
-        for(Favorite fav : favorites) {
-          if(fav instanceof FilterFavorite) {
-            reload = ((FilterFavorite)fav).deleteFilter(filter) || reload;
-          }
-          else if(fav instanceof AdvancedFavorite) {
-            reload = ((AdvancedFavorite)fav).deleteFilter(filter) || reload;
-          }
-          else {
-            reload = fav.deleteFilterExclusion(filter,true) || reload;
-          }
-        }
-        
-        if(reload) {
-          if(mMangePanel != null) {
-            mMangePanel.reload(true);
-          }
-          if(ManageFavoritesDialog.getInstance() != null) {
-            ManageFavoritesDialog.getInstance().reload(true);
-          }
-          
-          store();
-        }
+        handleFilterChanges(new ProgramFilter[] {filter}, true);
       }
       
       @Override

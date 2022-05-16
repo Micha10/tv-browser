@@ -280,7 +280,7 @@ public class FilterFavorite extends Favorite implements PendingFilterLoader {
     return mFilterIsAcceptable;
   }
   
-  public boolean updateFilter(ProgramFilter filter) {
+  public boolean updateFilter(ProgramFilter filter, boolean updatePrograms) {
     boolean result = (mFilterInstance != null && (mFilterInstance.equals(filter)) || mFilterName.equals(filter.getName())); 
     
     if(result) {
@@ -297,7 +297,7 @@ public class FilterFavorite extends Favorite implements PendingFilterLoader {
     
     result = updateFilterExclusion(filter,false) || result;
     
-    if(result) {
+    if(result && updatePrograms) {
       try {
         updatePrograms();
       } catch (TvBrowserException e) {}
@@ -306,7 +306,7 @@ public class FilterFavorite extends Favorite implements PendingFilterLoader {
     return result;
   }
   
-  public boolean deleteFilter(ProgramFilter filter) {
+  public boolean deleteFilter(ProgramFilter filter, boolean updatePrograms) {
     boolean result = (mFilterInstance != null && (mFilterInstance.equals(filter)) || mFilterName.equals(filter.getName())); 
     
     if(result) {
@@ -316,7 +316,7 @@ public class FilterFavorite extends Favorite implements PendingFilterLoader {
     
     result = deleteFilterExclusion(filter,false) || result;
     
-    if(result) {
+    if(result && updatePrograms) {
       try {
         updatePrograms();
       } catch (TvBrowserException e) {}

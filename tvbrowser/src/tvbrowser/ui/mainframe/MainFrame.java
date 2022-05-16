@@ -3899,6 +3899,20 @@ public class MainFrame extends JFrame implements DateListener,DropTargetListener
       setProgramFilter(filter);
     }
   }
+  
+  @Override
+  public void filterTouched(ProgramFilter[] filters) {
+    ProgramFilter current = getProgramFilter();
+    
+    if(current != null && filters != null) {
+      for(ProgramFilter filter : filters) {
+        if(filter != null && current.equals(filter)) {
+          setProgramFilter(filter);
+          break;
+        }
+      }
+    }
+  }
 
   @Override
   public void filterDefaultChanged(ProgramFilter filter) {

@@ -333,54 +333,62 @@ public class EditFilterDlg extends JDialog implements ActionListener, DocumentLi
     Object o = e.getSource();
     
     if (o == mOkBtn) {
-      mOkWasPressed = true;
+      final String filterName = mFilterNameTF.getText().strip();
+      final String filterRule = mFilterRuleTF.getText().strip();
       
-      if(mFromFilterList) {
-        String filterName = mFilterNameTF.getText().strip();
-        if (!filterName.equalsIgnoreCase(mFilterName) && mFilterList.containsFilter(filterName)) {
-          JOptionPane
-              .showMessageDialog(this, LOCALIZER.msg("alreadyExists", "Filter '{0}' already exists.", filterName));
-          mOkWasPressed = false;
-        } else {
-          if (mFilter == null) {
-            mFilter = new UserFilter(mFilterNameTF.getText());
+      mOkWasPressed = mFilter == null || (!mFilter.getName().equals(filterName) || !mFilter.getRule().equals(filterRule));
+      
+      if(mOkWasPressed) {
+        if(mFromFilterList) {
+          if (!filterName.equalsIgnoreCase(mFilterName) && mFilterList.containsFilter(filterName)) {
+            JOptionPane.showMessageDialog(this, LOCALIZER.msg("alreadyExists", "Filter '{0}' already exists.", filterName));
+            mOkWasPressed = false;
           } else {
-            mFilter.setName(mFilterNameTF.getText());
+            if (mFilter == null) {
+              mFilter = new UserFilter(mFilterNameTF.getText());
+            } else {
+              mFilter.setName(mFilterNameTF.getText());
+            }
+    
+            try {
+              mFilter.setRule(mFilterRuleTF.getText());
+            } catch (ParserException exc) {
+              mOkWasPressed = false;
+              JOptionPane.showMessageDialog(this, LOCALIZER.msg("invalidRule", "Invalid rule: ") + exc.getMessage());
+            }
           }
-  
+        }
+        else {
           try {
             mFilter.setRule(mFilterRuleTF.getText());
-            FilterComponentList.getInstance().store();
-            setVisible(false);
-          } catch (ParserException exc) {
+          } catch (ParserException e1) {
             mOkWasPressed = false;
-            JOptionPane.showMessageDialog(this, LOCALIZER.msg("invalidRule", "Invalid rule: ") + exc.getMessage());
+            JOptionPane.showMessageDialog(this, LOCALIZER.msg("invalidRule", "Invalid rule: ") + e1.getMessage());
           }
         }
       }
-      else {
-        try {
-          mFilter.setRule(mFilterRuleTF.getText());
-          FilterComponentList.getInstance().store();
-          setVisible(false);
-        } catch (ParserException e1) {
-          mOkWasPressed = false;
-          JOptionPane.showMessageDialog(this, LOCALIZER.msg("invalidRule", "Invalid rule: ") + e1.getMessage());
-        }
+      
+      setVisible(false);
+      
+      if(mFilterComponent.getFilterComponentWasTouched()) {
+        FilterComponentList.getInstance().store();
       }
       
       if(mOkWasPressed) {
         mFilterHighlight.save(mFilter);
       }
     } else if (o == mCancelBtn) {
-      FilterComponentList.getInstance().store();
+      if(mFilterComponent.getFilterComponentWasTouched()) {
+        FilterComponentList.getInstance().store();
+      }
+      
       setVisible(false);
     }
 
   }
   
   public boolean getOkWasPressed() {
-    return mOkWasPressed || mFilterComponent.getFilterComponentWasTouched();
+    return mOkWasPressed;
   }
 
   public UserFilter getUserFilter() {

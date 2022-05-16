@@ -343,7 +343,6 @@ public class EditFilterComponentDlg extends JDialog implements ActionListener, D
       String compName = mNameTF.getText();
 
       if (FilterComponentList.getInstance().exists(compName)) {
-
         JOptionPane.showMessageDialog(this, "Component '" + compName + "' already exists");
       } else {
 
