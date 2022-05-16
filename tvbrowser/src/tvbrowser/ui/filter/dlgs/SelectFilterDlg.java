@@ -292,6 +292,7 @@ public class SelectFilterDlg extends JDialog implements ActionListener, WindowCl
     
     setVisible(false);
     INSTANCE = null;
+    dispose();
   }
   
   void copySelectedFilter(FilterNode node) {
@@ -354,10 +355,11 @@ public class SelectFilterDlg extends JDialog implements ActionListener, WindowCl
           EditFilterDlg dlg = new EditFilterDlg(SelectFilterDlg.this, FilterList.getInstance(), filter, true);
           
           if(dlg.getOkWasPressed()) {
-            dlg.dispose();
             mFilterTree.getModel().fireFilterTouched(filter);
             mFilterTree.updateUI();
           }
+          
+          dlg.dispose();
         }
         
         updateBtns();

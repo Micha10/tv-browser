@@ -108,6 +108,8 @@ public class EditFilterComponentDlg extends JDialog implements ActionListener, D
   private JTextField mDescTF, mNameTF;
   private JEditorPane mFilterComponentDescription;
   private JPanel mTypeDescriptionPanel;
+  
+  private boolean mOkWasPressed;
 
   public EditFilterComponentDlg(Window parent, FilterComponent comp) {
     super(parent, ModalityType.DOCUMENT_MODAL);
@@ -336,7 +338,8 @@ public class EditFilterComponentDlg extends JDialog implements ActionListener, D
       updateOkBtn();
 
     } else if (o == mOkBtn) {
-
+      mOkWasPressed = true;
+      
       String compName = mNameTF.getText();
 
       if (FilterComponentList.getInstance().exists(compName)) {
@@ -385,5 +388,17 @@ public class EditFilterComponentDlg extends JDialog implements ActionListener, D
     mSelectedFilterComponent = null;
     setVisible(false);
   }
-
+  
+  @Override
+  public void setVisible(boolean b) {
+    if(b) {
+      mOkWasPressed = false;
+    }
+    
+    super.setVisible(b);
+  }
+  
+  public boolean getOkWasPressed() {
+    return mOkWasPressed;
+  }
 }

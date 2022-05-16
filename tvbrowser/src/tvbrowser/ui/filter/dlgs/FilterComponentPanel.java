@@ -70,12 +70,14 @@ public class FilterComponentPanel extends JPanel implements ActionListener {
   private JDialog mParent;
   private JTextField mFilterRuleTF;
   private UserFilter mFilter = null;
+  private boolean mFilterComponentTouched;
   
   FilterComponentPanel(final JDialog parent) {
     this(parent, null, null);
   }
   
   FilterComponentPanel(final JDialog parent, final JTextField filterRuleTF, final UserFilter filter) {
+    mFilterComponentTouched = false;
     mParent = parent;
     mFilterRuleTF = filterRuleTF;
     mFilter = filter;
@@ -283,32 +285,33 @@ public class FilterComponentPanel extends JPanel implements ActionListener {
     FilterComponent rule = ((FilterItem)mFilterComponentListModel.getElementAt(inx)).getComponent();
     
     String name = rule.getName();
-  int count = name.lastIndexOf("_");
-  
-  if(count != -1) {
-    try {
-    count = Integer.parseInt(name.substring(count+1))+1;
-    name = name.substring(0,name.lastIndexOf("_"));
-    }catch(NumberFormatException nfe) {
+    int count = name.lastIndexOf("_");
+    
+    if(count != -1) {
+      try {
+      count = Integer.parseInt(name.substring(count+1))+1;
+      name = name.substring(0,name.lastIndexOf("_"));
+      }catch(NumberFormatException nfe) {
+        count = 1;
+      }
+    }
+    else {
       count = 1;
     }
-  }
-  else {
-    count = 1;
-  }
-  
-  while(FilterComponentList.getInstance().exists(name+"_"+count)) {
-    count++;
-  }
-  
-  rule = FilterComponentList.getInstance().createCopy(rule, name + "_" + count);
+    
+    while(FilterComponentList.getInstance().exists(name+"_"+count)) {
+      count++;
+    }
+    
+    rule = FilterComponentList.getInstance().createCopy(rule, name + "_" + count);
     
     EditFilterComponentDlg dlg = null;
     
     dlg = new EditFilterComponentDlg(mParent,rule);
     
-    
     FilterComponent newRule = dlg.getFilterComponent();
+    
+    dlg.dispose();
     
     if (newRule != null) {
       FilterComponentList.getInstance().add(newRule);
@@ -340,10 +343,17 @@ public class FilterComponentPanel extends JPanel implements ActionListener {
         
         dlg = new EditFilterComponentDlg(mParent,rule);
         
+        if(dlg.getOkWasPressed()) {
+          mFilterComponentTouched = true;
+        }
+        
         FilterComponent newRule = dlg.getFilterComponent();
+        
         if (newRule == null) {
           newRule = rule;
         }
+        
+        dlg.dispose();
         
         FilterComponentList.getInstance().add(newRule);
         FilterTreeModel.getInstance().updateFilterComponent(oldName, newRule);
@@ -382,5 +392,9 @@ public class FilterComponentPanel extends JPanel implements ActionListener {
         updateBtns();
       }
     }.start();
+  }
+  
+  public boolean getFilterComponentWasTouched() {
+    return mFilterComponentTouched;
   }
 }

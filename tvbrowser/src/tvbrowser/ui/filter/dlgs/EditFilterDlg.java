@@ -380,7 +380,7 @@ public class EditFilterDlg extends JDialog implements ActionListener, DocumentLi
   }
   
   public boolean getOkWasPressed() {
-    return mOkWasPressed;
+    return mOkWasPressed || mFilterComponent.getFilterComponentWasTouched();
   }
 
   public UserFilter getUserFilter() {
