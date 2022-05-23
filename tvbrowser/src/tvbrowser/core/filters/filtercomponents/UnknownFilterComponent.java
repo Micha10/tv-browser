@@ -59,7 +59,7 @@ public class UnknownFilterComponent implements FilterComponent {
 
   @Override
   public boolean accept(Program program) {
-    return true;
+    return false;
   }
 
   @Override
