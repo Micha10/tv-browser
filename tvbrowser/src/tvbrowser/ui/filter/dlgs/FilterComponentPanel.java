@@ -53,6 +53,7 @@ import tvbrowser.core.filters.FilterList;
 import tvbrowser.core.filters.UserFilter;
 import tvbrowser.core.filters.filtercomponents.AcceptNoneFilterComponent;
 import tvbrowser.core.filters.filtercomponents.SingleChannelFilterComponent;
+import tvbrowser.core.filters.filtercomponents.UnknownFilterComponent;
 import util.ui.EnhancedPanelBuilder;
 import util.ui.TVBrowserIcons;
 
@@ -180,7 +181,7 @@ public class FilterComponentPanel extends JPanel implements ActionListener {
     if(mFilterComponentList.getSelectedIndex() >= 0) {
       FilterItem item = (FilterItem)mFilterComponentList.getSelectedValue();
       
-      mRemoveBtn.setEnabled(!item.isAndItem() && !item.isOrItem() && !item.isNotItem() && !item.isOpenBracketItem() && !item.isCloseBracketItem() && !(item.getComponent() instanceof SingleChannelFilterComponent));
+      mRemoveBtn.setEnabled(!item.isAndItem() && !item.isOrItem() && !item.isNotItem() && !item.isOpenBracketItem() && !item.isCloseBracketItem() && !(item.getComponent() instanceof SingleChannelFilterComponent) && !(item.getComponent() instanceof UnknownFilterComponent));
       
       mEditBtn.setEnabled(mRemoveBtn.isEnabled() && !(item.getComponent() instanceof AcceptNoneFilterComponent));
       mCopyButton.setEnabled(mEditBtn.isEnabled());

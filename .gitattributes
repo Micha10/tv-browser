@@ -2415,6 +2415,7 @@ tvbrowser/src/tvbrowser/core/filters/filtercomponents/ProgramTypeFilterComponent
 tvbrowser/src/tvbrowser/core/filters/filtercomponents/ReminderFilterComponent.java -text
 tvbrowser/src/tvbrowser/core/filters/filtercomponents/SingleChannelFilterComponent.java -text svneol=unset#text/plain
 tvbrowser/src/tvbrowser/core/filters/filtercomponents/SingleTitleFilterComponent.java -text
+tvbrowser/src/tvbrowser/core/filters/filtercomponents/UnknownFilterComponent.java -text svneol=unset#text/plain
 tvbrowser/src/tvbrowser/core/filters/filtercomponents/filtercomponents_cs.properties -text svneol=unset#text/plain
 tvbrowser/src/tvbrowser/core/filters/filtercomponents/filtercomponents_da.properties -text
 tvbrowser/src/tvbrowser/core/filters/filtercomponents/filtercomponents_el.properties -text

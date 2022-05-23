@@ -65,6 +65,7 @@ import tvbrowser.core.filters.filtercomponents.ReminderFilterComponent;
 import tvbrowser.core.filters.filtercomponents.SingleChannelFilterComponent;
 import tvbrowser.core.filters.filtercomponents.SingleTitleFilterComponent;
 import tvbrowser.core.filters.filtercomponents.TimeFilterComponent;
+import tvbrowser.core.filters.filtercomponents.UnknownFilterComponent;
 import tvbrowser.core.plugin.PluginManagerImpl;
 import tvbrowser.extras.favoritesplugin.core.FilterComponentNewFavoritePrograms;
 import util.io.stream.ObjectInputStreamProcessor;
@@ -130,6 +131,7 @@ public class FilterComponentList {
                           } catch (ClassNotFoundException e) {
                             e.printStackTrace();
                           }
+                          
                           if (comp != null) {
                             synchronized (mComponentList) {
                               mComponentList.add(comp);
@@ -208,11 +210,17 @@ public class FilterComponentList {
     while(it.hasNext()) {
       FilterComponent component = it.next();
       
-      ArrayList<FilterComponent> componentList = filterTable.get(component.getClass().getCanonicalName());
+      String key = component.getClass().getCanonicalName();
+      
+      if(component instanceof UnknownFilterComponent) {
+        key = ((UnknownFilterComponent) component).getClassName();
+      }
+      
+      ArrayList<FilterComponent> componentList = filterTable.get(key);
       
       if(componentList == null) {
         componentList = new ArrayList<FilterComponent>();
-        filterTable.put(component.getClass().getCanonicalName(), componentList);
+        filterTable.put(key, componentList);
       }
       
       componentList.add(component);
@@ -228,27 +236,30 @@ public class FilterComponentList {
             Set<String> filterKeys = filterTable.keySet();
             
             for(String key : filterKeys) {
-              out.writeUTF(key);
-              File componentFile = new File(tvbrowser.core.filters.FilterList.FILTER_DIRECTORY,"java."+key+".dat");
-              
               final ArrayList<FilterComponent> list = filterTable.get(key);
               
-              StreamUtilities.objectOutputStreamIgnoringExceptions(componentFile,
-                new ObjectOutputStreamProcessor() {
-                  @Override
-                  public void process(ObjectOutputStream outputStream) throws IOException {
-                    outputStream.writeInt(1); // version for future use
-                    outputStream.writeInt(list.size());
-                    
-                    Iterator<FilterComponent> it = list.iterator();
-                    while (it.hasNext()) {
-                      FilterComponent comp = it.next();
-                      writeComponent(outputStream, comp);
+              out.writeUTF(key);
+              
+              File componentFile = new File(tvbrowser.core.filters.FilterList.FILTER_DIRECTORY,"java."+key+".dat");
+              
+              if(!(list.get(0) instanceof UnknownFilterComponent)) {
+                StreamUtilities.objectOutputStreamIgnoringExceptions(componentFile,
+                  new ObjectOutputStreamProcessor() {
+                    @Override
+                    public void process(ObjectOutputStream outputStream) throws IOException {
+                      outputStream.writeInt(1); // version for future use
+                      outputStream.writeInt(list.size());
+                      
+                      Iterator<FilterComponent> it = list.iterator();
+                      while (it.hasNext()) {
+                        FilterComponent comp = it.next();
+                        writeComponent(outputStream, comp);
+                      }
+                      
+                      outputStream.close();
                     }
-                    
-                    outputStream.close();
-                  }
-              });
+                });
+              }
             }
             
             out.close();
@@ -390,7 +401,10 @@ public class FilterComponentList {
           filterComponent = new FavoritesFilterComponent(name, description);
         }
       }
+    } else {
+      filterComponent = new UnknownFilterComponent(name, description, className);
     }
+    
     return filterComponent;
   }
 
