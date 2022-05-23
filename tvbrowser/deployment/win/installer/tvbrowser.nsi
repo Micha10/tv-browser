@@ -210,7 +210,7 @@ Function LockedListShow
   !insertmacro MUI_HEADER_TEXT "$(LOCKED_LIST_HEADING)" "$(LOCKED_LIST_CAPTION)"
   LockedList::AddModule /NOUNLOAD "\tvbrowser.exe"
   LockedList::AddModule /NOUNLOAD "\tvbrowser_noDD.exe"
-  LockedList::AddCaption /NOUNLOAD "TV-Browser*"
+  LockedList::AddCaption /NOUNLOAD "TV-Browser ?.*"
   LockedList::Dialog /heading "$(LOCKED_LIST_HEADING)" /caption "$(LOCKED_LIST_CAPTION)" /searching "$(LOCKED_LIST_SEARCHING)" /noprograms "$(LOCKED_LIST_NOPROGRAMS)" /colheadings "$(LOCKED_LIST_APPLICATION)" "$(LOCKED_LIST_PROCESS)" /ignore "$(LOCKED_LIST_IGNORE)"
 FunctionEnd
 
