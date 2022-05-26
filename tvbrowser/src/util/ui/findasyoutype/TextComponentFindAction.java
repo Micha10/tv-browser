@@ -68,7 +68,7 @@ public class TextComponentFindAction extends FindAction implements
 
   // Added method for building up the search bar
   private void ini() {
-    EnhancedPanelBuilder b = new EnhancedPanelBuilder(new FormLayout("2dlu,default,5dlu,default,5dlu,100dlu,5dlu,default,5dlu,default,15dlu,default","default,3dlu"));
+    EnhancedPanelBuilder b = new EnhancedPanelBuilder(new FormLayout("2dlu,default,5dlu,default,5dlu,100dlu,5dlu,default,5dlu,default,15dlu,default"));
     
     mSearchBar = b.getPanel();
     mSearchBar.addComponentListener(this);
@@ -123,12 +123,13 @@ public class TextComponentFindAction extends FindAction implements
       }
     });
 
-    b.add(mSearchCloseBtn, 2);
+    b.addRow(false, mSearchCloseBtn, 2);
     b.labelAdd(mLocalizer.msg("find", "Find:"), 4);
     b.add(searchField, 6);
     b.add(mFindNext, 8);
     b.add(mFindPrev, 10);
     b.add(getMessageLabel(), 12);
+    b.addRow("3dlu", false);
 
     /*
      * Close action for the SearchPanel.
