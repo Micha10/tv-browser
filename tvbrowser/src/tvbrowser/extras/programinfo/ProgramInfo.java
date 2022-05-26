@@ -239,16 +239,16 @@ public class ProgramInfo {
       boolean currentFound = false;
       
       while(dayProgram.hasNext()) {
-        Program current = dayProgram.next();
+        InfoProgram current = new InfoProgram(dayProgram.next());
         
         if(prog.equals(current)) {
           currentFound = true;
         }
         else if(currentFound) {
-          nextPrograms.add(current);
+          nextPrograms.add(current.getProgram());
         }
         else {
-          previousPrograms.add(current);
+          previousPrograms.add(current.getProgram());
         }
       }
       
@@ -436,7 +436,6 @@ public class ProgramInfo {
         mHistoryIndex = mHistory.size() - 1;
       }
       
-      
       findPreviousAndNextProgram(previous);
       ProgramInfoDialog.getInstance(previous.getProgram(), mLeftSplit, true);
     }
@@ -477,12 +476,24 @@ public class ProgramInfo {
     private Date mDate;
     private Channel mChannel;
     private String mTitle;
+    private Program mProgram;
+    private int mIndex;
     
     public InfoProgram(final Program p) {
       mId = p.getUniqueID();
       mDate = p.getDate();
       mChannel = p.getChannel();
       mTitle = p.getTitle();
+      mProgram = p;
+      
+      final Program[] progs = PluginManagerImpl.getInstance().getPrograms(mId);
+      
+      for(int i = 0; i < progs.length; i++) {
+        if(progs[i] == p) {
+          mIndex = i;
+          break;
+        }
+      }
     }
     
     @Override
@@ -491,18 +502,36 @@ public class ProgramInfo {
         return ((Program) obj).getUniqueID().contentEquals(mId);
       }
       else if(obj instanceof InfoProgram) {
-        return ((InfoProgram) obj).mId.contentEquals(mId);
+        return ((InfoProgram) obj).mId.contentEquals(mId) && ((InfoProgram) obj).mIndex == mIndex;
       }
       
       return super.equals(obj);
     }
     
     public Program getProgram() {
-      return PluginManagerImpl.getInstance().getProgram(mId);
+      if(mProgram == null || mProgram.getProgramState() != Program.STATE_IS_VALID) {
+        Program[] progs = PluginManagerImpl.getInstance().getPrograms(mId);
+        
+        if(progs != null) {
+          if(mIndex < progs.length) {
+            mProgram = progs[mIndex];
+          }
+          else {
+            mProgram = progs[0];
+          }
+        }
+      }
+      
+      return mProgram;
     }
     
     public String getTitle() {
       return mTitle;
+    }
+    
+    @Override
+    public String toString() {
+      return mIndex + " " + mProgram;
     }
   }
 }
