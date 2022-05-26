@@ -257,12 +257,12 @@ public class ProgramTableSettingsTab implements SettingsTab, ActionListener {
     
     
     Calendar cal = Calendar.getInstance();
-    cal.set(Calendar.HOUR_OF_DAY, Settings.ProgramTable.START_OF_DAY.getDefaultHourOfDay());
-    cal.set(Calendar.MINUTE, Settings.ProgramTable.START_OF_DAY.getDefaultMinutesOfHour());
+    cal.set(Calendar.HOUR_OF_DAY, Settings.ProgramTable.START_OF_DAY.getHourOfDay());
+    cal.set(Calendar.MINUTE, Settings.ProgramTable.START_OF_DAY.getMinutesOfHour());
     mStartOfDayTimeSp.setValue(cal.getTime());
     
-    cal.set(Calendar.HOUR_OF_DAY, Settings.ProgramTable.END_OF_DAY.getDefaultHourOfDay());
-    cal.set(Calendar.MINUTE, Settings.ProgramTable.END_OF_DAY.getDefaultMinutesOfHour());
+    cal.set(Calendar.HOUR_OF_DAY, Settings.ProgramTable.END_OF_DAY.getHourOfDay());
+    cal.set(Calendar.MINUTE, Settings.ProgramTable.END_OF_DAY.getMinutesOfHour());
     mEndOfDayTimeSp.setValue(cal.getTime());
     
     
