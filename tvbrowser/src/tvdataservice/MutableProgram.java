@@ -632,7 +632,7 @@ public class MutableProgram implements Program {
     }
 
     if (type == ProgramFieldType.TITLE_TYPE && value.length() > 0) {
-      mTitle = value;
+      mTitle = value.replaceAll("\\r+", "").replaceAll("\\n+", " ").strip();
     }
 
     setObjectValueField(type, value);
@@ -751,9 +751,9 @@ public class MutableProgram implements Program {
    * @param title the new title of this program.
    */
   public void setTitle(String title) {
-    mTitle = title;
-
-    setTextField(ProgramFieldType.TITLE_TYPE, title);
+    mTitle = title.replaceAll("\\r+", "").replaceAll("\\n+", " ").strip();
+    
+    setTextField(ProgramFieldType.TITLE_TYPE, mTitle);
   }
 
   /**
