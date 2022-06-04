@@ -17,14 +17,17 @@ import java.util.Properties;
 
 import javax.swing.Icon;
 import javax.swing.JCheckBox;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.JTextField;
+import javax.swing.KeyStroke;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingUtilities;
-
-import util.ui.UiUtilities;
 
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
@@ -37,6 +40,7 @@ import devplugin.PluginInfo;
 import devplugin.Program;
 import devplugin.SettingsTab;
 import devplugin.Version;
+import util.ui.UiUtilities;
 
 public class TvbNetControl extends Plugin {
   private static final String SOCKET_PORT_KEY = "socketPort";
@@ -45,7 +49,7 @@ public class TvbNetControl extends Plugin {
   private static final String ANSWER_NETWORK_KEY = "answerNetwork";
   private static final String PAKET_SIZE_KEY = "packetSize";
   
-  private static final Version VERSION = new Version(0, 9, 0, false);
+  private static final Version VERSION = new Version(0, 10, 0, false);
   private static TvbNetControl INSTANCE;
   
   private Properties mSettings;
@@ -211,11 +215,68 @@ public class TvbNetControl extends Plugin {
         keyCode = (Integer)keyField.get(KeyEvent.class);
       }
       
+      
+      if(focus) {
+        int modifiers = 0;
+        
+        if(ctrl) {
+          modifiers |= KeyEvent.CTRL_DOWN_MASK;
+        }
+        
+        if(alt) {
+          modifiers |= KeyEvent.ALT_DOWN_MASK;
+        }
+        
+        if(shift) {
+          modifiers |= KeyEvent.SHIFT_DOWN_MASK;
+        }
+        KeyStroke k = KeyStroke.getKeyStroke(keyCode, modifiers);
+        
+        JMenuBar m = ((JFrame)getParentFrame()).getJMenuBar();
+        JMenuItem item = null;
+        
+        for(int i = 0; i < m.getMenuCount(); i++) {
+          item = findItemForAccelerator(m.getMenu(i), k);
+          
+          if(item != null) {
+            break;
+          }
+        }
+        
+        if(item != null) {
+          final JMenuItem ii = item;
+          
+          SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+              ii.doClick();
+            }
+          });
+          
+          return;
+        }
+      }
+      
       sendKey(keyCode, ctrl, shift, alt, focus);
     }catch (Exception e1) {
       // TODO: handle exception
       e1.printStackTrace();
     }
+  }
+  
+  private JMenuItem findItemForAccelerator(JMenu menu, KeyStroke accellerator) {
+    for(int j = 0; j < menu.getItemCount(); j++) {
+      JMenuItem item = menu.getItem(j);
+      
+      if(item instanceof JMenu) {
+        return findItemForAccelerator((JMenu)item, accellerator);
+      }
+      if(item != null && item.getAccelerator() != null && accellerator.equals(item.getAccelerator())) {
+        return item;
+      }
+    }
+    
+    return null;
   }
   
   private void focusWindow() {
