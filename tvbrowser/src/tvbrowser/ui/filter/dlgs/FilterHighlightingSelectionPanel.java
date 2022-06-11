@@ -36,19 +36,20 @@ import util.ui.DefaultMarkingPrioritySelectionPanel.State;
 public class FilterHighlightingSelectionPanel extends JPanel {
   private DefaultMarkingPrioritySelectionPanel mFilterHighlight;
   private State mState;
+  private int mPriorityInitial;
   
   public FilterHighlightingSelectionPanel(ProgramFilter filter) {
     mState = new DefaultMarkingPrioritySelectionPanel.State(DefaultMarkingPrioritySelectionPanel.TYPE_SELECTABLE, filter != null && Settings.Markings.HIGHLIGHTING_FILTERS.containsKey(filter.getName()));
     
-    int priority = Settings.Markings.MARK_PRIORITY_FILTERS.getInt();
+    mPriorityInitial = Settings.Markings.MARK_PRIORITY_FILTERS.getInt();
     
     if(mState.isActivated()) {
       try {
-        priority = Integer.parseInt(Settings.Markings.HIGHLIGHTING_FILTERS.getEntry(filter.getName()));
+        mPriorityInitial = Integer.parseInt(Settings.Markings.HIGHLIGHTING_FILTERS.getEntry(filter.getName()));
       }catch(NumberFormatException nfe) {}
     }
     
-    mFilterHighlight = DefaultMarkingPrioritySelectionPanel.createPanel(mState, priority, EditFilterDlg.LOCALIZER.msg("highlight","Highlight all matching programs"), false, false, false, true, false);
+    mFilterHighlight = DefaultMarkingPrioritySelectionPanel.createPanel(mState, mPriorityInitial, EditFilterDlg.LOCALIZER.msg("highlight","Highlight all matching programs"), false, false, false, true, false);
     
     setOpaque(false);
     
@@ -76,5 +77,9 @@ public class FilterHighlightingSelectionPanel extends JPanel {
     else {
       Settings.Markings.HIGHLIGHTING_FILTERS.removeEntry(filter.getName());
     }
+  }
+  
+  public boolean wasChanged() {
+    return mPriorityInitial != getSelectedPriority() || mState.wasChanged();
   }
 }

@@ -374,7 +374,7 @@ public class EditFilterDlg extends JDialog implements ActionListener, DocumentLi
         FilterComponentList.getInstance().store();
       }
       
-      if(mOkWasPressed) {
+      if(mFilterHighlight.wasChanged()) {
         mFilterHighlight.save(mFilter);
       }
     } else if (o == mCancelBtn) {
