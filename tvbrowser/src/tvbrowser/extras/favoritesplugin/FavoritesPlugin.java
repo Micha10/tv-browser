@@ -1471,7 +1471,7 @@ public class FavoritesPlugin {
   }
 
   protected int getMarkPriority() {
-    if(mMarkPriority == - 2 && mSettings != null) {
+    if(mMarkPriority == - 2 && mSettings != null && !mSettings.isEmpty()) {
       mMarkPriority = Integer.parseInt(mSettings.getProperty(KEY_MARK_PRIORITY,String.valueOf(Program.PRIORITY_MARK_MIN)));
       return mMarkPriority;
     } else {
