@@ -408,6 +408,7 @@ public final class DefaultMarkingPrioritySelectionPanel extends JPanel {
   public static final class State {
     private String mType;
     private boolean mActivated;
+    private boolean mActivatedInitialy;
     
     /**
      * State of an selection entry.
@@ -419,7 +420,7 @@ public final class DefaultMarkingPrioritySelectionPanel extends JPanel {
      */
     public State(final String type, final boolean activated) {
       mType = type;
-      mActivated = activated;
+      mActivatedInitialy = mActivated = activated;
     }
     
     /**
@@ -428,6 +429,10 @@ public final class DefaultMarkingPrioritySelectionPanel extends JPanel {
      */
     public boolean isActivated() {
       return mType.equals(TYPE_SELECTABLE) ? mActivated : true;
+    }
+    
+    public boolean wasChanged() {
+      return mActivated != mActivatedInitialy;
     }
   }
   
