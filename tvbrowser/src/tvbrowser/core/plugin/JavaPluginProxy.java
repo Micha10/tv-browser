@@ -166,8 +166,8 @@ public class JavaPluginProxy extends AbstractPluginProxy {
    * @throws TvBrowserException If loading failed.
    */
   protected void doLoadSettings() throws TvBrowserException {
-    PluginSettings.readData(mPlugin);
     PluginSettings.loadSettings(mPlugin);
+    PluginSettings.readData(mPlugin);
   }
 
 

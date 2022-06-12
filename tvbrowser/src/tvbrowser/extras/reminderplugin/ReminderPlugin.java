@@ -336,6 +336,53 @@ public class ReminderPlugin {
     }
     
     mReminderList.updateItems();
+    
+    TvDataUpdater.getInstance().addTvDataUpdateListener(
+        new TvDataUpdateListener() {
+          private boolean mCanCreateInfoPanel;
+          
+          public void tvDataUpdateStarted(Date until) {
+            mCanCreateInfoPanel = false;
+            mHasRightToSave = false;
+            mInfoCreationThread = new Thread() {
+              public void run() {
+                while(!mCanCreateInfoPanel) {
+                  try {
+                    sleep(500);
+                  } catch (InterruptedException e) {
+                    // Ignore
+                  }
+                }
+                
+                if (mSettings.getProperty("showRemovedDialog","true").compareTo("true") == 0) {
+                  Program[] removedPrograms = mReminderList.updatePrograms();
+                  
+                  if (removedPrograms.length > 0) {
+                    mInfoPanel = new RemovedProgramsPanel(removedPrograms);
+                  }
+                  else {
+                    mInfoPanel = null;
+                  }
+                } else {
+                  mReminderList.updatePrograms();
+                  mInfoPanel = null;
+                }
+
+                mHasRightToSave = true;
+                saveReminders();
+
+                ReminderListDialog.updateReminderList();
+              }
+            };
+            mInfoCreationThread.start();
+          }
+
+          public void tvDataUpdateFinished() {
+            mCanCreateInfoPanel = true;
+          }
+        });
+    
+    mReminderList.setReminderTimerListener(new ReminderTimerListener(mSettings, mReminderList));
   }
 
   /**
@@ -408,53 +455,6 @@ public class ReminderPlugin {
 
       settings.remove("autoCloseReminderAtProgramEnd");
     }
-
-    TvDataUpdater.getInstance().addTvDataUpdateListener(
-        new TvDataUpdateListener() {
-          private boolean mCanCreateInfoPanel;
-          
-          public void tvDataUpdateStarted(Date until) {
-            mCanCreateInfoPanel = false;
-            mHasRightToSave = false;
-            mInfoCreationThread = new Thread() {
-              public void run() {
-                while(!mCanCreateInfoPanel) {
-                  try {
-                    sleep(500);
-                  } catch (InterruptedException e) {
-                    // Ignore
-                  }
-                }
-                
-                if (mSettings.getProperty("showRemovedDialog","true").compareTo("true") == 0) {
-                  Program[] removedPrograms = mReminderList.updatePrograms();
-                  
-                  if (removedPrograms.length > 0) {
-                    mInfoPanel = new RemovedProgramsPanel(removedPrograms);
-                  }
-                  else {
-                    mInfoPanel = null;
-                  }
-                } else {
-                  mReminderList.updatePrograms();
-                  mInfoPanel = null;
-                }
-
-                mHasRightToSave = true;
-                saveReminders();
-
-                ReminderListDialog.updateReminderList();
-              }
-            };
-            mInfoCreationThread.start();
-          }
-
-          public void tvDataUpdateFinished() {
-            mCanCreateInfoPanel = true;
-          }
-        });
-    
-    mReminderList.setReminderTimerListener(new ReminderTimerListener(mSettings, mReminderList));
   }
 
   protected ActionMenu getContextMenuActions(final Window parentFrame, final Program program) {

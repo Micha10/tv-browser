@@ -138,12 +138,13 @@ public class InternalPluginProxyList {
    */
   private synchronized void loadData() {
     for(InternalPluginProxyIf plugin : mList) {
+      PluginSettings.loadSettings(plugin);
+      
       try {
         PluginSettings.readData(plugin);
       } catch (TvBrowserException e) {
         e.printStackTrace();
       }
-      PluginSettings.loadSettings(plugin);
     }
   }
 }
