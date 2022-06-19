@@ -73,6 +73,7 @@ import devplugin.PluginInfo;
 import devplugin.PluginTreeNode;
 import devplugin.PluginsFilterComponent;
 import devplugin.Program;
+import devplugin.ProgramFilter;
 import devplugin.ProgramReceiveTarget;
 import devplugin.SettingsTab;
 import devplugin.Version;
@@ -97,7 +98,7 @@ import util.ui.WindowClosingIf;
 public class SimpleMarkerPlugin extends Plugin {
   public static boolean HANDLE_SEPARATORS = true;
   
-  private static final Version mVersion = new Version(3,33,2,true);
+  private static final Version mVersion = new Version(3,35,0,true);
 
   /** The localizer for this class. */
   private static final util.ui.Localizer LOCALIZER = util.ui.Localizer.getLocalizerFor(SimpleMarkerPlugin.class);
@@ -135,7 +136,8 @@ public class SimpleMarkerPlugin extends Plugin {
   private boolean mShowHtmlContextMenu = true;
   
   public static boolean SUPPORTS_RECEIVE_REMOVE = false;
-
+  public static boolean SUPPORTS_PROGRAM_LIST_SCROLLING = false;
+  
   /**
    * Standard constructor for this class.
    */
@@ -156,11 +158,13 @@ public class SimpleMarkerPlugin extends Plugin {
 
   public void onActivation() {
     SUPPORTS_RECEIVE_REMOVE = getPluginManager().getTVBrowserVersion().compareTo(new Version(4,22,true)) >= 0;
+    SUPPORTS_PROGRAM_LIST_SCROLLING = getPluginManager().getTVBrowserVersion().compareTo(new Version(3,34,true)) >= 0;
     
     mShowHtmlContextMenu = getPluginManager().getTVBrowserVersion().compareTo(new Version(4,9,97,false)) > 0;
     HANDLE_SEPARATORS = getPluginManager().getTVBrowserVersion().compareTo(new Version(4,22,52,false)) < 0;
     mInfoCounter = 1;
     updateTree(true);
+    
     
     /*SwingUtilities.invokeLater(new Runnable() {
       @Override
@@ -172,6 +176,39 @@ public class SimpleMarkerPlugin extends Plugin {
             @Override
             public PluginCenterPanel[] getCenterPanels() {
               return new PluginCenterPanel[] {new SimpleMarkerPanel()};
+            }
+            
+
+            @Override
+            public void scrolledToDate(Date date) {
+              if(mManagePanel != null && mSettings.isReactScrollDate()) {
+                mManagePanel.dateSelected(date);
+              }
+            }
+            
+            @Override
+            public void scrolledToNow() {
+              if(mManagePanel != null && mSettings.isReactScrollTime()) {
+                mManagePanel.scrollToNow();
+              }
+            }
+            
+            @Override
+            public void scrolledToTime(int time) {
+              if(mManagePanel != null && mSettings.isReactScrollTime()) {
+                if(mSettings.isScrollToTime()) {
+                  mManagePanel.scrollToTime(time);
+                }
+                else if(mSettings.isScrollToTimeNext()) {
+                  mManagePanel.scrollToTimeOnward(time);
+                }
+              }
+            }
+            
+            public void filterSelected(ProgramFilter filter) {
+              if(mManagePanel != null && mSettings.isReactFilterChange()) {
+                mManagePanel.updateFilter(filter);
+              }
             }
           };
         }

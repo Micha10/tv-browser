@@ -34,6 +34,12 @@ public final class SimpleMarkerSettings extends PropertyBasedSettings{
   private static final String KEY_SHOW_DATE_SEPARATORS = "showDateSeparator";
   private static final String KEY_SHOW_ALL_IN_CONTEXT_MENU = "showInContextMenu";
   
+  private static final String KEY_REACT_SCROLL_TIME = "reactScrollTime";
+  private static final String KEY_REACT_SCROLL_DATE = "reactScrollDate";
+  private static final String KEY_REACT_FILTER_CHANGE = "reactFilterChange";
+  private static final String KEY_SCROLL_TO_NEXT_TIME = "scrollToNextTime";
+  private static final String KEY_SCROLL_TIME = "scrollToTime";
+  
   /**
    * show plugin nodes by title and date
    */
@@ -136,5 +142,42 @@ public final class SimpleMarkerSettings extends PropertyBasedSettings{
   
   public boolean isShowingInContextMenu() {
     return get(KEY_SHOW_ALL_IN_CONTEXT_MENU, false);
+  }
+  
+  void setReactScrollTime(boolean scroll) {
+    set(KEY_REACT_SCROLL_TIME, scroll);
+  }
+  
+  public boolean isReactScrollTime() {
+    return get(KEY_REACT_SCROLL_TIME, true);
+  }
+  
+  void setReactScrollDate(boolean scroll) {
+    set(KEY_REACT_SCROLL_DATE, scroll);
+  }
+  
+  public boolean isReactScrollDate() {
+    return get(KEY_REACT_SCROLL_DATE, true);
+  }
+  
+  void setReactFilterChange(boolean react) {
+    set(KEY_REACT_FILTER_CHANGE, react);
+  }
+  
+  public boolean isReactFilterChange() {
+    return get(KEY_REACT_FILTER_CHANGE, true);
+  }
+
+  void setScrollToTime(boolean scrollToTimeNext, boolean scrollToTime) {
+    set(KEY_SCROLL_TO_NEXT_TIME, scrollToTimeNext && !scrollToTime);
+    set(KEY_SCROLL_TIME, scrollToTime && !scrollToTimeNext);
+  }
+  
+  public boolean isScrollToTimeNext() {
+    return get(KEY_SCROLL_TO_NEXT_TIME, true);
+  }
+  
+  public boolean isScrollToTime() {
+    return get(KEY_SCROLL_TIME, false);
   }
 }

@@ -41,6 +41,8 @@ import java.awt.dnd.DropTargetEvent;
 import java.awt.dnd.DropTargetListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
@@ -53,15 +55,18 @@ import java.util.ArrayList;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.ButtonGroup;
 import javax.swing.Icon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JEditorPane;
 import javax.swing.JFileChooser;
+import javax.swing.JLabel;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
+import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
@@ -96,6 +101,7 @@ import simplemarkerplugin.table.MarkerPriorityRenderer;
 import simplemarkerplugin.table.MarkerProgramImportanceRenderer;
 import simplemarkerplugin.table.MarkerSendToPluginRenderer;
 import util.io.IOUtilities;
+import util.ui.EnhancedPanelBuilder;
 import util.ui.ExtensionFileFilter;
 import util.ui.Localizer;
 import util.ui.TVBrowserIcons;
@@ -124,13 +130,19 @@ public class SimpleMarkerPluginSettingsTab implements SettingsTab,
   private ArrayList<MarkList> mMarkLists;
   private JCheckBox mShowInContextMenu;
   
+  private JCheckBox mScrollTime;
+  private JCheckBox mScrollDate;
+  private JCheckBox mFilterChange;
+  private JRadioButton mJumpToNextTime;
+  private JRadioButton mJumpToTime;
+  
   private Rectangle2D mCueLine = new Rectangle2D.Float();
 
   public JPanel createSettingsPanel() {try {
     final FormLayout layout = new FormLayout("5dlu,default:grow,5dlu",
         "default,3dlu,fill:default:grow,default,3dlu,pref,10dlu,pref,5dlu");
     
-    final JPanel panel = new JPanel(layout);
+    JPanel panel = new JPanel(layout);
     
     mShowDateSeparators = new JCheckBox(SimpleMarkerPlugin.getLocalizer().msg(
         "settings.showDateSeparator",
@@ -403,6 +415,53 @@ public class SimpleMarkerPluginSettingsTab implements SettingsTab,
     
     panel.add(mHelpLabel, CC.xy(2,y));
 
+    mScrollTime = new JCheckBox(SimpleMarkerPlugin.getLocalizer().msg("settings.react.time", "Time"), SimpleMarkerPlugin.getInstance().getSettings().isReactScrollTime());
+    mScrollDate = new JCheckBox(SimpleMarkerPlugin.getLocalizer().msg("settings.react.date", "Date"), SimpleMarkerPlugin.getInstance().getSettings().isReactScrollDate());
+    mFilterChange = new JCheckBox(SimpleMarkerPlugin.getLocalizer().msg("settings.react.filter", "Filter"), SimpleMarkerPlugin.getInstance().getSettings().isReactFilterChange());
+    
+    mJumpToNextTime = new JRadioButton(SimpleMarkerPlugin.getLocalizer().msg("settings.jump.timeNext", "Jump to next occurrence of time from current view"), SimpleMarkerPlugin.getInstance().getSettings().isScrollToTimeNext());
+    mJumpToTime = new JRadioButton(SimpleMarkerPlugin.getLocalizer().msg("settings.jump.time","Jump to time on currently shown day"), SimpleMarkerPlugin.getInstance().getSettings().isScrollToTime());
+    
+    ButtonGroup bg = new ButtonGroup();
+    bg.add(mJumpToNextTime);
+    bg.add(mJumpToTime);
+    
+    if(SimpleMarkerPlugin.SUPPORTS_PROGRAM_LIST_SCROLLING) {
+      EnhancedPanelBuilder pb = new EnhancedPanelBuilder(new FormLayout("10dlu,5dlu,default:grow"));
+      pb.addParagraph(SimpleMarkerPlugin.getLocalizer().msg("settings.react.label", "Tab reacts on following actions in main window"));
+      pb.appendRow("5dlu");
+      pb.appendRow("default");
+      pb.add(mScrollTime, CC.xyw(2, pb.getRowCount(), 2));
+      pb.appendRow("default");
+      pb.add(mScrollDate, CC.xyw(2, pb.getRowCount(), 2));
+      pb.appendRow("default");
+      pb.add(mFilterChange, CC.xyw(2, pb.getRowCount(), 2));
+      pb.appendParagraphGapRow();
+      pb.appendRow(RowSpec.decode("default"));
+      final JLabel label = pb.addLabel("Verhalten der Zeitknöpfe", CC.xyw(2, pb.getRowCount(), 2));
+      pb.appendRow("5dlu");
+      pb.appendRow("default");
+      pb.add(mJumpToNextTime, CC.xy(3, pb.getRowCount()));
+      pb.appendRow("default");
+      pb.add(mJumpToTime, CC.xy(3, pb.getRowCount()));
+      pb.getPanel().setBackground(Color.red);
+      layout.appendRow(RowSpec.decode("5dlu"));
+      layout.appendRow(RowSpec.decode("pref"));
+      panel.add(pb.getPanel(), CC.xyw(1, y+=3, 2));
+      
+      label.setEnabled(mScrollTime.isSelected());
+      mJumpToNextTime.setEnabled(mScrollTime.isSelected());
+      mJumpToTime.setEnabled(mScrollTime.isSelected());
+      
+      mScrollTime.addItemListener(new ItemListener() {
+        @Override
+        public void itemStateChanged(ItemEvent e) {
+          label.setEnabled(e.getStateChange() == ItemEvent.SELECTED);
+          mJumpToNextTime.setEnabled(label.isEnabled());
+          mJumpToTime.setEnabled(label.isEnabled());
+        }
+      });
+    }
 
     JPanel p = new JPanel(new FormLayout("450dlu:grow","5dlu,fill:default:grow"));
     p.add(panel, CC.xy(1,2));
@@ -448,6 +507,11 @@ public class SimpleMarkerPluginSettingsTab implements SettingsTab,
     
     SimpleMarkerPlugin.getInstance().setMarkLists(mMarkLists.toArray(new MarkList[mMarkLists.size()]));
     SimpleMarkerPlugin.getInstance().save(true);
+    
+    SimpleMarkerPlugin.getInstance().getSettings().setReactScrollDate(mScrollDate.isSelected());
+    SimpleMarkerPlugin.getInstance().getSettings().setReactScrollTime(mScrollTime.isSelected());
+    SimpleMarkerPlugin.getInstance().getSettings().setReactFilterChange(mFilterChange.isSelected());
+    SimpleMarkerPlugin.getInstance().getSettings().setScrollToTime(mJumpToNextTime.isSelected(), mJumpToTime.isSelected());
   }
 
   public Icon getIcon() {

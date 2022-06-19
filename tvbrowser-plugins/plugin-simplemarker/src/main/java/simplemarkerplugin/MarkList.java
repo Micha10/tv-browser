@@ -364,7 +364,6 @@ public class MarkList extends Vector<Program> {
       Constructor<ActionMenu> c = ActionMenu.class.getConstructor(int.class, Action.class);
       result = c.newInstance(mActionId, action);
     } catch (Exception e1) {
-    	e1.printStackTrace();
       result = new ActionMenu(action);
     }
     

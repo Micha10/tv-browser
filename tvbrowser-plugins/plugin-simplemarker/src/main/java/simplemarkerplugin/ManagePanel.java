@@ -72,6 +72,7 @@ import compat.PersonaCompat;
 import compat.PersonaCompatListener;
 import compat.ProgramListCompat;
 import devplugin.ActionMenu;
+import devplugin.Date;
 import devplugin.Plugin;
 import devplugin.Program;
 import devplugin.ProgramFilter;
@@ -161,7 +162,7 @@ public class ManagePanel extends TabListenerPanel implements PersonaCompatListen
     SwingUtilities.invokeLater(new Runnable() {
       @Override
       public void run() {
-        mFilterSelection.setSelectedItem(SimpleMarkerPlugin.getPluginManager().getFilterManager().getAllFilter());
+        mFilterSelection.setSelectedItem(SimpleMarkerPlugin.getInstance().getSettings().isReactFilterChange() ? SimpleMarkerPlugin.getPluginManager().getFilterManager().getCurrentFilter() : SimpleMarkerPlugin.getPluginManager().getFilterManager().getAllFilter());
       }
     });
     
@@ -758,5 +759,57 @@ public class ManagePanel extends TabListenerPanel implements PersonaCompatListen
   
   boolean isAncestor() {
     return mIsAncestor;
+  }
+  
+  void dateSelected(Date date) {
+    if(SimpleMarkerPlugin.SUPPORTS_PROGRAM_LIST_SCROLLING) {
+      try {
+        mProgramsList.getClass().getDeclaredMethod("scrollToNextDateIfAvailable", Date.class).invoke(mProgramsList, date);
+      } catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+        e.printStackTrace();
+        // ignore
+      }
+    }
+  }
+  
+  void scrollToNow() {
+    if(SimpleMarkerPlugin.SUPPORTS_PROGRAM_LIST_SCROLLING) {
+      for(int i = 0; i < mProgramListModel.getSize(); i++) {
+        Object test = mProgramListModel.getElementAt(i);
+        
+        if(test instanceof Program && !((Program)test).isExpired()) {
+          mProgramsList.ensureIndexIsVisible(i);
+          break;
+        }
+      }
+    }
+  }
+  
+  void scrollToTimeOnward(int time) {
+    if(SimpleMarkerPlugin.SUPPORTS_PROGRAM_LIST_SCROLLING) {
+      try {
+        mProgramsList.getClass().getDeclaredMethod("scrollToFirstOccurrenceOfTimeFromCurrentViewOnwardIfAvailable", int.class).invoke(mProgramsList, time);
+      } catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+        e.printStackTrace();
+        // ignore
+      }
+    }    
+  }
+  
+  void scrollToTime(int time) {
+    if(SimpleMarkerPlugin.SUPPORTS_PROGRAM_LIST_SCROLLING) {
+      try {
+        mProgramsList.getClass().getDeclaredMethod("scrollToTimeFromCurrentViewIfAvailable", int.class).invoke(mProgramsList, time);
+      } catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+        e.printStackTrace();
+        // ignore
+      }
+    }    
+  }
+  
+  void updateFilter(ProgramFilter filter) {
+    if(SimpleMarkerPlugin.SUPPORTS_PROGRAM_LIST_SCROLLING) {
+      mFilterSelection.setSelectedItem(filter);
+    }
   }
 }
