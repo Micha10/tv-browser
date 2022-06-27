@@ -285,6 +285,7 @@ public class ExcludeWizardStep extends AbstractWizardStep {
     listProgramFields.add(ProgramFieldType.PRODUCTION_YEAR_TYPE);
     listProgramFields.add(ProgramFieldType.PRODUCTION_COMPANY_TYPE);
     listProgramFields.add(ProgramFieldType.SEASON_NUMBER_TYPE);
+    listProgramFields.add(ProgramFieldType.SHORT_DESCRIPTION_TYPE);
     
     Collections.sort(listProgramFields, ProgramFieldType.getComparatorLocalizedNames());
     
@@ -415,6 +416,10 @@ public class ExcludeWizardStep extends AbstractWizardStep {
     updateButtons(handler);
     
     ItemListener buttonUpdate = e -> {
+      if(e.getSource().equals(mProgramFieldCb)) {
+        handleProgramFieldTextSelection(new ItemEvent(mProgramFieldChooser, -1, mProgramFieldChooser.getSelectedItem(), e.getStateChange()));
+      }
+      
       updateButtons(handler);
     };
 
@@ -474,6 +479,12 @@ public class ExcludeWizardStep extends AbstractWizardStep {
     if(mProgramDurationCb.isSelected()) {
       allowNext = allowNext || mDurationTooShort.isSelected() || mDurationTooLong.isSelected();
     }
+    
+    if(mProgram != null) {
+      mProgramFieldChooser.addItemListener(e -> {
+        handleProgramFieldTextSelection(e);
+      });
+    }
 
     mTitleTf.setEnabled(mTitleCb.isSelected());
     mChannelCB.setEnabled(mChannelCb.isSelected());
@@ -501,6 +512,36 @@ public class ExcludeWizardStep extends AbstractWizardStep {
     }
   }
 
+  private void handleProgramFieldTextSelection(ItemEvent e) {
+    if(mProgram != null) {
+      if(e.getStateChange() == ItemEvent.DESELECTED && !mProgramFieldTextTf.mTextField.getText().isBlank()) {
+        ProgramFieldType type = (ProgramFieldType)e.getItem();
+        
+        if(mProgram.hasFieldValue(type)) {
+          String text = null;
+          switch(type.getFormat()) {
+            case ProgramFieldType.FORMAT_INT:text = mProgram.getIntFieldAsString(type);break;
+            case ProgramFieldType.FORMAT_TEXT:text = mProgram.getTextField(type);break;
+          }
+          
+          if(text != null && mProgramFieldTextTf.mTextField.getText().equals(text)) {
+            mProgramFieldTextTf.mTextField.setText("");
+          };
+        }
+      }
+      else if(mProgramFieldTextTf.mTextField.getText().isBlank() && e.getStateChange() == ItemEvent.SELECTED) {
+        ProgramFieldType type = (ProgramFieldType)e.getItem();
+        
+        if(mProgram.hasFieldValue(type)) {
+          switch(type.getFormat()) {
+            case ProgramFieldType.FORMAT_INT:mProgramFieldTextTf.mTextField.setText(mProgram.getIntFieldAsString(type));break;
+            case ProgramFieldType.FORMAT_TEXT:mProgramFieldTextTf.mTextField.setText(mProgram.getTextField(type));break;
+          }
+        }
+      }
+    }
+  }
+  
   public Object createDataObject(Object obj) {
     String title = null;
     String topic = null;
