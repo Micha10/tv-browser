@@ -387,7 +387,7 @@ public class ParamLibrary {
         return null;
       }
 
-      if ((params[0] != null) && (params[0].length() > 0)) {
+      if ((params[0] != null) && (!params[0].isBlank())) {
         return params[1];
       }
 
