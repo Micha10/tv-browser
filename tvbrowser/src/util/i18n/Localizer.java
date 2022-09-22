@@ -104,6 +104,7 @@ public class Localizer {
   public final static String I18N_CLEAR_SELECTION = "i18n_clear_selection";
   public final static String I18N_ERROR = "i18n_error";
   public final static String I18N_DEFAULT = "i18n_default";
+  public final static String I18N_MINUTES = "i18n_minutes";
   public final static String I18N_STANDARD = "i18n_standard";
   public final static String I18N_YESTERDAY = "i18n_yesterday";
   public final static String I18N_TODAY = "i18n_today";

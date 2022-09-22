@@ -428,7 +428,7 @@ public class ReminderListPanel extends TabListenerPanel implements PersonaListen
       selected = mTable.getSelectedRows();
     }
     
-    final boolean frameReminders = ReminderPropertyDefaults.getPropertyDefaults().getValueFromProperties(ReminderPropertyDefaults.KEY_FRAME_REMINDERS_SHOW,ReminderPlugin.getInstance().getSettings()).equalsIgnoreCase("true");
+    final boolean frameReminders = ReminderPlugin.getInstance().getSettings().isSet(ReminderSettings.KEY_FRAME_REMINDERS_SHOW);
 
     if (selected.length > 0) {
       Arrays.sort(selected);

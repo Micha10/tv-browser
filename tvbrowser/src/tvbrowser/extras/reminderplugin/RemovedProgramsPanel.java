@@ -60,7 +60,7 @@ public class RemovedProgramsPanel extends AfterDataUpdateInfoPanel {
     JLabel lb = new JLabel(mLocalizer.msg("header","<html>Die folgenden Sendungen, an die sie erinnert werden wollten, sind in der aktualisierten Programmvorschau nicht mehr enthalten:</html>"));
     mDisable = new JCheckBox(mLocalizer.msg("dontShowAnymore","Don't show anymore"));
     mDisable.addItemListener(e -> {
-      ReminderPlugin.getInstance().getSettings().setProperty("showRemovedDialog", String.valueOf(e.getStateChange() == ItemEvent.DESELECTED));
+      ReminderPlugin.getInstance().getSettings().set(ReminderSettings.KEY_DIALOG_REMOVED_SHOW, e.getStateChange() == ItemEvent.DESELECTED);
     });
     
     add(lb, BorderLayout.NORTH);

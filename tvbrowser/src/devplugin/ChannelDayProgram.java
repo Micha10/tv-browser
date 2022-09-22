@@ -105,4 +105,14 @@ public interface ChannelDayProgram {
    */
   public boolean getLastProgramHadEndOnUpdate();
   
+  /**
+   * Gets the index of program at given time.
+   * 
+   * @param minutes The minutes to get the index for.
+   * @return The index of the program with a start time smaller than or equal to given time.
+   *         <code>-1</code> if no program could be found with that condition.
+   * @since 4.2.7
+   */
+  public int getIndexForTime(int minutes);
+  
 }

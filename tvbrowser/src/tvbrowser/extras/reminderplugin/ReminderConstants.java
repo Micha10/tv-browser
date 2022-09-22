@@ -99,7 +99,7 @@ public final class ReminderConstants {
   static int getAutoCloseReminderTime(Program p) {
     int autoCloseReminderTime = 0;
     try {
-      if(ReminderPlugin.getInstance().getSettings().getProperty(ReminderPropertyDefaults.KEY_AUTO_CLOSE_BEHAVIOUR,ReminderPropertyDefaults.VALUE_AUTO_CLOSE_BEHAVIOUR_ON_END).equals(ReminderPropertyDefaults.VALUE_AUTO_CLOSE_BEHAVIOUR_ON_END)) {
+      if(ReminderPlugin.getInstance().getSettings().isAutoCloseOnEnd()) {
         int endTime = (p.getStartTime() + p.getLength()) * 60;
 
         int currentTime = IOUtilities.getSecondsAfterMidnight();
@@ -112,9 +112,8 @@ public final class ReminderConstants {
         }
         autoCloseReminderTime = (endTime - currentTime);
       }
-      else if(ReminderPlugin.getInstance().getSettings().getProperty(ReminderPropertyDefaults.KEY_AUTO_CLOSE_BEHAVIOUR,ReminderPropertyDefaults.VALUE_AUTO_CLOSE_BEHAVIOUR_ON_TIME).equals(ReminderPropertyDefaults.VALUE_AUTO_CLOSE_BEHAVIOUR_ON_TIME)){
-        String asString = ReminderPlugin.getInstance().getSettings().getProperty(ReminderPropertyDefaults.KEY_AUTO_CLOSE_REMINDER_TIME, "10");
-        autoCloseReminderTime = Integer.parseInt(asString);
+      else if(ReminderPlugin.getInstance().getSettings().isAutoCloseOnTime()){
+        autoCloseReminderTime = ReminderPlugin.getInstance().getSettings().getAsInt(ReminderSettings.KEY_AUTO_CLOSE_REMINDER_TIME);
       } else {
         autoCloseReminderTime = 0;
       }

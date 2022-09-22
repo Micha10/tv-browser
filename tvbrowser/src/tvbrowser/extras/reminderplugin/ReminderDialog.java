@@ -72,13 +72,13 @@ public class ReminderDialog extends JDialog implements WindowClosingIf {
   private RemindValue[] mRemindValueArr;
 
   public ReminderDialog(Window parent, devplugin.Program program,
-      final java.util.Properties settings) {
+      final ReminderSettings settings) {
     super(parent);
     setModalityType(ModalityType.DOCUMENT_MODAL);
     createGui(program, settings);
   }
 
-  private void createGui(final devplugin.Program program, final java.util.Properties settings) {
+  private void createGui(final devplugin.Program program, final ReminderSettings settings) {
     mRemindValueArr = ReminderPlugin.calculatePossibleReminders(program);
 
     setTitle(mLocalizer.msg("title", "New reminder"));
@@ -117,7 +117,7 @@ public class ReminderDialog extends JDialog implements WindowClosingIf {
 
     mList=new JComboBox<>(mRemindValueArr);
 
-    String s=settings.getProperty("defaultReminderEntry");
+    String s = settings.get(ReminderSettings.KEY_REMINDER_ENTRY_DEFAULT);
     int reminderTime = 5;
     if (s!=null) {
       try {
@@ -170,10 +170,9 @@ public class ReminderDialog extends JDialog implements WindowClosingIf {
     okBtn.addActionListener(e -> {
       mOkPressed=true;
       if (mRememberSettingsCb.isSelected()) {
-        settings.setProperty("defaultReminderEntry", Integer.toString(mList
-            .getSelectedIndex() - ReminderPlugin.getStartIndexForBeforeReminders(program)));
+        settings.set(ReminderSettings.KEY_REMINDER_ENTRY_DEFAULT, mList.getSelectedIndex() - ReminderPlugin.getStartIndexForBeforeReminders(program));
       }
-      settings.setProperty("showTimeSelectionDialog",String.valueOf(!mDontShowDialog.isSelected()));
+      settings.set(ReminderSettings.KEY_DIALOG_TIME_SELECTION_SHOW,!mDontShowDialog.isSelected());
       setVisible(false);
     });
     btnPn.add(okBtn);

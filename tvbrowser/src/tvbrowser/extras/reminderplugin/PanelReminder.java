@@ -145,7 +145,7 @@ public class PanelReminder extends ScrollableJPanel {
     mAutoCloseAtMillis = System.currentTimeMillis() + 1000 * mRemainingSecs;
     
     int seconds = mRemainingSecs;
-    if (ReminderPlugin.getInstance().getSettings().getProperty(ReminderPropertyDefaults.KEY_SHOW_TIME_COUNTER,"false").compareTo("true") == 0) {
+    if (ReminderPlugin.getInstance().getSettings().isSet(ReminderSettings.KEY_TIME_COUNTER_SHOW)) {
       seconds = 10;
     }
     
@@ -275,7 +275,7 @@ public class PanelReminder extends ScrollableJPanel {
     mRemainingSecs = Math.max(0, (int)(mAutoCloseAtMillis - System.currentTimeMillis()) / 1000);
 
     if (mRemainingSecs <= 0) {
-      if(!ReminderPlugin.getInstance().getSettings().getProperty(ReminderPropertyDefaults.KEY_AUTO_CLOSE_BEHAVIOUR,ReminderPropertyDefaults.VALUE_AUTO_CLOSE_BEHAVIOUR_ON_END).equals(ReminderPropertyDefaults.VALUE_AUTO_CLOSE_BEHAVIOUR_ON_NEVER)) {
+      if(!ReminderPlugin.getInstance().getSettings().isAutoCloseNever()) {
         mCloseInterface.close(this);
       }
       else {
@@ -327,7 +327,7 @@ public class PanelReminder extends ScrollableJPanel {
   }
   
   private void updateCloseBtText() {
-    if(mRemainingSecs <= 10 || ReminderPlugin.getInstance().getSettings().getProperty(ReminderPropertyDefaults.KEY_SHOW_TIME_COUNTER,"false").compareTo("true") == 0) {
+    if(mRemainingSecs <= 10 || ReminderPlugin.getInstance().getSettings().isSet(ReminderSettings.KEY_TIME_COUNTER_SHOW)) {
       mCloseBt.setText(getCloseButtonText(mRemainingSecs));
     }
   }
@@ -335,7 +335,7 @@ public class PanelReminder extends ScrollableJPanel {
   private String getCloseButtonText(int seconds) {
     final StringBuilder builder = new StringBuilder(mCloseBtText);
     
-    if(!ReminderPlugin.getInstance().getSettings().getProperty(ReminderPropertyDefaults.KEY_AUTO_CLOSE_BEHAVIOUR,ReminderPropertyDefaults.VALUE_AUTO_CLOSE_BEHAVIOUR_ON_END).equals(ReminderPropertyDefaults.VALUE_AUTO_CLOSE_BEHAVIOUR_ON_NEVER) && (mRemainingSecs <= 10 || ReminderPlugin.getInstance().getSettings().getProperty("showTimeCounter","false").compareTo("true") == 0)) {
+    if(!ReminderPlugin.getInstance().getSettings().isAutoCloseNever() && (mRemainingSecs <= 10 || ReminderPlugin.getInstance().getSettings().isSet(ReminderSettings.KEY_TIME_COUNTER_SHOW))) {
       builder.append(" (");
       if (seconds <= 60) {
         builder.append(seconds);

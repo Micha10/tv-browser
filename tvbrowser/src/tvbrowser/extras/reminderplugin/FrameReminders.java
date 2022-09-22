@@ -79,7 +79,7 @@ public class FrameReminders extends JFrame implements InterfaceClose<PanelRemind
         close((PanelReminder)mListReminders.getComponent(i), false, true);
       }
       
-      if(ReminderPlugin.getInstance().getSettings().getProperty(ReminderPropertyDefaults.KEY_AUTO_CLOSE_FRAME_REMINDERS_IF_EMTPY, "true").equals("true")) {
+      if(ReminderPlugin.getInstance().getSettings().isSet(ReminderSettings.KEY_AUTO_CLOSE_FRAME_REMINDERS_IF_EMTPY)) {
         close();
       }
     });
@@ -92,7 +92,7 @@ public class FrameReminders extends JFrame implements InterfaceClose<PanelRemind
         close((PanelReminder)mListReminders.getComponent(i), false, false);
       }
       
-      if(ReminderPlugin.getInstance().getSettings().getProperty(ReminderPropertyDefaults.KEY_AUTO_CLOSE_FRAME_REMINDERS_IF_EMTPY, "true").equals("true")) {
+      if(ReminderPlugin.getInstance().getSettings().isSet(ReminderSettings.KEY_AUTO_CLOSE_FRAME_REMINDERS_IF_EMTPY)) {
         close();
       }
     });
@@ -151,7 +151,7 @@ public class FrameReminders extends JFrame implements InterfaceClose<PanelRemind
               }
               
               if((getExtendedState() & JFrame.MAXIMIZED_BOTH) != JFrame.MAXIMIZED_BOTH) {
-                ReminderPlugin.getInstance().getSettings().setProperty(ReminderPropertyDefaults.KEY_FRAME_REMINDERS_XPOS, String.valueOf(e.getComponent().getX()));
+                ReminderPlugin.getInstance().getSettings().set(ReminderSettings.KEY_FRAME_REMINDERS_XPOS,e.getComponent().getX());
                 ReminderPlugin.getInstance().saveReminders();
               }
             }
@@ -176,7 +176,7 @@ public class FrameReminders extends JFrame implements InterfaceClose<PanelRemind
               }
               
               if((getExtendedState() & JFrame.MAXIMIZED_BOTH) != JFrame.MAXIMIZED_BOTH) {
-                ReminderPlugin.getInstance().getSettings().setProperty(ReminderPropertyDefaults.KEY_FRAME_REMINDERS_WIDTH, String.valueOf(e.getComponent().getWidth()));
+                ReminderPlugin.getInstance().getSettings().set(ReminderSettings.KEY_FRAME_REMINDERS_WIDTH, e.getComponent().getWidth());
                 ReminderPlugin.getInstance().saveReminders();
               }
             }
@@ -263,7 +263,7 @@ public class FrameReminders extends JFrame implements InterfaceClose<PanelRemind
   }
   
   public void updateWindowSettings() {
-    final boolean autoResize = ReminderPlugin.getInstance().getSettings().getProperty(ReminderPropertyDefaults.KEY_AUTO_RESIZE_ENABLED, ReminderPropertyDefaults.getPropertyDefaults().getDefaultValueForKey(ReminderPropertyDefaults.KEY_AUTO_RESIZE_ENABLED)).equals("false");
+    final boolean autoResize = !ReminderPlugin.getInstance().getSettings().isSet(ReminderSettings.KEY_AUTO_RESIZE_ENABLED);
     
     if(mAutoResize == null || mAutoResize.get() != autoResize) {
       if(mAutoResize == null) {
@@ -277,13 +277,13 @@ public class FrameReminders extends JFrame implements InterfaceClose<PanelRemind
         Settings.updateWindowSettings(ID_WINDOW, new Dimension(Sizes.dialogUnitXAsPixel(400, this), Sizes.dialogUnitYAsPixel(300, this)), false);
       }
       else {
-        int width = Integer.parseInt(ReminderPlugin.getInstance().getSettings().getProperty(ReminderPropertyDefaults.KEY_FRAME_REMINDERS_WIDTH, String.valueOf(getWidth())));
+        int width = Integer.parseInt(ReminderPlugin.getInstance().getSettings().get(ReminderSettings.KEY_FRAME_REMINDERS_WIDTH, String.valueOf(getWidth())));
         
         Settings.updateWindowSettings(ID_WINDOW, new Dimension(Sizes.dialogUnitXAsPixel(400, this), Sizes.dialogUnitYAsPixel(300, this)), true);
         pack();
         setSize(width, getHeight());
         
-        setLocation(Integer.parseInt(ReminderPlugin.getInstance().getSettings().getProperty(ReminderPropertyDefaults.KEY_FRAME_REMINDERS_XPOS,"0")), Toolkit.getDefaultToolkit().getScreenSize().height-10);
+        setLocation(ReminderPlugin.getInstance().getSettings().getAsInt(ReminderSettings.KEY_FRAME_REMINDERS_XPOS), Toolkit.getDefaultToolkit().getScreenSize().height-10);
         
         if(isVisible()) {
           updateHeight();
@@ -340,7 +340,7 @@ public class FrameReminders extends JFrame implements InterfaceClose<PanelRemind
     	  mListReminders.revalidate();
       });
       
-      if(ReminderPlugin.getInstance().getSettings().getProperty(ReminderPropertyDefaults.KEY_FRAME_REMINDERS_TO_FRONT_WHEN_REMINDER_ADDED,"false").equals("true")) {
+      if(ReminderPlugin.getInstance().getSettings().isSet(ReminderSettings.KEY_FRAME_REMINDERS_TO_FRONT_WHEN_REMINDER_ADDED)) {
         SwingUtilities.invokeLater(() -> {
           setExtendedState(getExtendedState());
           setAlwaysOnTop(true);
@@ -358,7 +358,7 @@ public class FrameReminders extends JFrame implements InterfaceClose<PanelRemind
 
   @Override
   public void close(final PanelReminder item) {
-    close(item, ReminderPlugin.getInstance().getSettings().getProperty(ReminderPropertyDefaults.KEY_AUTO_CLOSE_FRAME_REMINDERS_IF_EMTPY, "true").equals("true"), false);
+    close(item, ReminderPlugin.getInstance().getSettings().isSet(ReminderSettings.KEY_AUTO_CLOSE_FRAME_REMINDERS_IF_EMTPY), false);
   }
   
   public void close(final PanelReminder item, boolean closeFrameIfEmptry, boolean reschedule) {
@@ -423,7 +423,7 @@ public class FrameReminders extends JFrame implements InterfaceClose<PanelRemind
       mListReminders.revalidate();
     }
     
-    if(mListReminders.getComponentCount() < 1 && ReminderPlugin.getInstance().getSettings().getProperty(ReminderPropertyDefaults.KEY_AUTO_CLOSE_FRAME_REMINDERS_IF_EMTPY, "true").equals("true")) {
+    if(mListReminders.getComponentCount() < 1 && ReminderPlugin.getInstance().getSettings().isSet(ReminderSettings.KEY_AUTO_CLOSE_FRAME_REMINDERS_IF_EMTPY)) {
       close();
     }
   }
@@ -447,7 +447,7 @@ public class FrameReminders extends JFrame implements InterfaceClose<PanelRemind
     
     updateButtons();
     
-    if(mListReminders.getComponentCount() < 1 && ReminderPlugin.getInstance().getSettings().getProperty(ReminderPropertyDefaults.KEY_AUTO_CLOSE_FRAME_REMINDERS_IF_EMTPY, "true").equals("true")) {
+    if(mListReminders.getComponentCount() < 1 && ReminderPlugin.getInstance().getSettings().isSet(ReminderSettings.KEY_AUTO_CLOSE_FRAME_REMINDERS_IF_EMTPY)) {
       close();
     }
   }
@@ -458,7 +458,7 @@ public class FrameReminders extends JFrame implements InterfaceClose<PanelRemind
   }
   
   private synchronized void updateHeight() {
-    if (ReminderPropertyDefaults.getPropertyDefaults().getValueFromProperties(ReminderPropertyDefaults.KEY_AUTO_RESIZE_ENABLED,ReminderPlugin.getInstance().getSettings()).equals("true") && (mThreadUpdateHeight == null || !mThreadUpdateHeight.isAlive())) {
+    if (ReminderPlugin.getInstance().getSettings().isSet(ReminderSettings.KEY_AUTO_RESIZE_ENABLED) && (mThreadUpdateHeight == null || !mThreadUpdateHeight.isAlive())) {
       mThreadUpdateHeight = new Thread("UPDATE HEIGHT THREAD") {
         @Override
         public void run() {
@@ -507,7 +507,7 @@ public class FrameReminders extends JFrame implements InterfaceClose<PanelRemind
                 setSize(Math.max(Sizes.dialogUnitXAsPixel(400, FrameReminders.this),getWidth()), maxWindowHeight + insets.bottom + (insets.top == 0 ? -30 : 0));
               }
               
-              int xPos = Integer.parseInt(ReminderPlugin.getInstance().getSettings().getProperty(ReminderPropertyDefaults.KEY_FRAME_REMINDERS_XPOS,"0"));
+              int xPos = ReminderPlugin.getInstance().getSettings().getAsInt(ReminderSettings.KEY_FRAME_REMINDERS_XPOS);
               int winBorder = xPos - winSize.width + getWidth();
               
               if(winBorder == 0) {
@@ -517,7 +517,7 @@ public class FrameReminders extends JFrame implements InterfaceClose<PanelRemind
                 xPos = 0 - insets.left+1;
               }
               
-              if(ReminderPropertyDefaults.getPropertyDefaults().getValueFromProperties(ReminderPropertyDefaults.KEY_AUTO_RESIZE_TYPE, ReminderPlugin.getInstance().getSettings()).equals(ReminderPropertyDefaults.VALUE_AUTO_RESIZE_TYPE_TOP)) {
+              if(ReminderPlugin.getInstance().getSettings().isAutoResizeTop()) {
                 setLocation(xPos, winSize.y);
               }
               else {

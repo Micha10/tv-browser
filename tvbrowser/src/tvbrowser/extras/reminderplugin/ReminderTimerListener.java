@@ -37,7 +37,6 @@ import java.awt.Toolkit;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Properties;
 import java.util.Set;
 import java.util.logging.Logger;
 
@@ -58,10 +57,10 @@ public class ReminderTimerListener {
 
   private static final Logger mLog = Logger.getLogger(ReminderTimerListener.class.getName());
 
-  private Properties mSettings;
+  private ReminderSettings mSettings;
   private ReminderList mReminderList;
 
-  public ReminderTimerListener(Properties settings, ReminderList reminderList) {
+  public ReminderTimerListener(ReminderSettings settings, ReminderList reminderList) {
     mSettings = settings;
     mReminderList = reminderList;
   }
@@ -80,15 +79,15 @@ public class ReminderTimerListener {
       return;
     }
 
-    if ("true" .equals(mSettings.getProperty( "usesound" ))) {
-      ReminderPlugin.playSound(mSettings.getProperty( "soundfile" ));
+    if (mSettings.isSet(ReminderSettings.KEY_SOUND_USE)) {
+      ReminderPlugin.playSound(mSettings.get(ReminderSettings.KEY_SOUNDFILE));
     }
-    if ("true" .equals(mSettings.getProperty( "usebeep" ))) {
+    if (mSettings.isSet(ReminderSettings.KEY_BEEP_USE)) {
       Toolkit.getDefaultToolkit().beep();
     }
 
-    if (ReminderPropertyDefaults.getPropertyDefaults().getValueFromProperties(ReminderPropertyDefaults.KEY_FRAME_REMINDERS_SHOW,ReminderPlugin.getInstance().getSettings()).equalsIgnoreCase("true") 
-        || ReminderPropertyDefaults.getPropertyDefaults().getValueFromProperties(ReminderPropertyDefaults.KEY_REMINDER_WINDOW_SHOW,ReminderPlugin.getInstance().getSettings()).equalsIgnoreCase("true")) {
+    if (mSettings.isSet(ReminderSettings.KEY_FRAME_REMINDERS_SHOW) 
+        || mSettings.isSet(ReminderSettings.KEY_REMINDER_WINDOW_SHOW)) {
       // sort reminders by time
       HashMap<Integer, ArrayList<ReminderListItem>> sortedReminders = new HashMap<Integer, ArrayList<ReminderListItem>>(reminders.size());
       for (ReminderListItem reminder : reminders) {
@@ -113,10 +112,10 @@ public class ReminderTimerListener {
       for (int i = timeSortedKeys.length-1; i >= 0; i--) {
         final ArrayList<ReminderListItem> singleTimeReminders = sortedReminders.get(timeSortedKeys[i]);
         
-        if(ReminderPropertyDefaults.getPropertyDefaults().getValueFromProperties(ReminderPropertyDefaults.KEY_FRAME_REMINDERS_SHOW,ReminderPlugin.getInstance().getSettings()).equalsIgnoreCase("true")) {
+        if(mSettings.isSet(ReminderSettings.KEY_FRAME_REMINDERS_SHOW)) {
           FrameReminders.getInstance().addReminders(mReminderList, singleTimeReminders);
         }
-        else if(ReminderPropertyDefaults.getPropertyDefaults().getValueFromProperties(ReminderPropertyDefaults.KEY_REMINDER_WINDOW_SHOW,ReminderPlugin.getInstance().getSettings()).equalsIgnoreCase("true")) {
+        else if(mSettings.isSet(ReminderSettings.KEY_REMINDER_WINDOW_SHOW)) {
           new ReminderFrame(mReminderList, singleTimeReminders, getAutoCloseReminderTime(singleTimeReminders));
         }
       }
@@ -126,13 +125,13 @@ public class ReminderTimerListener {
         mReminderList.blockProgram(reminder.getProgram());
       }
     }
-    if ("true".equals(mSettings.getProperty("useexec"))) {
-      String fName = mSettings.getProperty("execfile", "").trim();
+    if (mSettings.isSet(ReminderSettings.KEY_EXECUTE_USE)) {
+      String fName = mSettings.get(ReminderSettings.KEY_EXECUTE_FILE).trim();
       if (StringUtils.isNotEmpty(fName)) {
         for (ReminderListItem reminder : reminders) {
           ParamParser parser = new ParamParser();
           String fParam = parser.analyse(
-              mSettings.getProperty("execparam", ""), reminder.getProgram());
+              mSettings.get(ReminderSettings.KEY_EXECUTE_PARAMETERS), reminder.getProgram());
 
           try {
             ExecutionHandler executionHandler = new ExecutionHandler(fParam,

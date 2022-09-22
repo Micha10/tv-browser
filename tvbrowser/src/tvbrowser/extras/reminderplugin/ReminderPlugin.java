@@ -106,7 +106,7 @@ public class ReminderPlugin {
   private static KeyStroke STROKE_FRAME_REMINDERS_SHOW = null;
   
   private ReminderList mReminderList;
-  private Properties mSettings;
+  private ReminderSettings mReminderSettings;
 
   private static ReminderPlugin mInstance;
   private static String DATAFILE_PREFIX = "reminderplugin.ReminderPlugin";
@@ -226,7 +226,7 @@ public class ReminderPlugin {
         if(mReminderListPanel != null) {
           int type = ReminderListPanel.SCROLL_TO_NEXT_TIME_TYPE;
           
-          if(!Boolean.parseBoolean(ReminderPropertyDefaults.getPropertyDefaults().getValueFromProperties(ReminderPropertyDefaults.KEY_SCROLL_TIME_TYPE_NEXT, mSettings))) {
+          if(!mReminderSettings.isSet(ReminderSettings.KEY_SCROLL_TIME_TYPE_NEXT)) {
             type = ReminderListPanel.SCROLL_TO_TIME_TYPE;
           }
           
@@ -277,7 +277,7 @@ public class ReminderPlugin {
   
   void addPanel() {
     SwingUtilities.invokeLater(() -> {
-      if(mSettings.getProperty("provideTab", "true").equals("true")) {
+      if(mReminderSettings.isSet(ReminderSettings.KEY_TAB_PROVIDE)) {
         if(mReminderListPanel == null) {
           mReminderListPanel = new ReminderListPanel(mReminderList, null);
           Persona.getInstance().registerPersonaListener(mReminderListPanel);
@@ -315,8 +315,8 @@ public class ReminderPlugin {
    *
    * @return The settings of the reminder.
    */
-  public Properties getSettings() {
-    return mSettings;
+  public ReminderSettings getSettings() {
+    return mReminderSettings;
   }
 
   void readData(ObjectInputStream in) throws IOException,
@@ -339,50 +339,16 @@ public class ReminderPlugin {
     
     TvDataUpdater.getInstance().addTvDataUpdateListener(
         new TvDataUpdateListener() {
-          private boolean mCanCreateInfoPanel;
-          
           public void tvDataUpdateStarted(Date until) {
-            mCanCreateInfoPanel = false;
             mHasRightToSave = false;
-            mInfoCreationThread = new Thread() {
-              public void run() {
-                while(!mCanCreateInfoPanel) {
-                  try {
-                    sleep(500);
-                  } catch (InterruptedException e) {
-                    // Ignore
-                  }
-                }
-                
-                if (mSettings.getProperty("showRemovedDialog","true").compareTo("true") == 0) {
-                  Program[] removedPrograms = mReminderList.updatePrograms();
-                  
-                  if (removedPrograms.length > 0) {
-                    mInfoPanel = new RemovedProgramsPanel(removedPrograms);
-                  }
-                  else {
-                    mInfoPanel = null;
-                  }
-                } else {
-                  mReminderList.updatePrograms();
-                  mInfoPanel = null;
-                }
-
-                mHasRightToSave = true;
-                saveReminders();
-
-                ReminderListDialog.updateReminderList();
-              }
-            };
-            mInfoCreationThread.start();
           }
 
           public void tvDataUpdateFinished() {
-            mCanCreateInfoPanel = true;
+            //do not use, use handleTvDataUpdateFinished in main class instead
           }
         });
     
-    mReminderList.setReminderTimerListener(new ReminderTimerListener(mSettings, mReminderList));
+    mReminderList.setReminderTimerListener(new ReminderTimerListener(mReminderSettings, mReminderList));
   }
 
   /**
@@ -405,11 +371,14 @@ public class ReminderPlugin {
     if (settings == null) {
       settings = new Properties();
     }
-    if (settings.getProperty(ReminderPropertyDefaults.KEY_REMINDER_WINDOW_SHOW) == null ||
-        (settings.getProperty(ReminderPropertyDefaults.KEY_REMINDER_WINDOW_SHOW).equals("true") 
-            && settings.getProperty(ReminderPropertyDefaults.KEY_FRAME_REMINDERS_SHOW) == null)) {
-      settings.setProperty(ReminderPropertyDefaults.KEY_REMINDER_WINDOW_SHOW, "false");
-      settings.setProperty(ReminderPropertyDefaults.KEY_FRAME_REMINDERS_SHOW, "true");
+    
+    mReminderSettings = new ReminderSettings(settings);
+    
+    if (!mReminderSettings.hasProperty(ReminderSettings.KEY_REMINDER_WINDOW_SHOW) ||
+        (mReminderSettings.isSet(ReminderSettings.KEY_REMINDER_WINDOW_SHOW) 
+            && !mReminderSettings.hasProperty(ReminderSettings.KEY_FRAME_REMINDERS_SHOW))) {
+      mReminderSettings.set(ReminderSettings.KEY_REMINDER_WINDOW_SHOW, false);
+      mReminderSettings.set(ReminderSettings.KEY_FRAME_REMINDERS_SHOW, true);
     }
     
     if (settings.getProperty("numberofremindoptions") != null && settings.getProperty("defaultReminderEntry") != null) {      
@@ -422,8 +391,6 @@ public class ReminderPlugin {
       settings.setProperty("defaultReminderEntry", String.valueOf(0));
     }
     
-    mSettings = settings;
-
     if(settings.containsKey("usethisplugin") || settings.containsKey("usesendplugin")) {
       String plugins = settings.getProperty("usethisplugin","").trim();
       boolean sendEnabled = settings.getProperty("usesendplugin","").compareToIgnoreCase("true") == 0;
@@ -450,7 +417,7 @@ public class ReminderPlugin {
 
     if(settings.containsKey("autoCloseReminderAtProgramEnd")) {
       if(settings.getProperty("autoCloseReminderAtProgramEnd","true").equalsIgnoreCase("true")) {
-        settings.setProperty("autoCloseBehaviour","onEnd");
+        mReminderSettings.set(ReminderSettings.KEY_AUTO_CLOSE_BEHAVIOUR, ReminderSettings.VALUE_REMINDER_AUTO_CLOSE_ON_END);
       }
 
       settings.remove("autoCloseReminderAtProgramEnd");
@@ -468,7 +435,7 @@ public class ReminderPlugin {
       dontRemind = new ContextMenuAction(ReminderConstants.DONT_REMIND_AGAIN_VALUE.toString());
       dontRemind.setSmallIcon(IconLoader.getInstance().getIconFromTheme("actions", "appointment-new", 16));
       dontRemind.setActionListener(e -> {
-        if(ReminderPropertyDefaults.getPropertyDefaults().getValueFromProperties(ReminderPropertyDefaults.KEY_FRAME_REMINDERS_SHOW,ReminderPlugin.getInstance().getSettings()).equalsIgnoreCase("true")) {
+        if(mReminderSettings.isSet(ReminderSettings.KEY_FRAME_REMINDERS_SHOW)) {
           FrameReminders.getInstance().removeReminder(item);
         }
         
@@ -485,7 +452,7 @@ public class ReminderPlugin {
             if(item.getMinutes() == value.getMinutes()) {
               mReminderList.removeWithoutChecking(program);
               
-              if(ReminderPropertyDefaults.getPropertyDefaults().getValueFromProperties(ReminderPropertyDefaults.KEY_FRAME_REMINDERS_SHOW,ReminderPlugin.getInstance().getSettings()).equalsIgnoreCase("true")) {
+              if(mReminderSettings.isSet(ReminderSettings.KEY_FRAME_REMINDERS_SHOW)) {
                 FrameReminders.getInstance().removeReminder(item);
               }
               
@@ -495,7 +462,7 @@ public class ReminderPlugin {
               item.setMinutes(value.getMinutes());
               saveReminders();
               
-              if(ReminderPropertyDefaults.getPropertyDefaults().getValueFromProperties(ReminderPropertyDefaults.KEY_FRAME_REMINDERS_SHOW,ReminderPlugin.getInstance().getSettings()).equalsIgnoreCase("true")) {
+              if(mReminderSettings.isSet(ReminderSettings.KEY_FRAME_REMINDERS_SHOW)) {
                 FrameReminders.getInstance().updateReminder(item);
               }
             }
@@ -520,7 +487,7 @@ public class ReminderPlugin {
         public void actionPerformed(ActionEvent e) {
           item.changeComment(parentFrame);
           
-          if(ReminderPropertyDefaults.getPropertyDefaults().getValueFromProperties(ReminderPropertyDefaults.KEY_FRAME_REMINDERS_SHOW,ReminderPlugin.getInstance().getSettings()).equalsIgnoreCase("true")) {
+          if(mReminderSettings.isSet(ReminderSettings.KEY_FRAME_REMINDERS_SHOW)) {
             FrameReminders.getInstance().updateReminder(item);
           }
           
@@ -537,10 +504,10 @@ public class ReminderPlugin {
       final Window w = UiUtilities.getLastModalChildOf(MainFrame.getInstance());
       try {
         UIThreadRunner.invokeAndWait(() -> {
-          ReminderDialog dlg = new ReminderDialog(w, program, mSettings);
+          ReminderDialog dlg = new ReminderDialog(w, program, mReminderSettings);
           Settings.layoutWindow("extras.remiderContext", dlg);
 
-          if(mSettings.getProperty("showTimeSelectionDialog","true").compareTo("true") == 0) {
+          if(mReminderSettings.isSet(ReminderSettings.KEY_DIALOG_TIME_SELECTION_SHOW)) {
             UiUtilities.centerAndShow(dlg);
 
             if (dlg.getOkPressed()) {
@@ -650,8 +617,8 @@ public class ReminderPlugin {
    * @return The default reminder time in minutes.
    */
   public int getDefaultReminderTime() {
-    String defaultReminderEntryStr = (String) mSettings
-        .get("defaultReminderEntry");
+    String defaultReminderEntryStr = mReminderSettings.get(ReminderSettings.KEY_REMINDER_ENTRY_DEFAULT);
+    
     int minutes = 10;
     if (defaultReminderEntryStr != null) {
       try {
@@ -855,7 +822,7 @@ public class ReminderPlugin {
     
     AbstractAction actionShowCurrentReminders = new AbstractAction() {
       public void actionPerformed(ActionEvent evt) {
-        if(ReminderPropertyDefaults.getPropertyDefaults().getValueFromProperties(ReminderPropertyDefaults.KEY_FRAME_REMINDERS_SHOW,ReminderPlugin.getInstance().getSettings()).equalsIgnoreCase("true")) {
+        if(mReminderSettings.isSet(ReminderSettings.KEY_FRAME_REMINDERS_SHOW)) {
           FrameReminders.getInstance().openShow();
         }
         else {
@@ -1082,8 +1049,8 @@ public class ReminderPlugin {
   }
 
   protected int getMarkPriority() {
-    if(mMarkPriority == - 2 && mSettings != null) {
-      mMarkPriority = Integer.parseInt(mSettings.getProperty("markPriority",String.valueOf(Program.PRIORITY_MARK_MIN)));
+    if(mMarkPriority == - 2 && mReminderSettings != null) {
+      mMarkPriority = mReminderSettings.getAsInt(ReminderSettings.KEY_MARK_PRIORITY);
       return mMarkPriority;
     } else {
       return mMarkPriority;
@@ -1098,8 +1065,8 @@ public class ReminderPlugin {
     for(ReminderListItem item : items) {
       item.getProgram().validateMarking();
     }
-
-    mSettings.setProperty("markPriority",String.valueOf(priority));
+    
+    mReminderSettings.set(ReminderSettings.KEY_MARK_PRIORITY, priority);
     saveReminders();
   }
 
@@ -1121,21 +1088,43 @@ public class ReminderPlugin {
   }
 
   protected void handleTvDataUpdateFinished() {
-    mReminderList.updateItems();
-    
-    if(mReminderListPanel != null) {
-      mReminderListPanel.updateTableEntries();
-    }
-    
-    updateRootNode(false);
+    mInfoCreationThread = new Thread() {
+      public void run() {
+        if (mReminderSettings.isSet(ReminderSettings.KEY_DIALOG_REMOVED_SHOW)) {
+          Program[] removedPrograms = mReminderList.updatePrograms();
+          
+          if (removedPrograms.length > 0) {
+            mInfoPanel = new RemovedProgramsPanel(removedPrograms);
+          }
+          else {
+            mInfoPanel = null;
+          }
+        } else {
+          mReminderList.updatePrograms();
+          mInfoPanel = null;
+        }
+
+        mHasRightToSave = true;
+        saveReminders();
+
+        ReminderListDialog.updateReminderList();
+        
+        if(mReminderListPanel != null) {
+          mReminderListPanel.updateTableEntries();
+        }
+        
+        updateRootNode(false);
+      }
+    };
+    mInfoCreationThread.start();
   }
 
   private void showManageRemindersDialog() {
     Window w = UiUtilities.getLastModalChildOf(MainFrame.getInstance());
     ReminderListDialog dlg = new ReminderListDialog(w, mReminderList);
 
-    int x = Integer.parseInt(mSettings.getProperty("dlgXPos","-1"));
-    int y = Integer.parseInt(mSettings.getProperty("dlgYPos","-1"));
+    int x = mReminderSettings.getAsInt(ReminderSettings.KEY_DIALOG_POS_X);
+    int y = mReminderSettings.getAsInt(ReminderSettings.KEY_DIALOG_POS_Y);
 
     if(x == -1 || y == -1) {
       UiUtilities.centerAndShow(dlg);
@@ -1144,10 +1133,10 @@ public class ReminderPlugin {
       dlg.setVisible(true);
     }
 
-    mSettings.setProperty("dlgXPos", String.valueOf(dlg.getX()));
-    mSettings.setProperty("dlgYPos", String.valueOf(dlg.getY()));
-    mSettings.setProperty("dlgWidth", String.valueOf(dlg.getWidth()));
-    mSettings.setProperty("dlgHeight", String.valueOf(dlg.getHeight()));
+    mReminderSettings.set(ReminderSettings.KEY_DIALOG_POS_X, dlg.getX());
+    mReminderSettings.set(ReminderSettings.KEY_DIALOG_POS_Y, dlg.getY());
+    mReminderSettings.set(ReminderSettings.KEY_DIALOG_WIDTH, dlg.getWidth());
+    mReminderSettings.set(ReminderSettings.KEY_DIALOG_HEIGHT, dlg.getHeight());
   }
 
   public static void resetLocalizer() {
@@ -1155,7 +1144,7 @@ public class ReminderPlugin {
   }
 
   public PluginCenterPanelWrapper getPluginCenterPanelWrapper() {
-    return mSettings.getProperty("provideTab", "true").equals("true") ? mWrapper : null;
+    return mReminderSettings.isSet(ReminderSettings.KEY_TAB_PROVIDE) ? mWrapper : null;
   }
   
   private class ReminderCenterPanel extends PluginCenterPanel {
@@ -1183,11 +1172,11 @@ public class ReminderPlugin {
   }
   
   public boolean showDateSeparators() {
-    return mSettings.getProperty("showDateSeparators", "true").equals("true");
+    return mReminderSettings.isSet(ReminderSettings.KEY_DATE_SEPARATORS_SHOW);
   }
   
   public void setShowDateSeparators(boolean show) {
-    mSettings.setProperty("showDateSeparators", String.valueOf(show));
+    mReminderSettings.set(ReminderSettings.KEY_DATE_SEPARATORS_SHOW, show);
     
     if(mReminderListPanel != null) {
       mReminderListPanel.installTableModel(false);

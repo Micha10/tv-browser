@@ -252,63 +252,19 @@ public class PluginManagerImpl implements PluginManager {
     if (ch != null && ChannelList.isSubscribedChannel(ch)) {
       int index = progID.lastIndexOf('_');
       String timeString = progID.substring(index + 1);
-  /*    int hourIndex = timeString.indexOf(':');
-      int offsetIndex = timeString.lastIndexOf(':');
+      String[] hourMinute = timeString.split(":");
+      int milliSeconds = Integer.parseInt(hourMinute[0]) * 60 * 60 * 1000 + Integer.parseInt(hourMinute[1]) * 60 * 1000;
 
-      if(hourIndex != offsetIndex) {
-        int timeZoneOffset = Integer.parseInt(timeString.substring(offsetIndex + 1));
-        int currentTimeZoneOffset = TimeZone.getDefault().getRawOffset()/60000;
-        
-        if(timeZoneOffset != currentTimeZoneOffset) {
-          String[] hourMinute = timeString.split(":");
-          int timeZoneDiff = currentTimeZoneOffset - timeZoneOffset;
-          
-          int hour = Integer.parseInt(hourMinute[0]) + (timeZoneDiff/60);
-          int minute = Integer.parseInt(hourMinute[1]) + (timeZoneDiff%60);
-          
-          if(hour >= 24) {
-            hour -= 24;
-            date = date.addDays(1);
-          }
-          else if(hour < 0) {
-            hour += 24;
-            date = date.addDays(-1);
-          }
-          
-          hourMinute[0] = String.valueOf(hour);
-          hourMinute[1] = String.valueOf(minute);
-          hourMinute[2] = String.valueOf(currentTimeZoneOffset);
-          
-          StringBuilder newId = new StringBuilder(progID.substring(0, index + 1));
-          newId.append(hourMinute[0]).append(":").append(hourMinute[1]).append(":").append(hourMinute[2]);
-          
-        //  progID = newId.toString();
+      int diff = Math.abs(ch.getTimeZone().getOffset(date.getCalendar().getTimeInMillis()+milliSeconds) - TimeZone.getDefault().getOffset(date.getCalendar().getTimeInMillis()+milliSeconds));
+      
+      if(ch.getTimeZone().getOffset(date.getCalendar().getTimeInMillis()+milliSeconds) < TimeZone.getDefault().getOffset(date.getCalendar().getTimeInMillis()+milliSeconds)) {
+        if(milliSeconds < diff) {
+          date = date.addDays(-1);
         }
       }
-     /*else {
-        String[] hourMinute = timeString.split(":");
-        StringBuilder newId = new StringBuilder(progID.substring(0, index + 1));
-        newId.append(hourMinute[0]).append(":").append(hourMinute[1]).append(":").append(TimeZone.getDefault().getRawOffset()/60000);
-        
-        progID = newId.toString();
-      }*/
-      
-      /*if(ch.getTimeZone().getRawOffset() != TimeZone.getDefault().getRawOffset() || 
-          (ch.getTimeZone().getDSTSavings() != TimeZone.getDefault().getDSTSavings())) {*/
-        String[] hourMinute = timeString.split(":");
-        int milliSeconds = Integer.parseInt(hourMinute[0]) * 60 * 60 * 1000 + Integer.parseInt(hourMinute[1]) * 60 * 1000;
-
-        int diff = Math.abs(ch.getTimeZone().getOffset(date.getCalendar().getTimeInMillis()+milliSeconds) - TimeZone.getDefault().getOffset(date.getCalendar().getTimeInMillis()+milliSeconds));
-        
-        if(ch.getTimeZone().getOffset(date.getCalendar().getTimeInMillis()+milliSeconds) < TimeZone.getDefault().getOffset(date.getCalendar().getTimeInMillis()+milliSeconds)) {
-          if(milliSeconds < diff) {
-            date = date.addDays(-1);
-          }
-        }
-        else if(milliSeconds + diff >= 86400 * 1000) {
-          date = date.addDays(1);
-        }
-     // }
+      else if(milliSeconds + diff >= 86400 * 1000) {
+        date = date.addDays(1);
+      }
       
       return db.getDayProgram(date, ch);
     }else{

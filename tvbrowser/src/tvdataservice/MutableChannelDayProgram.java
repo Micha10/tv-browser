@@ -345,4 +345,24 @@ public class MutableChannelDayProgram implements ChannelDayProgram {
     }
     return true; // everything checked, so they are the same
   }
+
+  @Override
+  public int getIndexForTime(int minutes) {
+    for(int i = 0; i < mProgramList.size(); i++) {
+      Program p = mProgramList.get(i);
+      
+      if(p.getStartTime() > minutes) {
+        return i-1;
+      }
+      else if(p.getStartTime() == minutes) {
+        return i;
+      }
+    }
+    
+    if(mProgramList.size() > 0 && mProgramList.get(0).getStartTime() < minutes) {
+      return 0;
+    }
+    
+    return -1;
+  }
 }

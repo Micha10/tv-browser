@@ -37,11 +37,13 @@ import java.util.HashSet;
 
 import javax.swing.Timer;
 
+import devplugin.ChannelDayProgram;
 import devplugin.Date;
 import devplugin.Plugin;
 import devplugin.Program;
 import devplugin.ProgramItem;
 import tvbrowser.core.ChannelList;
+import tvbrowser.core.TvDataBase;
 import tvbrowser.core.filters.GenericFilterMap;
 import util.io.IOUtilities;
 
@@ -51,7 +53,6 @@ import util.io.IOUtilities;
  * @author Martin Oberhauser
  */
 public class ReminderList implements ActionListener {
-
   private static final int MINUTES_PER_DAY = 24 * 60;
 
   private ReminderTimerListener mListener = null;
@@ -238,6 +239,11 @@ public class ReminderList implements ActionListener {
   }
 
   private void remove(ReminderListItem item) {
+    StackTraceElement[] els = Thread.currentThread().getStackTrace();
+    for(StackTraceElement e : els) {
+      System.out.println(e);
+    }
+    
     item.decReferenceCount();
     if (item.getReferenceCount() < 1) {
       synchronized (mList) {
@@ -347,9 +353,110 @@ public class ReminderList implements ActionListener {
 
     ArrayList<Program> removedPrograms = new ArrayList<Program>();
 
+    boolean reSearch = ReminderPlugin.getInstance().getSettings().isSet(ReminderSettings.KEY_REMINDERS_STICKY);
+    int time = ReminderPlugin.getInstance().getSettings().getAsInt(ReminderSettings.KEY_REMINDERS_STICKY_MINUTES);
+    
     for (ReminderListItem item : localItems) {
       if (item.getProgram().getProgramState() == Program.STATE_WAS_DELETED) {
-        removedPrograms.add(item.getProgram());
+        Program p = item.getProgram();
+        Program result = null;
+        
+        if(reSearch) {
+          int startTime = p.getStartTime();
+          
+          ChannelDayProgram dayProgram = TvDataBase.getInstance().getDayProgram(p.getDate(), p.getChannel());
+          
+          int index = -1;
+          boolean searchPrev = true;
+          boolean searchNext = true;
+          
+          if(dayProgram != null) {
+            index = dayProgram.getIndexForTime(p.getStartTime());
+            
+            if(index == -1) {
+              index = 0;
+            }
+            
+            if(index > -1) {
+              for(int i = index; i >= 0; i--) {
+                Program test = dayProgram.getProgramAt(i);
+                
+                if(test.getStartTime() < startTime - time) {
+                  searchPrev = false;
+                  break;
+                }
+                else if(test.getStartTime() >= startTime - time 
+                    && p.getTitle().equals(test.getTitle())) {
+                  result = test;
+                  break;
+                }
+              }
+              
+              if(result == null) {
+                for(int i = index + 1; i < dayProgram.getProgramCount(); i++) {
+                  Program test = dayProgram.getProgramAt(i);
+                  
+                  if(test.getStartTime() > startTime + time) {
+                    searchNext = false;
+                    break;
+                  }
+                  else if(test.getStartTime() <= startTime + time
+                      && p.getTitle().equals(test.getTitle())) {
+                    result = test;
+                    break;
+                  }
+                }
+              }
+            }
+          }
+          
+          if(result == null && searchPrev) {
+            dayProgram = TvDataBase.getInstance().getDayProgram(p.getDate().addDays(-1), p.getChannel());
+            startTime += 1440;
+            
+            if(dayProgram != null) {
+              for(int i = dayProgram.getProgramCount()-1; i >= 0; i--) {
+                Program test = dayProgram.getProgramAt(i);
+                
+                if(test.getStartTime() < startTime - time) {
+                  break;
+                }
+                else if(test.getStartTime() >= startTime - time 
+                    && p.getTitle().equals(test.getTitle())) {
+                  result = test;
+                  break;
+                }
+              }
+            }
+          }
+          
+          if(result == null && searchNext) {
+            dayProgram = TvDataBase.getInstance().getDayProgram(p.getDate().addDays(1), p.getChannel());
+            startTime = p.getStartTime() - 1440;
+            
+            if(dayProgram != null) {
+              for(int i = 0; i < dayProgram.getProgramCount(); i++) {
+                Program test = dayProgram.getProgramAt(i);
+                
+                if(test.getStartTime() > startTime + time) {
+                  break;
+                }
+                else if(test.getStartTime() <= startTime + time
+                    && p.getTitle().equals(test.getTitle())) {
+                  result = test;
+                  break;
+                }
+              }
+            }
+          }
+        }
+        
+        if(result == null) {
+          removedPrograms.add(p);
+        }
+        else {
+          add(result, item.getMinutes(), item.getReferenceCount());
+        }
       } else if (item.getProgram().getProgramState() == Program.STATE_WAS_UPDATED) {
         Program p = item.getProgram();
         add(Plugin.getPluginManager().getProgram(p.getDate(), p.getID()),
@@ -388,7 +495,7 @@ public class ReminderList implements ActionListener {
   private boolean isRemindEventRequired(Program prog, int remindMinutes, Date today) {
     if (remindMinutes < ReminderListItem.MAX_FORWARD_REMINDER_TIME || 
         mPauseTimer != null && mPauseTimer.isRunning() || 
-        (ReminderPlugin.getInstance().getSettings().getProperty("prefilter", "false").equals("true") &&
+        (ReminderPlugin.getInstance().getSettings().isSet(ReminderSettings.KEY_PREFILTER) &&
             !GenericFilterMap.getInstance().getGenericInternalFilter(GenericFilterMap.GENERIC_REMINDER_FILTER_NAME).isBrokenPartially() &&
             !GenericFilterMap.getInstance().getGenericInternalFilter(GenericFilterMap.GENERIC_REMINDER_FILTER_NAME).accept(prog))) {
       return false;

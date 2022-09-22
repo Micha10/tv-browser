@@ -2546,6 +2546,7 @@ tvbrowser/src/tvbrowser/extras/reminderplugin/ReminderContent.java -text
 tvbrowser/src/tvbrowser/extras/reminderplugin/ReminderListPanel.java -text
 tvbrowser/src/tvbrowser/extras/reminderplugin/ReminderPluginProxy.java -text
 tvbrowser/src/tvbrowser/extras/reminderplugin/ReminderPropertyDefaults.java -text svneol=unset#text/plain
+tvbrowser/src/tvbrowser/extras/reminderplugin/ReminderSettings.java -text svneol=unset#text/plain
 tvbrowser/src/tvbrowser/extras/reminderplugin/reminderplugin_cs.properties -text svneol=unset#text/plain
 tvbrowser/src/tvbrowser/extras/reminderplugin/reminderplugin_da.properties -text
 tvbrowser/src/tvbrowser/extras/reminderplugin/reminderplugin_el.properties -text

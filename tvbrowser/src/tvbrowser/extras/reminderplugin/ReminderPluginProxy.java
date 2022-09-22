@@ -208,7 +208,7 @@ public class ReminderPluginProxy extends AbstractInternalPluginProxy implements 
   
   @Override
   public Properties storeSettings() {
-    return ReminderPlugin.getInstance().getSettings();
+    return ReminderPlugin.getInstance().getSettings().storeSettings();
   }
   
   @Override

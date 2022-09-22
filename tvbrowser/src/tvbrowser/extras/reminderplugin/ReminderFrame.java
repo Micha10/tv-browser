@@ -287,7 +287,7 @@ public class ReminderFrame implements WindowClosingIf, ChangeListener {
     final JPanel btnPanel = new JPanel(new BorderLayout(10, 0));
     mCloseBtText = Localizer.getLocalization(Localizer.I18N_CLOSE);
     int seconds = mRemainingSecs;
-    if (ReminderPlugin.getInstance().getSettings().getProperty("showTimeCounter","false").compareTo("true") == 0) {
+    if (ReminderPlugin.getInstance().getSettings().isSet(ReminderSettings.KEY_TIME_COUNTER_SHOW)) {
       seconds = 10;
     }
     mCloseBt = new JButton(getCloseButtonText(seconds));
@@ -354,9 +354,9 @@ public class ReminderFrame implements WindowClosingIf, ChangeListener {
     mDialog.setSize(mDialog.getWidth() + scrollPane.getVerticalScrollBar().getPreferredSize().width, height+scrollPane.getHorizontalScrollBar().getPreferredSize().height);
     
     mCloseBt.setText(mCloseBtText);
-    mDialog.setAlwaysOnTop(ReminderPlugin.getInstance().getSettings().getProperty("alwaysOnTop","true").equalsIgnoreCase("true"));
+    mDialog.setAlwaysOnTop(ReminderPlugin.getInstance().getSettings().isSet(ReminderSettings.KEY_REMINDER_WINDOW_ALWAYS_ON_TOP));
     
-    int windowLocation = Integer.parseInt(ReminderPropertyDefaults.getPropertyDefaults().getValueFromProperties(ReminderPropertyDefaults.KEY_REMINDER_WINDOW_POSITION, ReminderPlugin.getInstance().getSettings()));
+    int windowLocation = ReminderPlugin.getInstance().getSettings().getAsInt(ReminderSettings.KEY_REMINDER_WINDOW_POSITION);
     
     Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
     
@@ -482,7 +482,7 @@ public class ReminderFrame implements WindowClosingIf, ChangeListener {
 
 
   private void updateCloseBtText() {
-    if(mRemainingSecs <= 10 || ReminderPlugin.getInstance().getSettings().getProperty("showTimeCounter","false").compareTo("true") == 0) {
+    if(mRemainingSecs <= 10 || ReminderPlugin.getInstance().getSettings().isSet(ReminderSettings.KEY_TIME_COUNTER_SHOW)) {
       mCloseBt.setText(getCloseButtonText(mRemainingSecs));
     }
   }
