@@ -328,8 +328,6 @@ public class FavoritesPlugin {
           ArrayList<Favorite> infoFavoriteList = new ArrayList<Favorite>(0);
 
           Favorite[] favoriteArr = FavoriteTreeModel.getInstance().getFavoriteArr();
-
-          
           
           for (Favorite favorite : favoriteArr) {
             Set<String> removed = favorite.clearRemovedPrograms();
@@ -954,40 +952,39 @@ public class FavoritesPlugin {
     }
     
     TvDataBase.getInstance().addTvDataListener(new TvDataBaseListener() {
+      private synchronized ExecutorService getExecutorService() {
+        if(mThreadPool == null) {
+          return Executors.newFixedThreadPool(Math.max(Runtime.getRuntime().availableProcessors(),3));
+        }
+        
+        return mThreadPool;
+      }
+      
       public void dayProgramTouched(final ChannelDayProgram removedDayProgram,
           final ChannelDayProgram addedDayProgram) {
         if(mThreadPool == null) {
-          mThreadPool = Executors.newFixedThreadPool(Math.max(Runtime.getRuntime().availableProcessors(),3));
+          mThreadPool = getExecutorService();
         }
 
         Runnable update = () -> {
-          Favorite[] favArray = null;
-          
-          if(removedDayProgram != null || addedDayProgram != null) {
-            favArray = FavoriteTreeModel.getInstance().getFavoriteArr();
-          }
+          Favorite[] favArray = (removedDayProgram != null || addedDayProgram != null) ? favArray = FavoriteTreeModel.getInstance().getFavoriteArr() : null;
           
           if(removedDayProgram != null) {
             Iterator<Program> it1 = removedDayProgram.getPrograms();
-
-            while (it1.hasNext()) {
-              try {
-                Program p1 = it1.next();
-
-                for (Favorite fav1 : favArray) {
+            it1.forEachRemaining(p1 -> {
+              for (Favorite fav1 : favArray) {
+                try {
                   fav1.removeProgram(p1);
+                }catch(Throwable t) {
+                  ErrorHandler.handle("Error in removing program from Favorites",t);
                 }
-              }catch(Throwable t) {
-                ErrorHandler.handle("Error in removing program from Favorites",t);
               }
-            }
+            });
           }
 
           if(addedDayProgram != null) {
             Iterator<Program> it2 = addedDayProgram.getPrograms();
-            while (it2.hasNext()) {
-              final Program p2 = it2.next();
-
+            it2.forEachRemaining(p2 -> {
               for (Favorite fav2 : favArray) {
                 try {
                   fav2.tryToMatch(p2);
@@ -995,7 +992,7 @@ public class FavoritesPlugin {
                   ErrorHandler.handle("Error in searching programs for Favorites",t);
                 }
               }
-            }
+            });
           }
         };
 
@@ -1016,7 +1013,9 @@ public class FavoritesPlugin {
         mHasRightToSave = false;
         mSendPluginsTable.clear();
         
-        for (Favorite favorite : FavoriteTreeModel.getInstance().getFavoriteArr()) {
+        Favorite[] favArray = FavoriteTreeModel.getInstance().getFavoriteArr();
+        
+        for (Favorite favorite : favArray) {
           if(mInfoPanel == null) {
             favorite.clearNewPrograms();
           }

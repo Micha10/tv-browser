@@ -42,7 +42,6 @@ import devplugin.Channel;
 import devplugin.Date;
 import devplugin.Plugin;
 import devplugin.Program;
-import devplugin.ProgramFieldType;
 import devplugin.ProgramFilter;
 import devplugin.ProgramReceiveTarget;
 import devplugin.ProgramSearcher;
@@ -1113,7 +1112,7 @@ public abstract class Favorite {
         wasInList = true;
 
         synchronized(mRemovedPrograms) {
-          mRemovedPrograms.put(getProgramKeyFor(p),new ReminderInfo(p.getTitle(), p.getTextField(ProgramFieldType.EPISODE_TYPE), reminderMinutes));
+          mRemovedPrograms.put(getProgramKeyFor(p), new ReminderInfo(p.getTitle(), reminderMinutes));
         }
       }
       
@@ -1221,12 +1220,10 @@ public abstract class Favorite {
   
   private class ReminderInfo {
     private String mTitle;
-    private String mEpisode;
     private int mMinutes;
     
-    public ReminderInfo(String title, String episode, int minutes) {
+    public ReminderInfo(String title, int minutes) {
       mTitle = title;
-      mEpisode = episode;
       mMinutes = minutes;
     }
     
@@ -1238,8 +1235,7 @@ public abstract class Favorite {
       if(o instanceof Program) {
         Program test = (Program)o;
         
-        return !(!test.getTitle().trim().equalsIgnoreCase(mTitle.trim()) || (test.hasFieldValue(ProgramFieldType.EPISODE_TYPE) && mEpisode != null && !test.getTextField(ProgramFieldType.EPISODE_TYPE).equalsIgnoreCase(mEpisode))
-            || (!test.hasFieldValue(ProgramFieldType.EPISODE_TYPE) && mEpisode != null));
+        return test.getTitle().trim().equalsIgnoreCase(mTitle.trim());
       }
       
       return this == o;
