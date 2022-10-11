@@ -967,9 +967,9 @@ public class FavoritesPlugin {
         }
 
         Runnable update = () -> {
-          Favorite[] favArray = (removedDayProgram != null || addedDayProgram != null) ? favArray = FavoriteTreeModel.getInstance().getFavoriteArr() : null;
+          final Favorite[] favArray = (removedDayProgram != null || addedDayProgram != null) ? FavoriteTreeModel.getInstance().getFavoriteArr() : null;
           
-          if(removedDayProgram != null) {
+          if(removedDayProgram != null && favArray != null) {
             Iterator<Program> it1 = removedDayProgram.getPrograms();
             it1.forEachRemaining(p1 -> {
               for (Favorite fav1 : favArray) {
@@ -982,7 +982,7 @@ public class FavoritesPlugin {
             });
           }
 
-          if(addedDayProgram != null) {
+          if(addedDayProgram != null && favArray != null) {
             Iterator<Program> it2 = addedDayProgram.getPrograms();
             it2.forEachRemaining(p2 -> {
               for (Favorite fav2 : favArray) {
