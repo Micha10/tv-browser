@@ -284,7 +284,7 @@ class ProgramInfoDialog {
 
   private void setProgramText() {
     if (mDialog != null) {
-      mDialog.setTitle(mProgram.getTitle());
+      mDialog.setTitle(mProgram.getChannel().toString() + " - " + mProgram.getTitle());
     }
     
     final ProgramTextCreator.Configuration config = new ProgramTextCreator.Configuration(ProgramInfo.getInstance().getOrder(),
