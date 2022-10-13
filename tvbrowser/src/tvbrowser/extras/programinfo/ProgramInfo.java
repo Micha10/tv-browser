@@ -488,10 +488,12 @@ public class ProgramInfo {
       
       final Program[] progs = PluginManagerImpl.getInstance().getPrograms(mId);
       
-      for(int i = 0; i < progs.length; i++) {
-        if(progs[i] == p) {
-          mIndex = i;
-          break;
+      if(progs != null) {
+        for(int i = 0; i < progs.length; i++) {
+          if(progs[i] == p) {
+            mIndex = i;
+            break;
+          }
         }
       }
     }
