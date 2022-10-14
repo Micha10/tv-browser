@@ -264,7 +264,7 @@ public final class SoftwareUpdater {
           }
   
           if (installedPlugin!=null && ((installedPlugin.getInfo().getVersion().compareTo(item.getVersion())>0 ||
-              (installedPlugin.getInfo().getVersion().compareTo(item.getVersion())==0 && ((!dragNdrop && TVBrowser.VERSION.isStable()) || item.getVersion().isStable()))))) {
+              (installedPlugin.getInfo().getVersion().compareTo(item.getVersion())==0 && ((!dragNdrop && (TVBrowser.VERSION.isStable() || Settings.Plugins.BETA_UPDATE_NO.getBoolean())) || item.getVersion().isStable()))))) {
             it.remove();
             continue;
           }

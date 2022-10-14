@@ -2213,6 +2213,13 @@ public class Settings {
     public static final BooleanProperty BETA_WARNING = new BooleanProperty(
       PROP, "pluginBetaWarning", true);
     
+    /**
+     * Hidden setting for disabling updates for beta Plugins in beta versions of TV-Browser.
+     * @since 4.2.7
+     */
+    public static final BooleanProperty BETA_UPDATE_NO = new BooleanProperty(
+      PROP, "pluginNoBetaUpdate", false);
+    
     public static final StringArrayProperty ACCESS_CONTROL = new StringArrayProperty(
       PROP, "accessControl", new String[0]);
     
