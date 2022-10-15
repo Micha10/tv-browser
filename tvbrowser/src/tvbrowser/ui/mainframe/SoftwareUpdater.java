@@ -272,7 +272,7 @@ public final class SoftwareUpdater {
           // remove already installed dataservices
           TvDataServiceProxy service= TvDataServiceProxyManager.getInstance().findDataServiceById(className.toLowerCase()+"."+className);
           if (service!=null && ((service.getInfo().getVersion().compareTo(item.getVersion())>0) ||
-              (service.getInfo().getVersion().compareTo(item.getVersion())==0 && ((!dragNdrop && TVBrowser.VERSION.isStable()) || item.getVersion().isStable())))) {
+              (service.getInfo().getVersion().compareTo(item.getVersion())==0 && ((!dragNdrop && (TVBrowser.VERSION.isStable() || Settings.Plugins.BETA_UPDATE_NO.getBoolean())) || item.getVersion().isStable())))) {
             it.remove();
             continue;
           }
