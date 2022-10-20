@@ -47,7 +47,10 @@ import devplugin.Date;
 import devplugin.Program;
 import devplugin.ProgramFilter;
 import devplugin.ProgressMonitor;
+import tvbrowser.core.Settings;
 import tvbrowser.core.TvDataBase;
+import tvbrowser.core.filters.FilterList;
+import tvbrowser.core.filters.FilterManagerImpl;
 import tvbrowser.ui.mainframe.MainFrame;
 import util.io.IOUtilities;
 import util.program.ProgramUtilities;
@@ -216,7 +219,18 @@ public class DefaultProgramTableModel implements ProgramTableModel, ChangeListen
 
 
   public ProgramFilter getProgramFilter() {
-    return mProgramFilter;
+    ProgramFilter result = mProgramFilter;
+    
+    if(result == null) {
+      final FilterList filterList = FilterList.getInstance();
+      result = filterList.getFilterByName(Settings.Window.FILTER_LAST_USED.getString());
+      
+      if (result == null) {
+        result = FilterManagerImpl.getInstance().getDefaultFilter();
+      }
+    }
+    
+    return result;
   }
   
   public ChannelFilter getChannelFilter() {
