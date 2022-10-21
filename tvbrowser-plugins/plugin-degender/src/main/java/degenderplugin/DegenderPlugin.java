@@ -48,7 +48,7 @@ public class DegenderPlugin extends Plugin {
   private static final Pattern GENDERED = Pattern.compile("(\\b(?i)(die\\s){0,1}(?-i)\\b(?!Mc)(\\w+?)(?:\\s*[\\*\\:_](?i:i)|I)n(nen){0,1})", Pattern.DOTALL | Pattern.UNICODE_CHARACTER_CLASS); 
   private static final Pattern GENDERED_LONG = Pattern.compile("(\\b([\\w\\-]+?)innen\\b\\s+(?:und|oder)\\s+\\-{0,1}\\b(\\w+?)\\b)|(\\b([\\w\\-]+?)\\b\\s+(?:und|oder)\\s+\\-{0,1}\\b(\\w+?)innen\\b)", Pattern.DOTALL | Pattern.UNICODE_CHARACTER_CLASS);
   private static final Pattern GENDERED_PARTIZIP = Pattern.compile("(\\b(?i)(?:(\\w*eine|der|die|bei|mit|\\w+en)\\s){0,1}(?-i)(\\b\\w+\\b\\s){0,1}\\b((\\p{Upper}\\w+)ende(n|r){0,1}(\\w*)\\b))", Pattern.DOTALL | Pattern.UNICODE_CHARACTER_CLASS);
-  private static final Version VERSION = new Version(0,13,8,true);
+  private static final Version VERSION = new Version(0,13,9,true);
   
   private boolean mRemoveLongForm = false;
   private boolean mReplacePartizip = false;
@@ -263,7 +263,7 @@ public class DegenderPlugin extends Plugin {
         }
         
         if(needle != null && male != null && female != null && male.startsWith(female)) {
-          result.append(text.substring(pos,index)).append(replace);
+          result.append(text.substring(pos,index)).append(replace.substring(0, 1).toUpperCase()).append(replace.substring(1));
           mCountLong++;
         }
         else {
