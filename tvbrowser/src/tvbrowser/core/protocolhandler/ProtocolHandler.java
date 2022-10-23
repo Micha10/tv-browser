@@ -33,6 +33,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.lang.reflect.Field;
+import java.net.URLDecoder;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -719,6 +721,6 @@ public class ProtocolHandler {
   }
   
   private static String unescape(String value) {
-    return value.replace(ESCAPE_COMMA, ",").replace(ESCAPE_QUOTE, "\"").replace(ESCAPE_SEMICOLON, ";").replace(ESCAPE_SLASH, "/");
+    return URLDecoder.decode(value.replace(ESCAPE_COMMA, ",").replace(ESCAPE_QUOTE, "\"").replace(ESCAPE_SEMICOLON, ";").replace(ESCAPE_SLASH, "/"), Charset.defaultCharset());
   }
 }
