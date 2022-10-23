@@ -334,7 +334,7 @@ public class PluginManagerImpl implements PluginManager {
       cal.setTimeInMillis(date.getTime());
       progDate = new Date(cal);
     } catch (ParseException e) {
-      LOG.severe("Couldn't parse date from unique ID");
+      LOG.severe("Couldn't parse date from unique ID: " + uniqueID);
       return null;
     }
     
