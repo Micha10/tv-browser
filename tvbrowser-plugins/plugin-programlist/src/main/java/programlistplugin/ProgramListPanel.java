@@ -132,6 +132,7 @@ public class ProgramListPanel extends TabListenerPanel implements PersonaCompatL
   
   private Component mFocusOwner;
   private JProgressBar mProgress;
+  private JScrollPane mScrollPane;
   
   static {
     try {
@@ -504,12 +505,12 @@ public class ProgramListPanel extends TabListenerPanel implements PersonaCompatL
       southPanel.add(close, cc.xy(11, 1));
     }
 
-    JScrollPane scrollPane = new JScrollPane(mList);
+    mScrollPane = new JScrollPane(mList);
     mProgress = new JProgressBar();
     mProgress.setVisible(false);
     
     JPanel center = new JPanel(new BorderLayout());
-    center.add(scrollPane, BorderLayout.CENTER);
+    center.add(mScrollPane, BorderLayout.CENTER);
     center.add(mProgress, BorderLayout.NORTH);
     
     add(panel, BorderLayout.NORTH);
@@ -717,16 +718,16 @@ public class ProgramListPanel extends TabListenerPanel implements PersonaCompatL
   }
   
   private synchronized void doFillProgramList() {
+    final ArrayList<Program> programs = new ArrayList();
+    
     synchronized (mPrograms) {
-      final DefaultListModel model = new DefaultListModel();
-      
       try {
+        mModel.clear();
+        mPrograms.clear();
+
         mProgress.setVisible(true);
         mProgress.setIndeterminate(true);
         mList.setVisible(false);
-        
-        mModel.clear();
-        mPrograms.clear();
         
         Channel[] channels = mChannelBox.getSelectedItem() instanceof String ? Plugin.getPluginManager()
             .getSubscribedChannels() : new Channel[] { (Channel) mChannelBox.getSelectedItem() };
@@ -790,15 +791,15 @@ public class ProgramListPanel extends TabListenerPanel implements PersonaCompatL
             break;
           }
           
-          if (model.size() < mMaxListSize) {
-            model.addElement(program);
+          if (programs.size() < mMaxListSize) {
+            programs.add(program);
             
             if(mCurrentSelection != null && mCurrentSelection.equals(program)) {
-              currentSelectionNewIndex = model.getSize()-1;
+              currentSelectionNewIndex = programs.size()-1;
             }
             
             if (!program.isExpired() && index == -1) {
-              index = model.getSize() - (ProgramListPlugin.getInstance().getSettings().getBooleanValue(ProgramListSettings.KEY_SHOW_DATE_SEPARATOR) ? 2 : 1);
+              index = programs.size() - (ProgramListPlugin.getInstance().getSettings().getBooleanValue(ProgramListSettings.KEY_SHOW_DATE_SEPARATOR) ? 2 : 1);
             }
             
             lastProgram = program;
@@ -816,7 +817,7 @@ public class ProgramListPanel extends TabListenerPanel implements PersonaCompatL
         }
         
         if(mKeepListing.get()) {
-          updateList(model, index, currentSelectionNewIndex != -1);
+          updateList(programs, index, currentSelectionNewIndex != -1);
         }
       } catch (Exception e) {
         e.printStackTrace();
@@ -860,7 +861,7 @@ public class ProgramListPanel extends TabListenerPanel implements PersonaCompatL
   
   private Thread updateListThread;
   
-  private void updateList(final DefaultListModel model, final int index, final boolean select) {
+  private void updateList(final ArrayList<Program> programs, final int index, final boolean select) {
     mKeepListing.set(false);
     
     while(updateListThread != null && updateListThread.isAlive()) {
@@ -875,18 +876,25 @@ public class ProgramListPanel extends TabListenerPanel implements PersonaCompatL
     updateListThread = new Thread() {
       @Override
       public void run() {try {
-        setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
-        
         mKeepListing.set(true);
-        mModel.clear();
+        try {
+          Thread.sleep(500);
+        }catch(InterruptedException ie) {
+          //ignore
+        }
+        
         boolean stop = false;
         
-        for(int i = 0; i < model.getSize(); i++) {
+        for(int i = 0; i < programs.size(); i++) {
           if(!mKeepListing.get()) {
             stop = true;
             break;
           }
-          mModel.addElement(model.get(i));
+          try {
+            mModel.addElement(programs.get(i));
+          }catch(IndexOutOfBoundsException iobe) {
+            iobe.printStackTrace();
+          }
         }
         
         if(!stop) {
@@ -915,14 +923,20 @@ public class ProgramListPanel extends TabListenerPanel implements PersonaCompatL
           }
         }
         
+        mProgress.setIndeterminate(false);
+        mProgress.setVisible(false);
+        
         mCurrentVisible = null;
         mCurrentCount = 0;
         
+        SwingUtilities.invokeLater(new Runnable() {
+          @Override
+          public void run() {
+            mList.setVisible(true);
+            mList.repaint();
+          }
+        });
         
-      //  mList.repaint();//.updateUI();
-        mList.setVisible(true);
-        mProgress.setIndeterminate(false);
-        mProgress.setVisible(false);
       }catch(Throwable t) {t.printStackTrace();}
       }
     };
