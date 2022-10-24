@@ -50,6 +50,7 @@ import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
+import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 import javax.swing.SwingUtilities;
@@ -130,6 +131,7 @@ public class ProgramListPanel extends TabListenerPanel implements PersonaCompatL
   private static Class<?> mWrapperFilter;
   
   private Component mFocusOwner;
+  private JProgressBar mProgress;
   
   static {
     try {
@@ -160,6 +162,7 @@ public class ProgramListPanel extends TabListenerPanel implements PersonaCompatL
     mProgramPanelSettings = new ProgramPanelSettings(new PluginPictureSettings(
         PluginPictureSettings.ALL_PLUGINS_SETTINGS_TYPE), !showDescription, ProgramPanelSettings.X_AXIS);
     mList = new ProgramList(mModel, mProgramPanelSettings);
+    mList.setDoubleBuffered(true);
     
     if(ProgramListPlugin.getPluginManager().getTVBrowserVersion().compareTo(new Version(4,22,51,false)) >= 0) {
       try {
@@ -501,10 +504,16 @@ public class ProgramListPanel extends TabListenerPanel implements PersonaCompatL
       southPanel.add(close, cc.xy(11, 1));
     }
 
-    final JScrollPane pane = new JScrollPane(mList);
+    JScrollPane scrollPane = new JScrollPane(mList);
+    mProgress = new JProgressBar();
+    mProgress.setVisible(false);
+    
+    JPanel center = new JPanel(new BorderLayout());
+    center.add(scrollPane, BorderLayout.CENTER);
+    center.add(mProgress, BorderLayout.NORTH);
     
     add(panel, BorderLayout.NORTH);
-    add(pane, BorderLayout.CENTER);
+    add(center, BorderLayout.CENTER);
     add(southPanel, BorderLayout.SOUTH);
     
     mUpdateList = false;
@@ -712,8 +721,10 @@ public class ProgramListPanel extends TabListenerPanel implements PersonaCompatL
       final DefaultListModel model = new DefaultListModel();
       
       try {
+        mProgress.setVisible(true);
+        mProgress.setIndeterminate(true);
+        mList.setVisible(false);
         
-        setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
         mModel.clear();
         mPrograms.clear();
         
@@ -813,6 +824,22 @@ public class ProgramListPanel extends TabListenerPanel implements PersonaCompatL
     }
     
     if(ProgramListPlugin.getPluginManager().getTVBrowserVersion().compareTo(new Version(4,22,51,false)) < 0) {
+      try {
+        Thread.sleep(500);
+      } catch (InterruptedException e) {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+      }
+      
+      while(updateListThread != null && updateListThread.isAlive()) {
+        try {
+          Thread.sleep(500);
+        } catch (InterruptedException e) {
+          // TODO Auto-generated catch block
+          e.printStackTrace();
+        }
+      }
+      
       mList.setModel(mModel);
       
       if(ProgramListPlugin.getInstance().getSettings().getBooleanValue(ProgramListSettings.KEY_SHOW_DATE_SEPARATOR)) {
@@ -831,42 +858,76 @@ public class ProgramListPanel extends TabListenerPanel implements PersonaCompatL
     }
   }
   
+  private Thread updateListThread;
   
   private void updateList(final DefaultListModel model, final int index, final boolean select) {
-    SwingUtilities.invokeLater(new Runnable() {
+    mKeepListing.set(false);
+    
+    while(updateListThread != null && updateListThread.isAlive()) {
+      try {
+        Thread.sleep(200);
+      } catch (InterruptedException e) {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+      }
+    }
+    
+    updateListThread = new Thread() {
       @Override
       public void run() {try {
-        mModel = model;
-        mList.setModel(model);
+        setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
         
-        final Rectangle rect = mList.getCellBounds(index, index);
-        final Rectangle visibleRect = mList.getVisibleRect();
+        mKeepListing.set(true);
+        mModel.clear();
+        boolean stop = false;
         
-        if(rect != null && visibleRect != null) {
-          rect.height = visibleRect.height;
-        }
-        
-        if(rect != null) {
-          mList.scrollRectToVisible(rect);
-        }
-        
-        if(index >= 0 && index < mModel.getSize()) {
-          if(select) {
-            mList.setSelectedIndex(index);
+        for(int i = 0; i < model.getSize(); i++) {
+          if(!mKeepListing.get()) {
+            stop = true;
+            break;
           }
-          else if(mCurrentVisible != null && mList.contains(mCurrentVisible.getLocation()) && mModel.getSize() == mCurrentCount) {
-            mList.scrollRectToVisible(mCurrentVisible);
+          mModel.addElement(model.get(i));
+        }
+        
+        if(!stop) {
+          try {
+            final Rectangle rect = mList.getCellBounds(index, index);
+            final Rectangle visibleRect = mList.getVisibleRect();
+            
+            if(rect != null && visibleRect != null) {
+              rect.height = visibleRect.height;
+            }
+            
+            if(rect != null) {
+              mList.scrollRectToVisible(rect);
+            }
+            
+            if(index >= 0 && index < mModel.getSize()) {
+              if(select) {
+                mList.setSelectedIndex(index);
+              }
+              else if(mCurrentVisible != null && mList.contains(mCurrentVisible.getLocation()) && mModel.getSize() == mCurrentCount) {
+                mList.scrollRectToVisible(mCurrentVisible);
+              }
+            }
+          }catch(Exception e) {
+            //ignore
           }
         }
         
         mCurrentVisible = null;
         mCurrentCount = 0;
         
-        setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));   
-        mList.repaint();//.updateUI();
+        
+      //  mList.repaint();//.updateUI();
+        mList.setVisible(true);
+        mProgress.setIndeterminate(false);
+        mProgress.setVisible(false);
       }catch(Throwable t) {t.printStackTrace();}
       }
-    });
+    };
+    updateListThread.setPriority(Thread.MIN_PRIORITY);
+    updateListThread.start();
   }
 
   private static class ChannelListCellRenderer extends DefaultListCellRenderer {
