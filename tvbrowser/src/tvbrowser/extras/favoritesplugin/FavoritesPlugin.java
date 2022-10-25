@@ -41,7 +41,6 @@ import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Properties;
-import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -92,7 +91,6 @@ import tvbrowser.core.TvDataUpdateListener;
 import tvbrowser.core.TvDataUpdater;
 import tvbrowser.core.filters.FilterManagerImpl;
 import tvbrowser.core.icontheme.IconLoader;
-import tvbrowser.core.plugin.PluginManagerImpl;
 import tvbrowser.extras.common.InternalPluginProxyIf;
 import tvbrowser.extras.common.InternalPluginProxyList;
 import tvbrowser.extras.common.ReminderConfiguration;
@@ -330,19 +328,9 @@ public class FavoritesPlugin {
           Favorite[] favoriteArr = FavoriteTreeModel.getInstance().getFavoriteArr();
           
           for (Favorite favorite : favoriteArr) {
-            Set<String> removed = favorite.clearRemovedPrograms();
-            HashSet<Program> programsRemoved = new HashSet<Program>();
+            Program[] programArr = favorite.clearRemovedPrograms();
             
-            for(String key : removed) {
-              Program test = PluginManagerImpl.getInstance().getProgram(key);
-              
-              if(test != null) {
-                programsRemoved.add(test);
-              }
-            }
-            
-            if(!programsRemoved.isEmpty()) {
-              final Program[] programArr = programsRemoved.toArray(new Program[0]);
+            if(programArr.length > 0) {
               final ProgramReceiveTarget[] receive = favorite.getForwardPlugins();
               
               for(ProgramReceiveTarget target : receive) {

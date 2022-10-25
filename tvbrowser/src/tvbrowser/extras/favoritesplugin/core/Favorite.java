@@ -35,7 +35,6 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import devplugin.Channel;
@@ -60,6 +59,8 @@ import util.program.ProgramUtilities;
 import util.ui.SearchFormSettings;
 
 public abstract class Favorite {
+  public static final String SEPARATOR = "#!#?#";
+  
   private ArrayList<Program> mPrograms;
   private ArrayList<Program> mNewPrograms;
   private String mName;
@@ -71,6 +72,7 @@ public abstract class Favorite {
   protected SearchFormSettings mSearchFormSettings;
 
   private HashMap<String,ReminderInfo> mRemovedPrograms;
+  private ArrayList<Program> mRemovedProgramsList;
   private ArrayList<Program> mRemovedBlacklistPrograms;
   private boolean mNewProgramsWasRequested;
   private boolean mProvideFilter;
@@ -90,6 +92,7 @@ public abstract class Favorite {
     mPrograms = new ArrayList<Program>(0);
     mNewPrograms = new ArrayList<Program>(0);
     mRemovedPrograms = new HashMap<String,ReminderInfo>(0);
+    mRemovedProgramsList = new ArrayList<Program>(0);
     mRemovedBlacklistPrograms = new ArrayList<Program>(0);
     mExclusionList = null; // defer initialisation until needed, save memory
     mBlackList = null; // defer initialization until needed
@@ -159,6 +162,7 @@ public abstract class Favorite {
     //mPrograms = programList;
 
     mRemovedPrograms = new HashMap<String, ReminderInfo>(0);
+    mRemovedProgramsList = new ArrayList<Program>(0);
     
     if(version > 4) {
       mProvideFilter = in.readBoolean();
@@ -1114,6 +1118,9 @@ public abstract class Favorite {
         synchronized(mRemovedPrograms) {
           mRemovedPrograms.put(getProgramKeyFor(p), new ReminderInfo(p.getTitle(), reminderMinutes));
         }
+        synchronized (mRemovedProgramsList) {
+          mRemovedProgramsList.add(p);
+        }
       }
       
       mNewPrograms.remove(p);
@@ -1145,17 +1152,18 @@ public abstract class Favorite {
    * Clears the list of removed programs
    * @since 2.7
    */
-  public Set<String> clearRemovedPrograms() {
-    final Set<String> result = mRemovedPrograms.keySet();
+  public Program[] clearRemovedPrograms() {
+    Program[] result = mRemovedProgramsList.toArray(new Program[mRemovedProgramsList.size()]);
     
-    mRemovedPrograms = new HashMap<String,ReminderInfo>(0);
-    mRemovedBlacklistPrograms = new ArrayList<Program>(0);
+    mRemovedPrograms.clear();
+    mRemovedProgramsList.clear();
+    mRemovedBlacklistPrograms.clear();
     
     return result;
   }
 
   private String getProgramKeyFor(Program p) {
-    return new StringBuilder(p.getChannel().getUniqueId()).append("_").append(p.getDate().getFormattedString("yyyy-MM-dd")).append("_").append(p.getStartTime()).append("_").append(p.getTitle()).toString();
+    return new StringBuilder(p.getUniqueID()).append(SEPARATOR).append(p.getTitle()).toString();
   }
   
   public void reValidateChannelLimitation() {
