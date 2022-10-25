@@ -1155,7 +1155,7 @@ public abstract class Favorite {
   }
 
   private String getProgramKeyFor(Program p) {
-    return new StringBuilder(p.getChannel().getUniqueId()).append(p.getDate().getValue()).append("_").append(p.getStartTime()).append("_").append(p.getTitle()).toString();
+    return new StringBuilder(p.getChannel().getUniqueId()).append("_").append(p.getDate().getFormattedString("yyyy-MM-dd")).append("_").append(p.getStartTime()).append("_").append(p.getTitle()).toString();
   }
   
   public void reValidateChannelLimitation() {
