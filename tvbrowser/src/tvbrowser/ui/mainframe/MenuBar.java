@@ -34,7 +34,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.io.File;
-import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -94,10 +93,10 @@ import tvbrowser.ui.settings.ToolBarDragAndDropSettings;
 import tvdataservice.MarkedProgramsMap;
 import util.browserlauncher.Launch;
 import util.exc.TvBrowserException;
+import util.i18n.Localizer;
 import util.misc.OperatingSystem;
 import util.ui.FixedSizeIcon;
 import util.ui.ImageIconEnhanced;
-import util.i18n.Localizer;
 import util.ui.ScrollableMenu;
 import util.ui.TVBrowserIcons;
 import util.ui.UIThreadRunner;
@@ -1153,14 +1152,7 @@ public abstract class MenuBar extends JMenuBar implements ActionListener {
 		  
 		  JOptionPane.showMessageDialog(UiUtilities.getLastModalChildOf(MainFrame.getInstance()), mLocalizer.msg("debugCopied", "Debug information copied to clipboard."), Localizer.getLocalization(Localizer.I18N_INFO), JOptionPane.INFORMATION_MESSAGE);
 		} else if(source == mOpenSettingsMI) {
-      if(Desktop.isDesktopSupported()) {
-        try {
-          Desktop.getDesktop().open(new File(Settings.getUserSettingsDirName()));
-        } catch (IOException e) {
-          // TODO Auto-generated catch block
-          e.printStackTrace();
-        }
-      }
+      Settings.openSettingsDir();
 		} else if(source == mDonateMI) {
 		  Launch.openURL("https://www.tvbrowser.org/index.php?id=donations");
 		}

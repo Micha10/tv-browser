@@ -38,21 +38,20 @@ import javax.swing.JRootPane;
 
 import org.apache.commons.lang3.StringUtils;
 
-import tvbrowser.core.Settings;
-import tvbrowser.core.protocolhandler.ProtocolHandler;
-import tvbrowser.ui.mainframe.MainFrame;
-import util.exc.ErrorHandler;
-import util.io.ExecutionHandler;
-import util.io.IOUtilities;
-import util.i18n.Localizer;
-import util.ui.UiUtilities;
-import util.ui.WindowClosingIf;
-
 import com.jgoodies.forms.factories.Borders;
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 
 import devplugin.SettingsItem;
+import tvbrowser.core.Settings;
+import tvbrowser.core.protocolhandler.ProtocolHandler;
+import tvbrowser.ui.mainframe.MainFrame;
+import util.exc.ErrorHandler;
+import util.i18n.Localizer;
+import util.io.ExecutionHandler;
+import util.io.IOUtilities;
+import util.ui.UiUtilities;
+import util.ui.WindowClosingIf;
 
 /**
  * This Class opens an Url in a Web-Browser.

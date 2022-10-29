@@ -95,6 +95,7 @@ public class ProtocolHandler {
   private static final String MESSAGE_PROGRAM = "program";
   private static final String MESSAGE_SETTINGS = "settings";
   private static final String MESSAGE_PLUGIN_UPDATE = "pluginUpdate";
+  private static final String MESSAGE_SETTINGS_DIR = "settingsDir";
   
   private static final String KEY_SEARCH_WHERE = "where";
   private static final String KEY_SEARCH_CASE_SENSITIVE = "casesensitive";
@@ -224,6 +225,9 @@ public class ProtocolHandler {
       if(parts.length > 1) {
         if(MESSAGE_CONFIG.equalsIgnoreCase(parts[0]) && parts[1].contains("=")) {
           configMessage(message, parts);
+        }
+        else if(MESSAGE_SHOW.equalsIgnoreCase(parts[0]) && parts[1].equals(MESSAGE_SETTINGS_DIR)) {
+          Settings.openSettingsDir();
         }
         else if(MESSAGE_SHOW.equalsIgnoreCase(parts[0]) && (parts.length == 2 || parts.length == 3) && parts[parts.length-1].contains("=")) {
           showMessage(parts);

@@ -26,6 +26,7 @@
 package tvbrowser.core;
 
 import java.awt.Color;
+import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.MouseEvent;
@@ -1525,6 +1526,17 @@ public class Settings {
     }
     
     MainFrame.updateFilterPanelLabel();
+  }
+  
+  public static final void openSettingsDir() {
+    if(Desktop.isDesktopSupported()) {
+      try {
+        Desktop.getDesktop().open(new File(getUserSettingsDirName()));
+      } catch (IOException e) {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+      }
+    }
   }
   
   public static final class Other {
