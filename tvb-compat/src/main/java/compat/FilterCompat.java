@@ -236,10 +236,22 @@ public final class FilterCompat {
     
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+      try {
       if(method != null && args != null && args.length == 1) {
-        mFilterCompat.handleFilterEvent(method.getName(), (ProgramFilter)args[0]);
+        if(args[0].getClass().isArray()) {
+          ProgramFilter[] filters = (ProgramFilter[])args[0];
+          
+          for(ProgramFilter filter : filters) {
+            mFilterCompat.handleFilterEvent(method.getName(), filter);
+          }
+        }
+        else {
+          mFilterCompat.handleFilterEvent(method.getName(), (ProgramFilter)args[0]);
+        }
       }
-      
+      }catch(Throwable t) {
+        t.printStackTrace();
+      }
       return null;
     }
   }

@@ -5,7 +5,7 @@
   <artifactId>TvBrowserCompat</artifactId>
   <packaging>pom</packaging>
   <name>TV-Browser Compatibility Classes</name>
-  <version>0.1</version>
+  <version>0.6.1</version>
   <organization>
     <name>TV-Browser</name>
     <url>http://www.tvbrowser.org/</url>
