@@ -58,8 +58,8 @@ public class MonthFilterComponent extends AbstractFilterComponent {
   private JComboBox<Integer> mToBoxDay;
   private int mStartDay = 1;
   private int mEndDay = 31;
-  private int mStartMonth = Calendar.JANUARY;
-  private int mEndMonth = Calendar.DECEMBER;
+  private int mStartMonth = Calendar.JANUARY+1;
+  private int mEndMonth = Calendar.DECEMBER+1;
 
   public MonthFilterComponent(String name, String description) {
     super(name, description);
@@ -74,17 +74,17 @@ public class MonthFilterComponent extends AbstractFilterComponent {
     boolean result = false;
     
     if(mStartMonth <= mEndMonth) {
-      result = program.getDate().getMonth() >= (mStartMonth+1) && program.getDate().getMonth() <= (mEndMonth+1);
+      result = program.getDate().getMonth() >= (mStartMonth) && program.getDate().getMonth() <= (mEndMonth);
     }
     else {
-      result = program.getDate().getMonth() >= (mStartMonth+1) || program.getDate().getMonth() <= (mEndMonth+1);
+      result = program.getDate().getMonth() >= (mStartMonth) || program.getDate().getMonth() <= (mEndMonth);
     }
     
-    if(result && program.getDate().getMonth() == (mStartMonth+1)) {
+    if(result && program.getDate().getMonth() == (mStartMonth)) {
       result = program.getDate().getDayOfMonth() >= mStartDay;
     }
     
-    if(result && program.getDate().getMonth() == (mEndMonth+1)) {
+    if(result && program.getDate().getMonth() == (mEndMonth)) {
       result = program.getDate().getDayOfMonth() <= mEndDay;
     }
     
@@ -145,10 +145,10 @@ public class MonthFilterComponent extends AbstractFilterComponent {
       mFromBoxMonth.addItem(new Month(month));
       mToBoxMonth.addItem(new Month(month));
       
-      if(mStartMonth == month) {
+      if(mStartMonth-1 == month) {
         mFromBoxMonth.setSelectedIndex(mFromBoxMonth.getItemCount()-1);
       }
-      if(mEndMonth == month) {
+      if(mEndMonth-1 == month) {
         mToBoxMonth.setSelectedIndex(mToBoxMonth.getItemCount()-1);
       }
     }
@@ -186,8 +186,8 @@ public class MonthFilterComponent extends AbstractFilterComponent {
 
   @Override
   public void saveSettings() {
-    mStartMonth = ((Month) mFromBoxMonth.getSelectedItem()).mCalendar.get(Calendar.MONTH);
-    mEndMonth = ((Month) mToBoxMonth.getSelectedItem()).mCalendar.get(Calendar.MONTH);
+    mStartMonth = ((Month) mFromBoxMonth.getSelectedItem()).mCalendar.get(Calendar.MONTH)+1;
+    mEndMonth = ((Month) mToBoxMonth.getSelectedItem()).mCalendar.get(Calendar.MONTH)+1;
     mStartDay = (int)mFromBoxDay.getSelectedItem();
     mEndDay = (int)mToBoxDay.getSelectedItem();
   }
