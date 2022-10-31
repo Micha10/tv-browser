@@ -876,6 +876,8 @@ public class ProgramListPanel extends TabListenerPanel implements PersonaCompatL
     updateListThread = new Thread() {
       @Override
       public void run() {try {
+        mProgress.setIndeterminate(true);
+        mProgress.setVisible(true);
         mKeepListing.set(true);
         try {
           Thread.sleep(500);
@@ -899,23 +901,25 @@ public class ProgramListPanel extends TabListenerPanel implements PersonaCompatL
         
         if(!stop) {
           try {
-            final Rectangle rect = mList.getCellBounds(index, index);
-            final Rectangle visibleRect = mList.getVisibleRect();
-            
-            if(rect != null && visibleRect != null) {
-              rect.height = visibleRect.height;
-            }
-            
-            if(rect != null) {
-              mList.scrollRectToVisible(rect);
-            }
-            
-            if(index >= 0 && index < mModel.getSize()) {
-              if(select) {
-                mList.setSelectedIndex(index);
+            if(mModel.getSize() > index) {
+              final Rectangle rect = mList.getCellBounds(index, index);
+              final Rectangle visibleRect = mList.getVisibleRect();
+              
+              if(rect != null && visibleRect != null) {
+                rect.height = visibleRect.height;
               }
-              else if(mCurrentVisible != null && mList.contains(mCurrentVisible.getLocation()) && mModel.getSize() == mCurrentCount) {
-                mList.scrollRectToVisible(mCurrentVisible);
+              
+              if(rect != null) {
+                mList.scrollRectToVisible(rect);
+              }
+              
+              if(index >= 0 && index < mModel.getSize()) {
+                if(select) {
+                  mList.setSelectedIndex(index);
+                }
+                else if(mCurrentVisible != null && mList.contains(mCurrentVisible.getLocation()) && mModel.getSize() == mCurrentCount) {
+                  mList.scrollRectToVisible(mCurrentVisible);
+                }
               }
             }
           }catch(Exception e) {

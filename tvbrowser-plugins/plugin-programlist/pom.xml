@@ -48,10 +48,10 @@
     </plugins>
   </build>
   <dependencies>
-  	<dependency>
+   	<dependency>
   		<groupId>org.tvbrowser</groupId>
   		<artifactId>TvBrowserCompat</artifactId>
-  		<version>0.4</version>
+  		<version>0.6.1</version>
   	</dependency>
   	<dependency>
   		<groupId>org.tvbrowser</groupId>
