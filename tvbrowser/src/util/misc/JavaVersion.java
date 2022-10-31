@@ -61,7 +61,7 @@ public class JavaVersion {
       version = version.substring(0, version.indexOf("-")).trim();      
     }
     
-    if(version.length() == 1) {
+    if(!version.contains(".")) {
       version += ".0";
     }
     
