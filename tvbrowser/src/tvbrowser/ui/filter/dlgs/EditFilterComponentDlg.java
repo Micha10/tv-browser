@@ -74,6 +74,7 @@ import tvbrowser.core.filters.filtercomponents.DayFilterComponent;
 import tvbrowser.core.filters.filtercomponents.FavoritesFilterComponent;
 import tvbrowser.core.filters.filtercomponents.KeywordFilterComponent;
 import tvbrowser.core.filters.filtercomponents.MassFilterComponent;
+import tvbrowser.core.filters.filtercomponents.MonthFilterComponent;
 import tvbrowser.core.filters.filtercomponents.PluginFilterComponent;
 import tvbrowser.core.filters.filtercomponents.PluginIconFilterComponent;
 import tvbrowser.core.filters.filtercomponents.ProgramInfoFilterComponent;
@@ -185,6 +186,7 @@ public class EditFilterComponentDlg extends JDialog implements ActionListener, D
       set.add(new FilterComponentNewFavoritePrograms());
       set.add(new KeywordFilterComponent());
       set.add(new MassFilterComponent());
+      set.add(new MonthFilterComponent());
       set.add(new PluginFilterComponent());
       set.add(new PluginIconFilterComponent());
       set.add(new ProgramInfoFilterComponent());
