@@ -239,11 +239,6 @@ public class ReminderList implements ActionListener {
   }
 
   private void remove(ReminderListItem item) {
-    StackTraceElement[] els = Thread.currentThread().getStackTrace();
-    for(StackTraceElement e : els) {
-      System.out.println(e);
-    }
-    
     item.decReferenceCount();
     if (item.getReferenceCount() < 1) {
       synchronized (mList) {

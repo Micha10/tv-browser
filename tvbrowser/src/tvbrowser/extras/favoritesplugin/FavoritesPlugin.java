@@ -948,8 +948,18 @@ public class FavoritesPlugin {
         return mThreadPool;
       }
       
-      public void dayProgramTouched(final ChannelDayProgram removedDayProgram,
-          final ChannelDayProgram addedDayProgram) {
+      public void dayProgramTouched(final ChannelDayProgram removedDayProgram, final ChannelDayProgram addedDayProgram) {
+        String logMessage = "Favorites: dayProgramTouched called with removedDayProgram '" + removedDayProgram + "' and addedDayProgram '" + addedDayProgram+"' for channel '";
+        
+        if(removedDayProgram != null) {
+          logMessage += removedDayProgram.getChannel().getName()+"' on " + removedDayProgram.getDate();
+        }
+        else if(addedDayProgram != null) {
+          logMessage += addedDayProgram.getChannel().getName()+"' on " + addedDayProgram.getDate();
+        }
+        
+        LOG.info(logMessage);
+        
         if(mThreadPool == null) {
           mThreadPool = getExecutorService();
         }

@@ -1311,12 +1311,10 @@ public class PluginProxyManager {
           mLog.log(Level.WARNING, "A not catched error occured in 'handleTvDataUpdateStarted' of Plugin '" + plugin +"'.", t);
         }
       }
-    } 
+    }
   }
-
-  private void runWithThreadPool(final ThreadPoolMethod threadPoolMethod) {
-    mPoolMethods.add(threadPoolMethod);
-//    mLog.info("Pool: " + mPoolMethods.size());
+  
+  private synchronized void createThreadPool(final ThreadPoolMethod threadPoolMethod) {
     if (mThreadPool == null) {
       int processors = Runtime.getRuntime().availableProcessors();
       mThreadPool = Executors.newFixedThreadPool(processors);
@@ -1333,7 +1331,7 @@ public class PluginProxyManager {
               }
             }
             if (poolMethod != null) {
-//                mLog.info("Exec (" + count + "): " + poolMethod.mName);
+  //              mLog.info("Exec (" + count + "): " + poolMethod.mName);
               poolMethod.run();
             }
             else {
@@ -1346,6 +1344,14 @@ public class PluginProxyManager {
           }
         });
       }
+    }
+  }
+  
+  private void runWithThreadPool(final ThreadPoolMethod threadPoolMethod) {
+    mPoolMethods.add(threadPoolMethod);
+//    mLog.info("Pool: " + mPoolMethods.size());
+    if (mThreadPool == null) {
+      createThreadPool(threadPoolMethod);
     }
   }
   
