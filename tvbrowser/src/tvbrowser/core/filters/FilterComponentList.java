@@ -32,12 +32,15 @@ import java.io.File;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Set;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import devplugin.Channel;
@@ -46,28 +49,13 @@ import devplugin.PluginsFilterComponent;
 import tvbrowser.core.ChannelList;
 import tvbrowser.core.Settings;
 import tvbrowser.core.filters.filtercomponents.AcceptNoneFilterComponent;
-import tvbrowser.core.filters.filtercomponents.AgeLimitFilterComponent;
-import tvbrowser.core.filters.filtercomponents.BeanShellFilterComponent;
 import tvbrowser.core.filters.filtercomponents.ChannelFilterComponent;
-import tvbrowser.core.filters.filtercomponents.DateFilterComponent;
-import tvbrowser.core.filters.filtercomponents.DayFilterComponent;
 import tvbrowser.core.filters.filtercomponents.FavoritesFilterComponent;
-import tvbrowser.core.filters.filtercomponents.KeywordFilterComponent;
-import tvbrowser.core.filters.filtercomponents.MassFilterComponent;
 import tvbrowser.core.filters.filtercomponents.PluginFilterComponent;
-import tvbrowser.core.filters.filtercomponents.PluginIconFilterComponent;
-import tvbrowser.core.filters.filtercomponents.ProgramInfoFilterComponent;
-import tvbrowser.core.filters.filtercomponents.ProgramLengthFilterComponent;
-import tvbrowser.core.filters.filtercomponents.ProgramMarkingPriorityFilterComponent;
-import tvbrowser.core.filters.filtercomponents.ProgramRunningFilterComponent;
-import tvbrowser.core.filters.filtercomponents.ProgramTypeFilterComponent;
 import tvbrowser.core.filters.filtercomponents.ReminderFilterComponent;
 import tvbrowser.core.filters.filtercomponents.SingleChannelFilterComponent;
-import tvbrowser.core.filters.filtercomponents.SingleTitleFilterComponent;
-import tvbrowser.core.filters.filtercomponents.TimeFilterComponent;
 import tvbrowser.core.filters.filtercomponents.UnknownFilterComponent;
 import tvbrowser.core.plugin.PluginManagerImpl;
-import tvbrowser.extras.favoritesplugin.core.FilterComponentNewFavoritePrograms;
 import util.io.stream.ObjectInputStreamProcessor;
 import util.io.stream.ObjectOutputStreamProcessor;
 import util.io.stream.StreamUtilities;
@@ -305,49 +293,16 @@ public class FilterComponentList {
   
   private FilterComponent loadComponent(final String className, final String name, final String description) {
     FilterComponent filterComponent = null;
-    if (className.endsWith(".AgeLimitFilterComponent")) {
-      filterComponent = new AgeLimitFilterComponent(name, description);
-    } else if (className.endsWith(".BeanShellFilterComponent")) {
-      filterComponent = new BeanShellFilterComponent(name, description);
-    } else if (className.endsWith(".ChannelFilterComponent")) {
-      filterComponent = new ChannelFilterComponent(name, description);
-    } else if (className.endsWith(".DayFilterComponent")) {
-      filterComponent = new DayFilterComponent(name, description);
-    } else if (className.endsWith(".DateFilterComponent")) {
-      filterComponent = new DateFilterComponent(name, description);
-    } else if (className.endsWith(".FavoritesFilterComponent")) {
-      filterComponent = new FavoritesFilterComponent(name, description);
-    } else if (className.endsWith(".KeywordFilterComponent")) {
-      filterComponent = new KeywordFilterComponent(name, description);
-    } else if (className.endsWith(".MassFilterComponent")) {
-      filterComponent = new MassFilterComponent(name, description);
-    } else if (className.endsWith(".PluginFilterComponent")) {
-      filterComponent = new PluginFilterComponent(name, description);
-    } else if (className.endsWith(".PluginIconFilterComponent")) {
-      filterComponent = new PluginIconFilterComponent(name, description);
-    } else if (className.endsWith(".ProgramInfoFilterComponent")) {
-      filterComponent = new ProgramInfoFilterComponent(name, description);
-    } else if (className.endsWith(".ProgramLengthFilterComponent")) {
-      filterComponent = new ProgramLengthFilterComponent(name, description);
-    } else if (className.endsWith(".ProgramMarkingPriorityFilterComponent")) {
-      filterComponent = new ProgramMarkingPriorityFilterComponent(name,
-          description);
-    } else if (className.endsWith(".ProgramRunningFilterComponent")) {
-      filterComponent = new ProgramRunningFilterComponent(name, description);
-    } else if (className.endsWith(".ProgramTypeFilterComponent")) {
-      filterComponent = new ProgramTypeFilterComponent(name, description);
-    } else if (className.endsWith(".ReminderFilterComponent")) {
-      filterComponent = new ReminderFilterComponent(name, description);
-    } else if (className.endsWith(".SingleTitleFilterComponent")) {
-      filterComponent = new SingleTitleFilterComponent(name, description);
-    } else if (className.endsWith(".TimeFilterComponent")) {
-      filterComponent = new TimeFilterComponent(name, description);
-    } else if (className.endsWith(".SingleChannelFilterComponent")) {
-      filterComponent = new SingleChannelFilterComponent(null);
-    } else if (className.endsWith(".AcceptNoneFilterComponent")) {
-      filterComponent = new AcceptNoneFilterComponent(name);
-    } else if (className.endsWith(".FilterComponentNewFavoritePrograms")) {
-      filterComponent = new FilterComponentNewFavoritePrograms(name, description);
+    
+    if(className.startsWith("tvbrowser.core.filters.filtercomponents")) {
+      try {
+        Class<?> filterComponentClass = Class.forName(className);
+        Constructor<?> constructor = filterComponentClass.getConstructor(String.class, String.class);
+        filterComponent = (FilterComponent)constructor.newInstance(name, description);
+      } catch (ClassNotFoundException | NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+        mLog.log(Level.WARNING, "Filter component class '" + className + "' could not be instantiated.");
+        filterComponent = new UnknownFilterComponent(name, description, className);
+      } 
     }
     else {
       try {

@@ -426,7 +426,7 @@ public class UserFilter implements devplugin.ProgramFilter {
     }
     
     if(result == null) {
-      AcceptNoneFilterComponent acceptNone = new AcceptNoneFilterComponent(tk.value);
+      AcceptNoneFilterComponent acceptNone = new AcceptNoneFilterComponent(tk.value,"");
       
       if(add) {
         FilterComponentList.getInstance().add(acceptNone);
@@ -819,7 +819,7 @@ class ItemNode extends Node {
       }
       
       if(!found) {
-        mRule = new AcceptNoneFilterComponent(mRule.getName());
+        mRule = new AcceptNoneFilterComponent(mRule.getName(), mRule.getDescription());
       }
     }
     else if(mRule instanceof AcceptNoneFilterComponent) {

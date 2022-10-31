@@ -32,7 +32,7 @@ import javax.swing.JPanel;
 import devplugin.Program;
 
 public class AcceptNoneFilterComponent extends AbstractFilterComponent {
-  public AcceptNoneFilterComponent(String name) {
+  public AcceptNoneFilterComponent(String name, String description) {
     super(name, "");
   }
 

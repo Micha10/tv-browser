@@ -24,6 +24,7 @@
 package tvbrowser.core.filters.filtercomponents;
 
 import java.awt.BorderLayout;
+import java.awt.event.ItemEvent;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -51,8 +52,12 @@ public class MonthFilterComponent extends AbstractFilterComponent {
 
   private static final util.i18n.Localizer LOCALIZER = util.i18n.Localizer
       .getLocalizerFor(MonthFilterComponent.class);
-  private JComboBox<Month> mFromBox;
-  private JComboBox<Month> mToBox;
+  private JComboBox<Month> mFromBoxMonth;
+  private JComboBox<Month> mToBoxMonth;
+  private JComboBox<Integer> mFromBoxDay;
+  private JComboBox<Integer> mToBoxDay;
+  private int mStartDay = 1;
+  private int mEndDay = 31;
   private int mStartMonth = Calendar.JANUARY;
   private int mEndMonth = Calendar.DECEMBER;
 
@@ -66,17 +71,44 @@ public class MonthFilterComponent extends AbstractFilterComponent {
 
   @Override
   public boolean accept(final Program program) {
-    return program.getDate().getMonth() >= (mStartMonth+1) && program.getDate().getMonth() <= (mEndMonth+1);
+    boolean result = program.getDate().getMonth() >= (mStartMonth+1) && program.getDate().getMonth() <= (mEndMonth+1);
+    
+    if(result && program.getDate().getMonth() == (mStartMonth+1)) {
+      result = program.getDate().getDayOfMonth() >= mStartDay;
+    }
+    
+    if(result && program.getDate().getMonth() == (mEndMonth+1)) {
+      result = program.getDate().getDayOfMonth() <= mEndDay;
+    }
+    
+    return result;
   }
 
   public String getTypeDescription() {
     return LOCALIZER.msg("description", "Accepts all programs with month between (inclusive) start and end.");
   }
   
+  private void handleItemEventFor(ItemEvent e, JComboBox<Integer> box) {
+    if(e.getStateChange() == ItemEvent.SELECTED) {
+      int value = (int)box.getSelectedItem();
+      box.removeAllItems();
+      
+      int days = ((Month)e.getItem()).mCalendar.getActualMaximum(Calendar.DAY_OF_MONTH);
+      
+      for(int i = 1; i <= days; i++) {
+        box.addItem(i);
+        
+        if(value == i) {
+          box.setSelectedIndex(box.getItemCount()-1);
+        }
+      }
+    }
+  }
+  
   @Override
   public JPanel getSettingsPanel() {
     FormLayout layout = new FormLayout(
-        "pref, 3dlu, fill:pref:grow", "");
+        "default, 3dlu, default, 3dlu, default", "");
     JPanel content = new JPanel(layout);
     content.setBorder(Borders.DIALOG);
 
@@ -86,30 +118,45 @@ public class MonthFilterComponent extends AbstractFilterComponent {
     layout.appendRow(RowSpec.decode("pref"));
     layout.appendRow(RowSpec.decode("3dlu"));
 
-    mFromBox = new JComboBox<MonthFilterComponent.Month>();
-    mToBox = new JComboBox<MonthFilterComponent.Month>();
+    mFromBoxDay = new JComboBox<Integer>();
+    mFromBoxDay.addItem(mStartDay);
+    mFromBoxDay.setSelectedIndex(0);
+    mToBoxDay = new JComboBox<Integer>();
+    mToBoxDay.addItem(mEndDay);
+    mToBoxDay.setSelectedIndex(0);
+    
+    mFromBoxMonth = new JComboBox<MonthFilterComponent.Month>();
+    mFromBoxMonth.addItemListener(e -> {
+      handleItemEventFor(e, mFromBoxDay);
+    });
+    mToBoxMonth = new JComboBox<MonthFilterComponent.Month>();
+    mToBoxMonth.addItemListener(e -> {
+      handleItemEventFor(e, mToBoxDay);
+    });
     
     for(int month = Calendar.JANUARY; month <= Calendar.DECEMBER; month++) {
-      mFromBox.addItem(new Month(month));
-      mToBox.addItem(new Month(month));
+      mFromBoxMonth.addItem(new Month(month));
+      mToBoxMonth.addItem(new Month(month));
       
       if(mStartMonth == month) {
-        mFromBox.setSelectedIndex(mFromBox.getItemCount()-1);
+        mFromBoxMonth.setSelectedIndex(mFromBoxMonth.getItemCount()-1);
       }
       if(mEndMonth == month) {
-        mToBox.setSelectedIndex(mToBox.getItemCount()-1);
+        mToBoxMonth.setSelectedIndex(mToBoxMonth.getItemCount()-1);
       }
     }
     
     content.add(new JLabel(LOCALIZER.msg("from", "From")), cc.xy(
         1, currentRow));
-    content.add(mFromBox, cc.xy(3, currentRow));
+    content.add(mFromBoxDay, cc.xy(3, currentRow));
+    content.add(mFromBoxMonth, cc.xy(5, currentRow));
     
     layout.appendRow(RowSpec.decode("pref"));
 
     content.add(new JLabel(LOCALIZER.msg("to", "Until")), cc.xy(
         1, currentRow += 2));
-    content.add(mToBox, cc.xy(3, currentRow));
+    content.add(mToBoxDay, cc.xy(3, currentRow));
+    content.add(mToBoxMonth, cc.xy(5, currentRow));
 
     JPanel centerPanel = new JPanel(new BorderLayout());
     centerPanel.add(content, BorderLayout.NORTH);
@@ -126,18 +173,24 @@ public class MonthFilterComponent extends AbstractFilterComponent {
       ClassNotFoundException {
     mStartMonth = in.readInt();
     mEndMonth = in.readInt();
+    mStartDay = in.readInt();
+    mEndDay = in.readInt();
   }
 
   @Override
   public void saveSettings() {
-    mStartMonth = ((Month) mFromBox.getSelectedItem()).mCalendar.get(Calendar.MONTH);
-    mEndMonth = ((Month) mToBox.getSelectedItem()).mCalendar.get(Calendar.MONTH);
+    mStartMonth = ((Month) mFromBoxMonth.getSelectedItem()).mCalendar.get(Calendar.MONTH);
+    mEndMonth = ((Month) mToBoxMonth.getSelectedItem()).mCalendar.get(Calendar.MONTH);
+    mStartDay = (int)mFromBoxDay.getSelectedItem();
+    mEndDay = (int)mToBoxDay.getSelectedItem();
   }
 
   @Override
   public void write(ObjectOutputStream out) throws IOException {
     out.writeInt(mStartMonth);
     out.writeInt(mEndMonth);
+    out.writeInt(mStartDay);
+    out.writeInt(mEndDay);
   }
 
   @Override
@@ -150,6 +203,7 @@ public class MonthFilterComponent extends AbstractFilterComponent {
     
     public Month(int month) {
       mCalendar = Calendar.getInstance();
+      mCalendar.set(Calendar.YEAR, 2022);
       mCalendar.set(Calendar.DAY_OF_MONTH, 1);
       mCalendar.set(Calendar.MONTH, month);
     }

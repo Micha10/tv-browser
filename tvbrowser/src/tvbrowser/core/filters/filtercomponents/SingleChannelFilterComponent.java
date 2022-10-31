@@ -37,6 +37,10 @@ public class SingleChannelFilterComponent implements FilterComponent {
   private Channel mChannel;
   private String mLoadName;
   
+  public SingleChannelFilterComponent(String name, String description) {
+    // do nothing here, only for compatibility
+  }
+  
   public SingleChannelFilterComponent(Channel ch) {
     mChannel = ch;
     
