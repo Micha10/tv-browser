@@ -71,7 +71,14 @@ public class MonthFilterComponent extends AbstractFilterComponent {
 
   @Override
   public boolean accept(final Program program) {
-    boolean result = program.getDate().getMonth() >= (mStartMonth+1) && program.getDate().getMonth() <= (mEndMonth+1);
+    boolean result = false;
+    
+    if(mStartMonth <= mEndMonth) {
+      result = program.getDate().getMonth() >= (mStartMonth+1) && program.getDate().getMonth() <= (mEndMonth+1);
+    }
+    else {
+      result = program.getDate().getMonth() >= (mStartMonth+1) || program.getDate().getMonth() <= (mEndMonth+1);
+    }
     
     if(result && program.getDate().getMonth() == (mStartMonth+1)) {
       result = program.getDate().getDayOfMonth() >= mStartDay;
