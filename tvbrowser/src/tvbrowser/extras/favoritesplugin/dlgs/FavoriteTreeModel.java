@@ -466,13 +466,17 @@ public class FavoriteTreeModel extends DefaultTreeModel {
     if(favorite.getName().compareTo(p.getTitle()) != 0) {
       description = description + "  " + p.getTitle();
     }
-    String episode = p.getTextField(ProgramFieldType.EPISODE_TYPE);
-    if (StringUtils.isNotBlank(episode)) {
-      if (episode.length()<=3) {
-        episode = ProgramFieldType.EPISODE_TYPE.getLocalizedName() + " " + episode;
+    
+    if(p.getProgramState() == Program.STATE_IS_VALID) {
+      String episode = p.getTextField(ProgramFieldType.EPISODE_TYPE);
+      if (StringUtils.isNotBlank(episode)) {
+        if (episode.length()<=3) {
+          episode = ProgramFieldType.EPISODE_TYPE.getLocalizedName() + " " + episode;
+        }
+        description = description + ": " + episode ;
       }
-      description = description + ": " + episode ;
     }
+    
     if (null == currentChannel || currentChannel != p.getChannel()) {
       description = description + "  (" + p.getChannel() + ")";
     }
@@ -543,10 +547,15 @@ public class FavoriteTreeModel extends DefaultTreeModel {
 	            }
 	            boolean episodeOnly = progArr.length > 1;
 	            for (Program program : progArr) {
-	              String episode = program.getTextField(ProgramFieldType.EPISODE_TYPE);
-	              if (StringUtils.isBlank(episode)) {
+	              if(program.getProgramState() == Program.STATE_IS_VALID) {
+  	              String episode = program.getTextField(ProgramFieldType.EPISODE_TYPE);
+  	              if (StringUtils.isBlank(episode)) {
+  	                episodeOnly = false;
+  	                break;
+  	              }
+	              }
+	              else {
 	                episodeOnly = false;
-	                break;
 	              }
 	            }
 	
