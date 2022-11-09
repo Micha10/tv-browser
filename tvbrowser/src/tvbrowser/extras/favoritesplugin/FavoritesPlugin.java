@@ -266,26 +266,28 @@ public class FavoritesPlugin {
    * @since 2.7.2
    */
   public void waitForFinishingUpdateThreads() {
-    if (mThreadPool != null) {
+    ExecutorService threadPool = mThreadPool;
+    mThreadPool = null;
+    
+    if (threadPool != null) {
       LOG.info("Favorites: Wait for update threads to finish");
-      mThreadPool.shutdown();
+      threadPool.shutdown();
 
       try {
-        boolean success = mThreadPool.awaitTermination(Math.max(
+        boolean success = threadPool.awaitTermination(Math.max(
             FavoriteTreeModel.getInstance().getFavoriteArr().length, 10),
             TimeUnit.SECONDS);
 
         if (success) {
           LOG.info("Favorites: Update threads were finished");
         } else {
-          LOG
-              .severe("Favorites: Timeout on waiting for update threads to finish was reached");
+          LOG.severe("Favorites: Timeout on waiting for update threads to finish was reached");
         }
       } catch (InterruptedException e) {
         LOG.log(Level.INFO,"Waiting for favorite update finishing was interrupted",e);
       }
-
-      mThreadPool = null;
+      
+      threadPool = null;
     }
   }
   
@@ -929,6 +931,14 @@ public class FavoritesPlugin {
     }
   }
 
+  private synchronized ExecutorService getExecutorService() {
+    if(mThreadPool == null || mThreadPool.isShutdown()) {
+      return Executors.newFixedThreadPool(Math.max(Runtime.getRuntime().availableProcessors(),3));
+    }
+    
+    return mThreadPool;
+  }
+  
   /**
    * Called by the host-application during start-up. Implements this method to
    * load your plugins settings from the file system.
@@ -940,61 +950,57 @@ public class FavoritesPlugin {
     }
     
     TvDataBase.getInstance().addTvDataListener(new TvDataBaseListener() {
-      private synchronized ExecutorService getExecutorService() {
-        if(mThreadPool == null) {
-          return Executors.newFixedThreadPool(Math.max(Runtime.getRuntime().availableProcessors(),3));
-        }
-        
-        return mThreadPool;
-      }
-      
       public void dayProgramTouched(final ChannelDayProgram removedDayProgram, final ChannelDayProgram addedDayProgram) {
-        String logMessage = "Favorites: dayProgramTouched called with removedDayProgram '" + removedDayProgram + "' and addedDayProgram '" + addedDayProgram+"' for channel '";
-        
-        if(removedDayProgram != null) {
-          logMessage += removedDayProgram.getChannel().getName()+"' on " + removedDayProgram.getDate();
-        }
-        else if(addedDayProgram != null) {
-          logMessage += addedDayProgram.getChannel().getName()+"' on " + addedDayProgram.getDate();
-        }
-        
-        LOG.info(logMessage);
-        
-        if(mThreadPool == null) {
-          mThreadPool = getExecutorService();
-        }
-
-        Runnable update = () -> {
-          final Favorite[] favArray = (removedDayProgram != null || addedDayProgram != null) ? FavoriteTreeModel.getInstance().getFavoriteArr() : null;
+        try {
+          String logMessage = "Favorites: dayProgramTouched called with removedDayProgram '" + removedDayProgram + "' and addedDayProgram '" + addedDayProgram+"' for channel '";
           
-          if(removedDayProgram != null && favArray != null) {
-            Iterator<Program> it1 = removedDayProgram.getPrograms();
-            it1.forEachRemaining(p1 -> {
-              for (Favorite fav1 : favArray) {
-                try {
-                  fav1.removeProgram(p1);
-                }catch(Throwable t) {
-                  ErrorHandler.handle("Error in removing program from Favorites",t);
-                }
-              }
-            });
+          if(removedDayProgram != null) {
+            logMessage += removedDayProgram.getChannel().getName()+"' on " + removedDayProgram.getDate();
           }
-
-          if(addedDayProgram != null && favArray != null) {
-            Iterator<Program> it2 = addedDayProgram.getPrograms();
-            it2.forEachRemaining(p2 -> {
-              for (Favorite fav2 : favArray) {
-                try {
-                  fav2.tryToMatch(p2);
-                } catch (Throwable t) {
-                  ErrorHandler.handle("Error in searching programs for Favorites",t);
-                }
-              }
-            });
+          else if(addedDayProgram != null) {
+            logMessage += addedDayProgram.getChannel().getName()+"' on " + addedDayProgram.getDate();
           }
-        };
-
-        mThreadPool.execute(update);
+          
+          LOG.info(logMessage);
+          
+          if(mThreadPool == null || mThreadPool.isShutdown()) {
+            mThreadPool = getExecutorService();
+          }
+  
+          Runnable update = () -> {
+            final Favorite[] favArray = (removedDayProgram != null || addedDayProgram != null) ? FavoriteTreeModel.getInstance().getFavoriteArr() : null;
+            
+            if(removedDayProgram != null && favArray != null) {
+              Iterator<Program> it1 = removedDayProgram.getPrograms();
+              it1.forEachRemaining(p1 -> {
+                for (Favorite fav1 : favArray) {
+                  try {
+                    fav1.removeProgram(p1);
+                  }catch(Throwable t) {
+                    ErrorHandler.handle("Error in removing program from Favorites",t);
+                  }
+                }
+              });
+            }
+  
+            if(addedDayProgram != null && favArray != null) {
+              Iterator<Program> it2 = addedDayProgram.getPrograms();
+              it2.forEachRemaining(p2 -> {
+                for (Favorite fav2 : favArray) {
+                  try {
+                    fav2.tryToMatch(p2);
+                  } catch (Throwable t) {
+                    ErrorHandler.handle("Error in searching programs for Favorites",t);
+                  }
+                }
+              });
+            }
+          };
+  
+          mThreadPool.execute(update);
+        }catch(Throwable t) {
+          LOG.log(Level.SEVERE, "Favorite update caused error", t);
+        }
       }
 
       public void dayProgramAdded(ChannelDayProgram prog) {}
@@ -1004,8 +1010,8 @@ public class FavoritesPlugin {
 
     TvDataUpdater.getInstance().addTvDataUpdateListener(new TvDataUpdateListener() {
       public void tvDataUpdateStarted(devplugin.Date until) {
-        if(mThreadPool == null) {
-          mThreadPool = Executors.newFixedThreadPool(Math.max(Runtime.getRuntime().availableProcessors(),3));
+        if(mThreadPool == null || mThreadPool.isShutdown()) {
+          mThreadPool = getExecutorService();
         }
         
         mHasRightToSave = false;
