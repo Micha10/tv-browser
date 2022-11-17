@@ -35,6 +35,9 @@ import org.apache.commons.lang3.StringUtils;
 
 import devplugin.Program;
 import devplugin.ProgramFieldType;
+import devplugin.ProgramInfo;
+import tvbrowser.core.plugin.PluginProxy;
+import tvbrowser.core.plugin.PluginProxyManager;
 import util.browserlauncher.Launch;
 import util.i18n.Localizer;
 import util.misc.TextLineBreakerStringWidth;
@@ -92,6 +95,7 @@ public class ParamLibrary {
   private static final String FUNCTION_REPLACE = "replace";
   private static final String FUNCTION_REPLACE_LINE_FEED = "replaceNewline";
   private static final String FUNCTION_ESCAPE_QUOTES = "escapeQuotes";
+  private static final String FUNCTION_PROGRAM_INFO = "programInfo";
   
   private static final String[] KEY_ARRAY = { KEY_TITLE, KEY_ORIGINAL_TITLE, KEY_START_DAY, KEY_START_MONTH, KEY_START_YEAR, KEY_START_HOUR, KEY_START_MINUTE,
       KEY_END_MONTH, KEY_END_YEAR, KEY_END_DAY, KEY_END_HOUR, KEY_END_MINUTE, KEY_LENGTH_MINUTES, KEY_LENGTH_SECONDS, KEY_SHORT_INFO,
@@ -100,7 +104,7 @@ public class ParamLibrary {
       KEY_ORIGIN,KEY_SEASON_NUMBER};
   
   private static final String[] FUNCTION_ARRAY = { FUNCTION_ISSET, FUNCTION_URLENCODE, FUNCTION_CONCAT, FUNCTION_CLEAN, FUNCTION_CLEAN_LESS, FUNCTION_LEADING_ZERO,
-      FUNCTION_SPLIT_AT, FUNCTION_TESTPARAM, FUNCTION_MAX_LENGTH, FUNCTION_REPLACE, FUNCTION_REPLACE_LINE_FEED, FUNCTION_ESCAPE_QUOTES};
+      FUNCTION_SPLIT_AT, FUNCTION_TESTPARAM, FUNCTION_MAX_LENGTH, FUNCTION_REPLACE, FUNCTION_REPLACE_LINE_FEED, FUNCTION_ESCAPE_QUOTES, FUNCTION_PROGRAM_INFO};
   
   /** Translator */
   private static final Localizer LOCALIZER = Localizer.getLocalizerFor(ParamLibrary.class);
@@ -543,6 +547,28 @@ public class ParamLibrary {
     }
     else if(function.equalsIgnoreCase(FUNCTION_REPLACE_LINE_FEED)) {
       return params[0].replaceAll("\\r*\\n", " ").strip();
+    }
+    else if(function.equalsIgnoreCase(FUNCTION_PROGRAM_INFO)) {
+      if(params.length == 2) {
+        PluginProxy plugin = PluginProxyManager.getInstance().getActivatedPluginForId("java."+params[0].toLowerCase()+"."+params[0]);
+        
+        if(plugin != null) {
+          ProgramInfo[] infos = plugin.getAddtionalProgramInfoForProgram(prg, params[1]);
+          
+          if(infos != null) {
+            for(ProgramInfo info : infos) {
+              if(info.getUniqueId().equals(params[1])) {
+                return info.getValue();
+              }
+            }
+          }
+          
+          return "";
+        }
+        else {
+          return "PLUGIN " + params[0] + " NOT AVAILABLE";
+        }
+      }
     }
     else if(function.equalsIgnoreCase(FUNCTION_ESCAPE_QUOTES)) {
       return Launch.getOs() == Launch.OS_WINDOWS ? params[0].replace("\"", "\\\"\\\"") : params[0].replace("\"", "\\\"");
