@@ -961,7 +961,7 @@ public class FavoritesPlugin {
             logMessage += addedDayProgram.getChannel().getName()+"' on " + addedDayProgram.getDate();
           }
           
-       //   LOG.info(logMessage);
+          LOG.info(logMessage);
           
           if(mThreadPool == null || mThreadPool.isShutdown()) {
             mThreadPool = getExecutorService();
