@@ -1584,9 +1584,32 @@ public class UiUtilities {
    */
   public static int showOptionDialogOnBestScreen(Component parent, Object message, String title, int optionType, int messageType, Icon icon, Object[] options, Object initialValue) {
     Component p = parent;
+    Rectangle screenSize = null;
     
     if(p == null) {
       p = getParentFrameOnMouseScreen();
+      screenSize = MouseInfo.getPointerInfo().getDevice().getDefaultConfiguration().getBounds();
+    }
+    else {
+      screenSize = p.getGraphicsConfiguration().getBounds();
+    }
+    
+    if(message instanceof JComponent) {
+      if(((JComponent) message).getPreferredSize().width > screenSize.width-200) {
+        ((JComponent) message).setPreferredSize(new Dimension(screenSize.width-200,Math.min(screenSize.height-50, (int)(((JComponent)message).getPreferredSize().height*(((JComponent)message).getPreferredSize().width/(screenSize.width-200f))))));
+      }
+    }
+    else if(message.getClass().isArray()) {
+      Object[] parts = (Object[])message;
+      
+      for(Object part : parts) {
+        if(part instanceof JComponent) {
+          JComponent c = ((JComponent) part); 
+          if(c.getPreferredSize().width > screenSize.width-200) {
+            c.setPreferredSize(new Dimension(screenSize.width-200,Math.min(screenSize.height-50, (int)(c.getPreferredSize().height*(c.getPreferredSize().width/(screenSize.width-200f))))));
+          }
+        }
+      }
     }
     
     int result = JOptionPane.showOptionDialog(p, message, title, optionType, messageType, icon, options, initialValue);

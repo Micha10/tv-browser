@@ -2995,7 +2995,7 @@ public class MainFrame extends JFrame implements DateListener,DropTargetListener
   }
   
   private void showTestVersionAvailable(TvbrowserSoftwareUpdateItem testVersion) {
-    JLabel info = new JLabel("<html>"+LOCALIZER.msg("testVersionFound.msg", "A new test version of TV-Browser ({0}) is available:",testVersion.getVersion().toString())+"<br><br><i>"+Translate.decode(testVersion.getDescription())+"</i><html>");
+    JLabel info = new JLabel("<html>"+LOCALIZER.msg("testVersionFound.msg", "A new test version of TV-Browser ({0}) is available:",testVersion.getVersion().toString())+"<br><br>"+Translate.decode(testVersion.getDescription())+"<html>");
     
     String[] options = {
         LOCALIZER.msg("testVersionFound.btn", "Open TV-Browser website for download"),
