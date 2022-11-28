@@ -952,16 +952,18 @@ public class FavoritesPlugin {
     TvDataBase.getInstance().addTvDataListener(new TvDataBaseListener() {
       public void dayProgramTouched(final ChannelDayProgram removedDayProgram, final ChannelDayProgram addedDayProgram) {
         try {
-          String logMessage = "Favorites: dayProgramTouched called with removedDayProgram '" + removedDayProgram + "' and addedDayProgram '" + addedDayProgram+"' for channel '";
-          
-          if(removedDayProgram != null) {
-            logMessage += removedDayProgram.getChannel().getName()+"' on " + removedDayProgram.getDate();
+          if(Settings.General.LOGGING_VERBOSE.getBoolean()) {
+            String logMessage = "Favorites: dayProgramTouched called with removedDayProgram '" + removedDayProgram + "' and addedDayProgram '" + addedDayProgram+"' for channel '";
+            
+            if(removedDayProgram != null) {
+              logMessage += removedDayProgram.getChannel().getName()+"' on " + removedDayProgram.getDate();
+            }
+            else if(addedDayProgram != null) {
+              logMessage += addedDayProgram.getChannel().getName()+"' on " + addedDayProgram.getDate();
+            }
+            
+            LOG.info(logMessage);
           }
-          else if(addedDayProgram != null) {
-            logMessage += addedDayProgram.getChannel().getName()+"' on " + addedDayProgram.getDate();
-          }
-          
-          LOG.info(logMessage);
           
           if(mThreadPool == null || mThreadPool.isShutdown()) {
             mThreadPool = getExecutorService();

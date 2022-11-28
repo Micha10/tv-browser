@@ -38,6 +38,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import tvbrowser.core.data.OnDemandDayProgramFile;
+import tvbrowser.extras.favoritesplugin.FavoritesPlugin;
 import tvbrowser.ui.mainframe.MainFrame;
 import tvdataservice.MutableChannelDayProgram;
 import tvdataservice.MutableProgram;
@@ -238,7 +239,7 @@ public class TvDataBase {
     // fire update finished
     if (somethingChanged) {
       if(!MainFrame.isStarting()) {
-        TvDataUpdater.getInstance().fireTvDataUpdateFinished();
+        handleAddedPrograms();
       }
       else {
         mPendingPluginInformationAboutChangedData = true;
@@ -254,21 +255,26 @@ public class TvDataBase {
    */
   public void handleTvBrowserStartFinished() {
     if(mPendingPluginInformationAboutChangedData) {
-      mPendingPluginInformationAboutChangedData = false;
-
-      Collection<UpdateData> dayPrograms = mNewDayProgramsAfterUpdate.values();
-
-      for(UpdateData dayProgram : dayPrograms) {        
-        if(dayProgram instanceof ChannelDayProgram) {
-          fireDayProgramTouched(dayProgram.getRemoved(),dayProgram.getAdded().getDayProgram());
-          fireDayProgramAdded(dayProgram.getAdded().getDayProgram());
-        }
-      }
-
-      mNewDayProgramsAfterUpdate.clear();
-
-      TvDataUpdater.getInstance().fireTvDataUpdateFinished();
+      handleAddedPrograms();
     }
+  }
+  
+  private void handleAddedPrograms() {
+    mPendingPluginInformationAboutChangedData = false;
+
+    Collection<UpdateData> dayPrograms = mNewDayProgramsAfterUpdate.values();
+
+    for(UpdateData dayProgram : dayPrograms) {
+      if(dayProgram.mAdded != null) {
+        fireDayProgramTouched(dayProgram.getRemoved(),dayProgram.getAdded().getDayProgram());
+        fireDayProgramAdded((ChannelDayProgram)dayProgram.getAdded().getDayProgram());
+      }
+    }
+
+    mNewDayProgramsAfterUpdate.clear();
+
+    FavoritesPlugin.getInstance().waitForFinishingUpdateThreads();
+    TvDataUpdater.getInstance().fireTvDataUpdateFinished();
   }
 
   public void close(boolean log) {
@@ -580,6 +586,7 @@ public class TvDataBase {
     }
 
     if(informPlugins && somethingDeleted) {
+      FavoritesPlugin.getInstance().waitForFinishingUpdateThreads();
       TvDataUpdater.getInstance().fireTvDataUpdateFinished();
       return true;
     }
@@ -903,10 +910,10 @@ public class TvDataBase {
       Date date = newDayProg.getDate();
       Channel channel = newDayProg.getChannel();
 
-      if (knownStatus == TvDataInventory.OTHER_VERSION) {
+      if(knownStatus == TvDataInventory.OTHER_VERSION) {
         // The day program was replaced -> fire a deleted event
         // (And later an added event)
-
+  
         // Since we don't have the old day program we use a dummy program
         ChannelDayProgram dayProg = new MutableChannelDayProgram(date, channel);
         //validateProgramState(dayProg, null);
