@@ -705,7 +705,7 @@ public class TvDataBase {
       }
 
       // Inform the listeners about adding the new program
-      if(updateData != null || somethingChanged) {
+      if(updateData != null) {
         ChannelDayKey dayKey = new ChannelDayKey(channel, date);
 //        OnDemandDayProgramFile dayProgramFile = getCacheEntry(date, channel, true, false);
                 
@@ -1121,16 +1121,18 @@ public class TvDataBase {
     
     //  ChannelDayProgram dayProgram = dayProgramFile.getDayProgram();
       
-      if(updateData.getRemoved() != null) {
-        //validateProgramState((ChannelDayProgram)oldProg,dayProgram);
-        fireDayProgramTouched(updateData.getRemoved(),updateData.getAdded().getDayProgram()/*dayProgram*/);
-        fireDayProgramDeleted(updateData.getRemoved());
+      if(updateData != null) {
+        if(updateData.getRemoved() != null) {
+          //validateProgramState((ChannelDayProgram)oldProg,dayProgram);
+          fireDayProgramTouched(updateData.getRemoved(),updateData.getAdded().getDayProgram()/*dayProgram*/);
+          fireDayProgramDeleted(updateData.getRemoved());
+        }
+        else {
+          fireDayProgramTouched(null,updateData.getAdded().getDayProgram()/*dayProgram*/);
+        }
+        
+        fireDayProgramAdded((ChannelDayProgram)updateData.getAdded().getDayProgram()/*dayProgram*/);
       }
-      else {
-        fireDayProgramTouched(null,updateData.getAdded().getDayProgram()/*dayProgram*/);
-      }
-  
-      fireDayProgramAdded((ChannelDayProgram)updateData.getAdded().getDayProgram()/*dayProgram*/);
     }
   }
   
