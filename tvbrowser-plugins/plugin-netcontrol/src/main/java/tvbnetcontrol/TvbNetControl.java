@@ -49,7 +49,7 @@ public class TvbNetControl extends Plugin {
   private static final String ANSWER_NETWORK_KEY = "answerNetwork";
   private static final String PAKET_SIZE_KEY = "packetSize";
   
-  private static final Version VERSION = new Version(0, 10, 0, false);
+  private static final Version VERSION = new Version(0, 11, 0, false);
   private static TvbNetControl INSTANCE;
   
   private Properties mSettings;
@@ -303,10 +303,12 @@ public class TvbNetControl extends Plugin {
         if(prog.isOnAir() || !prog.isExpired()) {
           SwingUtilities.invokeLater(new Runnable() {
             @Override
-            public void run() {
+            public void run() {try {
               UiUtilities.getLastModalChildOf(getParentFrame()).toFront();
               UiUtilities.getLastModalChildOf(getParentFrame()).requestFocus();
-              ProgramCompat.selectProgram(prog);
+              ProgramCompat.selectProgram(prog);}catch(Throwable t) {
+                t.printStackTrace();
+              }
             }
           });
           
