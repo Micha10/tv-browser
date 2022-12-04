@@ -45,6 +45,7 @@ import compat.VersionCompat;
 import devplugin.Plugin;
 import devplugin.ProgramFilter;
 import devplugin.SettingsTab;
+import devplugin.Version;
 import util.ui.DefaultProgramImportanceSelectionPanel;
 import util.ui.Localizer;
 import util.ui.ScrollableJPanel;
@@ -153,29 +154,37 @@ public class IDontWant2SeeSettingsTab implements SettingsTab {
     
     mAdditionalFilter = new JCheckBox(mLocalizer.msg("settings.additionalFilter", "Use additonal Filter"), mSettings.isUsingAdditionalFilter());
     
-    try {
-      ProgramFilter filter = (ProgramFilter)Plugin.getPluginManager().getFilterManager().getClass().getDeclaredMethod("getFilterByName", String.class).invoke(Plugin.getPluginManager().getFilterManager(), mSettings.getAdditionalFilterName());
-      Class clazz = Class.forName("util.ui.FilterSelectionPanel");
-      mFilterSelectionPanel = (JPanel)clazz.getConstructor(String.class,ProgramFilter.class,boolean.class).newInstance("",filter,true);
-      
-      for(int i = 0; i < mFilterSelectionPanel.getComponentCount(); i++) {
-        mFilterSelectionPanel.getComponent(i).setEnabled(mAdditionalFilter.isSelected());
-      }
-      
-      mAdditionalFilter.addItemListener(new ItemListener() {
-        @Override
-        public void itemStateChanged(ItemEvent e) {
-          try {
-            mFilterSelectionPanel.getClass().getDeclaredMethod("setEnabled",boolean.class).invoke(mFilterSelectionPanel, e.getStateChange() == ItemEvent.SELECTED);
-          } catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e1) {
-            for(int i = 0; i < mFilterSelectionPanel.getComponentCount(); i++) {
-              mFilterSelectionPanel.getComponent(i).setEnabled(e.getStateChange() == ItemEvent.SELECTED);
+    if(Plugin.getPluginManager().getTVBrowserVersion().compareTo(new Version(4, 24, true)) >= 0) {
+      try {
+        ProgramFilter filter = (ProgramFilter)Plugin.getPluginManager().getFilterManager().getClass().getDeclaredMethod("getFilterByName", String.class).invoke(Plugin.getPluginManager().getFilterManager(), mSettings.getAdditionalFilterName());
+        Class<?> clazz = Class.forName("util.ui.FilterSelectionPanel");
+        
+        try {
+          mFilterSelectionPanel = (JPanel)clazz.getConstructor(String.class,ProgramFilter.class,boolean.class,boolean.class,Class[].class).newInstance("",filter,true,true,new Class<?>[] {IDontWant2SeeFilterComponent.class,IDontWant2See.class});
+        }catch(Exception e) {
+          // fallback to method of TV-Browser 4.2.4
+          mFilterSelectionPanel = (JPanel)clazz.getConstructor(String.class,ProgramFilter.class,boolean.class).newInstance("",filter,true);
+        }
+        
+        for(int i = 0; i < mFilterSelectionPanel.getComponentCount(); i++) {
+          mFilterSelectionPanel.getComponent(i).setEnabled(mAdditionalFilter.isSelected());
+        }
+        
+        mAdditionalFilter.addItemListener(new ItemListener() {
+          @Override
+          public void itemStateChanged(ItemEvent e) {
+            try {
+              mFilterSelectionPanel.getClass().getDeclaredMethod("setEnabled",boolean.class).invoke(mFilterSelectionPanel, e.getStateChange() == ItemEvent.SELECTED);
+            } catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e1) {
+              for(int i = 0; i < mFilterSelectionPanel.getComponentCount(); i++) {
+                mFilterSelectionPanel.getComponent(i).setEnabled(e.getStateChange() == ItemEvent.SELECTED);
+              }
             }
           }
-        }
-      });
-    } catch (ClassNotFoundException | NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-      // ignore
+        });
+      } catch (ClassNotFoundException | NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+        //ignore
+      }
     }
     
     y = 2;

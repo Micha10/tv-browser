@@ -113,7 +113,7 @@ public final class IDontWant2See extends Plugin implements AWTEventListener {
   private static final String DONT_WANT_TO_SEE_IMPORT_SYNC_ADDRESS = "https://www.tvbrowser-app.de/data/scripts/syncDown.php?type=dontWantToSee";
   
   private static final boolean PLUGIN_IS_STABLE = true;
-  private static final Version PLUGIN_VERSION = new Version(0, 19, 2, PLUGIN_IS_STABLE);
+  private static final Version PLUGIN_VERSION = new Version(0, 20, 0, PLUGIN_IS_STABLE);
 
   private static final String RECEIVE_TARGET_EXCLUDE_EXACT = "target_exclude_exact";
 
@@ -454,8 +454,7 @@ public final class IDontWant2See extends Plugin implements AWTEventListener {
         
     if(car != null && bicycle != null) {
       URLConnection conn = null;
-      BufferedReader read = null;
-
+      
       try {
         URL url = new URL(DONT_WANT_TO_SEE_IMPORT_SYNC_ADDRESS);
         System.out.println("url:" + url);
@@ -888,6 +887,11 @@ public final class IDontWant2See extends Plugin implements AWTEventListener {
         mSettings.setOutdated(IDontWant2SeeSettings.OUTDATED_DAY_COUNT_DEFAULT_FIRST, in.readInt());
         mSettings.setOutdated(IDontWant2SeeSettings.OUTDATED_DAY_COUNT_DEFAULT_SECOND, in.readInt());
       }
+      if(version >= 11) {
+        mSettings.setUseAdditionalFilter(in.readBoolean());
+        mSettings.setAdditionalFilterName(in.readUTF());
+        updateAdditonalFilter();
+      }
     }
   }
 
@@ -900,7 +904,7 @@ public final class IDontWant2See extends Plugin implements AWTEventListener {
       }
     });
 
-    out.writeInt(10); //version
+    out.writeInt(11); //version
     out.writeInt(mSettings.getSearchList().size());
 
     for(IDontWant2SeeListEntry entry : mSettings.getSearchList()) {
@@ -922,6 +926,9 @@ public final class IDontWant2See extends Plugin implements AWTEventListener {
     out.writeBoolean(mSettings.isDefaultCaseSensitive());
     out.writeInt(mSettings.getOutdated(IDontWant2SeeSettings.OUTDATED_DAY_COUNT_DEFAULT_FIRST));
     out.writeInt(mSettings.getOutdated(IDontWant2SeeSettings.OUTDATED_DAY_COUNT_DEFAULT_SECOND));
+    
+    out.writeBoolean(mSettings.isUsingAdditionalFilter());
+    out.writeUTF(mSettings.getAdditionalFilterName());
   }
 
   public SettingsTab getSettingsTab() {
@@ -967,10 +974,9 @@ public final class IDontWant2See extends Plugin implements AWTEventListener {
     }
     return false;
   }
-
+  
   @Override
   public void onActivation() {
-    updateAdditonalFilter();
     mFilter = new PluginsProgramFilter(this) {
       public String getSubName() {
         return "";
