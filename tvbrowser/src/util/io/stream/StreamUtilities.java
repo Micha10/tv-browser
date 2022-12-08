@@ -33,6 +33,8 @@ import java.io.OutputStream;
 import java.io.PrintStream;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import util.io.IOUtilities;
 
@@ -47,7 +49,8 @@ import util.io.IOUtilities;
  *
  */
 public class StreamUtilities {
-
+  private static final Logger LOG = Logger.getLogger(StreamUtilities.class.getName());
+  
   interface IInputStreamMethod {
     InputStream openInputStream() throws IOException;
   }
@@ -541,7 +544,7 @@ public class StreamUtilities {
     try {
       objectInputStream(file, bufferSize, processor);
     } catch (IOException e) {
-      e.printStackTrace();
+      LOG.log(Level.WARNING, "Problem reading from file: "+file.getAbsolutePath(), e);
     }
   }
 

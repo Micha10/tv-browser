@@ -79,7 +79,7 @@ public class FilterComponentList {
 
           @Override
             public void process(final ObjectInputStream in) throws IOException {
-              int version = in.readInt(); // version not yet used
+              int version = in.readInt();
               int compCnt = in.readInt();
               
               for (int i = 0; i < compCnt; i++) {
@@ -92,7 +92,7 @@ public class FilterComponentList {
                   } catch (ClassNotFoundException e) {
                     e.printStackTrace();
                   }
-                  if (comp != null) {
+                  if (comp != null && !(comp instanceof AcceptNoneFilterComponent)) {
                     synchronized (mComponentList) {
                       mComponentList.add(comp);
                     }
@@ -120,7 +120,7 @@ public class FilterComponentList {
                             e.printStackTrace();
                           }
                           
-                          if (comp != null) {
+                          if (comp != null && !(comp instanceof AcceptNoneFilterComponent)) {
                             synchronized (mComponentList) {
                               mComponentList.add(comp);
                             }
@@ -202,6 +202,9 @@ public class FilterComponentList {
       
       if(component instanceof UnknownFilterComponent) {
         key = ((UnknownFilterComponent) component).getClassName();
+      }
+      else if(component instanceof AcceptNoneFilterComponent) {
+        continue;
       }
       
       ArrayList<FilterComponent> componentList = filterTable.get(key);

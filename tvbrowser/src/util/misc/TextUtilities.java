@@ -3,7 +3,7 @@ package util.misc;
 import java.util.HashSet;
 
 /**
- * A class with usefull functions for text.
+ * A class with useful functions for text.
  * 
  * @author René Mach
  * @since 4.2.7
@@ -14,7 +14,7 @@ public final class TextUtilities {
    * Removes multiple identical entries from haystack with entries separated by lineSeparatorHaystack
    * and returns the cleaned text with lines separated by lineSeparatorTarget.
    * 
-   * @param haystack The text to search for multiple indentical entries.
+   * @param haystack The text to search for multiple identical entries.
    * @param lineSeparatorHaystackRegEx The separator used in haystack to separate entries from each other as regular expression.
    * @param lineSeparatorTarget The separator used in result to separate entries from each other.
    * @return The cleaned text with lines separated by lineSeparatorTarget.
