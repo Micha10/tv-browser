@@ -98,7 +98,7 @@ import util.ui.WindowClosingIf;
 public class SimpleMarkerPlugin extends Plugin {
   public static boolean HANDLE_SEPARATORS = true;
   
-  private static final Version mVersion = new Version(3,35,0,true);
+  private static final Version mVersion = new Version(3,35,1,true);
 
   /** The localizer for this class. */
   private static final util.ui.Localizer LOCALIZER = util.ui.Localizer.getLocalizerFor(SimpleMarkerPlugin.class);
@@ -863,12 +863,8 @@ public class SimpleMarkerPlugin extends Plugin {
 
   @SuppressWarnings("unchecked")
   public Class<? extends PluginsFilterComponent>[] getAvailableFilterComponentClasses() {
-    if(mMarkListVector.size() > 1) {
-      // Make sure the compiler not has to make unsafe class cast, therefore class is casted manually to needed type
-      return new Class[] {MarkListFilterComponent.class};
-    }
-
-    return null;
+	// Make sure the compiler not has to make unsafe class cast, therefore class is casted manually to needed type
+	return new Class[] {MarkListFilterComponent.class};
   }
 
   protected SimpleMarkerSettings getSettings() {
