@@ -49,7 +49,7 @@ public class TvbNetControl extends Plugin {
   private static final String ANSWER_NETWORK_KEY = "answerNetwork";
   private static final String PAKET_SIZE_KEY = "packetSize";
   
-  private static final Version VERSION = new Version(0, 12, 0, false);
+  private static final Version VERSION = new Version(0, 13, 0, false);
   private static TvbNetControl INSTANCE;
   
   private Properties mSettings;
@@ -149,7 +149,7 @@ public class TvbNetControl extends Plugin {
               mSocket.receive(packet);
               String temp = new String(packet.getData()).trim();
               
-              if(temp != null && temp.equals(Commands.DO_NOTHING)) {
+              if(temp != null && !temp.equals(Commands.DO_NOTHING)) {
                 boolean send = true;
                 
                 String channel = Commands.getRunningNumber(temp);
