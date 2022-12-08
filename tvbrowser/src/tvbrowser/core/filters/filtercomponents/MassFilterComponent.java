@@ -103,7 +103,7 @@ public class MassFilterComponent extends AbstractFilterComponent {
   }
 
   public int getVersion() {
-    return 1;
+    return 2;
   }
 
   public boolean accept(final Program program) {
@@ -119,13 +119,19 @@ public class MassFilterComponent extends AbstractFilterComponent {
 
   public void read(ObjectInputStream in, int version) throws IOException,
       ClassNotFoundException {
-    mText = (String) in.readObject();
+    if(version >= 2) {
+      mText = in.readUTF();
+    }
+    else {
+      mText = (String) in.readObject();
+    }
+    
     mSearchFormSettings = new SearchFormSettings(in);
     mSearcher = null;
   }
 
   public void write(ObjectOutputStream out) throws IOException {
-    out.writeObject(mText);
+    out.writeUTF(mText);
     mSearchFormSettings.writeData(out);
   }
 
