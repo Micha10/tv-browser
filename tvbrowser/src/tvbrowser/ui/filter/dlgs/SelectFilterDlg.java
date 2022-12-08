@@ -361,7 +361,7 @@ public class SelectFilterDlg extends JDialog implements ActionListener, WindowCl
   void editSelectedFilter(FilterNode node) {
     new Thread("EDIT SELECTED FILTER THREAD") {
       public void run() {
-        if(node.getFilter() instanceof FavoriteFilter || node.getFilter() instanceof PluginsProgramFilter || node.getFilter() instanceof InfoBitFilter || node.getFilter() instanceof SingleChannelFilter) {
+        if(node.getFilter() instanceof FavoriteFilter || node.getFilter() instanceof PluginsProgramFilter || node.getFilter() instanceof InfoBitFilter || node.getFilter() instanceof SingleChannelFilter || node.getFilter() instanceof ShowAllFilter) {
           editHighlighting(node);
         }
         else {

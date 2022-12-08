@@ -66,7 +66,7 @@ public class FilterComponentList {
 
   private static ArrayList<FilterComponent> mComponentList;
 
-  private static final Logger mLog = Logger.getLogger(FilterComponentList.class.getName());
+  private static final Logger LOG = Logger.getLogger(FilterComponentList.class.getName());
 
   private FilterComponentList() {
     mComponentList = new ArrayList<FilterComponent>();
@@ -88,7 +88,7 @@ public class FilterComponentList {
                   try {
                     comp = readComponent(in);
                   } catch (IOException e) {
-                    mLog.warning("error reading filter component: " + e);
+                    LOG.log(Level.WARNING, "error reading filter component: ", e);
                   } catch (ClassNotFoundException e) {
                     e.printStackTrace();
                   }
@@ -115,7 +115,7 @@ public class FilterComponentList {
                           try {
                             comp = readComponent(inputStream);
                           } catch (IOException e) {
-                            mLog.warning("error reading filter component: " + e);
+                        	LOG.log(Level.WARNING, "error reading filter component: ", e);
                           } catch (ClassNotFoundException e) {
                             e.printStackTrace();
                           }
@@ -303,7 +303,7 @@ public class FilterComponentList {
         Constructor<?> constructor = filterComponentClass.getConstructor(String.class, String.class);
         filterComponent = (FilterComponent)constructor.newInstance(name, description);
       } catch (ClassNotFoundException | NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-        mLog.log(Level.WARNING, "Filter component class '" + className + "' could not be instantiated.");
+        LOG.log(Level.WARNING, "Filter component class '" + className + "' could not be instantiated.");
         filterComponent = new UnknownFilterComponent(name, description, className);
       } 
     }
@@ -328,7 +328,7 @@ public class FilterComponentList {
         filterComponent.setDescription(description);
       }catch(Exception e) {
         //throw new IOException("error reading filter component: "+className+" unknown");
-        mLog.warning("error reading filter component: "+className+" unknown");
+        LOG.warning("error reading filter component: "+className+" unknown");
         return null;
       }
     }
