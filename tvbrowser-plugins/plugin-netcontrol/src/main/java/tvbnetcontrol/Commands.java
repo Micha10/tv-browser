@@ -3,6 +3,7 @@ package tvbnetcontrol;
 import java.util.HashMap;
 
 public class Commands {
+  public static final String DO_NOTHING = "DO_NOTHING";
   public static final String CHANNEL = "channel";
   public static final String RUNNING = "running";
   public static final String UP = "up";

@@ -49,12 +49,13 @@ public class TvbNetControl extends Plugin {
   private static final String ANSWER_NETWORK_KEY = "answerNetwork";
   private static final String PAKET_SIZE_KEY = "packetSize";
   
-  private static final Version VERSION = new Version(0, 11, 0, false);
+  private static final Version VERSION = new Version(0, 12, 0, false);
   private static TvbNetControl INSTANCE;
   
   private Properties mSettings;
   private DatagramSocket mSocket;
   
+  private boolean mKeepRunning;
   private boolean mHasToStart;
   private Robot mRobot;
   
@@ -64,6 +65,7 @@ public class TvbNetControl extends Plugin {
   public TvbNetControl() {
     INSTANCE = this;
     mHasToStart = false;
+    mKeepRunning = false;
   }
   
   static TvbNetControl getInstance() {
@@ -93,6 +95,7 @@ public class TvbNetControl extends Plugin {
   }
   
   public void onActivation() {
+    mKeepRunning = true;
     if(mSettings != null) {
       if(mParentListener == null && getParentFrame() != null) {
         mParentState = getParentFrame().getExtendedState();
@@ -135,47 +138,53 @@ public class TvbNetControl extends Plugin {
     new Thread() {
       public void run() {
         setPriority(Thread.MIN_PRIORITY);
-        while(!mSocket.isClosed()) {
+        while(mKeepRunning && !mSocket.isClosed()) {
           try {
             Thread.sleep(100);
-            byte[] b = new byte[getPaketSize()];
-            DatagramPacket packet = new DatagramPacket(b,getPaketSize());
-            mSocket.receive(packet);
-            String temp = new String(packet.getData()).trim();
             
-            boolean send = true;
-            
-            String channel = Commands.getRunningNumber(temp);
-            
-            if(channel != null) {
-              selectRunning(channel);
-            }
-            else {
-              channel = Commands.getChannelNumber(temp);
+            if(mKeepRunning) {
+              byte[] b = new byte[getPaketSize()];
+              DatagramPacket packet = new DatagramPacket(b,getPaketSize());
               
-              if(channel != null) {
-                scrollToChannel(channel);
-              }
-              else if(Commands.isFocus(temp)) {
-                focusWindow();
-              }
-              else if(!Commands.isPing(temp)) {
-                String cmd = Commands.getCommandForCommand(temp);
+              mSocket.receive(packet);
+              String temp = new String(packet.getData()).trim();
+              
+              if(temp != null && temp.equals(Commands.DO_NOTHING)) {
+                boolean send = true;
                 
-                if(cmd != null) {
-                  sendKeyCommand(cmd);
+                String channel = Commands.getRunningNumber(temp);
+                
+                if(channel != null) {
+                  selectRunning(channel);
                 }
                 else {
-                  send = false;
+                  channel = Commands.getChannelNumber(temp);
+                  
+                  if(channel != null) {
+                    scrollToChannel(channel);
+                  }
+                  else if(Commands.isFocus(temp)) {
+                    focusWindow();
+                  }
+                  else if(!Commands.isPing(temp)) {
+                    String cmd = Commands.getCommandForCommand(temp);
+                    
+                    if(cmd != null) {
+                      sendKeyCommand(cmd);
+                    }
+                    else {
+                      send = false;
+                    }
+                  }
+                }
+                
+                if(send) {
+                  send(temp);
+                }
+                else {
+                  send(Commands.UNKNOWN);
                 }
               }
-            }
-            
-            if(send) {
-              send(temp);
-            }
-            else {
-              send(Commands.UNKNOWN);
             }
           }catch(Exception e) {e.printStackTrace();}
         }
@@ -377,8 +386,22 @@ public class TvbNetControl extends Plugin {
     }
   }
   
+  
+  
   public void onDeactivation() {
+    mKeepRunning = false;
     if(mSocket != null) {
+      try (DatagramSocket socket = new DatagramSocket()){
+        InetAddress address = InetAddress.getByName("localhost");
+        byte[] buf = Commands.DO_NOTHING.getBytes();
+        
+        DatagramPacket packet = new DatagramPacket(buf, buf.length, address, getNetworkPort());
+        socket.send(packet);
+      } catch (Exception e) {
+        // TODO Automatisch erstellter Catch-Block
+        e.printStackTrace();
+      }
+      
       mSocket.close();
     }
   }
@@ -486,8 +509,7 @@ public class TvbNetControl extends Plugin {
   private void send(String text) {
     if(mSettings.getProperty(ANSWER_ENABLED_KEY,"false").equals("true")) {
       byte[] buf = new byte[getPaketSize()];
-      try {
-        DatagramSocket socket = new DatagramSocket();
+      try(DatagramSocket socket = new DatagramSocket()) {
         InetAddress address = InetAddress.getByName(getAnswerNetwork());
         buf = text.getBytes();
         
