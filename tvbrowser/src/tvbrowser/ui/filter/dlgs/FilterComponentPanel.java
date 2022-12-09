@@ -340,15 +340,18 @@ public class FilterComponentPanel extends JPanel implements ActionListener {
     
         FilterComponent rule = ((FilterItem)mFilterComponentListModel.getElementAt(inx)).getComponent();
         final String oldName = rule.getName();
-        FilterComponentList.getInstance().remove(oldName);
+        
         mFilterComponentListModel.removeElementAt(inx);
         EditFilterComponentDlg dlg = null;
         FilterComponent newRule = rule;
         
         dlg = new EditFilterComponentDlg(mParent,rule);
-        boolean result = dlg.getOkWasPressed();
         
-        if(result) {
+        if(dlg.getOkWasPressed()) {
+          if(!oldName.equalsIgnoreCase(newRule.getName())) {
+            FilterComponentList.getInstance().remove(oldName);
+          }
+          
           mFilterComponentTouched = true;
         
           newRule = dlg.getFilterComponent();
@@ -362,32 +365,28 @@ public class FilterComponentPanel extends JPanel implements ActionListener {
           FilterComponentList.getInstance().add(newRule);
           FilterTreeModel.getInstance().updateFilterComponent(oldName, newRule);
           
-          if(!oldName.equalsIgnoreCase(newRule.getName())) {
-            FilterComponentList.getInstance().remove(oldName);
-          }
-        }
-        
-        if(mParent instanceof EditFilterDlg && result) {
-          if(!oldName.equalsIgnoreCase(newRule.getName())) {
-            final String[] parts = mFilterRuleTF.getText().split("\\s+");
-            final StringBuilder newRuleText = new StringBuilder();
-            
-            for(int i = 0; i < parts.length; i++) {
-              if(parts[i].equals(oldName)) {
-                parts[i] = newRule.getName();
+          if(mParent instanceof EditFilterDlg) {
+            if(!oldName.equalsIgnoreCase(newRule.getName())) {
+              final String[] parts = mFilterRuleTF.getText().split("\\s+");
+              final StringBuilder newRuleText = new StringBuilder();
+              
+              for(int i = 0; i < parts.length; i++) {
+                if(parts[i].equals(oldName)) {
+                  parts[i] = newRule.getName();
+                }
+                
+                if(newRuleText.length() > 0) {
+                  newRuleText.append(" ");
+                }
+                
+                newRuleText.append(parts[i]);
               }
               
-              if(newRuleText.length() > 0) {
-                newRuleText.append(" ");
-              }
-              
-              newRuleText.append(parts[i]);
+              mFilterRuleTF.setText(newRuleText.toString());
             }
             
-            mFilterRuleTF.setText(newRuleText.toString());
+            ((EditFilterDlg) mParent).repaintFilterConstruction();
           }
-          
-          ((EditFilterDlg) mParent).repaintFilterConstruction();
         }
           
         mFilterComponentListModel.insertElementAt(new FilterItem(newRule,0),inx);
