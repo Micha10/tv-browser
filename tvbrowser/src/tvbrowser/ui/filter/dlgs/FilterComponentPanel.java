@@ -345,13 +345,11 @@ public class FilterComponentPanel extends JPanel implements ActionListener {
         EditFilterComponentDlg dlg = null;
         FilterComponent newRule = rule;
         
+        FilterComponentList.getInstance().remove(oldName);
+        
         dlg = new EditFilterComponentDlg(mParent,rule);
         
         if(dlg.getOkWasPressed()) {
-          if(!oldName.equalsIgnoreCase(newRule.getName())) {
-            FilterComponentList.getInstance().remove(oldName);
-          }
-          
           mFilterComponentTouched = true;
         
           newRule = dlg.getFilterComponent();
@@ -387,6 +385,9 @@ public class FilterComponentPanel extends JPanel implements ActionListener {
             
             ((EditFilterDlg) mParent).repaintFilterConstruction();
           }
+        }
+        else {
+          FilterComponentList.getInstance().add(rule);
         }
           
         mFilterComponentListModel.insertElementAt(new FilterItem(newRule,0),inx);
