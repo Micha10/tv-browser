@@ -49,7 +49,7 @@ public class TvbNetControl extends Plugin {
   private static final String ANSWER_NETWORK_KEY = "answerNetwork";
   private static final String PAKET_SIZE_KEY = "packetSize";
   
-  private static final Version VERSION = new Version(0, 13, 0, false);
+  private static final Version VERSION = new Version(0, 13, 0, true);
   private static TvbNetControl INSTANCE;
   
   private Properties mSettings;
