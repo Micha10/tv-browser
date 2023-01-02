@@ -25,9 +25,12 @@
  */
 package tvbrowser.ui.settings;
 
+import java.awt.event.ItemEvent;
+
 import javax.swing.ButtonGroup;
 import javax.swing.Icon;
 import javax.swing.JCheckBox;
+import javax.swing.JComponent;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
@@ -61,7 +64,6 @@ public class TrayBaseSettingsTab implements SettingsTab {
   private JRadioButton mFilterAll,mNoMarkedFiltering,mNoFiltering;
 
   public JPanel createSettingsPanel() {
-
     final EnhancedPanelBuilder builder = new EnhancedPanelBuilder(new FormLayout("5dlu, 50dlu:grow, 5dlu"));
     builder.border(Borders.DIALOG);
 
@@ -118,27 +120,37 @@ public class TrayBaseSettingsTab implements SettingsTab {
     builder.addRow(false, mTrayIsAnialiasing, 2);
     builder.addRow(false, mMinimizeToTrayChb, 2);
     
-    builder.addParagraph(LOCALIZER.msg("filter", "Filter settings"));
+    final JComponent label = builder.addParagraph(LOCALIZER.msg("filter", "Filter settings"));
     builder.addRow(mFilterAll, 2);
     builder.addRow(false, mNoMarkedFiltering, 2);
     builder.addRow(false, mNoFiltering, 2);
 
-    mTrayIsEnabled.addActionListener(e -> {
-      mIsEnabled = mTrayIsEnabled.isSelected();
-      TrayImportantSettingsTab.setTrayIsEnabled(mIsEnabled);
-      TrayNowSettingsTab.setTrayIsEnabled(mIsEnabled);
-      TrayOnTimeSettingsTab.setTrayIsEnabled(mIsEnabled);
-      TraySoonSettingsTab.setTrayIsEnabled(mIsEnabled);
-      TrayProgramsChannelsSettingsTab.setTrayIsEnabled(mIsEnabled);
-      mMinimizeToTrayChb.setEnabled(mTrayIsEnabled.isSelected());
-      mNowOnRestore.setEnabled(mTrayIsEnabled.isSelected());
-      mTrayIsAnialiasing.setEnabled(mTrayIsEnabled.isSelected());
-      mFilterAll.setEnabled(mTrayIsEnabled.isSelected());
-      mNoMarkedFiltering.setEnabled(mTrayIsEnabled.isSelected());
-      mNoFiltering.setEnabled(mTrayIsEnabled.isSelected());
+    mTrayIsEnabled.addItemListener(e -> {
+      mIsEnabled = e.getStateChange() == ItemEvent.SELECTED;
+      updateEnabled(label);
     });
-
+    
+    updateEnabled(label);
+    
     return builder.getPanel();
+  }
+  
+  private void updateEnabled(JComponent label) {
+    TrayImportantSettingsTab.setTrayIsEnabled(mIsEnabled);
+    TrayNowSettingsTab.setTrayIsEnabled(mIsEnabled);
+    TrayOnTimeSettingsTab.setTrayIsEnabled(mIsEnabled);
+    TraySoonSettingsTab.setTrayIsEnabled(mIsEnabled);
+    TrayProgramsChannelsSettingsTab.setTrayIsEnabled(mIsEnabled);
+    mMinimizeToTrayChb.setEnabled(mTrayIsEnabled.isSelected());
+    mNowOnRestore.setEnabled(mTrayIsEnabled.isSelected());
+    mTrayIsAnialiasing.setEnabled(mTrayIsEnabled.isSelected());
+    mFilterAll.setEnabled(mTrayIsEnabled.isSelected());
+    mNoMarkedFiltering.setEnabled(mTrayIsEnabled.isSelected());
+    mNoFiltering.setEnabled(mTrayIsEnabled.isSelected());
+    
+    for(int i = 0; i < label.getComponentCount(); i++) {
+      label.getComponent(i).setEnabled(mIsEnabled);
+    }
   }
 
   public void saveSettings() {
