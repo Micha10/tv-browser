@@ -166,7 +166,6 @@ public class ProtocolHandler {
         
         if(source == null) {
           source = new File("/usr/share/tvbrowser/tvbrowser.sh");
-          
         }
         
         if(ask) {
@@ -710,9 +709,10 @@ public class ProtocolHandler {
       out.write("Exec="+baseDir.getAbsolutePath()+"/tvbrowser"+(TVBrowser.isTransportable() ? "-transportable":"")+".sh %u\n");
       out.write("Comment=Themeable and easy to use TV Guide - written in Java\n");
       out.write("Categories=Video;AudioVideo;TV\n");
-      /*if(isMimeHandler) {
+      
+      if(isMimeHandler) {
         out.write("MimeType=x-scheme-handler/tvb;\n");
-      }*/
+      }
       
       out.write("Name[de]="+name+"\n");
       out.write("GenericName=Digital TV Guide\n");
