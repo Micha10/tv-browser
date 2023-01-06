@@ -517,6 +517,7 @@
   		tryExec="tvbrowser.sh"
         categories="Video;AudioVideo;TV"
     	type="Application"
+  		mimetype="x-scheme-handler/tvb;"
   	>
     	<name lang="de" value="${programname}"/>
     	<genericName value="Digital TV Guide"/>
@@ -536,7 +537,8 @@
         exec="tvbrowser %u"
         categories="Video;AudioVideo;TV"
     	  type="Application"
-  			comment="Easy to use TV Guide - written in Java">
+  			comment="Easy to use TV Guide - written in Java"
+  		mimetype="x-scheme-handler/tvb;">
     	<name lang="de" value="${programname}"/>
     	<genericName value="Digital TV Guide"/>
     	<genericName lang="de" value="Digitale TV-Zeitschrift"/>
