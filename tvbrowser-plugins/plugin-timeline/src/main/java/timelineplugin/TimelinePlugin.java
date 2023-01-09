@@ -67,7 +67,7 @@ public final class TimelinePlugin extends devplugin.Plugin {
 	static final util.ui.Localizer mLocalizer = util.ui.Localizer
 			.getLocalizerFor(TimelinePlugin.class);
 
-	private static final Version VERSION = new Version(1, 15, 1);
+	private static final Version VERSION = new Version(1, 15, 2);
 	
 	private static TimelinePlugin mInstance;
 
@@ -422,6 +422,10 @@ public final class TimelinePlugin extends devplugin.Plugin {
 
 		if (version == 1) {
 			mTitleFormat = (String) in.readObject();
+			
+			if(mSettings != null && mTitleFormat != null) {
+			  mSettings.setTitleFormat(mTitleFormat);
+			}
 		}
 	}
 
