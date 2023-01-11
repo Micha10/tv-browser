@@ -297,7 +297,7 @@ public class FilterComponentList {
   private FilterComponent loadComponent(final String className, final String name, final String description) {
     FilterComponent filterComponent = null;
     
-    if(className.startsWith("tvbrowser.core.filters.filtercomponents")) {
+    if(className.startsWith("tvbrowser.core.filters.filtercomponents") || className.startsWith("tvbrowser.extras")) {
       try {
         Class<?> filterComponentClass = Class.forName(className);
         Constructor<?> constructor = filterComponentClass.getConstructor(String.class, String.class);
