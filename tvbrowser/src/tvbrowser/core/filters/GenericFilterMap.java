@@ -260,8 +260,25 @@ public class GenericFilterMap {
     final GenericFilterHolder holder = mGenericInternalFilterMap.get(type);
     
     if(holder != null) {
-      holder.setFilter(filter);
-      holder.getFilter().store(GENERIC_PLUGIN_FILTER_DIRECTORY, type);
+      if(filter == null) {
+        try {
+          holder.getFilter().setRule("");
+        } catch (ParserException e) {
+          e.printStackTrace();
+        }
+        
+        final File file = new File(GENERIC_PLUGIN_FILTER_DIRECTORY, type + ".filter");
+        
+        if(file.isFile()) {
+          if(!file.delete()) {
+            holder.getFilter().store(GENERIC_PLUGIN_FILTER_DIRECTORY, type);
+          }
+        }
+      }
+      else {
+        holder.setFilter(filter);
+        holder.getFilter().store(GENERIC_PLUGIN_FILTER_DIRECTORY, type);
+      }
     }
     
     MainFrame.getInstance().getProgramTableScrollPane().forceRepaintAll();

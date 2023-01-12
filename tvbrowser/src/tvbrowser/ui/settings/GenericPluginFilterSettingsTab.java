@@ -26,6 +26,8 @@ package tvbrowser.ui.settings;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.HashSet;
+import java.util.Hashtable;
 import java.util.List;
 
 import javax.swing.BorderFactory;
@@ -59,9 +61,13 @@ public class GenericPluginFilterSettingsTab implements SettingsTab {
 
   private SelectableItemList<PluginProxy> mGenericPluginFilterList;
   private ArrayList<PluginProxy> mCurrentlySelecteedList; 
+  private HashSet<PluginProxy> mDeletedFilterList; 
+  private Hashtable<PluginProxy, UserFilter> mToUpdateList;
   
   @Override
   public JPanel createSettingsPanel() {
+    mToUpdateList = new Hashtable<PluginProxy, UserFilter>();
+    
     PluginProxy[] currentlySelected = GenericFilterMap.getInstance().getActivatedGenericPluginFilterProxies();
     PluginProxy[] allPlugins = PluginProxyManager.getInstance().getActivatedPlugins();
     
@@ -72,6 +78,7 @@ public class GenericPluginFilterSettingsTab implements SettingsTab {
       }
     });
     
+    mDeletedFilterList = new HashSet<PluginProxy>();
     mCurrentlySelecteedList = new ArrayList<PluginProxy>();
     mCurrentlySelecteedList.addAll(Arrays.asList(currentlySelected));
     
@@ -86,16 +93,26 @@ public class GenericPluginFilterSettingsTab implements SettingsTab {
       SelectableItem<PluginProxy> item = mGenericPluginFilterList.getSelectedValue();
       PluginProxy proxy = (PluginProxy)item.getItem();
       
-      UserFilter filter = GenericFilterMap.getInstance().getGenericPluginFilter(proxy, false);
-      
+      UserFilter filter = mToUpdateList.get(proxy);
+       
       if(filter == null) {
-        filter = new UserFilter(proxy.getInfo().getName());
+        filter = GenericFilterMap.getInstance().getGenericPluginFilter(proxy, false);
+        
+        if(filter == null) {
+          filter = new UserFilter(proxy.getInfo().getName());
+        }
       }
       
-      EditFilterDlg editFilter = new EditFilterDlg(UiUtilities.getLastModalChildOf(MainFrame.getInstance()), FilterList.getInstance(), filter, false);
+      EditFilterDlg editFilter = new EditFilterDlg(UiUtilities.getLastModalChildOf(MainFrame.getInstance()), FilterList.getInstance(), filter, false, true);
       
       if(editFilter.getOkWasPressed()) {
-        GenericFilterMap.getInstance().updateGenericPluginFilter(proxy, filter, item.isSelected());
+        mDeletedFilterList.remove(proxy);
+        mToUpdateList.put(proxy, filter);
+      }
+      else if(editFilter.getDeleteWasPressed()) {
+        mDeletedFilterList.add(proxy);
+        mGenericPluginFilterList.removeSelection(item);
+        mToUpdateList.remove(proxy);
       }
     });
     edit.setEnabled(false);
@@ -132,6 +149,14 @@ public class GenericPluginFilterSettingsTab implements SettingsTab {
   public void saveSettings() {
     List<PluginProxy> selectedPlugins = mGenericPluginFilterList.getSelectionList();
     ArrayList<PluginProxy> newSelection = new ArrayList<PluginProxy>();
+    
+    for(PluginProxy pluginProxy : mDeletedFilterList) {
+      GenericFilterMap.getInstance().updateGenericPluginFilter(pluginProxy, null, false);
+    }
+    
+    for(PluginProxy pluginProxy : mToUpdateList.keySet()) {
+      GenericFilterMap.getInstance().updateGenericPluginFilter(pluginProxy, mToUpdateList.get(pluginProxy), true);
+    }
     
     for(PluginProxy pluginProxy : selectedPlugins) {
       GenericFilterMap.getInstance().updateGenericPluginFilterActivated(pluginProxy, true);

@@ -107,18 +107,20 @@ public class EditFilterDlg extends JDialog implements ActionListener, DocumentLi
   
   private boolean mFromFilterList;
   private boolean mOkWasPressed;
+  private boolean mDeleteWasPressed;
   
-  private JButton mOkBtn, mCancelBtn;
+  private JButton mOkBtn, mCancelBtn, mDeleteBtn;
 
-  public EditFilterDlg(Window parent, FilterList filterList, UserFilter filter, boolean fromFilterList) {
+  public EditFilterDlg(Window parent, FilterList filterList, UserFilter filter, boolean fromFilterList, boolean specialFilter) {
     super(parent, ModalityType.DOCUMENT_MODAL);
-    init(parent,filterList,filter, fromFilterList);
+    init(parent,filterList,filter, fromFilterList, specialFilter);
   }
   
-  private void init(Window parent,FilterList filterList, UserFilter filter, boolean fromFilterList) {
+  private void init(Window parent,FilterList filterList, UserFilter filter, boolean fromFilterList, boolean specialFilter) {
     UiUtilities.registerForClosing(this);
     try {
     mFromFilterList = fromFilterList;
+    mOkWasPressed = false;
     mOkWasPressed = false;
     
     if (filter == null) {
@@ -155,7 +157,15 @@ public class EditFilterDlg extends JDialog implements ActionListener, DocumentLi
 
     mCancelBtn = new JButton(Localizer.getLocalization(Localizer.I18N_CANCEL));
     mCancelBtn.addActionListener(this);
+    
+    mDeleteBtn = new JButton(Localizer.getLocalization(Localizer.I18N_DELETE));
+    mDeleteBtn.addActionListener(this);
 
+    if(specialFilter) {
+      bottomBar.addButton(mDeleteBtn);
+      bottomBar.addUnrelatedGap();
+    }
+    
     bottomBar.addButton(new JButton[] {mOkBtn, mCancelBtn});
 
     mFilterComponent = new FilterComponentPanel(this,mFilterRuleTF,mFilter);
@@ -279,8 +289,12 @@ public class EditFilterDlg extends JDialog implements ActionListener, DocumentLi
     
     filterCreation.addRow("fill:min:grow", listPanel.getPanel(), 1, 4);
     filterCreation.addRowFull(UiUtilities.createHelpTextArea(LOCALIZER.msg("help","To create or edit a filter you can enter the rules in the text field or drag and drop the rules to the left side.")), 2);
-    filterCreation.addParagraph(LOCALIZER.msg("highlighting", "Highlighting"));
-    filterCreation.addRow(mFilterHighlight, 1, 4);
+    
+    if(fromFilterList) {
+      filterCreation.addParagraph(LOCALIZER.msg("highlighting", "Highlighting"));
+      filterCreation.addRow(mFilterHighlight, 1, 4);
+    }
+    
     filterCreation.addRowFull(new JSeparator(JSeparator.HORIZONTAL));
     filterCreation.addRowFull(bottomBar.getPanel());
     
@@ -383,12 +397,19 @@ public class EditFilterDlg extends JDialog implements ActionListener, DocumentLi
       }
       
       setVisible(false);
+    } else if (o == mDeleteBtn && UiUtilities.showConfirmDialogOnMouseScreen(LOCALIZER.msg("confirmDelete.msg","Do you really want to delete the filter?"), LOCALIZER.msg("confirmDelete.title","Confirm deleting filter"), JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, true) == JOptionPane.YES_OPTION) {
+      mDeleteWasPressed = true;
+      mFilter = null;
+      setVisible(false);
     }
-
   }
   
   public boolean getOkWasPressed() {
     return mOkWasPressed;
+  }
+  
+  public boolean getDeleteWasPressed() {
+    return mDeleteWasPressed;
   }
 
   public UserFilter getUserFilter() {

@@ -32,7 +32,7 @@ import util.i18n.Localizer;
 public final class FilterSelectionPanel extends JPanel {
   private static final Localizer LOCALIZER = Localizer.getLocalizerFor(FilterSelectionPanel.class);
   private JLabel mLabel;
-  private JComboBox<WrapperFilter> mFilterBox;
+  private WideComboBox<WrapperFilter> mFilterBox;
   private JButton mEdit;
   private WrapperFilter mNewFilter;
   private WrapperFilter mLastSelectedFilter;
@@ -81,7 +81,7 @@ public final class FilterSelectionPanel extends JPanel {
   public FilterSelectionPanel(final String label, ProgramFilter selectedFilter, final boolean showEditButton) {
     this(label, selectedFilter, showEditButton, false);
   }
-  
+
   /**
    * Creates an instance of this class.
    * <p>
@@ -95,9 +95,27 @@ public final class FilterSelectionPanel extends JPanel {
    */
   @SafeVarargs
   public FilterSelectionPanel(final String label, ProgramFilter selectedFilter, final boolean showEditButton, final boolean grow, final Class<? extends Excludable>... exclusions) {
+    this(label, selectedFilter, showEditButton, grow, false, false, exclusions);
+  }
+  
+  /**
+   * Creates an instance of this class.
+   * <p>
+   * @param label The text for the label of the filter.
+   * @param selectedFilter The filter to be selected at first.
+   * @param showEditButton <code>true</code> if the edit button should be shown.
+   * @param grow If the selection JComboBox should grow with the width of the component.
+   * @param showHighlighting If the highlighting panel should be visible
+   * @param showDeleteButton If the delete button shoudl be visible
+   * @param exclusions The classes implementing ProgramFilter or FilterComponent that should be excluded
+   * from the list or <code>null</code> if there are no exclusions.
+   * @since 4.2.8
+   */
+  @SafeVarargs
+  public FilterSelectionPanel(final String label, ProgramFilter selectedFilter, final boolean showEditButton, final boolean grow, final boolean showHighlighting, final boolean showDeleteButton, final Class<? extends Excludable>... exclusions) {
     setLayout(new FormLayout(getLineSpec(label == null || !label.isBlank(),grow),"default"));
     
-    mFilterBox = new JComboBox<>();
+    mFilterBox = new WideComboBox<>();
     mNewFilter = new WrapperFilter(new UserFilter(getNewFilterName()));
     
     if(selectedFilter == null) {
@@ -138,7 +156,7 @@ public final class FilterSelectionPanel extends JPanel {
           filter = new UserFilter("");
         }
         
-        EditFilterDlg dlg = new EditFilterDlg(UiUtilities.getLastModalChildOf(MainFrame.getInstance()), FilterList.getInstance(), filter, true);
+        EditFilterDlg dlg = new EditFilterDlg(UiUtilities.getLastModalChildOf(MainFrame.getInstance()), FilterList.getInstance(), filter, showHighlighting, showDeleteButton);
         
         if(dlg.getOkWasPressed()) {
           if(filterNew) {

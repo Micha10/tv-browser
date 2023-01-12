@@ -37,7 +37,6 @@ import java.util.Collections;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
@@ -72,6 +71,7 @@ import util.ui.OkayCancelDialog;
 import util.ui.SearchableTextAreaPanel;
 import util.ui.TimePeriodChooser;
 import util.ui.UiUtilities;
+import util.ui.WideComboBox;
 
 public class ExcludeWizardStep extends AbstractWizardStep {
   private static final util.i18n.Localizer LOCALIZER = util.i18n.Localizer.getLocalizerFor(ExcludeWizardStep.class);
@@ -108,10 +108,10 @@ public class ExcludeWizardStep extends AbstractWizardStep {
   private MutliSelectionTextField mEpisodeTitleTf;
   private MutliSelectionTextField mProgramFieldTextTf;
 
-  private JComboBox<Channel> mChannelCB;
-  private JComboBox<LimitationConfiguration.DayLimitValue> mDayChooser;
-  private JComboBox<String> mCategoryChooser;
-  private JComboBox<ProgramFieldType> mProgramFieldChooser;
+  private WideComboBox<Channel> mChannelCB;
+  private WideComboBox<LimitationConfiguration.DayLimitValue> mDayChooser;
+  private WideComboBox<String> mCategoryChooser;
+  private WideComboBox<ProgramFieldType> mProgramFieldChooser;
 
   private TimePeriodChooser mTimePeriodChooser;
 
@@ -210,7 +210,7 @@ public class ExcludeWizardStep extends AbstractWizardStep {
 
   @Override
   public JPanel createContent(final WizardHandler handler) {
-    final EnhancedPanelBuilder panelBuilder = new EnhancedPanelBuilder(new FormLayout("5dlu, default, default, default:grow, 3dlu, default"));
+    final EnhancedPanelBuilder panelBuilder = new EnhancedPanelBuilder(new FormLayout("5dlu, default, default, 100dlu:grow, 3dlu, default"));
     
     final CaretListener textFieldButtonUpdateListener = new CaretListener() {
       @Override
@@ -226,13 +226,13 @@ public class ExcludeWizardStep extends AbstractWizardStep {
     mProgramFieldTextTf = new MutliSelectionTextField(textFieldButtonUpdateListener);
     mFilterCb = new JCheckBox(mFilterQuestion);
     
-    mFilterSelection = new FilterSelectionPanel("", null, true, true, FavoriteFilter.class, FavoritesFilterComponent.class);
+    mFilterSelection = new FilterSelectionPanel("", null, true, true, false, false, FavoriteFilter.class, FavoritesFilterComponent.class);
     
-    mDayChooser = new JComboBox<>(LimitationConfiguration.DAYLIMIT_VALUE_ARRAY);
+    mDayChooser = new WideComboBox<>(LimitationConfiguration.DAYLIMIT_VALUE_ARRAY);
     
-    mCategoryChooser = new JComboBox<>(ProgramInfoHelper.getInfoIconMessages());
+    mCategoryChooser = new WideComboBox<>(ProgramInfoHelper.getInfoIconMessages());
     
-    mChannelCB = new JComboBox<>(ChannelList.getSubscribedChannels());
+    mChannelCB = new WideComboBox<>(ChannelList.getSubscribedChannels());
     
     panelBuilder.addLabelRowFull(false, mMainQuestion);
 
@@ -267,7 +267,7 @@ public class ExcludeWizardStep extends AbstractWizardStep {
     panelBuilder.add(mTimePeriodChooser = new TimePeriodChooser(TimePeriodChooser.ALIGN_LEFT), 4, 3);
     
     panelBuilder.addRow(mProgramFieldCb = new JCheckBox(mProgramFieldQuestion), 2);
-    panelBuilder.add(mProgramFieldChooser = new JComboBox<>(), 3);
+    panelBuilder.add(mProgramFieldChooser = new WideComboBox<>(), 3);
     panelBuilder.add(mProgramFieldTextTf.mTextField, 4);
     panelBuilder.add(mProgramFieldTextTf.mButton, 6);
     

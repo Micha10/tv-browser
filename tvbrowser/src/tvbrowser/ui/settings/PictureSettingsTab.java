@@ -237,10 +237,13 @@ public class PictureSettingsTab extends AbstractSettingsTab implements Cancelabl
       editFilter.addActionListener(e -> {
         final UserFilter filter = GenericFilterMap.getInstance().getGenericInternalFilter(GenericFilterMap.GENERIC_PICTURE_FILTER_NAME);
         
-        final EditFilterDlg editFilter1 = new EditFilterDlg(UiUtilities.getLastModalChildOf(MainFrame.getInstance()), FilterList.getInstance(), filter, false);
+        final EditFilterDlg editFilter1 = new EditFilterDlg(UiUtilities.getLastModalChildOf(MainFrame.getInstance()), FilterList.getInstance(), filter, false, true);
         
         if(editFilter1.getOkWasPressed()) {
           GenericFilterMap.getInstance().updateGenericInternalFilter(GenericFilterMap.GENERIC_PICTURE_FILTER_NAME, filter);
+        }
+        else if(editFilter1.getDeleteWasPressed()) {
+          GenericFilterMap.getInstance().updateGenericInternalFilter(GenericFilterMap.GENERIC_PICTURE_FILTER_NAME, null);
         }
       });
       

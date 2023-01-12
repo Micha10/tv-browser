@@ -122,11 +122,18 @@ public class ProgramPanelSettingsTab implements SettingsTab {
   private JSpinner mShortProgramsMinutes;
 
   private JLabel mShortProgramsLabel;
+  
+  private boolean mAlternativeFilterDeleted;
+  
+  private UserFilter mFilterToUpdate;
 
   /**
    * Creates the settings panel for this tab.
    */
   public JPanel createSettingsPanel() {
+    mAlternativeFilterDeleted = false;
+    mFilterToUpdate = null;
+    
     EnhancedPanelBuilder panel = new EnhancedPanelBuilder("5dlu, fill:50dlu:grow, 3dlu, fill:50dlu:grow, 3dlu");
     panel.border(Borders.DIALOG);
     
@@ -199,11 +206,16 @@ public class ProgramPanelSettingsTab implements SettingsTab {
     EnhancedPanelBuilder filterPanel = new EnhancedPanelBuilder(new FormLayout("default","default"));
     JButton editFilter = new JButton("Filter editieren...");
     editFilter.addActionListener(e -> {
-      final UserFilter filter = GenericFilterMap.getInstance().getGenericInternalFilter(GenericFilterMap.GENERIC_PROGRAM_PANEL_FILTER_NAME);
-      final EditFilterDlg editFilter1 = new EditFilterDlg(UiUtilities.getLastModalChildOf(MainFrame.getInstance()), FilterList.getInstance(), filter, false);
+      final UserFilter filter = mFilterToUpdate != null ? mFilterToUpdate : GenericFilterMap.getInstance().getGenericInternalFilter(GenericFilterMap.GENERIC_PROGRAM_PANEL_FILTER_NAME);
+      final EditFilterDlg editFilter1 = new EditFilterDlg(UiUtilities.getLastModalChildOf(MainFrame.getInstance()), FilterList.getInstance(), filter, false, true);
       
       if(editFilter1.getOkWasPressed()) {
-        GenericFilterMap.getInstance().updateGenericInternalFilter(GenericFilterMap.GENERIC_PROGRAM_PANEL_FILTER_NAME, filter);
+        mAlternativeFilterDeleted = false;
+        mFilterToUpdate = filter;
+      }
+      else if(editFilter1.getDeleteWasPressed()) {
+        mAlternativeFilterDeleted = true;
+        mFilterToUpdate = null;
       }
     });
     
@@ -486,6 +498,13 @@ public class ProgramPanelSettingsTab implements SettingsTab {
    * Called by the host-application, if the user wants to save the settings.
    */
   public void saveSettings() {
+    if(mAlternativeFilterDeleted) {
+      GenericFilterMap.getInstance().updateGenericInternalFilter(GenericFilterMap.GENERIC_PROGRAM_PANEL_FILTER_NAME, null);
+    }
+    else if(mFilterToUpdate != null) {
+      GenericFilterMap.getInstance().updateGenericInternalFilter(GenericFilterMap.GENERIC_PROGRAM_PANEL_FILTER_NAME, mFilterToUpdate);
+    }
+    
     // icons
     savePluginIcons(mIconPluginOCh,Settings.ProgramPanel.ICON_PLUGINS );
     savePluginIcons(mIconPluginOChAlt,Settings.ProgramPanel.ICON_PLUGINS_ALTERNATIVE);

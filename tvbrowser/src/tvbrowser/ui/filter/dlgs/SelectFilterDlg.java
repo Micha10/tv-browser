@@ -335,7 +335,7 @@ public class SelectFilterDlg extends JDialog implements ActionListener, WindowCl
 	
 	try {
 	  filterNew.setRule(filter.getRule());
-	  final EditFilterDlg dlg = new EditFilterDlg(this, FilterList.getInstance(), filterNew, true);
+	  final EditFilterDlg dlg = new EditFilterDlg(this, FilterList.getInstance(), filterNew, true, false);
 	  
 	  if (dlg.getOkWasPressed()) {
 	      FilterNode nodeNew = new FilterNode(filterNew);
@@ -366,7 +366,7 @@ public class SelectFilterDlg extends JDialog implements ActionListener, WindowCl
         }
         else {
           UserFilter filter = (UserFilter)node.getFilter();
-          EditFilterDlg dlg = new EditFilterDlg(SelectFilterDlg.this, FilterList.getInstance(), filter, true);
+          EditFilterDlg dlg = new EditFilterDlg(SelectFilterDlg.this, FilterList.getInstance(), filter, true, false);
           
           if(dlg.getOkWasPressed()) {
             mTouchedFilterList.add(filter);
@@ -416,7 +416,7 @@ public class SelectFilterDlg extends JDialog implements ActionListener, WindowCl
   }
   
   void createNewFilter(FilterNode parent) {
-    EditFilterDlg dlg = new EditFilterDlg(this, FilterList.getInstance(), null, true);
+    EditFilterDlg dlg = new EditFilterDlg(this, FilterList.getInstance(), null, true, false);
     UserFilter filter = dlg.getUserFilter();
     if (filter != null) {
       FilterNode node = new FilterNode(filter);

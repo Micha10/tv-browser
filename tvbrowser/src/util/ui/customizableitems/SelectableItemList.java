@@ -216,7 +216,16 @@ public class SelectableItemList<E> extends JPanel implements ListSelectionListen
     if(showSelectionButtons) {
       add(p3, BorderLayout.SOUTH);
     }
-    
+  }
+  
+  
+  /**
+   * @param item The item to remove selection from
+   * @since 4.2.8
+   */
+  public void removeSelection(SelectableItem<E> item) {
+    item.setSelected(false);
+    handleItemSelectionChanged();
   }
   
   private void handleItemSelectionChanged() {

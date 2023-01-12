@@ -126,6 +126,9 @@ public class ReminderSettingsTab implements SettingsTab {
   
   private DefaultMarkingPrioritySelectionPanel mMarkingsPanel;
 
+  private boolean mPreFilterDeleted;
+  private UserFilter mFilterToUpdate;
+  
   /**
    * Constructor.
    */
@@ -137,6 +140,8 @@ public class ReminderSettingsTab implements SettingsTab {
    * Creates the settings panel for this tab.
    */
   public JPanel createSettingsPanel() {
+    mFilterToUpdate = null;
+    mPreFilterDeleted = false;
     /*PropertyDefaults propDefaults = ReminderPropertyDefaults.getPropertyDefaults();
     propDefaults.setProperties(mSettings.storeSettings());*/
     
@@ -255,12 +260,18 @@ public class ReminderSettingsTab implements SettingsTab {
     final JButton editFilter = new JButton(LOCALIZER.msg("editFilter", "Edit filter"));
     editFilter.setEnabled(mPrefilter.isSelected());
     editFilter.addActionListener(e -> {
-      final UserFilter filter = GenericFilterMap.getInstance().getGenericInternalFilter(GenericFilterMap.GENERIC_REMINDER_FILTER_NAME);
+      final UserFilter filter = mFilterToUpdate != null ? mFilterToUpdate : GenericFilterMap.getInstance().getGenericInternalFilter(GenericFilterMap.GENERIC_REMINDER_FILTER_NAME);
       
-      final EditFilterDlg editFilter1 = new EditFilterDlg(UiUtilities.getLastModalChildOf(MainFrame.getInstance()), FilterList.getInstance(), filter, false);
+      final EditFilterDlg editFilter1 = new EditFilterDlg(UiUtilities.getLastModalChildOf(MainFrame.getInstance()), FilterList.getInstance(), filter, false, true);
       
       if(editFilter1.getOkWasPressed()) {
-        GenericFilterMap.getInstance().updateGenericInternalFilter(GenericFilterMap.GENERIC_REMINDER_FILTER_NAME, filter);
+        mPreFilterDeleted = false;
+        mFilterToUpdate = filter;
+      }
+      else if(editFilter1.getDeleteWasPressed()) {
+        mPreFilterDeleted = true;
+        mPrefilter.setSelected(false);
+        mFilterToUpdate = null;
       }
     });
     
@@ -599,6 +610,14 @@ public class ReminderSettingsTab implements SettingsTab {
    * Called by the host-application, if the user wants to save the settings.
    */
   public void saveSettings() {
+    if(mFilterToUpdate != null) {
+      GenericFilterMap.getInstance().updateGenericInternalFilter(GenericFilterMap.GENERIC_REMINDER_FILTER_NAME, mFilterToUpdate);
+    }
+    
+    if(mPreFilterDeleted) {
+      GenericFilterMap.getInstance().updateGenericInternalFilter(GenericFilterMap.GENERIC_REMINDER_FILTER_NAME, null);
+    }
+    
     mSettings.set(ReminderSettings.KEY_SOUNDFILE, mSoundFileChB.getTextField().getText());
     mSettings.set(ReminderSettings.KEY_EXECUTE_FILE, mExecFileStr);
     mSettings.set(ReminderSettings.KEY_EXECUTE_PARAMETERS, mExecParamStr);
