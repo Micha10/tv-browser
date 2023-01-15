@@ -99,7 +99,7 @@ public final class ProgramTimeList implements Cloneable {
           Program[] test = time.getAllPrograms();
 
           for(Program p : test) {
-            if (p == program) {
+            if (program != null && p.equals(program)) {
               return time;
             }
           }

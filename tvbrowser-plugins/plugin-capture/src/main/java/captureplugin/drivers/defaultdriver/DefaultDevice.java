@@ -199,7 +199,7 @@ public final class DefaultDevice implements DeviceIf {
         
         ProgramTime prgTime = mConfig.getMarkedPrograms().getProgramTimeForProgram(program);
         
-        if (exec.removeProgram(prgTime, onlyGuiAtErrors)) {
+        if (prgTime != null && exec.removeProgram(prgTime, onlyGuiAtErrors)) {
             mConfig.getMarkedPrograms().remove(prgTime);
             return true;
         } else {

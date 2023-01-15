@@ -46,7 +46,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
-import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -87,7 +86,7 @@ import util.ui.UiUtilities;
  *         adopted by fishhead
  */
 public class CapturePlugin extends devplugin.Plugin {
-  private static final Version mVersion = new Version(3,23,1,false);
+  private static final Version mVersion = new Version(3,23,2,false);
   
     /**
      * Translator
