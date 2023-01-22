@@ -51,12 +51,13 @@ import javax.swing.event.ListSelectionListener;
 
 import org.apache.commons.lang3.StringUtils;
 
+import captureplugin.CapturePlugin;
+import captureplugin.CapturePluginData;
 import util.paramhandler.ParamInputField;
 import util.ui.Localizer;
 import util.ui.TVBrowserIcons;
 import util.ui.UiUtilities;
 import util.ui.WindowClosingIf;
-import captureplugin.CapturePlugin;
 
 /**
  * A DialogBox for the additional Parameters
@@ -329,12 +330,16 @@ public class AdditionalParams extends JDialog implements WindowClosingIf{
 
         for (int i = 0; i < mListModel.size(); i++) {
             ParamEntry e = (ParamEntry) mListModel.get(i);
-
+            
             if ((e.getName().trim().length() > 0) || (e.getParam().trim().length() > 0)) {
                 if (StringUtils.isBlank(e.getName())) {
                     e.setName("?");
                 }
-
+                
+                if(e.getActionId() == CapturePluginData.ACTION_ID_UNKNOWN) {
+                  e.setActionId(mConfig.getIncrementAndGetActionIdLast());
+                }
+                
                 l.add(e);
             }
 
@@ -375,7 +380,6 @@ public class AdditionalParams extends JDialog implements WindowClosingIf{
      */
     protected void addPressed() {
         ParamEntry n = new ParamEntry();
-        n.setActionId(mConfig.getIncrementAndGetActionIdLast());
         mListModel.addElement(n);
         mList.setSelectedValue(n, true);
     }
