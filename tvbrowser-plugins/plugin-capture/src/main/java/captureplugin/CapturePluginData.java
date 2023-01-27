@@ -81,6 +81,8 @@ public final class CapturePluginData implements Cloneable {
       
       mShowRemovedProgramsDialog = data.showRemovedProgramsDialog();
       
+      mShowDirectlyInContextMenu = data.showDirectlyInContextMenu();
+      
       mDevices = new Vector<DeviceIf>();
       
       Vector<DeviceIf> old = new Vector<DeviceIf>(data.getDevices());

@@ -98,7 +98,7 @@ public class CapturePluginPanel extends JPanel {
         }
         
         mTabPane.addTab(DefaultMarkingPrioritySelectionPanel.getTitle(), mMarkingPriorityPanel);
-
+        
         mShowAdditionalCommandsOnTop = new JCheckBox(LOCALIZER.msg("showOnTop", "Show additional commands (if any) on top of context menu."), data.showAdditionalCommandsOnTop());
         mShowRemovedProgramsDialog = new JCheckBox(LOCALIZER.msg("showRemovedPrograms", "Show dialog with removed programs after data update."), data.showRemovedProgramsDialog());
         mShowDirectlyInContextMenu = new JCheckBox(LOCALIZER.msg("showDirectlyInContextMenu", "Show devices directly in context menu of TV-Browser."), data.showDirectlyInContextMenu());
