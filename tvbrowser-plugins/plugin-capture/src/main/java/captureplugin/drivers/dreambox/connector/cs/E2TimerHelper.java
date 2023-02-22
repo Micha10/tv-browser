@@ -76,7 +76,7 @@ public class E2TimerHelper {
   private final TimerCompare TIMER_COMPARE = new TimerCompare();
 
   // Logger
-  private static final Logger mLog = Logger.getLogger(E2TimerHelper.class.getName());
+  private static final Logger LOG = Logger.getLogger(E2TimerHelper.class.getName());
   // Class
   private static final Map<String, E2TimerHelper> singletonMap = new HashMap<String, E2TimerHelper>();
   // Member
@@ -113,7 +113,7 @@ public class E2TimerHelper {
    * @param thread
    */
   private E2TimerHelper(DreamboxConnector connector) {
-    mLog.setLevel(Level.INFO);    
+    LOG.setLevel(Level.INFO);    
     this.mConnector = connector;
     this.mTimers = null;
     run();
@@ -134,7 +134,7 @@ public class E2TimerHelper {
     try {
       return Long.parseLong(longStr);
     } catch (NumberFormatException e) {
-      mLog.warning(e.getLocalizedMessage());
+      LOG.warning(e.getLocalizedMessage());
     }
 
     return -1;
@@ -259,7 +259,7 @@ public class E2TimerHelper {
     }
     List<Map<String, String>> listTimers = new ArrayList<Map<String, String>>();
     listTimers.addAll(mapTimers.values());
-    mLog.fine("  getRepeatedTimers(" + (listTimers == null ? "null" : listTimers.size()) + ")");
+    LOG.fine("  getRepeatedTimers(" + (listTimers == null ? "null" : listTimers.size()) + ")");
     return listTimers;
   }
 
@@ -289,11 +289,11 @@ public class E2TimerHelper {
         try {
           Thread.sleep(100);
         } catch (InterruptedException e1) {
-          mLog.log(Level.WARNING, "InterruptedException", e1);
+          LOG.log(Level.WARNING, "InterruptedException", e1);
         }
       }
     }
-    mLog.fine(" getTimers(" + (mTimers == null ? "null" : mTimers.size()) + ") " + mConnector.getConfig().getDreamboxAddress());
+    LOG.fine(" getTimers(" + (mTimers == null ? "null" : mTimers.size()) + ") " + mConnector.getConfig().getDreamboxAddress());
     
     return mTimers != null ? mTimers : new ArrayList<Map<String,String>>(0);
   }
@@ -305,7 +305,7 @@ public class E2TimerHelper {
    */
   public int getTimerCount() {
     List<Map<String, String>> timers = getTimers();
-    mLog.info("[" + mConnector.getConfig().getDreamboxAddress() + "] " + "  getTimerCount(): " + (timers == null ? "0" : timers.size()));
+    LOG.info("[" + mConnector.getConfig().getDreamboxAddress() + "] " + "  getTimerCount(): " + (timers == null ? "0" : timers.size()));
     return (timers == null ? 0 : timers.size());
   }
 
@@ -340,22 +340,22 @@ public class E2TimerHelper {
               }
             }
           } catch (ParserConfigurationException e) {
-            mLog.log(Level.WARNING, "ParserConfigurationException", e);
+            LOG.log(Level.WARNING, "ParserConfigurationException", e);
           } catch (SAXException e) {
-            mLog.warning(data);
-            mLog.log(Level.WARNING, "SAXException", e);
+            LOG.warning(data);
+            LOG.log(Level.WARNING, "SAXException", e);
           } catch (MalformedURLException e) {
-            mLog.log(Level.WARNING, "MalformedURLException", e);
+            LOG.log(Level.WARNING, "MalformedURLException", e);
           } catch (SocketTimeoutException e) {
-            mLog.log(Level.WARNING, "SocketTimeoutException", e);
+            LOG.log(Level.WARNING, "SocketTimeoutException", e);
           } catch (IOException e) {
-            mLog.log(Level.WARNING, "IOException", e);
+            LOG.log(Level.WARNING, "IOException", e);
           } catch (IllegalArgumentException e) {
-            mLog.log(Level.WARNING, "IllegalArgumentException", e);
+            LOG.log(Level.WARNING, "IllegalArgumentException", e);
           }
         }
 
-        mLog.info("[" + mConnector.getConfig().getDreamboxAddress() + "] " + "GET timerlist - "
+        LOG.info("[" + mConnector.getConfig().getDreamboxAddress() + "] " + "GET timerlist - "
             + (new GregorianCalendar().getTimeInMillis() - cal.getTimeInMillis()) + " ms");
       }
     };
@@ -597,30 +597,30 @@ public class E2TimerHelper {
             getTimers().add(timer);
             Collections.sort(getTimers(), TIMER_COMPARE);
             // Log
-            mLog.info("[" + mConnector.getConfig().getDreamboxAddress() + "] " + String.format("ADD %s - %s - %d ms", // msg
+            LOG.info("[" + mConnector.getConfig().getDreamboxAddress() + "] " + String.format("ADD %s - %s - %d ms", // msg
                 "1".equals(timer.get(JUSTPLAY)) ? "ZAP" : "REC", // justplay
                 handler.getStatetext(), // Fehlermeldung
                 (new GregorianCalendar().getTimeInMillis() - cal.getTimeInMillis())) // Dauer
                 );
           } else {
-            mLog.warning(handler.getStatetext());
+            LOG.warning(handler.getStatetext());
           }
         }
       } catch (IOException e) {
         // Web-Interface TDT
-        mLog.info("[" + mConnector.getConfig().getDreamboxAddress() + "] " + e.getLocalizedMessage());
+        LOG.info("[" + mConnector.getConfig().getDreamboxAddress() + "] " + e.getLocalizedMessage());
         state = true;
       }
 
       return state;
 
     } catch (UnsupportedEncodingException e) {
-      mLog.log(Level.WARNING, "UnsupportedEncodingException", e);
+      LOG.log(Level.WARNING, "UnsupportedEncodingException", e);
     } catch (ParserConfigurationException e) {
-      mLog.log(Level.WARNING, "ParserConfigurationException", e);
+      LOG.log(Level.WARNING, "ParserConfigurationException", e);
     } catch (SAXException e) {
-      mLog.warning(data);
-      mLog.log(Level.WARNING, "SAXException", e);
+      LOG.warning(data);
+      LOG.log(Level.WARNING, "SAXException", e);
     }
 
     return false;
@@ -674,30 +674,30 @@ public class E2TimerHelper {
             Collections.sort(getTimers(), TIMER_COMPARE);
   
             // Log
-            mLog.info("[" + mConnector.getConfig().getDreamboxAddress() + "] " + String.format("CHG %s - %s - %d ms", // msg
+            LOG.info("[" + mConnector.getConfig().getDreamboxAddress() + "] " + String.format("CHG %s - %s - %d ms", // msg
                 "1".equals(oldTimer.get(JUSTPLAY)) ? "ZAP" : "REC", // justplay
                 handler.getStatetext(), // Fehlermeldung
                 (new GregorianCalendar().getTimeInMillis() - cal.getTimeInMillis())) // Dauer
                 );
           } else {
-            mLog.warning(handler.getStatetext());
+            LOG.warning(handler.getStatetext());
           }
         }
       } catch (IOException e) {
         // Web-Interface TDT
-        mLog.info("[" + mConnector.getConfig().getDreamboxAddress() + "] " + e.getLocalizedMessage());
+        LOG.info("[" + mConnector.getConfig().getDreamboxAddress() + "] " + e.getLocalizedMessage());
         state = true;
       }
 
       return state;
 
     } catch (UnsupportedEncodingException e) {
-      mLog.log(Level.WARNING, "UnsupportedEncodingException", e);
+      LOG.log(Level.WARNING, "UnsupportedEncodingException", e);
     } catch (ParserConfigurationException e) {
-      mLog.log(Level.WARNING, "ParserConfigurationException", e);
+      LOG.log(Level.WARNING, "ParserConfigurationException", e);
     } catch (SAXException e) {
-      mLog.warning(data);
-      mLog.log(Level.WARNING, "SAXException", e);
+      LOG.warning(data);
+      LOG.log(Level.WARNING, "SAXException", e);
     }
 
     return false;
@@ -735,28 +735,28 @@ public class E2TimerHelper {
             getTimers().remove(indexOfTimer(timer));
             Collections.sort(getTimers(), TIMER_COMPARE);
             // Log
-            mLog.info("[" + mConnector.getConfig().getDreamboxAddress() + "] " + String.format("DEL %s - %s - %d ms", // msg
+            LOG.info("[" + mConnector.getConfig().getDreamboxAddress() + "] " + String.format("DEL %s - %s - %d ms", // msg
                 "1".equals(timer.get(JUSTPLAY)) ? "ZAP" : "REC", // justplay
                 handler.getStatetext(), // Fehlermeldung
                 (new GregorianCalendar().getTimeInMillis() - cal.getTimeInMillis())) // Dauer
                 );
           } else {
-            mLog.warning(handler.getStatetext());
+            LOG.warning(handler.getStatetext());
           }
           return state;
         }
       }
     } catch (UnsupportedEncodingException e) {
-      mLog.log(Level.WARNING, "UnsupportedEncodingException", e);
+      LOG.log(Level.WARNING, "UnsupportedEncodingException", e);
     } catch (MalformedURLException e) {
-      mLog.log(Level.WARNING, "MalformedURLException", e);
+      LOG.log(Level.WARNING, "MalformedURLException", e);
     } catch (IOException e) {
-      mLog.log(Level.WARNING, "IOException", e);
+      LOG.log(Level.WARNING, "IOException", e);
     } catch (ParserConfigurationException e) {
-      mLog.log(Level.WARNING, "ParserConfigurationException", e);
+      LOG.log(Level.WARNING, "ParserConfigurationException", e);
     } catch (SAXException e) {
-      mLog.warning(data);
-      mLog.log(Level.WARNING, "SAXException", e);
+      LOG.warning(data);
+      LOG.log(Level.WARNING, "SAXException", e);
     }
     return false;
   }

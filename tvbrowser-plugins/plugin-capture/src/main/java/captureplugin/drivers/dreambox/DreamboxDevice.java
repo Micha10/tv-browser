@@ -238,7 +238,7 @@ public final class DreamboxDevice implements DeviceIf {
             time.setEnd(end.getTime());
 
             // fishhead ------------------------
-            ProgramOptionPanel pgmOptPanel = new ProgramOptionPanel(locationHelper, movieThread);
+            ProgramOptionPanel pgmOptPanel = new ProgramOptionPanel(locationHelper, movieThread, mConfig);
             int info = time.getProgram().getInfo();
             boolean useHdService = (info & Program.INFO_VISION_HD) == Program.INFO_VISION_HD;
             pgmOptPanel.setUseHdService(useHdService);

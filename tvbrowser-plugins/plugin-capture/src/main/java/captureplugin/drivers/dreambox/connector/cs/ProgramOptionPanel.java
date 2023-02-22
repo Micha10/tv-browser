@@ -15,6 +15,7 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import captureplugin.drivers.dreambox.DreamboxConfig;
 import util.ui.Localizer;
 
 /**
@@ -29,7 +30,7 @@ public class ProgramOptionPanel extends JPanel implements ActionListener {
   /**
    * Translator
    */
-  private static final Localizer mLocalizer = Localizer
+  private static final Localizer LOCALIZER = Localizer
       .getLocalizerFor(ProgramOptionPanel.class);
 
   private final JCheckBox cbMon;
@@ -56,8 +57,8 @@ public class ProgramOptionPanel extends JPanel implements ActionListener {
    * @param movieThread
    */
   public ProgramOptionPanel(E2LocationHelper locationThread,
-      E2MovieHelper movieThread) {
-
+      E2MovieHelper movieThread, DreamboxConfig config) {
+    
     // Location / Category
     JPanel panelGB = new JPanel(new GridBagLayout());
     GridBagConstraints c = new GridBagConstraints();
@@ -66,7 +67,7 @@ public class ProgramOptionPanel extends JPanel implements ActionListener {
     c.fill = GridBagConstraints.HORIZONTAL;
 
     //use description
-    cbUseDescription = new JCheckBox(mLocalizer.msg("useDescription", "Send description (if available)"));
+    cbUseDescription = new JCheckBox(LOCALIZER.msg("useDescription", "Send description (if available)"));
     
     c.insets = new Insets(2, 6, 4, 2);
     c.gridx = 0;
@@ -78,11 +79,11 @@ public class ProgramOptionPanel extends JPanel implements ActionListener {
     
     // AfterEvent
     cmbAfterEvent = new JComboBox(new String[] {
-        mLocalizer.msg("afterEventNothing", "Nothing"),
-        mLocalizer.msg("afterEventStandby", "Standby"),
-        mLocalizer.msg("afterEventDeepstandby", "Deepstandby"),
-        mLocalizer.msg("afterEventAuto", "Auto") });
-    cmbAfterEvent.setSelectedIndex(3);
+        LOCALIZER.msg("afterEventNothing", "Nothing"),
+        LOCALIZER.msg("afterEventStandby", "Standby"),
+        LOCALIZER.msg("afterEventDeepstandby", "Deepstandby"),
+        LOCALIZER.msg("afterEventAuto", "Auto") });
+    cmbAfterEvent.setSelectedIndex(config.getAfterEvent());
 
     c.insets = new Insets(4, 6, 0, 10);
     c.gridx = 0;
@@ -90,13 +91,13 @@ public class ProgramOptionPanel extends JPanel implements ActionListener {
     panelGB.add(cmbAfterEvent, c);
 
     // Repeated
-    cbMon = new JCheckBox(mLocalizer.msg("Mon", "Mon"));
-    cbTue = new JCheckBox(mLocalizer.msg("Tue", "Tue"));
-    cbWed = new JCheckBox(mLocalizer.msg("Wed", "Wed"));
-    cbThu = new JCheckBox(mLocalizer.msg("Thu", "Thu"));
-    cbFre = new JCheckBox(mLocalizer.msg("Fre", "Fre"));
-    cbSat = new JCheckBox(mLocalizer.msg("Sat", "Sat"));
-    cbSun = new JCheckBox(mLocalizer.msg("Sun", "Sun"));
+    cbMon = new JCheckBox(LOCALIZER.msg("Mon", "Mon"));
+    cbTue = new JCheckBox(LOCALIZER.msg("Tue", "Tue"));
+    cbWed = new JCheckBox(LOCALIZER.msg("Wed", "Wed"));
+    cbThu = new JCheckBox(LOCALIZER.msg("Thu", "Thu"));
+    cbFre = new JCheckBox(LOCALIZER.msg("Fre", "Fre"));
+    cbSat = new JCheckBox(LOCALIZER.msg("Sat", "Sat"));
+    cbSun = new JCheckBox(LOCALIZER.msg("Sun", "Sun"));
 
     c.insets = new Insets(0, 2, 0, 2);
     c.gridx = 1;
@@ -116,7 +117,7 @@ public class ProgramOptionPanel extends JPanel implements ActionListener {
     panelGB.add(cbSun, c);
 
     // BeforeEvent
-    cbZapBeforeEvent = new JCheckBox(mLocalizer.msg("beforeEvent",
+    cbZapBeforeEvent = new JCheckBox(LOCALIZER.msg("beforeEvent",
         "Vor der Aufnahme auf den Kanal wechseln"));
     c.insets = new Insets(8, 2, 0, 2);
     c.gridx = 0;
@@ -142,7 +143,7 @@ public class ProgramOptionPanel extends JPanel implements ActionListener {
     c.insets = new Insets(8, 6, 4, 2);
     c.gridx = 0;
     c.gridy++;
-    lbLocation = new JLabel(mLocalizer.msg("location", "Aufnahmeort: "));
+    lbLocation = new JLabel(LOCALIZER.msg("location", "Aufnahmeort: "));
     panelGB.add(lbLocation, c);
     c.gridx++;
     c.gridwidth = 4;
@@ -161,7 +162,7 @@ public class ProgramOptionPanel extends JPanel implements ActionListener {
     c.insets = new Insets(2, 6, 4, 2);
     c.gridx = 0;
     c.gridy++;
-    lbTag = new JLabel(mLocalizer.msg("tags", "Kategorie: "));
+    lbTag = new JLabel(LOCALIZER.msg("tags", "Kategorie: "));
     panelGB.add(lbTag, c);
     c.gridx++;
     c.gridwidth = 4;
@@ -169,7 +170,7 @@ public class ProgramOptionPanel extends JPanel implements ActionListener {
     c.gridwidth = 1;
 
     // HD-Sender verwenden
-    cbUseHdService = new JCheckBox(mLocalizer.msg("useHdService",
+    cbUseHdService = new JCheckBox(LOCALIZER.msg("useHdService",
         "HD Sender verwenden"));
     cbUseHdService.addActionListener(this);
     cbUseHdService.setActionCommand(CMD_USE_HD_SERVICE);
@@ -183,7 +184,7 @@ public class ProgramOptionPanel extends JPanel implements ActionListener {
     }
 
     // nur Umschalt-Timer erzeugen
-    cbOnlyCreateZapTimer = new JCheckBox(mLocalizer.msg("onlyZapTimer",
+    cbOnlyCreateZapTimer = new JCheckBox(LOCALIZER.msg("onlyZapTimer",
         "Nur Umschalt-Timer erzeugen"));
     cbOnlyCreateZapTimer.addActionListener(this);
     cbOnlyCreateZapTimer.setActionCommand(CMD_ONLY_CREATE_ZAP_TIMER);

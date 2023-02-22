@@ -86,7 +86,7 @@ import util.ui.UiUtilities;
  *         adopted by fishhead
  */
 public class CapturePlugin extends devplugin.Plugin {
-  private static final Version mVersion = new Version(3,23,4);
+   private static final Version mVersion = new Version(3,23,5);
   
     /**
      * Translator
@@ -360,7 +360,6 @@ public class CapturePlugin extends devplugin.Plugin {
       
       if (commands != null) {
         for (int y = 0; y < commands.length; y++) {
-
             final int num = y;
 
             AbstractAction caction = new AbstractAction() {

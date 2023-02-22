@@ -90,6 +90,9 @@ public final class DreamboxConfig implements ConfigIf, Cloneable {
     /** Show zap timers in timer list */
     private boolean mShowZapTimer = false;
     
+    /** The event after recording default to auto */
+    private int mAfterEvent = 3;
+    
     /**
      * Constructor
      */
@@ -135,6 +138,7 @@ public final class DreamboxConfig implements ConfigIf, Cloneable {
         mDefaultLocation = dreamboxConfig.getDefaultLocation();
         mShowZapTimer = dreamboxConfig.isShowingZapTimer();
         mShowExpired = dreamboxConfig.isShowingExpired();
+        mAfterEvent = dreamboxConfig.getAfterEvent();
     }
 
     /**
@@ -167,7 +171,7 @@ public final class DreamboxConfig implements ConfigIf, Cloneable {
      * @throws IOException io errors
      */
     public void writeData(ObjectOutputStream stream) throws IOException {
-        stream.writeInt(15); // version
+        stream.writeInt(16); // version
         stream.writeUTF(getId());
 
         stream.writeUTF(mDreamboxAddress);
@@ -225,6 +229,7 @@ public final class DreamboxConfig implements ConfigIf, Cloneable {
         
         stream.writeBoolean(mShowExpired);
         stream.writeBoolean(mShowZapTimer);
+        stream.writeInt(mAfterEvent);
     }
 
     /**
@@ -337,6 +342,10 @@ public final class DreamboxConfig implements ConfigIf, Cloneable {
           
           if(version > 12) {
             mShowZapTimer = stream.readBoolean();
+          }
+          
+          if(version > 15) {
+            mAfterEvent = stream.readInt();
           }
         }
     }
@@ -461,6 +470,20 @@ public final class DreamboxConfig implements ConfigIf, Cloneable {
         mAfter = after;
     }
 
+    /** @return The after event value */
+    public int getAfterEvent() {
+      return mAfterEvent;
+    }
+    
+    /**
+     * Set the after event value.
+     *  
+     * @param afterEvent The after event
+     */
+    public void setAfterEvent(int afterEvent) {
+      mAfterEvent = afterEvent;
+    }
+    
     /**
      * @return Time before recording
      */

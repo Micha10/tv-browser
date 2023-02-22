@@ -103,6 +103,8 @@ public class DreamboxConfigDialog extends JDialog implements WindowClosingIf {
     private JComboBox mSoftwareSelection;
     /** The default recording directory */
     private JComboBox mDefaultLocation;
+    /** The default event after recording */
+    private JComboBox mDefaultAfterEvent;
     /** IP-Address of the dreambox */
     private JTextField mDreamboxAddress;
     /** Device Name of the dreambox */
@@ -403,11 +405,24 @@ public class DreamboxConfigDialog extends JDialog implements WindowClosingIf {
         extendedPanel.add(mProgramReceiveTargetSelection, CC.xyw(1,extendedPanel.getRow(),7));
 
         mDefaultLocation = new JComboBox();
+        mDefaultAfterEvent = new JComboBox();
 
+        for(int i = 0; i < 4; i++) {
+          AfterEventEntry entry = new AfterEventEntry(i);
+          mDefaultAfterEvent.addItem(entry);
+          
+          if(entry.matchesEvent(mConfig.getAfterEvent())) {
+            mDefaultAfterEvent.setSelectedItem(entry);
+          }
+        }
+        
         extendedPanel.addParagraph(LOCALIZER.msg("recording", "Recording"));
         extendedPanel.addRow("default");
         extendedPanel.add(new JLabel(LOCALIZER.msg("defaultlocation", "DefaultLocation :")), CC.xy(2, extendedPanel.getRow()));
         extendedPanel.add(mDefaultLocation, CC.xy(4, extendedPanel.getRow()));
+        extendedPanel.addRow("default");
+        extendedPanel.add(new JLabel(LOCALIZER.msg("afterEvent", "Action after recording:")), CC.xy(2, extendedPanel.getRow()));
+        extendedPanel.add(mDefaultAfterEvent, CC.xy(4, extendedPanel.getRow()));
         
         ButtonBarBuilder builder = new ButtonBarBuilder();
 
@@ -613,6 +628,7 @@ public class DreamboxConfigDialog extends JDialog implements WindowClosingIf {
         
         String defaultLocation = (String) mDefaultLocation.getSelectedItem();
         mConfig.setDefaultLocation(defaultLocation != null ? defaultLocation : "");
+        mConfig.setAfterEvent(((AfterEventEntry)mDefaultAfterEvent.getSelectedItem()).mCode);
         
         setVisible(false);
     }
@@ -643,5 +659,22 @@ public class DreamboxConfigDialog extends JDialog implements WindowClosingIf {
      */
     public String getDeviceName() {
         return mDeviceName.getText();
+    }
+    
+    private static final class AfterEventEntry {
+      private int mCode = 0;
+      
+      private AfterEventEntry(int code) {
+        mCode = code;
+      }
+      
+      @Override
+      public String toString() {
+        return LOCALIZER.msg("afterEvent"+mCode,String.valueOf(mCode));
+      }
+      
+      private boolean matchesEvent(int code) {
+        return mCode == code;
+      }
     }
 }

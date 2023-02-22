@@ -556,7 +556,7 @@ try {
     String serviceRef = oldTimer.get(E2TimerHelper.SERVICEREFERENCE);
     boolean useHdService = E2ServiceHelper.isHdService(serviceRef);
     ProgramOptionPanel pgmOptPanel = new ProgramOptionPanel(E2LocationHelper
-        .getInstance(mConnector, null), E2MovieHelper.getInstance(mConnector, null));
+        .getInstance(mConnector, null), E2MovieHelper.getInstance(mConnector, null), mConnector.getConfig());
 
     pgmOptPanel.setRepeated(Integer.parseInt(oldTimer
         .get(E2TimerHelper.REPEATED)));
