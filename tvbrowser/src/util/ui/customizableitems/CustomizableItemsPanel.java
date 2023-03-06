@@ -120,12 +120,12 @@ public class CustomizableItemsPanel<E> extends JPanel {
     JPanel panel5=new JPanel(new BorderLayout());
 
     mRightBt = new JButton(TVBrowserIcons.right(TVBrowserIcons.SIZE_LARGE));
-    msg = mLocalizer.msg("tooltip.right", "Move selected rows in right list");
+    msg = mLocalizer.msg("tooltip.right", "Move selected rows to right list");
     mRightBt.setToolTipText(msg);
     mRightBt.setMargin(UiUtilities.ZERO_INSETS);
 
     mLeftBt = new JButton(TVBrowserIcons.left(TVBrowserIcons.SIZE_LARGE));
-    msg = mLocalizer.msg("tooltip.left", "Move selected rows in left list");
+    msg = mLocalizer.msg("tooltip.left", "Move selected rows to left list");
     mLeftBt.setToolTipText(msg);
     mLeftBt.setMargin(UiUtilities.ZERO_INSETS);
 

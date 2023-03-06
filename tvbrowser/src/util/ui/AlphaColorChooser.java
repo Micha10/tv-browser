@@ -234,8 +234,11 @@ public class AlphaColorChooser extends JDialog implements ChangeListener {
         SpinnerModel model = new SpinnerNumberModel(100, 0, 255, 1);
 
         JSpinner ret = new JSpinner(model);
-        ret.setMinimumSize(new Dimension(50, 10));
-        ret.setPreferredSize(new Dimension(50, 10));
+        
+        int minwidth = ret.getPreferredSize().width;
+        
+        ret.setMinimumSize(new Dimension(minwidth, 10));
+        ret.setPreferredSize(new Dimension(minwidth, 10));
         return ret;
     }
 

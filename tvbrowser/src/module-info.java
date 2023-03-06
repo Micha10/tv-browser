@@ -82,6 +82,7 @@ module tvbrowser {
 	requires transitive jgoodies.common;
 	requires transitive jgoodies.forms;
 	requires jgoodies.looks;
+	requires com.formdev.flatlaf;
 	requires l2fprod.common.tasks;
 	requires transitive texhyphj;
 	requires opencsv;

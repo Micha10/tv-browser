@@ -379,6 +379,10 @@ public final class DefaultMarkingPrioritySelectionPanel extends JPanel {
     return colors;
   }
 
+  public static String getNoPriorityColorName() {
+    return MarkingsSettingsTab.LOCALIZER.msg("color.noPriority", "Don't highlight");
+  }
+  
   /**
    * this enables the panel and all its subcomponents.
    * @param enabled true to enable this panel, false otherwise

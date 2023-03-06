@@ -788,7 +788,7 @@ public class FilterTree extends JTree implements DragGestureListener, DropTarget
         }
       }
 
-      if(UiUtilities.isNimbusLookAndFeel()) {
+      if(UiUtilities.isNimbusLookAndFeel() || UiUtilities.isFlatLafLookAndFeel()) {
         if(sel) {
           label.setOpaque(true);
           label.setBackground(UIManager.getColor("Tree.selectionBackground"));

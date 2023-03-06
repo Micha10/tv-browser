@@ -31,14 +31,17 @@ import java.util.Arrays;
 
 import javax.swing.Icon;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JSlider;
 import javax.swing.UIManager;
 
+import com.jgoodies.forms.builder.ButtonBarBuilder;
 import com.jgoodies.forms.factories.Borders;
 import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.factories.DefaultComponentFactory;
@@ -57,8 +60,11 @@ import tvbrowser.ui.mainframe.MainFrame;
 import tvbrowser.ui.settings.looksSettings.JGoodiesLNFSettings;
 import util.i18n.Localizer;
 import util.ui.CustomComboBoxRenderer;
+import util.ui.EnhancedPanelBuilder;
 import util.ui.LinkButton;
+import util.ui.TVBrowserIcons;
 import util.ui.UiUtilities;
+import util.ui.WindowClosingIf;
 import util.ui.persona.Persona;
 import util.ui.persona.PersonaInfo;
 
@@ -86,6 +92,11 @@ public final class LookAndFeelSettingsTab implements CancelableSettingsTab {
   private static int START_ICON_INDEX;
   private static int START_PLUGIN_VIEW_POSITION_INDEX;
   private static int START_INFO_ICON_THEME_INDEX;
+  
+  private static boolean FLATLAF_START_BUTTONS_ROUNDED;
+  private static boolean FLATLAF_START_TABBED_SEPARATORS;
+  private static boolean FLATLAF_START_SCROLLBAR_BUTTONS;
+  private static int FLATLAF_START_SCROLLBAR_WIDTH = -1;
 
   private static String JOODIES_START_THEME;
   private static boolean JGOODIES_START_SHADOW;
@@ -298,6 +309,10 @@ public final class LookAndFeelSettingsTab implements CancelableSettingsTab {
       JOODIES_START_THEME = Settings.LookAndFeel.JGOODIES_THEME.getString();
       JGOODIES_START_SHADOW = Settings.LookAndFeel.JGOODIES_SHADOW.getBoolean();
       START_INFO_ICON_THEME_INDEX = mInfoIconThemes.getSelectedIndex();
+      FLATLAF_START_BUTTONS_ROUNDED = Settings.LookAndFeel.FLATLAF_BUTTONS_ROUNDED.getBoolean();
+      FLATLAF_START_TABBED_SEPARATORS = Settings.LookAndFeel.FLATLAF_TABBED_SEPARATORS_SHOW.getBoolean();
+      FLATLAF_START_SCROLLBAR_BUTTONS = Settings.LookAndFeel.FLATLAF_SCROLLBAR_BUTTONS_SHOW.getBoolean();
+      FLATLAF_START_SCROLLBAR_WIDTH = Settings.LookAndFeel.FLATLAF_SCROLLBAR_WIDTH.getInt();
     }
 
     mIconThemes.addActionListener(e -> {
@@ -415,7 +430,11 @@ public final class LookAndFeelSettingsTab implements CancelableSettingsTab {
         JOODIES_START_THEME.compareTo(Settings.LookAndFeel.JGOODIES_THEME.getString()) != 0 ||
         JGOODIES_START_SHADOW != Settings.LookAndFeel.JGOODIES_SHADOW.getBoolean() ||
         mPluginViewPosition.getSelectedIndex() != START_PLUGIN_VIEW_POSITION_INDEX ||
-        START_INFO_ICON_THEME_INDEX != mInfoIconThemes.getSelectedIndex());
+        START_INFO_ICON_THEME_INDEX != mInfoIconThemes.getSelectedIndex() ||
+        FLATLAF_START_BUTTONS_ROUNDED != Settings.LookAndFeel.FLATLAF_BUTTONS_ROUNDED.getBoolean() ||
+        FLATLAF_START_TABBED_SEPARATORS != Settings.LookAndFeel.FLATLAF_TABBED_SEPARATORS_SHOW.getBoolean() ||
+        FLATLAF_START_SCROLLBAR_BUTTONS != Settings.LookAndFeel.FLATLAF_SCROLLBAR_BUTTONS_SHOW.getBoolean() ||
+        FLATLAF_START_SCROLLBAR_WIDTH != Settings.LookAndFeel.FLATLAF_SCROLLBAR_WIDTH.getInt());
   }
 
   void configTheme() {
@@ -423,6 +442,9 @@ public final class LookAndFeelSettingsTab implements CancelableSettingsTab {
 
     if (classname.startsWith("com.jgoodies")) {
       JGoodiesLNFSettings settings = new JGoodiesLNFSettings((JDialog) UiUtilities.getBestDialogParent(mSettingsPn));
+      UiUtilities.centerAndShow(settings);
+    } else if(classname.startsWith("com.formdev.flatlaf")) {
+      FlatLafLNFSettings settings = new FlatLafLNFSettings((JDialog) UiUtilities.getBestDialogParent(mSettingsPn));
       UiUtilities.centerAndShow(settings);
     }
 
@@ -432,7 +454,7 @@ public final class LookAndFeelSettingsTab implements CancelableSettingsTab {
   void lookChanged() {
     String classname = ((LookAndFeelObj)mLfComboBox.getSelectedItem()).getLFClassName();
 
-    if ((classname.startsWith("com.jgoodies") || classname.startsWith("com.l2fprod")) && !classname.startsWith("com.jgoodies.looks.windows.WindowsLookAndFeel")) {
+    if ((classname.startsWith("com.formdev.flatlaf") || classname.startsWith("com.jgoodies") || classname.startsWith("com.l2fprod")) && !classname.startsWith("com.jgoodies.looks.windows.WindowsLookAndFeel")) {
       mConfigBtn.setEnabled(true);
     } else {
       mConfigBtn.setEnabled(false);
@@ -495,7 +517,12 @@ public final class LookAndFeelSettingsTab implements CancelableSettingsTab {
         JOODIES_START_THEME.compareTo(Settings.LookAndFeel.JGOODIES_THEME.getString()) != 0 ||
         JGOODIES_START_SHADOW != Settings.LookAndFeel.JGOODIES_SHADOW.getBoolean() ||
         (Settings.LookAndFeel.PLUGIN_VIEW_IS_LEFT.getBoolean() ? 1 : 0) != START_PLUGIN_VIEW_POSITION_INDEX ||
-        START_INFO_ICON_THEME_INDEX != mInfoIconThemes.getSelectedIndex());
+        START_INFO_ICON_THEME_INDEX != mInfoIconThemes.getSelectedIndex() ||
+        FLATLAF_START_BUTTONS_ROUNDED != Settings.LookAndFeel.FLATLAF_BUTTONS_ROUNDED.getBoolean() ||
+        FLATLAF_START_TABBED_SEPARATORS != Settings.LookAndFeel.FLATLAF_TABBED_SEPARATORS_SHOW.getBoolean() ||
+        FLATLAF_START_SCROLLBAR_BUTTONS != Settings.LookAndFeel.FLATLAF_SCROLLBAR_BUTTONS_SHOW.getBoolean() ||
+        FLATLAF_START_SCROLLBAR_WIDTH != Settings.LookAndFeel.FLATLAF_SCROLLBAR_WIDTH.getInt()
+        );
   }catch(Throwable t) {t.printStackTrace();}
   }
 
@@ -505,5 +532,82 @@ public final class LookAndFeelSettingsTab implements CancelableSettingsTab {
 
   public String getTitle() {
     return LOCALIZER.msg("graphical", "Graphical settings");
+  }
+  
+  private static final class FlatLafLNFSettings extends JDialog implements WindowClosingIf {
+    private JCheckBox mScrollBarShowButtons;
+    private JCheckBox mTabbedSeparatorsShow;
+    private JCheckBox mRoundedButtonsShow;
+    private JSlider mScrollBarWidth;
+    
+    private FlatLafLNFSettings(JDialog parent) {
+      super(parent, true);
+      setTitle(LOCALIZER.msg("flatlaf.title", "FlatLaf options"));
+      createGui();
+    }
+    
+    private void createGui() {
+      EnhancedPanelBuilder pb = new EnhancedPanelBuilder("default,2dlu,default,2dlu,10dlu,2dlu,default,5dlu:grow");
+      
+      mRoundedButtonsShow = new JCheckBox(LOCALIZER.msg("flatlaf.buttons.rounded", "Use rounded buttons"), Settings.LookAndFeel.FLATLAF_BUTTONS_ROUNDED.getBoolean());
+      mScrollBarShowButtons = new JCheckBox(LOCALIZER.msg("flatlaf.scrollbar.showButtons", "Show buttons for scrolling"), Settings.LookAndFeel.FLATLAF_SCROLLBAR_BUTTONS_SHOW.getBoolean());
+      mTabbedSeparatorsShow = new JCheckBox(LOCALIZER.msg("flatlaf.tabbed.showSeparators", "Show separators between tabs"), Settings.LookAndFeel.FLATLAF_TABBED_SEPARATORS_SHOW.getBoolean());
+      mScrollBarWidth = new JSlider(5, 20, Settings.LookAndFeel.FLATLAF_SCROLLBAR_WIDTH.getInt());
+      
+      final JLabel valueLabel = new JLabel(String.valueOf(mScrollBarWidth.getValue()));
+      
+      mScrollBarWidth.addChangeListener(e -> {
+        valueLabel.setText(String.valueOf(mScrollBarWidth.getValue()));
+      });
+      
+      JButton reset = new JButton(Localizer.getLocalization(Localizer.I18N_RESET), TVBrowserIcons.reset(TVBrowserIcons.SIZE_LARGE));
+      reset.addActionListener(e -> {
+        mScrollBarWidth.setValue(Settings.LookAndFeel.FLATLAF_SCROLLBAR_WIDTH.getDefault());
+      });
+      
+      JButton ok = new JButton(Localizer.getLocalization(Localizer.I18N_OK));
+      ok.addActionListener(e -> {
+        okPressed();
+      });
+      
+      JButton cancel = new JButton(Localizer.getLocalization(Localizer.I18N_CANCEL));
+      cancel.addActionListener(e -> {
+        close();
+      });
+
+      ButtonBarBuilder bar = new ButtonBarBuilder();
+      bar.addGlue();
+      bar.addButton(new JButton[] {ok, cancel});
+      
+      pb.addRowFull(mRoundedButtonsShow);
+      pb.addRowFull(mTabbedSeparatorsShow);
+      pb.addRowFull(mScrollBarShowButtons);
+      pb.addLabelRow(LOCALIZER.msg("flatlaf.scrollbar.width", "Width of scrollbars"), 1);
+      pb.add(mScrollBarWidth, 3);
+      pb.add(valueLabel, 5);
+      pb.add(reset, 7);
+      pb.addRowFull("10dlu,default",bar.getPanel());
+      pb.getPanel().setBorder(Borders.DIALOG);
+      
+      setContentPane(pb.getPanel());
+      
+      pack();
+      
+      UiUtilities.registerForClosing(this);
+    }
+    
+    private void okPressed() {
+      Settings.LookAndFeel.FLATLAF_BUTTONS_ROUNDED.setBoolean(mRoundedButtonsShow.isSelected());
+      Settings.LookAndFeel.FLATLAF_TABBED_SEPARATORS_SHOW.setBoolean(mTabbedSeparatorsShow.isSelected());
+      Settings.LookAndFeel.FLATLAF_SCROLLBAR_BUTTONS_SHOW.setBoolean(mScrollBarShowButtons.isSelected());
+      Settings.LookAndFeel.FLATLAF_SCROLLBAR_WIDTH.setInt(mScrollBarWidth.getValue());
+      
+      close();
+    }
+    
+    @Override
+    public void close() {
+      dispose();
+    }
   }
 }

@@ -1233,6 +1233,14 @@ public class UiUtilities {
   }
   
   /**
+   * @return If the current LookAndFeel is FlatLaf.
+   * @since 4.3
+   */
+  public static boolean isFlatLafLookAndFeel() {
+    return UIManager.getLookAndFeel().getClass().getCanonicalName().startsWith("com.formdev.flatlaf");
+  }
+  
+  /**
    * @return If the current LookAndFeel is GTK+.
    * @since 3.2
    */
@@ -1525,43 +1533,47 @@ public class UiUtilities {
     
     d.setModalityType(ModalityType.APPLICATION_MODAL);
     d.addComponentListener(new ComponentListener() {
-		
-		@Override
-		public void componentShown(ComponentEvent e) {
-			// TODO Auto-generated method stub
-			SwingUtilities.invokeLater(new Runnable() {
-				
-				@Override
-				public void run() {
-					  d.toFront();
-					  d.requestFocus();
-				}
-			});
-			
-		}
-		
-		@Override
-		public void componentResized(ComponentEvent e) {
-			// TODO Auto-generated method stub
-			
-		}
-		
-		@Override
-		public void componentMoved(ComponentEvent e) {
-			// TODO Auto-generated method stub
-			
-		}
-		
-		@Override
-		public void componentHidden(ComponentEvent e) {
-			// TODO Auto-generated method stub
-			
-		}
-	});
+  		@Override
+  		public void componentShown(ComponentEvent e) {
+  			// TODO Auto-generated method stub
+  			SwingUtilities.invokeLater(new Runnable() {
+  				
+  				@Override
+  				public void run() {
+  					  d.toFront();
+  					  d.requestFocus();
+  				}
+  			});
+  			
+  		}
+  		
+  		@Override
+  		public void componentResized(ComponentEvent e) {
+  			// TODO Auto-generated method stub
+  			
+  		}
+  		
+  		@Override
+  		public void componentMoved(ComponentEvent e) {
+  			// TODO Auto-generated method stub
+  			
+  		}
+  		
+  		@Override
+  		public void componentHidden(ComponentEvent e) {
+  			// TODO Auto-generated method stub
+  			
+  		}
+  	});
     
     d.setVisible(true);
     
-    int result = (Integer)pane.getValue();
+    Integer result = (Integer)pane.getValue();
+    
+    if(result == null) {
+      result = JOptionPane.CLOSED_OPTION;
+    }
+    
     parent.dispose();
     
     return result;
@@ -1683,5 +1695,50 @@ public class UiUtilities {
    */
   public static boolean isBrightnessSimilarForColors(final Color color1, final Color color2, int similarityThreshold) {
     return getBrightnessSimilarityForColors(color1, color2) >= similarityThreshold;
+  }
+
+  public static Color getBorderColorForBackground(Color c) {
+    int test = getBrightnessValueForColor(c);
+    int alpha = 100;
+    
+    if(test <= 12) {
+      c = Color.white;
+      alpha = 200;
+    }
+    else if(test <= 16) {
+      c = c.brighter().brighter().brighter().brighter().brighter().brighter();
+      alpha = 200;
+    }
+    else if(test <= 24) {
+      c = c.brighter().brighter().brighter();
+      alpha = 160;
+    }
+    else if(test <= 39) {
+      c = c.brighter().brighter();
+      alpha = 140;
+    }
+    else if(test <= 57) {
+      alpha = 120;
+    }
+    else if(test <= 67) {
+      c = c.darker();
+      alpha = 120;
+    }
+    else if(test <= 80) {
+      c = c.darker().darker();
+      alpha = 120;
+    }
+    else if(test <= 94){
+      c = c.darker().darker().darker();
+      alpha = 100;
+    }
+    else {
+      c = Color.black;
+      alpha = 100;
+    }
+    
+    c = new Color(c.getRed(),c.getGreen(),c.getBlue(),alpha);
+      
+    return c;
   }
 }

@@ -51,6 +51,7 @@ import tvbrowser.core.Settings;
 import util.i18n.Localizer;
 import util.ui.EnhancedPanelBuilder;
 import util.ui.OrderChooser;
+import util.ui.TVBrowserIcons;
 import util.ui.UiUtilities;
 
 /**
@@ -115,7 +116,7 @@ public class TrayProgramsChannelsSettingsTab implements SettingsTab {
       valueLabel.setText(String.valueOf(mChannelWidth.getValue()));
     });
     
-    JButton reset = new JButton(Localizer.getLocalization(Localizer.I18N_DEFAULT));
+    JButton reset = new JButton(Localizer.getLocalization(Localizer.I18N_DEFAULT), TVBrowserIcons.reset(TVBrowserIcons.SIZE_LARGE));
     reset.addActionListener(e -> {
       mChannelWidth.setValue(Settings.Tray.Channels.WIDTH.getDefault());
     });

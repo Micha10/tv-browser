@@ -51,7 +51,7 @@ public class OverlayListener extends MouseInputAdapter{
           Rectangle paintBounds = SwingUtilities.convertRectangle(mTree, mBounds, this);
           
           
-          if(UiUtilities.isNimbusLookAndFeel()) {
+          if(UiUtilities.isNimbusLookAndFeel() || UiUtilities.isFlatLafLookAndFeel()) {
             Color current = g.getColor();
             
             if(selected) {

@@ -59,7 +59,7 @@ import util.ui.WindowClosingIf;
  */
 public class JGoodiesLNFSettings extends JDialog implements WindowClosingIf {
   /** Translation */
-  private static final util.i18n.Localizer mLocalizer = util.i18n.Localizer.getLocalizerFor(JGoodiesLNFSettings.class);
+  private static final util.i18n.Localizer LOCALIZER = util.i18n.Localizer.getLocalizerFor(JGoodiesLNFSettings.class);
 
   /** Color-Schema */
   private JComboBox<PlasticTheme> mColorScheme;
@@ -73,7 +73,7 @@ public class JGoodiesLNFSettings extends JDialog implements WindowClosingIf {
    */
   public JGoodiesLNFSettings(JDialog parent) {
     super(parent, true);
-    setTitle(mLocalizer.msg("title", "Title"));
+    setTitle(LOCALIZER.msg("title", "Title"));
     createGui();
   }
 
@@ -96,7 +96,7 @@ public class JGoodiesLNFSettings extends JDialog implements WindowClosingIf {
     
     CellConstraints cc = new CellConstraints();
     
-    content.add(new JLabel(mLocalizer.msg("colorTheme", "Color-Theme") +  ":"), cc.xy(1,1));
+    content.add(new JLabel(LOCALIZER.msg("colorTheme", "Color-Theme") +  ":"), cc.xy(1,1));
     
     mColorScheme = new JComboBox<>(themes);
     mColorScheme.setRenderer(new DefaultListCellRenderer() {
@@ -120,7 +120,7 @@ public class JGoodiesLNFSettings extends JDialog implements WindowClosingIf {
     
     content.add(mColorScheme, cc.xy(3,1));
     
-    mShadow = new JCheckBox(mLocalizer.msg("dropShadow", "Drop Shadow on Menus"));
+    mShadow = new JCheckBox(LOCALIZER.msg("dropShadow", "Drop Shadow on Menus"));
     mShadow.setSelected(Settings.LookAndFeel.JGOODIES_SHADOW.getBoolean());
     content.add(mShadow, cc.xyw(1,3,3));
     

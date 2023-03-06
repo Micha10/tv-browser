@@ -64,6 +64,7 @@ import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 
 import devplugin.Plugin;
+import tvbrowser.core.Settings;
 import tvbrowser.core.filters.FilterManagerImpl;
 import tvbrowser.core.icontheme.IconLoader;
 import tvbrowser.ui.mainframe.MainFrame;
@@ -172,7 +173,12 @@ public class SearchField extends JPanel {
   private void createGui() {
     mSearchParent.setOpaque(true);
 
-    panel.setBorder(BorderFactory.createCompoundBorder(UIManager.getBorder("TextField.border"),BorderFactory.createEmptyBorder(2,2,1,2)));
+    if(UiUtilities.isFlatLafLookAndFeel() && Settings.LookAndFeel.FLATLAF_BUTTONS_ROUNDED.getBoolean()) {
+      panel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(UiUtilities.getBorderColorForBackground(UIManager.getColor("Panel.background"))),BorderFactory.createEmptyBorder(2,2,1,2)));
+    }
+    else {
+      panel.setBorder(BorderFactory.createCompoundBorder(UIManager.getBorder("TextField.border"),BorderFactory.createEmptyBorder(2,2,1,2)));
+    }
     mText = new SearchTextField(15);
 
     mPersonaFocusListener = new FocusListener() {
@@ -182,8 +188,10 @@ public class SearchField extends JPanel {
         mSearchParent.setBackground(new Color(c.getRed(),c.getGreen(),c.getBlue(),180));
         mSearchParent.setOpaque(false);
         SwingUtilities.invokeLater(() -> {
-          mSearchParent.setOpaque(true);
-          panel.repaint();            
+       
+            mSearchParent.setOpaque(true);
+            panel.repaint();
+       
         });
       }
       
@@ -203,7 +211,7 @@ public class SearchField extends JPanel {
     else {
       mText.setBorder(BorderFactory.createEmptyBorder(1,1,1,1));
     }
-
+    
     mText.addFocusListener(new FocusAdapter() {
       public void focusLost(FocusEvent e) {
         mGoOrCancelButton.setVisible(mText.getText().length() != 0 && !mText.getText().equals(SearchTextField.mLocalizer.ellipsisMsg("search","Search")));

@@ -2017,6 +2017,15 @@ public class Settings {
     public static final StringProperty INFO_ICON_THEME_ID = new StringProperty(
       PROP, "infoIconThemeName", "tvb_default.zip");
 
+    public static final BooleanProperty FLATLAF_BUTTONS_ROUNDED = new BooleanProperty(
+      PROP, "flatlaf.buttonsRounded", false);
+    public static final BooleanProperty FLATLAF_TABBED_SEPARATORS_SHOW = new BooleanProperty(
+        PROP, "flatlaf.tabbedSeparatorsShow", true);
+    public static final BooleanProperty FLATLAF_SCROLLBAR_BUTTONS_SHOW = new BooleanProperty(
+        PROP, "flatlaf.scrollbarButtonsShow", true);
+    public static final IntProperty FLATLAF_SCROLLBAR_WIDTH = new IntProperty(
+        PROP, "flatlaf.scrollbarWidth", 12);
+    
     /**
      * The IconTheme
      */

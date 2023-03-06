@@ -877,7 +877,7 @@ public class SettingsDialog implements WindowClosingIf {
         }
       }
 
-      if(UiUtilities.isNimbusLookAndFeel()) {
+      if(UiUtilities.isNimbusLookAndFeel() || UiUtilities.isFlatLafLookAndFeel()) {
         if(sel) {
           label.setOpaque(true);
           label.setBackground(UIManager.getColor("Tree.selectionBackground"));

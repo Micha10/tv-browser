@@ -869,7 +869,7 @@ public class FavoriteTree extends JTree implements DragGestureListener, DropTarg
           label.setOpaque(!sel && !cellHasFocus);
         }
       }
-      
+
       if(value instanceof FavoriteNode) {
         FavoriteNode node = ((FavoriteNode)value);
         if(leaf && node.isDirectoryNode()) {
@@ -884,7 +884,7 @@ public class FavoriteTree extends JTree implements DragGestureListener, DropTarg
         }
       }
 
-      if(UiUtilities.isNimbusLookAndFeel()) {
+      if(UiUtilities.isNimbusLookAndFeel() || UiUtilities.isFlatLafLookAndFeel()) {
         if(sel) {
           label.setOpaque(true);
           label.setBackground(UIManager.getColor("Tree.selectionBackground"));
@@ -893,7 +893,7 @@ public class FavoriteTree extends JTree implements DragGestureListener, DropTarg
           label.setOpaque(false);
         }
       }
-
+      
       return label;
     }
   }

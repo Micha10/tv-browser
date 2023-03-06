@@ -111,6 +111,7 @@ public class Localizer {
   public final static String I18N_TOMORROW = "i18n_tomorrow";
   public final static String I18N_INFO = "i18n_info";
   public final static String I18N_WARNING = "i18n_warning";
+  public final static String I18N_RESET = I18N_DEFAULT;
   
 
   /** The logger for this class. */

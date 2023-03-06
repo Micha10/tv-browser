@@ -1901,6 +1901,17 @@ public class TVBrowser {
       UIManager.installLookAndFeel("Plastic 3D",        "com.jgoodies.looks.plastic.Plastic3DLookAndFeel");
       UIManager.installLookAndFeel("Plastic XP",        "com.jgoodies.looks.plastic.PlasticXPLookAndFeel");
       
+      UIManager.installLookAndFeel("FlatLaf Light",     "com.formdev.flatlaf.FlatLightLaf");
+      UIManager.installLookAndFeel("FlatLaf Dark",      "com.formdev.flatlaf.FlatDarkLaf");
+      UIManager.installLookAndFeel("FlatLaf IntelliJ",  "com.formdev.flatlaf.FlatIntelliJLaf");
+      UIManager.installLookAndFeel("FlatLaf Darcula",   "com.formdev.flatlaf.FlatDarculaLaf");
+      
+      if(OperatingSystem.isMacOs()) {
+        UIManager.installLookAndFeel("FlatLaf macOS Light v3", "com.formdev.flatlaf.themes.FlatMacLightLaf");
+        UIManager.installLookAndFeel("FlatLaf macOS Dark v3", "com.formdev.flatlaf.themes.FlatMacDarkLaf");
+      }
+
+      
       //String classPath = System.getProperty("java.class.path","");
       /*if (!isStable() || StringUtils.containsIgnoreCase(classPath, "eclipse") || StringUtils.containsIgnoreCase(classPath, "workspace")) {
         Map<String, SkinInfo> substanceSkins = SubstanceLookAndFeel.getAllSkins();
@@ -1973,25 +1984,6 @@ public class TVBrowser {
     if (Settings.LookAndFeel.SELECTED.getString().equals(
         "com.l2fprod.gui.plaf.skin.SkinLookAndFeel")) {
     	Settings.LookAndFeel.SELECTED.setString(Settings.LookAndFeel.SELECTED.getDefault());
-    	/*
-      String themepack = Settings.propSkinLFThemepack.getString();
-      try {
-        File themepackFile = new File(themepack);
-        if (!themepackFile.exists()) {
-          themepackFile = new File(Settings.getUserDirectoryName(), themepack);
-        }
-
-        if (!themepackFile.exists() && OperatingSystem.isMacOs()) {
-          themepackFile = new File("/Library/Application Support/TV-Browser/", themepack);
-        }
-
-        //SkinLookAndFeel.setSkin(SkinLookAndFeel.loadThemePack(themepackFile.getAbsolutePath()));
-      } catch (Exception exc) {
-        ErrorHandler.handle(
-          "Could not load themepack.\nSkinLF is disabled now",
-          exc);
-        Settings.LookAndFeel.SELECTED.setString(Settings.LookAndFeel.SELECTED.getDefault());
-      }*/
     } else if (Settings.LookAndFeel.SELECTED.getString().startsWith("com.jgoodies") && !Settings.LookAndFeel.SELECTED.getString().startsWith("com.jgoodies.looks.windows.WindowsLookAndFeel")) {
       com.jgoodies.looks.Options.setPopupDropShadowEnabled(Settings.LookAndFeel.JGOODIES_SHADOW.getBoolean());
       UIManager.put("jgoodies.popupDropShadowEnabled", Boolean
@@ -2046,7 +2038,37 @@ public class TVBrowser {
 
     // set colors for action pane at UIManager
     UIManager.put("TaskPane.foreground",UIManager.get("Button.foreground"));
-
+    
+    if(UiUtilities.isFlatLafLookAndFeel()) {
+      for(Object key : UIManager.getLookAndFeel().getDefaults().keySet()) {
+        if (key.toString().startsWith("Tree.") && key.toString().toLowerCase().contains("background")) {
+          Color c = UIManager.getDefaults().getColor(key);
+          
+          if(c != null) {
+            UIManager.put(key, new Color(c.getRed(),c.getGreen(),c.getBlue(),c.getAlpha()));
+          }
+        }
+      }
+      
+      if(Settings.LookAndFeel.FLATLAF_TABBED_SEPARATORS_SHOW.getBoolean()) {
+        UIManager.put("TabbedPane.showTabSeparators", true );
+        UIManager.put("TabbedPane.tabSeparatorsFullHeight", true );
+      }
+      
+      if(Settings.LookAndFeel.FLATLAF_TABBED_SEPARATORS_SHOW.getBoolean()) {
+        UIManager.put("ScrollBar.showButtons", true );
+      }
+      
+      UIManager.put("ScrollBar.width", Settings.LookAndFeel.FLATLAF_SCROLLBAR_WIDTH.getInt());
+      
+      if(Settings.LookAndFeel.FLATLAF_BUTTONS_ROUNDED.getBoolean()) {
+        UIManager.put("Button.arc", 999 );
+        UIManager.put("Component.arc", 999 );
+        UIManager.put("ProgressBar.arc", 999 );
+        UIManager.put("TextComponent.arc", 999 );
+      }
+    }
+    
     if(UIManager.getColor("List.selectionBackground") == null) {
       UIManager.put("List.selectionBackground",UIManager.getColor("Tree.selectionBackground"));
     }
