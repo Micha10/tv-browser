@@ -204,7 +204,7 @@ public class ProgramPanelSettingsTab implements SettingsTab {
     mShowOriginalTitles = new JCheckBox(LOCALIZER.msg("showOriginalTitles", "Show original title, if available, instead of title"), Settings.ProgramPanel.ORIGINIAL_TITLES_SHOW.getBoolean());
     
     EnhancedPanelBuilder filterPanel = new EnhancedPanelBuilder(new FormLayout("default","default"));
-    JButton editFilter = new JButton("Filter editieren...");
+    JButton editFilter = new JButton(LOCALIZER.ellipsisMsg("editFilter", "Edit filter"));
     editFilter.addActionListener(e -> {
       final UserFilter filter = mFilterToUpdate != null ? mFilterToUpdate : GenericFilterMap.getInstance().getGenericInternalFilter(GenericFilterMap.GENERIC_PROGRAM_PANEL_FILTER_NAME);
       final EditFilterDlg editFilter1 = new EditFilterDlg(UiUtilities.getLastModalChildOf(MainFrame.getInstance()), FilterList.getInstance(), filter, false, true);
@@ -227,7 +227,7 @@ public class ProgramPanelSettingsTab implements SettingsTab {
     panel.add(UiUtilities.createHelpTextArea(LOCALIZER.msg("infoText.description", "Select the information and its order to show at the programs.")), CC.xyw(4, panel.getRowCount()-2, 1));
     panel.add(mShowOriginalTitles, 4);
     
-    panel.addSeparatorRow("Standard", 2, 3);
+    panel.addSeparatorRow(Localizer.getLocalization(Localizer.I18N_STANDARD), 2, 3);
     
     panel.addGrowingRow(mIconPluginOCh, 2);
     panel.add(mInfoTextOCh, 4);
