@@ -88,8 +88,8 @@ public class PluginTreeModel extends DefaultTreeModel {
 	        }
 	        else if(n.equals(FavoritesPlugin.getInstance().getRootNode().getMutableTreeNode())) {
 	          FavoritesPlugin.getInstance().getRootNode().update();
-	        } else if(n.equals(ReminderPlugin.getRootNode().getMutableTreeNode())) {
-	          ReminderPlugin.getRootNode().update();
+	        } else if(n.equals(ReminderPlugin.getInstance().getRootNode().getMutableTreeNode())) {
+	          ReminderPlugin.getInstance().getRootNode().update();
 	        }
         }
       }

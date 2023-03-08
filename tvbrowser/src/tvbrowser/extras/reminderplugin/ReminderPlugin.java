@@ -111,7 +111,7 @@ public class ReminderPlugin {
   private static ReminderPlugin mInstance;
   private static String DATAFILE_PREFIX = "reminderplugin.ReminderPlugin";
 
-  private static final PluginTreeNode mRootNode = new PluginTreeNode(LOCALIZER.msg("pluginName","Reminders"));
+  private  final PluginTreeNode mRootNode = new PluginTreeNode(LOCALIZER.msg("pluginName","Reminders"));
 
   private boolean mHasRightToStartTimer = false;
 
@@ -736,14 +736,14 @@ public class ReminderPlugin {
    * <p>
    * @return The root node for the plugin tree.
    */
-  public static PluginTreeNode getRootNode() {
+  public PluginTreeNode getRootNode() {
     return mRootNode;
   }
 
   synchronized void updateRootNode(boolean save, boolean scroll) {
     mRootNode.removeAllActions();
     mRootNode.getMutableTreeNode().setIcon(IconLoader.getInstance().getIconFromTheme("apps", "appointment", 16));
-
+System.out.println(mRootNode.getUserObject());
     Action editReminders = new AbstractAction() {
       public void actionPerformed(ActionEvent e) {
         ReminderListDialog dlg = new ReminderListDialog(MainFrame.getInstance(), mReminderList);

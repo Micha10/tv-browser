@@ -125,7 +125,7 @@ public class PluginView extends JPanel implements MouseListener, KeyListener {
       if(menuIfs[i].getId().compareTo(FavoritesPlugin.getFavoritesPluginId()) == 0) {
         mModel.addCustomNode(FavoritesPlugin.getInstance().getRootNode());
       } else if(menuIfs[i].getId().compareTo(ReminderPlugin.getReminderPluginId()) == 0) {
-        mModel.addCustomNode(ReminderPlugin.getRootNode());
+        mModel.addCustomNode(ReminderPlugin.getInstance().getRootNode());
       } else if(pluginList.contains(menuIfs[i].getId())) {
         PluginProxy plugin = PluginProxyManager.getInstance().getPluginForId(menuIfs[i].getId());
         mModel.addPluginTree(plugin);

@@ -355,7 +355,7 @@ public class PluginTree extends JTree implements DragGestureListener,
 
               if (!target.equals(plugin) && !targetPath.isDescendant(sourcePath) &&
                   !sourcePath.isDescendant(targetPath)) {
-                if (target.equals(ReminderPlugin.getRootNode()
+                if (target.equals(ReminderPlugin.getInstance().getRootNode()
                     .getMutableTreeNode())) {
                   e.acceptDrag(e.getDropAction());
                   reject = false;
@@ -397,7 +397,7 @@ public class PluginTree extends JTree implements DragGestureListener,
                   rejected = false;
                   reject = false;
                   temp = FavoritesPlugin.getInstance();
-                } else if (ReminderPlugin.getRootNode()
+                } else if (ReminderPlugin.getInstance().getRootNode()
                     .getMutableTreeNode().equals(target)) {
                   e.acceptDrag(e.getDropAction());
                   rejected = false;
@@ -611,7 +611,7 @@ public class PluginTree extends JTree implements DragGestureListener,
                 Program[] p = vec.toArray(new Program[vec.size()]);
 
                 if(p.length > 0) {
-                  if (target.equals(ReminderPlugin.getRootNode()
+                  if (target.equals(ReminderPlugin.getInstance().getRootNode()
                       .getMutableTreeNode())) {
                       ReminderPlugin.getInstance().addPrograms(p);
                   } else if(target.getProgramReceiveTarget() == null) {
@@ -667,7 +667,7 @@ public class PluginTree extends JTree implements DragGestureListener,
                     .getMutableTreeNode().equals(target)) {
                   action = getAction(FavoritesPluginProxy.getInstance()
                       .getContextMenuActions(program));
-                } else if (ReminderPlugin.getRootNode()
+                } else if (ReminderPlugin.getInstance().getRootNode()
                     .getMutableTreeNode().equals(target)) {
                   action = getAction(ReminderPluginProxy.getInstance()
                       .getContextMenuActions(program));

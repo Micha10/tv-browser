@@ -296,7 +296,7 @@ public abstract class AbstractContextMenu implements ContextMenu {
 
     Node parent = node;
 
-    while (parent != null && parent.getType() != Node.PLUGIN_ROOT && parent != ReminderPlugin.getRootNode().getMutableTreeNode() && parent != FavoritesPlugin.getInstance().getRootNode().getMutableTreeNode() && parent.getProgramReceiveTarget() == null) {
+    while (parent != null && parent.getType() != Node.PLUGIN_ROOT && parent != ReminderPlugin.getInstance().getRootNode().getMutableTreeNode() && parent != FavoritesPlugin.getInstance().getRootNode().getMutableTreeNode() && parent.getProgramReceiveTarget() == null) {
       parent = (Node) parent.getParent();
     }
 
@@ -310,7 +310,7 @@ public abstract class AbstractContextMenu implements ContextMenu {
       if(o instanceof Plugin) {
         return o;
       } else {
-        if (o instanceof String && o.equals(ReminderPlugin.getRootNode().getMutableTreeNode().getUserObject())) {
+        if (o instanceof String && o.equals(ReminderPlugin.getInstance().getRootNode().getMutableTreeNode().getUserObject())) {
           return ReminderPluginProxy.getInstance();
         }
         if (o instanceof String && o.equals(FavoritesPlugin.getInstance().getRootNode().getMutableTreeNode().getUserObject())) {
