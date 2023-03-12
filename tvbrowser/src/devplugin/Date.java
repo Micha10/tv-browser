@@ -64,7 +64,10 @@ public class Date implements Comparable<Date>
    */
   private static final byte DATE_CACHE_SIZE = 50;
 
-
+  private static SimpleDateFormat FORMAT_LONG_DAY_MONTH;
+  private static SimpleDateFormat FORMAT_LONG_DAY;
+  private static SimpleDateFormat FORMAT_LONG_MONTH;
+  private static SimpleDateFormat FORMAT_SHORT_DAY_MONTH;
 
   /**
    * the year, ie Calendar.get(Calendar.YEAR).
@@ -353,24 +356,45 @@ public class Date implements Comparable<Date>
   public String getDateString() {
     return String.valueOf(getValue());
   }
-
+  
   /**
    * @param longDay false for abbreviated day of week
    * @param longMonth false for abbreviated month name
    * @return date string
    */
   private String getFormattedString(final boolean longDay, final boolean longMonth) {
-    Calendar cal = getCalendar();
-
-    SimpleDateFormat day = new SimpleDateFormat(longDay ? "EEEEEE" : "E");
-    SimpleDateFormat month = new SimpleDateFormat(longMonth ? "MMMMMM" : "MMM");
-
-    int dayOfMonth = cal.get(Calendar.DAY_OF_MONTH);
-
-    java.util.Date javaDate = new java.util.Date(getCalendar().getTimeInMillis());
-
-    return LOCALIZER.msg("datePattern", "{0}, {1} {2}", day.format(javaDate), month.format(javaDate), Integer
-        .toString(dayOfMonth));
+    SimpleDateFormat format = FORMAT_SHORT_DAY_MONTH;
+    
+    if(longDay && longMonth) {
+      if(FORMAT_LONG_DAY_MONTH == null) {
+        FORMAT_LONG_DAY_MONTH = new SimpleDateFormat(LOCALIZER.msg("datePattern", "{0}, {1} {2}", "EEEEEE", "MMMMMM", "d"));
+      }
+      
+      format = FORMAT_LONG_DAY_MONTH;
+    }
+    else if(longDay) {
+      if(FORMAT_LONG_DAY == null) {
+        FORMAT_LONG_DAY = new SimpleDateFormat(LOCALIZER.msg("datePattern", "{0}, {1} {2}", "EEEEEE", "MMM", "d"));
+      }
+      
+      format = FORMAT_LONG_DAY;
+    }
+    else if(longMonth) {
+      if(FORMAT_LONG_MONTH == null) {
+        FORMAT_LONG_MONTH = new SimpleDateFormat(LOCALIZER.msg("datePattern", "{0}, {1} {2}", "E", "MMMMMM", "d"));
+      }
+      
+      format = FORMAT_LONG_MONTH;
+    }
+    else {
+      if(FORMAT_SHORT_DAY_MONTH == null) {
+        FORMAT_SHORT_DAY_MONTH = new SimpleDateFormat(LOCALIZER.msg("datePattern", "{0}, {1} {2}", "E", "MMM", "d"));
+      }
+      
+      format = FORMAT_SHORT_DAY_MONTH;
+    }
+    
+    return format.format(new java.util.Date(getCalendar().getTimeInMillis()));
   }
   
   /**

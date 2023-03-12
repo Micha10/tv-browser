@@ -2826,8 +2826,17 @@ tvbrowser/src/util/i18n/Localizer.java -text svneol=unset#text/plain
 tvbrowser/src/util/i18n/PooledLocalizer.java -text svneol=unset#text/plain
 tvbrowser/src/util/i18n/WritingConversion.java -text
 tvbrowser/src/util/i18n/i18n.properties -text svneol=unset#text/plain
+tvbrowser/src/util/i18n/i18n_ce.properties -text svneol=unset#text/plain
+tvbrowser/src/util/i18n/i18n_da.properties -text svneol=unset#text/plain
 tvbrowser/src/util/i18n/i18n_de.properties -text svneol=unset#text/plain
+tvbrowser/src/util/i18n/i18n_dk.properties -text svneol=unset#text/plain
+tvbrowser/src/util/i18n/i18n_el.properties -text svneol=unset#text/plain
 tvbrowser/src/util/i18n/i18n_fr.properties -text svneol=unset#text/plain
+tvbrowser/src/util/i18n/i18n_hr.properties -text svneol=unset#text/plain
+tvbrowser/src/util/i18n/i18n_it.properties -text svneol=unset#text/plain
+tvbrowser/src/util/i18n/i18n_pl.properties -text svneol=unset#text/plain
+tvbrowser/src/util/i18n/i18n_sk.properties -text svneol=unset#text/plain
+tvbrowser/src/util/i18n/i18n_sv.properties -text svneol=unset#text/plain
 tvbrowser/src/util/io/BufferedRandomAccessFile.java -text
 tvbrowser/src/util/io/DownloadJob.java -text
 tvbrowser/src/util/io/NtpMessage.java -text

@@ -743,7 +743,7 @@ public class ReminderPlugin {
   synchronized void updateRootNode(boolean save, boolean scroll) {
     mRootNode.removeAllActions();
     mRootNode.getMutableTreeNode().setIcon(IconLoader.getInstance().getIconFromTheme("apps", "appointment", 16));
-System.out.println(mRootNode.getUserObject());
+    
     Action editReminders = new AbstractAction() {
       public void actionPerformed(ActionEvent e) {
         ReminderListDialog dlg = new ReminderListDialog(MainFrame.getInstance(), mReminderList);
