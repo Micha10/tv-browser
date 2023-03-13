@@ -56,10 +56,10 @@ import util.io.IOUtilities;
  * @author Til Schneider, www.murfman.de
  */
 public class NewsPlugin extends Plugin {
-  private static final Version mVersion = new Version(3,18);
+  private static final Version VERSION = new Version(3,18,1);
 
   /** The localizer used by this class. */
-  private static final util.ui.Localizer mLocalizer = util.ui.Localizer
+  private static final util.ui.Localizer LOCALIZER = util.ui.Localizer
       .getLocalizerFor(NewsPlugin.class);
 
   /** The URL of the news skript. */
@@ -118,7 +118,7 @@ public class NewsPlugin extends Plugin {
       }
     };
 
-    action.putValue(Action.NAME, mLocalizer.msg("news", "News"));
+    action.putValue(Action.NAME, LOCALIZER.msg("news", "News"));
     action.putValue(Action.SMALL_ICON, createImageIcon("apps",
         "internet-news-reader", 16));
     action.putValue(BIG_ICON, createImageIcon("apps", "internet-news-reader",
@@ -129,7 +129,7 @@ public class NewsPlugin extends Plugin {
   }
 
   public static Version getVersion() {
-    return mVersion;
+    return VERSION;
   }
   
   /**
@@ -139,8 +139,8 @@ public class NewsPlugin extends Plugin {
    */
   public PluginInfo getInfo() {
     if(mPluginInfo == null) {
-      String name = mLocalizer.msg("news", "News");
-      String desc = mLocalizer.msg("description",
+      String name = LOCALIZER.msg("news", "News");
+      String desc = LOCALIZER.msg("description",
           "Gets the TV-Browser news after each TV data update.");
       String author = "Til Schneider, www.murfman.de";
       

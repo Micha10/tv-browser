@@ -1072,9 +1072,11 @@ tvbrowser-plugins/plugin-news/src/main/resources/newsplugin/ChangeLog.txt -text
 tvbrowser-plugins/plugin-news/src/main/resources/newsplugin/newsplugin.properties -text
 tvbrowser-plugins/plugin-news/src/main/resources/newsplugin/newsplugin_da.properties -text
 tvbrowser-plugins/plugin-news/src/main/resources/newsplugin/newsplugin_de.properties -text
+tvbrowser-plugins/plugin-news/src/main/resources/newsplugin/newsplugin_fr.properties -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-news/src/main/resources/newsplugin/newsplugin_hr.properties -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-news/src/main/resources/newsplugin/newsplugin_it.properties -text
 tvbrowser-plugins/plugin-news/src/main/resources/newsplugin/newsplugin_pl.properties -text svneol=unset#text/plain
+tvbrowser-plugins/plugin-news/src/main/resources/newsplugin/newsplugin_ru.properties -text svneol=unset#text/plain
 tvbrowser-plugins/plugin-news/src/main/resources/newsplugin/newsplugin_sk.properties -text
 tvbrowser-plugins/plugin-news/src/main/resources/newsplugin/newsplugin_sv.properties -text
 tvbrowser-plugins/plugin-nextviewdataservice/pom.xml -text
