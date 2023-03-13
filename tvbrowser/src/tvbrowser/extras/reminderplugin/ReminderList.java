@@ -219,7 +219,7 @@ public class ReminderList implements ActionListener {
     if (mListener != null && mTimer == null) {
       mTimer = new javax.swing.Timer(10000, this);
       mTimer.start();
-    } else if (!mTimer.isRunning()) {
+    } else if (mTimer != null && !mTimer.isRunning()) {
       mTimer.start();
     }
   }
