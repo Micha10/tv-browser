@@ -254,6 +254,8 @@ tvb-compat/src/main/java/util/settings/ContextMenuMouseActionSetting.java -text 
 tvb-compat/src/main/java/util/ui/TabListenerPanel.java -text svneol=unset#text/plain
 tvb-compat/src/main/resources/compat/compat.properties -text svneol=unset#text/plain
 tvb-compat/src/main/resources/compat/compat_de.properties -text svneol=unset#text/plain
+tvb-compat/src/main/resources/compat/compat_fr.properties -text svneol=unset#text/plain
+tvb-compat/src/main/resources/compat/compat_ru.properties -text svneol=unset#text/plain
 tvbrowser-lens/.project -text
 tvbrowser-lens/License.txt -text
 tvbrowser-lens/build.properties -text
