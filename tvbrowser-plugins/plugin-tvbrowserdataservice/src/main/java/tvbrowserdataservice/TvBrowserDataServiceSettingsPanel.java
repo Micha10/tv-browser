@@ -98,7 +98,7 @@ public class TvBrowserDataServiceSettingsPanel extends SettingsPanel implements 
   private static SettingsPanel mInstance;
 
   /** The localizer for this class. */
-  private static final util.ui.Localizer mLocalizer = util.ui.Localizer
+  private static final util.ui.Localizer LOCALIZER = util.ui.Localizer
       .getLocalizerFor(TvBrowserDataServiceSettingsPanel.class);
 
   protected TvBrowserDataServiceSettingsPanel(TvBrowserDataServiceSettings settings) {
@@ -114,7 +114,7 @@ public class TvBrowserDataServiceSettingsPanel extends SettingsPanel implements 
     levelList.border(Borders.DIALOG);
 
     levelList.addRow();
-    levelList.addSeparator(mLocalizer.msg("downloadLevel", "Download this data"), CC.xyw(1,levelList.getRow(),2));
+    levelList.addSeparator(LOCALIZER.msg("downloadLevel", "Download this data"), CC.xyw(1,levelList.getRow(),2));
 
     TvDataLevel[] levelArr = DayProgramFile.getLevels();
 
@@ -137,7 +137,7 @@ public class TvBrowserDataServiceSettingsPanel extends SettingsPanel implements 
       }
     }
 
-    mShowNews = new JCheckBox(mLocalizer.msg("showNews", "Show news for subscribed channels"),settings.showNews());
+    mShowNews = new JCheckBox(LOCALIZER.msg("showNews", "Show news for subscribed channels"),settings.showNews());
     
     /* basic settings pane */
     
@@ -150,7 +150,7 @@ public class TvBrowserDataServiceSettingsPanel extends SettingsPanel implements 
     EnhancedPanelBuilder groupListPanel = new EnhancedPanelBuilder("5dlu,0dlu:grow");
     groupListPanel.border(Borders.DIALOG);
 
-    JTextArea ta = UiUtilities.createHelpTextArea(mLocalizer.msg("channelgroup.description","description"));
+    JTextArea ta = UiUtilities.createHelpTextArea(LOCALIZER.msg("channelgroup.description","description"));
 
     groupListPanel.addRow();
     groupListPanel.add(ta, CC.xyw(1,groupListPanel.getRow(),2));
@@ -169,10 +169,10 @@ public class TvBrowserDataServiceSettingsPanel extends SettingsPanel implements 
 
     mAddBtn = new JButton(Localizer.getLocalization(Localizer.I18N_ADD),
         TVBrowserIcons.newIcon(TVBrowserIcons.SIZE_SMALL));
-    mRemoveBtn = new JButton(mLocalizer.msg("remove", "Remove"),
+    mRemoveBtn = new JButton(LOCALIZER.msg("remove", "Remove"),
         TVBrowserIcons.delete(TVBrowserIcons.SIZE_SMALL));
-
-    mInfoBtn = new JButton("Information", AbstractTvDataService
+    
+    mInfoBtn = new JButton(LOCALIZER.msg("info", "Information"), AbstractTvDataService
         .getPluginManager().getIconFromTheme(null, "actions", "help-browser",
             16));
 
@@ -195,7 +195,7 @@ public class TvBrowserDataServiceSettingsPanel extends SettingsPanel implements 
     JPanel groupInfoPanel = new JPanel(new BorderLayout(3, 0));
     JPanel westPn = new JPanel(new BorderLayout());
 
-    westPn.add(new JLabel(mLocalizer.msg("description", "Description:")), BorderLayout.NORTH);
+    westPn.add(new JLabel(LOCALIZER.msg("description", "Description:")), BorderLayout.NORTH);
     groupInfoPanel.add(westPn, BorderLayout.WEST);
 
     mGroupDescriptionTA = UiUtilities.createHelpTextArea("");
@@ -209,9 +209,9 @@ public class TvBrowserDataServiceSettingsPanel extends SettingsPanel implements 
     groupListPanel.addRow();
     groupListPanel.add(groupInfoPanel, CC.xy(2,groupListPanel.getRow()));
 
-    tabbedPane.add(mLocalizer.msg("basicSettings","Basic settings"), basic);
-    tabbedPane.add(mLocalizer.msg("datalevel", "data level"), levelList.getPanel());
-    tabbedPane.add(mLocalizer.msg("channelgroups", "channel groups"), groupListPanel.getPanel());
+    tabbedPane.add(LOCALIZER.msg("basicSettings","Basic settings"), basic);
+    tabbedPane.add(LOCALIZER.msg("datalevel", "data level"), levelList.getPanel());
+    tabbedPane.add(LOCALIZER.msg("channelgroups", "channel groups"), groupListPanel.getPanel());
 
     add(tabbedPane, CC.xy(1,1));
 
@@ -319,7 +319,7 @@ public class TvBrowserDataServiceSettingsPanel extends SettingsPanel implements 
     try {
       new URL(url);
     } catch (MalformedURLException e) {
-      JOptionPane.showMessageDialog(this, mLocalizer.msg("invalidUrl", "'{0}' is not a valid URL", url));
+      JOptionPane.showMessageDialog(this, LOCALIZER.msg("invalidUrl", "'{0}' is not a valid URL", url));
       return;
     }
 
@@ -348,8 +348,8 @@ public class TvBrowserDataServiceSettingsPanel extends SettingsPanel implements 
 
     Object source = event.getSource();
     if (source == mAddBtn) {
-      String groupUrl = (String) JOptionPane.showInputDialog(this, mLocalizer.msg("enterGroupUrl",
-              "Please enter the URL of the new group"), mLocalizer.msg("enterGroupDlgTitle", "Add group"), JOptionPane.PLAIN_MESSAGE,
+      String groupUrl = (String) JOptionPane.showInputDialog(this, LOCALIZER.msg("enterGroupUrl",
+              "Please enter the URL of the new group"), LOCALIZER.msg("enterGroupDlgTitle", "Add group"), JOptionPane.PLAIN_MESSAGE,
               null, null, "");
       if (groupUrl != null && groupUrl.length() > 0) {
         addGroupUrl(groupUrl);
@@ -357,9 +357,9 @@ public class TvBrowserDataServiceSettingsPanel extends SettingsPanel implements 
       }
     } else if (source == mRemoveBtn) {
       TvBrowserDataServiceChannelGroup group = (TvBrowserDataServiceChannelGroup) mGroupList.getSelectedValue();
-      Object[] options = { mLocalizer.msg("removeGroup", "yes,remove"), mLocalizer.msg("keepGroup", "Keep!") };
-      int deleteGroup = JOptionPane.showOptionDialog(this, mLocalizer.msg("removeGroupQuestion",
-              "Do you want to remove group '{0}' ?", group.getName()), mLocalizer.msg("removeGroupDlgTitle", "Remove group"),
+      Object[] options = { LOCALIZER.msg("removeGroup", "yes,remove"), LOCALIZER.msg("keepGroup", "Keep!") };
+      int deleteGroup = JOptionPane.showOptionDialog(this, LOCALIZER.msg("removeGroupQuestion",
+              "Do you want to remove group '{0}' ?", group.getName()), LOCALIZER.msg("removeGroupDlgTitle", "Remove group"),
               JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[1]);
 
       if (deleteGroup == JOptionPane.YES_OPTION) {
