@@ -2055,7 +2055,7 @@ public class TVBrowser {
         UIManager.put("TabbedPane.tabSeparatorsFullHeight", true );
       }
       
-      if(Settings.LookAndFeel.FLATLAF_TABBED_SEPARATORS_SHOW.getBoolean()) {
+      if(Settings.LookAndFeel.FLATLAF_SCROLLBAR_BUTTONS_SHOW.getBoolean()) {
         UIManager.put("ScrollBar.showButtons", true );
       }
       
