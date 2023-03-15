@@ -26,6 +26,8 @@ package util.ui;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
@@ -156,6 +158,10 @@ public class MarkPriorityComboBoxRenderer extends CustomComboBoxRenderer {
     
     @Override
     protected void paintComponent(Graphics g) {
+      if(g instanceof Graphics2D) {
+        ((Graphics2D)g).setRenderingHint(RenderingHints.KEY_ANTIALIASING,RenderingHints.VALUE_ANTIALIAS_ON);
+      }
+      
       Color c = g.getColor();
       int widthH1 = getWidth()/2;
       int widthH2 = getWidth() - widthH1;
