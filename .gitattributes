@@ -2917,6 +2917,7 @@ tvbrowser/src/util/io/stream/StreamUtilities.java -text
 tvbrowser/src/util/io/windows/registry/RegistryEditor.java -text svneol=unset#text/plain
 tvbrowser/src/util/io/windows/registry/RegistryKey.java -text
 tvbrowser/src/util/io/windows/registry/RegistryValue.java -text
+tvbrowser/src/util/io/windows/uac/UACStarter.java -text svneol=unset#text/plain
 tvbrowser/src/util/misc/AbstractXmlTvDataHandler.java -text
 tvbrowser/src/util/misc/AppleScriptRunner.java -text
 tvbrowser/src/util/misc/BooleanResult.java svneol=native#text/plain

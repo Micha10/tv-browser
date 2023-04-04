@@ -45,7 +45,7 @@ public class RegistryKey {
 	private String mKey;
 	private String mPath;
 	
-	private static final File REG_TOOL = new File(System.getenv("windir")+File.separator+(System.getProperty("os.arch").contains("64") ? "SysWOW64" : "System32")+File.separator+"reg.exe");
+	public static final File REG_TOOL = new File(System.getenv("windir")+File.separator+(System.getProperty("os.arch").contains("64") ? "SysWOW64" : "System32")+File.separator+"reg.exe");
 	
 	private static final Pattern PATTERN_QUERY = Pattern.compile("\\s{2,}(.*?)\\s+(REG_.*?)\\s+(.*?)$",Pattern.DOTALL);
 	
@@ -94,7 +94,7 @@ public class RegistryKey {
 			cmdList.add(key);
 		}
 		
-		final ExecutionHandler handler = new ExecutionHandler(cmdList.toArray(new String[0]));
+		final ExecutionHandler handler = new ExecutionHandler(cmdList.toArray(new String[cmdList.size()]));
 		
 		RegistryValue result = new RegistryValue(key, RegistryValue.TYPE_REG_UNKNOWN, "");
 		
@@ -203,4 +203,8 @@ public class RegistryKey {
     
 	  return result;
 	}
+	
+	public String getFullPath() {
+    return mKey+"//"+mPath;
+  }
 }

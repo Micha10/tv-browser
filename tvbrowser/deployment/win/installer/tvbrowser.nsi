@@ -732,8 +732,6 @@ Section "Uninstall"
     Delete "$SMPROGRAMS\$8\$(MISC_DIR)\Forum.url"
     Delete "$SMPROGRAMS\$8\$(MISC_DIR)\Deutsches Handbuch.url"
 	Delete "$SMPROGRAMS\$8\$(MISC_DIR)\English Manual.url"
-#	Delete "$SMPROGRAMS\$8\$(MISC_DIR)\$(UNINSTALL_TXT).lnk"
-    Delete "$SMPROGRAMS\$8\${PROG_NAME}.lnk"
     
     # delete start menu directories if empty
     RMDir "$SMPROGRAMS\$8\$(MISC_DIR)" 

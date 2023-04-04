@@ -44,11 +44,13 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.WindowAdapter;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.RandomAccessFile;
 import java.io.StringWriter;
@@ -162,6 +164,7 @@ import util.io.IOUtilities;
 import util.io.Mirror;
 import util.io.windows.registry.RegistryKey;
 import util.io.windows.registry.RegistryValue;
+import util.io.windows.uac.UACStarter;
 import util.misc.BooleanResult;
 import util.misc.OperatingSystem;
 import util.ui.EnhancedPanelBuilder;
@@ -539,10 +542,7 @@ public class TVBrowser {
 
     Version tmpVer = Settings.General.TV_BROWSER_VERSION_USED_LAST.getVersion();
     final Version currentVersion = tmpVer != null ? new Version(tmpVer.getMajor(),tmpVer.getMinor(),tmpVer.getSubMinor(),Settings.General.TV_BROWSER_VERSION_USED_LAST_IS_STABLE.getBoolean()) : tmpVer;
-
-    /*TODO Create an update service for installed TV data services that doesn't
-     *     work with TV-Browser 3.0 and updates for them are known.
-     */
+    
     if(!isTransportable() && Launch.isOsWindowsNtBranch() && new Version(3,0,true).isNewerThan(currentVersion)) {
       String tvDataDir = Settings.Directories.TV_DATA.getString().replace("/",File.separator);
 
@@ -1106,6 +1106,8 @@ public class TVBrowser {
             final ScrollableJPanel boxPanel = new ScrollableJPanel();
             boxPanel.setLayout(new BoxLayout(boxPanel, BoxLayout.Y_AXIS));
             final AtomicInteger count = new AtomicInteger(0);
+            final JCheckBox cleanRegistry = new JCheckBox(LOCALIZER.msg("cleanRegistry", "Delete matching Windows registry and start menu entries (will trigger request for Administrator rights)"), true);
+            cleanRegistry.setEnabled(false);
             
             final ItemListener listener = e -> {
               if(e.getStateChange() == ItemEvent.SELECTED) {
@@ -1114,7 +1116,8 @@ public class TVBrowser {
               else if(e.getStateChange() == ItemEvent.DESELECTED) {
                 count.decrementAndGet();
               }
-              
+
+              cleanRegistry.setEnabled(count.get() > 0);
               delete.setEnabled(count.get() > 0);
               selectAll.setEnabled(count.get() != oldDirs.size());
               clearSelection.setEnabled(delete.isEnabled());
@@ -1128,7 +1131,7 @@ public class TVBrowser {
               selection[i].addItemListener(listener);
               boxPanel.add(selection[i]);
             }
-            
+                        
             final JScrollPane scroll = new JScrollPane(boxPanel);
             scroll.setBorder(null);
             scroll.setViewportBorder(null);
@@ -1155,6 +1158,11 @@ public class TVBrowser {
             message.add(scroll);
             message.add(buttons);
             
+            if(UACStarter.isUsable() && RegistryKey.isUsable()) {
+              message.add(new JLabel(" "));
+              message.add(cleanRegistry);
+            }
+            
             final Object[] options = {
                 delete,
                 Localizer.getLocalization(Localizer.I18N_CANCEL)
@@ -1163,6 +1171,76 @@ public class TVBrowser {
             int option = DontShowAgainOptionBox.showOptionDialog(messageId, null, message.toArray(), LOCALIZER.msg("deleteOldSettingsTitle", "TV-Browser: Delete old versions settings files"), JOptionPane.QUESTION_MESSAGE, JOptionPane.YES_NO_OPTION, options, options[1], null);
             
             if(JOptionPane.YES_OPTION == option) {
+              RegistryKey reg = new RegistryKey(RegistryKey.HKEY_LOCAL_MACHINE, "Software\\TV-Browser");
+              
+              if(cleanRegistry.isSelected() && RegistryKey.isUsable()) {
+                String startMenuFolder = reg.getValue("Start Menu Folder").getData();
+                File startMenu = new File(System.getenv("%ProgramData%"),"Microsoft\\Windows\\Start Menu\\Programs");
+                File cmd = null;
+                
+                ArrayList<String> fileNames = new ArrayList<>();
+                fileNames.add("Lizenz.lnk");
+                fileNames.add("License.lnk");
+                fileNames.add("Website.url");
+                fileNames.add("Forum.url");
+                fileNames.add("Deutsches Handbuch.url");
+                fileNames.add("English Manual.url");
+                
+                try {
+                  cmd = File.createTempFile("cleanreg", ".bat");
+                
+                  try(BufferedWriter write = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(cmd), "ISO-8859-1"))) {
+                    boolean first = true;
+                    for(int i = 0; i < selection.length; i++) {
+                      if(selection[i].isSelected()) {
+                        String name = oldDirs.get(i).getParentFile().getName();
+                        
+                        reg = new RegistryKey(RegistryKey.HKEY_LOCAL_MACHINE, "Software\\TV-Browser"+name);
+                        RegistryValue dir = reg.getValue("Install directory");
+                        RegistryValue folder = reg.getValue("Start Menu Folder");
+                        
+                        if(!dir.isUnknown()) {
+                          if(first) {
+                            write.write("@echo off\r\n");
+                            first = false;
+                          }
+                          
+                          if(!folder.isUnknown() && !folder.getData().equals(startMenuFolder)) {
+                            File tvbStartFolder = new File(startMenu,folder.getData());
+                            File[] files = tvbStartFolder.listFiles();
+                            
+                            for(File file : files) {
+                              if(file.isFile() && file.getName().startsWith("TV-Browser") || fileNames.contains(file.getName())) {
+                                write.write("del \"" + file.getAbsolutePath() + "\"\r\n");
+                              }
+                              else if(file.isDirectory() && (file.getName().equals("Sonstiges") || file.getName().equals("Misc"))) {
+                                File[] temp = file.listFiles();
+                                
+                                for(File tmp : temp) {
+                                  if(tmp.isFile() && tmp.getName().startsWith("TV-Browser") || fileNames.contains(tmp.getName())) {
+                                    write.write("del \"" + tmp.getAbsolutePath() + "\"\r\n");
+                                  }
+                                }
+                                
+                                write.write("rmdir \"" + file.getAbsolutePath() + "\"\r\n");
+                              }
+                            }
+                            
+                            write.write("rmdir \"" + tvbStartFolder.getAbsolutePath() + "\"\r\n");
+                          }
+                          
+                          write.write(RegistryKey.REG_TOOL.getAbsolutePath()+" delete \"" + reg.getFullPath()+ "\" /f\r\n");
+                        }
+                      }
+                    }
+                  }catch(Exception e2) {
+                    e2.printStackTrace();
+                  }
+                } catch (IOException e1) {
+                  e1.printStackTrace();
+                }
+              }
+              
               for(int i = 0; i < selection.length; i++) {
                 if(selection[i].isSelected()) {
                   eraseDirectory(oldDirs.get(i).getParentFile());
@@ -1171,10 +1249,8 @@ public class TVBrowser {
             }
           });
         } catch (InvocationTargetException e) {
-          // TODO Auto-generated catch block
           e.printStackTrace();
         } catch (InterruptedException e) {
-          // TODO Auto-generated catch block
           e.printStackTrace();
         }
   	  }
@@ -1286,7 +1362,6 @@ public class TVBrowser {
         lines = new String[1];
         lines[0] = String.valueOf(mToggleSocket.get().getSocket().getLocalPort());
       } catch (SocketException e) {
-        // TODO Auto-generated catch block
         e.printStackTrace();
       }
       
@@ -1462,10 +1537,8 @@ public class TVBrowser {
         }
       });
     } catch (InterruptedException e) {
-      // TODO Auto-generated catch block
       e.printStackTrace();
     } catch (InvocationTargetException e) {
-      // TODO Auto-generated catch block
       e.printStackTrace();
     }
   }
@@ -1581,23 +1654,22 @@ public class TVBrowser {
     	  app.getMethod("requestToggleFullScreen", Window.class).invoke(o,mainFrame);
     	}
     	
-		Class<? extends Object> fullScreenListenerClass = Class.forName("com.apple.eawt.FullScreenListener");
-		Object fullScreenListener = Proxy.newProxyInstance(fullScreenListenerClass.getClassLoader(), new Class<?>[] {fullScreenListenerClass}, (proxy, method, methodArgs) -> {
-		  if(method.getName().equals("windowEnteredFullScreen")) {
-		    Settings.Window.MAC_OS_FULL_SCREEN.setBoolean(true);
-		  }
-		  else if(method.getName().equals("windowExitedFullScreen")) {
-		    Settings.Window.MAC_OS_FULL_SCREEN.setBoolean(false);
-	      }
-		  
-		  return null;
-		});
-		
-		fullScreenUtilities.getMethod("addFullScreenListenerTo", Window.class, fullScreenListenerClass).invoke(null, mainFrame, fullScreenListener);
-	  } catch (Exception e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	  }
+  		Class<? extends Object> fullScreenListenerClass = Class.forName("com.apple.eawt.FullScreenListener");
+  		Object fullScreenListener = Proxy.newProxyInstance(fullScreenListenerClass.getClassLoader(), new Class<?>[] {fullScreenListenerClass}, (proxy, method, methodArgs) -> {
+  		  if(method.getName().equals("windowEnteredFullScreen")) {
+  		    Settings.Window.MAC_OS_FULL_SCREEN.setBoolean(true);
+  		  }
+  		  else if(method.getName().equals("windowExitedFullScreen")) {
+  		    Settings.Window.MAC_OS_FULL_SCREEN.setBoolean(false);
+  	      }
+  		  
+  		  return null;
+  		});
+  		
+  		fullScreenUtilities.getMethod("addFullScreenListenerTo", Window.class, fullScreenListenerClass).invoke(null, mainFrame, fullScreenListener);
+  	  } catch (Exception e) {
+  	    e.printStackTrace();
+  	  }
     }
   }
 
@@ -2023,7 +2095,6 @@ public class TVBrowser {
             try {
               UIManager.setLookAndFeel(CUR_LOOK_AND_FEEL);
             } catch (Exception e) {
-              // TODO Auto-generated catch block
               e.printStackTrace();
             }
             LOG.info("setting look and feel to " + CUR_LOOK_AND_FEEL);
@@ -2347,10 +2418,8 @@ public class TVBrowser {
         }
       });
     } catch (InterruptedException e) {
-      // TODO Auto-generated catch block
       e.printStackTrace();
     } catch (InvocationTargetException e) {
-      // TODO Auto-generated catch block
       e.printStackTrace();
     }
   }

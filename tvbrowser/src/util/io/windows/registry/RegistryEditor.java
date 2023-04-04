@@ -32,7 +32,7 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Set;
 
-import util.io.ExecutionHandler;
+import util.io.windows.uac.UACStarter;
 
 /**
  * Class to change windows registry with admin rights.
@@ -41,8 +41,12 @@ import util.io.ExecutionHandler;
  * @since 4.2.3
  */
 public class RegistryEditor {
-  private static final File WSCRIPT = new File(System.getenv("windir")+File.separator+(System.getProperty("os.arch").contains("64") ? "SysWOW64" : "System32")+File.separator+"wscript.exe");  
   private Hashtable<String, ArrayList<RegistryValue>> mValueTable;
+  private ArrayList<String> mDeleteList = new ArrayList<String>();
+  
+  public static boolean isUsable() {
+    return UACStarter.isUsable();
+  }
   
   private RegistryEditor() {
     mValueTable = new Hashtable<String, ArrayList<RegistryValue>>();
@@ -50,6 +54,10 @@ public class RegistryEditor {
   
   public static RegistryEditor create() {
     return new RegistryEditor();
+  }
+  
+  public void deleteKey(final String path) {
+    mDeleteList.add(path);
   }
   
   public void setValue(final String path, RegistryValue value) {
@@ -75,15 +83,11 @@ public class RegistryEditor {
     }
   }
   
-  public void commit() {
-    commit("regChange");
-  }
-  
-  
-  public void commit(String prefix) {
+  public File createRegFile(String prefix) {
+    File reg = null;
+    
     try {
-      File reg = File.createTempFile(prefix, ".reg");
-      File vbs = File.createTempFile(prefix, ".vbs");
+      reg = File.createTempFile(prefix, ".reg");
       
       try(BufferedWriter out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(reg), "ISO-8859-1"))) {
         out.write("REGEDIT4\r\n\r\n");
@@ -119,7 +123,10 @@ public class RegistryEditor {
             
             content.append("=");
             
-            if(value.isRegBinary()) {
+            if(value.getData().equals("-")) {
+              content.append("-");
+            }
+            else if(value.isRegBinary()) {
               content.append("hex:");
               content.append(value.getData().replace(" ", ","));
             }
@@ -171,26 +178,41 @@ public class RegistryEditor {
             }
           }
         }
+        
+        for(String toDelete : mDeleteList) {
+          if(!first) {
+            out.write("\r\n\r\n");
+          }
+          else {
+            first = false;
+          }
+          
+          out.write("[-");
+          out.write(toDelete);
+          out.write("]");
+        }
       }
+      catch(IOException ioe) {
+        ioe.printStackTrace();
+      }
+    }catch(Exception e1) {e1.printStackTrace();}
+    
+    return reg;
+  }
+  
+  public void commit() {
+    commit("regChange");
+  }
+  
+  
+  public void commit(String prefix) {
+    try {
+      File reg = createRegFile(prefix);
       
       if(reg.length() > 0) {
-        try(BufferedWriter out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(vbs), "ISO-8859-1"))) {
-          out.write("Set UAC = CreateObject(\"Shell.Application\")\r\n");
-          out.write("UAC.ShellExecute \"regedit.exe\", \""+reg.getAbsolutePath()+"\", \"\", \"runas\", 1");
-        }catch(IOException ioe) {
-          ioe.printStackTrace();
-        }
-        
-        ExecutionHandler h = ExecutionHandler.create(WSCRIPT.getAbsolutePath(),vbs.getAbsolutePath());
-        h.execute(true,true);
-        try {
-          h.getProcess().waitFor();
-        } catch (InterruptedException e) {
-          // TODO Auto-generated catch block
-          e.printStackTrace();
-        }
+        UACStarter.getInstance().startApplication("regedit.exe", reg.getAbsolutePath());
       }
-    } catch (IOException e) {
+    } catch (Exception e) {
       // TODO Auto-generated catch block
       e.printStackTrace();
     }
