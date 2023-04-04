@@ -23,6 +23,8 @@
  */
 package util.io.windows.registry;
 
+import java.io.File;
+
 /**
  * A value of a Windows Registry key.
  * 
@@ -41,6 +43,8 @@ public class RegistryValue {
 	private int mType;
 	private String mName;
 	private String mValue;
+	
+	private File mUsedRegTool;
 	
 	/**
 	 * @param name The name of the registry key.
@@ -74,6 +78,23 @@ public class RegistryValue {
 	 */
 	public String getData() {
 		return mValue;
+	}
+	
+	/**
+	 * @return Get the used reg tool.
+	 * @since 4.3
+	 */
+	public File getUsedRegTool() {
+		return mUsedRegTool;
+	}
+	
+	/**
+	 * 
+	 * @param usedRegTool
+	 * @since 4.3
+	 */
+	public void setUsedRegTool(File usedRegTool) {
+		mUsedRegTool = usedRegTool;
 	}
 	
 	/**

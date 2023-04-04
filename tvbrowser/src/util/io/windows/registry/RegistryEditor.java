@@ -204,13 +204,12 @@ public class RegistryEditor {
     commit("regChange");
   }
   
-  
   public void commit(String prefix) {
     try {
       File reg = createRegFile(prefix);
       
       if(reg.length() > 0) {
-        UACStarter.getInstance().startApplication("regedit.exe", reg.getAbsolutePath());
+        UACStarter.getInstance().startApplication(UACStarter.ARCH_32, "regedit.exe", reg.getAbsolutePath());
       }
     } catch (Exception e) {
       // TODO Auto-generated catch block

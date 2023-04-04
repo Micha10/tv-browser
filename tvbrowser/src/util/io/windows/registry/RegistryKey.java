@@ -45,7 +45,10 @@ public class RegistryKey {
 	private String mKey;
 	private String mPath;
 	
-	public static final File REG_TOOL = new File(System.getenv("windir")+File.separator+(System.getProperty("os.arch").contains("64") ? "SysWOW64" : "System32")+File.separator+"reg.exe");
+	public static final File REG_TOOL_32 = new File(System.getenv("windir")+File.separator+"System32"+File.separator+"reg.exe");
+	public static final File REG_TOOL_64 = new File(System.getenv("windir")+File.separator+"SysWOW64"+File.separator+"reg.exe");
+	
+	public static final File REG_TOOL = System.getProperty("os.arch").contains("64") ? REG_TOOL_64 : REG_TOOL_32;
 	
 	private static final Pattern PATTERN_QUERY = Pattern.compile("\\s{2,}(.*?)\\s+(REG_.*?)\\s+(.*?)$",Pattern.DOTALL);
 	
@@ -53,7 +56,7 @@ public class RegistryKey {
 	 * @return <code>true</code> if the registry is accessible, <code>false</code> otherwise.
 	 */
 	public static boolean isUsable() {
-		return REG_TOOL.isFile();
+		return REG_TOOL_32.isFile() || REG_TOOL_64.isFile();
 	}
 	
 	/**
@@ -65,13 +68,12 @@ public class RegistryKey {
 	 */
 	public RegistryKey(final String hkey, final String path) throws RuntimeException {
 		if(!isUsable() || Launch.getOs() != Launch.OS_WINDOWS) {
-			throw new RuntimeException("Reg tool '" + REG_TOOL.getAbsolutePath() + "' not available. No access to Windows Registry");
+			throw new RuntimeException("Reg tool '" + REG_TOOL_32.getAbsolutePath() + "' not available. No access to Windows Registry");
 		}
 		
 		mKey = hkey;
 		mPath = path;
 	}
-	
 	
 	/**
 	 * Get the value of the given key.
@@ -80,8 +82,24 @@ public class RegistryKey {
 	 * @return The result of the registry query.
 	 */
 	public RegistryValue getValue(String key) {
+		RegistryValue result = getValue(key, REG_TOOL);
+		
+		if(result.isUnknown() && !REG_TOOL.equals(REG_TOOL_32)) {
+			result = getValue(key, REG_TOOL_32);
+		}
+		
+		return result;
+	}
+	
+	/**
+	 * Get the value of the given key.
+	 * 
+	 * @param key The key to get the value for.
+	 * @return The result of the registry query.
+	 */
+	private RegistryValue getValue(String key, File regTool) {
 		final ArrayList<String> cmdList = new ArrayList<>();
-		cmdList.add(REG_TOOL.getAbsolutePath());
+		cmdList.add(regTool.getAbsolutePath());
 		cmdList.add("query");
 		cmdList.add(mKey + "\\" + mPath);
 		
@@ -127,9 +145,10 @@ public class RegistryKey {
 			}
 			
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
+		result.setUsedRegTool(regTool);
 		
 		return result;
 	}
@@ -145,36 +164,36 @@ public class RegistryKey {
 	  boolean result = false;
 	  
 	  final ArrayList<String> cmdList = new ArrayList<>();
-    cmdList.add(REG_TOOL.getAbsolutePath());
-    cmdList.add("add");
-    cmdList.add(mKey + "\\" + mPath);
-    cmdList.add("/t");
-    
-    switch(value.getType()) {
-      case RegistryValue.TYPE_REG_SZ:cmdList.add("REG_SZ");break;
-      case RegistryValue.TYPE_REG_BINARY:cmdList.add("REG_BINARY");break;
-      case RegistryValue.TYPE_REG_DWORD:cmdList.add("REG_DWORD");break;
-      case RegistryValue.TYPE_REG_QWORD:cmdList.add("REG_QWORD");break;
-      
-      default: return result;
-    }
-    
-    cmdList.add("/v");
-    cmdList.add(value.getName());
-    cmdList.add("/d");
-    cmdList.add(value.getData());
-    cmdList.add("/f");
-    
-    final ExecutionHandler handler = new ExecutionHandler(cmdList.toArray(new String[0]));
-    try {
-      handler.execute(true);
-      handler.getProcess().waitFor();
-      result = handler.getProcess().exitValue() != 0;
-    }catch(Throwable t) {
-      t.printStackTrace();
-    }
-	  
-    return result;
+	  cmdList.add(REG_TOOL.getAbsolutePath());
+	  cmdList.add("add");
+	  cmdList.add(mKey + "\\" + mPath);
+	  cmdList.add("/t");
+	    
+	  switch(value.getType()) {
+	    case RegistryValue.TYPE_REG_SZ:cmdList.add("REG_SZ");break;
+	    case RegistryValue.TYPE_REG_BINARY:cmdList.add("REG_BINARY");break;
+	    case RegistryValue.TYPE_REG_DWORD:cmdList.add("REG_DWORD");break;
+	    case RegistryValue.TYPE_REG_QWORD:cmdList.add("REG_QWORD");break;
+	      
+	    default: return result;
+	  }
+	    
+	  cmdList.add("/v");
+	  cmdList.add(value.getName());
+	  cmdList.add("/d");
+	  cmdList.add(value.getData());
+	  cmdList.add("/f");
+	    
+	  final ExecutionHandler handler = new ExecutionHandler(cmdList.toArray(new String[0]));
+	  try {
+	    handler.execute(true);
+	    handler.getProcess().waitFor();
+	    result = handler.getProcess().exitValue() != 0;
+	  }catch(Throwable t) {
+	    t.printStackTrace();
+	  }
+		  
+	  return result;
 	}
 	
 	/**
@@ -187,24 +206,24 @@ public class RegistryKey {
 	  boolean result = false;
 	  
 	  final ArrayList<String> cmdList = new ArrayList<>();
-    cmdList.add(REG_TOOL.getAbsolutePath());
-    cmdList.add("delete");
-    cmdList.add(mKey + "\\" + mPath);
-    cmdList.add("/f");
+	  cmdList.add(REG_TOOL.getAbsolutePath());
+      cmdList.add("delete");
+      cmdList.add(mKey + "\\" + mPath);
+      cmdList.add("/f");
 	  
-    final ExecutionHandler handler = new ExecutionHandler(cmdList.toArray(new String[0]));
-    try {
-      handler.execute(true);
-      handler.getProcess().waitFor();
-      result = handler.getProcess().exitValue() != 0;
-    }catch(Throwable t) {
-      t.printStackTrace();
-    }
-    
+      final ExecutionHandler handler = new ExecutionHandler(cmdList.toArray(new String[0]));
+      try {
+        handler.execute(true);
+        handler.getProcess().waitFor();
+        result = handler.getProcess().exitValue() != 0;
+      }catch(Throwable t) {
+        t.printStackTrace();
+      }
+      
 	  return result;
 	}
 	
 	public String getFullPath() {
-    return mKey+"//"+mPath;
+    return mKey+"\\"+mPath;
   }
 }

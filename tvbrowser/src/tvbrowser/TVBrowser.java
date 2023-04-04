@@ -1032,21 +1032,6 @@ public class TVBrowser {
 		}
 
 	}
-/*
-  private static boolean isJavaImplementationSupported() {
-    if (mIgnoreJVM) {
-      return true;
-    }
-    String vendor = System.getProperty("java.vendor");
-    if (!StringUtils.containsIgnoreCase(vendor, "sun") && !StringUtils.containsIgnoreCase(vendor, "oracle")) {
-      return false;
-    }
-    String implementation = System.getProperty("java.vm.name");
-    if (!StringUtils.containsIgnoreCase(implementation, "openjdk")) {
-      return false;
-    }
-    return true;
-  }*/
 	
 	private static void seachForOldVersionFiles() {
 	  final String messageId = "TVBrowser#DeleteOldVersionFiles";
@@ -1082,181 +1067,204 @@ public class TVBrowser {
         });
     	  
     	  try {
-          UIThreadRunner.invokeAndWait(() -> {
-            final JButton selectAll = new JButton(Localizer.getLocalization(Localizer.I18N_SELECT_ALL));
-            selectAll.setEnabled(true);
-            final JButton clearSelection = new JButton(Localizer.getLocalization(Localizer.I18N_CLEAR_SELECTION));
-            clearSelection.setEnabled(false);
-            final JButton delete = new JButton(LOCALIZER.msg("deleteOldSettingsDelete", "Delete selected settings"));
-            delete.setEnabled(false);
-            delete.addActionListener(e -> {
-              Container container = delete.getParent();
-            
-              do {
-                container = container.getParent();
-              }while(container != null && !(container instanceof JOptionPane));
-              
-              if(container != null && container instanceof JOptionPane) {
-                JOptionPane p = (JOptionPane)container;
-                p.setValue(delete);
-              }
+	          UIThreadRunner.invokeAndWait(() -> {
+	            final JButton selectAll = new JButton(Localizer.getLocalization(Localizer.I18N_SELECT_ALL));
+	            selectAll.setEnabled(true);
+	            final JButton clearSelection = new JButton(Localizer.getLocalization(Localizer.I18N_CLEAR_SELECTION));
+	            clearSelection.setEnabled(false);
+	            final JButton delete = new JButton(LOCALIZER.msg("deleteOldSettingsDelete", "Delete selected settings"));
+	            delete.setEnabled(false);
+	            delete.addActionListener(e -> {
+	              Container container = delete.getParent();
+	            
+	              do {
+	                container = container.getParent();
+	              }while(container != null && !(container instanceof JOptionPane));
+	              
+	              if(container != null && container instanceof JOptionPane) {
+	                JOptionPane p = (JOptionPane)container;
+	                p.setValue(delete);
+	              }
+	            });
+	            final DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.MEDIUM);
+	            Localizer settingsLocalizer = Localizer.getLocalizerFor(Settings.class);
+	            final ScrollableJPanel boxPanel = new ScrollableJPanel();
+	            boxPanel.setLayout(new BoxLayout(boxPanel, BoxLayout.Y_AXIS));
+	            final AtomicInteger count = new AtomicInteger(0);
+	            final JCheckBox cleanRegistry = new JCheckBox(LOCALIZER.msg("cleanRegistry", "Delete matching Windows registry and start menu entries (will trigger request for Administrator rights)"), true);
+	            cleanRegistry.setEnabled(false);
+	            
+	            final ItemListener listener = e -> {
+	              if(e.getStateChange() == ItemEvent.SELECTED) {
+	                count.incrementAndGet();
+	              }
+	              else if(e.getStateChange() == ItemEvent.DESELECTED) {
+	                count.decrementAndGet();
+	              }
+	
+	              cleanRegistry.setEnabled(count.get() > 0);
+	              delete.setEnabled(count.get() > 0);
+	              selectAll.setEnabled(count.get() != oldDirs.size());
+	              clearSelection.setEnabled(delete.isEnabled());
+	            };
+	            
+	            final JCheckBox[] selection = new JCheckBox[oldDirs.size()];
+	            
+	            for(int i = 0; i < selection.length; i++) {
+	              final File dir = oldDirs.get(i);
+	              selection[i] = new JCheckBox(settingsLocalizer.msg("selectImportDirectoryInfo", "{0} (last used: {1})",dir.getParentFile().getName(),dateFormat.format(new java.util.Date(dir.lastModified()))));
+	              selection[i].addItemListener(listener);
+	              boxPanel.add(selection[i]);
+	            }
+	                        
+	            final JScrollPane scroll = new JScrollPane(boxPanel);
+	            scroll.setBorder(null);
+	            scroll.setViewportBorder(null);
+	            scroll.getViewport().setOpaque(false);
+	            
+	            selectAll.addActionListener(e -> {
+	              for(JCheckBox box : selection) {
+	                box.setSelected(true);
+	              }
+	            });
+	            clearSelection.addActionListener(e -> {
+	              for(JCheckBox box : selection) {
+	                box.setSelected(false);
+	              }
+	            });
+	            
+	            final JPanel buttons = new JPanel(new FormLayout("default,60dlu,default","default"));
+	            buttons.add(clearSelection, CC.xy(1, 1));
+	            buttons.add(selectAll, CC.xy(3, 1));
+	            
+	            
+	            final ArrayList<Object> message = new ArrayList<>();
+	            message.add(LOCALIZER.msg("deleteOldSettingsMessage", "TV-Browser has found settings of old versions of TV-Browser\nthat were not used for at least half a year.\n\nYou can select the versions of TV-Browser you no longer use,\nfor which the old setttings should be deleted now.\n\n"));
+	            message.add(scroll);
+	            message.add(buttons);
+	            
+	            if(UACStarter.isUsable() && RegistryKey.isUsable()) {
+	              message.add(new JLabel(" "));
+	              message.add(cleanRegistry);
+	            }
+	            
+	            final Object[] options = {
+	                delete,
+	                Localizer.getLocalization(Localizer.I18N_CANCEL)
+	            };
+	            
+	            int option = DontShowAgainOptionBox.showOptionDialog(messageId, null, message.toArray(), LOCALIZER.msg("deleteOldSettingsTitle", "TV-Browser: Delete old versions settings files"), JOptionPane.QUESTION_MESSAGE, JOptionPane.YES_NO_OPTION, options, options[1], null);
+	            
+	            if(JOptionPane.YES_OPTION == option) {
+	              RegistryKey reg = new RegistryKey(RegistryKey.HKEY_LOCAL_MACHINE, "Software\\TV-Browser");
+	              
+	              if(cleanRegistry.isSelected() && RegistryKey.isUsable()) {
+	                String startMenuFolder = reg.getValue("Start Menu Folder").getData();
+	                File startMenu = new File(System.getenv("ProgramData"),"Microsoft\\Windows\\Start Menu\\Programs");
+	                File cmd = null;
+	                
+	                ArrayList<String> fileNames = new ArrayList<>();
+	                fileNames.add("Lizenz.lnk");
+	                fileNames.add("License.lnk");
+	                fileNames.add("Website.url");
+	                fileNames.add("Forum.url");
+	                fileNames.add("Deutsches Handbuch.url");
+	                fileNames.add("English Manual.url");
+	                
+	                try {
+	                  cmd = File.createTempFile("cleanreg", ".bat");
+	                  
+	                  try(BufferedWriter write = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(cmd), "ISO-8859-1"))) {
+	                    boolean first = true;
+	                    for(int i = 0; i < selection.length; i++) {
+	                    	if(selection[i].isSelected()) {
+	                    		first = addVersionToClean(write, oldDirs.get(i), first, startMenuFolder, startMenu, fileNames);
+	                    	}
+	                    }
+	                    
+	                    if(!first) {
+	                    	write.write("exit");
+	                    }
+	                  } catch(Exception e2) {
+	                    e2.printStackTrace();
+	                  }
+	                  
+	                  if(cmd.length() > 0) {
+	                	try {
+						  UACStarter.getInstance().startApplication(UACStarter.ARCH_32, cmd.getAbsolutePath());
+						} catch (TvBrowserException e1) {
+						  e1.printStackTrace();
+						}
+	                  }
+	                  
+	              	  cmd.deleteOnExit();
+	                } catch (IOException e1) {
+	                  e1.printStackTrace();
+	                }
+	              }
+	              
+	              for(int i = 0; i < selection.length; i++) {
+	                if(selection[i].isSelected()) {
+	                  eraseDirectory(oldDirs.get(i).getParentFile());
+	                }
+	              }
+	            }
             });
-            final DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.MEDIUM);
-            Localizer settingsLocalizer = Localizer.getLocalizerFor(Settings.class);
-            final ScrollableJPanel boxPanel = new ScrollableJPanel();
-            boxPanel.setLayout(new BoxLayout(boxPanel, BoxLayout.Y_AXIS));
-            final AtomicInteger count = new AtomicInteger(0);
-            final JCheckBox cleanRegistry = new JCheckBox(LOCALIZER.msg("cleanRegistry", "Delete matching Windows registry and start menu entries (will trigger request for Administrator rights)"), true);
-            cleanRegistry.setEnabled(false);
-            
-            final ItemListener listener = e -> {
-              if(e.getStateChange() == ItemEvent.SELECTED) {
-                count.incrementAndGet();
-              }
-              else if(e.getStateChange() == ItemEvent.DESELECTED) {
-                count.decrementAndGet();
-              }
-
-              cleanRegistry.setEnabled(count.get() > 0);
-              delete.setEnabled(count.get() > 0);
-              selectAll.setEnabled(count.get() != oldDirs.size());
-              clearSelection.setEnabled(delete.isEnabled());
-            };
-            
-            final JCheckBox[] selection = new JCheckBox[oldDirs.size()];
-            
-            for(int i = 0; i < selection.length; i++) {
-              final File dir = oldDirs.get(i);
-              selection[i] = new JCheckBox(settingsLocalizer.msg("selectImportDirectoryInfo", "{0} (last used: {1})",dir.getParentFile().getName(),dateFormat.format(new java.util.Date(dir.lastModified()))));
-              selection[i].addItemListener(listener);
-              boxPanel.add(selection[i]);
-            }
-                        
-            final JScrollPane scroll = new JScrollPane(boxPanel);
-            scroll.setBorder(null);
-            scroll.setViewportBorder(null);
-            scroll.getViewport().setOpaque(false);
-            
-            selectAll.addActionListener(e -> {
-              for(JCheckBox box : selection) {
-                box.setSelected(true);
-              }
-            });
-            clearSelection.addActionListener(e -> {
-              for(JCheckBox box : selection) {
-                box.setSelected(false);
-              }
-            });
-            
-            final JPanel buttons = new JPanel(new FormLayout("default,60dlu,default","default"));
-            buttons.add(clearSelection, CC.xy(1, 1));
-            buttons.add(selectAll, CC.xy(3, 1));
-            
-            
-            final ArrayList<Object> message = new ArrayList<>();
-            message.add(LOCALIZER.msg("deleteOldSettingsMessage", "TV-Browser has found settings of old versions of TV-Browser\nthat were not used for at least half a year.\n\nYou can select the versions of TV-Browser you no longer use,\nfor which the old setttings should be deleted now.\n\n"));
-            message.add(scroll);
-            message.add(buttons);
-            
-            if(UACStarter.isUsable() && RegistryKey.isUsable()) {
-              message.add(new JLabel(" "));
-              message.add(cleanRegistry);
-            }
-            
-            final Object[] options = {
-                delete,
-                Localizer.getLocalization(Localizer.I18N_CANCEL)
-            };
-            
-            int option = DontShowAgainOptionBox.showOptionDialog(messageId, null, message.toArray(), LOCALIZER.msg("deleteOldSettingsTitle", "TV-Browser: Delete old versions settings files"), JOptionPane.QUESTION_MESSAGE, JOptionPane.YES_NO_OPTION, options, options[1], null);
-            
-            if(JOptionPane.YES_OPTION == option) {
-              RegistryKey reg = new RegistryKey(RegistryKey.HKEY_LOCAL_MACHINE, "Software\\TV-Browser");
-              
-              if(cleanRegistry.isSelected() && RegistryKey.isUsable()) {
-                String startMenuFolder = reg.getValue("Start Menu Folder").getData();
-                File startMenu = new File(System.getenv("%ProgramData%"),"Microsoft\\Windows\\Start Menu\\Programs");
-                File cmd = null;
-                
-                ArrayList<String> fileNames = new ArrayList<>();
-                fileNames.add("Lizenz.lnk");
-                fileNames.add("License.lnk");
-                fileNames.add("Website.url");
-                fileNames.add("Forum.url");
-                fileNames.add("Deutsches Handbuch.url");
-                fileNames.add("English Manual.url");
-                
-                try {
-                  cmd = File.createTempFile("cleanreg", ".bat");
-                
-                  try(BufferedWriter write = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(cmd), "ISO-8859-1"))) {
-                    boolean first = true;
-                    for(int i = 0; i < selection.length; i++) {
-                      if(selection[i].isSelected()) {
-                        String name = oldDirs.get(i).getParentFile().getName();
-                        
-                        reg = new RegistryKey(RegistryKey.HKEY_LOCAL_MACHINE, "Software\\TV-Browser"+name);
-                        RegistryValue dir = reg.getValue("Install directory");
-                        RegistryValue folder = reg.getValue("Start Menu Folder");
-                        
-                        if(!dir.isUnknown()) {
-                          if(first) {
-                            write.write("@echo off\r\n");
-                            first = false;
-                          }
-                          
-                          if(!folder.isUnknown() && !folder.getData().equals(startMenuFolder)) {
-                            File tvbStartFolder = new File(startMenu,folder.getData());
-                            File[] files = tvbStartFolder.listFiles();
-                            
-                            for(File file : files) {
-                              if(file.isFile() && file.getName().startsWith("TV-Browser") || fileNames.contains(file.getName())) {
-                                write.write("del \"" + file.getAbsolutePath() + "\"\r\n");
-                              }
-                              else if(file.isDirectory() && (file.getName().equals("Sonstiges") || file.getName().equals("Misc"))) {
-                                File[] temp = file.listFiles();
-                                
-                                for(File tmp : temp) {
-                                  if(tmp.isFile() && tmp.getName().startsWith("TV-Browser") || fileNames.contains(tmp.getName())) {
-                                    write.write("del \"" + tmp.getAbsolutePath() + "\"\r\n");
-                                  }
-                                }
-                                
-                                write.write("rmdir \"" + file.getAbsolutePath() + "\"\r\n");
-                              }
-                            }
-                            
-                            write.write("rmdir \"" + tvbStartFolder.getAbsolutePath() + "\"\r\n");
-                          }
-                          
-                          write.write(RegistryKey.REG_TOOL.getAbsolutePath()+" delete \"" + reg.getFullPath()+ "\" /f\r\n");
-                        }
-                      }
-                    }
-                  }catch(Exception e2) {
-                    e2.printStackTrace();
-                  }
-                } catch (IOException e1) {
-                  e1.printStackTrace();
-                }
-              }
-              
-              for(int i = 0; i < selection.length; i++) {
-                if(selection[i].isSelected()) {
-                  eraseDirectory(oldDirs.get(i).getParentFile());
-                }
-              }
-            }
-          });
-        } catch (InvocationTargetException e) {
-          e.printStackTrace();
-        } catch (InterruptedException e) {
-          e.printStackTrace();
-        }
-  	  }
+          } catch (InvocationTargetException e) {
+            e.printStackTrace();
+          } catch (InterruptedException e) {
+            e.printStackTrace();
+          }
+  	    }
   	  
-  	  Settings.General.DATE_OLD_SETTINGS_CHECKED_LAST.setDate(Date.getCurrentDate());
+  	    Settings.General.DATE_OLD_SETTINGS_CHECKED_LAST.setDate(Date.getCurrentDate());
 	  }
+  }
+	
+  private static boolean addVersionToClean(final BufferedWriter write, final File oldDir, boolean first, final String startMenuFolder, final File startMenu, final ArrayList<String> fileNames) throws IOException {
+		String name = oldDir.getParentFile().getName();
+        
+        RegistryKey reg = new RegistryKey(RegistryKey.HKEY_LOCAL_MACHINE, "Software\\TV-Browser"+name);
+        
+        RegistryValue dir = reg.getValue("Install directory");
+        RegistryValue folder = reg.getValue("Start Menu Folder");
+
+        if(!dir.isUnknown()) {
+          if(first) {
+            write.write("@echo off\r\n");
+            first = false;
+          }
+          
+          if(!folder.isUnknown() && !folder.getData().equals(startMenuFolder)) {
+            File tvbStartFolder = new File(startMenu,folder.getData());
+            File[] files = tvbStartFolder.listFiles();
+            
+            if(files != null) {
+	            for(File file : files) {
+	              if(file.isFile() && file.getName().startsWith("TV-Browser") || fileNames.contains(file.getName())) {
+	                write.write("del \"" + file.getAbsolutePath() + "\"\r\n");
+	              }
+	              else if(file.isDirectory() && (file.getName().equals("Sonstiges") || file.getName().equals("Misc"))) {
+	                File[] temp = file.listFiles();
+	                
+	                for(File tmp : temp) {
+	                  if(tmp.isFile() && tmp.getName().startsWith("TV-Browser") || fileNames.contains(tmp.getName())) {
+	                    write.write("del \"" + tmp.getAbsolutePath() + "\"\r\n");
+	                  }
+	                }
+	                
+	                write.write("rmdir \"" + file.getAbsolutePath() + "\"\r\n");
+	              }
+	            }
+	            
+	            write.write("rmdir \"" + tvbStartFolder.getAbsolutePath() + "\"\r\n");
+	          }
+          }
+          
+          write.write(dir.getUsedRegTool() + " delete \"" + reg.getFullPath()+ "\" /f\r\n");
+        }
+		
+		return first;
 	}
 	
 	private static void eraseDirectory(final File directory) {
