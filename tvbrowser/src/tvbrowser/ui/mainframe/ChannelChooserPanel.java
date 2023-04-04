@@ -62,6 +62,7 @@ public class ChannelChooserPanel extends JPanel implements ListDropAction<Object
   private MainFrame mParent;
   private boolean disableSync = false;
   private ChannelFilter mChannelFilter;
+  private DragAndDropMouseListener<Object> mDragAndDropMouseListener;
   
   /**
    * @param frame The mainframe.
@@ -105,7 +106,7 @@ public class ChannelChooserPanel extends JPanel implements ListDropAction<Object
 
     ListDragAndDropHandler dnDHandler = new ListDragAndDropHandler(mList,
         mList, this);
-    new DragAndDropMouseListener<>(mList, mList, this, dnDHandler);
+    mDragAndDropMouseListener = new DragAndDropMouseListener<>(mList, mList, this, dnDHandler);
 
     mList.addListSelectionListener(e ->  {
       if (!disableSync) {
@@ -152,6 +153,8 @@ public class ChannelChooserPanel extends JPanel implements ListDropAction<Object
       mList.setSelectedIndex(selected);
       mList.ensureIndexIsVisible(selected);
     });
+    
+    updateDragAndDropEnabled();
   }
 
   private void showChannel() {
@@ -200,6 +203,10 @@ public class ChannelChooserPanel extends JPanel implements ListDropAction<Object
           mChannelChooserModel.addElement(channelList[i]);
       }
     }
+  }
+  
+  public void updateDragAndDropEnabled() {
+    mDragAndDropMouseListener.setDragEnabled(Settings.Window.CHANNEL_SELECTION_DRAG_AND_DROP.getBoolean());
   }
 
   public void drop(JList<Object> source, JList<Object> target, int rows, boolean move) {

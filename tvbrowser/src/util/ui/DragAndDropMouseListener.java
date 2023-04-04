@@ -28,6 +28,7 @@ package util.ui;
 
 import java.awt.dnd.DnDConstants;
 import java.awt.dnd.DragGestureListener;
+import java.awt.dnd.DragGestureRecognizer;
 import java.awt.dnd.DragSource;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -51,7 +52,9 @@ public class DragAndDropMouseListener<E> extends MouseAdapter {
   private ListDropAction<E> mAction;
   private DragGestureListener mListener;
   private boolean mMoveWithDoubleClick;
-
+  private DragGestureRecognizer mDragGuestureRecognizer;
+  private boolean mDragEnabled;
+  
   /**
    * 
    * @param source
@@ -88,6 +91,7 @@ public class DragAndDropMouseListener<E> extends MouseAdapter {
     mAction = action;
     mListener = listener;
     mMoveWithDoubleClick = moveWithDoubleClick;
+    mDragEnabled = true;
     
     restore();
   }
@@ -110,12 +114,39 @@ public class DragAndDropMouseListener<E> extends MouseAdapter {
       }
     }
     
-    (new DragSource()).createDefaultDragGestureRecognizer(mSource,
+    if(mDragGuestureRecognizer != null) {
+      mDragGuestureRecognizer.setComponent(null);
+    }
+    
+    mDragGuestureRecognizer = (new DragSource()).createDefaultDragGestureRecognizer(mSource,
         DnDConstants.ACTION_MOVE, mListener);
+    
+    if(!mDragEnabled) {
+      mDragGuestureRecognizer.setComponent(null);
+    }
     
     mSource.addMouseListener(this);
   }
 
+  /**
+   * Enables/disables drag gesture recognition.
+   * 
+   * @param enabled If drag is enabled.
+   * @since 4.3
+   */
+  public void setDragEnabled(boolean enabled) {
+    mDragEnabled = enabled;
+    
+    if(mDragGuestureRecognizer != null) {
+      if(enabled) {
+        mDragGuestureRecognizer.setComponent(mSource);
+      }
+      else {
+        mDragGuestureRecognizer.setComponent(null);
+      }
+    }
+  }
+  
   public void mouseClicked(MouseEvent e) {
     if (mSource.isEnabled() && !mSource.hasFocus()) {
       mSource.requestFocusInWindow();

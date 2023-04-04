@@ -6,11 +6,15 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 
+import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.swing.JRadioButtonMenuItem;
 
+import devplugin.ActionMenu;
+import devplugin.Channel;
+import devplugin.ChannelFilter;
 import tvbrowser.core.ChannelList;
 import tvbrowser.core.DummyChannel;
 import tvbrowser.core.Settings;
@@ -26,9 +30,6 @@ import tvbrowser.ui.settings.channel.ChannelConfigDlg;
 import util.browserlauncher.Launch;
 import util.i18n.Localizer;
 import util.ui.menu.MenuUtil;
-import devplugin.ActionMenu;
-import devplugin.Channel;
-import devplugin.ChannelFilter;
 
 /**
  * A class that builds a PopupMenu for a Channel.
@@ -100,7 +101,6 @@ public class ChannelContextMenu implements ActionListener {
     if (!(mSource instanceof ChannelsSettingsTab)) {
       mMenu.add(mFilterChannels);
       mMenu.addSeparator();
-      mMenu.add(mChAdd);
       JMenu configureLayout = new JMenu(LOCALIZER.msg("layout", "Layout"));
       layoutBoth = new JRadioButtonMenuItem(LOCALIZER.msg("layoutBoth",
           "Logo and name"));
@@ -111,14 +111,22 @@ public class ChannelContextMenu implements ActionListener {
       configureLayout.add(layoutBoth);
       configureLayout.add(layoutLogo);
       configureLayout.add(layoutName);
-      mMenu.add(configureLayout);
-
+      
       layoutBoth.addActionListener(this);
       layoutLogo.addActionListener(this);
       layoutName.addActionListener(this);
 
       // is the layout configuration for the channel chooser
       if (mSource instanceof ChannelChooserPanel) {
+        JCheckBoxMenuItem dragAndDropEnabled = new JCheckBoxMenuItem(LOCALIZER.msg("dragAndDrop", "Move channels with drag and drop"));
+        dragAndDropEnabled.setSelected(Settings.Window.CHANNEL_SELECTION_DRAG_AND_DROP.getBoolean());
+        dragAndDropEnabled.addActionListener(e1 -> {
+          Settings.Window.CHANNEL_SELECTION_DRAG_AND_DROP.toggleValue();
+          ((ChannelChooserPanel)mSource).updateDragAndDropEnabled();
+        });
+        
+        mMenu.add(dragAndDropEnabled);
+        
         if (Settings.IconAndNames.SHOW_ICONS_IN_CHANNEL_LIST.getBoolean()
             && Settings.IconAndNames.SHOW_NAMES_IN_CHANNEL_LIST.getBoolean()) {
           layoutBoth.setSelected(true);
@@ -139,6 +147,9 @@ public class ChannelContextMenu implements ActionListener {
           layoutName.setSelected(true);
         }
       }
+      
+      mMenu.add(mChAdd);
+      mMenu.add(configureLayout);
       // add context menu actions from plugins
       addPluginContextMenuItems(ch);
     }

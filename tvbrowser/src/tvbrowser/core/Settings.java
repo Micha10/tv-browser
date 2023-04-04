@@ -2789,6 +2789,9 @@ public class Settings {
     public static final BooleanProperty CHANNEL_SELECTION_SHOW = new BooleanProperty(
         PROP, "show.channels", true);
   
+    public static final BooleanProperty CHANNEL_SELECTION_DRAG_AND_DROP = new BooleanProperty(
+        PROP, "channels.dragAndDrop", true);
+    
     public static final BooleanProperty DATE_SELECTION_SHOW = new BooleanProperty(
         PROP, "show.datelist", true);
   

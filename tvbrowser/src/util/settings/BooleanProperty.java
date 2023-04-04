@@ -91,6 +91,17 @@ public class BooleanProperty extends Property {
     mCachedValue = value;
   }
   
+  /**
+   * Toggles the value of this BooleanProperty.
+   * 
+   * @return The new value of this BooleanProperty.
+   * @since 4.3
+   */
+  public boolean toggleValue() {
+    setBoolean(!getBoolean());
+    
+    return getBoolean();
+  }
   
   protected void clearCache() {
     mIsCacheFilled = false;
