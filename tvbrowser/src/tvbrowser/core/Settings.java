@@ -2408,6 +2408,7 @@ public class Settings {
           ProgramTable.VALUE_LAYOUT_OPTIMIZED_COMPACT_TIME_BLOCK});
     public static final IntProperty COLUMN_WIDTH = new VariableIntProperty(PROP,
       "columnwidth", 200);
+    public static final BooleanProperty INACTIVE_SCROLL_TO_NOW = new BooleanProperty(PROP, "inactiveScrollToNow", true);
     
     /**
      * start of day in minutes after midnight

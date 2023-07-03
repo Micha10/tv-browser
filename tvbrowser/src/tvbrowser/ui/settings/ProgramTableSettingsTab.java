@@ -124,6 +124,8 @@ public class ProgramTableSettingsTab implements SettingsTab, ActionListener {
   private ColorLabel mScrollChannelLb;
   private ColorButton mScrollChannelColor;
   
+  private JCheckBox mInactiveAutoScrollToNow;
+  
   public void actionPerformed(ActionEvent event) {
     Object source = event.getSource();
     if (source == mDefaultBtn) {
@@ -360,9 +362,10 @@ public class ProgramTableSettingsTab implements SettingsTab, ActionListener {
     
     // Miscellaneous *********************************************
     layout.appendRow(RowSpec.decode("10dlu"));
-    layout.appendRow(RowSpec.decode("pref"));
+    layout.appendRow(RowSpec.decode("default"));
     layout.appendRow(RowSpec.decode("5dlu"));
-    layout.appendRow(RowSpec.decode("pref"));
+    layout.appendRow(RowSpec.decode("default"));
+    layout.appendRow(RowSpec.decode("default"));
 
     mSettingsPn.add(DefaultComponentFactory.getInstance().createSeparator(
         LOCALIZER.msg("mouse", "Mouse")), CC.xyw(1,
@@ -383,7 +386,8 @@ public class ProgramTableSettingsTab implements SettingsTab, ActionListener {
     mMouseOverCb.getActionListeners()[0].actionPerformed(null);
     
     mTypeAsYouFind = new JCheckBox(LOCALIZER.msg("typeAsYouFind", "Type-As-You-Find enabled"),Settings.ProgramTable.FIND_AS_YOU_TYPE.getBoolean());
-
+    mInactiveAutoScrollToNow = new JCheckBox(LOCALIZER.msg("inactiveAutoScrollToNow", "Scroll to now sporadically when user is away"), Settings.ProgramTable.INACTIVE_SCROLL_TO_NOW.getBoolean());
+    
     mSettingsPn.add(mMouseOverColorLb, CC.xy(4, currentRow));
     mSettingsPn.add(mouseOverColorChangeBtn, CC.xy(6, currentRow));
     
@@ -479,6 +483,7 @@ public class ProgramTableSettingsTab implements SettingsTab, ActionListener {
         (currentRow += 2), 8));
     
     mSettingsPn.add(mTypeAsYouFind, CC.xyw(2, (currentRow += 2), 6));
+    mSettingsPn.add(mInactiveAutoScrollToNow, CC.xyw(2, ++currentRow, 6));
 
     updateBackgroundStyleConfigureButton();
 
@@ -597,6 +602,7 @@ public class ProgramTableSettingsTab implements SettingsTab, ActionListener {
     Settings.ProgramTable.COLOR_HIGHLIGHT_CHANNEL_PROGRAMS_BACKGROUND.setColor(mScrollChannelLb.getColor());
     
     Settings.ProgramTable.FIND_AS_YOU_TYPE.setBoolean(mTypeAsYouFind.isSelected());
+    Settings.ProgramTable.INACTIVE_SCROLL_TO_NOW.setBoolean(mInactiveAutoScrollToNow.isSelected());
     
     MainFrame.getInstance().getProgramTableScrollPane().getProgramTable().clearTimeMarkings();
   }

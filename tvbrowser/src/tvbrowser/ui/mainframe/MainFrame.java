@@ -1903,7 +1903,6 @@ public class MainFrame extends JFrame implements DateListener,DropTargetListener
   }
 
   private void handleTimerEvent() {
-    checkAutomaticGotoNow();
     Date date = Date.getCurrentDate();
 
     if(mLastTimerMinutesAfterMidnight == -1) {
@@ -1915,89 +1914,93 @@ public class MainFrame extends JFrame implements DateListener,DropTargetListener
     try {
       int minutesAfterMidnight = IOUtilities.getMinutesAfterMidnight();
       boolean onAirChanged = false;
+
+      if (minutesAfterMidnight != mLastTimerMinutesAfterMidnight) {
+        checkAutomaticGotoNow();
       
-      if (minutesAfterMidnight != mLastTimerMinutesAfterMidnight && (mDownloadingThread == null || !mDownloadingThread.isAlive())) {
-        mLastTimerMinutesAfterMidnight = minutesAfterMidnight;
-        Channel[] ch = ChannelList.getSubscribedChannels();
-
-        if(ch != null) {
-          /* If no date array is available we have to find
-           * the on air programs */
-          if(mChannelDateArr == null) {
-            onAirChanged = true;
-            fillOnAirArrays(ch);
-          }
-          else {
-            /* We have a date array and can test the programs */
-            for(int i = 0; i < mChannelDateArr.length; i++) {
-              if(mChannelDateArr[i] != null) {
-                ChannelDayProgram chProg = TvDataBase.getInstance().getDayProgram(mChannelDateArr[i],ch[i]);
-
-                if(chProg != null && chProg.getProgramCount() > 0 && mOnAirRowProgramsArr[i] != -1) {
-                  if (mOnAirRowProgramsArr[i] >= chProg.getProgramCount()) {
-                    fillOnAirArrays(ch);
-                    LOG.warning("Reset of on-air-arrays");
-                  }
-                  Program p = chProg.getProgramAt(mOnAirRowProgramsArr[i]);
-
-                  if(p.isOnAir()) {
-                    p.validateMarking();
-                  } else if(p.isExpired()) {
-                    onAirChanged = true;
-                    p.validateMarking();
-
-                    int n = mOnAirRowProgramsArr[i]+1;
-
-                    if(n < chProg.getProgramCount()) {
-                      mOnAirRowProgramsArr[i] = n;
-                      chProg.getProgramAt(mOnAirRowProgramsArr[i]).validateMarking();
+        if (mDownloadingThread == null || !mDownloadingThread.isAlive()) {
+          mLastTimerMinutesAfterMidnight = minutesAfterMidnight;
+          Channel[] ch = ChannelList.getSubscribedChannels();
+  
+          if(ch != null) {
+            /* If no date array is available we have to find
+             * the on air programs */
+            if(mChannelDateArr == null) {
+              onAirChanged = true;
+              fillOnAirArrays(ch);
+            }
+            else {
+              /* We have a date array and can test the programs */
+              for(int i = 0; i < mChannelDateArr.length; i++) {
+                if(mChannelDateArr[i] != null) {
+                  ChannelDayProgram chProg = TvDataBase.getInstance().getDayProgram(mChannelDateArr[i],ch[i]);
+  
+                  if(chProg != null && chProg.getProgramCount() > 0 && mOnAirRowProgramsArr[i] != -1) {
+                    if (mOnAirRowProgramsArr[i] >= chProg.getProgramCount()) {
+                      fillOnAirArrays(ch);
+                      LOG.warning("Reset of on-air-arrays");
                     }
-                    else {
-                      /* The last day program is expired so we have to
-                       * look for the on air program on the next day */
-                      mChannelDateArr[i] = mChannelDateArr[i].addDays(1);
-
-                      chProg = TvDataBase.getInstance().getDayProgram(mChannelDateArr[i],ch[i]);
-
-                      // The next day has no data
-                      if(chProg == null || chProg.getProgramCount() < 1) {
-                        mOnAirRowProgramsArr[i] = -1;
-                      } else {
-                        mOnAirRowProgramsArr[i] = 0;
+                    Program p = chProg.getProgramAt(mOnAirRowProgramsArr[i]);
+  
+                    if(p.isOnAir()) {
+                      p.validateMarking();
+                    } else if(p.isExpired()) {
+                      onAirChanged = true;
+                      p.validateMarking();
+  
+                      int n = mOnAirRowProgramsArr[i]+1;
+  
+                      if(n < chProg.getProgramCount()) {
+                        mOnAirRowProgramsArr[i] = n;
                         chProg.getProgramAt(mOnAirRowProgramsArr[i]).validateMarking();
+                      }
+                      else {
+                        /* The last day program is expired so we have to
+                         * look for the on air program on the next day */
+                        mChannelDateArr[i] = mChannelDateArr[i].addDays(1);
+  
+                        chProg = TvDataBase.getInstance().getDayProgram(mChannelDateArr[i],ch[i]);
+  
+                        // The next day has no data
+                        if(chProg == null || chProg.getProgramCount() < 1) {
+                          mOnAirRowProgramsArr[i] = -1;
+                        } else {
+                          mOnAirRowProgramsArr[i] = 0;
+                          chProg.getProgramAt(mOnAirRowProgramsArr[i]).validateMarking();
+                        }
                       }
                     }
                   }
-                }
-                else if(mChannelDateArr[i].compareTo(Date.getCurrentDate()) < 0) {
-                  /* If the date array for the channel contains a date
-                   * earlier than today we have to use today instead */
-                  mChannelDateArr[i] = Date.getCurrentDate();
-                  onAirChanged = true;
-
-                  chProg = TvDataBase.getInstance().getDayProgram(mChannelDateArr[i],ch[i]);
-
-                  if(chProg != null && chProg.getProgramCount() > 0) {
-                    mOnAirRowProgramsArr[i] = 0;
-                    chProg.getProgramAt(mOnAirRowProgramsArr[i]).validateMarking();
+                  else if(mChannelDateArr[i].compareTo(Date.getCurrentDate()) < 0) {
+                    /* If the date array for the channel contains a date
+                     * earlier than today we have to use today instead */
+                    mChannelDateArr[i] = Date.getCurrentDate();
+                    onAirChanged = true;
+  
+                    chProg = TvDataBase.getInstance().getDayProgram(mChannelDateArr[i],ch[i]);
+  
+                    if(chProg != null && chProg.getProgramCount() > 0) {
+                      mOnAirRowProgramsArr[i] = 0;
+                      chProg.getProgramAt(mOnAirRowProgramsArr[i]).validateMarking();
+                    }
                   }
                 }
               }
             }
           }
-        }
-        
-        for(PluginCenterPanelWrapper wrapper : mCenterPanelWrapperList) {
-          wrapper.timeEvent();
-        }
-        
-        if ((mLastAutoUpdateRun + Settings.Data.DATA_SERVICE_AUTO_UPDATE_TIME.getInt() * 60000L) <= System.currentTimeMillis() && !TvDataUpdater.getInstance().isDownloading()) {
-          runAutoUpdate();
-        }
-        
-        if((Settings.General.AUTO_DATA_DOWNLOAD_ENABLED.getBoolean() || Settings.General.AUTO_UPDATE_PRIME_TIME.getBoolean()) && (mAutoDownloadTimer < IOUtilities.getMinutesAfterMidnight() || !date.equals(mCurrentDay) || Settings.General.AUTO_UPDATE_PRIME_TIME.getBoolean()) && (mDownloadingThread == null || !mDownloadingThread.isAlive())) {
-          if(TVBrowser.handleAutomaticDownload(mAutoDownloadTimer)) {
-            mAutoDownloadTimer = -1;
+          
+          for(PluginCenterPanelWrapper wrapper : mCenterPanelWrapperList) {
+            wrapper.timeEvent();
+          }
+          
+          if ((mLastAutoUpdateRun + Settings.Data.DATA_SERVICE_AUTO_UPDATE_TIME.getInt() * 60000L) <= System.currentTimeMillis() && !TvDataUpdater.getInstance().isDownloading()) {
+            runAutoUpdate();
+          }
+          
+          if((Settings.General.AUTO_DATA_DOWNLOAD_ENABLED.getBoolean() || Settings.General.AUTO_UPDATE_PRIME_TIME.getBoolean()) && (mAutoDownloadTimer < IOUtilities.getMinutesAfterMidnight() || !date.equals(mCurrentDay) || Settings.General.AUTO_UPDATE_PRIME_TIME.getBoolean()) && (mDownloadingThread == null || !mDownloadingThread.isAlive())) {
+            if(TVBrowser.handleAutomaticDownload(mAutoDownloadTimer)) {
+              mAutoDownloadTimer = -1;
+            }
           }
         }
       }
@@ -2068,7 +2071,7 @@ public class MainFrame extends JFrame implements DateListener,DropTargetListener
   }
 
   private void checkAutomaticGotoNow() {
-    if (mAwayDetector.isAway()) {
+    if (Settings.ProgramTable.INACTIVE_SCROLL_TO_NOW.getBoolean() && mAwayDetector.isAway()) {
       scrollToNow();
     }
   }
