@@ -206,7 +206,7 @@ public class TVBrowser {
   private static final boolean IS_STABLE = false;
   private static final int MAJRO_VERSION = 4;
   private static final int MINOR_VERSION = 27;
-  private static final int SUB_MINOR_VERSION = 50;
+  private static final int SUB_MINOR_VERSION = 51;
 
   /* If you want to change the version string, add it to the beginning of this array.
      We need the old version strings to import the settings.
@@ -220,6 +220,7 @@ public class TVBrowser {
   */
   /** The string array with the names of the earlier versions. */
   private static final String[] ALL_VERSIONS = new String[] {
+      "4.2.7.51 SVN",
       "4.2.7.50 SVN",
           "4.2.7", "4.2.6.95 Beta1", "4.2.6.50 SVN",
           "4.2.6", "4.2.5.50 SVN",
@@ -909,6 +910,15 @@ public class TVBrowser {
           };
           Settings.Markings.HIGHLIGHTING_COLORS.setIntArray(colors);
           Settings.updateColors();
+        }
+        
+        if(currentVersion != null && currentVersion.isOlderThan(new Version(4,27,51,false))) {
+          if(!Settings.ProgramPanel.ICON_PLUGINS.containsItem(Settings.INFO_ID)) {
+            Settings.ProgramPanel.ICON_PLUGINS.addItem("FORMAT_1");
+          }
+          if(!Settings.ProgramPanel.ICON_PLUGINS_ALTERNATIVE.containsItem(Settings.INFO_ID)) {
+            Settings.ProgramPanel.ICON_PLUGINS_ALTERNATIVE.addItem("FORMAT_1");
+          }
         }
         
         MainFrame.getInstance().getProgramTableScrollPane()

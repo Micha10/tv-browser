@@ -219,6 +219,9 @@ public class InfoIconTheme implements Comparable<InfoIconTheme> {
     if(name.startsWith("Info_16to9")) {
       mIconMap.put(Byte.valueOf(INFO_16_9), icon);
     }
+    else if(name.startsWith("Info_4to3")) {
+      mIconMap.put(Byte.valueOf(INFO_4_3), icon);
+    }
     else if(name.startsWith("Info_Arts")) {
       mIconMap.put(Byte.valueOf(INFO_ARTS), icon);
     }

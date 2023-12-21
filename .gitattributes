@@ -1930,6 +1930,7 @@ tvbrowser/development/readme.txt svneol=native#text/plain
 tvbrowser/images/additional/desktop.ico -text
 tvbrowser/images/additional/tvbrowser.icns -text
 tvbrowser/images/infothemes/tvb_colored/Info_16to9.gif -text
+tvbrowser/images/infothemes/tvb_colored/Info_4to3.png -text
 tvbrowser/images/infothemes/tvb_colored/Info_Arts.png -text
 tvbrowser/images/infothemes/tvb_colored/Info_AudioDescription.png -text
 tvbrowser/images/infothemes/tvb_colored/Info_BlackAndWhite.gif -text
@@ -1959,6 +1960,7 @@ tvbrowser/images/infothemes/tvb_colored/Info_TwoChannelTone.gif -text
 tvbrowser/images/infothemes/tvb_colored/name -text
 tvbrowser/images/infothemes/tvb_colored/name_de -text
 tvbrowser/images/infothemes/tvb_default/Info_16to9.gif -text
+tvbrowser/images/infothemes/tvb_default/Info_4to3.png -text
 tvbrowser/images/infothemes/tvb_default/Info_Arts.png -text
 tvbrowser/images/infothemes/tvb_default/Info_AudioDescription.png -text
 tvbrowser/images/infothemes/tvb_default/Info_BlackAndWhite.gif -text
