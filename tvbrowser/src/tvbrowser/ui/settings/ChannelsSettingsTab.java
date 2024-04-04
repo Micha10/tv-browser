@@ -1391,8 +1391,8 @@ public class ChannelsSettingsTab implements SettingsTab, ListDropAction<Object> 
     ArrayList<Channel> availableChannelList = new ArrayList<Channel>();
 
     for (Channel channel : channels) {
-      if (!((DefaultListModel<Object>) mSubscribedChannels.getModel())
-          .contains(channel)
+      if (channel != null 
+          && !((DefaultListModel<Object>) mSubscribedChannels.getModel()).contains(channel)
           && mFilter.accept(channel)) {
         availableChannelList.add(channel);
       }
