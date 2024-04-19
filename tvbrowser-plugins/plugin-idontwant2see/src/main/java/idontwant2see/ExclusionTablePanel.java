@@ -398,7 +398,7 @@ public class ExclusionTablePanel extends JPanel {
             IDontWant2See.getInstance().updateExclusions(IDontWant2See.getInstance().loadExclusions(in, true, win.isSelected() ? "ISO-8859-15" : "UTF-8"), entryList, false);
             
             mTableModel.clear();
-            mTableModel.addAll(settings.getSearchList());
+            mTableModel.addAll(entryList);
           }catch(Exception ioe) {
             ioe.printStackTrace();
           }

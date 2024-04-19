@@ -102,7 +102,9 @@ public class IDontWant2SeeSettingsTableModel extends AbstractTableModel {
     mData.add(new IDontWant2SeeSettingsTableEntry(new IDontWant2SeeListEntry("DUMMY-ENTRY",true)));
     mDataFull.add(mData.get(mData.size()-1));
     
-    fireTableRowsInserted(mData.size()-1,mData.size()-1);
+    if(mData.size() > 1) {
+      fireTableRowsInserted(mData.size()-1,mData.size()-1);
+    }
   }
   
   protected boolean rowIsValid(final int row) {
