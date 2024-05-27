@@ -140,7 +140,7 @@ public class AndroidSync extends Plugin {
   private static final String PLUGIN_TYPE = "PLUGIN_TYPE";
   private static final String FILTER_TYPE = "FILTER_TYPE";
   
-  private static final Version mVersion = new Version(0, 30, 0, true);
+  private static final Version mVersion = new Version(0, 30, 1, true);
   private final String CrLf = "\r\n";
   private Properties mProperties;
   
@@ -1516,11 +1516,11 @@ public class AndroidSync extends Plugin {
         }
         if(info) {
           switch (response) {
-            case 404: JOptionPane.showMessageDialog(getParentFrame(), LOCALIZER.msg("userError", "Username or password were not accepted. Please check them."), LOCALIZER.msg("serverError", "Error in server connection"), JOptionPane.ERROR_MESSAGE);break;
-            case 415: JOptionPane.showMessageDialog(getParentFrame(), LOCALIZER.msg("wrongFileError", "Server didn't accepted upload data. This should not happen. Please contact TV-Browser team."), LOCALIZER.msg("serverError", "Error in server connection"), JOptionPane.ERROR_MESSAGE);break;
-            case 500: JOptionPane.showMessageDialog(getParentFrame(), LOCALIZER.msg("serverFileError", "Server could not store data. Please try again, if this continues please contact TV-Browser team."), LOCALIZER.msg("serverError", "Error in server connection"), JOptionPane.ERROR_MESSAGE);break;
+            case 404: JOptionPane.showMessageDialog(getParentFrame(), "AndroidSync: " + LOCALIZER.msg("userError", "Username or password were not accepted. Please check them."), "AndroidSync: " + LOCALIZER.msg("serverError", "Error in server connection"), JOptionPane.ERROR_MESSAGE);break;
+            case 415: JOptionPane.showMessageDialog(getParentFrame(), "AndroidSync: " + LOCALIZER.msg("wrongFileError", "Server didn't accepted upload data. This should not happen. Please contact TV-Browser team."), "AndroidSync: " + LOCALIZER.msg("serverError", "Error in server connection"), JOptionPane.ERROR_MESSAGE);break;
+            case 500: JOptionPane.showMessageDialog(getParentFrame(), "AndroidSync: " + LOCALIZER.msg("serverFileError", "Server could not store data. Please try again, if this continues please contact TV-Browser team."), "AndroidSync: " + LOCALIZER.msg("serverError", "Error in server connection"), JOptionPane.ERROR_MESSAGE);break;
             
-            default: JOptionPane.showMessageDialog(getParentFrame(), LOCALIZER.msg("unknowError", "Something went wrong with the connection to the server. Reason unknown."), LOCALIZER.msg("serverError", "Error in server connection"), JOptionPane.ERROR_MESSAGE);break;
+            default: JOptionPane.showMessageDialog(getParentFrame(), "AndroidSync: " + LOCALIZER.msg("unknowError", "Something went wrong with the connection to the server. Reason unknown."), "AndroidSync: " + LOCALIZER.msg("serverError", "Error in server connection"), JOptionPane.ERROR_MESSAGE);break;
           }
         }
           e.printStackTrace();
