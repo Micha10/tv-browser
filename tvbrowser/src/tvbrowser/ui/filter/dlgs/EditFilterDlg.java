@@ -350,7 +350,7 @@ public class EditFilterDlg extends JDialog implements ActionListener, DocumentLi
       final String filterName = mFilterNameTF.getText().strip();
       final String filterRule = mFilterRuleTF.getText().strip();
       
-      mOkWasPressed = mFilter == null || (!mFilter.getName().equals(filterName) || !mFilter.getRule().equals(filterRule));
+      mOkWasPressed = mFilter == null || mFilter.getRule() == null || (!mFilter.getName().equals(filterName) || !mFilter.getRule().equals(filterRule));
       
       if(mOkWasPressed) {
         if(mFromFilterList) {
