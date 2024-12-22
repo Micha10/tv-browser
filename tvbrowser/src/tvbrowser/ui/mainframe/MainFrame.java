@@ -638,6 +638,13 @@ public class MainFrame extends JFrame implements DateListener,DropTargetListener
         });
         
         final JPopupMenu popup = new JPopupMenu();
+        
+        if(!OperatingSystem.isMacOs() || TVBrowser.isTransportable()) {
+          popup.add(ContextMenu.createViewMenuBarMenu());
+        }
+        
+        popup.add(ContextMenu.createViewMenu());
+        popup.addSeparator();
         popup.add(settings);
         
         try {
@@ -3021,6 +3028,7 @@ public class MainFrame extends JFrame implements DateListener,DropTargetListener
   
   public void setVisible(boolean visible) {
     super.setVisible(visible);
+    createBufferStrategy(2);
     mIsVisible = visible;
   }
 

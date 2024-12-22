@@ -142,7 +142,7 @@ public class ContextMenu {
   }
 
   
-  private static JCheckBoxMenuItem createViewMenuBarMenu() {
+  public static JCheckBoxMenuItem createViewMenuBarMenu() {
     final JCheckBoxMenuItem show = new JCheckBoxMenuItem(
         mLocalizer.msg("showMenubar", "Show menubar"));
     show.setSelected(Settings.Window.MENU_BAR_VISIBLE.getBoolean());
@@ -154,7 +154,7 @@ public class ContextMenu {
     return show;
   }
   
-  private static JCheckBoxMenuItem createViewMenu() {
+  public static JCheckBoxMenuItem createViewMenu() {
     final JCheckBoxMenuItem show = new JCheckBoxMenuItem(
         ToolBarDragAndDropSettings.LOCALIZER
             .msg("showToolbar", "Show toolbar"));
