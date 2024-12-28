@@ -65,13 +65,16 @@ import com.jgoodies.forms.factories.DefaultComponentFactory;
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.FormLayout;
 
+import devplugin.Program;
 import tvbrowser.core.Settings;
 import tvbrowser.core.filters.FilterComponent;
 import tvbrowser.core.filters.FilterComponentList;
 import tvbrowser.core.filters.FilterList;
+import tvbrowser.core.filters.FilterManagerImpl;
 import tvbrowser.core.filters.ParserException;
 import tvbrowser.core.filters.UserFilter;
 import util.i18n.Localizer;
+import util.ui.DefaultProgramImportanceSelectionPanel;
 import util.ui.DragAndDropMouseListener;
 import util.ui.EnhancedPanelBuilder;
 import util.ui.FilterSelectionPanel;
@@ -102,6 +105,7 @@ public class EditFilterDlg extends JDialog implements ActionListener, DocumentLi
   private FilterComponentPanel mFilterComponent;
   
   private FilterHighlightingSelectionPanel mFilterHighlight;
+  private DefaultProgramImportanceSelectionPanel mProgramImportancePanel;
   
   private DefaultListModel<FilterItem> mFilterConstructionListModel;
   
@@ -110,6 +114,9 @@ public class EditFilterDlg extends JDialog implements ActionListener, DocumentLi
   private boolean mDeleteWasPressed;
   
   private JButton mOkBtn, mCancelBtn, mDeleteBtn;
+  
+  private byte mImportance = Program.IMPORTANCE_PROGRAM_DEFAULT;
+  private boolean mImportanceEnabled = false;
 
   public EditFilterDlg(Window parent, FilterList filterList, UserFilter filter, boolean fromFilterList, boolean specialFilter) {
     super(parent, ModalityType.DOCUMENT_MODAL);
@@ -146,8 +153,18 @@ public class EditFilterDlg extends JDialog implements ActionListener, DocumentLi
     mFilterRuleTF = new JTextField();
     mFilterRuleTF.getDocument().addDocumentListener(this);
     mFilterRuleTF.addCaretListener(this);
+        
+    if(mFilter != null && Settings.Other.IMPORTANCE_FILTERS.containsKey(mFilter.getName())) {
+      try {
+        mImportance = Byte.parseByte(Settings.Other.IMPORTANCE_FILTERS.getEntry(mFilter.getName()));
+        mImportanceEnabled = true;
+      }catch(NumberFormatException nfe) {
+        nfe.printStackTrace();
+      }
+    }
     
     mFilterHighlight = new FilterHighlightingSelectionPanel(mFilter);
+    mProgramImportancePanel = DefaultProgramImportanceSelectionPanel.createPanel(mImportance, true, false, false, mImportanceEnabled, true, false, false, LOCALIZER.msg("programImportance", "Importance of filtered programs:"));
    
     ButtonBarBuilder bottomBar = Utilities.createFilterButtonBar();
 
@@ -293,6 +310,8 @@ public class EditFilterDlg extends JDialog implements ActionListener, DocumentLi
     if(fromFilterList) {
       filterCreation.addParagraph(LOCALIZER.msg("highlighting", "Highlighting"));
       filterCreation.addRow(mFilterHighlight, 1, 4);
+      filterCreation.addLineGap();
+      filterCreation.addRowFull(true, mProgramImportancePanel);
     }
     
     filterCreation.addRowFull(new JSeparator(JSeparator.HORIZONTAL));
@@ -351,7 +370,7 @@ public class EditFilterDlg extends JDialog implements ActionListener, DocumentLi
       final String filterRule = mFilterRuleTF.getText().strip();
       
       mOkWasPressed = mFilter == null || mFilter.getRule() == null || (!mFilter.getName().equals(filterName) || !mFilter.getRule().equals(filterRule));
-      
+            
       if(mOkWasPressed) {
         if(mFromFilterList) {
           if (!filterName.equalsIgnoreCase(mFilterName) && mFilterList.containsFilter(filterName)) {
@@ -388,8 +407,19 @@ public class EditFilterDlg extends JDialog implements ActionListener, DocumentLi
         FilterComponentList.getInstance().store();
       }
       
+      if(mProgramImportancePanel.isEnabled() && mProgramImportancePanel.getSelectedImportance() > Program.IMPORTANCE_PROGRAM_DEFAULT) {
+        Settings.Other.IMPORTANCE_FILTERS.putEntry(mFilter.getName(), mProgramImportancePanel.getSelectedImportance());
+      }
+      else {
+        Settings.Other.IMPORTANCE_FILTERS.removeEntry(mFilter.getName());
+      }
+      
       if(mFilterHighlight.wasChanged()) {
         mFilterHighlight.save(mFilter);
+      }
+      
+      if(FilterManagerImpl.getInstance().getCurrentFilter().getName().equals(mFilter.getName()) && mProgramImportancePanel.isEnabled() != mImportanceEnabled || mProgramImportancePanel.getSelectedImportance() != mImportance) {
+        FilterManagerImpl.getInstance().setCurrentFilter(FilterManagerImpl.getInstance().getCurrentFilter());
       }
     } else if (o == mCancelBtn) {
       if(mFilterComponent.getFilterComponentWasTouched()) {
@@ -435,100 +465,6 @@ public class EditFilterDlg extends JDialog implements ActionListener, DocumentLi
   public void close() {
     setVisible(false);
   }
-  /*
-  private class FilterItem {    
-    private String mRuleType;
-    private FilterComponent mComponent;
-    private int mLevel;
-    
-    private FilterItem(String ruleType, int level, FilterComponent comp) {
-      mRuleType = ruleType;
-      mLevel = level;
-      mComponent = comp;
-    }
-    
-    public FilterItem(String ruleType, int level) {
-      mRuleType = ruleType;
-      mComponent = null;
-      mLevel = level;
-    }
-    public FilterItem(FilterComponent comp, int level) {
-      mRuleType = null;
-      mComponent = comp;
-      mLevel = level;
-    }
-    
-    public String toString() {
-      if(mRuleType != null) {
-        if(getLocale().getLanguage().equals("de")) {
-          if(mRuleType.equals(AND_KEY)) {
-            return "UND";
-          }
-          else if(mRuleType.equals(OR_KEY)) {
-            return "ODER";
-          }
-          else if(mRuleType.equals(NOT_KEY)) {
-            return "NICHT";
-          } 
-        }
-        else {
-          if(mRuleType.equals(AND_KEY)) {
-            return "AND";
-          }
-          else if(mRuleType.equals(OR_KEY)) {
-            return "OR";
-          }
-          else if(mRuleType.equals(NOT_KEY)) {
-            return "NOT";
-          } 
-        }
-        
-        if(mRuleType.equals(OPEN_BRACKET_KEY)) {
-          return "(";
-        }
-        else if(mRuleType.equals(CLOSE_BRACKET_KEY)) {
-          return ")";
-        }
-      }
-      return mComponent.getName();
-    }
-    
-    public void setLevel(int level) {
-      mLevel = level;
-    }
-    
-    public int getLevel() {
-      return mLevel;
-    }
-    
-    public FilterComponent getComponent() {
-      return mComponent;
-    }
-    
-    public FilterItem clone(int level) {
-      return new FilterItem(mRuleType,level,mComponent);
-    }
-    
-    public boolean isOpenBracketItem() {
-      return mRuleType != null && mRuleType.equals(OPEN_BRACKET_KEY);
-    }
-    
-    public boolean isCloseBracketItem() {
-      return mRuleType != null && mRuleType.equals(CLOSE_BRACKET_KEY);
-    }
-    
-    public boolean isAndItem() {
-      return mRuleType != null && mRuleType.equals(AND_KEY);
-    }
-
-    public boolean isOrItem() {
-      return mRuleType != null && mRuleType.equals(OR_KEY);
-    }
-    
-    public boolean isNotItem() {
-      return mRuleType != null && mRuleType.equals(NOT_KEY);
-    }
-  }*/
   
   public boolean checkValueForRuleType(String value, String ruleType) {
     if(ruleType != null) {

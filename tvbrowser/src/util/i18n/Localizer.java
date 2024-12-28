@@ -83,6 +83,7 @@ public class Localizer {
   public final static String I18N_COPY = "i18n_copy";
   public final static String I18N_DELETE = "i18n_delete";
   public final static String I18N_EDIT = "i18n_edit";
+  public final static String I18N_ENABLED = "i18n_enabled";
   public final static String I18N_PROGRAM = "i18n_program";
   public final static String I18N_PROGRAMS = "i18n_programs";
   public final static String I18N_CHANNEL = "i18n_channel";
@@ -561,6 +562,8 @@ public class Localizer {
         value = "Delete";
       } else if(key.equals(I18N_EDIT)) {
         value = "Edit";
+      } else if(key.equals(I18N_ENABLED)) {
+        value = "Enabled";
       } else if(key.equals(I18N_PROGRAM)) {
         value = "Program";
       } else if(key.equals(I18N_PROGRAMS)) {

@@ -152,7 +152,7 @@ public class ProgramPanel extends JComponent implements ChangeListener, PluginSt
    * It's the height the panel has with a maximum of 3 information rows.
    */
   private int mPreferredHeight = 0;
-  
+    
   private ChannelLabel mChannelLabel;
   /** The start time as String. */
   private String mProgramTimeAsString;
@@ -200,6 +200,8 @@ public class ProgramPanel extends JComponent implements ChangeListener, PluginSt
 
   /** The importance of this program */
   private byte mProgramImportance;
+  
+  private byte mProgramImportanceFilter = Program.IMPORTANCE_PROGRAM_DEFAULT;
   
   private int mLogoWidth = 0;
   
@@ -510,7 +512,7 @@ private static Font getDynamicFontSize(Font font, int offset) {
   public void setProgram(Program program, int maxHeight) {
     Program oldProgram = mProgram;
     mProgram = program;
-
+    
     if (Settings.ProgramPanel.TITLE_CUT.getBoolean()) {
       mTitleIcon.setMaximumLineCount(Settings.ProgramPanel.TITLE_CUT_LINES
           .getInt());
@@ -531,6 +533,7 @@ private static Font getDynamicFontSize(Font font, int offset) {
     boolean programChanged = oldProgram == null || !oldProgram.equals(program);
     
     if (programChanged) {
+      mProgramImportanceFilter = Program.IMPORTANCE_PROGRAM_DEFAULT;
       mTextColor = (!Settings.ProgramTable.STYLE_BACKGROUND.getString().equals("uiColor") && !Settings.ProgramTable.STYLE_BACKGROUND.getString().equals("uiTimeBlock")) ? Settings.ProgramPanel.COLOR_FOREGROUND.getColor() : UIManager.getColor("List.foreground");
       setForeground(mTextColor);
       // Get the start time, filter duplicate strings
@@ -642,6 +645,10 @@ private static Font getDynamicFontSize(Font font, int offset) {
       revalidate();
       repaint();
     }
+  }
+  
+  public void setFilterImportance(byte importance) {
+    mProgramImportanceFilter = importance;
   }
   
   private int calculateHeight(int titleHeight, int descriptionHeight, int addtionalHeight) {
@@ -768,8 +775,12 @@ private static Font getDynamicFontSize(Font font, int offset) {
     }
 
     // Prevent accidentally set program importance to take effect
-    if(mSettings.isIgnoringProgramImportance() || mProgram.getProgramState() == Program.STATE_WAS_DELETED) {
+    if((mSettings.isIgnoringProgramImportance() && mProgramImportanceFilter == Program.IMPORTANCE_PROGRAM_DEFAULT) || mProgram.getProgramState() == Program.STATE_WAS_DELETED) {
       mProgramImportance = Program.IMPORTANCE_PROGRAM_MAX;
+    }
+    
+    if(mProgramImportanceFilter > Program.IMPORTANCE_PROGRAM_DEFAULT) {
+      mProgramImportance = mProgramImportanceFilter;
     }
     
     // This is for debugging of the marking problem after an data update

@@ -1565,6 +1565,11 @@ public class Settings {
     public static final StringArrayProperty FAVORITE_BLOCKED_FILTER_COMPONENTS = new StringArrayProperty(
       PROP, "favoriteBlockedFilterComponents", new String[] {"tvbrowser.core.filters.filtercomponents.BeanShellFilterComponent","tvbrowser.core.filters.filtercomponents.ProgramMarkingPriorityFilterComponent","tvbrowser.core.filters.filtercomponents.ReminderFilterComponent","tvbrowser.core.filters.filtercomponents.PluginFilterComponent"});
   
+    /**
+     * @since 4.2.8
+     */
+    public static final StringMapProperty IMPORTANCE_FILTERS = new StringMapProperty(
+        PROP, "importanceFilters");
   
     private Other() {}
   }
@@ -2074,7 +2079,7 @@ public class Settings {
     
     public static final StringMapProperty HIGHLIGHTING_FILTERS = new StringMapProperty(
         PROP, "highlightingFilters");
-    
+
     private Markings() {}
   }
   

@@ -39,19 +39,23 @@ import java.util.ArrayList;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JDialog;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JToolBar;
+import javax.swing.SwingUtilities;
 import javax.swing.tree.TreePath;
 
 import com.jgoodies.forms.factories.Borders;
 import com.jgoodies.forms.layout.FormLayout;
 
 import devplugin.PluginsProgramFilter;
+import devplugin.Program;
 import devplugin.ProgramFilter;
 import tvbrowser.core.Settings;
 import tvbrowser.core.filters.FilterList;
+import tvbrowser.core.filters.FilterManagerImpl;
 import tvbrowser.core.filters.InfoBitFilter;
 import tvbrowser.core.filters.ParserException;
 import tvbrowser.core.filters.PluginFilter;
@@ -63,6 +67,7 @@ import tvbrowser.core.icontheme.IconLoader;
 import tvbrowser.extras.favoritesplugin.core.FavoriteFilter;
 import tvbrowser.ui.mainframe.MainFrame;
 import util.i18n.Localizer;
+import util.ui.DefaultProgramImportanceSelectionPanel;
 import util.ui.EnhancedPanelBuilder;
 import util.ui.TVBrowserIcons;
 import util.ui.UiUtilities;
@@ -281,8 +286,37 @@ public class SelectFilterDlg extends JDialog implements ActionListener, WindowCl
     if(node.containsFilter()) {
       final FilterHighlightingSelectionPanel highlighting = new FilterHighlightingSelectionPanel(node.getFilter());
       
-      if(UiUtilities.showConfirmDialogOnMouseScreen(highlighting, LOCALIZER.msg("hightlightingSelection", "Select highlighting for filter: {0}", node.getFilter().getName()), JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, true) == JOptionPane.OK_OPTION) {
+      byte importance = Program.IMPORTANCE_PROGRAM_DEFAULT;
+      boolean enabled = false;
+      
+      if(Settings.Other.IMPORTANCE_FILTERS.containsKey(node.getFilter().getName())) {
+        try {
+          importance = Byte.parseByte(Settings.Other.IMPORTANCE_FILTERS.getEntry(node.getFilter().getName()));
+          enabled = true;
+        }catch(NumberFormatException nfe) {
+          nfe.printStackTrace();
+        }
+      }
+      
+      final DefaultProgramImportanceSelectionPanel programImportancePanel = DefaultProgramImportanceSelectionPanel.createPanel(importance, true, false, false, enabled, true, false, false, EditFilterDlg.LOCALIZER.msg("programImportance", "Importance of filtered programs:"));
+      
+      if(UiUtilities.showConfirmDialogOnMouseScreen(new Object[] {highlighting,new JLabel(" "),programImportancePanel}, LOCALIZER.msg("hightlightingSelection", "Select highlighting for filter: {0}", node.getFilter().getName()), JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, true) == JOptionPane.OK_OPTION) {
         highlighting.save(node.getFilter());
+        
+        if(programImportancePanel.isEnabled() && programImportancePanel.getSelectedImportance() > Program.IMPORTANCE_PROGRAM_DEFAULT) {
+          Settings.Other.IMPORTANCE_FILTERS.putEntry(node.getFilter().getName(), programImportancePanel.getSelectedImportance());
+        }
+        else {
+          Settings.Other.IMPORTANCE_FILTERS.removeEntry(node.getFilter().getName());
+        }
+        
+        if(((programImportancePanel.isEnabled() != enabled) || (programImportancePanel.getSelectedImportance() != importance)) && FilterManagerImpl.getInstance().getCurrentFilter() != null && FilterManagerImpl.getInstance().getCurrentFilter().getName().equals(node.getFilter().getName())) {
+          SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+              FilterManagerImpl.getInstance().setCurrentFilter(FilterManagerImpl.getInstance().getCurrentFilter());              
+            }
+          });
+        }
       }
       
       mFilterTree.updateUI();

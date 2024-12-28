@@ -49,7 +49,7 @@ public class FilterHighlightingSelectionPanel extends JPanel {
       }catch(NumberFormatException nfe) {}
     }
     
-    mFilterHighlight = DefaultMarkingPrioritySelectionPanel.createPanel(mState, mPriorityInitial, EditFilterDlg.LOCALIZER.msg("highlight","Highlight all matching programs"), false, false, false, true, false);
+    mFilterHighlight = DefaultMarkingPrioritySelectionPanel.createPanel(mState, mPriorityInitial, EditFilterDlg.LOCALIZER.msg("highlight","Highlight all matching programs:"), false, false, false, false, false);
     
     setOpaque(false);
     

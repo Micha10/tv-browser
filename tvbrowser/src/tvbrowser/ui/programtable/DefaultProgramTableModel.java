@@ -76,7 +76,8 @@ public class DefaultProgramTableModel implements ProgramTableModel, ChangeListen
   private int mLastTimerMinutesAfterMidnight;
   private Timer mTimer;
   
-  private ProgramFilter mProgramFilter=null;
+  private ProgramFilter mProgramFilter;
+  private byte mProgramFilterImportance = Program.IMPORTANCE_PROGRAM_DEFAULT;
 
   private HashMap<Channel, DateRange> mDateRangeForChannel;
   
@@ -85,7 +86,7 @@ public class DefaultProgramTableModel implements ProgramTableModel, ChangeListen
   /**
    * the currently active channel filter
    */
-  private ChannelFilter mChannelFilter = null;
+  private ChannelFilter mChannelFilter;
 
   /**
    * Creates a new instance of DefaultProgramTableModel.
@@ -206,7 +207,19 @@ public class DefaultProgramTableModel implements ProgramTableModel, ChangeListen
   
   
   public void setProgramFilter(ProgramFilter filter) {
-    mProgramFilter=filter;
+    mProgramFilter = filter;
+    
+    if(mProgramFilter != null && Settings.Other.IMPORTANCE_FILTERS.containsKey(mProgramFilter.getName())) {
+      try {
+        mProgramFilterImportance = Byte.parseByte(Settings.Other.IMPORTANCE_FILTERS.getEntry(mProgramFilter.getName()));
+      }catch(NumberFormatException nfe) {
+        
+      }
+    }
+    else {
+      mProgramFilterImportance = Program.IMPORTANCE_PROGRAM_DEFAULT;
+    }
+    
     updateTableContent();
     fireTableDataChanged(null);
   }
@@ -318,19 +331,13 @@ public class DefaultProgramTableModel implements ProgramTableModel, ChangeListen
 	        if (compareDateTime(progDate, progTime, toDate, toMinutes) <= 0) {
             // program starts after or at given end time
             if (compareDateTime(progDate, progTime, fromDate, fromMinutes) >= 0)  {
-  		        if (filterAccepts(prog)) {
-                ProgramPanel panel = new ProgramPanel(prog);
-                mProgramColumn[col].add(panel);
-              }
+              addProgramToColumn(prog,col);
             }
   	        else {
               // add the last program _before_ the day start time which is still running afterwards
   	          if (mProgramColumn[col].isEmpty()) {
   	            if (compareDateTime(progDate, progTime + prog.getLength(), fromDate, fromMinutes) > 0) {
-                  if (filterAccepts(prog)) {
-                    ProgramPanel panel = new ProgramPanel(prog);
-                    mProgramColumn[col].add(panel);
-                  }
+  	              addProgramToColumn(prog,col);
                 }
   	          }
   	        }
@@ -339,10 +346,28 @@ public class DefaultProgramTableModel implements ProgramTableModel, ChangeListen
       }
     }
   }
+  
+  private void addProgramToColumn(Program prog, int col) {
+    boolean channelFilter = channelFilterAccepts(prog);
+    boolean programFilter = programfilterAccepts(prog);
+    
+    if (channelFilter && programFilter || (channelFilter && !programFilter && mProgramFilterImportance > Program.IMPORTANCE_PROGRAM_DEFAULT)) {
+      ProgramPanel panel = new ProgramPanel(prog);
+      
+      if(!programFilter) {
+        panel.setFilterImportance(mProgramFilterImportance);
+      }
+      
+      mProgramColumn[col].add(panel);
+    }
+  }
+  
+  private boolean channelFilterAccepts(Program program) {
+    return (mChannelFilter == null || mChannelFilter.accept(program));
+  }
 
-
-  private boolean filterAccepts(Program program) {
-    return (mChannelFilter == null || mChannelFilter.accept(program)) && (mProgramFilter==null || mProgramFilter.accept(program));
+  private boolean programfilterAccepts(Program program) {
+    return (mProgramFilter==null || mProgramFilter.accept(program));
   }
 
   public void setDate(Date date, ProgressMonitor monitor, Runnable callback)

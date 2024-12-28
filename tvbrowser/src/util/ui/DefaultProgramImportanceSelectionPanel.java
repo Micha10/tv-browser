@@ -23,12 +23,16 @@
  */
 package util.ui;
 
+import java.awt.event.ItemEvent;
+
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JEditorPane;
 import javax.swing.JPanel;
 import javax.swing.event.HyperlinkEvent;
 
 import com.jgoodies.forms.factories.Borders;
+import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.FormLayout;
 
 import devplugin.Program;
@@ -44,19 +48,29 @@ import util.i18n.Localizer;
  */
 public class DefaultProgramImportanceSelectionPanel extends JPanel {
   private static final Localizer LOCALIZER = Localizer.getLocalizerFor(DefaultProgramImportanceSelectionPanel.class);
-  private JComboBox<String> mProgramImportanceSelection;
+  private JComboBox<ImportanceValue> mProgramImportanceSelection;
   private JEditorPane mHelpLabel;
+  private JCheckBox mIsEnabled;
   
-  private DefaultProgramImportanceSelectionPanel(byte importance, boolean showTitle, boolean withDefaultDialogBorder) {
+  private DefaultProgramImportanceSelectionPanel(byte importance, boolean showTitle, boolean withDefaultDialogBorder, boolean showHelp, boolean enabled, boolean showEnabled, boolean growingGap, boolean withDefaultImportance, String label) {
+    EnhancedPanelBuilder pb = new EnhancedPanelBuilder(new FormLayout("5dlu,default,default"),this);
     
-    EnhancedPanelBuilder pb = new EnhancedPanelBuilder(new FormLayout("5dlu,default,5dlu,default,0dlu:grow"),this);
+    if(growingGap) {
+      pb.getLayout().insertColumn(3, ColumnSpec.decode("5dlu:grow"));
+      pb.getLayout().appendColumn(ColumnSpec.decode("0dlu"));
+    }
+    else {
+      pb.getLayout().insertColumn(3, ColumnSpec.decode("5dlu"));
+      pb.getLayout().appendColumn(ColumnSpec.decode("0dlu:grow"));
+    }
     
     if(withDefaultDialogBorder) {
       pb.border(Borders.DIALOG);
     }
     
-    mProgramImportanceSelection = new JComboBox<>(getProgramImportanceNames(true));
-    mProgramImportanceSelection.setSelectedIndex(getIndexForImportance(importance));
+    mIsEnabled = new JCheckBox(label, enabled || !showEnabled);
+    
+    mProgramImportanceSelection = getImportanceSelection(withDefaultImportance, importance);
     
     mHelpLabel = UiUtilities.createHtmlHelpTextArea(LOCALIZER.msg("help","The selected importance is used to determinate the transparency of a program. It's calculated over all plugins as mean value. Lower importance leads to higher transparency. This works only if the plugins are allowed to set the transparency at <a href=\"#link\">program panel settings</a>."), e -> {
       if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
@@ -69,10 +83,45 @@ public class DefaultProgramImportanceSelectionPanel extends JPanel {
       pb.addLineGap();
     }
     
-    pb.addLabelRow(false, LOCALIZER.msg("color","Program importance:"), 2);
+    if(showEnabled) {
+      pb.addRow(false, mIsEnabled, 2);
+    }
+    else {
+      pb.addLabelRow(false, label, 2);
+    }
+    
     pb.add(mProgramImportanceSelection, 4);
     pb.addRow("fill:0dlu:grow",false);
-    pb.addRowFull("10dlu,default",mHelpLabel, 2);
+    
+    if(showHelp) {
+      pb.addRowFull("10dlu,default",mHelpLabel, 2);
+    }
+    
+    mProgramImportanceSelection.setEnabled(mIsEnabled.isSelected());
+    mHelpLabel.setEnabled(mIsEnabled.isSelected());
+    
+    mIsEnabled.addItemListener(e -> {
+      mProgramImportanceSelection.setEnabled(e.getStateChange() == ItemEvent.SELECTED);
+      mHelpLabel.setEnabled(e.getStateChange() == ItemEvent.SELECTED);
+    });
+  }
+  
+  /**
+   * Creates an instance of this class.
+   * 
+   * @param importance The current selected importance.
+   * @param showTitle If the title should be shown.
+   * @param withDefaultDialogBorder If the panel should show the default dialog border of FormLayouts PanelBuilder.
+   * @param showHelp If the help panel should be shown.
+   * @param showEnabled If the enabled selection should be shown
+   * @param growingGap If true, gap between label and selection grows
+   * @param withDefaultImportance Show default importance in selection
+   * @param label Text of label for importance selection 
+   * @return The created instance of this class.
+   * @since 4.2.8
+   */
+  public static DefaultProgramImportanceSelectionPanel createPanel(byte importance, boolean showTitle, boolean withDefaultDialogBorder, boolean showHelp, boolean enabled, boolean showEnabled, boolean growingGap, boolean withDefaultImportance, String label) {
+    return new DefaultProgramImportanceSelectionPanel(importance, showTitle, withDefaultDialogBorder, showHelp, enabled, showEnabled, growingGap, withDefaultImportance, label);
   }
   
   /**
@@ -84,7 +133,7 @@ public class DefaultProgramImportanceSelectionPanel extends JPanel {
    * @return The created instance of this class.
    */
   public static DefaultProgramImportanceSelectionPanel createPanel(byte importance, boolean showTitle, boolean withDefaultDialogBorder) {
-    return new DefaultProgramImportanceSelectionPanel(importance, showTitle, withDefaultDialogBorder);
+    return createPanel(importance, showTitle, withDefaultDialogBorder, true, true, false, false, true, LOCALIZER.msg("color","Program importance:"));
   }
   
   /**
@@ -93,27 +142,17 @@ public class DefaultProgramImportanceSelectionPanel extends JPanel {
    * @return The selected marking priority.
    */
   public byte getSelectedImportance() {
-    switch(mProgramImportanceSelection.getSelectedIndex()) {
-      case 1: return Program.IMPORTANCE_PROGRAM_MIN;
-      case 2: return Program.IMPORTANCE_PROGRAM_MEDIUM_LOWER;
-      case 3: return Program.IMPORTANCE_PROGRAM_MEDIUM;
-      case 4: return Program.IMPORTANCE_PROGRAM_MEDIUM_HIGHER;
-      case 5: return Program.IMPORTANCE_PROGRAM_MAX;
-      
-      default: return Program.IMPORTANCE_PROGRAM_DEFAULT;
-    }
+    return mProgramImportanceSelection.getItemAt(mProgramImportanceSelection.getSelectedIndex()).getImportance();
   }
   
-  private int getIndexForImportance(byte importance) {
-    switch(importance) {
-    case Program.IMPORTANCE_PROGRAM_MIN: return 1;
-    case Program.IMPORTANCE_PROGRAM_MEDIUM_LOWER: return 2;
-    case Program.IMPORTANCE_PROGRAM_MEDIUM: return 3;
-    case Program.IMPORTANCE_PROGRAM_MEDIUM_HIGHER: return 4;
-    case Program.IMPORTANCE_PROGRAM_MAX: return 5;
-    
-    default: return 0;
-  }
+  /**
+   * Gets if the program importance is enabled.
+   * 
+   * @return <code>true</code> if the program importance is enabled, <code>false</code> if not.
+   * @since 4.2.8
+   */
+  public boolean isEnabled() {
+    return mIsEnabled.isSelected();
   }
   
   /**
@@ -137,6 +176,47 @@ public class DefaultProgramImportanceSelectionPanel extends JPanel {
     }
     else {
       return new String[] {LOCALIZER.msg("color.min","Mininum importance"),LOCALIZER.msg("color.lowerMedium","Lower medium importance"),LOCALIZER.msg("color.medium","Medium importance"),LOCALIZER.msg("color.higherMedium","Higher medium importance"),LOCALIZER.msg("color.max","Maximum importance")};
+    }
+  }
+  
+  /**
+   * @since 4.2.8
+   * @param withDefault If the default importance should be selectable
+   * @param selection Value to select.
+   * @return A selection for the program importance value
+   */
+  public static JComboBox<ImportanceValue> getImportanceSelection(boolean withDefault, byte selection) {
+    final JComboBox<ImportanceValue> importance = new JComboBox<>();
+    String[] names = getProgramImportanceNames(true);
+    byte[] values = {Program.IMPORTANCE_PROGRAM_DEFAULT, Program.IMPORTANCE_PROGRAM_MIN, Program.IMPORTANCE_PROGRAM_MEDIUM_LOWER, Program.IMPORTANCE_PROGRAM_MEDIUM, Program.IMPORTANCE_PROGRAM_MEDIUM_HIGHER, Program.IMPORTANCE_PROGRAM_MAX};
+    
+    for(int i = withDefault ? 0 : 1; i < names.length; i++) {
+      importance.addItem(new ImportanceValue(values[i], names[i]));
+      
+      if(values[i] == selection) {
+        importance.setSelectedIndex(importance.getItemCount()-1);
+      }
+    }
+    
+    return importance;
+  }
+  
+  public static final class ImportanceValue {
+    private byte mImportance;
+    private String mName;
+    
+    private ImportanceValue(byte importance, String name) {
+      mImportance = importance;
+      mName = name;
+    }
+    
+    @Override
+    public String toString() {
+      return mName;
+    }
+    
+    public byte getImportance() {
+      return mImportance;
     }
   }
 }

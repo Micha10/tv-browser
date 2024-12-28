@@ -157,13 +157,15 @@ public final class DefaultMarkingPrioritySelectionPanel extends JPanel {
    */
   private DefaultMarkingPrioritySelectionPanel(final State[] states, final int[] priority, final String[] label, final boolean showTitle, final boolean showHelpLabel, final boolean withDefaultDialogBorder, final boolean growingGap, final boolean showNoMarkingPriority) {
     try {
-    EnhancedPanelBuilder pb = new EnhancedPanelBuilder(new FormLayout("5dlu,default,default,0dlu:grow"),this);
+    EnhancedPanelBuilder pb = new EnhancedPanelBuilder(new FormLayout("5dlu,default,default"),this);
     
     if(growingGap) {
       pb.getLayout().insertColumn(3, ColumnSpec.decode("5dlu:grow"));
+      pb.getLayout().appendColumn(ColumnSpec.decode("0dlu"));
     }
     else {
       pb.getLayout().insertColumn(3, ColumnSpec.decode("5dlu"));
+      pb.getLayout().appendColumn(ColumnSpec.decode("0dlu:grow"));
     }
     
     //how many selectors do we have to draw?
