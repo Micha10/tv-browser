@@ -616,9 +616,11 @@ public class SoftwareUpdateDlg extends JDialog implements ActionListener, ListSe
             for (SoftwareUpdateItem item : mSoftwareUpdateItemList.getSelectionList()) {
               try {
                 p.setMessage(item.getName());
-                item.download(mDownloadUrl);
-                p.incrementValue();
-                successfullyDownloadedItems++;
+                
+                if(item.download(mDownloadUrl)) {
+                  p.incrementValue();
+                  successfullyDownloadedItems++;
+                }
               } catch (TvBrowserException e) {
                 util.exc.ErrorHandler.handle(e);
               }
