@@ -44,6 +44,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JRootPane;
+import javax.swing.JSpinner;
+import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingUtilities;
 
 import com.jgoodies.forms.factories.CC;
@@ -80,11 +82,8 @@ import util.ui.WindowClosingIf;
 public class ProgramListPlugin extends Plugin {
   static final Localizer mLocalizer = Localizer.getLocalizerFor(ProgramListPlugin.class);
 
-  private static Version mVersion = new Version(3, 42, 1, true);
+  private static Version mVersion = new Version(3, 43, 0, true);
   
-  private static final int MAX_DIALOG_LIST_SIZE = 5000;
-  static final int MAX_PANEL_LIST_SIZE = 2500;
-
   private JDialog mDialog;
   private ProgramListSettings mSettings;
   
@@ -194,7 +193,7 @@ public class ProgramListPlugin extends Plugin {
       public void run() {
         if(getSettings().getBooleanValue(ProgramListSettings.KEY_PROVIDE_TAB)) {
           if(mCenterPanelEntry == null) {
-            mCenterPanelEntry = new ProgramListPanel(null, false, MAX_PANEL_LIST_SIZE, true, null);
+            mCenterPanelEntry = new ProgramListPanel(null, false, true, null);
             PersonaCompat.getInstance().registerPersonaListener(mCenterPanelEntry);
             FilterCompat.getInstance().registerFilterChangeListener(mCenterPanelEntry);
             
@@ -347,7 +346,7 @@ public class ProgramListPlugin extends Plugin {
           }
         });
 
-        mDialogPanel = new ProgramListPanel(selectedChannel,true,MAX_DIALOG_LIST_SIZE,true,null);
+        mDialogPanel = new ProgramListPanel(selectedChannel,true,true,null);
         
         mDialog.getContentPane().add(mDialogPanel, BorderLayout.CENTER);
 
@@ -430,10 +429,23 @@ public class ProgramListPlugin extends Plugin {
       private JCheckBox mShowAfterDataUpdate;
       private JComboBox mShowAfterDataUpdateFilter;
       
+      private JSpinner mMaxDays;
+      private JSpinner mMaxNumber;
+      
       @Override
       public JPanel createSettingsPanel() {
         JPanel panel = new JPanel(new FormLayout("5dlu,10dlu,10dlu,min:grow",
-            "5dlu,default,default,5dlu,default,5dlu,default,5dlu,default,5dlu,default,default,default,default,5dlu,default,5dlu,default,default"));
+            "5dlu,default,default,default,5dlu,default,5dlu,default,5dlu,default,5dlu,default,default,default,default,5dlu,default,5dlu,default,default"));
+        
+        mMaxDays = new JSpinner(new SpinnerNumberModel(mSettings.getIntValue(ProgramListSettings.KEY_MAX_DAYS), 14, 60, 1));
+        mMaxNumber = new JSpinner(new SpinnerNumberModel(mSettings.getIntValue(ProgramListSettings.KEY_MAX_NUMBER), 1000, 10000, 100));
+        
+        JPanel max = new JPanel(new FormLayout("default,5dlu,default","default,default,5dlu"));
+        
+        max.add(new JLabel(mLocalizer.msg("maxDays", "Maximum number of listed days:")), CC.xy(1, 1));
+        max.add(mMaxDays, CC.xy(3, 1));
+        max.add(new JLabel(mLocalizer.msg("maxNumber", "Maximum number of listed programs:")), CC.xy(1, 2));
+        max.add(mMaxNumber, CC.xy(3, 2));
         
         mShowDateSeparator = new JCheckBox(mLocalizer.msg("showDateSeparator", "Show date separator in list"), getSettings().getBooleanValue(ProgramListSettings.KEY_SHOW_DATE_SEPARATOR));
         mShowAfterDataUpdate = new JCheckBox(mLocalizer.msg("showAfterDataUpdateFilter", "Show program list after data update"), getSettings().getBooleanValue(ProgramListSettings.KEY_SHOW_AFTER_DATA_UPDATE));
@@ -485,6 +497,8 @@ public class ProgramListPlugin extends Plugin {
         bg.add(mTabTimeScrollDay);
         
         int y = 2;
+        
+        panel.add(max, CC.xyw(2, y++, 3));
         
         panel.add(mShowDateSeparator, CC.xyw(2, y++, 3));
         panel.add(mShowAfterDataUpdate, CC.xyw(2, y++, 3));
@@ -541,6 +555,8 @@ public class ProgramListPlugin extends Plugin {
       
       @Override
       public void saveSettings() {
+        getSettings().setIntValue(ProgramListSettings.KEY_MAX_DAYS, (Integer)mMaxDays.getValue());
+        getSettings().setIntValue(ProgramListSettings.KEY_MAX_NUMBER, (Integer)mMaxNumber.getValue());
         getSettings().setBooleanValue(ProgramListSettings.KEY_PROVIDE_TAB, mProvideTab.isSelected());
 
         getSettings().setBooleanValue(ProgramListSettings.KEY_SHOW_AFTER_DATA_UPDATE, mShowAfterDataUpdate.isSelected());
@@ -593,7 +609,7 @@ public class ProgramListPlugin extends Plugin {
         }
       }
       
-      final ProgramListPanel p = new ProgramListPanel(null, false, MAX_PANEL_LIST_SIZE, false, selected);
+      final ProgramListPanel p = new ProgramListPanel(null, false, false, selected);
       
       if(!p.isEmpty()) {
         mHandleTimeEvent = false;

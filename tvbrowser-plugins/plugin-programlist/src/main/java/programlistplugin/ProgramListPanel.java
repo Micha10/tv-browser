@@ -99,7 +99,6 @@ public class ProgramListPanel extends TabListenerPanel implements PersonaCompatL
   /**
    * maximum number of programs to be shown in the list. If the filter has more results, only the first results are shown.
    */
-  private int mMaxListSize = 5000;
   private int mUpdateCounter = 5;
   
   private JComboBox mChannelBox;
@@ -142,9 +141,8 @@ public class ProgramListPanel extends TabListenerPanel implements PersonaCompatL
     }
   }
   
-  public ProgramListPanel(final Channel selectedChannel, boolean showClose, int maxListSize, boolean save, ProgramFilter selected) {
+  public ProgramListPanel(final Channel selectedChannel, boolean showClose, boolean save, ProgramFilter selected) {
     mKeepListing = new AtomicBoolean(false);
-    mMaxListSize = maxListSize;
     mSave = save;
     mFilter = selected;
     createGui(selectedChannel,showClose,selected);
@@ -473,9 +471,7 @@ public class ProgramListPanel extends TabListenerPanel implements PersonaCompatL
         int topRow = mList.getFirstVisibleIndex();
         mProgramPanelSettings.setShowOnlyDateAndTitle(e.getStateChange() == ItemEvent.DESELECTED);
         
-        if(mMaxListSize != ProgramListPlugin.MAX_PANEL_LIST_SIZE) {
-          ProgramListPlugin.getInstance().updateDescriptionSelection(e.getStateChange() == ItemEvent.SELECTED);
-        }
+        ProgramListPlugin.getInstance().updateDescriptionSelection(e.getStateChange() == ItemEvent.SELECTED);
         
         mSettings.setBooleanValue(ProgramListSettings.KEY_SHOW_DESCRIPTION,e.getStateChange() == ItemEvent.SELECTED);
         mList.updateUI();
@@ -739,7 +735,7 @@ public class ProgramListPanel extends TabListenerPanel implements PersonaCompatL
         int startTime = Plugin.getPluginManager().getTvBrowserSettings().getProgramTableStartOfDay();
         int endTime = Plugin.getPluginManager().getTvBrowserSettings().getProgramTableEndOfDay();
 
-        int maxDays = dateSelected ? 2 : 28;
+        int maxDays = dateSelected ? 2 : ProgramListPlugin.getInstance().getSettings().getIntValue(ProgramListSettings.KEY_MAX_DAYS);
         
         //boolean showExpired = date.compareTo(Date.getCurrentDate()) != 0;
         
@@ -791,7 +787,7 @@ public class ProgramListPanel extends TabListenerPanel implements PersonaCompatL
             break;
           }
           
-          if (programs.size() < mMaxListSize) {
+          if (programs.size() < ProgramListPlugin.getInstance().getSettings().getIntValue(ProgramListSettings.KEY_MAX_NUMBER)) {
             programs.add(program);
             
             if(mCurrentSelection != null && mCurrentSelection.equals(program)) {

@@ -39,7 +39,11 @@ public class ProgramListSettings extends PropertyBasedSettings {
   public static final String KEY_SHOW_AFTER_DATA_UPDATE = "showAfterDataUpdate";
   public static final String KEY_SHOW_AFTER_DATA_UPDATE_FILTER = "showAfterDataUpdateFilter";
   
+  public static final String KEY_MAX_DAYS = "maxDays";
+  public static final String KEY_MAX_NUMBER = "maxNumber";
+  
   private static final HashMap<String, Boolean> mDefaultMap;
+  private static final HashMap<String, Integer> mDefaultMapInt;
   
   static {
     mDefaultMap = new HashMap<String, Boolean>();
@@ -52,6 +56,11 @@ public class ProgramListSettings extends PropertyBasedSettings {
     mDefaultMap.put(KEY_TAB_REACT_ON_TIME, true);
     mDefaultMap.put(KEY_TAB_REACT_ON_CHANNEL, true);
     mDefaultMap.put(KEY_TAB_REACT_ON_DATE, true);
+    
+    mDefaultMapInt = new HashMap<String, Integer>();
+    
+    mDefaultMapInt.put(KEY_MAX_DAYS, 28);
+    mDefaultMapInt.put(KEY_MAX_NUMBER, 2500);
   }
 
   public ProgramListSettings(final Properties properties) {
@@ -82,6 +91,14 @@ public class ProgramListSettings extends PropertyBasedSettings {
     }
     
     return result;
+  }
+  
+  public void setIntValue(final String key, final int value) {
+    set(key, value);
+  }
+  
+  public int getIntValue(final String key) {
+    return get(key, mDefaultMapInt.get(key));
   }
   
   public void setAfterDataUpdateFilterName(final String name) {
