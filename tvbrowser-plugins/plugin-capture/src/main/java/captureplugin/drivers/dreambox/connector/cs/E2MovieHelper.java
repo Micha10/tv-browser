@@ -213,7 +213,7 @@ public class E2MovieHelper {
               // correct filesize
               try {
                 FtpHelper ftpHelper = new FtpHelper();
-                ftpHelper.cmd("OPEN", mConnector.getConfig().getDreamboxAddress());
+                ftpHelper.cmd("OPEN", mConnector.getConfig().getDreamboxAddressWithoutProtocol());
                 ftpHelper.cmd("LOGIN", mConnector.getConfig().getUserName(), mConnector.getConfig().getPassword());
                 mapFileSize = ftpHelper.getFileSize(directory);
                 ftpHelper.cmd("CLOSE");

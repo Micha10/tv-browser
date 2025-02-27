@@ -118,7 +118,7 @@ public class DreamboxOptionPane {
         String local = System.getProperty("user.home") + File.separatorChar + "timers_" + config.getDreamboxAddress()
             + ".xml";
         FtpHelper ftpHelper = new FtpHelper();
-        ftpHelper.cmd("OPEN", config.getDreamboxAddress());
+        ftpHelper.cmd("OPEN", config.getDreamboxAddressWithoutProtocol());
         ftpHelper.cmd("LOGIN", config.getUserName(), config.getPassword());
         String s = ftpHelper.cmd(false, "GET", remote);
         if (s == null) {

@@ -397,7 +397,32 @@ public final class DreamboxConfig implements ConfigIf, Cloneable {
      * @return IP-Address of the dreambox
      */
     public String getDreamboxAddress() {
-        return mDreamboxAddress;
+      return mDreamboxAddress;
+    }
+    
+    /**
+     * @return The protocol of the dreambox connection 
+     */
+    public String getDreamboxProtocol() {
+      int index = mDreamboxAddress.indexOf("://");
+      
+      return index > 0 ? mDreamboxAddress.substring(0, index+3) : "http://";
+    }
+    
+    /**
+     * @return The IP-Address of the dreambox without the protocol
+     */
+    public String getDreamboxAddressWithoutProtocol() {
+      int index = mDreamboxAddress.indexOf("://");
+      
+      return index > 0 ? mDreamboxAddress.substring(index+3) : mDreamboxAddress;
+    }
+    
+    /**
+     * @return The IP-Address of the dreambox with the protocol
+     */
+    public String getDreamboxAddressWithProtocol() {
+      return getDreamboxProtocol() + getDreamboxAddressWithoutProtocol();
     }
 
     /**

@@ -270,7 +270,7 @@ public class DreamboxMovieListPanel extends JPanelRefreshAbstract implements
           COL_FILENAME));
       filename = filename.substring(mRootLocation.length());
       try {
-        String url = "http://" + config.getDreamboxAddress() + "/file/?file="
+        String url = config.getDreamboxAddressWithProtocol() + "/file/?file="
             + URLEncoder.encode(filename, "UTF-8");
         ExecutionHandler exec = new ExecutionHandler(new String[] {config.getMediaplayer(),url});
         exec.execute();
@@ -295,7 +295,7 @@ public class DreamboxMovieListPanel extends JPanelRefreshAbstract implements
       filename = filename.substring(mRootLocation.length());
       try {
        // mConnector.getDataForURL(url, errorMsg)
-        String url = "http://" + config.getDreamboxAddress() + "/file/?file="
+        String url = config.getDreamboxAddressWithProtocol() + "/file/?file="
             + URLEncoder.encode(filename, "UTF-8") + "&root="
             + URLEncoder.encode(mRootLocation, "UTF-8");
         mLog.info(url);
@@ -590,7 +590,7 @@ public class DreamboxMovieListPanel extends JPanelRefreshAbstract implements
       // FTP
       FtpHelper ftpHelper = new FtpHelper();
       DreamboxConfig config = mConnector.getConfig();
-      ftpHelper.cmd("OPEN", config.getDreamboxAddress());
+      ftpHelper.cmd("OPEN", config.getDreamboxAddressWithoutProtocol());
       ftpHelper.cmd("LOGIN", config.getUserName(), config.getPassword());
       String s = ftpHelper.cmd("GET", filename);
       String[] zeilen;
@@ -623,7 +623,7 @@ public class DreamboxMovieListPanel extends JPanelRefreshAbstract implements
       // FTP
       FtpHelper ftpHelper = new FtpHelper();
       DreamboxConfig config = mConnector.getConfig();
-      ftpHelper.cmd("OPEN", config.getDreamboxAddress());
+      ftpHelper.cmd("OPEN", config.getDreamboxAddressWithoutProtocol());
       ftpHelper.cmd("LOGIN", config.getUserName(), config.getPassword());
       String s = ftpHelper.cmd("GET", filename);
       String[] zeilen;

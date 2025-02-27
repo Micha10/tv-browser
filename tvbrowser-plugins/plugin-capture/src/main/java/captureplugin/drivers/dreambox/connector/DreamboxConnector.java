@@ -173,7 +173,7 @@ public class DreamboxConnector {
             exc.set(new MalformedURLException("Dreambox address malformed: " + mConfig.getDreamboxAddress()));
           }
           else {
-            URL url = new URL("http://" + mConfig.getDreamboxAddress() + localUrl);
+            URL url = new URL(mConfig.getDreamboxAddressWithProtocol() + localUrl);
             URLConnection connection = url.openConnection();
             
             // set user and password
@@ -755,7 +755,7 @@ public class DreamboxConnector {
       try {
     	// set user and password
     	String userpassword = mConfig.getUserName() + ":" + mConfig.getPassword();
-        final URL url = new URL("http://" + userpassword + "@" 
+        final URL url = new URL(mConfig.getDreamboxProtocol() + userpassword + "@" 
         	+ mConfig.getDreamboxAddress()
             + "/web/stream.m3u?ref="
             + URLEncoder.encode(channel.getReference(), "UTF8"));
