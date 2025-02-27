@@ -89,7 +89,7 @@ public class DeviceCreatorDialog extends JDialog implements WindowClosingIf {
   public DeviceCreatorDialog(Window parent, int actionId) {
     super(parent);
     setModal(true);
-    mActionId = actionId;
+    mActionId = actionId;System.out.println(actionId);
     createGUI();
     setTitle(mLocalizer.msg("Title", "Create Device"));
   }

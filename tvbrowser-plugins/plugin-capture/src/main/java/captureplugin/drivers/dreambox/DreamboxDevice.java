@@ -351,11 +351,11 @@ public final class DreamboxDevice implements DeviceIf {
      */
     public Command[] getAdditionalCommands() {
         return new Command[] { 
-                new Command(mActionIdLast, LOCALIZER.msg("switch", "Switch channel")),
-                new Command(mActionIdLast+1, LOCALIZER.msg("sendMessage", "Send as Message")),
-                new Command(mActionIdLast+2, LOCALIZER.msg("streamChannel", "Open channel with mediaplayer")),
+                new Command(mActionIdLast+5, LOCALIZER.msg("switch", "Switch channel")),
+                new Command(mActionIdLast+6, LOCALIZER.msg("sendMessage", "Send as Message")),
+                new Command(mActionIdLast+7, LOCALIZER.msg("streamChannel", "Open channel with mediaplayer")),
                 // fishhead ------------------------
-                new Command(mActionIdLast+3, LOCALIZER.msg("timerlist", "Show Timerlist")) };
+                new Command(mActionIdLast+8, LOCALIZER.msg("timerlist", "Show Timerlist")) };
                 // fishhead ------------------------
     }
 
