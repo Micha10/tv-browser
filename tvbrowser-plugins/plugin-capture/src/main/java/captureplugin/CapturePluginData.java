@@ -30,16 +30,17 @@ import java.io.ObjectOutputStream;
 import java.util.Collection;
 import java.util.Vector;
 
-import util.exc.ErrorHandler;
-import util.ui.Localizer;
 import captureplugin.drivers.DeviceIf;
 import devplugin.Program;
+import util.exc.ErrorHandler;
+import util.ui.Localizer;
 
 
 /**
  * This Class contains all needed Data
  */
 public final class CapturePluginData implements Cloneable {
+    public static final int ACTION_ID_GAP = 10000;
     public static final int ACTION_ID_UNKNOWN = -1;
     /** Translator */
     private static final Localizer LOCALIZER = Localizer.getLocalizerFor(CapturePluginData.class);
@@ -53,7 +54,7 @@ public final class CapturePluginData implements Cloneable {
     private int mWidthProgramTableColum1 = 200;
     private int mWidthProgramTableColum2 = 400;
     
-    private int mActionIdLast = 10000;
+    private int mActionIdLast = 0;
     
     private boolean mShowDirectlyInContextMenu = false;
     
@@ -161,7 +162,7 @@ public final class CapturePluginData implements Cloneable {
         mDevices = new Vector<DeviceIf>();
         
         DeviceFileHandling reader = new DeviceFileHandling();
-        
+                
         for (int i = 0; i < num; i++) {
             String classname = (String) in.readObject();
             String devname = (String)in.readObject();
@@ -178,8 +179,8 @@ public final class CapturePluginData implements Cloneable {
                 
                 if (dev != null) {
                     mDevices.add(dev);
-                    getAndIncrementActionIdLast();
-                    mActionIdLast = ((Math.max(mActionIdLast, actionId) / 10000) * 10000) + 2;
+                    incrementAndGetActionIdLast();
+                    mActionIdLast = ((Math.max(mActionIdLast, actionId) / ACTION_ID_GAP) * ACTION_ID_GAP) + 2;
                 }
             } catch (Throwable e) {
                 ErrorHandler.handle(LOCALIZER.msg("ProblemDevice", "Problems while loading Device {0}.", devname),e);
@@ -308,10 +309,10 @@ public final class CapturePluginData implements Cloneable {
       mShowRemovedProgramsDialog = showRemovedProgramsDialog;
     }
     
-    public int getAndIncrementActionIdLast() {
-      int actionIdLast = (mActionIdLast/10000) * 10000;
-      mActionIdLast += 10002;
-      return actionIdLast;
+    public int incrementAndGetActionIdLast() {
+      mActionIdLast = (mActionIdLast/ACTION_ID_GAP) * ACTION_ID_GAP + 2 + ACTION_ID_GAP;
+      
+      return mActionIdLast;
     }
     
     public boolean showDirectlyInContextMenu() {

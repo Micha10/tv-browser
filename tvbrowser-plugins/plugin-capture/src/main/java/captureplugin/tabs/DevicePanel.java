@@ -48,14 +48,14 @@ import javax.swing.SwingUtilities;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import util.exc.ErrorHandler;
-import util.ui.ExtensionFileFilter;
-import util.ui.Localizer;
-import util.ui.UiUtilities;
 import captureplugin.CapturePluginData;
 import captureplugin.drivers.DeviceCreatorDialog;
 import captureplugin.drivers.DeviceIf;
 import captureplugin.utils.DeviceImportAndExport;
+import util.exc.ErrorHandler;
+import util.ui.ExtensionFileFilter;
+import util.ui.Localizer;
+import util.ui.UiUtilities;
 
 
 /**
@@ -218,7 +218,7 @@ public class DevicePanel extends JPanel {
      */
     private void addDevice() {
         Window parent = UiUtilities.getLastModalChildOf(mOwner);
-        DeviceCreatorDialog dialog = new DeviceCreatorDialog(parent, mData.getAndIncrementActionIdLast());
+        DeviceCreatorDialog dialog = new DeviceCreatorDialog(parent, mData.incrementAndGetActionIdLast());
         UiUtilities.centerAndShow(dialog);
         
         DeviceIf device = dialog.createDevice();

@@ -86,7 +86,7 @@ import util.ui.UiUtilities;
  *         adopted by fishhead
  */
 public class CapturePlugin extends devplugin.Plugin {
-  private static final Version mVersion = new Version(3,23,7,false);
+  private static final Version mVersion = new Version(3,23,7,true);
   
     /**
      * Translator
@@ -306,11 +306,11 @@ public class CapturePlugin extends devplugin.Plugin {
                 final Program test = dev.getProgramForProgramInList(program);
 
                 if (test != null) {
-                    commandList.add(CapturePlugin.createActionMenu((dev.getActionIdLast()/10000) * 10000, createRemoveAction(dev, parent, test, exampleProgram || (mConfig.showDirectlyInContextMenu() && devices.length == 1), false)));
-                    commandList.add(CapturePlugin.createActionMenu((dev.getActionIdLast()/10000) * 10000 + 1, createRemoveAction(dev, parent, test, exampleProgram || (mConfig.showDirectlyInContextMenu() && devices.length == 1), true)));
+                    commandList.add(CapturePlugin.createActionMenu((dev.getActionIdLast()/CapturePluginData.ACTION_ID_GAP) * CapturePluginData.ACTION_ID_GAP, createRemoveAction(dev, parent, test, exampleProgram || (mConfig.showDirectlyInContextMenu() && devices.length == 1), false)));
+                    commandList.add(CapturePlugin.createActionMenu((dev.getActionIdLast()/CapturePluginData.ACTION_ID_GAP) * CapturePluginData.ACTION_ID_GAP + 1, createRemoveAction(dev, parent, test, exampleProgram || (mConfig.showDirectlyInContextMenu() && devices.length == 1), true)));
                 } else {
-                    commandList.add(CapturePlugin.createActionMenu((dev.getActionIdLast()/10000) * 10000, createAddAction(dev, parent, program, exampleProgram || (mConfig.showDirectlyInContextMenu() && devices.length == 1), false)));
-                    commandList.add(CapturePlugin.createActionMenu((dev.getActionIdLast()/10000) * 10000 + 1, createAddAction(dev, parent, program, exampleProgram || (mConfig.showDirectlyInContextMenu() && devices.length == 1), true)));
+                    commandList.add(CapturePlugin.createActionMenu((dev.getActionIdLast()/CapturePluginData.ACTION_ID_GAP) * CapturePluginData.ACTION_ID_GAP, createAddAction(dev, parent, program, exampleProgram || (mConfig.showDirectlyInContextMenu() && devices.length == 1), false)));
+                    commandList.add(CapturePlugin.createActionMenu((dev.getActionIdLast()/CapturePluginData.ACTION_ID_GAP) * CapturePluginData.ACTION_ID_GAP + 1, createAddAction(dev, parent, program, exampleProgram || (mConfig.showDirectlyInContextMenu() && devices.length == 1), true)));
                 }
             }
             

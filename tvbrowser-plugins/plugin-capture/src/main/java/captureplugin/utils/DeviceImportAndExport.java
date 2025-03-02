@@ -106,7 +106,7 @@ public class DeviceImportAndExport {
       String classname = (String) in.readObject();
       String devname = (String)in.readObject();
       
-      DeviceIf dev = DriverFactory.getInstance().createDevice(classname, devname, data.getAndIncrementActionIdLast());
+      DeviceIf dev = DriverFactory.getInstance().createDevice(classname, devname, data.incrementAndGetActionIdLast());
       
       if (dev == null) {
           mError = mLocalizer.msg("ProblemsCreating","Problems while creating the Device");

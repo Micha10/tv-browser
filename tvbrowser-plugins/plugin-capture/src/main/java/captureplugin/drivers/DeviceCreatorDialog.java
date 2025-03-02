@@ -51,13 +51,12 @@ import javax.swing.event.DocumentListener;
 
 import org.apache.commons.lang3.StringUtils;
 
-import util.ui.Localizer;
-import util.ui.UiUtilities;
-import util.ui.WindowClosingIf;
-
 import com.jgoodies.forms.builder.ButtonBarBuilder;
 
 import captureplugin.CapturePluginData;
+import util.ui.Localizer;
+import util.ui.UiUtilities;
+import util.ui.WindowClosingIf;
 
 /**
  * A Dialog for creating new Devices
@@ -88,8 +87,8 @@ public class DeviceCreatorDialog extends JDialog implements WindowClosingIf {
    */
   public DeviceCreatorDialog(Window parent, int actionId) {
     super(parent);
-    setModal(true);
-    mActionId = actionId;System.out.println(actionId);
+    setModal(true);System.out.println(actionId);
+    mActionId = actionId;
     createGUI();
     setTitle(mLocalizer.msg("Title", "Create Device"));
   }

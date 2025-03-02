@@ -549,7 +549,7 @@ public final class DeviceConfig implements Cloneable {
         for (int i = 0; i < mParamEntries.size(); i++) {
             (mParamEntries.get(i)).writeData(stream);
         }
-
+        
         stream.writeInt(mMaxTimeout);
 
         stream.writeInt(mVariables.size());
@@ -616,7 +616,7 @@ public final class DeviceConfig implements Cloneable {
         int size = stream.readInt();
 
         mParamEntries = new ArrayList<ParamEntry>();
-
+        
         for (int i = 0; i < size; i++) {
             ParamEntry entry = new ParamEntry();
             entry.readData(stream);
@@ -630,7 +630,7 @@ public final class DeviceConfig implements Cloneable {
             
             mParamEntries.add(entry);
         }
-
+        
         mMaxTimeout = stream.readInt();
 
         mVariables = new ArrayList<Variable>();
