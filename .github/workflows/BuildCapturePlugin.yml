@@ -22,4 +22,4 @@ jobs:
           cache: maven
             
       - name: Build capture plugin only
-        run: mvn -f tvbrowser-plugins/pom.xml -P expensive-modules-to-build -pl plugin-capture -am package
+        run: mvn -s .github/maven-settings.xml -f tvbrowser-plugins/pom.xml -P expensive-modules-to-build -pl plugin-capture -am package
