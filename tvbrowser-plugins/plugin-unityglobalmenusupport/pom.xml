@@ -11,7 +11,7 @@
   <developers>
     <developer>
       <id>nildog</id>
-      <name>René Mach</name>
+      <name>RenÃ© Mach</name>
     </developer>
   </developers>
   <licenses>
@@ -26,8 +26,8 @@
       <plugin>
         <artifactId>maven-compiler-plugin</artifactId>
         <configuration>
-          <source>1.6</source>
-          <target>1.6</target>
+          <source>1.8</source>
+          <target>1.8</target>
           <encoding>UTF-8</encoding>
         </configuration>
       </plugin>
@@ -65,3 +65,4 @@
   	</dependency>
   </dependencies>
 </project>
+

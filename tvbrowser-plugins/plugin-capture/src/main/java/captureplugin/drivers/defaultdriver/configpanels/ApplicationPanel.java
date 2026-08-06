@@ -24,24 +24,25 @@
  */
 package captureplugin.drivers.defaultdriver.configpanels;
 
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 
+import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 
 import util.ui.Localizer;
 import captureplugin.drivers.defaultdriver.DeviceConfig;
-
-import com.jgoodies.forms.builder.PanelBuilder;
-import com.jgoodies.forms.layout.CellConstraints;
-import com.jgoodies.forms.layout.FormLayout;
 
 
 /**
@@ -74,16 +75,27 @@ public class ApplicationPanel extends JPanel {
      * creates a JPanel for getting the programpath
      */
     private void createPanel() {
-      CellConstraints cc = new CellConstraints();
-      PanelBuilder pb = new PanelBuilder(new FormLayout("5dlu,pref,3dlu,pref:grow,3dlu,pref,2dlu",
-          "pref,5dlu,pref,3dlu,pref"),this);
-      pb.setDefaultDialogBorder();
+      setLayout(new GridBagLayout());
+      setBorder(BorderFactory.createEmptyBorder(8, 8, 8, 8));
 
-      pb.addSeparator(mLocalizer.msg("What", "What to start"), cc.xyw(1,1,7));
+      GridBagConstraints gc = new GridBagConstraints();
+      gc.insets = new Insets(4, 4, 4, 4);
+      gc.anchor = GridBagConstraints.WEST;
+      gc.fill = GridBagConstraints.HORIZONTAL;
+
+      gc.gridx = 0;
+      gc.gridy = 0;
+      gc.gridwidth = 3;
+      gc.weightx = 1.0;
+      add(new JLabel(mLocalizer.msg("What", "What to start")), gc);
       
       JRadioButton application = new JRadioButton(mLocalizer.msg("Application", "Application"));
-        
-      pb.add(application, cc.xy(2,3));
+
+      gc.gridy = 1;
+      gc.gridx = 0;
+      gc.gridwidth = 1;
+      gc.weightx = 0;
+      add(application, gc);
         
       mPathTextField.setText(mData.getProgramPath());
       mPathTextField.addFocusListener(new FocusAdapter() {
@@ -92,7 +104,9 @@ public class ApplicationPanel extends JPanel {
         }
       });
 
-      pb.add(mPathTextField, cc.xy(4,3));
+      gc.gridx = 1;
+      gc.weightx = 1.0;
+      add(mPathTextField, gc);
 
       mFileButton.addActionListener(new ActionListener() {
         public void actionPerformed(ActionEvent e) {
@@ -100,11 +114,15 @@ public class ApplicationPanel extends JPanel {
         }
       });
 
-      pb.add(mFileButton, cc.xy(6,3));
+      gc.gridx = 2;
+      gc.weightx = 0;
+      add(mFileButton, gc);
         
       JRadioButton url = new JRadioButton(mLocalizer.msg("URL", "URL"));
-        
-      pb.add(url, cc.xy(2,5));
+
+      gc.gridy = 2;
+      gc.gridx = 0;
+      add(url, gc);
         
       mUrl.setText(mData.getWebUrl());
         
@@ -114,7 +132,10 @@ public class ApplicationPanel extends JPanel {
         }
       });
 
-      pb.add(mUrl, cc.xyw(4,5,3));
+      gc.gridx = 1;
+      gc.gridwidth = 2;
+      gc.weightx = 1.0;
+      add(mUrl, gc);
         
       ButtonGroup group = new ButtonGroup();
         

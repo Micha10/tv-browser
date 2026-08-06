@@ -24,8 +24,10 @@
  */
 package captureplugin.drivers.defaultdriver.configpanels;
 
+import java.awt.BorderLayout;
 import java.awt.Component;
 
+import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -38,10 +40,6 @@ import javax.swing.table.TableCellEditor;
 
 import util.ui.Localizer;
 import captureplugin.drivers.defaultdriver.DeviceConfig;
-
-import com.jgoodies.forms.builder.PanelBuilder;
-import com.jgoodies.forms.layout.CellConstraints;
-import com.jgoodies.forms.layout.FormLayout;
 
 /**
  * The Panel for configuration of the Variables
@@ -72,13 +70,12 @@ public class VariablePanel extends JPanel {
    * creates a JPanel for managing the variables
    */
   private void createPanel() {
-    CellConstraints cc = new CellConstraints();
-    PanelBuilder pb = new PanelBuilder(new FormLayout("5dlu,pref:grow,5dlu","pref,5dlu,fill:default:grow"),this);
-    pb.setDefaultDialogBorder();
+    setLayout(new BorderLayout());
+    setBorder(BorderFactory.createTitledBorder(mLocalizer.msg("Variables", "Variables")));
     
     DefaultTableCellRenderer renderer = new DefaultTableCellRenderer() {
       public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-        JPanel background = new JPanel(new FormLayout("default:grow","fill:default:grow"));
+        JPanel background = new JPanel(new BorderLayout());
         JLabel label = new JLabel(value.toString());
         label.setOpaque(false);
         
@@ -90,7 +87,7 @@ public class VariablePanel extends JPanel {
           background.setBackground(table.getBackground());
         }
         
-        background.add(label, new CellConstraints().xy(1,1));
+        background.add(label, BorderLayout.CENTER);
         
         return background;
       }
@@ -122,8 +119,7 @@ public class VariablePanel extends JPanel {
       }
     });
     
-    pb.addSeparator(mLocalizer.msg("Variables", "Variables"), cc.xyw(1,1,3));
-    pb.add(sp, cc.xy(2,3));
+    add(sp, BorderLayout.CENTER);
   }
 
 }

@@ -29,19 +29,18 @@ import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
 import util.paramhandler.ParamInputField;
-import util.ui.EnhancedPanelBuilder;
 import util.ui.Localizer;
 import util.ui.UiUtilities;
 import captureplugin.drivers.defaultdriver.AdditionalParams;
 import captureplugin.drivers.defaultdriver.CaptureParamLibrary;
 import captureplugin.drivers.defaultdriver.DefaultKonfigurator;
 import captureplugin.drivers.defaultdriver.DeviceConfig;
-
-import com.jgoodies.forms.layout.CellConstraints;
+import captureplugin.ui.EnhancedPanelBuilder;
 
 /**
  * Enter the Parameters
@@ -78,9 +77,8 @@ public class ParameterPanel extends JPanel {
      * creates a JPanel for getting the parameters
      */
     private void createPanel() {try {
-      CellConstraints cc = new CellConstraints();
       EnhancedPanelBuilder pb = new EnhancedPanelBuilder("5dlu,pref,5dlu,pref:grow,pref,5dlu", this);
-      pb.setDefaultDialogBorder();
+      setBorder(BorderFactory.createEmptyBorder(8, 8, 8, 8));
 
       pb.addParagraph(mLocalizer.msg("parametersRecord", "Parameters for recording"));
 
@@ -92,7 +90,7 @@ public class ParameterPanel extends JPanel {
         }
       });
       
-      pb.add(mAddFormatTextField, cc.xyw(2, pb.getRow(), pb.getColumnCount() - 1));
+      pb.add(mAddFormatTextField, 2, pb.getColumnCount() - 1);
       
       pb.addParagraph(mLocalizer.msg("parametersDelete", "Parameters for deletion"));
 
@@ -104,7 +102,7 @@ public class ParameterPanel extends JPanel {
         }
       });
       
-      pb.add(mRemFormatTextField, cc.xyw(2, pb.getRow(), pb.getColumnCount() - 1));
+      pb.add(mRemFormatTextField, 2, pb.getColumnCount() - 1);
       
       pb.addParagraph(mLocalizer.msg("parametersAdditional", "Additional commands"));
       pb.addRow();
@@ -117,7 +115,7 @@ public class ParameterPanel extends JPanel {
         }
       });
         
-      pb.add(additional, cc.xy(pb.getColumnCount() - 1, pb.getRow()));
+      pb.add(additional, pb.getColumnCount() - 1);
       
       }catch(Exception e){e.printStackTrace();}
     }

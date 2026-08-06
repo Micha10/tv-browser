@@ -502,7 +502,7 @@ public class E2TimerHelper {
     timer.put(LOCATION, location); // Aufzeichnungspfad
     timer.put(TAGS, tags); // Kategorie
     timer.put(DURATION, ""); // Dauer
-    timer.put(EIT, ""); // EIT
+    timer.put(EIT, "0"); // EIT
 
     return timer;
   }

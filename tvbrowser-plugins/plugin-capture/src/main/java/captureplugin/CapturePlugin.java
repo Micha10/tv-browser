@@ -130,7 +130,6 @@ public class CapturePlugin extends devplugin.Plugin {
      */
     public CapturePlugin() {
         mInstance = this;
-        System.setProperty("ftp4j.activeDataTransfer.acceptTimeout", "5000");
     }
 
     /**

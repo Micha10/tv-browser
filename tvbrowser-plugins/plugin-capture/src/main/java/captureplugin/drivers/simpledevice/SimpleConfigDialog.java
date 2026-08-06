@@ -24,10 +24,15 @@
  */
 package captureplugin.drivers.simpledevice;
 
+import java.awt.FlowLayout;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
@@ -46,13 +51,6 @@ import util.ui.WindowClosingIf;
 import captureplugin.utils.ConfigTableModel;
 import captureplugin.utils.ExternalChannelTableCellEditor;
 import captureplugin.utils.ExternalChannelTableCellRenderer;
-
-import com.jgoodies.forms.builder.ButtonBarBuilder2;
-import com.jgoodies.forms.factories.Borders;
-import com.jgoodies.forms.factories.DefaultComponentFactory;
-import com.jgoodies.forms.layout.CellConstraints;
-import com.jgoodies.forms.layout.FormLayout;
-import com.jgoodies.forms.layout.Sizes;
 
 /**
  * Config Dialog
@@ -110,26 +108,54 @@ public class SimpleConfigDialog extends JDialog implements WindowClosingIf {
     JPanel panel = (JPanel) getContentPane();
     
     setTitle(mLocalizer.msg("title","Device Settings"));
-    
-    panel.setLayout(new FormLayout("3dlu, pref, 3dlu, fill:pref:grow, 3dlu, pref, 3dlu", "pref, 5dlu, pref, 3dlu, pref, 5dlu, fill:min:grow, 3dlu, pref, 3dlu, pref"));
-    panel.setBorder(Borders.DIALOG_BORDER);
-    
-    CellConstraints cc = new CellConstraints();
-    
-    panel.add(DefaultComponentFactory.getInstance().createSeparator(mLocalizer.msg("deviceName","Device name")), cc.xyw(1,1, 7));
 
-    panel.add(new JLabel(mLocalizer.msg("deviceNameInput", "Name")+ ":"), cc.xy(2,3));
+    panel.setLayout(new GridBagLayout());
+    panel.setBorder(BorderFactory.createEmptyBorder(8, 8, 8, 8));
+
+    GridBagConstraints gc = new GridBagConstraints();
+    gc.insets = new Insets(4, 4, 4, 4);
+    gc.anchor = GridBagConstraints.WEST;
+    gc.fill = GridBagConstraints.HORIZONTAL;
+
+    gc.gridx = 0;
+    gc.gridy = 0;
+    gc.gridwidth = 3;
+    gc.weightx = 1;
+    JLabel nameSection = new JLabel(mLocalizer.msg("deviceName","Device name"));
+    nameSection.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), ""));
+    panel.add(nameSection, gc);
+
+    gc.gridy = 1;
+    gc.gridx = 0;
+    gc.gridwidth = 1;
+    gc.weightx = 0;
+    panel.add(new JLabel(mLocalizer.msg("deviceNameInput", "Name")+ ":"), gc);
     mName = new JTextField(mDevice.getName());
-    panel.add(mName, cc.xyw(4,3,3));
-    
-    panel.add(DefaultComponentFactory.getInstance().createSeparator(mLocalizer.msg("channelAssignment","Channel assignment")), cc.xyw(1,5, 7));
-    
+    gc.gridx = 1;
+    gc.gridwidth = 2;
+    gc.weightx = 1;
+    panel.add(mName, gc);
+
+    gc.gridy = 2;
+    gc.gridx = 0;
+    gc.gridwidth = 3;
+    gc.weightx = 1;
+    JLabel channelSection = new JLabel(mLocalizer.msg("channelAssignment","Channel assignment"));
+    channelSection.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), ""));
+    panel.add(channelSection, gc);
+
     mTable = new JTable(new ConfigTableModel(mConfig, mLocalizer.msg("external", "external")));
     mTable.getTableHeader().setReorderingAllowed(false);
     mTable.getColumnModel().getColumn(0).setCellRenderer(new ChannelTableCellRenderer());
     mTable.getColumnModel().getColumn(1).setCellRenderer(new ExternalChannelTableCellRenderer());
     mTable.getColumnModel().getColumn(1).setCellEditor(new ExternalChannelTableCellEditor(mConfig));
-    panel.add(new JScrollPane(mTable), cc.xyw(2,7,5));
+    gc.gridy = 3;
+    gc.gridx = 0;
+    gc.gridwidth = 3;
+    gc.weightx = 1;
+    gc.weighty = 1;
+    gc.fill = GridBagConstraints.BOTH;
+    panel.add(new JScrollPane(mTable), gc);
     
     JButton fetch = new JButton(mLocalizer.msg("fetchChannels","Fetch Channellist"));
     
@@ -152,11 +178,15 @@ public class SimpleConfigDialog extends JDialog implements WindowClosingIf {
         });
       }
     });
-    
-    panel.add(fetch, cc.xy(6,9));
-    
-    ButtonBarBuilder2 builder = new ButtonBarBuilder2();
-    builder.addGlue();
+
+    gc.gridy = 4;
+    gc.gridx = 2;
+    gc.gridwidth = 1;
+    gc.weightx = 0;
+    gc.weighty = 0;
+    gc.fill = GridBagConstraints.NONE;
+    gc.anchor = GridBagConstraints.EAST;
+    panel.add(fetch, gc);
     
     JButton ok = new JButton(Localizer.getLocalization(Localizer.I18N_OK));
     ok.addActionListener(new ActionListener() {
@@ -179,14 +209,20 @@ public class SimpleConfigDialog extends JDialog implements WindowClosingIf {
       }
     });
     
-    builder.addButton(new JButton[] {ok, cancel});
-    
-    panel.add(builder.getPanel(), cc.xyw(1,11,7));
+    JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+    buttonPanel.add(ok);
+    buttonPanel.add(cancel);
+
+    gc.gridy = 5;
+    gc.gridx = 0;
+    gc.gridwidth = 3;
+    gc.anchor = GridBagConstraints.EAST;
+    panel.add(buttonPanel, gc);
     
     getRootPane().setDefaultButton(ok);
     UiUtilities.registerForClosing(this);
     
-    setSize(Sizes.dialogUnitXAsPixel(250, this), Sizes.dialogUnitXAsPixel(200, this));
+    setSize(500, 400);
   }
 
   /**

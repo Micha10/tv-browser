@@ -26,16 +26,14 @@
 package captureplugin;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.Window;
 
+import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
 import javax.swing.JCheckBox;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
-
-import com.jgoodies.forms.builder.PanelBuilder;
-import com.jgoodies.forms.factories.Borders;
-import com.jgoodies.forms.factories.CC;
-import com.jgoodies.forms.layout.FormLayout;
 
 import captureplugin.tabs.DevicePanel;
 import captureplugin.tabs.ProgramListPanel;
@@ -102,15 +100,18 @@ public class CapturePluginPanel extends JPanel {
         mShowAdditionalCommandsOnTop = new JCheckBox(LOCALIZER.msg("showOnTop", "Show additional commands (if any) on top of context menu."), data.showAdditionalCommandsOnTop());
         mShowRemovedProgramsDialog = new JCheckBox(LOCALIZER.msg("showRemovedPrograms", "Show dialog with removed programs after data update."), data.showRemovedProgramsDialog());
         mShowDirectlyInContextMenu = new JCheckBox(LOCALIZER.msg("showDirectlyInContextMenu", "Show devices directly in context menu of TV-Browser."), data.showDirectlyInContextMenu());
-        
-        PanelBuilder pb = new PanelBuilder(new FormLayout("default","default,default,default"));
-        pb.border(Borders.DIALOG);
-        
-        pb.add(mShowAdditionalCommandsOnTop, CC.xy(1, 1));
-        pb.add(mShowRemovedProgramsDialog, CC.xy(1, 2));
-        pb.add(mShowDirectlyInContextMenu, CC.xy(1, 3));
-        
-        mTabPane.addTab(LOCALIZER.msg("Global", "Global Settings"), pb.getPanel());
+
+        JPanel globalSettingsPanel = new JPanel();
+        globalSettingsPanel.setLayout(new BoxLayout(globalSettingsPanel, BoxLayout.Y_AXIS));
+        globalSettingsPanel.setBorder(BorderFactory.createEmptyBorder(8, 8, 8, 8));
+        mShowAdditionalCommandsOnTop.setAlignmentX(Component.LEFT_ALIGNMENT);
+        mShowRemovedProgramsDialog.setAlignmentX(Component.LEFT_ALIGNMENT);
+        mShowDirectlyInContextMenu.setAlignmentX(Component.LEFT_ALIGNMENT);
+        globalSettingsPanel.add(mShowAdditionalCommandsOnTop);
+        globalSettingsPanel.add(mShowRemovedProgramsDialog);
+        globalSettingsPanel.add(mShowDirectlyInContextMenu);
+
+        mTabPane.addTab(LOCALIZER.msg("Global", "Global Settings"), globalSettingsPanel);
         
         this.add(mTabPane, BorderLayout.CENTER);
     }

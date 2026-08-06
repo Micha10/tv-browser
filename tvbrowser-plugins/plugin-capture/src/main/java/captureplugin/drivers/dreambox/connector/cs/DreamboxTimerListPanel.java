@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Desktop;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -56,9 +57,6 @@ import javax.xml.parsers.SAXParserFactory;
 
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
-
-import com.jgoodies.forms.factories.CC;
-import com.jgoodies.forms.layout.FormLayout;
 
 import captureplugin.drivers.dreambox.connector.DreamboxConnector;
 import captureplugin.drivers.dreambox.connector.DreamboxStateHandler;
@@ -877,9 +875,9 @@ try {
     mCbShowZap.setActionCommand(CMD_FILTER_CHANGED);
     mCbShowZap.addActionListener(this);
     
-    JPanel panelFilter = new JPanel(new FormLayout("0dlu:grow,default,3dlu,default","default"));
-    panelFilter.add(mCbShowExpired, CC.xy(2, 1));
-    panelFilter.add(mCbShowZap, CC.xy(4, 1));
+    JPanel panelFilter = new JPanel(new FlowLayout(FlowLayout.RIGHT, 3, 0));
+    panelFilter.add(mCbShowExpired);
+    panelFilter.add(mCbShowZap);
 
     // Panel fuer Timer-Chart
     this.removeAll();

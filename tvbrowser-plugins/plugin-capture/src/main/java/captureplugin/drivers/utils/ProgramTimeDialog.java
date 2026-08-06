@@ -27,6 +27,7 @@ package captureplugin.drivers.utils;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -35,6 +36,7 @@ import java.awt.event.WindowEvent;
 import java.util.Calendar;
 
 import javax.swing.JButton;
+import javax.swing.BorderFactory;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
@@ -45,15 +47,11 @@ import javax.swing.event.ChangeListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import util.ui.EnhancedPanelBuilder;
 import util.ui.Localizer;
 import util.ui.ProgramList;
 import util.ui.ProgramRangeSelectionPanel;
 import captureplugin.CapturePlugin;
-
-import com.jgoodies.forms.builder.ButtonBarBuilder2;
-import com.jgoodies.forms.factories.Borders;
-import com.jgoodies.forms.layout.CellConstraints;
+import captureplugin.ui.EnhancedPanelBuilder;
 
 import devplugin.Program;
 
@@ -133,31 +131,29 @@ public class ProgramTimeDialog extends JDialog {
       setTitle(mLocalizer.msg("SetTime","Set Time"));
       
       JPanel content = (JPanel)getContentPane();
-      content.setBorder(Borders.DIALOG_BORDER);
+      content.setBorder(BorderFactory.createEmptyBorder(8, 8, 8, 8));
       content.setLayout(new BorderLayout());
 
       EnhancedPanelBuilder panel = new EnhancedPanelBuilder("2dlu,default,5dlu,default:grow");
-      
-      CellConstraints cc = new CellConstraints();
 
       if (titleEditable) {
         panel.addParagraph(mLocalizer.msg("Title", "Title"));
         mTitle = new JTextField(mPrgTime.getTitle());
 
         panel.addRow();
-        panel.add(mTitle, cc.xyw(2, panel.getRow(), panel.getColumnCount() - 1));
+        panel.add(mTitle, 2, panel.getColumnCount() - 1);
       }
 
       panel.addParagraph(mLocalizer.msg("Times","Times"));
       panel.addRow();
-      panel.add(new JLabel(mLocalizer.msg("StartTime","Start time")), cc.xy(2, panel.getRow()));
+      panel.add(new JLabel(mLocalizer.msg("StartTime","Start time")), 2);
       mStart = new TimeDateSpinner(mPrgTime.getStart());
-      panel.add(mStart, cc.xy(4, panel.getRow()));
+      panel.add(mStart, 4);
       
       panel.addRow();
-      panel.add(new JLabel(mLocalizer.msg("EndTime","End time")), cc.xy(2, panel.getRow()));
+      panel.add(new JLabel(mLocalizer.msg("EndTime","End time")), 2);
       mEnd =  new TimeDateSpinner(mPrgTime.getEnd());
-      panel.add(mEnd, cc.xy(4, panel.getRow()));
+      panel.add(mEnd, 4);
       
       if (mPrgTime.getProgram().getLength() <= 0) {
         mEnd.setSpinnerBackground(new Color(255, 153, 153));
@@ -166,14 +162,14 @@ public class ProgramTimeDialog extends JDialog {
       if (additionalText != null) {
           panel.addParagraph(additionalText);
           panel.addRow();
-          panel.add(additionalComponent, cc.xyw(2, panel.getRow(), panel.getColumnCount() - 1));
+          panel.add(additionalComponent, 2, panel.getColumnCount() - 1);
       }
       
       final ProgramRangeSelectionPanel programSelection = ProgramRangeSelectionPanel.createPanel(mPrgTime.getProgram(),(short)6);
       
       panel.addParagraph(mLocalizer.msg("programSelection","Program selection"));
       panel.addRow("fill:50dlu:grow");
-      panel.add(programSelection, cc.xyw(2, panel.getRow(), panel.getColumnCount() - 1));
+      panel.add(programSelection, 2, panel.getColumnCount() - 1);
 
       programSelection.addListSelectionListener(new ListSelectionListener() {
         public void valueChanged(ListSelectionEvent e) {
@@ -225,9 +221,6 @@ public class ProgramTimeDialog extends JDialog {
       
       content.add(panel.getPanel(), BorderLayout.CENTER);
       
-      ButtonBarBuilder2 btPanel = new ButtonBarBuilder2();
-      btPanel.setBorder(Borders.DLU4_BORDER);
-      
       JButton ok = new JButton(Localizer.getLocalization(Localizer.I18N_OK));
       ok.addActionListener(new ActionListener() {
           public void actionPerformed(ActionEvent e) {
@@ -240,8 +233,6 @@ public class ProgramTimeDialog extends JDialog {
           }
       });
       
-      btPanel.addGlue();
-      
       JButton cancel = new JButton(Localizer.getLocalization(Localizer.I18N_CANCEL));
       
       cancel.addActionListener(new ActionListener() {
@@ -250,8 +241,11 @@ public class ProgramTimeDialog extends JDialog {
               setVisible(false);
           }
       });
-      
-      btPanel.addButton(ok, cancel);
+
+      JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+      buttonPanel.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
+      buttonPanel.add(ok);
+      buttonPanel.add(cancel);
 
       getRootPane().setDefaultButton(ok);
       
@@ -262,7 +256,7 @@ public class ProgramTimeDialog extends JDialog {
         }
       });
       
-      content.add(btPanel.getPanel(), BorderLayout.SOUTH);
+      content.add(buttonPanel, BorderLayout.SOUTH);
       
       CapturePlugin.getInstance().layoutWindow("programTimeDialog",this,new Dimension(300,270));
     }

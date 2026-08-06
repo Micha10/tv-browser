@@ -5,24 +5,25 @@ import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TreeMap;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import it.sauronsoftware.ftp4j.FTPClient;
-import it.sauronsoftware.ftp4j.FTPCommunicationListener;
-import it.sauronsoftware.ftp4j.FTPDataTransferListener;
-import it.sauronsoftware.ftp4j.FTPFile;
+import org.apache.commons.net.ProtocolCommandEvent;
+import org.apache.commons.net.ProtocolCommandListener;
+import org.apache.commons.net.ftp.FTP;
+import org.apache.commons.net.ftp.FTPClient;
+import org.apache.commons.net.ftp.FTPFile;
 
 /**
  * @author fishhead
  * 
  */
-public class FtpHelper implements FTPCommunicationListener {
+public class FtpHelper implements ProtocolCommandListener {
 
   // Logger
   private static final Logger LOG = Logger
@@ -39,6 +40,8 @@ public class FtpHelper implements FTPCommunicationListener {
   
   public FtpHelper() {
     mClient = new FTPClient();
+    mClient.setControlEncoding(ENCODING);
+    mClient.addProtocolCommandListener(this);
     mReceived = new StringBuilder();
     mSent = new StringBuilder();
   }
@@ -64,19 +67,16 @@ public class FtpHelper implements FTPCommunicationListener {
       if (cmd.equalsIgnoreCase("OPEN")) {
         // OPEN
         try {
-          String address = args[1];
-          int index = address.indexOf(":");
-          
-          if(index != -1) {
-            address = args[1].substring(0,index);
+          String host = args[1];
+          int port = 21;
+          int index = args[1].lastIndexOf(':');
+
+          if(index > 0 && index == args[1].indexOf(':')) {
+            host = args[1].substring(0,index);
+            port = Integer.parseInt(args[1].substring(index + 1));
           }
-          
-          String[] connect = mClient.connect(address);
-          
-          for(String c : connect) {
-            mReceived.append(c).append("\n");
-          }
-          
+
+          mClient.connect(host, port);
           s = getString(false);
         }catch(Exception e) {
           if(log) {
@@ -87,7 +87,7 @@ public class FtpHelper implements FTPCommunicationListener {
       } else if (cmd.equalsIgnoreCase("CLOSE")) {
         try {
           if(mClient.isConnected()) {
-            mClient.disconnect(true);            
+            mClient.disconnect();
           }
           
           s = getString(false);
@@ -112,7 +112,9 @@ public class FtpHelper implements FTPCommunicationListener {
         }
         
         try {
-          mClient.login(user, password);
+          if (!mClient.login(user, password)) {
+            throw new IOException("Could not login to server");
+          }
           s = getString(false);
         }catch(Exception e) {
           if(log) {
@@ -123,7 +125,9 @@ public class FtpHelper implements FTPCommunicationListener {
       } else if (cmd.equalsIgnoreCase("CD")) {
         // CD
         try {
-          mClient.changeDirectory(args[1]);
+          if (!mClient.changeWorkingDirectory(args[1])) {
+            throw new IOException("Could not change directory");
+          }
           s = getString(false);
         }catch(Exception e) {
           if(log) {
@@ -134,7 +138,7 @@ public class FtpHelper implements FTPCommunicationListener {
       } else if (cmd.equalsIgnoreCase("PWD")) {
         // PWD
         try {
-          s = mClient.currentDirectory().trim();
+          s = mClient.printWorkingDirectory().trim();
         }catch(Exception e) {
           if(log) {
             LOG.log(Level.SEVERE, "Could not get current directory from server", e);
@@ -154,31 +158,11 @@ public class FtpHelper implements FTPCommunicationListener {
     	ByteArrayOutputStream out = null;
         
     	try {
-          mClient.setType(FTPClient.TYPE_BINARY);
+          mClient.setFileType(FTP.BINARY_FILE_TYPE);
           String filename = new String(args[1].getBytes(ENCODING));
           out = new ByteArrayOutputStream();
-          final AtomicBoolean completed = new AtomicBoolean(false);
-            
-	        mClient.download(filename, out, 0, new FTPDataTransferListener() {
-	          @Override
-	          public void transferred(int arg0) {}
-	          
-	          @Override
-	          public void started() {}
-	          
-	          @Override
-	          public void failed() {}
-	          
-	          @Override
-	          public void completed() {
-	            completed.set(true);
-	          }
-	          
-	          @Override
-	          public void aborted() {}
-	        });
-	        
-	        if(completed.get()) {
+
+	        if(mClient.retrieveFile(filename, out)) {
 	          s = new String(out.toByteArray(),ENCODING);
 	        }
         }catch(Exception e) {
@@ -194,32 +178,13 @@ public class FtpHelper implements FTPCommunicationListener {
 		}
       } else if (cmd.equalsIgnoreCase("PUT")) {
         // PUT file
-        mClient.setType(FTPClient.TYPE_BINARY);
+        mClient.setFileType(FTP.BINARY_FILE_TYPE);
         ByteArrayInputStream in = null;
         
         try {
           String filename = new String(args[1].getBytes(ENCODING));
           in = new ByteArrayInputStream(args[2].getBytes(ENCODING));
-            final AtomicBoolean complete = new AtomicBoolean(false);
-            
-            mClient.upload(filename, in, 0, 0, new FTPDataTransferListener() {
-              @Override
-              public void transferred(int arg0) {}
-              
-              @Override
-              public void started() {}
-              
-              @Override
-              public void failed() {}
-              
-              @Override
-              public void completed() {
-                complete.set(true);
-              }
-              
-              @Override
-              public void aborted() {}
-            });
+            mClient.storeFile(filename, in);
         }catch(Exception e) {
           if(log) {
             LOG.log(Level.SEVERE, "Could not upload file: " + args[1], e);
@@ -270,8 +235,10 @@ public class FtpHelper implements FTPCommunicationListener {
     
     // CD
     try {
-      mClient.changeDirectory(dir);
-      FTPFile[] names = mClient.list();
+      if (!mClient.changeWorkingDirectory(dir)) {
+        throw new IOException("Could not change directory");
+      }
+      FTPFile[] names = mClient.listFiles();
   
       // Parse
       for (FTPFile row : names) {
@@ -279,13 +246,22 @@ public class FtpHelper implements FTPCommunicationListener {
         list.add(map);
         
         map.put(NAME, dir + row.getName());
-        map.put("date", String.valueOf(row.getModifiedDate().getTime()));
+        Calendar modifiedDate = row.getTimestamp();
+        if (modifiedDate != null) {
+          map.put("date", String.valueOf(modifiedDate.getTimeInMillis()));
+        } else {
+          map.put("date", "0");
+        }
         map.put(SIZE, String.valueOf(row.getSize()));
         
-        switch(row.getType()) {
-          case FTPFile.TYPE_DIRECTORY:map.put("type", "DIRECTORY"); break;
-          case FTPFile.TYPE_FILE:map.put("type", "FILE"); break;
-          case FTPFile.TYPE_LINK:map.put("type", "LINK"); break;
+        if (row.isDirectory()) {
+          map.put("type", "DIRECTORY");
+        } else if (row.isFile()) {
+          map.put("type", "FILE");
+        } else if (row.isSymbolicLink()) {
+          map.put("type", "LINK");
+        } else {
+          map.put("type", "UNKNOWN");
         }
       }
     }catch(Exception e) {
@@ -310,13 +286,17 @@ public class FtpHelper implements FTPCommunicationListener {
   }
 
   @Override
-  public void received(String s) {
-    mReceived.append(s).append("\n");
+  public void protocolReplyReceived(ProtocolCommandEvent event) {
+    if (event.getMessage() != null) {
+      mReceived.append(event.getMessage());
+    }
   }
 
   @Override
-  public void sent(String s) {
-    mSent.append(s).append("\n");
+  public void protocolCommandSent(ProtocolCommandEvent event) {
+    if (event.getMessage() != null) {
+      mSent.append(event.getMessage());
+    }
   }
   
   private String getString(boolean sent) {

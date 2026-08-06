@@ -38,10 +38,11 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 
 import javax.swing.JOptionPane;
 
-import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.StringUtils;
 
 import util.exc.ErrorHandler;
@@ -124,7 +125,7 @@ class CaptureExecute {
     if (StringUtils.isBlank(mData.getParameterFormatAdd())) {
       JOptionPane.showMessageDialog(mParent, mLocalizer.msg("NoParamsAdd",
           "Please specify parameters for adding of the program!"), mLocalizer.msg("CapturePlugin", "Capture Plugin"),
-          JOptionPane.OK_OPTION);
+          JOptionPane.WARNING_MESSAGE);
       createDialog().show(DefaultKonfigurator.TAB_PARAMETER);
       return false;
     }
@@ -141,7 +142,7 @@ class CaptureExecute {
   public boolean removeProgram(ProgramTime programTime, boolean onlyGuiAtErrors) {
     if (StringUtils.isBlank(mData.getParameterFormatAdd()) || (StringUtils.isBlank(mData.getParameterFormatRem()))) {
       JOptionPane.showMessageDialog(mParent, mLocalizer.msg("NoParams", "Please specify Parameters for the Program!"),
-          mLocalizer.msg("CapturePlugin", "Capture Plugin"), JOptionPane.OK_OPTION);
+          mLocalizer.msg("CapturePlugin", "Capture Plugin"), JOptionPane.WARNING_MESSAGE);
       createDialog().show(DefaultKonfigurator.TAB_PARAMETER);
       return false;
     }
@@ -200,7 +201,7 @@ class CaptureExecute {
         return false;
       }
 
-      if ((!mData.getDialogOnlyOnError() && !onlyGuiAtErrors) || (mError && mExitValue != 249)) {
+      if (!mData.getDialogOnlyOnError() && !onlyGuiAtErrors) {
         ResultDialog dialog = new ResultDialog(mParent, params, output, false);
         UiUtilities.centerAndShow(dialog);
       }
@@ -221,13 +222,13 @@ class CaptureExecute {
   private boolean checkParams() {
     if (!mData.getUseWebUrl() && StringUtils.isBlank(mData.getProgramPath())) {
       JOptionPane.showMessageDialog(mParent, mLocalizer.msg("NoProgram", "Please specify Application to use!"),
-          mLocalizer.msg("CapturePlugin", "Capture Plugin"), JOptionPane.OK_OPTION);
+          mLocalizer.msg("CapturePlugin", "Capture Plugin"), JOptionPane.WARNING_MESSAGE);
       createDialog().show(DefaultKonfigurator.TAB_PATH);
       return false;
     }
     if (mData.getUseWebUrl() && StringUtils.isBlank(mData.getWebUrl())) {
       JOptionPane.showMessageDialog(mParent, mLocalizer.msg("NoUrl", "Please specify URL to use!"), mLocalizer.msg(
-          "CapturePlugin", "Capture Plugin"), JOptionPane.OK_OPTION);
+          "CapturePlugin", "Capture Plugin"), JOptionPane.WARNING_MESSAGE);
       createDialog().show(DefaultKonfigurator.TAB_PATH);
       return false;
     }
@@ -334,7 +335,7 @@ class CaptureExecute {
     URLConnection uc = url.openConnection();
 
     String userpassword = mData.getUsername() + ':' + mData.getPassword();
-    String encoded = new String(Base64.encodeBase64(userpassword.getBytes()));
+    String encoded = Base64.getEncoder().encodeToString(userpassword.getBytes(StandardCharsets.UTF_8));
 
     uc.setRequestProperty("Authorization", "Basic " + encoded);
 
