@@ -5,6 +5,8 @@ on:
     paths:
       - 'captureplugin/**'
       - '.github/workflows/build-capture.yml'
+    tags:
+      - 'capture-v*'
   pull_request:
     paths:
       - 'captureplugin/**'
@@ -25,3 +27,28 @@ jobs:
 
       - name: Build capture plugin only
         run: mvn -s .github/maven-settings.xml -f tvbrowser-plugins/pom.xml -P expensive-modules-to-build -pl plugin-capture -am package
+
+      - name: Upload CapturePlugin.jar
+        uses: actions/upload-artifact@v7
+        with:
+          name: CapturePlugin
+          path: tvbrowser-plugins/plugin-capture/target/CapturePlugin.jar
+
+  release:
+    needs: build-capture
+    if: startsWith(github.ref, 'refs/tags/capture-v')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Download artifact
+        uses: actions/download-artifact@v8
+        with:
+          name: CapturePlugin
+          path: dist
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: dist/CapturePlugin.jar
+          generate_release_notes: true
