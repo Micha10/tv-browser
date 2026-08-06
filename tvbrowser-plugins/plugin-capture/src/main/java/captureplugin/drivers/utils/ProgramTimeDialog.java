@@ -47,11 +47,11 @@ import javax.swing.event.ChangeListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import util.ui.EnhancedPanelBuilder;
 import util.ui.Localizer;
 import util.ui.ProgramList;
 import util.ui.ProgramRangeSelectionPanel;
 import captureplugin.CapturePlugin;
+import captureplugin.ui.EnhancedPanelBuilder;
 
 import devplugin.Program;
 

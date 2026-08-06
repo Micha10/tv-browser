@@ -34,13 +34,13 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 
 import util.paramhandler.ParamInputField;
-import util.ui.EnhancedPanelBuilder;
 import util.ui.Localizer;
 import util.ui.UiUtilities;
 import captureplugin.drivers.defaultdriver.AdditionalParams;
 import captureplugin.drivers.defaultdriver.CaptureParamLibrary;
 import captureplugin.drivers.defaultdriver.DefaultKonfigurator;
 import captureplugin.drivers.defaultdriver.DeviceConfig;
+import captureplugin.ui.EnhancedPanelBuilder;
 
 /**
  * Enter the Parameters

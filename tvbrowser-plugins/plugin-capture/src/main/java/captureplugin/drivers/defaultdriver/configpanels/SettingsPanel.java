@@ -48,8 +48,8 @@ import javax.swing.event.ChangeListener;
 
 import captureplugin.CapturePlugin;
 import captureplugin.drivers.defaultdriver.DeviceConfig;
+import captureplugin.ui.EnhancedPanelBuilder;
 import devplugin.ProgramReceiveTarget;
-import util.ui.EnhancedPanelBuilder;
 import util.ui.Localizer;
 import util.ui.ProgramReceiveTargetSelectionPanel;
 import util.ui.ScrollableJPanel;

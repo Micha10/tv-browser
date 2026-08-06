@@ -53,11 +53,6 @@
       <artifactId>tvbrowser</artifactId>
       <version>4.2.7</version>
     </dependency>
-<!--    <dependency>-->
-<!--      <groupId>com.jgoodies</groupId>-->
-<!--      <artifactId>jgoodies-forms</artifactId>-->
-<!--      <version>1.9.0</version>-->
-<!--    </dependency>-->
     <dependency>
       <groupId>commons-net</groupId>
       <artifactId>commons-net</artifactId>
