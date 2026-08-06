@@ -4,7 +4,6 @@
     <artifactId>tvbrowser-plugins</artifactId>
     <groupId>org.tvbrowser</groupId>
     <version>0.1-SNAPSHOT</version>
-    <relativePath>..</relativePath>
   </parent>
   <artifactId>tvbrowser-plugins-capture</artifactId>
   <name>CapturePlugin</name>
@@ -21,8 +20,8 @@
       <plugin>
         <artifactId>maven-compiler-plugin</artifactId>
         <configuration>
-          <source>1.6</source>
-          <target>1.6</target>
+          <source>1.8</source>
+          <target>1.8</target>
           <encoding>UTF-8</encoding>
         </configuration>
       </plugin>
@@ -52,7 +51,7 @@
    <dependency>
       <groupId>org.tvbrowser</groupId>
       <artifactId>tvbrowser</artifactId>
-      <version>3.3.2</version>
+      <version>4.2.7</version>
     </dependency>
     <dependency>
       <groupId>it.sauronsoftware</groupId>

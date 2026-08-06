@@ -10,7 +10,7 @@
   <name>Very Simple List Plugin</name>
   <developers>
     <developer>
-      <id>Achim Kröber</id>
+      <id>Achim KrÃ¶ber</id>
       <email>kroeber.a@gmx.net</email>
     </developer>
   </developers>
@@ -26,8 +26,8 @@
       <plugin>
         <artifactId>maven-compiler-plugin</artifactId>
         <configuration>
-          <source>1.5</source>
-          <target>1.5</target>
+          <source>1.8</source>
+          <target>1.8</target>
           <encoding>UTF-8</encoding>
         </configuration>
       </plugin>
@@ -60,3 +60,4 @@
     </dependency>
   </dependencies>
 </project>
+
