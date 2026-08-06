@@ -34,6 +34,7 @@ import java.awt.event.ItemListener;
 import java.util.ArrayList;
 import java.util.TimeZone;
 
+import javax.swing.BorderFactory;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
@@ -45,13 +46,10 @@ import javax.swing.SpinnerNumberModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import com.jgoodies.forms.builder.PanelBuilder;
-import com.jgoodies.forms.factories.CC;
-import com.jgoodies.forms.layout.FormLayout;
-
 import captureplugin.CapturePlugin;
 import captureplugin.drivers.defaultdriver.DeviceConfig;
 import devplugin.ProgramReceiveTarget;
+import util.ui.EnhancedPanelBuilder;
 import util.ui.Localizer;
 import util.ui.ProgramReceiveTargetSelectionPanel;
 import util.ui.ScrollableJPanel;
@@ -107,11 +105,8 @@ public class SettingsPanel extends ScrollableJPanel implements ActionListener, C
      * creates a JPanel for getting the time offsets
      */
     private void createPanel() {
-      PanelBuilder pb = new PanelBuilder(new FormLayout("5dlu,12dlu,pref:grow,5dlu,pref:grow,5dlu",
-      "pref,5dlu,pref,1dlu,pref,1dlu,default,10dlu,pref,5dlu,pref,1dlu,"+
-      "pref,10dlu,pref,5dlu,pref,1dlu,pref,7dlu,pref,pref," +
-      "pref,pref,pref,7dlu,pref,pref,10dlu,pref"),this);
-      pb.setDefaultDialogBorder();
+      EnhancedPanelBuilder pb = new EnhancedPanelBuilder("5dlu,12dlu,pref:grow,5dlu,pref:grow,5dlu", this);
+      setBorder(BorderFactory.createEmptyBorder(8, 8, 8, 8));
       
       mPreTimeSpinner = new JSpinner(new SpinnerNumberModel(mData.getPreTime(), 0, null, 1));
       mPostTimeTextField = new JSpinner(new SpinnerNumberModel(mData.getPostTime(), 0, null, 1));
@@ -146,41 +141,43 @@ public class SettingsPanel extends ScrollableJPanel implements ActionListener, C
         }
       }
       
-      int y = 1;
-      
-      pb.addSeparator(LOCALIZER.msg("TimeSettings", "Timesettings"), CC.xyw(1,y++,6));
-      
-      pb.addLabel(LOCALIZER.msg("Earlier", "Number of minutes to start erlier"),CC.xyw(2,++y,2));
-      pb.add(mPreTimeSpinner, CC.xy(5,y));
-      
-      pb.addLabel(LOCALIZER.msg("Later", "Number of minutes to stop later"),CC.xyw(2,y+=2,2));
-      pb.add(mPostTimeTextField, CC.xy(5,y));
-      
-      pb.add(mUseTimeOffsetForAllCommands, CC.xyw(2, y+=2, 4));
-      
-      pb.addSeparator(LOCALIZER.msg("User", "User"), CC.xyw(1,y+=2,6));
-      
-      pb.addLabel(LOCALIZER.msg("Username", "Username") + ":", CC.xyw(2,y+=2,2));
-      pb.add(mUserName, CC.xy(5,y));
-      
-      pb.addLabel(LOCALIZER.msg("Password", "Password") + ":", CC.xyw(2,y+=2,2));
-      pb.add(mUserPwd, CC.xy(5,y));
-            
-      pb.addSeparator(LOCALIZER.msg("Additional", "Additional"), CC.xyw(1,y+=2,6));
+      pb.addParagraph(LOCALIZER.msg("TimeSettings", "Timesettings"));
+      pb.addRow();
+      pb.add(new JLabel(LOCALIZER.msg("Earlier", "Number of minutes to start erlier")), 2, 2);
+      pb.add(mPreTimeSpinner, 5);
+      pb.addRow();
+      pb.add(new JLabel(LOCALIZER.msg("Later", "Number of minutes to stop later")), 2, 2);
+      pb.add(mPostTimeTextField, 5);
+      pb.addRow();
+      pb.add(mUseTimeOffsetForAllCommands, 2, 4);
 
-      pb.addLabel(LOCALIZER.msg("MaxSimult","Maximum simultaneous recordings")+ ":" , CC.xyw(2,y+=2,2));
-      pb.add(mMaxSimult,CC.xy(5,y));
-      
-      pb.addLabel(LOCALIZER.msg("Timeout","Wait sec. until Timeout (-1 = disabled)")+ ":", CC.xyw(2,y+=2,2));
-      pb.add(mMaxTimeout,CC.xy(5,y));
+      pb.addParagraph(LOCALIZER.msg("User", "User"));
+      pb.addRow();
+      pb.add(new JLabel(LOCALIZER.msg("Username", "Username") + ":"), 2, 2);
+      pb.add(mUserName, 5);
+      pb.addRow();
+      pb.add(new JLabel(LOCALIZER.msg("Password", "Password") + ":"), 2, 2);
+      pb.add(mUserPwd, 5);
 
-      pb.add(mCheckReturn, CC.xyw(2,y+=2,4));
-      pb.add(mShowOnError, CC.xyw(2,++y,4));
-      pb.add(mShowTitleAndTimeDialog, CC.xyw(2,++y,4));
-      pb.add(mDeleteRemovedPrograms, CC.xyw(2,++y,4));
-      pb.add(mOldPrograms, CC.xyw(2,++y,4));
-      
-      pb.add(mUseTime, CC.xyw(2,y+=2,4));
+      pb.addParagraph(LOCALIZER.msg("Additional", "Additional"));
+      pb.addRow();
+      pb.add(new JLabel(LOCALIZER.msg("MaxSimult","Maximum simultaneous recordings")+ ":"), 2, 2);
+      pb.add(mMaxSimult, 5);
+      pb.addRow();
+      pb.add(new JLabel(LOCALIZER.msg("Timeout","Wait sec. until Timeout (-1 = disabled)")+ ":"), 2, 2);
+      pb.add(mMaxTimeout, 5);
+      pb.addRow();
+      pb.add(mCheckReturn, 2, 4);
+      pb.addRow(false);
+      pb.add(mShowOnError, 2, 4);
+      pb.addRow(false);
+      pb.add(mShowTitleAndTimeDialog, 2, 4);
+      pb.addRow(false);
+      pb.add(mDeleteRemovedPrograms, 2, 4);
+      pb.addRow(false);
+      pb.add(mOldPrograms, 2, 4);
+      pb.addRow();
+      pb.add(mUseTime, 2, 4);
       
       JPanel timeZonePanel = new JPanel(new FlowLayout(FlowLayout.LEFT,0,0));
       mTimeZoneLabel = new JLabel(LOCALIZER.msg("Timezone","Timezone")+": ");
@@ -188,7 +185,8 @@ public class SettingsPanel extends ScrollableJPanel implements ActionListener, C
       timeZonePanel.add(mTimeZoneLabel);
       timeZonePanel.add(mTimeZones);
       
-      pb.add(timeZonePanel, CC.xyw(3,++y,3));
+      pb.addRow(false);
+      pb.add(timeZonePanel, 3, 3);
       
       ProgramReceiveTarget[] targets = mData.getProgramReceiveTargets();
       
@@ -203,7 +201,8 @@ public class SettingsPanel extends ScrollableJPanel implements ActionListener, C
       mProgramReceiveTargetSelection = new ProgramReceiveTargetSelectionPanel(UiUtilities.getLastModalChildOf(CapturePlugin.getInstance().getSuperFrame()),
           existing.toArray(new ProgramReceiveTarget[existing.size()]),null,CapturePlugin.getInstance(),true,LOCALIZER.msg("sendToTitle","Send scheduled programs to:"));
       mProgramReceiveTargetSelection.addChangeListener(this);
-      pb.add(mProgramReceiveTargetSelection, CC.xyw(1,y+=2,5));
+      pb.addRow();
+      pb.add(mProgramReceiveTargetSelection, 1, 5);
       
       // add ChangeListener to the spinners
       mPreTimeSpinner.addChangeListener(this);

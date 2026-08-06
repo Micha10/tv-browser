@@ -25,6 +25,7 @@
 package captureplugin.drivers;
 
 import java.awt.Component;
+import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -35,6 +36,7 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 
 import javax.swing.DefaultListCellRenderer;
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
@@ -50,8 +52,6 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
 import org.apache.commons.lang3.StringUtils;
-
-import com.jgoodies.forms.builder.ButtonBarBuilder;
 
 import captureplugin.CapturePluginData;
 import util.ui.Localizer;
@@ -201,15 +201,16 @@ public class DeviceCreatorDialog extends JDialog implements WindowClosingIf {
       }
     });
 
-    ButtonBarBuilder builder = new ButtonBarBuilder();
-    builder.addGlue();
-    builder.addButton(new JButton[] { ok, cancel });
+    JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+    buttonPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
+    buttonPanel.add(ok);
+    buttonPanel.add(cancel);
 
     getRootPane().setDefaultButton(ok);
 
     input.insets = new Insets(5, 5, 5, 5);
 
-    panel.add(builder.getPanel(), input);
+    panel.add(buttonPanel, input);
 
     setSize(400, 300);
 

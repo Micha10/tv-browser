@@ -25,14 +25,12 @@
 
 package captureplugin;
 
+import javax.swing.BorderFactory;
 import javax.swing.Icon;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import util.ui.Localizer;
-
-import com.jgoodies.forms.factories.Borders;
-import com.jgoodies.forms.layout.Sizes;
 
 import devplugin.SettingsTab;
 
@@ -72,7 +70,7 @@ public class CapturePluginSettingsTab implements SettingsTab {
      */
     public JPanel createSettingsPanel() {
       mPanel = new CapturePluginPanel(mOwner, mCloneData, true);
-      mPanel.setBorder(Borders.createEmptyBorder(Sizes.DLUY5,Sizes.DLUX5,Sizes.DLUY5,Sizes.DLUX5));
+      mPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
       mPanel.setSelectedTab(mCurrentPanel);
       return mPanel;
     }

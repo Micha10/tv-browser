@@ -26,15 +26,15 @@
 package captureplugin;
 
 import java.awt.BorderLayout;
+import java.awt.FlowLayout;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JDialog;
-
-import com.jgoodies.forms.builder.ButtonBarBuilder2;
-import com.jgoodies.forms.factories.Borders;
+import javax.swing.JPanel;
 
 import util.ui.Localizer;
 import util.ui.UiUtilities;
@@ -88,12 +88,11 @@ public class CapturePluginDialog extends JDialog implements WindowClosingIf {
             }
         });
 
-        ButtonBarBuilder2 builder = new ButtonBarBuilder2();
-        builder.addGlue();
-        builder.addButton(okButton);
-        builder.setBorder(Borders.DLU4_BORDER);
-        
-        this.getContentPane().add(builder.getPanel(), BorderLayout.SOUTH);
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        buttonPanel.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
+        buttonPanel.add(okButton);
+
+        this.getContentPane().add(buttonPanel, BorderLayout.SOUTH);
     }
 
     /**

@@ -24,7 +24,9 @@
  */
 package captureplugin.drivers.defaultdriver.configpanels;
 
+import java.awt.BorderLayout;
 import java.awt.Component;
+import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedReader;
@@ -37,6 +39,7 @@ import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 
 import javax.swing.ButtonGroup;
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
@@ -50,12 +53,6 @@ import javax.swing.event.AncestorEvent;
 import javax.swing.event.AncestorListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellEditor;
-
-import com.jgoodies.forms.builder.PanelBuilder;
-import com.jgoodies.forms.factories.Borders;
-import com.jgoodies.forms.factories.CC;
-import com.jgoodies.forms.layout.CellConstraints;
-import com.jgoodies.forms.layout.FormLayout;
 
 import captureplugin.CapturePlugin;
 import captureplugin.drivers.defaultdriver.DeviceConfig;
@@ -96,8 +93,8 @@ public class ChannelPanel extends JPanel {
      * creates a JPanel for managing the channels
      */
     private void createPanel() {
-      PanelBuilder pb = new PanelBuilder(new FormLayout("5dlu,default,pref:grow,5dlu","pref,5dlu,fill:default:grow,5dlu,default"),this);
-      pb.border(Borders.DIALOG);
+      setLayout(new BorderLayout(0, 5));
+      setBorder(BorderFactory.createTitledBorder(LOCALIZER.msg("ChannelNames", "Channel Names")));
 
       mTableModel = new ChannelTableModel(mData);
       mChannelTable.setModel(mTableModel);
@@ -106,7 +103,7 @@ public class ChannelPanel extends JPanel {
       mChannelTable.getColumnModel().getColumn(0).setCellRenderer(new ChannelTableCellRenderer());
       mChannelTable.getColumnModel().getColumn(1).setCellRenderer(new DefaultTableCellRenderer() {
         public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-          JPanel background = new JPanel(new FormLayout("default:grow","fill:default:grow"));
+          JPanel background = new JPanel(new BorderLayout());
           JLabel label = new JLabel(value.toString());
           label.setOpaque(false);
           
@@ -118,7 +115,7 @@ public class ChannelPanel extends JPanel {
             background.setBackground(table.getBackground());
           }
           
-          background.add(label, new CellConstraints().xy(1,1));
+          background.add(label, BorderLayout.CENTER);
           
           return background;
         }
@@ -159,13 +156,12 @@ public class ChannelPanel extends JPanel {
         }
       });
       
-      JPanel mapping = new JPanel(new FormLayout("default,5dlu:grow,default","default"));
-      mapping.add(tryMapping, CC.xy(1, 1));
-      mapping.add(help, CC.xy(3, 1));
-        
-      pb.addSeparator(LOCALIZER.msg("ChannelNames", "Channel Names"), CC.xyw(1,1,4));
-      pb.add(sp, CC.xyw(2,3,2));
-      pb.add(mapping, CC.xyw(2,5,2));
+      JPanel mapping = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 0));
+      mapping.add(tryMapping);
+      mapping.add(help);
+
+      add(sp, BorderLayout.CENTER);
+      add(mapping, BorderLayout.SOUTH);
     }
     
     private void export() {
