@@ -20,6 +20,8 @@ jobs:
           distribution: temurin
           java-version: '17'
           cache: maven
-            
+      - name: Install JAR to local repo
+        run: mvn install:install-file -Dfile=lib/tvbrowser-4.2.7.jar -DgroupId=org.tvbrowser -DartifactId=tvbrowser -Dversion=4.2.7 -Dpackaging=jar
+
       - name: Build capture plugin only
         run: mvn -s .github/maven-settings.xml -f tvbrowser-plugins/pom.xml -P expensive-modules-to-build -pl plugin-capture -am package
