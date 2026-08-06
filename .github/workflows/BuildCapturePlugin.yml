@@ -20,6 +20,6 @@ jobs:
           distribution: temurin
           java-version: '17'
           cache: maven
-      
+            
       - name: Build capture plugin only
-        run: mvn -pl captureplugin -am package
+        run: mvn -f tvbrowser-plugins/pom.xml -P expensive-modules-to-build -pl plugin-capture -am package
