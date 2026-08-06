@@ -1,0 +1,25 @@
+name: Build Capture Plugin
+
+on:
+  push:
+    paths:
+      - 'captureplugin/**'
+      - '.github/workflows/build-capture.yml'
+  pull_request:
+    paths:
+      - 'captureplugin/**'
+  workflow_dispatch:
+
+jobs:
+  build-capture:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+          cache: maven
+      
+      - name: Build capture plugin only
+        run: ./mvnw -pl captureplugin -am package
