@@ -1,18 +1,15 @@
-name: Build Capture Plugin
+name: Release Capture Plugin
 
 on:
   push:
-    paths:
-      - 'captureplugin/**'
-      - '.github/workflows/BuildCapturePlugin.yml'
-  pull_request:
-    paths:
-      - 'captureplugin/**'
-  workflow_dispatch:
+    tags:
+      - 'capture-v*'
 
 jobs:
-  build-capture:
+  release:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-java@v4
@@ -20,15 +17,16 @@ jobs:
           distribution: temurin
           java-version: '17'
           cache: maven
+
       - name: Install JAR to local repo
         run: mvn install:install-file -Dfile=lib/tvbrowser-4.2.7.jar -DgroupId=org.tvbrowser -DartifactId=tvbrowser -Dversion=4.2.7 -Dpackaging=jar
 
       - name: Build capture plugin only
         run: mvn -s .github/maven-settings.xml -f tvbrowser-plugins/pom.xml -P expensive-modules-to-build -pl plugin-capture -am package
 
-      - name: Upload CapturePlugin.jar
-        uses: actions/upload-artifact@v4
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
         with:
-          name: CapturePlugin
-          path: tvbrowser-plugins/plugin-capture/target/CapturePlugin.jar
-          if-no-files-found: error
+          files: tvbrowser-plugins/plugin-capture/target/CapturePlugin.jar
+          fail_on_unmatched_files: true
+          generate_release_notes: true
